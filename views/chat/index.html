@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/js/lib/kindeditor/themes/default/default.css" />
+    <link rel="stylesheet" href="/css/chat.css" />
+</head>
+<body>
+<div data-role="header" data-add-back-btn="true">
+    <h1 class="title"><%= title %></h1>
+</div>
+
+<div class="console-container">
+    <div class="title"></div>
+    <div class="content" id="contentDiv"></div>
+    <div class="textDiv">
+        <textarea id="contentText"></textarea>
+        <div style="" class="btnDiv"><input type="button" class="btn" id="sendBtn" value="发送" /></div>
+    </div>
+</div>
+<script src="/js/lib/kindeditor/kindeditor-min.js"></script>
+<script src="/js/lib/kindeditor/lang/zh_CN.js"></script>
+<script src="/js/lib/socket.io.js"></script>
+<script src="/js/lib/jquery-1.11.0.min.js"></script>
+<script src="/js/util/common.js"></script>
+<script src="/js/chat.js"></script>
+<script>
+    chat.userInfo=JSON.parse('<%= userInfo %>'.replace(/&#34;/g,'"'));
+</script>
+</body>
+</html>
