@@ -29,19 +29,9 @@ router.get('/getOnlineUser', function(req, res) {
 });
 
 /**
- * 聊天室token提取
+ * 提取聊天室缓存中在线用户
  */
-router.get('/getToken', function(req, res) {
-    if(common.isBlank(groupId)){
-        res.json(errorMessage.code_1000);
-    }else{
-        var userArr=chatService.cacheUserArr[groupId];
-        var result=[];
-        for(var i=0;i<userArr.length;i++){
-            result.push(userArr[i].userInfo);
-        }
-        res.json(result);
-    }
-});
+router.get('/getOnlineUser', function(req, res) {
 
+});
 module.exports = router;

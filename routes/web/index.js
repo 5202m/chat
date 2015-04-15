@@ -13,17 +13,22 @@ chatService.init();//启动socket
  * 聊天室页面入口
  */
 router.get('/chat', function(req, res) {
+    var token=req.param("token");
     chatOnlineUser.userId=req.param("userId");
     chatOnlineUser.groupId=req.param("groupId");
-    chatOnlineUser.userNickname=req.param("nickname");
-    chatOnlineUser.userAvatar=req.param("avatar");
-    if(/^U(\d{6})[A-Z](\d{6})/g.test(chatOnlineUser.userId)){//系统用户，则提取对应权限，以开放聊天室的对应权限
-        chatOnlineUser.userType=1;
-    }
-    if(common.isBlank(chatOnlineUser.userId)||common.isBlank(chatOnlineUser.groupId)){
-        res.render('chat/error',{error: '输入参数有误，必须传入userId，groupId'});
+    chatOnlineUser.nickname=req.param("nickname");
+    chatOnlineUser.avatar=req.param("avatar");
+    chatOnlineUser.userType=req.param("userType");
+    if(common.isBlank(token)||common.isBlank(chatOnlineUser.userId)||common.isBlank(chatOnlineUser.groupId)){
+        res.render('chat/error',{error: '输入参数有误，必须传入token,userId，groupId'});
     }else{
-        res.render('chat/index',{title: '聊天室',userInfo:JSON.stringify(chatOnlineUser)});
+        chatService.destroyHomeToken(token,function(isTrue){
+            if(isTrue) {
+                res.render('chat/index', {title: '聊天室', userInfo: JSON.stringify(chatOnlineUser)});
+            }else{
+                res.render('chat/error',{error: 'token验证失效！'});
+            }
+        });
     }
 });
 
