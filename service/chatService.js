@@ -1,5 +1,7 @@
 var chatContent = require('../models/chatContent');//引入chatContent数据模型
 var chatGroup = require('../models/chatGroup');//引入chatGroup数据模型
+var token = require('../models/token');//引入token数据模型
+var common = require('../util/common');//引入common类
 var userService = require('../service/userService');//引入userService服务类
 /**
  * 聊天室服务类
@@ -21,16 +23,34 @@ var chatService ={
         var app = require('express')();
         var server = require('http').Server(app);
         this.socket = require('socket.io')(server);
-        server.listen(8087);
-        console.log('server is listenering on port 8087');
+        server.listen(3002);
+        console.log('the socket io is listenering on port 3002');
         this.setSocket();
     },
     /**
      * 根据平台初始化用户缓存集合
      */
     initCacheUserArr:function(groupId){
-        for(var index in this.groupList){
-            this.cacheUserArr[this.groupList[index]._id]=[];
+        if(chatService.cacheUserArr.length==0){//不存在数据，则初始化
+            for(var index in this.groupList){
+                this.cacheUserArr[this.groupList[index]._id]=[];
+            }
+        }else{//存在数据，则不同更新cacheUserArr数据
+            var row=null;
+            var newCacheUserArr=[];
+            var gId=null;
+            for(var gIndex in this.groupList){
+                gId=this.groupList[index]._id;
+                row=this.cacheUserArr[gId];
+                if(row!=null && row!=undefined && row.length>0){
+                    newCacheUserArr[gId]=row;
+                }else{
+                    newCacheUserArr[gId]=[];
+                }
+            }
+            if(newCacheUserArr.length>0){
+                chatService.cacheUserArr=newCacheUserArr;
+            }
         }
     },
     /**
@@ -42,6 +62,7 @@ var chatService ={
             //登录(缓存用户信息）
             socket.on('login',function(info){
                 var groupRow=chatService.cacheUserArr[info.groupId];
+
                 if(groupRow!=null) {
                     var hasRow=false;
                     //检查用户是否在线
@@ -76,19 +97,24 @@ var chatService ={
                 var userInfo=data.fromUser;
                 var sameGroupUserArr=chatService.cacheUserArr[userInfo.groupId];
                 var user=null;
-                userInfo.publishDate=  new Date();
+                userInfo.publishDate=new Date();
                 userInfo["id"]=userInfo.publishDate.getTime()*1000+userInfo.publishDate.getMilliseconds();//产生唯一的id
-                for(var i=0;i<sameGroupUserArr.length;i++){
-                    user = sameGroupUserArr[i];
-                    if(user.socket!=null){
-                        user.socket.emit('sendMsg',{fromUser:userInfo,msg:data.msg});
+                //验证规则
+                chatService.verifyRule(userInfo.groupId,data.msg,function(resultVal){
+                    if(resultVal){//匹配规则，则按规则逻辑提示
+                        console.log('resultVal:'+resultVal);
+                        socket.emit('sendMsg',{fromUser:userInfo,msg:resultVal,rule:true});
+                    } else{
+                        for(var i=0;i<sameGroupUserArr.length;i++){
+                            user = sameGroupUserArr[i];
+                            if(user.socket!=null){
+                                user.socket.emit('sendMsg',{fromUser:userInfo,msg:data.msg});
+                            }
+                        }
+                        //保存聊天数据
+                        chatService.saveMsg(data);
                     }
-                }
-                //保存聊天数据
-                chatService.saveMsg(data);
-                /*if(data.broadcast===true){ //广播信息直接转发给所有用户
-                    socket.broadcast.emit('sendMsg',{fromUser:data.fromUser,msg:data.msg});
-                }*/
+                });
             });
         });
     },
@@ -166,6 +192,61 @@ var chatService ={
         };
         chatContent.create(row,function(){
             console.log('save chatContent success!');
+        });
+    },
+    /**
+     * 销毁访问主页的token
+     * @param val
+     */
+    destroyHomeToken:function(val,callback){
+        token.findOne({value:val},function (err,row) {
+            if(err!=null||row==null){
+                callback(false);
+            }else{
+                //row.remove();
+                callback(true);
+            }
+        });
+    },
+    /**
+     * 验证规则
+     */
+    verifyRule:function(groupId,msg,callback){
+        chatGroup.findById(groupId,function (err,row) {
+            var ruleArr=row.chatRules,resultTip=[],beforeVal='',type='';
+            var periodStartDate= 0,periodEndDate= 0,currentTime= 0;
+            //先检查禁止发言的规则
+            for(var i in ruleArr){
+                beforeVal=ruleArr[i].beforeRuleVal;
+                type=ruleArr[i].type;
+                periodStartDate=ruleArr[i].periodStartDate;
+                periodEndDate=ruleArr[i].periodEndDate;
+                currentTime=new Date().getTime();
+                var isNullPeriod=(periodStartDate==null && periodEndDate==null);
+                var isPeriod=periodStartDate!=null && currentTime>=periodStartDate.getTime() && periodEndDate!=null && currentTime<=periodEndDate.getTime();
+                if(isPeriod && type=='speak_not_allowed'){
+                    resultTip=[];
+                    resultTip.push(ruleArr[i].afterRuleTips);
+                    break;
+                }
+                if((isNullPeriod || isPeriod) && type!='speak_not_allowed' && common.isValid(beforeVal)){
+                    beforeVal=beforeVal.replace(/(,|，)$/,'');//去掉结尾的逗号
+                    beforeVal=beforeVal.replace(/,|，/g,'|');//逗号替换成|，便于统一使用正则表达式
+                    if(type=='keyword_filter'){//过滤关键字
+                        if(eval('/'+beforeVal+'/').test(msg)){
+                            resultTip.push(ruleArr[i].afterRuleTips);
+                            break;
+                        }
+                    }
+                    if(type=='keyword_replace'){//替换关键字
+                        if(eval('/'+beforeVal+'/').test(msg)){
+                            msg=msg.replace(eval('/'+beforeVal+'/g'),ruleArr[i].afterRuleVal);
+                            resultTip.push(ruleArr[i].afterRuleTips);
+                        }
+                    }
+                }
+            }
+            callback(resultTip.join(";"));
         });
     }
 };

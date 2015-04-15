@@ -6,7 +6,7 @@
 var chat={
     socket:null,
     editor:null,
-    socketUrl:'http://172.30.6.22:8087',
+    socketUrl:'http://127.0.0.1:3002',
     userInfo:null,
     init:function(){
         this.setKindEdit();
@@ -48,6 +48,10 @@ var chat={
      * @param data
      */
     setContent:function(data,isLoadMsg){
+        if(data.rule){
+           alert("系统提示："+data.msg);
+           return;
+        }
         console.log('receiver message from '+data.msg);
         var fUserInfo=data.fromUser;
         var msg=common.encodeHtml(data.msg);
