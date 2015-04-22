@@ -28,10 +28,4 @@ router.get('/getOnlineUser', function(req, res) {
     }
 });
 
-/**
- * 提取聊天室缓存中在线用户
- */
-router.get('/getOnlineUser', function(req, res) {
-
-});
 module.exports = router;

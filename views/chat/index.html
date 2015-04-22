@@ -1,29 +1,83 @@
-<!DOCTYPE HTML>
+﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title><%= title %></title>
-    <link rel="stylesheet" href="/js/lib/kindeditor/themes/default/default.css" />
-    <link rel="stylesheet" href="/css/chat.css" />
+<meta charset="utf-8">
+<title>金道贵金属微信聊天室</title>
+<meta name="keywords" content="微信聊天室" />
+<meta name="description" content="微信聊天室" />
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<link  type="text/css" rel="stylesheet" href="/css/chat.css"/>
 </head>
 <body>
-<div data-role="header" data-add-back-btn="true">
-    <h1 class="title"><%= title %></h1>
+<header id="header">
+    <aside class="clearfix">
+        <article class="kaig-icon">只看分析师<span class="kg-stadus off-fon" id="readSet"><i></i></span></article>
+    </aside>
+</header>
+<section >
+  <article class="talk-infobox">
+    <ul id="content_ul"></ul>
+  </article>
+</section>
+
+<!-- footer begin -->
+<footer class="float-box">
+  <article class="float-con">
+    <section class="inp-fon-tix">
+      <textarea  id="contentText" class="text-area-box"></textarea>
+    </section>
+    <button class="add-btn hide-t" id="addBtn">添加</button>
+    <section class="add-img dn">
+      <article class="add-img-in">
+        <aside class="select-img"></aside>
+        <input type="file" class="file-img" id="fileBtn"/>
+        <p>图片</p>
+      </article>
+    </section>
+    <button class="send-btn" style="display:none" id="sendBtn">发送</button>
+  </article>
+</footer>
+
+<!--登录 begin-->
+<div id="loginBox" >
+<section class="layer-out">
+    <section class="layer-con" id="loginSection">
+        <a href="javascript://" class="del-btn" title="关闭"></a>
+        <h3>真实客户登录</h3>
+            <section class="form-box">
+                <form id="loginForm">
+                    <input type="hidden"  name="userId"/>
+                    <input type="hidden"  name="groupId"/>
+                    <input type="hidden"  name="nickname"/>
+                    <section class="form-part-a clearfix">
+                        <label class="fl">账　号：</label>
+                        <aside class="form-inp"><input type="text" class="input-text" name="accountNo" /></aside>
+                    </section>
+                    <section class="form-part-a clearfix">
+                        <label class="fl">手机号：</label>
+                        <aside class="form-inp"><input type="text" class="input-text" name="mobilePhone" /></aside>
+                    </section>
+                    <section class="form-part-a clearfix">
+                        <label class="fl">验证码：</label>
+                        <aside class="form-inp"><input type="text" class="input-text" name="verifyCode" /><i class="yzm-text" id="verifyCodeId">
+                            <canvas id="canvasId" width="45" height="20" style="cursor: pointer;"></canvas></i></aside>
+                    </section>
+                    <p class="wrong-info"></p>
+                    <button type="button" class="submit-btn" id="formBtn">提交</button>
+                </form>
+            </section>
+    </section>
+    <!--登录成功 begin-->
+    <section class="layer-con dn" id="tipSection">
+        <a href="javascript://" class="del-btn" title="关闭"></a>
+        <h2></h2>
+        <p class="succ-p-info"></p>
+    </section>
+</section>
+<!--登录 end-->
 </div>
 
-<div class="console-container">
-    <div class="title"></div>
-    <div class="content" id="contentDiv"></div>
-    <div class="textDiv">
-        <textarea id="contentText"></textarea>
-        <div style="" class="btnDiv">
-            <input type="button" class="btn" id="sendBtn" value="发送" />
-        </div>
-    </div>
-</div>
-<script src="/js/lib/kindeditor/kindeditor-min.js"></script>
-<script src="/js/lib/kindeditor/lang/zh_CN.js"></script>
+<!-- footer end -->
 <script src="/js/lib/socket.io.js"></script>
 <script src="/js/lib/jquery-1.11.0.min.js"></script>
 <script src="/js/util/common.js"></script>

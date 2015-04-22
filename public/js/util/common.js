@@ -60,12 +60,75 @@ var common = {
      */
     encodeHtml:function(str) {
         return str.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\\/g, "");
+    },
+    /**
+     * 格式化去日期（含时间）
+     */
+    formatterDateTime : function(date,splitChar) {
+        if(!splitChar){
+            splitChar='-';
+        }
+        var datetime = date.getFullYear()
+            + splitChar// "年"
+            + ((date.getMonth() + 1) >=10 ? (date.getMonth() + 1) : "0"
+            + (date.getMonth() + 1))
+            + splitChar// "月"
+            + (date.getDate() < 10 ? "0" + date.getDate() : date.getDate())
+            + splitChar
+            + (date.getHours() < 10 ? "0" + date.getHours() : date
+                .getHours())
+            + ":"
+            + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date
+                .getMinutes())
+            + ":"
+            + (date.getSeconds() < 10 ? "0" + date.getSeconds() : date
+                .getSeconds());
+        return datetime;
+    },
+    /**
+     * 毫秒转日期(格式：yyyy-MM-dd HH:mm:ss)
+     */
+    longMsTimeToDateTime : function(time,splitChar) {
+        if(isNaN(time)){
+            return time;
+        }
+        var myDate = new Date(time);
+        return this.formatterDateTime(myDate,splitChar);
+    },
+    /**
+     * 通用ajax方法
+     * @param url
+     * @param params
+     * @param callback
+     * @param async
+     * @returns
+     */
+    getJson:function (url, params, callback,async) {
+        var result = null;
+        $.ajax({
+            url: url,
+            type: "POST",
+            timeout : 100000, //超时时间设置，单位毫秒
+            cache: false,
+            async: async!=undefined?async:false,
+            dataType: "json",
+            data: params,
+            complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
+                if(status=='timeout'){					//超时,status还有success,error等值的情况
+                    alert("请求超时,请重试!");
+                }
+            },
+            success: typeof (callback) == "function" ? callback : function (data) {
+                result = data;
+            },
+            error: function (obj,data) {
+                if (common.isValid(obj.responseText)) {
+                    if (obj.statusText != "OK") alert(obj.responseText);
+                }else{
+                    alert("请求超时,请重试!");
+                }
+            }
+        });
+        return result;
     }
 };
-//导出类
-try {
-    if (module) {
-        module.exports = common;
-    }
-}catch (e){
-}

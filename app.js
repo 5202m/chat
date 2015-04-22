@@ -1,7 +1,7 @@
 /*＃＃＃＃＃＃＃＃＃＃引入所需插件＃＃＃＃＃＃＃＃begin */
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
+var session = require('express-session');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -10,9 +10,8 @@ var mongoose = require('mongoose');
 /*＃＃＃＃＃＃＃＃＃＃引入所需插件＃＃＃＃＃＃＃＃end */
 
 /*＃＃＃＃＃＃＃＃＃＃路由入口设置＃＃＃＃＃＃＃＃begin */
-var webRoutes = require('./routes/web/');//配置同源页面路由
+var webRoutes = require('./routes/web/index');//配置同源页面路由
 var apiChatRoutes = require('./routes/api/chatAPI');//配置聊天室api路由
-
 /*＃＃＃＃＃＃＃＃＃＃引入所需插件＃＃＃＃＃＃＃＃end */
 
 
@@ -39,7 +38,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use(express.static(path.join(__dirname, 'views')));如需要设成静态目录，则这就去掉注释。（备注：设为静态目录，不能动态填充数据）
+//session设置
+app.use(session({
+   secret: 'pm@chat',
+   //name: 'pm@chat',   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
+   cookie: {maxAge: 60000 },  //设置maxAge是80000ms，即60s后session和相应的cookie失效过期
+   resave: false,
+   saveUninitialized: true
+}));
 /*---------------- 外部链接路由的路径 ---------------- begin */
 app.use('/', webRoutes);
 app.use('/api/chat/', apiChatRoutes);

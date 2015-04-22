@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="bin\pm_chat" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="$USER_HOME$/AppData/Roaming/npm/node-supervisor.cmd" path-to-js-file="bin/pm_chat" node-parameters="--debug" working-dir="$PROJECT_DIR$">
+  <configuration default="false" name="bin\pm_chat" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="D:/Program Files/nodejs/node" path-to-js-file="bin/pm_chat" working-dir="$PROJECT_DIR$">
     <envs>
       <env name="DEBUG" value="pm_chat" />
     </envs>
