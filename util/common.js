@@ -70,10 +70,8 @@ var common = {
         if(!req){
             return '';
         }
-        return req.headers['x-forwarded-for'] ||
-        req.connection.remoteAddress ||
-        req.socket.remoteAddress ||
-        req.connection.socket.remoteAddress;
+        return req.headers['x-forwarded-for'] || req.ip || req._remoteAddress ||
+            (req.socket && (req.socket.remoteAddress || (req.socket.socket && req.socket.socket.remoteAddress)));
     }
 };
 //导出类

@@ -11,6 +11,7 @@ var chatOnlineUser = require('../../models/chatOnlineUser');//引入chatOnlineUs
 var userService = require('../../service/userService');//引入userService
 var messageService = require('../../service/messageService');//引入messageService
 var chatService = require('../../service/chatService');//引入chatService
+var logger=require('../../resources/logConf').getLogger('index');//引入log4js
 /**
  * 聊天室页面入口
  */
@@ -22,6 +23,7 @@ router.get('/chat', function(req, res) {
     chatOnlineUser.avatar=req.param("avatar");
     chatOnlineUser.userType=req.param("userType");
     if(common.isBlank(token)||common.isBlank(chatOnlineUser.groupId)||(common.isBlank(chatOnlineUser.userId))){
+        logger.warn('chat->非法访问,ip:'+ common.getClientIp(req));
         res.render('chat/error',{error: '输入参数有误，必须传入token，groupId,userId'});
     }else{
         if(common.isBlank(chatOnlineUser.userType)){
