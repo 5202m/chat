@@ -17,5 +17,6 @@ var chatWebServer = app.listen('3001', function() {
 var chatSocketServerApp=express();
 var chatSocketServer=chatSocketServerApp.listen('3002', function() {
     console.log('Chat socket server running. Listening on port ' + chatSocketServer.address().port);
+    require("../routes/chatServer").start(chatSocketServer);
 });
-//require("../routes/chatServer").start(chatSocketServer);
+

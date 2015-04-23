@@ -9,19 +9,11 @@ var messageService = require('../service/messageService');//引入messageService
  */
 var chatService ={
     socket:null,
+    /**
+     * 初始化
+     */
     init:function(){
         userService.synchGroupInfo();
-        this.initSocket();
-    },
-    /**
-     * 初始化socket
-     */
-    initSocket:function(){
-        var app = require('express')();
-        var server = require('http').Server(app);
-        this.socket = require('socket.io')(server);
-        server.listen(3002);
-        console.log('the socket io is listenering on port 3002');
         this.setSocket();
     },
     /**

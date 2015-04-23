@@ -11,8 +11,6 @@ var chatOnlineUser = require('../../models/chatOnlineUser');//引入chatOnlineUs
 var userService = require('../../service/userService');//引入userService
 var messageService = require('../../service/messageService');//引入messageService
 var chatService = require('../../service/chatService');//引入chatService
-chatService.init();//启动socket
-
 /**
  * 聊天室页面入口
  */
@@ -76,7 +74,7 @@ router.post('/getVerifyCode', function(req, res) {
     for(var i=0;i<4;i++){
         var nd=Math.floor(Math.random()*charCode.length);
         result.push(charCode[nd]);
-    };
+    }
     var code=result.join("");
     req.session.verifyCode=code;
     res.json({code:code});
