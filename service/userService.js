@@ -4,7 +4,7 @@
 var http = require('http');//引入http
 var member = require('../models/member');//引入member数据模型
 var chatGroup = require('../models/chatGroup');//引入chatGroup数据模型
-var constant = require('../constant/constant');//引入constant
+var config = require('../resources/config');//引入配置
 var common = require('../util/common');//引入common类
 var querystring = require('querystring');
 
@@ -242,7 +242,7 @@ var userService = {
      */
     checkClient:function(userInfo,callback){
         //如果是微信，则验证客户是否A客户
-        if(constant.weChatGroupId==userInfo.groupId){
+        if(config.weChatGroupId==userInfo.groupId){
             userService.checkAClient(userInfo,function(result){
                 callback(result);
             });
@@ -265,9 +265,9 @@ var userService = {
             'loginname' :userInfo.accountNo
         });
         var options = {
-            hostname: constant.goldApiHostname,
-            port: constant.goldApiPort,
-            path: constant.getCustomerInfoUrl,
+            hostname: config.goldApiHostname,
+            port: config.goldApiPort,
+            path: config.getCustomerInfoUrl,
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',

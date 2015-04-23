@@ -2,11 +2,13 @@
 var express = require('express');
 var path = require('path');
 var session = require('express-session');
-var logger = require('morgan');
+//var logger = require('morgan');
+var logger=require('./resources/logConf');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var http = require('http');
 var mongoose = require('mongoose');
+var config=require('./resources/config');//资源文件
 /*＃＃＃＃＃＃＃＃＃＃引入所需插件＃＃＃＃＃＃＃＃end */
 
 /*＃＃＃＃＃＃＃＃＃＃路由入口设置＃＃＃＃＃＃＃＃begin */
@@ -33,7 +35,8 @@ app.set( 'view engine', 'html' );
 app.engine('.html',require('ejs').__express);//两个下划线
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-app.use(logger('dev'));
+//app.use(logger('dev'));
+logger.use(app);//配置框架日志输出
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -84,7 +87,7 @@ app.use(function(err, req, res, next) {
 /*＃＃＃＃＃＃＃＃＃＃定义app配置信息＃＃＃＃＃＃＃＃end */
 
 /*＃＃＃＃＃＃＃＃＃＃数据库连接配置＃＃＃＃＃＃＃＃begin */
-mongoose.connect('mongodb://192.168.35.236/cms');
+mongoose.connect(config.dbURL);
 /*＃＃＃＃＃＃＃＃＃＃数据库连接配置＃＃＃＃＃＃＃＃end */
 
 module.exports = app;

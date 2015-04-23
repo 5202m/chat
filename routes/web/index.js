@@ -4,7 +4,7 @@
  */
 var express = require('express');
 var router = express.Router();
-var constant = require('../../constant/constant');//引入constant
+var config = require('../../resources/config');//引入config
 var common = require('../../util/common');//引入common
 var errorMessage = require('../../util/errorMessage');
 var chatOnlineUser = require('../../models/chatOnlineUser');//引入chatOnlineUser对象
@@ -34,7 +34,7 @@ router.get('/chat', function(req, res) {
         }
         chatService.destroyHomeToken(token,function(isTrue){
             if(isTrue) {
-                res.render('chat/index', {socketUrl:constant.socketServerUrl,userInfo: JSON.stringify(chatOnlineUser)});
+                res.render('chat/index', {socketUrl:config.socketServerUrl,userInfo: JSON.stringify(chatOnlineUser)});
             }else{
                 res.render('chat/error',{error: 'token验证失效！'});
             }
