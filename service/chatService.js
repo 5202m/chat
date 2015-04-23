@@ -55,7 +55,7 @@ var chatService ={
                         });
                     }
                 }else{
-                    socket.emit('loadMsg',{fromUser:info,content:{type:'text',value:"参数异常，暂不能发言，请联系管理员！"},rule:true});
+                    socket.emit('loadMsg',{fromUser:info,content:{msgType:'text',value:"参数异常，暂不能发言，请联系管理员！"},rule:true});
                 }
             });
             //断开连接
@@ -78,23 +78,26 @@ var chatService ={
                         userService.verifyRule(groupId,data.content,function(resultVal){
                             if(resultVal){//匹配规则，则按规则逻辑提示
                                 console.log('resultVal:'+resultVal);
-                                socket.emit('sendMsg',{fromUser:userInfo,content:{type:'text',value:resultVal},rule:true});
+                                socket.emit('sendMsg',{fromUser:userInfo,content:{msgType:'text',value:resultVal},rule:true});
                             } else{
+                                //保存聊天数据
+                                messageService.saveMsg(data);
+                                //发送聊天信息
+                                if(data.content.msgType=='img'){
+                                    data.content.maxValue='';
+                                }
                                 for(var i=0;i<sameGroupUserArr.length;i++){
                                     user = sameGroupUserArr[i];
                                     if(user.socket!=null){
                                         user.socket.emit('sendMsg',{fromUser:userInfo,content:data.content});
                                     }
                                 }
-                                //保存聊天数据
-                                messageService.saveMsg(data);
                             }
                         });
                     }else{
                         socket.emit('sendMsg',{isVisitor:true,socketId:socket.id});
                     }
                 });
-
             });
         });
     },

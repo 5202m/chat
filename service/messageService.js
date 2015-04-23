@@ -9,9 +9,25 @@ var messageService ={
      * 从数据库中加载已有的聊天记录
      */
     loadMsg:function(groupId,callback){
-        chatMessage.find().where('groupId').equals(groupId).where('status').equals(1).limit(100).sort({'publishTime':'desc'}).exec(function (err,data) {
+        chatMessage.find().select('userId nickname avatar userType groupId content.msgType content.value content.needMax publishTime').where('groupId').equals(groupId).where('status').equals(1).limit(100).sort({'publishTime':'desc'}).exec(function (err,data) {
             if(!err){
                 callback(data);
+            }
+        });
+    },
+    /**
+     * 加载大图
+     * @param publishTime
+     * @param callback
+     */
+    loadBigImg:function(publishTime,callback){
+        chatMessage.findOne().select('content.maxValue publishTime').where('publishTime').equals(publishTime).exec(function (err,data) {
+            if(!err){
+                if(data) {
+                    callback(data.content.maxValue);
+                }else{
+                    callback(null);
+                }
             }
         });
     },
@@ -20,6 +36,7 @@ var messageService ={
      */
     saveMsg:function(data){
         var userInfo=data.fromUser;
+        var content=data.content;
         var chatMessageModel = new chatMessage({
             _id:null,
             userId:userInfo.userId,
@@ -27,8 +44,12 @@ var messageService ={
             avatar:userInfo.avatar||'',
             userType:userInfo.userType||0,
             groupId:userInfo.groupId,
-            msgType:data.content.type,
-            content:data.content.value,
+            content:{
+                msgType:content.msgType,
+                value:content.value,
+                maxValue:content.maxValue,
+                needMax:content.needMax
+            },
             status:1, //内容状态：0 、禁用 ；1、启动
             publishTime:userInfo.publishTime, //发布日期
             createUser:userInfo.userId,

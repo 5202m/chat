@@ -4,10 +4,12 @@
  */
 var express = require('express');
 var router = express.Router();
+var constant = require('../../constant/constant');//引入constant
 var common = require('../../util/common');//引入common
 var errorMessage = require('../../util/errorMessage');
 var chatOnlineUser = require('../../models/chatOnlineUser');//引入chatOnlineUser对象
 var userService = require('../../service/userService');//引入userService
+var messageService = require('../../service/messageService');//引入messageService
 var chatService = require('../../service/chatService');//引入chatService
 chatService.init();//启动socket
 
@@ -27,9 +29,12 @@ router.get('/chat', function(req, res) {
         if(common.isBlank(chatOnlineUser.userType)){
             chatOnlineUser.userType=0;
         }
+        if(common.isBlank(chatOnlineUser.nickname)){
+            chatOnlineUser.nickname=chatOnlineUser.userId;
+        }
         chatService.destroyHomeToken(token,function(isTrue){
             if(isTrue) {
-                res.render('chat/index', {userInfo: JSON.stringify(chatOnlineUser)});
+                res.render('chat/index', {socketUrl:constant.socketServerUrl,userInfo: JSON.stringify(chatOnlineUser)});
             }else{
                 res.render('chat/error',{error: 'token验证失效！'});
             }
@@ -52,6 +57,7 @@ router.post('/checkClient', function(req, res) {
         if(common.isBlank(req.session.verifyCode) || (common.isValid(req.session.verifyCode) && verifyCode.toLowerCase()!=req.session.verifyCode)){
             res.json(errorMessage.code_1002);
         }else{
+            userInfo.ip=common.getClientIp();
             userService.checkClient(userInfo,function(result){
                 console.log("result.flag:"+result.flag);
                 res.json(result);
@@ -75,5 +81,20 @@ router.post('/getVerifyCode', function(req, res) {
     req.session.verifyCode=code;
     res.json({code:code});
 });
+
+/**
+ * 加载大图数据
+ */
+router.post('/getBigImg', function(req, res) {
+    var publishTime=req.param("publishTime");
+    if(common.isBlank(publishTime)){
+        res.json({});
+    }else {
+        messageService.loadBigImg(publishTime, function (bigImgData) {
+            res.json({value: bigImgData});
+        });
+    }
+});
+
 
 module.exports = router;

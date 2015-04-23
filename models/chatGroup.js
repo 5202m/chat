@@ -20,7 +20,6 @@ var mongoose = require('mongoose')
           _id:{type:String},
           name:{type:String},//名称
           status:{type:Number, default:1}, //状态：0 、禁用 ；1、启动
-          contentRuleIds:{type:String}, //内容规则ids,多个逗号分隔
           valid:{type:Number, default:1}, //是否删除：0 、删除 ；1、正常
           chatRules:[chatRulesSchema]
         });

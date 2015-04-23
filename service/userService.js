@@ -91,7 +91,7 @@ var userService = {
      */
     verifyRule:function(groupId,content,callback){
         var contentVal=content.value;
-        if(content.type!='text'){
+        if(content.msgType!='text'){
             callback(null);
             return;
         }
@@ -149,7 +149,7 @@ var userService = {
      * @param userInfo
      * @param callback
      */
-    createUser:function(userInfo){
+    createUser:function(userInfo,callback){
         member.findOne({'mobilePhone':userInfo.mobilePhone},function(err,row){
                 if(!err && row ){
                     userService.createChatUserGroupInfo(userInfo);
@@ -160,13 +160,25 @@ var userService = {
                         status:1, //内容状态：0 、禁用 ；1、启动
                         valid:1,//有效
                         createUser:userInfo.userId,
-                        createIp:userInfo.createIp,//新增记录的Ip
-                        createDate:new Date()//创建日期
+                        createIp:userInfo.ip,//新增记录的Ip
+                        updateIp:userInfo.ip,//新增记录的Ip
+                        createDate:new Date(),//创建日期
+                        loginPlatform:{
+                            chatUserGroup:[
+                             {  _id:userInfo.groupId,//组id，与聊天室组对应
+                                userId:userInfo.userId,//第三方用户id，对于微信，userId为微信的openId;
+                                onlineStatus: 1, //在线状态：0 、下线 ；1、在线
+                                onlineDate: new Date(),//上线时间
+                                avatar:userInfo.avatar,//头像
+                                nickname:userInfo.nickname,//昵称
+                                accountNo:userInfo.accountNo //账号
+                            }]
+                        }
                     };
                     member.create(memberModel,function(err,count){
                         if(!err && count){
-                            userService.createChatUserGroupInfo(userInfo);
                             console.log('create member success!');
+                            callback(true);
                         }
                     });
                 }
@@ -180,31 +192,12 @@ var userService = {
      */
     createChatUserGroupInfo:function(userInfo,callback){
         var jsonStr={_id:userInfo.groupId,userId:userInfo.userId,onlineStatus:1,onlineDate:new Date(),avatar:userInfo.avatar,nickname:userInfo.nickname};
-        console.log("createChatUserGroupInfo->userInfo:"+JSON.stringify(userInfo));
         member.findOneAndUpdate({'mobilePhone':userInfo.mobilePhone,'loginPlatform.chatUserGroup._id':{$ne:userInfo.groupId}},{'$push':{'loginPlatform.chatUserGroup':jsonStr}},function(err,row){
                 if(!err && row){
                     console.log('create ChatUserGroupInfo!');
                 }
         });
     },
-
-    /**
-     * 更新会员信息
-     */
-    saveChatUserGroupInfo:function(userInfo,callback){
-        var jsonStr={_id:userInfo.groupId,onlineStatus:userInfo.onlineStatus,onlineDate:userInfo.onlineDate,avatar:userInfo.avatar,nickname:userInfo.nickname};
-        member.findOneAndUpdate({'_id':userInfo.userId,'loginPlatform.chatUserGroup._id':{$ne:userInfo.groupId}},{'$push':{'loginPlatform.chatUserGroup':jsonStr}},function(err,row){
-            if(!err && !row){
-                member.findOneAndUpdate({'_id':userInfo.userId,'loginPlatform.chatUserGroup._id':userInfo.groupId},
-                    {'$set':{'loginPlatform.chatUserGroup.$.onlineDate':userInfo.onlineDate,'loginPlatform.chatUserGroup.$.onlineStatus':userInfo.onlineStatus}},function(err){
-                        callback(err);
-                    });
-            }else{
-                callback(err);
-            }
-        });
-    },
-
     /**
      * 更新会员信息
      * 备注：判断是否存在登录信息，不存在则新增，存在则更新
@@ -255,7 +248,9 @@ var userService = {
             });
         }else {
             //其他组别如需要验证，可按需求加入相关方法，该版本默认不做验证，直接记录登录信息
-            userService.createUser(userInfo);
+            userService.createUser(userInfo,function(isOk){
+                callback({flag:0});
+            });
         }
     },
 

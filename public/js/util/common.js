@@ -59,7 +59,7 @@ var common = {
      * @returns html
      */
     encodeHtml:function(str) {
-        return str.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\\/g, "");
+        return (this.isBlank(str)?'':str.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\\/g, ""));
     },
     /**
      * 格式化去日期（含时间）
