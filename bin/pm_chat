@@ -10,7 +10,7 @@ var express = require('express');
 var debug = require('debug')('pm_chat:server');
 // web server start
 var chatWebServer = app.listen('3001', function() {
-    console.log('Chat web server running. Listening on port' + chatWebServer.address().port);
+    console.log('Chat web server running. Listening on port ' + chatWebServer.address().port);
 });
 
 //chat server start
