@@ -2,7 +2,6 @@
 var express = require('express');
 var path = require('path');
 var session = require('express-session');
-//var logger = require('morgan');
 var logger=require('./resources/logConf');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -35,7 +34,6 @@ app.set( 'view engine', 'html' );
 app.engine('.html',require('ejs').__express);//两个下划线
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-//app.use(logger('dev'));
 logger.use(app);//配置框架日志输出
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
