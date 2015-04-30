@@ -1,4 +1,4 @@
-﻿body{font:12px/1.4 microsoft yahei;color:#333;;background:#F1F1F1;-webkit-text-size-adjust:none;-moz-text-size-adjust:none;-ms-text-size-adjust:none;text-size-adjust:none}
+﻿body{overflow:hidden;font:12px/1.4 microsoft yahei;color:#333;;background:#F1F1F1;-webkit-text-size-adjust:none;-moz-text-size-adjust:none;-ms-text-size-adjust:none;text-size-adjust:none}
 body,p,ol,ul,li,h1,h2,h3,h4,h5,h6,dl,dt,dd,pre,input,table,tr,td,button,textarea{margin:0;padding:0}
 ol,ul,li{list-style:none}
 input,button{border:0 none}
@@ -85,7 +85,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 /**---------------开发加入，end----------**/
 
 /* center */
-.wrapper{position:fixed;left:-10px;padding-left:10px;bottom:36px;width:100%;overflow:hidden;overflow-y:scroll;z-index:1}
+.wrapper{position:fixed;left:-10px;padding-left:10px;bottom:36px;width:100%;overflow:hidden;/*overflow-y:scroll;*/z-index:1}
 .pub-top{top:229px}
 .pub-two{top:149px}
 .kaig-icon{float:right;position:relative;margin-top:6px;width:49px;padding-right:48px;height:21px;line-height:21px;font-size:9px;color:#b2b2b2}
@@ -95,7 +95,8 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .on-fon i{float:right;background:#fff}
 .off-fon{background:#fff;border-color:#BDBDBD}
 .off-fon i{float:left;background:#BDBDBD}
-.talk-infobox{padding:0 10px 10px}
+.talk-infobox{padding:0 10px 10px;margin-top:25px;}
+.talk-infobox ul{overflow:hidden;overflow-y: scroll;max-height:700px;margin-bottom: 5px;}
 .talk-infobox li{padding:5px 0}
 .talk-dlbox{font-size:0;width:100%}
 .talk-dlbox dt,.talk-dlbox dd{display:inline-block;font:7px arial;vertical-align:bottom}
@@ -162,4 +163,10 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
     .pub-two{top:166px}
 	.adbox img{width:320px;height:40px}
 	.date-box{background-size:7px 7px}
+    #loginBox{left: 50px;top:4px; }
+    .layer-con{padding:20px 20px 28px 20px;}
 }
+
+/*高度大于介于400-700px时*/
+@media screen and (min-height:400px) and (max-height: 600px){.talk-infobox ul{max-height:320px;}}
+@media screen and (min-height:601px) and (max-height: 800px){.talk-infobox ul{max-height:400px;}}

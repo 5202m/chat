@@ -4,6 +4,7 @@
  * author Alan.wu
  */
 var chat={
+    maxRows:50,//显示的最大条数
     //预定义数据传输对象
     sendObj:{
         fromUser:null,
@@ -45,6 +46,9 @@ var chat={
          */
         $("#top_info label").click(function(){
             chat.setTxtOfNickname($(this).attr("fuserId"),$(this).attr("fnickname"));
+            $(this).html("");
+            $("#top_info").hide();
+            $(".talk-infobox").css("margin-top","25px");
         });
         /**
          * 关闭登录框按钮事件
@@ -95,13 +99,10 @@ var chat={
                 var flag=result.flag;
                 if('wechat'==chat.userInfo.groupId){
                     if(flag==1){//客户记录标志:0（记录不存在）、1（未绑定微信）、2（未入金激活）、3（绑定微信并且已经入金激活）
-                        $("#loginSection").hide();
-                        $("#tipSection h2").html("绑定账号提示");
-                        $("#tipSection .succ-p-info").html('欢迎光临金道贵金属聊天室，绑定金道交易账号，尊享更多专业服务！<a href="http://103.227.194.71/index.php/articles_2931.html" >如何绑定</a>');
-                        $("#tipSection").show();
+                      chat.setWechatTip();
                     }else if(flag==2){
                         $("#loginSection").hide();
-                        $("#tipSection h2").html("非激活账户提示");
+                        $("#tipSection h2").html("提示");
                         $("#tipSection .succ-p-info").html("欢迎光临金道贵金属聊天室，目前发言功能暂仅对激活客户开放，了解更多请咨询金道微信客户！");
                         $("#tipSection").show();
                     }else if(flag==3){
@@ -118,7 +119,7 @@ var chat={
                     $("#tipSection .succ-p-info").html("尊贵的客户：欢迎光临金道贵金属聊天室！");
                     $("#tipSection").show();
                 }
-            },false);
+            },true);
         });
        //输入框事件
         $('#contentText')[0].addEventListener("input", function(e) {
@@ -130,7 +131,12 @@ var chat={
                 $('#sendBtn').hide();
             }
         }, false);
-
+        /**
+         * 隐藏发图片框
+         */
+        $('#contentText').focus(function(){
+            $('.add-img').hide();
+        })
         /**
          * 输入框退格事件
          */
@@ -171,46 +177,74 @@ var chat={
         });
         //添加按钮事件
         $('#addBtn').click(function(){
-            $(this).next().toggle();
+            $('.add-img').show();
         });
         //图片选择事件
         $("#fileBtn")[0].addEventListener("change", function () {
-            var img = this.files[0];
-            // 判断是否图片
-            if(!img){
-                return false;
-            }
-            // 判断图片格式
-            if(!(img.type.indexOf('image')==0 && img.type && /\.(?:jpg|png|gif)$/.test(img.name)) ){
-                alert('图片只能是jpg,gif,png');
-                return false ;
-            }
-            //加载文件转成URL所需的文件流
-            var reader = new FileReader();
-            reader.readAsDataURL(img);
-            reader.onload = function(e){
-                chat.sendObj.fromUser=chat.userInfo;
-                chat.sendObj.content.msgType='img';
-                var base64Data=e.target.result;
-                chat.zipImg(200,base64Data,50,function(minImg,needMax){//压缩缩略图
-                    chat.sendObj.content.value=minImg;
-                    chat.sendObj.content.needMax=(needMax?1:0);
-                    console.log("minImg:" + minImg);
-                    if(needMax) {
-                        chat.zipImg(0, base64Data, 50, function (maxImg) {//压缩大图
-                            chat.sendObj.content.maxValue = maxImg;
-                            console.log("maxImg:" + chat.sendObj.content.maxValue);
-                            chat.socket.emit('sendMsg', chat.sendObj);//发送图片
-                            chat.clearSendObj();
-                        });
-                    }else{
-                        chat.socket.emit('sendMsg', chat.sendObj);//发送图片
-                        chat.clearSendObj();
+            var _this=this;
+            chat.checkSendAuthority(function(isOk){
+                if(isOk){
+                    var img = _this.files[0];
+                    // 判断是否图片
+                    if(!img){
+                        return false;
                     }
-                });
-                console.log("onload file:"+e.target.result);
-            };
+                    // 判断图片格式
+                    if(!(img.type.indexOf('image')==0 && img.type && /\.(?:jpg|png|gif)$/.test(img.name)) ){
+                        alert('图片只能是jpg,gif,png');
+                        return false ;
+                    }
+                    //加载文件转成URL所需的文件流
+                    var reader = new FileReader();
+                    reader.readAsDataURL(img);
+                    reader.onload = function(e){
+                        chat.sendObj.fromUser=chat.userInfo;
+                        chat.sendObj.content.msgType='img';
+                        var base64Data=e.target.result;
+                        chat.zipImg(200,base64Data,50,function(minImg,needMax){//压缩缩略图
+                            chat.sendObj.content.value=minImg;
+                            chat.sendObj.content.needMax=(needMax?1:0);
+                            console.log("minImg:" + minImg);
+                            if(needMax) {
+                                chat.zipImg(0, base64Data, 50, function (maxImg) {//压缩大图
+                                    chat.sendObj.content.maxValue = maxImg;
+                                    console.log("maxImg:" + chat.sendObj.content.maxValue);
+                                    chat.socket.emit('sendMsg', chat.sendObj);//发送图片
+                                    chat.clearSendObj();
+                                });
+                            }else{
+                                chat.socket.emit('sendMsg', chat.sendObj);//发送图片
+                                chat.clearSendObj();
+                            }
+                        });
+                        console.log("onload file:"+e.target.result);
+                    };
+                }
+                $('.add-img').hide();
+            });
         }, false);
+    },
+    /**
+     * 检查发送权限
+     */
+    checkSendAuthority:function(callback){
+        common.getJson("/checkSendAuthority",{userId:chat.userInfo.userId,groupId:chat.userInfo.groupId},function(result){
+            if(result.isVisitor) {
+                chat.openLoginBox();
+                callback(false);
+            }else{
+                callback(true);
+            }
+        },true);
+    },
+    /**
+     * 设置微信组提示
+     */
+    setWechatTip:function(){
+        $("#loginSection").hide();
+        $("#tipSection h2").html("提示");
+        $("#tipSection .succ-p-info").html('您的微信还未绑定金道交易账号，绑定金道交易账号，尊享更多专业服务！<a href="http://103.227.194.71/index.php/articles_2931.html" >如何绑定</a>');
+        $("#tipSection").show();
     },
     clearSendObj:function(){
         chat.sendObj.fromUser=null;
@@ -323,44 +357,58 @@ var chat={
     },
 
     /**
+     * 打开登录框
+     */
+    openLoginBox:function(){
+        $("#loginForm input[type=hidden]").each(function(){
+            $(this).val(chat.userInfo[this.name]);
+        });
+        chat.refreshVerifyCode();
+        $('#loginBox').slideDown();
+    },
+    /**
      * 填充内容
      * @param data
      */
     setContent:function(data,isLoadData){
         if(data.isVisitor){
-           $("#loginForm input[type=hidden]").each(function(){
-               $(this).val(chat.userInfo[this.name]);
-           });
-            chat.refreshVerifyCode();
-            $('#loginBox').slideDown();
+            chat.openLoginBox();
             return;
         }
         if(data.rule){
            alert("系统提示："+data.content.value);
            return;
         }
+        if(data.isShowWechatTip){
+            chat.setWechatTip();
+            $('#loginBox').slideDown();
+        }
         var li=chat.formatContentHtml(data);
         var ul=$("#content_ul");
         ul.append(li);
-        while (ul.length > 100) {
+        while (ul.length > chat.maxRows) {
             ul.eq(1).remove();
         }
-        ul.scrollTop[0]=ul[0].scrollHeight;
-        var dtObj=$('#'+data.fromUser.publishTime+' .dt-send-name');
+        $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
+        var fromUser=data.fromUser;
+        //内容@事件设置
+        var dtObj=$('#'+fromUser.publishTime+' .talk-content .dt-send-name');
         if(dtObj.length>0) {
             var tId=dtObj.attr("tId");
-            if(!isLoadData && tId==chat.userInfo.userId && data.fromUser.userId!=chat.userInfo.userId){//如果是@自己，则在顶部浮动层显示
+            if(!isLoadData && tId==chat.userInfo.userId && fromUser.userId!=chat.userInfo.userId){//如果是@自己，则在顶部浮动层显示
                 $("#top_info").show();
-                $("#top_info label").html(data.fromUser.nickname+':'+dtObj.html()).attr("tId",tId).attr("fnickname",data.fromUser.nickname).attr("fuserId",data.fromUser.userId);
+                $(".talk-infobox").css("margin-top",(25+$("#top_info").height())+"px");
+                $("#top_info label").html(fromUser.nickname+':'+dtObj.html()).attr("tId",tId).attr("fnickname",fromUser.nickname).attr("fuserId",fromUser.userId);
             }
             dtObj.click(function () {
-                var name=dtObj.text(),next=dtObj.next();
-                if(next.attr("tid")=="nickname"){
-                    name=next.text();
-                }
+                var name=dtObj.text();
                 chat.setTxtOfNickname(dtObj.attr("tId"),name);
             });
         }
+        //设计师@事件设置
+        $('#'+fromUser.publishTime+' .talk-dlbox .dt-send-name').click(function () {
+            chat.setTxtOfNickname($(this).attr("tId"),$(this).next().text());
+        });
     },
 
     /**
@@ -389,7 +437,7 @@ var chat={
             pHtml=common.encodeHtml(content.value);
         }
         var html='<li class="'+liClass+' clearfix" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'">'+
-                 '<dl class="talk-dlbox">'+dtHtml+'<dt tId="nickname">'+nickname+'</dt><dd>'+common.longMsTimeToDateTime(fromUser.publishTime/1000,'.')+'</dd></dl>'+
+                 '<dl class="talk-dlbox">'+dtHtml+'<dt>'+nickname+'</dt><dd>'+common.longMsTimeToDateTime(fromUser.publishTime/1000,'.')+'</dd></dl>'+
                  '<section class="talk-content "'+contentClass+'><seciton class="arrow-outer jian-position1"><seciton class="arrow-shadow"></seciton></seciton><p>'+
                   pHtml+'</p></section></li>';
         return html;
@@ -403,6 +451,10 @@ var chat={
         this.socket.on('connect',function(){
             console.log('connected to server'+chat.userInfo);
             chat.socket.emit('login',chat.userInfo);
+        });
+        //登录成功返回信息(包括在线人数）
+        this.socket.on('loginResult',function(data){
+             $("#onlineUserNum").text(data.onlineUserNum);
         });
         //断开连接
         this.socket.on('disconnect',function(){
@@ -431,7 +483,6 @@ var chat={
                             groupId: row.groupId,
                             publishTime: row.publishTime//发布日期
                         };
-                        console.log("maxValue:"+row.content.value);
                         chat.setContent({fromUser: fromUser,content:row.content},true);
                     }
                 }else{
@@ -441,9 +492,5 @@ var chat={
         });
     }
 };
-// 初始化
-$(function() {
-    chat.init();
-});
 
  

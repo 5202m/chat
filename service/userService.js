@@ -45,7 +45,7 @@ var userService = {
      * 移除在线用户
      * @param socketId
      */
-    removeOnlineUser:function(socketId){
+    removeOnlineUser:function(socketId,callback){
         //从缓存中移除
         var groupArr=userService.cacheUserArr;
         var subArr=null,obj=null;
@@ -71,6 +71,9 @@ var userService = {
                     console.log("update member status success!");
                 }
             });
+            callback(userInfo.groupId);
+        }else{
+            callback(null);
         }
     },
     /**
@@ -115,7 +118,7 @@ var userService = {
                 if((isNullPeriod || isPeriod) && type!='speak_not_allowed' && common.isValid(beforeVal)){
                     beforeVal=beforeVal.replace(/(,|，)$/,'');//去掉结尾的逗号
                     beforeVal=beforeVal.replace(/,|，/g,'|');//逗号替换成|，便于统一使用正则表达式
-                    if(type=='keyword_filter'){//过滤关键字
+                    if(type=='keyword_filter'||type=='url_filter'){//过滤关键字或过滤链接
                         if(eval('/'+beforeVal+'/').test(contentVal)){
                             resultTip.push(ruleArr[i].afterRuleTips);
                             break;
@@ -171,14 +174,18 @@ var userService = {
                                 onlineDate: new Date(),//上线时间
                                 avatar:userInfo.avatar,//头像
                                 nickname:userInfo.nickname,//昵称
-                                accountNo:userInfo.accountNo //账号
+                                accountNo:userInfo.accountNo, //账号
+                                isBindWechat:userInfo.isBindWechat,//是否绑定微信
+                                intoChatTimes:1
                             }]
                         }
                     };
                     member.create(memberModel,function(err,count){
                         if(!err && count){
                             console.log('create member success!');
-                            callback(true);
+                            if(callback){
+                                callback(true);
+                            }
                         }
                     });
                 }
@@ -225,13 +232,32 @@ var userService = {
     },
 
     /**
+     * 更新微信用户组绑定微信的信息
+     * @param groupId
+     * @param userId
+     * @param isBindWechat
+     * @param callback
+     */
+    updateChatUserGroupWechat:function(groupId,userId,isBindWechat,intoChatTimes){
+        member.findOneAndUpdate({'loginPlatform.chatUserGroup.userId':userId,'loginPlatform.chatUserGroup._id':groupId},
+            {'$set':{'loginPlatform.chatUserGroup.$.isBindWechat':isBindWechat,'loginPlatform.chatUserGroup.$.intoChatTimes':intoChatTimes}},function(err,row){
+                if(!err && row){
+                    console.log("updateChatUserGroupWechat->update success!");
+                }
+            });
+    },
+    /**
      * 通过userId及组别检测用户是否已经登录过
      * @param userId
      * @param groupId
      */
     checkUserLogin:function(userId,groupId,callback){
-        member.find().where('loginPlatform.chatUserGroup.userId').equals(userId).where('loginPlatform.chatUserGroup._id').equals(groupId).count(function (err, count){
-            callback((!err && count!=0));
+        member.findOne().select("loginPlatform.chatUserGroup.$").where('loginPlatform.chatUserGroup.userId').equals(userId).where('loginPlatform.chatUserGroup._id').equals(groupId).exec(function (err, row){
+            if(!err && row){
+                callback(row);
+           }else{
+                callback(null);
+            }
         });
     },
 
@@ -243,7 +269,7 @@ var userService = {
     checkClient:function(userInfo,callback){
         //如果是微信，则验证客户是否A客户
         if(config.weChatGroupId==userInfo.groupId){
-            userService.checkAClient(userInfo,function(result){
+            userService.checkAClient(userInfo,false,function(result){
                 callback(result);
             });
         }else {
@@ -259,7 +285,7 @@ var userService = {
      * 备注：目前只是微信组聊天室客户发言时需检测
      * @param userInfo
      */
-    checkAClient:function(userInfo,callback){
+    checkAClient:function(userInfo,isCheckBindWechat,callback){
         var flagResult={flag:0};//客户记录标志:0（记录不存在）、1（未绑定微信）、2（未入金激活）、3（绑定微信并且已经入金激活）
         var postData = querystring.stringify({
             'loginname' :userInfo.accountNo
@@ -285,16 +311,24 @@ var userService = {
                     var allData = JSON.parse(tmpData);
                     if (allData.code == 'SUCCESS') {
                         var result = allData.result;
-                        if (result.mobilePhone.indexOf(userInfo.mobilePhone)==-1) {
-                            flagResult.flag = 0;//没有对应记录
-                        } else if (common.isBlank(result.weichatAccountNo)) {
-                            flagResult.flag = 1;//未绑定微信
-                        } else if (result.accountStatus != 'A') {
-                            flagResult.flag = 2;//未入金激活
-                        } else {
-                            flagResult.flag = 3;//绑定微信并且已经入金激活
-                            //验证通过，成为聊天室会员，记录信息
-                            userService.createUser(userInfo);
+                        if(!isCheckBindWechat){
+                            if (result.mobilePhone.indexOf(userInfo.mobilePhone)==-1) {
+                                flagResult.flag = 0;//没有对应记录
+                            }  else if (result.accountStatus != 'A') {
+                                flagResult.flag = 2;//未入金激活
+                            } else if (result.isBindWeichat!=1) {
+                                flagResult.flag = 1;//未绑定微信
+                                //验证通过，成为聊天室会员，记录信息
+                                userInfo.isBindWechat=false;
+                                userService.createUser(userInfo);
+                            }else {
+                                flagResult.flag = 3;//绑定微信并且已经入金激活
+                                //验证通过，成为聊天室会员，记录信息
+                                userInfo.isBindWechat=true;
+                                userService.createUser(userInfo);
+                            }
+                        }else if (result.isBindWeichat==1){
+                            flagResult.flag = 5;//绑定微信
                         }
                     } else {
                         flagResult.flag = 0;//没有对应记录

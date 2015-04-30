@@ -4,19 +4,6 @@
 var mongoose = require('mongoose')
     , Schema = mongoose.Schema
     , ObjectId = Schema.ObjectId
-    ,chatUserGroupSchema = new Schema({//聊天室用户组别Schema
-            _id:String,//组id，与聊天室组对应
-            userId:String,//第三方用户id，对于微信，userId为微信的openId;
-            onlineStatus: {type:Number, default:1}, //在线状态：0 、下线 ；1、在线
-            onlineDate: Date,//上线时间
-            avatar:String,//头像
-            nickname:String,//昵称
-            accountNo:String //账号
-     })
-    ,loginPlatformSchema = new Schema({//登录平台Schema
-         chatUserGroup : [chatUserGroupSchema]
-    })
-    ,loginPlatformModel=mongoose.model('loginPlatform',loginPlatformSchema,"loginPlatform")
     ,memberSchema = new Schema({//会员Schema
         _id:String,
         mobilePhone: String ,
@@ -34,7 +21,9 @@ var mongoose = require('mongoose')
                 onlineDate: Date,//上线时间
                 avatar:String,//头像
                 nickname:String,//昵称
-                accountNo:String //账号
+                accountNo:String, //账号
+                isBindWechat:Boolean, //是否绑定微信
+                intoChatTimes:{type:Number, default:0}//进入聊天室次数
                 }]
         }
    });

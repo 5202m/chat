@@ -5,11 +5,12 @@ var chatMessage = require('../models/chatMessage');//引入chatMessage数据模�
  * author Alan.wu
  */
 var messageService ={
+    maxRows:50,
     /**
      * 从数据库中加载已有的聊天记录
      */
     loadMsg:function(groupId,callback){
-        chatMessage.find().select('userId nickname avatar userType groupId content.msgType content.value content.needMax publishTime').where('groupId').equals(groupId).where('status').equals(1).limit(100).sort({'publishTime':'desc'}).exec(function (err,data) {
+        chatMessage.find().select('userId nickname avatar userType groupId content.msgType content.value content.needMax publishTime').where('groupId').equals(groupId).where('status').equals(1).limit(this.maxRows).sort({'publishTime':'desc'}).exec(function (err,data) {
             if(!err){
                 callback(data);
             }

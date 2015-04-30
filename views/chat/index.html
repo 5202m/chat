@@ -10,13 +10,14 @@
 </head>
 <body>
 <div id="body">
+<input type="hidden" id="onlineUserNum"/>
 <header id="header">
     <aside class="clearfix">
         <section class="ss-tk-info" id="top_info"><label></label><i id="close_top_btn"></i></section>
         <article class="kaig-icon">只看分析师<span class="kg-stadus off-fon" id="readSet"><i></i></span></article>
     </aside>
 </header>
-<section >
+<section id="content_div">
   <article class="talk-infobox">
     <ul id="content_ul"></ul>
   </article>
@@ -80,12 +81,11 @@
 </section>
 <!--登录 end-->
 </div>
-
 <!-- footer end -->
 <script src="/js/lib/socket.io.js"></script>
 <script src="/js/lib/jquery-1.11.0.min.js"></script>
-<script src="/js/util/common.js"></script>
-<script src="/js/chat.js"></script>
+<script src="/js/util/common.js?t=<%=new Date()%>"></script>
+<script src="/js/chat.js?t=<%=new Date()%>"></script>
 <script>
     chat.userInfo=JSON.parse('<%= userInfo %>'.replace(/&#34;/g,'"'));
     chat.socketUrl='<%= socketUrl %>';

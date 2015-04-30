@@ -2,8 +2,7 @@
  * 页面请求控制类
  * Created by Alan.wu on 2015/3/4.
  */
-var express = require('express');
-var router = express.Router();
+var router =  require('express').Router();
 var config = require('../../resources/config');//引入config
 var common = require('../../util/common');//引入common
 var errorMessage = require('../../util/errorMessage');
@@ -11,6 +10,7 @@ var chatOnlineUser = require('../../models/chatOnlineUser');//引入chatOnlineUs
 var userService = require('../../service/userService');//引入userService
 var messageService = require('../../service/messageService');//引入messageService
 var chatService = require('../../service/chatService');//引入chatService
+var pmApiService = require('../../service/pmApiService');//引入pmApiService
 var logger=require('../../resources/logConf').getLogger('index');//引入log4js
 /**
  * 聊天室页面入口
@@ -34,7 +34,21 @@ router.get('/chat', function(req, res) {
         }
         chatService.destroyHomeToken(token,function(isTrue){
             if(isTrue) {
-                res.render('chat/index', {socketUrl:config.socketServerUrl,userInfo: JSON.stringify(chatOnlineUser)});
+                var obj=null;//输出参数
+                if(chatOnlineUser.groupId==config.weChatGroupId){
+                    obj={
+                        userInfoObj:chatOnlineUser,
+                        web24kPriceUrl:(config.pmApiUrl+'/common/get24kPrice'),
+                        socketUrl:config.socketServerUrl,
+                        userInfo: JSON.stringify(chatOnlineUser)
+                    };
+                }else{
+                    obj={
+                        socketUrl:config.socketServerUrl,
+                        userInfo: JSON.stringify(chatOnlineUser)
+                    };
+                }
+                res.render(config.chatIndexUrl[chatOnlineUser.groupId],obj);
             }else{
                 res.render('chat/error',{error: 'token验证失效！'});
             }
@@ -83,6 +97,23 @@ router.post('/getVerifyCode', function(req, res) {
 });
 
 /**
+ * 检查发送权限
+ */
+router.post('/checkSendAuthority', function(req, res) {
+    var userId=req.param("userId"),groupId=req.param("groupId"),result={isVisitor:true};
+    if(common.isBlank(userId)||common.isBlank(groupId)){
+        res.json(result);
+    }else {
+        userService.checkUserLogin(userId,groupId,function(row) {
+            if (row) {
+                result.isVisitor=false;
+            }
+            res.json(result);
+        });
+    }
+});
+
+/**
  * 加载大图数据
  */
 router.post('/getBigImg', function(req, res) {
@@ -96,5 +127,22 @@ router.post('/getBigImg', function(req, res) {
     }
 });
 
+/**
+ * 提取公告信息
+ */
+router.get('/getBulletinList', function(req, res) {
+    pmApiService.getBulletinList('zh',1,20,function(data){
+        res.json(JSON.parse(data));
+    });
+});
+
+/**
+ * 提取广告信息
+ */
+router.get('/getAdvertisement', function(req, res) {
+    pmApiService.getAdvertisement(function(data){
+        res.json(JSON.parse(data));
+    });
+});
 
 module.exports = router;
