@@ -27,7 +27,7 @@ var common = {
      * @returns {boolean}
      */
     isBlank:function(v) {
-        return v == undefined || v == null || this.trim(v) == '';
+        return v == undefined || v == null ||v ==''|| this.trim(v) == '';
     },
     /**
      * 非空判断
@@ -43,12 +43,11 @@ var common = {
      * @returns {XML|string|void}
      */
     trim:function(val){
-        return val.replace(/(^\s*)|(\s*$)/g, "");
+        return val.toString().replace(/(^\s*)|(\s*$)/g, "");
     },
     /**
      * HTML代码转String
      * @param html
-     * @returns html
      */
     escapeHtml:function(html) {
         return document.createElement('div').appendChild(document.createTextNode(html)).parentNode.innerHTML.replace(/"/g, '\\"');
@@ -56,10 +55,9 @@ var common = {
     /**
      * String转HTML
      * @param str
-     * @returns html
      */
     encodeHtml:function(str) {
-        return str.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\\/g, "");
+        return this.isBlank(str)?'': (str.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/\\/g, ""));
     },
     /**
      * 提取ip

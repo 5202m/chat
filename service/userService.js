@@ -3,6 +3,7 @@
  */
 var http = require('http');//引入http
 var member = require('../models/member');//引入member数据模型
+var boUser = require('../models/boUser');//引入boUser数据模型
 var chatGroup = require('../models/chatGroup');//引入chatGroup数据模型
 var config = require('../resources/config');//引入配置
 var common = require('../util/common');//引入common类
@@ -146,7 +147,30 @@ var userService = {
             callback(members);
         });
     },
-
+    /**
+     * 检查后台进入聊天室的用户，是则直接登录聊天室
+     */
+    checkSystemUserInfo:function(userInfo,callback){
+        var result={userType:0,isOk:false,isSys:true,nickName:''};
+        var newUserInfo=null;
+        if(config.fromPlatform.pm_mis==userInfo.fromPlatform){
+            newUserInfo={accountNo:userInfo.userId,userId:''};
+        }
+        boUser.findOne({'userNo':userInfo.accountNo,'telephone':userInfo.mobilePhone},function(err,row) {
+            if(!err && row){
+                newUserInfo.mobilePhone=userInfo.mobilePhone=row.telephone;
+                newUserInfo.nickname=userInfo.nickname=row.userName;
+                newUserInfo.userType=newUserInfo.userType=config.roleUserType[row.role.roleNo];
+                result.isOk=true;
+                result.nickName=row.userName+"("+row.roleName+")";
+                if(common.isBlank(result.userType)){
+                    console.error("checkBackUserInfo->userType has error,please the config.roleUserType");
+                }
+                userService.createUser(newUserInfo, function (isOk) {});
+            }
+            callback(result);
+        });
+    },
     /**
      * 新增用户信息
      * @param userInfo
@@ -269,9 +293,16 @@ var userService = {
     checkClient:function(userInfo,callback){
         //如果是微信，则验证客户是否A客户
         if(config.weChatGroupId==userInfo.groupId){
-            userService.checkAClient(userInfo,false,function(result){
-                callback(result);
-            });
+            //系统用户，检查是否已经存在
+            if(eval("/^"+config.systemUserPrefix+'/').test(userInfo.userId)){
+                userService.checkSystemUserInfo(userInfo,function(result){
+                    callback(result);
+                });
+            }else{
+                userService.checkAClient(userInfo,false,function(result){
+                    callback(result);
+                });
+            }
         }else {
             //其他组别如需要验证，可按需求加入相关方法，该版本默认不做验证，直接记录登录信息
             userService.createUser(userInfo,function(isOk){

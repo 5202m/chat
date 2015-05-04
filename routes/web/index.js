@@ -3,6 +3,7 @@
  * Created by Alan.wu on 2015/3/4.
  */
 var router =  require('express').Router();
+var async = require('async');//引入async
 var config = require('../../resources/config');//引入config
 var common = require('../../util/common');//引入common
 var errorMessage = require('../../util/errorMessage');
@@ -21,7 +22,8 @@ router.get('/chat', function(req, res) {
     chatOnlineUser.groupId=req.param("groupId");
     chatOnlineUser.nickname=req.param("nickname");
     chatOnlineUser.avatar=req.param("avatar");
-    chatOnlineUser.userType=req.param("userType");
+    chatOnlineUser.mobilePhone=req.param("mobilePhone");
+    chatOnlineUser.fromPlatform=req.param("fromPlatform");//是否后台进入
     if(common.isBlank(token)||common.isBlank(chatOnlineUser.groupId)||(common.isBlank(chatOnlineUser.userId))){
         logger.warn('chat->非法访问,ip:'+ common.getClientIp(req));
         res.render('chat/error',{error: '输入参数有误，必须传入token，groupId,userId'});
@@ -34,25 +36,62 @@ router.get('/chat', function(req, res) {
         }
         chatService.destroyHomeToken(token,function(isTrue){
             if(isTrue) {
-                var obj=null;//输出参数
-                if(chatOnlineUser.groupId==config.weChatGroupId){
-                    obj={
-                        userInfoObj:chatOnlineUser,
-                        web24kPriceUrl:(config.pmApiUrl+'/common/get24kPrice'),
-                        socketUrl:config.socketServerUrl,
-                        userInfo: JSON.stringify(chatOnlineUser)
-                    };
-                }else{
-                    obj={
-                        socketUrl:config.socketServerUrl,
-                        userInfo: JSON.stringify(chatOnlineUser)
-                    };
-                }
-                res.render(config.chatIndexUrl[chatOnlineUser.groupId],obj);
+                async.parallel({
+                        checkResult: function(callback){
+                            if(common.isValid(chatOnlineUser.fromPlatform)&&config.fromPlatform.pm_mis==chatOnlineUser.fromPlatform){//检查系统用户
+                                userService.checkSystemUserInfo(chatOnlineUser,function(result){
+                                    callback(null,result);
+                                });
+                            }else{
+                                callback(null,null);
+                            }
+                        },
+                        returnObj: function(callback){
+                            var obj=null;//输出参数
+                            if(chatOnlineUser.groupId==config.weChatGroupId){
+                                obj={
+                                    userInfoObj:chatOnlineUser,
+                                    web24kPriceUrl:(config.pmApiUrl+'/common/get24kPrice'),
+                                    socketUrl:config.socketServerUrl,
+                                    userInfo: JSON.stringify(chatOnlineUser)
+                                };
+                            }else{
+                                obj={
+                                    socketUrl:config.socketServerUrl,
+                                    userInfo: JSON.stringify(chatOnlineUser)
+                                };
+                            }
+                            callback(null,obj);
+                        }
+                    },
+                    function(err, results) {
+                        if(results.checkResult!=null && !results.checkResult.isOk){
+                            res.render('chat/error',{error: '您缺少访问权限，请联系管理员！'});
+                        }else{
+                            var obj=results.returnObj;
+                            if(results.checkResult!=null){
+                                obj.userType=results.checkResult.userType;
+                            }
+                            res.render(config.chatIndexUrl[chatOnlineUser.groupId],obj);
+                        }
+                    });
             }else{
                 res.render('chat/error',{error: 'token验证失效！'});
             }
         });
+    }
+});
+
+/**
+ * 上传数据
+ */
+router.post('/uploadData', function(req, res) {
+    var data = req.body;
+    if(data!=null){
+        chatService.acceptMsg(data,null);
+        res.json({success:false});
+    }else{
+        res.json({});
     }
 });
 

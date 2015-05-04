@@ -63,59 +63,82 @@ var chatService ={
             });
             //信息传输
             socket.on('sendMsg',function(data){
-                var userInfo=data.fromUser,groupId=userInfo.groupId;
-                //如果首次发言需要登录验证(备注：微信取openId为userId，即验证openId）
-                userService.checkUserLogin(userInfo.userId,groupId,function(row){
-                    if(row){
-                        var sameGroupUserArr=userService.cacheUserArr[groupId];
-                        var currentDate=new Date();
-                        userInfo.publishTime=currentDate.getTime()*1000+currentDate.getMilliseconds();//产生唯一的id
-                        //验证规则
-                        userService.verifyRule(groupId,data.content,function(resultVal){
-                            if(resultVal){//匹配规则，则按规则逻辑提示
-                                console.log('resultVal:'+resultVal);
-                                socket.emit('sendMsg',{fromUser:userInfo,content:{msgType:'text',value:resultVal},rule:true});
-                            } else{
-                                //保存聊天数据
-                                messageService.saveMsg(data);
-                                //发送聊天信息
-                                if(data.content.msgType=='img'){
-                                    data.content.maxValue='';
-                                }
-                                var userInfoTmp=null,user=null,subRow=null,isBindWechatTmp=false;
-                                for(var i=0;i<sameGroupUserArr.length;i++){
-                                    user = sameGroupUserArr[i];
-                                    userInfoTmp=user.userInfo;
-                                    if(user.socket!=null){
-                                        //微信组用户如果没有绑定微信，进入聊天室小于5次，则弹出提示语
-                                        if(userInfo.userId==userInfoTmp.userId && config.weChatGroupId==userInfoTmp.groupId && userInfoTmp.isNewIntoChat) {
-                                            subRow = row.loginPlatform.chatUserGroup[0];
-                                            isBindWechatTmp = subRow.isBindWechat;
-                                            if (!isBindWechatTmp && subRow.intoChatTimes <= 5) {//没有绑定，小于5次，则调用goldApi检查是否绑定状态
-                                                userService.checkAClient({accountNo: subRow.accountNo}, true, function (checkResult) {
-                                                    if (checkResult.flag == 5) {//已经绑定微信，更新状态
-                                                        isBindWechatTmp = true;
-                                                    }
-                                                    userService.updateChatUserGroupWechat(groupId,userInfo.userId,isBindWechatTmp, (subRow.intoChatTimes + 1));
-                                                    user.socket.emit('sendMsg',{fromUser:userInfo,content:data.content,isShowWechatTip:true});
-                                                });
-                                            }else{
-                                                user.socket.emit('sendMsg',{fromUser:userInfo,content:data.content});
-                                            }
-                                        }else{
-                                            user.socket.emit('sendMsg',{fromUser:userInfo,content:data.content});
-                                        }
-                                        userInfoTmp.isNewIntoChat=false;
-                                    }
-                                }
-                            }
-                        });
-                    }else{
-                        socket.emit('sendMsg',{isVisitor:true});
-                    }
-                });
+                chatService.acceptMsg(data);
             });
         });
+    },
+    /**
+     * 接收信息数据
+     */
+    acceptMsg:function(data,socket){
+        var userInfo=data.fromUser,groupId=userInfo.groupId;
+        //如果首次发言需要登录验证(备注：微信取openId为userId，即验证openId）
+        userService.checkUserLogin(userInfo.userId,groupId,function(row){
+            if(row){
+                var sameGroupUserArr=userService.cacheUserArr[groupId];
+                var currentDate = new Date();
+                userInfo.publishTime = currentDate.getTime() * 1000 + currentDate.getMilliseconds();//产生唯一的id
+                //验证规则
+                userService.verifyRule(groupId,data.content,function(resultVal){
+                    if(resultVal){//匹配规则，则按规则逻辑提示
+                        console.log('resultVal:'+resultVal);
+                        (socket||chatService.getSocket(groupId,userInfo.userId)).emit('sendMsg',{fromUser:userInfo,content:{msgType:'text',value:resultVal},rule:true});
+                    } else{
+                        //保存聊天数据
+                        messageService.saveMsg(data);
+                        //发送聊天信息
+                        if(data.content.msgType=='img'){
+                            data.content.maxValue='';
+                        }
+                        var userInfoTmp=null,user=null,subRow=null,isBindWechatTmp=false,sendInfo=null;
+                        for(var i=0;i<sameGroupUserArr.length;i++){
+                            user = sameGroupUserArr[i];
+                            userInfoTmp=user.userInfo;
+                            if(user.socket!=null){
+                                if(userInfo.userId==userInfoTmp.userId){//如果是自己，清空内容，告知客户端发送成功即可
+                                    sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true};
+                                    //微信组用户如果没有绑定微信，进入聊天室小于5次，则弹出提示语
+                                    if(config.weChatGroupId==userInfoTmp.groupId && userInfoTmp.isNewIntoChat) {
+                                        subRow = row.loginPlatform.chatUserGroup[0];
+                                        isBindWechatTmp = subRow.isBindWechat;
+                                        if (!isBindWechatTmp && subRow.intoChatTimes <= 5) {//没有绑定，小于5次，则调用goldApi检查是否绑定状态
+                                            userService.checkAClient({accountNo: subRow.accountNo}, true, function (checkResult) {
+                                                if (checkResult.flag == 5) {//已经绑定微信，更新状态
+                                                    isBindWechatTmp = true;
+                                                }
+                                                userService.updateChatUserGroupWechat(groupId,userInfo.userId,isBindWechatTmp, (subRow.intoChatTimes + 1));
+                                                sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,isShowWechatTip:true};
+                                            });
+                                        }
+                                    }
+                                    user.socket.emit('sendMsg',sendInfo);
+                                }else{
+                                    user.socket.emit('sendMsg',{fromUser:userInfo,content:data.content});
+                                }
+                                userInfoTmp.isNewIntoChat=false;
+                            }
+                        }
+                    }
+                });
+            }else{
+                (socket||chatService.getSocket(groupId,userInfo.userId)).emit('sendMsg',{isVisitor:true,uiId:data.uiId});
+            }
+        });
+    },
+    /**
+     * 根据组id、用户id找对应socket
+     * @param groupId
+     * @param userId
+     */
+    getSocket:function(groupId,userId){
+        var groupUserArr=userService.cacheUserArr[groupId],user=null;
+        for(var i=0;i<groupUserArr.length;i++) {
+            user = groupUserArr[i];
+            if (user.userInfo.userId == userId) {
+                return user.socket;
+            }
+        }
+        return null;
     },
     /**
      * 销毁访问主页的token

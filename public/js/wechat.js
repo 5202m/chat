@@ -36,8 +36,9 @@ var wechat={
     },
     setEvent : function(){
         $('.adbox s').click(function(){
-            $('#adBox').fadeOut();
+            $("#adBox").hide();
             $('.wrapper').addClass('pub-two');
+            $('.fxs-ony-box').addClass('fxs-top');
         });
         $('#contentText').focus(function(){
             $('.wrapper').removeClass('pub-top pub-two').addClass('pub-three');
@@ -108,9 +109,10 @@ var wechat={
         $(".gg-h-tt").html(title);
         $(".gg-time").html(date);
         $(".anounce-detail").html(content);
-        $("#bulletinBox").slideDown();
+        $("#bulletinBoxCloseBtn").unbind("click");
+        common.showBox("#bulletinBox");
         $("#bulletinBoxCloseBtn").click(function(){
-            $("#bulletinBox").slideUp();
+            common.hideBox("#bulletinBox");
         });
     },
     /**

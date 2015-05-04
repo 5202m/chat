@@ -11,7 +11,8 @@
         /**---------------开发加入，begin----------**/
         .dt-txt-name{ position: absolute;top: 8px;left: 5px; }
         .dt-send-name{ color:#093491; margin-right:5px; cursor:pointer;  }
-        .big-img{ width:100%; height:100%;position: absolute;display: none; z-index: 2000;background-color: #FFF;border: 1px solid #CACBC7;border-radius: 5px;}
+        .big-img{text-align:center;vertical-align:middle;width:100%; height:100%;position:absolute;display: none; z-index: 2000;background-color: #FFF;border: 1px solid #CACBC7;border-radius: 5px;}
+        .big-img img{display:block;margin:0 auto;}
         /**---------------开发加入，end----------**/
     </style>
 </head>
@@ -87,7 +88,13 @@
 </footer>
 <!-- footer end -->
 </div>
-<div id="showImgDiv" class="big-img"><img src="" width="100%" height="100%" alt="预览大图"/></div>
+<div id="showImgDiv" class="big-img">
+    <p><img src=""/></p>
+    <p><!-- loading begin -->
+        <section class="loading-box"></section>
+        <!-- loading end -->
+    </p>
+</div>
 <section class="layer-out dn" id="loginBox">
     <section class="layer-con" id="loginSection">
         <a href="javascript://" class="del-btn" title="关闭"></a>
@@ -123,25 +130,25 @@
     </section>
 </section>
 <!--登录 end-->
-<!--公告详情页 begin-->
 <section class="layer-out dn" id="bulletinBox">
     <section class="layer-con">
         <a href="javascript://" class="del-btn" title="关闭" id="bulletinBoxCloseBtn"></a>
-        <h3 class="gg-h-tt"></h3>
-        <p class="gg-time"></p>
         <article class="anounce-detail">
         </article>
     </section>
 </section>
-<!-- loading begin -->
-<section class="loading-box dn"></section>
-<!-- loading end -->
+<!--公告详情页 begin-->
+<!-- shadow begin -->
+<section class="layer-shadow dn"></section>
+<!-- shadow end -->
 
 <script src="/js/lib/socket.io.js"></script>
 <script src="/js/lib/jquery-1.11.0.min.js"></script>
+<script src="/js/lib/jQuery.autoIMG.min.js"></script>
 <script src="/js/util/common.js?t=<%=new Date()%>"></script>
 <script src="/js/chat.js?t=<%=new Date()%>"></script>
 <script src="/js/wechat.js?t=<%=new Date()%>"></script>
+
 <script>
     wechat.priceUrl='<%= web24kPriceUrl %>';
     chat.userInfo=JSON.parse('<%= userInfo %>'.replace(/&#34;/g,'"'));

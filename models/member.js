@@ -23,6 +23,7 @@ var mongoose = require('mongoose')
                 nickname:String,//昵称
                 accountNo:String, //账号
                 isBindWechat:Boolean, //是否绑定微信
+                userType:{type:Number, default:0},//区分系统用户还是会员，0表示会员，1表示管理员，2、分析师
                 intoChatTimes:{type:Number, default:0}//进入聊天室次数
                 }]
         }
