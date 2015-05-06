@@ -4,6 +4,7 @@
  */
 var router =  require('express').Router();
 var async = require('async');//引入async
+var constant = require('../../constant/constant');//引入constant
 var config = require('../../resources/config');//引入config
 var common = require('../../util/common');//引入common
 var errorMessage = require('../../util/errorMessage');
@@ -38,7 +39,7 @@ router.get('/chat', function(req, res) {
             if(isTrue) {
                 async.parallel({
                         checkResult: function(callback){
-                            if(common.isValid(chatOnlineUser.fromPlatform)&&config.fromPlatform.pm_mis==chatOnlineUser.fromPlatform){//检查系统用户
+                            if(common.isValid(chatOnlineUser.fromPlatform)&&constant.fromPlatform.pm_mis==chatOnlineUser.fromPlatform){//检查系统用户
                                 userService.checkSystemUserInfo(chatOnlineUser,function(result){
                                     callback(null,result);
                                 });
@@ -47,19 +48,9 @@ router.get('/chat', function(req, res) {
                             }
                         },
                         returnObj: function(callback){
-                            var obj=null;//输出参数
-                            if(chatOnlineUser.groupId==config.weChatGroupId){
-                                obj={
-                                    userInfoObj:chatOnlineUser,
-                                    web24kPriceUrl:(config.pmApiUrl+'/common/get24kPrice'),
-                                    socketUrl:config.socketServerUrl,
-                                    userInfo: JSON.stringify(chatOnlineUser)
-                                };
-                            }else{
-                                obj={
-                                    socketUrl:config.socketServerUrl,
-                                    userInfo: JSON.stringify(chatOnlineUser)
-                                };
+                            var obj={};//输出参数
+                            if(chatOnlineUser.groupId==constant.weChatGroupId){
+                                obj={web24kPriceUrl:(config.pmApiUrl+'/common/get24kPrice')};
                             }
                             callback(null,obj);
                         }
@@ -70,9 +61,13 @@ router.get('/chat', function(req, res) {
                         }else{
                             var obj=results.returnObj;
                             if(results.checkResult!=null){
-                                obj.userType=results.checkResult.userType;
+                                chatOnlineUser.userType=results.checkResult.userType;
+                                chatOnlineUser.nickname=results.checkResult.nickname;
+                                chatOnlineUser.accountNo= chatOnlineUser.userId;//后台进入的用户，账户与userId保持一致，保存到member表时，userId不保存
                             }
-                            res.render(config.chatIndexUrl[chatOnlineUser.groupId],obj);
+                            obj.socketUrl=config.socketServerUrl;
+                            obj.userInfo=JSON.stringify(chatOnlineUser);
+                            res.render(constant.chatIndexUrl[chatOnlineUser.groupId],obj);
                         }
                     });
             }else{
@@ -112,7 +107,7 @@ router.post('/checkClient', function(req, res) {
         }else{
             userInfo.ip=common.getClientIp();
             userService.checkClient(userInfo,function(result){
-                console.log("result.flag:"+result.flag);
+                console.log("result:"+JSON.stringify(result));
                 res.json(result);
             });
         }
@@ -139,11 +134,11 @@ router.post('/getVerifyCode', function(req, res) {
  * 检查发送权限
  */
 router.post('/checkSendAuthority', function(req, res) {
-    var userId=req.param("userId"),groupId=req.param("groupId"),result={isVisitor:true};
+    var userId=req.param("userId"),groupId=req.param("groupId"),fromPlatform=req.param("fromPlatform"),accountNo=req.param("accountNo"),result={isVisitor:true};
     if(common.isBlank(userId)||common.isBlank(groupId)){
         res.json(result);
     }else {
-        userService.checkUserLogin(userId,groupId,function(row) {
+        userService.checkUserLogin({userId:userId,groupId:groupId,fromPlatform:fromPlatform,accountNo:accountNo},function(row) {
             if (row) {
                 result.isVisitor=false;
             }
@@ -155,13 +150,20 @@ router.post('/checkSendAuthority', function(req, res) {
 /**
  * 加载大图数据
  */
-router.post('/getBigImg', function(req, res) {
-    var publishTime=req.param("publishTime");
+router.get('/getBigImg', function(req, res) {
+    var publishTime=req.param("publishTime"),userId=req.param("userId");
     if(common.isBlank(publishTime)){
-        res.json({});
+        res.end("");
     }else {
-        messageService.loadBigImg(publishTime, function (bigImgData) {
-            res.json({value: bigImgData});
+        messageService.loadBigImg(userId,publishTime, function (bigImgData) {
+            if(common.isBlank(bigImgData)){
+                res.end("");
+            }else{
+                var base64Data = bigImgData.replace(/^data:image.*base64,/,"");
+                res.writeHead(200, {"Content-Type": "image/jpeg"});
+                //res.write(,'binary');
+                res.end(new Buffer(base64Data,'base64'));
+            }
         });
     }
 });
@@ -171,7 +173,7 @@ router.post('/getBigImg', function(req, res) {
  */
 router.get('/getBulletinList', function(req, res) {
     pmApiService.getBulletinList('zh',1,20,function(data){
-        res.json(JSON.parse(data));
+        res.json(data?JSON.parse(data):{});
     });
 });
 
@@ -180,7 +182,7 @@ router.get('/getBulletinList', function(req, res) {
  */
 router.get('/getAdvertisement', function(req, res) {
     pmApiService.getAdvertisement(function(data){
-        res.json(JSON.parse(data));
+        res.json(data?JSON.parse(data):{});
     });
 });
 

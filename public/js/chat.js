@@ -23,7 +23,7 @@ var chat={
      */
     getUiId:function(){
         var currentDate=new Date();
-        return currentDate.getTime()*1000+currentDate.getMilliseconds();
+        return currentDate.getTime()+"_isMeSend";
     },
     refreshVerifyCode:function(){
         common.getJson("/getVerifyCode",null,function(data){
@@ -65,13 +65,6 @@ var chat={
         $("#close_top_btn").click(function(){
             $("#top_info").hide();
         });
-        /**
-         * 点击大图
-         */
-        $("#showImgDiv").click(function(){
-            $("#showImgDiv").hide();
-            $("#body").show();
-        });
          /**
          * 输入框blur事件
          */
@@ -103,6 +96,7 @@ var chat={
                 if('wechat'==chat.userInfo.groupId){
                     if(result.isSys){
                         if(result.isOk){
+                            chat.userInfo.nickname=result.nickname;
                             $("#loginSection").hide();
                             $("#tipSection h2").html("验证成功");
                             $("#tipSection .succ-p-info").html("尊贵的客户：欢迎光临金道贵金属聊天室！");
@@ -216,9 +210,9 @@ var chat={
                     reader.onload = function(e){
                         var sendObj={uiId:uiId,fromUser:chat.userInfo,content:{msgType:chat.msgType.img,value:'',needMax:0,maxValue:''}};
                         var base64Data=e.target.result;
-                        $("#"+uiId+" img").attr("src",base64Data);
                         chat.zipImg(sendObj,150,base64Data,80,function(result,value){//压缩缩略图
                             result.content.value=value;
+                            $("#"+result.uiId+" img").attr("src",value);
                             if(result.content.needMax==1) {
                                 chat.zipImg(result,0, base64Data, 50, function (newResult,bigValue) {//压缩大图
                                     newResult.content.maxValue=bigValue;
@@ -243,7 +237,7 @@ var chat={
      * @param data
      */
     dataUpload:function(data){
-        // 发送到后端
+        //上传图片到后端
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/uploadData');
         xhr.addEventListener("progress", function(e){
@@ -280,17 +274,12 @@ var chat={
                 var h = image.height;
                 if ((h > max) || (w > max)) {     //计算比例
                     sendObj.content.needMax=1;
-                    var hRatio=0;
-                    var wRatio=0;
-                    var ratio = 1;
-                    wRatio = max / w;
-                    hRatio = max / h;
-                    if(wRatio<1 || hRatio<1){
-                        ratio = (wRatio<=hRatio?wRatio:hRatio);
-                    }
-                    if (ratio<1){
-                        w = w * ratio;
-                        h = h * ratio;
+                    if(h>max && w<=max){
+                        w= (max/h)*w;
+                        h = max;
+                    }else{
+                        h = (max / w) * h;
+                        w = max;
                     }
                     image.height = h;
                     image.width = w;
@@ -322,7 +311,6 @@ var chat={
                 if(li.attr("mType")==chat.msgType.img){
                     var sendObj={uiId:uiIdTmp,fromUser:chat.userInfo,content:{msgType:chat.msgType.img,value:'',needMax:0,maxValue:''}};
                     var base64Data=$(".talk-content p img",li).attr("src");
-                    console.log("base64Data:"+base64Data);
                     chat.zipImg(sendObj,150,base64Data,50,function(result,value){//压缩缩略图
                         result.content.value=value;
                         if(result.content.needMax==1) {
@@ -345,7 +333,7 @@ var chat={
      * 检查发送权限
      */
     checkSendAuthority:function(callback){
-        common.getJson("/checkSendAuthority",{userId:chat.userInfo.userId,groupId:chat.userInfo.groupId},function(result){
+        common.getJson("/checkSendAuthority",{accountNo:chat.userInfo.accountNo,userId:chat.userInfo.userId,groupId:chat.userInfo.groupId,fromPlatform:chat.userInfo.fromPlatform},function(result){
             if(result.isVisitor) {
                 chat.openLoginBox();
                 callback(false);
@@ -377,22 +365,16 @@ var chat={
      * 显示大图
      */
     showBigImg:function(_this,needMax){
-        $("#showImgDiv img").attr("src","");
-        $("#body").hide();
-        $("#showImgDiv").show();
-        $(".loading-box").show();
         if(needMax){
-            common.getJson("/getBigImg",{publishTime:$(_this).parents("li").attr("id")},function(result){
-                $("#showImgDiv img").attr("src",result.value);
-                $('#showImgDiv p').autoIMG();
-                $(".loading-box").hide();
-            },true,function(){
-                $(".loading-box").hide();
+            $.get('/getBigImg',{publishTime:$(_this).parents("li").attr("id")},function(data){
+                $.swipebox([
+                    { href:data},
+                ]);
             });
         }else{
-            $("#showImgDiv img").attr("src",$(_this).attr("src"));
-            $('#showImgDiv p').autoIMG();
-            $(".loading-box").hide();
+            $.swipebox([
+                { href:$(_this).attr("src")},
+            ]);
         }
     },
     /**
@@ -457,6 +439,12 @@ var chat={
         },60000);
     },
     /**
+     * 格式发布日期
+     */
+    formatPublishTime:function(time){
+        return common.isBlank(time)?'':common.longMsTimeToDateTime(Number(time.replace(/_.+/g,"")),'.');
+    },
+    /**
      * 填充内容
      * @param data
      */
@@ -478,13 +466,20 @@ var chat={
         if(isMeSend){//发送，并检查状态
             fromUser.publishTime=data.uiId;
             chat.timeOutSend(data.uiId,true);//一分钟后检查是否发送成功，不成功提示重发
-            $('#'+data.uiId+' p').autoIMG();
         }
         if(!isMeSend && chat.userInfo.userId==fromUser.userId && data.serverSuccess){
             $('#'+data.uiId+' .img-loading,#'+data.uiId+' .img-load-gan').remove();
             $('#'+data.uiId+' .shadow-box,#'+data.uiId+' .shadow-conut').remove();
             $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
-            $('#'+data.uiId+' dd[tId=time]').html(common.longMsTimeToDateTime(fromUser.publishTime/1000,'.'));
+            $('#'+data.uiId+' dd[tId=time]').html(chat.formatPublishTime(fromUser.publishTime));
+            //设置看大图的url
+            if(data.content.msgType==chat.msgType.img){
+                var liObj=$('#'+fromUser.publishTime+' .talk-content p');
+                var url=data.content.needMax?'/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:liObj.find("a img").attr("src");
+                liObj.find('a[class=swipebox]').attr("href",url);
+                //上传成功后可以点击查看
+                $('.swipebox').swipebox();
+            }
              return;
         }
         var li=chat.formatContentHtml(data,isMeSend);
@@ -538,13 +533,17 @@ var chat={
             nickname=fromUser.userId;
         }
         if(content.msgType==chat.msgType.img){
-            contentClass='talk-img';
-            pHtml='<img src="'+content.value+'" width=150 height=150 alt="图片"  onclick="chat.showBigImg(this,'+content.needMax+');"/>'+loadImgHtml;
+            contentClass='talk-img';/* /getBigImg?publishTime='+fromUser.publishTime+'  onclick="chat.showBigImg(this,'+content.needMax+');"*/
+            if(content.needMax){
+                pHtml='<a href="/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" class="swipebox" ><img src="'+content.value+'" alt="图片"/></a>'+loadImgHtml;
+            }else{
+                pHtml='<a href="'+content.value+'" class="swipebox" ><img src="'+content.value+'" alt="图片" /></a>'+loadImgHtml;
+            }
         }else{
             pHtml=common.encodeHtml(content.value);
         }
         var html='<li class="'+liClass+' clearfix" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" >'+
-                 '<dl class="talk-dlbox">'+dtHtml+'<dt>'+nickname+'</dt><dd tId="time">'+common.longMsTimeToDateTime(fromUser.publishTime/1000,'.')+'</dd></dl>'+
+                 '<dl class="talk-dlbox">'+dtHtml+'<dt>'+nickname+'</dt><dd tId="time">'+chat.formatPublishTime(fromUser.publishTime)+'</dd></dl>'+
                  '<section class="talk-content "'+contentClass+'><seciton class="arrow-outer jian-position1"><seciton class="arrow-shadow"></seciton></seciton>'+loadHtml+'<p>'+pHtml+'</p></section></li>';
         return html;
     },
@@ -573,6 +572,9 @@ var chat={
         //信息传输
         this.socket.on('sendMsg',function(data){
             chat.setContent(data,false,false);
+            if(data.content && data.content.msgType==chat.msgType.img){
+                $('.swipebox').swipebox();
+            }
         });
         //信息传输
         this.socket.on('loadMsg',function(data){
@@ -594,6 +596,7 @@ var chat={
                     chat.setContent({fromUser: fromUser,content:row.content},false,true);
                 }
             }
+            $('.swipebox').swipebox();
         });
     }
 };

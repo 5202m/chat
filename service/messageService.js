@@ -21,14 +21,12 @@ var messageService ={
      * @param publishTime
      * @param callback
      */
-    loadBigImg:function(publishTime,callback){
-        chatMessage.findOne().select('content.maxValue publishTime').where('publishTime').equals(publishTime).exec(function (err,data) {
-            if(!err){
-                if(data) {
-                    callback(data.content.maxValue);
-                }else{
-                    callback(null);
-                }
+    loadBigImg:function(userId,publishTime,callback){//{'content.maxValue':1}
+        chatMessage.findOne({userId:userId,publishTime:publishTime},{'content.maxValue':1},function (err,data) {
+            if(!err && data) {
+                callback(data.content.maxValue);
+            }else{
+                callback('');
             }
         });
     },

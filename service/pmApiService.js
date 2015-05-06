@@ -24,7 +24,7 @@ var pmApiService = {
                  callback(data);
              }else{
                  logger.error("getBulletinList>>>error:"+err);
-                 callback({});
+                 callback(null);
              }
          });
      },
@@ -37,7 +37,7 @@ var pmApiService = {
                 callback(data);
             }else{
                 logger.error("getBulletinList>>>error:"+err);
-                callback({});
+                callback(null);
             }
         });
     }

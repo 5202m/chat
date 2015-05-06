@@ -70,6 +70,9 @@ var common = {
         }
         return req.headers['x-forwarded-for'] || req.ip || req._remoteAddress ||
             (req.socket && (req.socket.remoteAddress || (req.socket.socket && req.socket.socket.remoteAddress)));
+    },
+    urlReg:function(){
+        return eval('/http:\/\/[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/');
     }
 };
 //导出类

@@ -1,6 +1,6 @@
 var token = require('../models/token');//引入token数据模型
 var common = require('../util/common');//引入common类
-var config = require('../resources/config');//引入配置
+var constant = require('../constant/constant');//引入constant
 var userService = require('../service/userService');//引入userService服务类
 var messageService = require('../service/messageService');//引入messageService服务类
 /**
@@ -73,11 +73,11 @@ var chatService ={
     acceptMsg:function(data,socket){
         var userInfo=data.fromUser,groupId=userInfo.groupId;
         //如果首次发言需要登录验证(备注：微信取openId为userId，即验证openId）
-        userService.checkUserLogin(userInfo.userId,groupId,function(row){
+        userService.checkUserLogin(userInfo,function(row){
             if(row){
                 var sameGroupUserArr=userService.cacheUserArr[groupId];
                 var currentDate = new Date();
-                userInfo.publishTime = currentDate.getTime() * 1000 + currentDate.getMilliseconds();//产生唯一的id
+                userInfo.publishTime = currentDate.getTime()+"_"+process.hrtime()[1];//产生唯一的id
                 //验证规则
                 userService.verifyRule(groupId,data.content,function(resultVal){
                     if(resultVal){//匹配规则，则按规则逻辑提示
@@ -96,9 +96,9 @@ var chatService ={
                             userInfoTmp=user.userInfo;
                             if(user.socket!=null){
                                 if(userInfo.userId==userInfoTmp.userId){//如果是自己，清空内容，告知客户端发送成功即可
-                                    sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true};
+                                    sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}};
                                     //微信组用户如果没有绑定微信，进入聊天室小于5次，则弹出提示语
-                                    if(config.weChatGroupId==userInfoTmp.groupId && userInfoTmp.isNewIntoChat) {
+                                    if(constant.weChatGroupId==userInfoTmp.groupId && userInfoTmp.isNewIntoChat && constant.fromPlatform.pm_mis!=userInfo.fromPlatform) {
                                         subRow = row.loginPlatform.chatUserGroup[0];
                                         isBindWechatTmp = subRow.isBindWechat;
                                         if (!isBindWechatTmp && subRow.intoChatTimes <= 5) {//没有绑定，小于5次，则调用goldApi检查是否绑定状态
@@ -107,7 +107,7 @@ var chatService ={
                                                     isBindWechatTmp = true;
                                                 }
                                                 userService.updateChatUserGroupWechat(groupId,userInfo.userId,isBindWechatTmp, (subRow.intoChatTimes + 1));
-                                                sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,isShowWechatTip:true};
+                                                sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,isShowWechatTip:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}};
                                             });
                                         }
                                     }
@@ -149,7 +149,7 @@ var chatService ={
             if(err!=null||row==null){
                 callback(false);
             }else{
-                //row.remove();
+                row.remove();
                 callback(true);
             }
         });

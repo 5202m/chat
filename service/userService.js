@@ -6,6 +6,7 @@ var member = require('../models/member');//引入member数据模型
 var boUser = require('../models/boUser');//引入boUser数据模型
 var chatGroup = require('../models/chatGroup');//引入chatGroup数据模型
 var config = require('../resources/config');//引入配置
+var constant = require('../constant/constant');//引入constant
 var common = require('../util/common');//引入common类
 var querystring = require('querystring');
 
@@ -102,6 +103,7 @@ var userService = {
         chatGroup.findById(groupId,function (err,row) {
             var ruleArr=row.chatRules,resultTip=[],beforeVal='',type='';
             var periodStartDate= 0,periodEndDate= 0,currentTime= 0;
+            var urlArr=[];
             //先检查禁止发言的规则
             for(var i in ruleArr){
                 beforeVal=ruleArr[i].beforeRuleVal;
@@ -119,11 +121,14 @@ var userService = {
                 if((isNullPeriod || isPeriod) && type!='speak_not_allowed' && common.isValid(beforeVal)){
                     beforeVal=beforeVal.replace(/(,|，)$/,'');//去掉结尾的逗号
                     beforeVal=beforeVal.replace(/,|，/g,'|');//逗号替换成|，便于统一使用正则表达式
-                    if(type=='keyword_filter'||type=='url_filter'){//过滤关键字或过滤链接
+                    if(type=='keyword_filter'){//过滤关键字或过滤链接
                         if(eval('/'+beforeVal+'/').test(contentVal)){
                             resultTip.push(ruleArr[i].afterRuleTips);
                             break;
                         }
+                    }
+                    if(type=='url_allowed'){//除该连接外其他连接会屏蔽
+                        urlArr.push(beforeVal);
                     }
                     if(type=='keyword_replace'){//替换关键字
                         if(eval('/'+beforeVal+'/').test(contentVal)){
@@ -131,6 +136,13 @@ var userService = {
                             resultTip.push(ruleArr[i].afterRuleTips);
                         }
                     }
+                }
+            }
+            if(urlArr.length>0 && common.urlReg().test(contentVal)){
+                var val=urlArr.join("|");
+                if(!eval('/'+val+'/').test(contentVal)){
+                    resultTip={};
+                    resultTip.push('链接无效！');
                 }
             }
             callback(resultTip.join(";"));
@@ -151,24 +163,32 @@ var userService = {
      * 检查后台进入聊天室的用户，是则直接登录聊天室
      */
     checkSystemUserInfo:function(userInfo,callback){
-        var result={userType:0,isOk:false,isSys:true,nickName:''};
-        var newUserInfo=null;
-        if(config.fromPlatform.pm_mis==userInfo.fromPlatform){
-            newUserInfo={accountNo:userInfo.userId,userId:''};
+        var result={userType:0,isOk:false,isSys:true,nickname:''};
+        var newUserInfo={groupId:userInfo.groupId,accountNo:userInfo.accountNo,userId:userInfo.userId,mobilePhone:userInfo.mobilePhone};
+        if(constant.fromPlatform.pm_mis==userInfo.fromPlatform){
+            newUserInfo.accountNo=userInfo.userId;
+            newUserInfo.userId='';
         }
-        boUser.findOne({'userNo':userInfo.accountNo,'telephone':userInfo.mobilePhone},function(err,row) {
+        boUser.findOne({'userNo':newUserInfo.accountNo,'telephone':newUserInfo.mobilePhone},function(err,row) {
             if(!err && row){
-                newUserInfo.mobilePhone=userInfo.mobilePhone=row.telephone;
-                newUserInfo.nickname=userInfo.nickname=row.userName;
-                newUserInfo.userType=newUserInfo.userType=config.roleUserType[row.role.roleNo];
                 result.isOk=true;
-                result.nickName=row.userName+"("+row.roleName+")";
+                result.userType=newUserInfo.userType=userInfo.userType=constant.roleUserType[row.role.roleNo];
+                result.nickname=userInfo.nickname=newUserInfo.nickname=row.userName+"("+row.role.roleName+")";
                 if(common.isBlank(result.userType)){
-                    console.error("checkBackUserInfo->userType has error,please the config.roleUserType");
+                    console.error("checkBackUserInfo->userType has error,please the constant.roleUserType");
                 }
-                userService.createUser(newUserInfo, function (isOk) {});
+                userService.createUser(newUserInfo, function (isOk) {
+                    if(!isOk){
+                        userService.updateUserGroupByAccountNo(newUserInfo,function(isOk){
+                            callback(result);
+                        });
+                    }else{
+                        callback(result);
+                    }
+                });
+            }else{
+                callback(result);
             }
-            callback(result);
         });
     },
     /**
@@ -180,6 +200,7 @@ var userService = {
         member.findOne({'mobilePhone':userInfo.mobilePhone},function(err,row){
                 if(!err && row ){
                     userService.createChatUserGroupInfo(userInfo);
+                    callback(false);
                 }else{
                     var memberModel = {
                         _id:null,
@@ -199,17 +220,16 @@ var userService = {
                                 avatar:userInfo.avatar,//头像
                                 nickname:userInfo.nickname,//昵称
                                 accountNo:userInfo.accountNo, //账号
+                                userType:userInfo.userType, //用户类型
                                 isBindWechat:userInfo.isBindWechat,//是否绑定微信
                                 intoChatTimes:1
                             }]
                         }
                     };
                     member.create(memberModel,function(err,count){
-                        if(!err && count){
-                            console.log('create member success!');
-                            if(callback){
-                                callback(true);
-                            }
+                        console.log('create member success!');
+                        if(callback){
+                            callback(!err && count);
                         }
                     });
                 }
@@ -246,6 +266,24 @@ var userService = {
     },
 
     /**
+     * 根据accountNo更新会员用户组
+     * 备注：判断是否存在登录信息，存在则更新
+     * @param userInfo
+     * @param callback
+     */
+    updateUserGroupByAccountNo:function(userInfo,callback){
+        //存在则更新上线状态及上线时间
+        member.findOneAndUpdate({'mobilePhone':userInfo.mobilePhone,'loginPlatform.chatUserGroup.accountNo':userInfo.accountNo,'loginPlatform.chatUserGroup._id':userInfo.groupId},
+            {'$set':{'loginPlatform.chatUserGroup.$.onlineDate':new Date(),
+                      'loginPlatform.chatUserGroup.$.onlineStatus':1,
+                      'loginPlatform.chatUserGroup.$.userId':userInfo.userId
+            }},function(err,row){
+                callback(!err && row);
+                console.log("updateUserGroupByAccountNo->update info!");
+            });
+    },
+
+    /**
      *下线更新会员状态
      */
     updateChatUserGroupStatus:function(userInfo,chatStatus,callback){
@@ -272,17 +310,26 @@ var userService = {
     },
     /**
      * 通过userId及组别检测用户是否已经登录过
-     * @param userId
-     * @param groupId
+     * @param userInfo
      */
-    checkUserLogin:function(userId,groupId,callback){
-        member.findOne().select("loginPlatform.chatUserGroup.$").where('loginPlatform.chatUserGroup.userId').equals(userId).where('loginPlatform.chatUserGroup._id').equals(groupId).exec(function (err, row){
-            if(!err && row){
-                callback(row);
-           }else{
-                callback(null);
-            }
-        });
+    checkUserLogin:function(userInfo,callback){
+        if(constant.fromPlatform.pm_mis==userInfo.fromPlatform){
+            member.findOne().select("loginPlatform.chatUserGroup.$").where('loginPlatform.chatUserGroup.accountNo').equals(userInfo.accountNo).where('loginPlatform.chatUserGroup._id').equals(userInfo.groupId).exec(function (err, row){
+                if(!err && row){
+                    callback(row);
+                }else{
+                    callback(null);
+                }
+            });
+        }else{
+            member.findOne().select("loginPlatform.chatUserGroup.$").where('loginPlatform.chatUserGroup.userId').equals(userInfo.userId).where('loginPlatform.chatUserGroup._id').equals(userInfo.groupId).exec(function (err, row){
+                if(!err && row){
+                    callback(row);
+                }else{
+                    callback(null);
+                }
+            });
+        }
     },
 
 
@@ -292,9 +339,10 @@ var userService = {
      */
     checkClient:function(userInfo,callback){
         //如果是微信，则验证客户是否A客户
-        if(config.weChatGroupId==userInfo.groupId){
+        if(constant.weChatGroupId==userInfo.groupId){
             //系统用户，检查是否已经存在
-            if(eval("/^"+config.systemUserPrefix+'/').test(userInfo.userId)){
+            if(eval("/^"+constant.systemUserPrefix+'/').test(userInfo.accountNo)){
+                userInfo.accountNo=userInfo.accountNo.replace(constant.systemUserPrefix,"");
                 userService.checkSystemUserInfo(userInfo,function(result){
                     callback(result);
                 });

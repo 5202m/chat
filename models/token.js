@@ -6,7 +6,7 @@ var mongoose = require('mongoose')
     , ObjectId = Schema.ObjectId
     ,tokenSchema = new Schema({//tokenSchema
             _id:ObjectId,
-            value:String, //token值
+            value:{type:String,index:true}, //token值
             beginTime:{type:Number, default:0},//开始时间
             endTime:{type:Number, default:0},//结束时间
             createDate: Date //创建时间

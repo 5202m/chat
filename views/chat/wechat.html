@@ -6,7 +6,8 @@
     <meta name="keywords" content="微信聊天室" />
     <meta name="description" content="微信聊天室" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
-    <link href="/css/wechat.css" type="text/css" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/swipebox.min.css">
+    <link type="text/css" rel="stylesheet" href="/css/wechat.css"/>
     <style type="text/css">
         /**---------------开发加入，begin----------**/
         .dt-txt-name{ position: absolute;top: 8px;left: 5px; }
@@ -17,15 +18,14 @@
     </style>
 </head>
 <body>
-<div id="body">
 <!-- header begin -->
 <header id="header">
     <section class="cop-info clearfix">
         <h1 id="logo" class="fl"><a href="http://m.24k.hk" class="hide-t">金道贵金属</a></h1>
         <p class="online-count fl">在线人数<span id="onlineUserNum"></span></p>
         <aside class="user-intr fr">
-            <span class="user-img"><img src="<%= userInfoObj.avatar%>" width="20" height="20" alt="头像" /></span>
-            <span class="user-name"><%= userInfoObj.nickname%></span>
+            <span class="user-img"><img src="" width="20" height="20" alt="头像" /></span>
+            <span class="user-name"></span>
         </aside>
     </section>
     <section class="date-box">
@@ -87,14 +87,6 @@
     </article>
 </footer>
 <!-- footer end -->
-</div>
-<div id="showImgDiv" class="big-img">
-    <p><img src=""/></p>
-    <p><!-- loading begin -->
-        <section class="loading-box"></section>
-        <!-- loading end -->
-    </p>
-</div>
 <section class="layer-out dn" id="loginBox">
     <section class="layer-con" id="loginSection">
         <a href="javascript://" class="del-btn" title="关闭"></a>
@@ -104,6 +96,7 @@
                 <input type="hidden"  name="userId"/>
                 <input type="hidden"  name="groupId"/>
                 <input type="hidden"  name="nickname"/>
+                <input type="hidden"  name="fromPlatform"/>
                 <section class="form-part-a clearfix">
                     <label class="fl">账　号：</label>
                     <aside class="form-inp"><input type="text" class="input-text" name="accountNo" /></aside>
@@ -141,10 +134,9 @@
 <!-- shadow begin -->
 <section class="layer-shadow dn"></section>
 <!-- shadow end -->
-
-<script src="/js/lib/socket.io.js"></script>
 <script src="/js/lib/jquery-1.11.0.min.js"></script>
-<script src="/js/lib/jQuery.autoIMG.min.js"></script>
+<script src="/js/lib/jquery.swipebox.min.js"></script>
+<script src="/js/lib/socket.io.js"></script>
 <script src="/js/util/common.js?t=<%=new Date()%>"></script>
 <script src="/js/chat.js?t=<%=new Date()%>"></script>
 <script src="/js/wechat.js?t=<%=new Date()%>"></script>

@@ -6,6 +6,7 @@ var wechat={
     priceUrl:'',
     init:function(){
         chat.init();
+        this.setPageUserInfo();
         this.setPrice();
         this.setAdvertisement();
         this.setBulletin();
@@ -13,6 +14,13 @@ var wechat={
         this.scrollBulletin();
         window.setTimeout("wechat.fnSmall()",10000);	// 10秒以后自动隐藏广告栏
         setInterval("wechat.setPrice()",5000);		//每间隔3秒刷新下报价信息
+    },
+    /**
+     * 设置页面用户信息
+     */
+    setPageUserInfo:function(){
+       $(".user-name").html(chat.userInfo.nickname);
+       $(".user-img img").attr("src",chat.userInfo.avatar);
     },
     /**
      * 功能：公告滚动
