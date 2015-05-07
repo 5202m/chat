@@ -6,7 +6,8 @@ var express = require('express');
 var router = express.Router();
 
 /*＃＃＃＃＃＃＃＃＃＃ 引入所需类 ＃＃＃＃＃＃＃＃begin */
-var chatService = require('../../service/chatService');
+var userService = require('../../service/userService');
+var chatService = require('../../service/chatService');//引入chatService
 var common = require('../../util/common'); //引入公共的js
 var errorMessage = require('../../util/errorMessage');
 /*＃＃＃＃＃＃＃＃＃＃ 引入所需服务类 ＃＃＃＃＃＃＃＃end */
@@ -19,7 +20,7 @@ router.get('/getOnlineUser', function(req, res) {
     if(common.isBlank(groupId)){
         res.json(errorMessage.code_1000);
     }else{
-        var userArr=chatService.cacheUserArr[groupId];
+        var userArr=userService.cacheUserArr[groupId];
         var result=[];
         for(var i=0;i<userArr.length;i++){
             result.push(userArr[i].userInfo);
@@ -27,5 +28,22 @@ router.get('/getOnlineUser', function(req, res) {
         res.json(result);
     }
 });
+
+
+/**
+ * 移除客户端信息
+ */
+router.post('/removeMsg', function(req, res) {
+    var msgIds=req.param("msgIds"),groupId=req.param("groupId");
+    var result={isOk:false,error:null};
+    if(common.isBlank(msgIds)||common.isBlank(groupId)){
+        result.error=errorMessage.code_1000;
+    }else{
+        chatService.clientNotice(chatService.noticeType.removeMsg,groupId,{msgIds:msgIds});
+        result.isOk=true;
+    }
+    res.json(result);
+});
+
 
 module.exports = router;

@@ -49,6 +49,7 @@ var messageService ={
                 maxValue:content.maxValue,
                 needMax:content.needMax
             },
+            fromPlatform:userInfo.fromPlatform,//平台来源
             status:1, //内容状态：0 、禁用 ；1、启动
             publishTime:userInfo.publishTime, //发布日期
             createUser:userInfo.userId,

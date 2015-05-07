@@ -436,7 +436,7 @@ var chat={
             return;
         }
         if(data.rule){
-           alert("系统提示："+data.content.value);
+           alert("系统提示："+data.value);
            return;
         }
         if(data.isShowWechatTip){
@@ -538,10 +538,8 @@ var chat={
             console.log('connected to server!');
             chat.socket.emit('login',chat.userInfo);
         });
-        //登录成功返回信息(包括在线人数）
-        this.socket.on('loginResult',function(data){
-             $("#onlineUserNum").text(data.onlineUserNum);
-        });
+        //登录成功返回信息
+        this.socket.on('loginResult',function(data){});
         //断开连接
         this.socket.on('disconnect',function(e){
             console.log('disconnect');
@@ -555,6 +553,18 @@ var chat={
             chat.setContent(data,false,false);
             if(data.content && data.content.msgType==chat.msgType.img){
                 $('.swipebox').swipebox();
+            }
+        });
+        //通知信息
+        this.socket.on('notice',function(result){
+            switch (result.type)
+            {
+                case 'onlineNum':
+                    $("#onlineUserNum").text(result.data.onlineUserNum);
+                    break;
+                case 'removeMsg':
+                    $("#"+result.data.msgIds.replace(/,/g,",#")).remove();
+                    break;
             }
         });
         //信息传输

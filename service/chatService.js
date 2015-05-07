@@ -10,6 +10,10 @@ var messageService = require('../service/messageService');//引入messageService
  */
 var chatService ={
     socket:null,
+    noticeType:{ //通知客户端类型
+       removeMsg:'removeMsg',
+       onlineNum:'onlineNum'
+    },
     /**
      * 初始化
      */
@@ -42,21 +46,15 @@ var chatService ={
                 });
                 userService.cacheUserArr[info.groupId]=groupRow;
                 //通知客户端
-                groupRow.forEach(function(row){
-                    row.socket.emit('loginResult',{onlineUserNum:groupRow.length});
-                });
+                chatService.clientNotice(chatService.noticeType.onlineNum,info.groupId);
             });
             //断开连接
             socket.on('disconnect',function(){
                 //移除在线用户
                 userService.removeOnlineUser(socket.id,function(groupId){
                     if(groupId){
-                        var groupRow=userService.cacheUserArr[groupId];
-                        if(groupRow){
-                            groupRow.forEach(function(row){
-                                row.socket.emit('loginResult',{onlineUserNum:groupRow.length});
-                            });
-                        }
+                        //通知客户端
+                        chatService.clientNotice(chatService.noticeType.onlineNum,groupId);
                     }
                 });
                 console.log('disconnect,please check!');
@@ -75,6 +73,11 @@ var chatService ={
         //如果首次发言需要登录验证(备注：微信取openId为userId，即验证openId）
         userService.checkUserLogin(userInfo,function(row){
             if(row){
+                var tip=userService.checkUserGag(row);
+                if(tip){
+                    (socket||chatService.getSocket(groupId,userInfo.userId)).emit('sendMsg',{fromUser:userInfo,value:tip,rule:true});
+                    return false;
+                }
                 var sameGroupUserArr=userService.cacheUserArr[groupId];
                 var currentDate = new Date();
                 userInfo.publishTime = currentDate.getTime()+"_"+process.hrtime()[1];//产生唯一的id
@@ -82,7 +85,7 @@ var chatService ={
                 userService.verifyRule(groupId,data.content,function(resultVal){
                     if(resultVal){//匹配规则，则按规则逻辑提示
                         console.log('resultVal:'+resultVal);
-                        (socket||chatService.getSocket(groupId,userInfo.userId)).emit('sendMsg',{fromUser:userInfo,content:{msgType:'text',value:resultVal},rule:true});
+                        (socket||chatService.getSocket(groupId,userInfo.userId)).emit('sendMsg',{fromUser:userInfo,value:resultVal,rule:true});
                     } else{
                         //保存聊天数据
                         messageService.saveMsg(data);
@@ -140,6 +143,25 @@ var chatService ={
         }
         return null;
     },
+
+    /**
+     * 客户端通知信息
+     * @param type
+     * @param groupId
+     * @param data
+     */
+    clientNotice:function(type,groupId,data){
+        var groupRow=userService.cacheUserArr[groupId];
+        if(groupRow){
+            var sendData=data;
+            if(chatService.noticeType.onlineNum==type){
+                sendData={onlineUserNum:groupRow.length}
+            }
+            groupRow.forEach(function(row){
+                row.socket.emit('notice',{type:type,data:sendData});
+            });
+        }
+    },
     /**
      * 销毁访问主页的token
      * @param val
@@ -149,7 +171,7 @@ var chatService ={
             if(err!=null||row==null){
                 callback(false);
             }else{
-                row.remove();
+                //row.remove();
                 callback(true);
             }
         });

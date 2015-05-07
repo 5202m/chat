@@ -21,6 +21,9 @@ var mongoose = require('mongoose')
                 onlineDate: Date,//上线时间
                 avatar:String,//头像
                 nickname:String,//昵称
+                gagStartDate:Date,//禁言-开始时间
+                gagEndDate:Date,//禁言-结束时间
+                gagTips:String,//禁言提示语
                 accountNo:{type:String,index:true}, //账号
                 isBindWechat:Boolean, //是否绑定微信
                 userType:{type:Number, default:0},//区分系统用户还是会员，0表示会员，1表示管理员，2、分析师

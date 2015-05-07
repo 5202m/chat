@@ -49,7 +49,7 @@ app.use(session({
 }));
 /*---------------- 外部链接路由的路径 ---------------- begin */
 app.use('/', webRoutes);
-app.use('/api/chat/', apiChatRoutes);
+app.use('/chat/api/', apiChatRoutes);
 /*----------------  外部链接路由的路径 ---------------- end */
 
 // catch 404 and forward to error handler （400请求错误处理）

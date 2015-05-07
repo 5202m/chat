@@ -16,33 +16,6 @@ var querystring = require('querystring');
  */
 var userService = {
     cacheUserArr:[],//按组别分类保存用户信息的二维数组
-    groupList:{},//组别类型(从数据库中提取，更新到该缓存中）
-    /**
-     * 根据平台初始化用户缓存集合
-     */
-    initCacheUserArr:function(groupId){
-        if(userService.cacheUserArr.length==0){//不存在数据，则初始化
-            for(var index in this.groupList){
-                userService.cacheUserArr[this.groupList[index]._id]=[];
-            }
-        }else{//存在数据，则不同更新cacheUserArr数据
-            var row=null;
-            var newCacheUserArr=[];
-            var gId=null;
-            for(var gIndex in this.groupList){
-                gId=this.groupList[index]._id;
-                row=userService.cacheUserArr[gId];
-                if(row!=null && row!=undefined && row.length>0){
-                    newCacheUserArr[gId]=row;
-                }else{
-                    newCacheUserArr[gId]=[];
-                }
-            }
-            if(newCacheUserArr.length>0){
-                userService.cacheUserArr=newCacheUserArr;
-            }
-        }
-    },
     /**
      * 移除在线用户
      * @param socketId
@@ -79,15 +52,16 @@ var userService = {
         }
     },
     /**
-     * 更新组别数据（如后台有改动会同步组别数据）
+     * 检查用户禁言
      */
-    synchGroupInfo:function(){
-        chatGroup.find({valid:1},function (err,row) {
-            userService.groupList=row;
-            userService.initCacheUserArr();//初始化数组
-        });
+    checkUserGag:function(row){
+        var subRow = row.loginPlatform.chatUserGroup[0],currentDate=new Date();
+        if(subRow.gagStartDate && subRow.gagEndDate && subRow.gagStartDate<=currentDate && subRow.gagEndDate>=currentDate){
+            return subRow.gagTips;
+        }else{
+            return null;
+        }
     },
-
     /**
      * 验证规则
      * @param groupId
