@@ -27,7 +27,7 @@ router.get('/chat', function(req, res) {
     chatOnlineUser.fromPlatform=req.param("fromPlatform");//是否后台进入
     if(common.isBlank(token)||common.isBlank(chatOnlineUser.groupId)||(common.isBlank(chatOnlineUser.userId))){
         logger.warn('chat->非法访问,ip:'+ common.getClientIp(req));
-        res.render('chat/error',{error: '输入参数有误，必须传入token，groupId,userId'});
+        res.render('chat/error',{error: '输入参数有误，请检查链接的输入参数！'});
     }else{
         if(common.isBlank(chatOnlineUser.userType)){
             chatOnlineUser.userType=0;
@@ -71,7 +71,7 @@ router.get('/chat', function(req, res) {
                         }
                     });
             }else{
-                res.render('chat/error',{error: 'token验证失效！'});
+                res.render('chat/error',{error: '链接已过期，请重新访问！'});
             }
         });
     }
@@ -159,10 +159,8 @@ router.get('/getBigImg', function(req, res) {
             if(common.isBlank(bigImgData)){
                 res.end("");
             }else{
-                var base64Data = bigImgData.replace(/^data:image.*base64,/,"");
                 res.writeHead(200, {"Content-Type": "image/jpeg"});
-                //res.write(,'binary');
-                res.end(new Buffer(base64Data,'base64'));
+                res.end(new Buffer(bigImgData.replace(/^data:image.*base64,/,""),'base64'));
             }
         });
     }

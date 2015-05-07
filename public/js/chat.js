@@ -210,18 +210,20 @@ var chat={
                     reader.onload = function(e){
                         var sendObj={uiId:uiId,fromUser:chat.userInfo,content:{msgType:chat.msgType.img,value:'',needMax:0,maxValue:''}};
                         var base64Data=e.target.result;
-                        chat.zipImg(sendObj,150,base64Data,80,function(result,value){//压缩缩略图
+                        chat.zipImg(sendObj,150,base64Data,80,function(result,value,w,h){//压缩缩略图
                             result.content.value=value;
-                            $("#"+result.uiId+" img").attr("src",value);
                             if(result.content.needMax==1) {
                                 chat.zipImg(result,0, base64Data, 50, function (newResult,bigValue) {//压缩大图
                                     newResult.content.maxValue=bigValue;
+                                    var imgDom= $("#"+result.uiId+" img");//填充图片，调整大小为缩略图大小
+                                    imgDom.attr("src",bigValue);
+                                    imgDom.width(w);
+                                    imgDom.height(h);
                                     chat.dataUpload(newResult);
-                                    //chat.socket.emit('sendMsg', newResult);//发送图片
                                 });
                             }else{
                                 chat.dataUpload(result);
-                                //chat.socket.emit('sendMsg', result);//发送图片
+                                $("#"+result.uiId+" img").attr("src",value);
                             }
                         });
                     };
@@ -242,8 +244,7 @@ var chat={
         xhr.open('POST', '/uploadData');
         xhr.addEventListener("progress", function(e){
             if (e.lengthComputable) {
-                var ra= (e.loaded / e.total *100|0)+"%";
-                console.log("ss;" + ra);
+                var ra= ((e.loaded / e.total *100)|0)+"%";
                 $("#"+data.uiId+" .shadow-box").css({height:"'+ra+'"});
                 $("#"+data.uiId+" .shadow-conut").html(ra);
             }
@@ -269,9 +270,9 @@ var chat={
         image.onload = function(){
             var ratio=0;
             var canvas = document.createElement('canvas');
+            var w = image.width;
+            var h = image.height;
             if(max>0) {
-                var w = image.width;
-                var h = image.height;
                 if ((h > max) || (w > max)) {     //计算比例
                     sendObj.content.needMax=1;
                     if(h>max && w<=max){
@@ -292,7 +293,7 @@ var chat={
             canvas.height = image.height;
             // 将图像绘制到canvas上
             ctx.drawImage(image, 0, 0, image.width, image.height);
-            callback(sendObj,canvas.toDataURL("image/jpeg",quality/100));
+            callback(sendObj,canvas.toDataURL("image/jpeg",quality/100),w,h);
         };
         image.src = data;
     },
@@ -311,16 +312,12 @@ var chat={
                 if(li.attr("mType")==chat.msgType.img){
                     var sendObj={uiId:uiIdTmp,fromUser:chat.userInfo,content:{msgType:chat.msgType.img,value:'',needMax:0,maxValue:''}};
                     var base64Data=$(".talk-content p img",li).attr("src");
-                    chat.zipImg(sendObj,150,base64Data,50,function(result,value){//压缩缩略图
+                    chat.zipImg(sendObj,150,base64Data,100,function(result,value){//压缩缩略图
                         result.content.value=value;
-                        if(result.content.needMax==1) {
-                            chat.zipImg(result,0, base64Data, 50, function (newResult,bigValue) {//压缩大图
-                                newResult.content.maxValue=bigValue;
-                                chat.dataUpload(newResult);
-                            });
-                        }else{
-                            chat.dataUpload(result);
+                        if(result.content.needMax==1) {//自己发送的图片，缩略图默认取大图数据显示，这样重发时直接取缩略图的数据作为原始数据
+                            result.content.maxValue=base64Data;
                         }
+                        chat.dataUpload(result);//上传数据
                     });
                 }else{
                     chat.socket.emit('sendMsg',{uiId:uiIdTmp,fromUser:chat.userInfo,content:{msgType:chat.msgType.text,value:$(".talk-content p",li).html()}});
@@ -359,22 +356,6 @@ var chat={
         if(common.isValid(obj.text())){
             obj.html("").attr("tId","");
             $("#contentText").css({"padding-left":"1%"}).width("98%");//重置输入框宽度
-        }
-    },
-    /**
-     * 显示大图
-     */
-    showBigImg:function(_this,needMax){
-        if(needMax){
-            $.get('/getBigImg',{publishTime:$(_this).parents("li").attr("id")},function(data){
-                $.swipebox([
-                    { href:data},
-                ]);
-            });
-        }else{
-            $.swipebox([
-                { href:$(_this).attr("src")},
-            ]);
         }
     },
     /**
@@ -533,7 +514,7 @@ var chat={
             nickname=fromUser.userId;
         }
         if(content.msgType==chat.msgType.img){
-            contentClass='talk-img';/* /getBigImg?publishTime='+fromUser.publishTime+'  onclick="chat.showBigImg(this,'+content.needMax+');"*/
+            contentClass='talk-img';
             if(content.needMax){
                 pHtml='<a href="/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" class="swipebox" ><img src="'+content.value+'" alt="图片"/></a>'+loadImgHtml;
             }else{
