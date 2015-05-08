@@ -1,3 +1,8 @@
+/**
+ * 验证码通用方法
+ * @type {exports}
+ * author:alan.wu
+ */
 var Canvas = require('canvas');
 /**
  * 随机数转换(浮点数）
@@ -30,7 +35,7 @@ exports.Generate = function(W,H) {
     var canvas = new Canvas(W, H);
     var ctx = canvas.getContext('2d');
     var items = 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPRSTUVWXYZ23456789'.split('');
-    var vCode = '';
+    var vCode =[];
 
     //设置背景色
     ctx.fillStyle = '#f3fbfe';
@@ -51,7 +56,7 @@ exports.Generate = function(W,H) {
         var j = randInt(0, items.length);
         ctx.fillStyle = color;
         ctx.fillText(items[j],2+i * 10,20);
-        vCode += items[j];
+        vCode.push(items[j]);
     }
     //画弧线路径
     ctx.beginPath();
@@ -74,7 +79,7 @@ exports.Generate = function(W,H) {
     ctx.stroke();
    //导出结果
     return {
-        code: vCode.toLowerCase(),
+        code: vCode.join("").toLowerCase(),
         dataURL: canvas.toDataURL()
     };
 };

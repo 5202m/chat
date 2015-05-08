@@ -23,7 +23,7 @@ var chat={
      */
     getUiId:function(){
         var currentDate=new Date();
-        return currentDate.getTime()+"_isMeSend";
+        return currentDate.getTime()+"_ms";
     },
     /**
      * 提取验证码
@@ -68,6 +68,8 @@ var chat={
          * 关闭登录框按钮事件
          */
         $("#loginSection .del-btn,#tipSection .del-btn").click(function(){
+            $("#loginSection").show();
+            $("#loginForm")[0].reset();
             common.hideBox('#loginBox');
         });
         /**
@@ -97,8 +99,10 @@ var chat={
             if(!chat.checkLoginInput()){
                 return;
             }
+            $('#formBtn').attr('disabled',true);
             common.getJson("/checkClient",$("#loginForm").serialize(),function(result){
                 $(".wrong-info").html("");
+                $('#formBtn').attr('disabled',false);
                 if(result.errcode){
                     $(".wrong-info").html(result.errmsg);
                     return false;
@@ -138,7 +142,9 @@ var chat={
                     $("#tipSection .succ-p-info").html("尊贵的客户：欢迎光临金道贵金属聊天室！");
                     $("#tipSection").show();
                 }
-            },true);
+            },true,function(err){
+                $('#formBtn').attr('disabled',false);
+            });
         });
        //输入框事件
         $('#contentText')[0].addEventListener("input", function(e) {

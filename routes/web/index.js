@@ -118,7 +118,6 @@ router.post('/checkClient', function(req, res) {
  * 提取验证码
  */
 router.get('/getVerifyCode', function(req, res) {
-    console.log('This platform is ' + process.platform);
     var result={isWin:false,data:''},codeArr=[];
     if(process.platform.indexOf("win")!=-1){
         var charCode=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s",
