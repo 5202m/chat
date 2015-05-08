@@ -116,7 +116,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .form-part-a{padding:5px 0;font-size:0}
 .form-part-a label{display:block;width:60px;font-size:15px;height:30px;line-height:30px}
 .form-inp{position:relative;margin-left:60px}
-.yzm-text{position:absolute;right:5px;top:50%;margin-top:-7px;width:41px;height:17px}
+.yzm-text{position:absolute;right:12px;top:50%;margin-top:-12px;width:41px;height:17px;cursor: pointer;}
 .input-text{width:100%;text-indent:5px;height:20px;padding:5px 0;background:#fff;border:solid #B3B3B3 1px;color:#333;font:12px/30px arial;border-radius:4px}
 .submit-btn{margin:8px auto 0;width:100%;height:30px;font:15px/30px microsoft yahei;color:#fff;border-radius:5px;background:#2F8CDB}
 .succ-p-info{margin-top:15px;line-height:24px;font-size:15px;text-align:justify}

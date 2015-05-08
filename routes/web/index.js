@@ -117,17 +117,26 @@ router.post('/checkClient', function(req, res) {
 /**
  * 提取验证码
  */
-router.post('/getVerifyCode', function(req, res) {
-    var charCode=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s",
-        "t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9"];
-    var result=[];
-    for(var i=0;i<4;i++){
-        var nd=Math.floor(Math.random()*charCode.length);
-        result.push(charCode[nd]);
+router.get('/getVerifyCode', function(req, res) {
+    console.log('This platform is ' + process.platform);
+    var result={isWin:false,data:''},codeArr=[];
+    if(process.platform.indexOf("win")!=-1){
+        var charCode=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s",
+            "t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9"];
+        for(var i=0;i<4;i++){
+            var nd=Math.floor(Math.random()*charCode.length);
+            codeArr.push(charCode[nd]);
+        }
+        var code=codeArr.join("");
+        req.session.verifyCode=code;
+        result.isWin=true;
+        result.data=code;
+    }else{
+        var verifyCodeObj = require("../../util/verifyCode").Generate(50,25);
+        req.session.verifyCode= verifyCodeObj.code;
+        result.data= verifyCodeObj.dataURL;
     }
-    var code=result.join("");
-    req.session.verifyCode=code;
-    res.json({code:code});
+    res.json(result);
 });
 
 /**

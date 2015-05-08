@@ -25,20 +25,31 @@ var chat={
         var currentDate=new Date();
         return currentDate.getTime()+"_isMeSend";
     },
+    /**
+     * 提取验证码
+     */
     refreshVerifyCode:function(){
-        common.getJson("/getVerifyCode",null,function(data){
-            if(data){
-                var canvas = document.getElementById("canvasId");
-                var ctx = canvas.getContext("2d");
-                ctx.fillStyle="#ffffff";
-                ctx.fillRect(0,0,canvas.width,canvas.height);
-                ctx.strokeStyle="#000";
-                ctx.fillStyle="#000000";
-                ctx.font="18px _sans";
-                ctx.textBaseline="middle";
-                ctx.fillText(data.code,5,8);
+        $.get("/getVerifyCode",null,function(result){
+            if(result){
+                if(result.isWin){
+                    $("#verifyCodeId img").hide();
+                    $("#canvasId").show();
+                    var canvas = document.getElementById("canvasId");
+                    var ctx = canvas.getContext("2d");
+                    ctx.fillStyle="#ffffff";
+                    ctx.fillRect(0,0,canvas.width,canvas.height);
+                    ctx.strokeStyle="#000";
+                    ctx.fillStyle="#000000";
+                    ctx.font="18px _sans";
+                    ctx.textBaseline="middle";
+                    ctx.fillText(result.data,5,8);
+                }else{
+                    $("#canvasId").hide();
+                    $("#verifyCodeId img").show();
+                    $("#verifyCodeId img").attr("src",result.data);
+                }
             }
-        },true);
+        },'json');
     },
     /**
      * 事件设置
