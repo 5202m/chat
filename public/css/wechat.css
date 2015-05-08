@@ -114,7 +114,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .del-btn{position:absolute;right:5px;top:5px;width:24px;height:24px;background-position:5px -27px}
 .form-box{margin-top:10px}
 .form-part-a{padding:5px 0;font-size:0}
-.form-part-a label{display:block;width:60px;font-size:15px;height:30px;line-height:30px}
+.form-part-a label{display:block;width:60px;font-size:15px;height:30px;line-height:30px;white-space:nowrap}
 .form-inp{position:relative;margin-left:60px}
 .yzm-text{position:absolute;right:12px;top:50%;margin-top:-12px;width:41px;height:17px;cursor: pointer;}
 .input-text{width:100%;text-indent:5px;height:20px;padding:5px 0;background:#fff;border:solid #B3B3B3 1px;color:#333;font:12px/30px arial;border-radius:4px}
