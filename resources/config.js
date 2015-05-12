@@ -3,6 +3,7 @@
  * Created by Alan.wu on 2015/4/18.
  */
 var config = {
+    isAllowCopyHomeUrl:true,//是否允许copy链接（针对微信进入聊天室）
     pmApiUrl:'http://218.213.241.84:3000/api',//pmApi地址
     goldApiHostname: '192.168.35.160',//gwapi地址
     goldApiPort:80,

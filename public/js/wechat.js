@@ -50,13 +50,20 @@ var wechat={
         });
         $('#contentText').focus(function(){
             $('.wrapper').removeClass('pub-top pub-two').addClass('pub-three');
-            $('#header').fadeOut();
+            $('#header').fadeOut('fast');
             $('.fxs-ony-box').addClass('fxs-none');
         }).blur(function(){
             $('.wrapper').removeClass('pub-three').addClass('pub-top pub-two');
-            $('#header').fadeIn();
+            $('#header').fadeIn('fast');
             $('.fxs-ony-box').removeClass('fxs-none');
         });
+        //手势控制
+        $('#content_div')[0].addEventListener("touchstart", function(e) {
+            var dom=$('.wrapper');
+            if(dom.hasClass('pub-three')){
+                $('#contentText').blur();
+            }
+        }, false);
     },
     /**
      * 设置广告

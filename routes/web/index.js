@@ -50,7 +50,13 @@ router.get('/chat', function(req, res) {
                         returnObj: function(callback){
                             var obj={};//输出参数
                             if(chatOnlineUser.groupId==constant.weChatGroupId){
-                                obj={web24kPriceUrl:(config.pmApiUrl+'/common/get24kPrice')};
+                                var isFromWeChat=true,error='';
+                                var deviceAgent = req.headers["user-agent"].toLowerCase();
+                                if(!config.isAllowCopyHomeUrl && deviceAgent.indexOf('micromessenger') == -1 && constant.fromPlatform.pm_mis!=chatOnlineUser.fromPlatform){
+                                    isFromWeChat=false;
+                                    error='请在微信客户端打开链接!';
+                                }
+                                obj={web24kPriceUrl:(config.pmApiUrl+'/common/get24kPrice'),isFromWeChat:isFromWeChat,error:error};
                             }
                             callback(null,obj);
                         }

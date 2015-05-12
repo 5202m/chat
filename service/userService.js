@@ -79,48 +79,64 @@ var userService = {
             return;
         }
         chatGroup.findById(groupId,function (err,row) {
-            var ruleArr=row.chatRules,resultTip=[],beforeVal='',type='';
+            if(err||!row){
+                callback(null);
+                return;
+            }
+            var ruleArr=row.chatRules,resultTip=[],beforeVal='',type='',tip='';
             var periodStartDate= 0,periodEndDate= 0,currentTime= 0;
-            var urlArr=[];
+            var urlArr=[],urlTipArr=[],ruleRow=null;
             //先检查禁止发言的规则
             for(var i in ruleArr){
-                beforeVal=ruleArr[i].beforeRuleVal;
-                type=ruleArr[i].type;
-                periodStartDate=ruleArr[i].periodStartDate;
-                periodEndDate=ruleArr[i].periodEndDate;
+                ruleRow=ruleArr[i];
+                beforeVal=ruleRow.beforeRuleVal;
+                type=ruleRow.type;
+                tip=ruleRow.afterRuleTips;
+                periodStartDate=ruleRow.periodStartDate;
+                periodEndDate=ruleRow.periodEndDate;
                 currentTime=new Date().getTime();
                 var isNullPeriod=(periodStartDate==null && periodEndDate==null);
                 var isPeriod=periodStartDate!=null && currentTime>=periodStartDate.getTime() && periodEndDate!=null && currentTime<=periodEndDate.getTime();
                 if(isPeriod && type=='speak_not_allowed'){
                     resultTip=[];
-                    resultTip.push(ruleArr[i].afterRuleTips);
-                    break;
+                    resultTip.push(tip);
+                    callback(resultTip.join(";"));
+                    return;
                 }
                 if((isNullPeriod || isPeriod) && type!='speak_not_allowed' && common.isValid(beforeVal)){
                     beforeVal=beforeVal.replace(/(,|，)$/,'');//去掉结尾的逗号
                     beforeVal=beforeVal.replace(/,|，/g,'|');//逗号替换成|，便于统一使用正则表达式
                     if(type=='keyword_filter'){//过滤关键字或过滤链接
                         if(eval('/'+beforeVal+'/').test(contentVal)){
-                            resultTip.push(ruleArr[i].afterRuleTips);
-                            break;
+                            resultTip=[];
+                            resultTip.push(tip);
+                            callback(resultTip.join(";"));
+                            return;
                         }
                     }
-                    if(type=='url_allowed'){//除该连接外其他连接会屏蔽
+                    if(type=='url_not_allowed' && common.urlReg().test(contentVal)){//禁止链接
+                        resultTip=[];
+                        resultTip.push(tip);
+                        callback(resultTip.join(";"));
+                        return;
+                    }
+                    if(type=='url_allowed'){//除该连接外其他连接会禁止
                         urlArr.push(beforeVal);
+                        urlTipArr.push(tip);
                     }
                     if(type=='keyword_replace'){//替换关键字
                         if(eval('/'+beforeVal+'/').test(contentVal)){
                             content.value=contentVal.replace(eval('/'+beforeVal+'/g'),ruleArr[i].afterRuleVal);
-                            resultTip.push(ruleArr[i].afterRuleTips);
+                            resultTip.push(tip);
                         }
                     }
                 }
             }
             if(urlArr.length>0 && common.urlReg().test(contentVal)){
-                var val=urlArr.join("|");
+                var val=urlArr.join("|").replace(/\//g,'\\\/').replace(/\./g,'\\\.');
                 if(!eval('/'+val+'/').test(contentVal)){
-                    resultTip={};
-                    resultTip.push('链接无效！');
+                    resultTip=[];
+                    resultTip.push(urlTipArr.join(";"));
                 }
             }
             callback(resultTip.join(";"));

@@ -1,4 +1,5 @@
 ﻿<!doctype html>
+<% if (isFromWeChat) { %>
 <html>
 <head>
     <meta charset="utf-8">
@@ -146,8 +147,11 @@
 
 <script>
     wechat.priceUrl='<%= web24kPriceUrl %>';
-    chat.userInfo=JSON.parse('<%= userInfo %>'.replace(/&#34;/g,'"'));
+    chat.userInfo=JSON.parse('<%- userInfo %>');
     chat.socketUrl='<%= socketUrl %>';
 </script>
 </body>
 </html>
+<% } else{%>
+<% include error.html %>
+<% } %>
