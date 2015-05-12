@@ -4,8 +4,7 @@
  * date:2015/4/3
  */
 var mongoose = require('mongoose')
-    , Schema = mongoose.Schema
-    , ObjectId = Schema.ObjectId;
+    , Schema = mongoose.Schema;
 /**
  * 模型定义
  * @type {Schema}

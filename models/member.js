@@ -3,7 +3,6 @@
  */
 var mongoose = require('mongoose')
     , Schema = mongoose.Schema
-    , ObjectId = Schema.ObjectId
     ,memberSchema = new Schema({//会员Schema
         _id:String,
         mobilePhone: {type:String,index:true} ,

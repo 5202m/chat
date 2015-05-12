@@ -5,7 +5,6 @@
  */
 var mongoose = require('mongoose')
     , Schema = mongoose.Schema
-    , ObjectId = Schema.ObjectId
     , chatRulesSchema=new Schema( //聊天规则
         {
             type:{type:String},
