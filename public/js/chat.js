@@ -68,9 +68,9 @@ var chat={
          * 关闭登录框按钮事件
          */
         $("#loginSection .del-btn,#tipSection .del-btn").click(function(){
+            common.hideBox('#loginBox');
             $("#loginSection").show();
             $("#loginForm")[0].reset();
-            common.hideBox('#loginBox');
         });
         /**
          * 删除顶部消息
@@ -187,7 +187,7 @@ var chat={
         $("#sendBtn").click(function(){
             var msg=$("#contentText").val();
             if(common.isValid(msg)) {
-                msg= $("#txtNicknameId").html()+msg;
+                msg= $("#txtNicknameId").html()+msg.replace(/<[^>].*?>/g,'');//去掉所有html标志
                 var sendObj={uiId:chat.getUiId(),fromUser:chat.userInfo,content:{msgType:chat.msgType.text,value:common.escapeHtml(msg)}};
                 chat.setContent(sendObj,true,false);//直接把数据填入内容栏
                 chat.socket.emit('sendMsg',sendObj);//发送数据
@@ -447,27 +447,27 @@ var chat={
      * @param data
      */
     setContent:function(data,isMeSend,isLoadData){
+        var fromUser=data.fromUser;
+        if(isMeSend){//发送，并检查状态
+            fromUser.publishTime=data.uiId;
+            chat.timeOutSend(data.uiId,true);//一分钟后检查是否发送成功，不成功提示重发
+        }
         if(data.isVisitor){
             $("#"+data.uiId).remove();
             chat.openLoginBox();
             return;
         }
         if(data.rule){
-           alert("系统提示："+data.value);
-           return;
+            chat.removeLoadDom(data.uiId);
+            $('#'+data.uiId+' .talk-content p').append('<em style="color:#ff0000;font-size:12px;">'+data.value+'</em>');
+            return;
         }
         if(data.isShowWechatTip){
             chat.setWechatTip();
             common.showBox('#loginBox');
         }
-        var fromUser=data.fromUser;
-        if(isMeSend){//发送，并检查状态
-            fromUser.publishTime=data.uiId;
-            chat.timeOutSend(data.uiId,true);//一分钟后检查是否发送成功，不成功提示重发
-        }
         if(!isMeSend && chat.userInfo.userId==fromUser.userId && data.serverSuccess){
-            $('#'+data.uiId+' .img-loading,#'+data.uiId+' .img-load-gan').remove();
-            $('#'+data.uiId+' .shadow-box,#'+data.uiId+' .shadow-conut').remove();
+            chat.removeLoadDom(data.uiId);
             $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
             $('#'+data.uiId+' dd[tId=time]').html(chat.formatPublishTime(fromUser.publishTime));
             //设置看大图的url
@@ -480,6 +480,7 @@ var chat={
             }
              return;
         }
+
         var li=chat.formatContentHtml(data,isMeSend);
         var ul=$("#content_ul");
         ul.append(li);
@@ -544,6 +545,13 @@ var chat={
                  '<dl class="talk-dlbox">'+dtHtml+'<dt>'+nickname+'</dt><dd tId="time">'+chat.formatPublishTime(fromUser.publishTime)+'</dd></dl>'+
                  '<section class="talk-content "'+contentClass+'><seciton class="arrow-outer jian-position1"><seciton class="arrow-shadow"></seciton></seciton>'+loadHtml+'<p>'+pHtml+'</p></section></li>';
         return html;
+    },
+    /**
+     * 移除加载提示的dom
+     * @param uiId
+     */
+    removeLoadDom:function(uiId){
+        $('#'+uiId+' .img-loading,#'+uiId+' .img-load-gan,#'+uiId+' .shadow-box,#'+uiId+' .shadow-conut').remove();
     },
     /**
      * 设置socket

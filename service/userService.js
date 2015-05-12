@@ -69,9 +69,13 @@ var userService = {
      * @param callback
      */
     verifyRule:function(groupId,content,callback){
-        var contentVal=content.value;
         if(content.msgType!='text'){
             callback(null);
+            return;
+        }
+		var contentVal=content.value.replace(/&lt;label class=\\"dt-send-name\\" tid=\\".+\\"&gt;@.*&lt;\/label&gt;/g,'');//排除@它html
+        if(/&lt;[^(&gt;)].*?&gt;/g.test(contentVal)){ //过滤特殊字符
+            callback(" 有特殊字符，已被拒绝！");
             return;
         }
         chatGroup.findById(groupId,function (err,row) {
@@ -143,8 +147,10 @@ var userService = {
             newUserInfo.accountNo=userInfo.userId;
             newUserInfo.userId='';
         }
+        console.log("newUserInfo:"+JSON.stringify(newUserInfo));
         boUser.findOne({'userNo':newUserInfo.accountNo,'telephone':newUserInfo.mobilePhone},function(err,row) {
             if(!err && row){
+                console.log("boUser->row:"+JSON.stringify(row));
                 result.isOk=true;
                 result.userType=newUserInfo.userType=userInfo.userType=constant.roleUserType[row.role.roleNo];
                 result.nickname=userInfo.nickname=newUserInfo.nickname=row.userName+"("+row.role.roleName+")";

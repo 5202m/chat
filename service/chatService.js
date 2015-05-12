@@ -74,18 +74,18 @@ var chatService ={
         userService.checkUserLogin(userInfo,function(row){
             if(row){
                 var tip=userService.checkUserGag(row);
+                var currentDate = new Date();
+                userInfo.publishTime = currentDate.getTime()+"_"+process.hrtime()[1];//产生唯一的id
                 if(tip){
                     (socket||chatService.getSocket(groupId,userInfo.userId)).emit('sendMsg',{fromUser:userInfo,value:tip,rule:true});
                     return false;
                 }
                 var sameGroupUserArr=userService.cacheUserArr[groupId];
-                var currentDate = new Date();
-                userInfo.publishTime = currentDate.getTime()+"_"+process.hrtime()[1];//产生唯一的id
                 //验证规则
                 userService.verifyRule(groupId,data.content,function(resultVal){
                     if(resultVal){//匹配规则，则按规则逻辑提示
                         console.log('resultVal:'+resultVal);
-                        (socket||chatService.getSocket(groupId,userInfo.userId)).emit('sendMsg',{fromUser:userInfo,value:resultVal,rule:true});
+                        (socket||chatService.getSocket(groupId,userInfo.userId)).emit('sendMsg',{fromUser:userInfo,uiId:data.uiId,value:resultVal,rule:true});
                     } else{
                         //保存聊天数据
                         messageService.saveMsg(data);
@@ -94,6 +94,7 @@ var chatService ={
                             data.content.maxValue='';
                         }
                         var userInfoTmp=null,user=null,subRow=null,isBindWechatTmp=false,sendInfo=null;
+                        var isValid=(common.isValid(userInfo.fromPlatform)&&constant.fromPlatform.pm_mis!=userInfo.fromPlatform)||(common.isBlank(userInfo.fromPlatform));
                         for(var i=0;i<sameGroupUserArr.length;i++){
                             user = sameGroupUserArr[i];
                             userInfoTmp=user.userInfo;
@@ -101,20 +102,24 @@ var chatService ={
                                 if(userInfo.userId==userInfoTmp.userId){//如果是自己，清空内容，告知客户端发送成功即可
                                     sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}};
                                     //微信组用户如果没有绑定微信，进入聊天室小于5次，则弹出提示语
-                                    if(constant.weChatGroupId==userInfoTmp.groupId && userInfoTmp.isNewIntoChat && constant.fromPlatform.pm_mis!=userInfo.fromPlatform) {
+                                    if(constant.weChatGroupId==userInfoTmp.groupId && userInfoTmp.isNewIntoChat && isValid){
                                         subRow = row.loginPlatform.chatUserGroup[0];
                                         isBindWechatTmp = subRow.isBindWechat;
-                                        if (!isBindWechatTmp && subRow.intoChatTimes <= 5) {//没有绑定，小于5次，则调用goldApi检查是否绑定状态
+                                        if (!isBindWechatTmp && Number(subRow.intoChatTimes) <= 5) {//没有绑定，小于5次，则调用goldApi检查是否绑定状态
                                             userService.checkAClient({accountNo: subRow.accountNo}, true, function (checkResult) {
                                                 if (checkResult.flag == 5) {//已经绑定微信，更新状态
                                                     isBindWechatTmp = true;
                                                 }
                                                 userService.updateChatUserGroupWechat(groupId,userInfo.userId,isBindWechatTmp, (subRow.intoChatTimes + 1));
-                                                sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,isShowWechatTip:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}};
+                                                sendInfo.isShowWechatTip={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,isShowWechatTip:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}};
+                                                user.socket.emit('sendMsg',sendInfo);
                                             });
+                                        }else{
+                                            user.socket.emit('sendMsg',sendInfo);
                                         }
+                                    }else{
+                                        user.socket.emit('sendMsg',sendInfo);
                                     }
-                                    user.socket.emit('sendMsg',sendInfo);
                                 }else{
                                     user.socket.emit('sendMsg',{fromUser:userInfo,content:data.content});
                                 }
