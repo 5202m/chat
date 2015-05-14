@@ -196,7 +196,9 @@ var userService = {
         member.findOne({'mobilePhone':userInfo.mobilePhone},function(err,row){
                 if(!err && row ){
                     userService.createChatUserGroupInfo(userInfo);
-                    callback(false);
+                    if(callback) {
+                        callback(false);
+                    }
                 }else{
                     var memberModel = {
                         _id:null,
@@ -343,8 +345,16 @@ var userService = {
                     callback(result);
                 });
             }else{
-                userService.checkAClient(userInfo,false,function(result){
-                    callback(result);
+                var accountNoTemp=userInfo.accountNo.substring(1,userInfo.accountNo.length);
+                console.log("checkClient->accountNoTemp:"+accountNoTemp);
+                member.find({ 'loginPlatform.chatUserGroup.accountNo': eval('/.+'+accountNoTemp+'$/')}).where('loginPlatform.chatUserGroup._id').equals(userInfo.groupId).count(function (err,count){
+                    if(!err && count>0){
+                        callback({flag:4});//账号已被绑定
+                    }else{
+                        userService.checkAClient(userInfo,false,function(result){
+                            callback(result);
+                        });
+                    }
                 });
             }
         }else {

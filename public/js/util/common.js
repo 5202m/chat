@@ -72,7 +72,7 @@ var common = {
             + (date.getMonth() + 1))
             + splitChar// "月"
             + (date.getDate() < 10 ? "0" + date.getDate() : date.getDate())
-            + splitChar
+            + ' '
             + (date.getHours() < 10 ? "0" + date.getHours() : date
                 .getHours())
             + ":"
@@ -87,9 +87,6 @@ var common = {
      * 毫秒转日期(格式：yyyy-MM-dd HH:mm:ss)
      */
     longMsTimeToDateTime : function(time,splitChar) {
-        if(isNaN(time)){
-            return time;
-        }
         var myDate = new Date(time);
         return this.formatterDateTime(myDate,splitChar);
     },

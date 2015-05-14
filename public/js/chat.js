@@ -50,7 +50,6 @@ var chat={
         $("#loginSection .del-btn,#tipSection .del-btn").click(function(){
             common.hideBox('#loginBox');
             $('#formBtnLoad').hide();
-            $("#loginSection").show();
             $("#loginForm")[0].reset();
             $('.wrong-info').html("");
         });
@@ -116,6 +115,8 @@ var chat={
                             $("#tipSection h2").html("登录成功");
                             $("#tipSection .succ-p-info").html("尊贵的客户：欢迎光临金道贵金属聊天室，即时参与和分析师互动，让投资变得更简单！");
                             $("#tipSection").show();
+                        }else if(flag==4){
+                            $(".wrong-info").html("该账号已被占用，请输入其他账号！");
                         }else{
                             $(".wrong-info").html("账号或手机号验证不通过，请重新输入！");
                         }
@@ -406,9 +407,11 @@ var chat={
      * 打开登录框
      */
     openLoginBox:function(){
+        $("#loginForm")[0].reset();
         $("#loginForm input[type=hidden]").each(function(){
             $(this).val(chat.userInfo[this.name]);
         });
+        $("#loginSection").show();
         chat.refreshVerifyCode();
         common.showBox('#loginBox');
     },

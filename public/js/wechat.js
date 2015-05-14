@@ -82,7 +82,7 @@ var wechat={
             $.each(data,function(i,obj){
                 if(obj != null){
                     var row=obj.detailList[0];
-                    $("#quotation ul").append('<li txt="'+row.content+'"><a href="#">'+row.title+'</a><i>'+obj.createDate+'</i></li>');
+                    $("#quotation ul").append('<li txt="'+row.content+'"><a href="#">'+row.title+'</a><i>'+ common.longMsTimeToDateTime(obj.createDate,'.')+'</i></li>');
                 }
             });
             $("#quotation ul li").click(function(){

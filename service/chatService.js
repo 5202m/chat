@@ -177,7 +177,7 @@ var chatService ={
             if(err!=null||row==null){
                 callback(false);
             }else{
-                row.remove();
+                //row.remove();
                 callback(true);
             }
         });
