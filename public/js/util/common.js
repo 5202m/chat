@@ -66,6 +66,9 @@ var common = {
         if(!splitChar){
             splitChar='-';
         }
+        if(!(date instanceof Date)){
+            date=new Date(date);
+        }
         var datetime = date.getFullYear()
             + splitChar// "年"
             + ((date.getMonth() + 1) >=10 ? (date.getMonth() + 1) : "0"
