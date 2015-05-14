@@ -108,10 +108,12 @@ router.post('/checkClient', function(req, res) {
     }else if(!(/(^[0-9]{11})$|(^86(-){0,3}[0-9]{11})$/.test(userInfo.mobilePhone))){
         res.json(errorMessage.code_1003);
     }else{
-        if(common.isBlank(req.session.verifyCode) || (common.isValid(req.session.verifyCode) && verifyCode.toLowerCase()!=req.session.verifyCode)){
+        var code=req.session.verifyCode;
+        console.log("checkClient->code:"+code);
+        if(common.isBlank(code) || (common.isValid(code) && code!=verifyCode.toLowerCase())){
             res.json(errorMessage.code_1002);
         }else{
-            userInfo.ip=common.getClientIp();
+            userInfo.ip=common.getClientIp(req);
             userService.checkClient(userInfo,function(result){
                 console.log("result:"+JSON.stringify(result));
                 res.json(result);
@@ -124,24 +126,14 @@ router.post('/checkClient', function(req, res) {
  * 提取验证码
  */
 router.get('/getVerifyCode', function(req, res) {
-    var result={isWin:false,data:''},codeArr=[];
     if(process.platform.indexOf("win")!=-1){
-        var charCode=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s",
-            "t","u","v","w","x","y","z","0","1","2","3","4","5","6","7","8","9"];
-        for(var i=0;i<4;i++){
-            var nd=Math.floor(Math.random()*charCode.length);
-            codeArr.push(charCode[nd]);
-        }
-        var code=codeArr.join("");
-        req.session.verifyCode=code;
-        result.isWin=true;
-        result.data=code;
+        res.end("");
     }else{
         var verifyCodeObj = require("../../util/verifyCode").Generate(50,25);
         req.session.verifyCode= verifyCodeObj.code;
-        result.data= verifyCodeObj.dataURL;
+        console.log("req.session.verifyCode:"+req.session.verifyCode);
+        res.end(new Buffer(verifyCodeObj.dataURL.replace(/^data:image.*base64,/,""),'base64'));
     }
-    res.json(result);
 });
 
 /**

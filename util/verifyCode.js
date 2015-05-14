@@ -69,7 +69,7 @@ exports.Generate = function(W,H) {
     var w = 2 * Math.PI / T;
     var S = function(x) {
         return A * Math.sin(w * x + f) + b;
-    }
+    };
     ctx.lineWidth =1;
     for (var x = -20; x < 200; x += 4) {
         ctx.moveTo(x, S(x));

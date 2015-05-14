@@ -11,8 +11,8 @@ var config = {
     socketServerUrl:'http://127.0.0.1:3002',
     //db
     dbURL:'mongodb://192.168.35.236/pm_mis',
-    dbUserName:'',
-    dbUserPWD:''
+    dbUserName:'pmmisuser',
+    dbUserPWD:'pmmispwd123'
 };
 //导出配置类
 module.exports =config;

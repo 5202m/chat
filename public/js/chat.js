@@ -29,27 +29,7 @@ var chat={
      * 提取验证码
      */
     refreshVerifyCode:function(){
-        $.get("/getVerifyCode",null,function(result){
-            if(result){
-                if(result.isWin){
-                    $("#verifyCodeId img").hide();
-                    $("#canvasId").show();
-                    var canvas = document.getElementById("canvasId");
-                    var ctx = canvas.getContext("2d");
-                    ctx.fillStyle="#ffffff";
-                    ctx.fillRect(0,0,canvas.width,canvas.height);
-                    ctx.strokeStyle="#000";
-                    ctx.fillStyle="#000000";
-                    ctx.font="18px _sans";
-                    ctx.textBaseline="middle";
-                    ctx.fillText(result.data,5,8);
-                }else{
-                    $("#canvasId").hide();
-                    $("#verifyCodeId img").show();
-                    $("#verifyCodeId img").attr("src",result.data);
-                }
-            }
-        },'json');
+        $("#verifyCodeId img").attr("src",'/getVerifyCode?v='+Math.random());
     },
     /**
      * 事件设置
@@ -69,8 +49,10 @@ var chat={
          */
         $("#loginSection .del-btn,#tipSection .del-btn").click(function(){
             common.hideBox('#loginBox');
+            $('#formBtnLoad').hide();
             $("#loginSection").show();
             $("#loginForm")[0].reset();
+            $('.wrong-info').html("");
         });
         /**
          * 删除顶部消息
@@ -100,9 +82,11 @@ var chat={
                 return;
             }
             $('#formBtn').attr('disabled',true);
+            $('#formBtnLoad').show();
             common.getJson("/checkClient",$("#loginForm").serialize(),function(result){
                 $(".wrong-info").html("");
                 $('#formBtn').attr('disabled',false);
+                $('#formBtnLoad').hide();
                 if(result.errcode){
                     $(".wrong-info").html(result.errmsg);
                     return false;
@@ -144,6 +128,7 @@ var chat={
                 }
             },true,function(err){
                 $('#formBtn').attr('disabled',false);
+                $('#formBtnLoad').hide();
             });
         });
        //输入框事件
@@ -161,7 +146,7 @@ var chat={
          */
         $('#contentText').focus(function(){
             $('.add-img').hide();
-        })
+        });
         /**
          * 输入框退格事件
          */
@@ -272,6 +257,7 @@ var chat={
                 console.log("success!");
              }
         };
+        data.fromUser.socketId=chat.socket.id;
         xhr.send(JSON.stringify(data)); //发送base64
     },
     /**
@@ -362,7 +348,7 @@ var chat={
     setWechatTip:function(){
         $("#loginSection").hide();
         $("#tipSection h2").html("提示");
-        $("#tipSection .succ-p-info").html('您的微信还未绑定金道交易账号，绑定金道交易账号，尊享更多专业服务！<a href="http://103.227.194.71/index.php/articles_2931.html" >如何绑定</a>');
+        $("#tipSection .succ-p-info").html('您的微信还未绑定金道交易账号，绑定金道交易账号，尊享更多专业服务！<a href="http://103.227.194.71/index.php/articles_2931.html" style="font-weight:bold;color:blue;" >如何绑定</a>');
         $("#tipSection").show();
     },
     /**

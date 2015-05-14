@@ -384,8 +384,8 @@ var userService = {
             res.on('end', function () {
                 if(common.isValid(tmpData)) {
                     var allData = JSON.parse(tmpData);
-                    if (allData.code == 'SUCCESS') {
-                        var result = allData.result;
+                    var result = allData.result;
+                    if (allData.code == 'SUCCESS'&& result!=null) {
                         if(!isCheckBindWechat){
                             if (result.mobilePhone.indexOf(userInfo.mobilePhone)==-1) {
                                 flagResult.flag = 0;//没有对应记录

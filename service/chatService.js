@@ -61,7 +61,7 @@ var chatService ={
             });
             //信息传输
             socket.on('sendMsg',function(data){
-                chatService.acceptMsg(data);
+                chatService.acceptMsg(data,socket);
             });
         });
     },
@@ -77,7 +77,7 @@ var chatService ={
                 var currentDate = new Date();
                 userInfo.publishTime = currentDate.getTime()+"_"+process.hrtime()[1];//产生唯一的id
                 if(tip){
-                    (socket||chatService.getSocket(groupId,userInfo.userId)).emit('sendMsg',{fromUser:userInfo,value:tip,rule:true});
+                    (socket||chatService.getSocket(groupId,userInfo)).emit('sendMsg',{fromUser:userInfo,value:tip,rule:true});
                     return false;
                 }
                 var sameGroupUserArr=userService.cacheUserArr[groupId];
@@ -85,7 +85,7 @@ var chatService ={
                 userService.verifyRule(groupId,data.content,function(resultVal){
                     if(resultVal){//匹配规则，则按规则逻辑提示
                         console.log('resultVal:'+resultVal);
-                        (socket||chatService.getSocket(groupId,userInfo.userId)).emit('sendMsg',{fromUser:userInfo,uiId:data.uiId,value:resultVal,rule:true});
+                        (socket||chatService.getSocket(groupId,userInfo)).emit('sendMsg',{fromUser:userInfo,uiId:data.uiId,value:resultVal,rule:true});
                     } else{
                         //保存聊天数据
                         messageService.saveMsg(data);
@@ -99,10 +99,11 @@ var chatService ={
                             user = sameGroupUserArr[i];
                             userInfoTmp=user.userInfo;
                             if(user.socket!=null){
-                                if(userInfo.userId==userInfoTmp.userId){//如果是自己，清空内容，告知客户端发送成功即可
+                                if((!userInfo.socketId && userInfo.userId == userInfoTmp.userId)|| (userInfo.socketId && userInfo.socketId == user.socket.id)){//如果是自己，清空内容，告知客户端发送成功即可
                                     sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}};
                                     //微信组用户如果没有绑定微信，进入聊天室小于5次，则弹出提示语
                                     if(constant.weChatGroupId==userInfoTmp.groupId && userInfoTmp.isNewIntoChat && isValid){
+                                        userInfoTmp.isNewIntoChat=false;
                                         subRow = row.loginPlatform.chatUserGroup[0];
                                         isBindWechatTmp = subRow.isBindWechat;
                                         if (!isBindWechatTmp && Number(subRow.intoChatTimes) <= 5) {//没有绑定，小于5次，则调用goldApi检查是否绑定状态
@@ -123,26 +124,26 @@ var chatService ={
                                 }else{
                                     user.socket.emit('sendMsg',{fromUser:userInfo,content:data.content});
                                 }
-                                userInfoTmp.isNewIntoChat=false;
                             }
                         }
+                        userInfoTmp.isNewIntoChat=false;
                     }
                 });
             }else{
-                (socket||chatService.getSocket(groupId,userInfo.userId)).emit('sendMsg',{isVisitor:true,uiId:data.uiId});
+                (socket||chatService.getSocket(groupId,userInfo)).emit('sendMsg',{isVisitor:true,uiId:data.uiId});
             }
         });
     },
     /**
      * 根据组id、用户id找对应socket
      * @param groupId
-     * @param userId
+     * @param userInfo
      */
-    getSocket:function(groupId,userId){
+    getSocket:function(groupId,userInfo){
         var groupUserArr=userService.cacheUserArr[groupId],user=null;
         for(var i=0;i<groupUserArr.length;i++) {
             user = groupUserArr[i];
-            if (user.userInfo.userId == userId) {
+            if ((!userInfo.socketId && user.userInfo.userId == userInfo.userId)|| (userInfo.socketId && userInfo.socketId == user.socket.id)) {
                 return user.socket;
             }
         }

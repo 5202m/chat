@@ -1,8 +1,8 @@
 ﻿/*＃＃＃＃＃＃＃＃＃＃引入所需插件＃＃＃＃＃＃＃＃begin */
 var express = require('express');
 var path = require('path');
-var session = require('express-session');
 var logger=require('./resources/logConf');
+var session = require('express-session');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var http = require('http');
@@ -37,15 +37,15 @@ app.engine('.html',require('ejs').__express);//两个下划线
 logger.use(app);//配置框架日志输出
 app.use(bodyParser.json({limit: '50mb'}));//最大传输量
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
 //session设置
 app.use(session({
    secret: 'pm@chat',
    //name: 'pm@chat',   //这里的name值得是cookie的name，默认cookie的name是：connect.sid
-   cookie: {maxAge: 60000 },  //设置maxAge是80000ms，即60s后session和相应的cookie失效过期
-   resave: false,
-   saveUninitialized: true
+    //cookie: {maxAge: 90000 },  //设置maxAge是80000ms，即90s后session和相应的cookie失效过期
+    resave: false,
+    saveUninitialized: true
 }));
 /*---------------- 外部链接路由的路径 ---------------- begin */
 app.use('/', webRoutes);
@@ -85,7 +85,12 @@ app.use(function(err, req, res, next) {
 /*＃＃＃＃＃＃＃＃＃＃定义app配置信息＃＃＃＃＃＃＃＃end */
 
 /*＃＃＃＃＃＃＃＃＃＃数据库连接配置＃＃＃＃＃＃＃＃begin */
-mongoose.connect(config.dbURL);
+var dbOptions = {
+    server: { poolSize: 5 },
+    user: config.dbUserName,
+    pass: config.dbUserPWD
+};
+mongoose.connect(config.dbURL,dbOptions);
 /*＃＃＃＃＃＃＃＃＃＃数据库连接配置＃＃＃＃＃＃＃＃end */
 
 module.exports = app;

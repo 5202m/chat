@@ -68,8 +68,7 @@ var common = {
         if(!req){
             return '';
         }
-        return req.headers['x-forwarded-for'] || req.ip || req._remoteAddress ||
-            (req.socket && (req.socket.remoteAddress || (req.socket.socket && req.socket.socket.remoteAddress)));
+        return req.headers['x-forwarded-for'] || req.ip;
     },
     /**
      * 链接正则
