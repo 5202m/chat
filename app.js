@@ -86,7 +86,7 @@ app.use(function(err, req, res, next) {
 
 /*＃＃＃＃＃＃＃＃＃＃数据库连接配置＃＃＃＃＃＃＃＃begin */
 var dbOptions = {
-    server: { poolSize: 5 },
+    server: {auto_reconnect: true, poolSize: 5 },
     user: config.dbUserName,
     pass: config.dbUserPWD
 };
