@@ -24,29 +24,30 @@ var userService = {
         //从缓存中移除
         var groupArr=userService.cacheUserArr;
         var subArr=null,obj=null;
-        var userInfo=null;
+        var userId='',groupId='';
         for(var i in groupArr){
             subArr=groupArr[i];
             for(var k=0;k<subArr.length;k++){
                 obj=subArr[k];
                 if(obj.socket.id==socketId){
+                    userId=obj.userInfo.userId;
+                    groupId=obj.userInfo.groupId;
                     subArr.splice(k,1);
-                    userInfo=obj.userInfo;
                     break;
                 }
             }
-            if(userInfo){
+            if(common.isValid(userId) && common.isValid(groupId)){
                 break;
             }
         }
         //更新用户记录表的在线状态(下线设置为0）
-        if(userInfo!=null) {
-            userService.updateChatUserGroupStatus(userInfo, '0', function (err) {
-                if(!err){
+        if(common.isValid(userId) && common.isValid(groupId)) {
+            userService.updateChatUserGroupStatus({userId:userId,groupId:groupId}, 0, function (err) {
+                if (!err) {
                     console.log("update member status success!");
                 }
             });
-            callback(userInfo.groupId);
+            callback(groupId);
         }else{
             callback(null);
         }
@@ -69,15 +70,13 @@ var userService = {
      * @param callback
      */
     verifyRule:function(groupId,content,callback){
-        if(content.msgType!='text'){
-            callback(null);
-            return;
-        }
+        var isImg=content.msgType!='text';
 		var contentVal=content.value.replace(/&lt;label class=\\"dt-send-name\\" tid=\\".+\\"&gt;@.*&lt;\/label&gt;/g,'');//排除@它html
-        if(/&lt;[^(&gt;)].*?&gt;/g.test(contentVal)){ //过滤特殊字符
+        if(/&lt;[^(&gt;)].*?&gt;/g.test(contentVal) && !isImg){ //过滤特殊字符
             callback(" 有特殊字符，已被拒绝！");
             return;
         }
+        console.log("contentVal:"+contentVal);
         chatGroup.findById(groupId,function (err,row) {
             if(err||!row){
                 callback(null);
@@ -103,7 +102,7 @@ var userService = {
                     callback(resultTip.join(";"));
                     return;
                 }
-                if((isNullPeriod || isPeriod) && type!='speak_not_allowed' && common.isValid(beforeVal)){
+                if(!isImg && (isNullPeriod || isPeriod) && type!='speak_not_allowed' && common.isValid(beforeVal)){
                     beforeVal=beforeVal.replace(/(,|，)$/,'');//去掉结尾的逗号
                     beforeVal=beforeVal.replace(/,|，/g,'|');//逗号替换成|，便于统一使用正则表达式
                     if(type=='keyword_filter'){//过滤关键字或过滤链接
@@ -114,11 +113,14 @@ var userService = {
                             return;
                         }
                     }
-                    if(type=='url_not_allowed' && common.urlReg().test(contentVal)){//禁止链接
-                        resultTip=[];
-                        resultTip.push(tip);
-                        callback(resultTip.join(";"));
-                        return;
+                    if(type=='url_not_allowed'){//禁止链接
+                        var val=beforeVal.replace(/\//g,'\\\/').replace(/\./g,'\\\.');
+                        if(eval('/'+beforeVal+'/').test(contentVal)){
+                            resultTip=[];
+                            resultTip.push(tip);
+                            callback(resultTip.join(";"));
+                            return;
+                        }
                     }
                     if(type=='url_allowed'){//除该连接外其他连接会禁止
                         urlArr.push(beforeVal);
@@ -132,7 +134,7 @@ var userService = {
                     }
                 }
             }
-            if(urlArr.length>0 && common.urlReg().test(contentVal)){
+            if(!isImg && urlArr.length>0 && common.urlReg().test(contentVal)){
                 var val=urlArr.join("|").replace(/\//g,'\\\/').replace(/\./g,'\\\.');
                 if(!eval('/'+val+'/').test(contentVal)){
                     resultTip=[];
@@ -347,7 +349,9 @@ var userService = {
             }else{
                 var accountNoTemp=userInfo.accountNo.substring(1,userInfo.accountNo.length);
                 console.log("checkClient->accountNoTemp:"+accountNoTemp);
-                member.find({ 'loginPlatform.chatUserGroup.accountNo': eval('/.+'+accountNoTemp+'$/')}).where('loginPlatform.chatUserGroup._id').equals(userInfo.groupId).count(function (err,count){
+                var searchObj = { "$or" : [{ 'loginPlatform.chatUserGroup.accountNo': eval('/.+'+accountNoTemp+'$/')}
+                    ,{'mobilePhone':userInfo.mobilePhone,'loginPlatform.chatUserGroup.userId':{ '$nin':['',null]}}]};
+                member.find(searchObj).where('loginPlatform.chatUserGroup._id').equals(userInfo.groupId).count(function (err,count){
                     if(!err && count>0){
                         callback({flag:4});//账号已被绑定
                     }else{

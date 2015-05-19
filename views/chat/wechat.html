@@ -8,7 +8,7 @@
     <meta name="description" content="微信聊天室" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
     <link rel="stylesheet" href="/css/swipebox.min.css">
-    <link type="text/css" rel="stylesheet" href="/css/wechat.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/wechat.css?t=<%=new Date()%>"/>
     <style type="text/css">
         /**---------------开发加入，begin----------**/
         .dt-txt-name{ position: absolute;top: 8px;left: 5px; }
@@ -86,7 +86,7 @@
     </article>
 </footer>
 <!-- footer end -->
-<section class="layer-out dn" id="loginBox">
+<section class="layer-out dn" id="openBox">
     <section class="layer-con" id="loginSection">
         <a href="javascript://" class="del-btn" title="关闭"></a>
         <h3>登录验证</h3>
@@ -96,6 +96,7 @@
                 <input type="hidden"  name="groupId"/>
                 <input type="hidden"  name="nickname"/>
                 <input type="hidden"  name="fromPlatform"/>
+                <input type="hidden"  name="userType"/>
                 <section class="form-part-a clearfix">
                     <label class="fl">账　号：</label>
                     <aside class="form-inp"><input type="tel" class="input-text" name="accountNo" /></aside>
@@ -137,6 +138,9 @@
 <!-- shadow begin -->
 <section class="layer-shadow dn"></section>
 <!-- shadow end -->
+<!-- loading begin -->
+<section class="loading-box dn"></section>
+<!-- loading end -->
 <script src="/js/lib/jquery-1.11.0.min.js"></script>
 <script src="/js/lib/jquery.swipebox.min.js"></script>
 <script src="/js/lib/socket.io.js"></script>

@@ -57,6 +57,7 @@ var chatService ={
                         chatService.clientNotice(chatService.noticeType.onlineNum,groupId);
                     }
                 });
+                //socket.emit('disconnect', {reConnect:true});//同步数据到客户端
                 console.log('disconnect,please check!');
             });
             //信息传输
@@ -77,7 +78,7 @@ var chatService ={
                 var currentDate = new Date();
                 userInfo.publishTime = currentDate.getTime()+"_"+process.hrtime()[1];//产生唯一的id
                 if(tip){
-                    (socket||chatService.getSocket(groupId,userInfo)).emit('sendMsg',{fromUser:userInfo,value:tip,rule:true});
+                    (socket||chatService.getSocket(groupId,userInfo)).emit('sendMsg',{fromUser:userInfo,uiId:data.uiId,value:tip,rule:true});
                     return false;
                 }
                 var sameGroupUserArr=userService.cacheUserArr[groupId];
@@ -177,7 +178,7 @@ var chatService ={
             if(err!=null||row==null){
                 callback(false);
             }else{
-                //row.remove();
+                row.remove();
                 callback(true);
             }
         });

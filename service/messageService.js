@@ -11,8 +11,10 @@ var messageService ={
      */
     loadMsg:function(groupId,callback){
         chatMessage.find().select('userId nickname avatar userType groupId content.msgType content.value content.needMax publishTime').where('groupId').equals(groupId).where('status').equals(1).limit(this.maxRows).sort({'publishTime':'desc'}).exec(function (err,data) {
-            if(!err){
+            if(!err && data){
                 callback(data);
+            }else{
+                callback(null);
             }
         });
     },

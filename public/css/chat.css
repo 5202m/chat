@@ -115,6 +115,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .me-li .arrow-outer{left:auto;right:-13px}
 .talk-img{max-width:150px;width:80%}
 .talk-img p{text-align:center;line-height:0;padding:2px;margin-left:4px}
+.talk-content p img{width:100%}
 .fxs-ony-box{position:fixed;top:190px;width:100%;padding:6px 0 8px;background:#f1f1f1;z-index:9}
 .fxs-top{top:111px}
 .fxs-none{top:0}

@@ -80,6 +80,6 @@ exports.Generate = function(W,H) {
    //导出结果
     return {
         code: vCode.join("").toLowerCase(),
-        dataURL: canvas.toDataURL()
+        dataURL: canvas.toDataURL('image/jpeg')
     };
 };

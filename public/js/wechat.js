@@ -39,7 +39,7 @@ var wechat={
                     $ul.css({marginTop:0});
                     $ul.find("li:first").fadeIn(500);
                 });
-            },3000);
+            },8000);
         }).trigger("mouseleave");
     },
     setEvent : function(){

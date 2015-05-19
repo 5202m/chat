@@ -88,11 +88,28 @@ router.get('/chat', function(req, res) {
  */
 router.post('/uploadData', function(req, res) {
     var data = req.body;
-    if(data!=null){
-        chatService.acceptMsg(data,null);
-        res.json({success:false});
+    if(data!=null && process.platform.indexOf("win")==-1){
+        var imgUtil=require('../../util/imgUtil');//引入imgUtil
+        var val=data.content.value,needMax=data.content.needMax;
+        if(data.content.msgType=="img" && common.isValid(val)){
+            imgUtil.zipImg(val,100,60,function(minResult){
+                data.content.value=minResult.data;
+                if(needMax==1){
+                    imgUtil.zipImg(val,0,60,function(maxResult){
+                        data.content.maxValue=maxResult.data;
+                        chatService.acceptMsg(data,null);
+                        res.json({success:true});
+                    });
+                }else{
+                    chatService.acceptMsg(data,null);
+                    res.json({success:true});
+                }
+            });
+        }else{
+            res.json({success:false});
+        }
     }else{
-        res.json({});
+        res.json({success:false});
     }
 });
 
