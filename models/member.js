@@ -16,7 +16,7 @@ var mongoose = require('mongoose')
         loginPlatform:{
             chatUserGroup:[{  _id:String,//组id，与聊天室组对应
                 userId:{type:String,index:true},//第三方用户id，对于微信，userId为微信的openId;
-                onlineStatus: {type:Number, default:1}, //在线状态：0 、下线 ；1、在线
+                onlineStatus: {type:Number, default:0}, //在线状态：0 、下线 ；1、在线
                 onlineDate: Date,//上线时间
                 avatar:String,//头像
                 nickname:String,//昵称
