@@ -19,7 +19,7 @@ var chatServer ={
      * 停止服务
      */
     stop:function(){
-        chatService.socket=null;
+        chatService.socket.close();
     }
 }
 //导出服务

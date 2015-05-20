@@ -141,6 +141,7 @@ var chat={
                     if(result.isSys){
                         if(result.isOk){
                             chat.userInfo.nickname=result.nickname;
+                            chat.userInfo.userType=result.userType;
                             $("#loginSection").hide();
                             $("#tipSection h2").html("验证成功");
                             $("#tipSection .succ-p-info").html("尊贵的客户：欢迎光临金道贵金属聊天室！");
@@ -224,7 +225,7 @@ var chat={
                 msg= $("#txtNicknameId").html()+msg.replace(/<[^>].*?>/g,'');//去掉所有html标志
                 var sendObj={uiId:chat.getUiId(),fromUser:chat.userInfo,content:{msgType:chat.msgType.text,value:common.escapeHtml(msg)}};
                 chat.setContent(sendObj,true,false);//直接把数据填入内容栏
-                chat.socket.emit('sendMsg',sendObj);//发送数据
+                //chat.socket.emit('sendMsg',sendObj);//发送数据
                 chat.removeTxtOfNickname();
                 //清空输入框
                 $("#contentText").val("");

@@ -77,6 +77,9 @@ var chatService ={
                 var tip=userService.checkUserGag(row);
                 var currentDate = new Date();
                 userInfo.publishTime = currentDate.getTime()+"_"+process.hrtime()[1];//产生唯一的id
+                var userGroupTmp=row.loginPlatform.chatUserGroup[0];
+                userInfo.userType=userGroupTmp.userType;
+                userInfo.nickname=userGroupTmp.nickname;
                 if(tip){
                     (socket||chatService.getSocket(groupId,userInfo)).emit('sendMsg',{fromUser:userInfo,uiId:data.uiId,value:tip,rule:true});
                     return false;
@@ -95,7 +98,8 @@ var chatService ={
                             data.content.maxValue='';
                         }
                         var userInfoTmp=null,user=null,subRow=null,isBindWechatTmp=false,sendInfo=null;
-                        var isValid=(common.isValid(userInfo.fromPlatform)&&constant.fromPlatform.pm_mis!=userInfo.fromPlatform)||(common.isBlank(userInfo.fromPlatform));
+                        //是否微信前台普通用户
+                        var isWeChatFrontValid=(common.isValid(userInfo.fromPlatform)&&constant.fromPlatform.pm_mis!=userInfo.fromPlatform)||(common.isBlank(userInfo.fromPlatform)&&userInfo.userType!=constant.roleUserType.analyst);
                         for(var i=0;i<sameGroupUserArr.length;i++){
                             user = sameGroupUserArr[i];
                             userInfoTmp=user.userInfo;
@@ -103,7 +107,7 @@ var chatService ={
                                 if((!userInfo.socketId && userInfo.userId == userInfoTmp.userId)|| (userInfo.socketId && userInfo.socketId == user.socket.id)){//如果是自己，清空内容，告知客户端发送成功即可
                                     sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}};
                                     //微信组用户如果没有绑定微信，进入聊天室小于5次，则弹出提示语
-                                    if(constant.weChatGroupId==userInfoTmp.groupId && userInfoTmp.isNewIntoChat && isValid){
+                                    if(constant.weChatGroupId==userInfoTmp.groupId && userInfoTmp.isNewIntoChat && isWeChatFrontValid){
                                         userInfoTmp.isNewIntoChat=false;
                                         subRow = row.loginPlatform.chatUserGroup[0];
                                         isBindWechatTmp = subRow.isBindWechat;

@@ -89,7 +89,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .fxs-top{top:111px}
 .fxs-none{top:0}
 .img-loading{position:absolute;bottom:0;display:block;width:25px;height:25px;border-radius:4px;background:url(../images/loading2.gif) no-repeat center;background-size:40px 40px;z-index:9}
-.img-load-gan{position:absolute;bottom:0;/*right:165px;*/display:block;width:40px;height:40px;border-radius:4px;background-position:9px -59px;z-index:9}
+.img-load-gan{position:absolute;bottom:0;display:block;width:40px;height:40px;border-radius:4px;background-position:9px -59px;z-index:9}
 .shadow-box{position:absolute;left:2px;top:2px;width:100%;max-width:150px;background:#000;opacity:0.4;z-index:9}
 .shadow-conut{position:absolute;left:2px;top:50%;margin-top:-12px;width:100%;max-width:150px;display:block;text-align:center;font:25px arial;color:#fff;text-shadow:0 2px 0 #000;z-index:10;text-decoration:none}
 
