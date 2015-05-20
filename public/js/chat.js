@@ -536,7 +536,9 @@ var chat={
         while (ul.length > chat.maxRows) {
             ul.eq(1).remove();
         }
-        $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
+        if(!isLoadData) {
+            $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
+        }
         //内容@事件设置
         var dtObj=$('#'+fromUser.publishTime+' .talk-content .dt-send-name');
         if(dtObj.length>0) {
@@ -666,8 +668,9 @@ var chat={
                     };
                     chat.setContent({fromUser: fromUser,content:row.content},false,true);
                 }
+                $('.swipebox').swipebox();
+                $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
             }
-            $('.swipebox').swipebox();
         });
     }
 };
