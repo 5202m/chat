@@ -163,7 +163,8 @@ var userService = {
         var newUserInfo={groupId:userInfo.groupId,accountNo:userInfo.accountNo,userId:userInfo.userId,mobilePhone:userInfo.mobilePhone};
         if(constant.fromPlatform.pm_mis==userInfo.fromPlatform){
             newUserInfo.accountNo=userInfo.userId;
-            newUserInfo.userId='';
+            newUserInfo.userId='';//不需要填值
+            newUserInfo.isFromBack=true;//来自后台
         }
         console.log("newUserInfo:"+JSON.stringify(newUserInfo));
         boUser.findOne({'userNo':newUserInfo.accountNo,'telephone':newUserInfo.mobilePhone},function(err,row) {
@@ -272,12 +273,15 @@ var userService = {
      * @param callback
      */
     updateUserGroupByAccountNo:function(userInfo,callback){
+        var setObj= userInfo.isFromBack?{'$set':{'loginPlatform.chatUserGroup.$.onlineDate':new Date(),
+            'loginPlatform.chatUserGroup.$.onlineStatus':1
+        }}:{'$set':{'loginPlatform.chatUserGroup.$.onlineDate':new Date(),
+            'loginPlatform.chatUserGroup.$.onlineStatus':1,
+            'loginPlatform.chatUserGroup.$.userId':userInfo.userId
+        }};
         //存在则更新上线状态及上线时间
-        member.findOneAndUpdate({'mobilePhone':userInfo.mobilePhone,'loginPlatform.chatUserGroup.accountNo':userInfo.accountNo,'loginPlatform.chatUserGroup._id':userInfo.groupId},
-            {'$set':{'loginPlatform.chatUserGroup.$.onlineDate':new Date(),
-                      'loginPlatform.chatUserGroup.$.onlineStatus':1,
-                      'loginPlatform.chatUserGroup.$.userId':userInfo.userId
-            }},function(err,row){
+        member.findOneAndUpdate({'mobilePhone':userInfo.mobilePhone,'loginPlatform.chatUserGroup.accountNo':userInfo.accountNo,'loginPlatform.chatUserGroup._id':userInfo.groupId},setObj
+           ,function(err,row){
                 callback(!err && row);
                 console.log("updateUserGroupByAccountNo->update info!");
             });

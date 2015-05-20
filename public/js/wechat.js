@@ -69,53 +69,65 @@ var wechat={
      * 设置广告
      */
     setAdvertisement:function(){
-        $.get('/getAdvertisement',null,function(data){
-            $("#adBox a").attr("href",data.imgUrl);
-            $("#adBox img").attr("src",data.img);
-        },"json");
+        try{
+            $.getJSON('/getAdvertisement',null,function(data){
+                $("#adBox a").attr("href",data.imgUrl);
+                $("#adBox img").attr("src",data.img);
+            });
+        }catch (e){
+          console.log("setAdvertisement->"+e);
+        }
     },
     /**
      * 设置公告
      */
     setBulletin:function(){
-        $.get('/getBulletinList',null,function(data){
-            $.each(data,function(i,obj){
-                if(obj != null){
-                    var row=obj.detailList[0];
-                    $("#quotation ul").append('<li txt="'+row.content+'"><a href="#">'+row.title+'</a><i>'+ common.formatterDateTime(obj.createDate,'.')+'</i></li>');
-                }
+        try{
+            $.getJSON('/getBulletinList',null,function(data){
+                $.each(data,function(i,obj){
+                    if(obj != null){
+                        var row=obj.detailList[0];
+                        $("#quotation ul").append('<li txt="'+row.content+'"><a href="#">'+row.title+'</a><i>'+ common.formatterDateTime(obj.createDate,'.')+'</i></li>');
+                    }
+                });
+                $("#quotation ul li").click(function(){
+                    wechat.showBulletin($(this).children("a").text(),$(this).children("i").text(),$(this).attr("txt"));
+                });
             });
-            $("#quotation ul li").click(function(){
-                wechat.showBulletin($(this).children("a").text(),$(this).children("i").text(),$(this).attr("txt"));
-            });
-        },"json");
+        }catch (e){
+            console.log("setBulletin->"+e);
+        }
     },
     /**
      * 设置价格
      */
     setPrice:function(){
-        $.get(wechat.priceUrl,null,function(data){
-            var result = data.result.row,subObj=null;
-            $.each(result,function(i,obj){
-                if(obj != null){
-                    subObj =obj.attr;
-                    var gmCode = subObj.gmcode,															 //产品种类
-                        bid = subObj.bid,																 //最新
-                        change = subObj.change,															 //涨跌0.31
-                        direction = ($.trim(change) != '' && change.indexOf('-') >= 0 ? 'up' : 'down'),  //升或降
-                        range = change/(bid-change) *100 ;											 	 //幅度0.03%
-                    var product = $("#product_price_ul li[name="+gmCode+"]");   //获取对应的code的产品
-                    if(direction == 'up'){					     //设置产品的颜色变化
-                        product.attr("class","date-up");
-                    }else if(direction == 'down'){
-                        product.attr("class","date-down");
+        try{
+            $.getJSON(wechat.priceUrl,null,function(data){
+                var result = data.result.row,subObj=null;
+                $.each(result,function(i,obj){
+                    if(obj != null){
+                        subObj =obj.attr;
+                        var gmCode = subObj.gmcode,															 //产品种类
+                            bid = subObj.bid,																 //最新
+                            change = subObj.change,															 //涨跌0.31
+                            direction = ($.trim(change) != '' && change.indexOf('-') >= 0 ? 'up' : 'down'),  //升或降
+                            range = change/(bid-change) *100 ;											 	 //幅度0.03%
+                        var product = $("#product_price_ul li[name="+gmCode+"]");   //获取对应的code的产品
+                        if(direction == 'up'){					     //设置产品的颜色变化
+                            product.attr("class","date-up");
+                        }else if(direction == 'down'){
+                            product.attr("class","date-down");
+                        }
+                        product.find("p.date-sz").text(Number(bid).toFixed(2));
+                        product.find("span:eq(0)").text(Number(change).toFixed(2));
+                        product.find("span:eq(1)").text(Number(range).toFixed(2)+'%');
                     }
-                    product.find("p.date-sz").text(Number(bid).toFixed(2));
-                    product.find("span:eq(0)").text(Number(change).toFixed(2));
-                    product.find("span:eq(1)").text(Number(range).toFixed(2)+'%');
-                }
+                });
             });
-        },"json");
+        }catch (e){
+            console.log("setPrice->"+e);
+        }
     },
     /**
      * 功能：显示公告

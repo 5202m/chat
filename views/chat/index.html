@@ -87,10 +87,10 @@
 <!-- loading begin -->
 <section class="loading-box"></section>
 <!-- loading end -->
-<script src="/js/lib/socket.io.js"></script>
-<script src="/js/lib/jquery-1.11.0.min.js"></script>
-<script src="/js/util/common.js?t=<%=new Date()%>"></script>
-<script src="/js/chat.js?t=<%=new Date()%>"></script>
+<script type="text/javascript" src="/js/lib/socket.io.js"></script>
+<script type="text/javascript" src="/js/lib/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="/js/util/common.js?t=<%=new Date()%>"></script>
+<script type="text/javascript" src="/js/chat.js?t=<%=new Date()%>"></script>
 <script>
     chat.userInfo=JSON.parse('<%= userInfo %>'.replace(/&#34;/g,'"'));
     chat.socketUrl='<%= socketUrl %>';

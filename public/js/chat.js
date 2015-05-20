@@ -225,7 +225,7 @@ var chat={
                 msg= $("#txtNicknameId").html()+msg.replace(/<[^>].*?>/g,'');//去掉所有html标志
                 var sendObj={uiId:chat.getUiId(),fromUser:chat.userInfo,content:{msgType:chat.msgType.text,value:common.escapeHtml(msg)}};
                 chat.setContent(sendObj,true,false);//直接把数据填入内容栏
-                //chat.socket.emit('sendMsg',sendObj);//发送数据
+                chat.socket.emit('sendMsg',sendObj);//发送数据
                 chat.removeTxtOfNickname();
                 //清空输入框
                 $("#contentText").val("");
