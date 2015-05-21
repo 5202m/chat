@@ -7,6 +7,7 @@ var mongoose = require('mongoose')
     ,tokenSchema = new Schema({//tokenSchema
             _id:ObjectId,
             value:{type:String,index:true}, //token值
+            tokenAccessId:String,//tokenAccess表外键值
             beginTime:{type:Number, default:0},//开始时间
             endTime:{type:Number, default:0},//结束时间
             createDate: Date //创建时间

@@ -9,6 +9,7 @@ var config = require('../resources/config');//引入配置
 var constant = require('../constant/constant');//引入constant
 var common = require('../util/common');//引入common类
 var querystring = require('querystring');
+var request = require('request');
 
 /**
  * 定义用户服务类
@@ -380,60 +381,37 @@ var userService = {
      */
     checkAClient:function(userInfo,isCheckBindWechat,callback){
         var flagResult={flag:0};//客户记录标志:0（记录不存在）、1（未绑定微信）、2（未入金激活）、3（绑定微信并且已经入金激活）
-        var postData = querystring.stringify({
-            'loginname' :userInfo.accountNo
-        });
-        var options = {
-            hostname: config.goldApiHostname,
-            port: config.goldApiPort,
-            path: config.getCustomerInfoUrl,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'Content-Length': postData.length
-            }
-        };
-        var req=http.request(options, function(res) {
-            res.setEncoding('utf8');
-            var tmpData="";
-            res.on('data', function (data) {//异步分包接收数据（如数据量大）
-                tmpData+=data;
-            });
-            res.on('end', function () {
-                if(common.isValid(tmpData)) {
-                    var allData = JSON.parse(tmpData);
-                    var result = allData.result;
-                    if (allData.code == 'SUCCESS'&& result!=null) {
-                        if(!isCheckBindWechat){
-                            if (result.mobilePhone.indexOf(userInfo.mobilePhone)==-1) {
-                                flagResult.flag = 0;//没有对应记录
-                            }  else if (result.accountStatus != 'A') {
-                                flagResult.flag = 2;//未入金激活
-                            } else if (result.isBindWeichat!=1) {
-                                flagResult.flag = 1;//未绑定微信
-                                //验证通过，成为聊天室会员，记录信息
-                                userInfo.isBindWechat=false;
-                                userService.createUser(userInfo);
-                            }else {
-                                flagResult.flag = 3;//绑定微信并且已经入金激活
-                                //验证通过，成为聊天室会员，记录信息
-                                userInfo.isBindWechat=true;
-                                userService.createUser(userInfo);
-                            }
-                        }else if (result.isBindWeichat==1){
-                            flagResult.flag = 5;//绑定微信
+        request.post({url:(config.goldApiUrl+'/account/getCustomerInfo'), form: {loginname:userInfo.accountNo}}, function(error,response,body){
+            var tmpData=body;
+            if(!error && common.isValid(tmpData)) {
+                var allData = JSON.parse(tmpData);
+                var result = allData.result;
+                if (allData.code == 'SUCCESS'&& result!=null) {
+                    if(!isCheckBindWechat){
+                        if (result.mobilePhone.indexOf(userInfo.mobilePhone)==-1) {
+                            flagResult.flag = 0;//没有对应记录
+                        }  else if (result.accountStatus != 'A') {
+                            flagResult.flag = 2;//未入金激活
+                        } else if (result.isBindWeichat!=1) {
+                            flagResult.flag = 1;//未绑定微信
+                            //验证通过，成为聊天室会员，记录信息
+                            userInfo.isBindWechat=false;
+                            userService.createUser(userInfo);
+                        }else {
+                            flagResult.flag = 3;//绑定微信并且已经入金激活
+                            //验证通过，成为聊天室会员，记录信息
+                            userInfo.isBindWechat=true;
+                            userService.createUser(userInfo);
                         }
-                    } else {
-                        flagResult.flag = 0;//没有对应记录
+                    }else if (result.isBindWeichat==1){
+                        flagResult.flag = 5;//绑定微信
                     }
+                } else {
+                    flagResult.flag = 0;//没有对应记录
                 }
-                callback(flagResult);
-            });
-        }).on('error', function(e) {
-            console.log("Get Customer Info Error: " + e.message);
+            }
+            callback(flagResult);
         });
-      req.write(postData);
-      req.end();
     }
 };
 
