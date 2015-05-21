@@ -182,8 +182,16 @@ var chatService ={
             if(err!=null||row==null){
                 callback(false);
             }else{
-                row.remove();
-                callback(true);
+                var currTime=new Date().getTime();
+                if(row.endTime==0||row.beginTime==0){
+                    row.remove();
+                    callback(true);
+                }else if(currTime>row.endTime){
+                    row.remove();
+                    callback(false);
+                }else{
+                    callback(true);
+                }
             }
         });
     }
