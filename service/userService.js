@@ -8,7 +8,6 @@ var chatGroup = require('../models/chatGroup');//引入chatGroup数据模型
 var config = require('../resources/config');//引入配置
 var constant = require('../constant/constant');//引入constant
 var common = require('../util/common');//引入common类
-var querystring = require('querystring');
 var request = require('request');
 
 /**
@@ -172,7 +171,18 @@ var userService = {
             if(!err && row){
                 console.log("boUser->row:"+JSON.stringify(row));
                 result.isOk=true;
-                result.userType=newUserInfo.userType=userInfo.userType=constant.roleUserType[row.role.roleNo];
+                var userTypeTmp=null;
+                for(var p in constant.roleUserType){
+                    if(eval('/^'+p+'.*?/g').test(row.role.roleNo)){
+                        userTypeTmp=constant.roleUserType[p];
+                        break;
+                    }
+                }
+                if(common.isBlank(userTypeTmp)){
+                    callback(result);
+                    return false;
+                }
+                result.userType=newUserInfo.userType=userInfo.userType=userTypeTmp;
                 result.nickname=userInfo.nickname=newUserInfo.nickname=row.userName+"("+row.role.roleName+")";
                 if(common.isBlank(result.userType)){
                     console.error("checkBackUserInfo->userType has error,please the constant.roleUserType");
@@ -229,7 +239,9 @@ var userService = {
                         }
                     };
                     member.create(memberModel,function(err,count){
-                        console.log('create member success!');
+                        if(err){
+                            console.log('create member fail,'+err);
+                        }
                         if(callback){
                             callback(!err && count);
                         }
