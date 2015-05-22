@@ -16,7 +16,7 @@ var constant={
         member:0,//会员
         admin:1,//管理员
         analyst:2, //分析师
-        customer_service:3 //客服
+        cs:3 //客服
     }
 };
 //导出常量类
