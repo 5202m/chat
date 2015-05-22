@@ -15,7 +15,8 @@ var constant={
     roleUserType:{ //角色与聊天室用户类别对应关系
         member:0,//会员
         admin:1,//管理员
-        analyst:2 //分析师
+        analyst:2, //分析师
+        customer_service:3 //客服
     }
 };
 //导出常量类
