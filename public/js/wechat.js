@@ -13,7 +13,7 @@ var wechat={
         this.setEvent();
         this.scrollBulletin();
         window.setTimeout("wechat.fnSmall()",10000);	// 10秒以后自动隐藏广告栏
-        setInterval("wechat.setPrice()",5000);		//每间隔3秒刷新下报价信息
+        setInterval("wechat.setPrice()",5000);	//每间隔3秒刷新下报价信息
     },
     /**
      * 设置页面用户信息
@@ -103,7 +103,7 @@ var wechat={
      */
     setPrice:function(){
         try{
-            $.getJSON(wechat.priceUrl,null,function(data){
+            $.getJSON(wechat.priceUrl).done(function(data){
                 var result = data.result.row,subObj=null;
                 $.each(result,function(i,obj){
                     if(obj != null){
