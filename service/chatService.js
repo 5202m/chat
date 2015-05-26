@@ -86,7 +86,7 @@ var chatService ={
                 }
                 var sameGroupUserArr=userService.cacheUserArr[groupId];
                 //验证规则
-                userService.verifyRule(groupId,data.content,function(resultVal){
+                userService.verifyRule(userInfo.userType,groupId,data.content,function(resultVal){
                     if(resultVal){//匹配规则，则按规则逻辑提示
                         console.log('resultVal:'+resultVal);
                         (socket||chatService.getSocket(groupId,userInfo)).emit('sendMsg',{fromUser:userInfo,uiId:data.uiId,value:resultVal,rule:true});

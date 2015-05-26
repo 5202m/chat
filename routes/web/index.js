@@ -194,7 +194,7 @@ router.get('/getBigImg', function(req, res) {
  */
 router.get('/getBulletinList', function(req, res) {
     pmApiService.getBulletinList('zh',1,20,function(data){
-        res.json(data?JSON.parse(data):{});
+        res.json(data?JSON.parse(data):null);
     });
 });
 
@@ -203,7 +203,7 @@ router.get('/getBulletinList', function(req, res) {
  */
 router.get('/getAdvertisement', function(req, res) {
     pmApiService.getAdvertisement(function(data){
-        res.json(data?JSON.parse(data):{});
+        res.json(data?JSON.parse(data):null);
     });
 });
 

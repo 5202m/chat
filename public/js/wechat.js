@@ -12,8 +12,6 @@ var wechat={
         this.setBulletin();
         this.setEvent();
         this.scrollBulletin();
-        window.setTimeout("wechat.fnSmall()",10000);	// 10秒以后自动隐藏广告栏
-        setInterval("wechat.setPrice()",5000);	//每间隔3秒刷新下报价信息
     },
     /**
      * 设置页面用户信息
@@ -27,11 +25,11 @@ var wechat={
      */
     scrollBulletin : function(){
         var scrtime='';
-        $("#quotation").hover(function(){
+        $("#bulletin").hover(function(){
             clearInterval(scrtime);
         },function(){
             scrtime = setInterval(function(){
-                var $ul = $("#quotation ul");
+                var $ul = $("#bulletin ul");
                 var liHeight = $ul.find("li:last").height();
                 $ul.animate({marginTop : liHeight + 35 + "px"},1000,function(){
                     $ul.find("li:last").prependTo($ul);
@@ -71,8 +69,13 @@ var wechat={
     setAdvertisement:function(){
         try{
             $.getJSON('/getAdvertisement',null,function(data){
-                $("#adBox a").attr("href",data.imgUrl);
-                $("#adBox img").attr("src",data.img);
+                if(data){
+                    $("#adBox a").attr("href",(common.isBlank(data.imgUrl)?"javascript:":data.imgUrl));
+                    $("#adBox img").attr("src",data.img);
+                    window.setTimeout("wechat.fnSmall()",10000);	// 10秒以后自动隐藏广告栏
+                }else{
+                    wechat.fnSmall();
+                }
             });
         }catch (e){
           console.log("setAdvertisement->"+e);
@@ -84,16 +87,20 @@ var wechat={
     setBulletin:function(){
         try{
             $.getJSON('/getBulletinList',null,function(data){
-                $.each(data,function(i,obj){
-                    if(obj != null){
-                        var row=obj.detailList[0];
-                        $("#quotation ul").append('<li txt="'+row.content+'"><a href="#">'+row.title+'</a><i>'+ common.formatterDateTime(obj.createDate,'.')+'</i></li>');
-                    }
-                });
-                $("#quotation ul li").click(function(){
-                    wechat.showBulletin($(this).children("a").text(),$(this).children("i").text(),$(this).attr("txt"));
-                });
+                if(data){
+                    $.each(data,function(i,obj){
+                        if(obj != null){
+                            var row=obj.detailList[0];
+                            $("#bulletin ul").append('<li txt="'+row.content+'"><a href="#">'+row.title+'</a><i>'+ common.formatterDate(obj.createDate,'.')+'</i></li>');
+                        }
+                    });
+                    $("#bulletin ul li").click(function(){
+                        wechat.showBulletin($(this).children("a").text(),$(this).children("i").text(),$(this).attr("txt"));
+                    });
+                    setInterval("wechat.setPrice()",5000);	//每间隔3秒刷新下报价信息
+                }
             });
+
         }catch (e){
             console.log("setBulletin->"+e);
         }
@@ -104,6 +111,10 @@ var wechat={
     setPrice:function(){
         try{
             $.getJSON(wechat.priceUrl).done(function(data){
+                if(!data){
+                    $("#product_price_ul li .date-sz").text("--");
+                    return false;
+                }
                 var result = data.result.row,subObj=null;
                 $.each(result,function(i,obj){
                     if(obj != null){

@@ -69,14 +69,17 @@ var userService = {
      * @param content
      * @param callback
      */
-    verifyRule:function(groupId,content,callback){
+    verifyRule:function(userType,groupId,content,callback){
+        if(constant.roleUserType.member!=userType){//后台用户无需使用规则
+            callback(null);
+            return;
+        }
         var isImg=content.msgType!='text';
 		var contentVal=content.value.replace(/&lt;label class=\\"dt-send-name\\" tid=\\".+\\"&gt;@.*&lt;\/label&gt;/g,'');//排除@它html
         if(/&lt;[^(&gt;)].*?&gt;/g.test(contentVal) && !isImg){ //过滤特殊字符
             callback(" 有特殊字符，已被拒绝！");
             return;
         }
-        console.log("contentVal:"+contentVal);
         chatGroup.findById(groupId,function (err,row) {
             if(err||!row){
                 callback(null);

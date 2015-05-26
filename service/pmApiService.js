@@ -19,7 +19,7 @@ var pmApiService = {
      * 提取公告信息
      */
      getBulletinList:function(lang,curPageNo,pageSize,callback){
-         request(this.formatApiUrl(util.format('/article/getArticleList?code=bulletin&lang=%s&curPageNo=%d&pageSize=%d',lang,curPageNo,pageSize)),function(err, response, data){
+         request(this.formatApiUrl(util.format('/article/getArticleList?platform=wechat&code=bulletin&lang=%s&curPageNo=%d&pageSize=%d',lang,curPageNo,pageSize)),function(err, response, data){
              if (!err && response.statusCode == 200) {
                  callback(data);
              }else{

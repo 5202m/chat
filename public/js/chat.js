@@ -406,7 +406,7 @@ var chat={
     setWechatTip:function(){
         $("#loginSection").hide();
         $("#tipSection h2").html("提示");
-        $("#tipSection .succ-p-info").html('您的微信还未绑定金道交易账号，绑定金道交易账号，尊享更多专业服务！<a href="http://103.227.194.71/index.php/articles_2931.html" style="font-weight:bold;color:blue;" >如何绑定</a>');
+        $("#tipSection .succ-p-info").html('您的微信还未绑定金道交易账号，绑定金道交易账号，尊享更多专业服务！<a href="http://wechat.24k.hk/WeixinFront/article/details.action?id=2931" style="font-weight:bold;color:blue;" >如何绑定</a>');
         $("#tipSection").show();
     },
     /**
@@ -579,7 +579,9 @@ var chat={
             }
         }
         else if(fromUser.userType==2){//分析师样式设置
-            liClass='expert-li';
+            if(chat.msgType.img!=content.msgType){
+                liClass='expert-li';
+            }
             dtHtml='<dt class="dt-send-name" tId="'+fromUser.userId+'">@</dt>';
         }
         if(common.isBlank(nickname)){
