@@ -60,6 +60,7 @@ var wechat={
             var dom=$('.wrapper');
             if(dom.hasClass('pub-three')){
                 $('#contentText').blur();
+                $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
             }
         }, false);
     },

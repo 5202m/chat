@@ -149,6 +149,7 @@ router.get('/getVerifyCode', function(req, res) {
         var verifyCodeObj = require("../../util/verifyCode").Generate(50,25);
         req.session.verifyCode= verifyCodeObj.code;
         console.log("req.session.verifyCode:"+req.session.verifyCode);
+        res.writeHead(200, {"Content-Type": "image/jpeg"});
         res.end(new Buffer(verifyCodeObj.dataURL.replace(/^data:image.*base64,/,""),'base64'));
     }
 });
