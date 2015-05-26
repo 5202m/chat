@@ -70,7 +70,7 @@ var userService = {
      * @param callback
      */
     verifyRule:function(userType,groupId,content,callback){
-        if(constant.roleUserType.member!=userType){//后台用户无需使用规则
+        if(userType && constant.roleUserType.member!=userType){//后台用户无需使用规则
             callback(null);
             return;
         }
@@ -375,6 +375,7 @@ var userService = {
                     if(!err && count>0){
                         callback({flag:4});//账号已被绑定
                     }else{
+                        userInfo.userType=0;//默认为0
                         userService.checkAClient(userInfo,false,function(result){
                             callback(result);
                         });

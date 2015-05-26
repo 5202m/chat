@@ -151,7 +151,11 @@ var chat={
                         }
                     }else{
                         if(flag==1){//客户记录标志:0（记录不存在）、1（未绑定微信）、2（未入金激活）、3（绑定微信并且已经入金激活）
-                            chat.setWechatTip();
+                            //chat.setWechatTip();
+                            $("#loginSection").hide();
+                            $("#tipSection h2").html("登录成功");
+                            $("#tipSection .succ-p-info").html("尊贵的客户：欢迎光临金道贵金属聊天室，即时参与和分析师互动，让投资变得更简单！");
+                            $("#tipSection").show();
                         }else if(flag==2){
                             $("#loginSection").hide();
                             $("#tipSection h2").html("提示");
