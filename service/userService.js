@@ -172,7 +172,6 @@ var userService = {
         console.log("newUserInfo:"+JSON.stringify(newUserInfo));
         boUser.findOne({'userNo':newUserInfo.accountNo,'telephone':newUserInfo.mobilePhone},function(err,row) {
             if(!err && row){
-                console.log("boUser->row:"+JSON.stringify(row));
                 result.isOk=true;
                 var userTypeTmp=null;
                 for(var p in constant.roleUserType){
