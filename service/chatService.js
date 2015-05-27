@@ -42,7 +42,7 @@ var chatService ={
                 userService.updateMemberInfo(info);
                 //加载已有内容
                 messageService.loadMsg(info.groupId,function(data){
-                    chatService.socket.emit('loadMsg', data);//同步数据到客户端
+                    socket.emit('loadMsg', data);//同步数据到客户端
                 });
                 userService.cacheUserArr[info.groupId]=groupRow;
                 //通知客户端
