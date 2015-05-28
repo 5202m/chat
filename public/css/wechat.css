@@ -49,15 +49,15 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .anounce li{position:relative}
 .anounce a{display:block;padding-left:22px;background-position:-72px -20px;color:#ccc;font-size:12px;line-height:25px}
 .anounce i{position:absolute;top:50%;margin-top:-4px;right:10px;font:normal 9px arial;color:#7e7e7f}
-.adbox{position:relative;margin:0 auto;background:#072468;text-align:center;line-height:0}
+.adbox{position:relative;margin:0 auto;text-align:center;line-height:0}
 .adbox s{position:absolute;right:0;bottom:0;display:block;width:16px;height:16px;background-position:0 -51px;z-index:5}
 .ss-tk-info{position:relative;height:25px;line-height:25px;color:#e93030;font-size:12px;background:#F2F181;padding:0 10px}
 .ss-tk-info i{position:absolute;right:5px;top:0;display:block;width:25px;height:25px;background-position:-25px -20px}
 
 /* center */
 .wrapper{position:fixed;left:-10px;padding-left:10px;bottom:36px;width:100%;overflow:hidden;overflow-y:scroll;z-index:1}
-.pub-top{top:229px}
-.pub-two{top:149px}
+.pub-top{top:236px}
+.pub-two{top:166px}
 .kaig-icon{float:right;position:relative;margin-top:6px;width:49px;padding-right:48px;height:21px;line-height:21px;font-size:9px;color:#b2b2b2}
 .kg-stadus{position:absolute;right:10px;display:inline-block;width:31px;height:21px;border-radius:21px;border:solid 1px}
 .kg-stadus i{display:block;width:21px;height:21px;border-radius:21px}
@@ -85,7 +85,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .talk-img{max-width:120px;width:100%}
 .talk-img p{text-align:center;line-height:0;/*padding:2px;*/margin-left:4px}
 .talk-img p img{width:100%}
-.fxs-ony-box{position:fixed;top:190px;width:100%;padding:0 0 8px;background:#f1f1f1;z-index:9}
+.fxs-ony-box{position:fixed;top:111px;width:100%;padding:0 0 8px;background:#f1f1f1;z-index:9}
 .fxs-top{top:111px}
 .fxs-none{top:0}
 .img-loading{position:absolute;bottom:0;display:block;width:25px;height:25px;border-radius:4px;background:url(../images/loading2.gif) no-repeat center;background-size:40px 40px;z-index:9}
@@ -128,11 +128,10 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .anounce-detail p{margin-top:10px;font-size:14px;line-height:24px;text-indent:2em}
 .layer-shadow{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;opacity:0.5;filter:alpha(opacity=50);z-index:30}
 @media(max-width:480px){
-	.fxs-ony-box{top:151px}
-	.fxs-top{top:111px}
-	.fxs-none{top:0}
-	.pub-top{top:162px}
-	.pub-two{top:150px}
-	.adbox img{width:320px;height:40px}
-	.date-box{background-size:7px 7px}
+    .fxs-ony-box{top:111px}
+    .fxs-top{top:111px}
+    .fxs-none{top:0}
+    .pub-top{top:197px}
+    .pub-two{top:156px}
+    .date-box{background-size:7px 7px}
 }

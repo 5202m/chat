@@ -180,16 +180,18 @@ var chatService ={
      */
     destroyHomeToken:function(val,callback){
         token.findOne({value:val},function (err,row) {
-            if(err!=null||row==null){
+            if(err||!row){
                 callback(false);
             }else{
                 var currTime=new Date().getTime();
                 if(row.endTime==0||row.beginTime==0){
-                    row.remove();
-                    callback(true);
+                    row.remove(function(){
+                        callback(true);
+                    });
                 }else if(currTime>row.endTime){
-                    row.remove();
-                    callback(false);
+                    row.remove(function(){
+                        callback(false);
+                    });
                 }else{
                     callback(true);
                 }

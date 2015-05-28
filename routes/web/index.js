@@ -37,6 +37,7 @@ router.get('/chat', function(req, res) {
         }
         chatService.destroyHomeToken(token,function(isTrue){
             if(isTrue) {
+                req.session.token=token;
                 async.parallel({
                         checkResult: function(callback){
                             if(common.isValid(chatOnlineUser.fromPlatform)&&constant.fromPlatform.pm_mis==chatOnlineUser.fromPlatform){//检查系统用户
@@ -77,7 +78,11 @@ router.get('/chat', function(req, res) {
                         }
                     });
             }else{
-                res.render('chat/error',{error: '链接已过期，请重新访问！'});
+                if(!req.session.token||(req.session.token && req.session.token!=token)){
+                    res.render('chat/error',{error: '链接已过期，请重新访问！'});
+                }else{
+                    res.end('chat/error',{error: '非常抱歉，请求出现异常，请重新访问！'});
+                }
             }
         });
     }
