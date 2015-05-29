@@ -537,10 +537,6 @@ var chat={
         var li=chat.formatContentHtml(data,isMeSend);
         var ul=$("#content_ul");
         ul.append(li);
-        var liObjArr=ul.find("li");
-        while (liObjArr.length > chat.maxRows) {
-            liObjArr.eq(0).remove();
-        }
         if(!isLoadData) {
             $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
         }
