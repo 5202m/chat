@@ -81,7 +81,7 @@ router.get('/chat', function(req, res) {
                 if(!req.session.token||(req.session.token && req.session.token!=token)){
                     res.render('chat/error',{error: '链接已过期，请重新访问！'});
                 }else{
-                    res.end('chat/error',{error: '非常抱歉，请求出现异常，请重新访问！'});
+                    res.render('chat/error',{error: '非常抱歉，请求出现异常，请重新访问！'});
                 }
             }
         });

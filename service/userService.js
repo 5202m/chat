@@ -99,7 +99,7 @@ var userService = {
                 currentTime=new Date().getTime();
                 var isNullPeriod=(periodStartDate==null && periodEndDate==null);
                 var isPeriod=periodStartDate!=null && currentTime>=periodStartDate.getTime() && periodEndDate!=null && currentTime<=periodEndDate.getTime();
-                if(isPeriod && type=='speak_not_allowed'){
+                if(isPeriod && type=='speak_not_allowed'){//禁言
                     resultTip=[];
                     resultTip.push(tip);
                     callback(resultTip.join(";"));
