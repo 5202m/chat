@@ -12,6 +12,8 @@ var wechat={
         this.setBulletin();
         this.setEvent();
         this.scrollBulletin();
+
+        setInterval("wechat.setPrice()",5000);	//每间隔3秒刷新下报价信息
     },
     /**
      * 设置页面用户信息
@@ -98,7 +100,6 @@ var wechat={
                     $("#bulletin ul li").click(function(){
                         wechat.showBulletin($(this).children("a").text(),$(this).children("i").text(),$(this).attr("txt"));
                     });
-                    setInterval("wechat.setPrice()",5000);	//每间隔3秒刷新下报价信息
                 }
             });
 
