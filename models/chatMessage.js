@@ -10,8 +10,12 @@ var mongoose = require('mongoose')
       _id:String,
       userId:{type:String,index:true},//用户id
       nickname:String,//用户昵称
+      mobilePhone:String,//手机号码
+      accountNo:String,//用户账号
       avatar:String,//用户头像
       userType:{type:Number, default:0},//区分系统用户还是会员，0表示会员，1表示系统用户
+      approvalRoleArr:[],//需要审核角色编号
+      approvalUserNo:String,//审核人编号
       groupId:{type:String,index:true},//组别Id
       content:{//内容
           msgType:String, //信息类型 txt,img缩略图的值。
@@ -20,10 +24,11 @@ var mongoose = require('mongoose')
           needMax:{type:Number, default:0} //是否需要最大值(0 表示不需要，1 表示需要）
       },
       fromPlatform:String,//平台来源
-      status:{type:Number, default:1}, //内容状态：0 、禁用 ；1、启动
+      status:{type:Number, default:1}, //内容状态：0、等待审批，1、通过 ；2、拒绝
       publishTime:{type:String,index:true}, //发布日期
       createUser:{type:String,default:'admin'}, //新增记录的用户，默认admin
       createIp:String,//新增记录的Ip
-      createDate:Date //创建日期
+      createDate:Date, //创建日期
+      valid:{type:Number, default:1}//是否有效，1为有效，0为无效
     });
 module.exports =mongoose.model('chatMessage',chatMessageSchema,"chatMessage");

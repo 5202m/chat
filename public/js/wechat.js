@@ -12,7 +12,6 @@ var wechat={
         this.setBulletin();
         this.setEvent();
         this.scrollBulletin();
-
         setInterval("wechat.setPrice()",5000);	//每间隔3秒刷新下报价信息
     },
     /**
@@ -52,17 +51,18 @@ var wechat={
             $('.wrapper').removeClass('pub-top pub-two').addClass('pub-three');
             $('#header').fadeOut('fast');
             $('.fxs-ony-box').addClass('fxs-none');
+            $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
         }).blur(function(){
             $('.wrapper').removeClass('pub-three').addClass('pub-top pub-two');
             $('#header').fadeIn('fast');
             $('.fxs-ony-box').removeClass('fxs-none');
+            $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
         });
         //手势控制
         $('#content_div')[0].addEventListener("touchstart", function(e) {
             var dom=$('.wrapper');
             if(dom.hasClass('pub-three')){
                 $('#contentText').blur();
-                $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
             }
         }, false);
     },
@@ -124,7 +124,7 @@ var wechat={
                         var gmCode = subObj.gmcode,															 //产品种类
                             bid = subObj.bid,																 //最新
                             change = subObj.change,															 //涨跌0.31
-                            direction = ($.trim(change) != '' && change.indexOf('-') >= 0 ? 'up' : 'down'),  //升或降
+                            direction = ($.trim(change) != '' && change.indexOf('-') !=-1 ? 'down' : 'up'),  //升或降
                             range = change/(bid-change) *100 ;											 	 //幅度0.03%
                         var product = $("#product_price_ul li[name="+gmCode+"]");   //获取对应的code的产品
                         if(direction == 'up'){					     //设置产品的颜色变化

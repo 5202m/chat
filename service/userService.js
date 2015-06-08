@@ -4,6 +4,8 @@
 var http = require('http');//引入http
 var member = require('../models/member');//引入member数据模型
 var boUser = require('../models/boUser');//引入boUser数据模型
+var boMenu = require('../models/boMenu');//引入boMenu数据模型
+var boRole= require('../models/boRole');//引入boRole数据模型
 var chatGroup = require('../models/chatGroup');//引入chatGroup数据模型
 var config = require('../resources/config');//引入配置
 var constant = require('../constant/constant');//引入constant
@@ -70,16 +72,24 @@ var userService = {
      * @param callback
      */
     verifyRule:function(userType,groupId,content,callback){
-        if(userType && constant.roleUserType.member!=userType){//后台用户无需使用规则
-            callback(null);
-            return;
-        }
         var isImg=content.msgType!='text';
 		var contentVal=content.value.replace(/&lt;label class=\\"dt-send-name\\" tid=\\".+\\"&gt;@.*&lt;\/label&gt;/g,'');//排除@它html
         if(/&lt;[^(&gt;)].*?&gt;/g.test(contentVal) && !isImg){ //过滤特殊字符
             callback(" 有特殊字符，已被拒绝！");
             return;
         }
+        if(!isImg){//如果是文字，替换成链接
+            var strRegex = '(((https|http)://)?)[A-Za-z0-9-_]+\\.[A-Za-z0-9-_&\?\/.=]+';
+            var regex=new RegExp(strRegex,"gi");
+            content.value=contentVal.replace(regex,function(m){
+                return !isNaN(m)?m:'<a href="'+m+'" target="_blank">'+m+'</a>';
+            });
+        }
+        if(userType && constant.roleUserType.member!=userType){//后台用户无需使用规则
+            callback(null);
+            return;
+        }
+        //预定义规则
         chatGroup.findById(groupId,function (err,row) {
             if(err||!row){
                 callback(null);
@@ -87,7 +97,7 @@ var userService = {
             }
             var ruleArr=row.chatRules,resultTip=[],beforeVal='',type='',tip='';
             var periodStartDate= 0,periodEndDate= 0,currentTime= 0;
-            var urlArr=[],urlTipArr=[],ruleRow=null;
+            var urlArr=[],urlTipArr=[],ruleRow=null,needApproval=false,needApprovalTip=null;
             //先检查禁止发言的规则
             for(var i in ruleArr){
                 ruleRow=ruleArr[i];
@@ -99,10 +109,12 @@ var userService = {
                 currentTime=new Date().getTime();
                 var isNullPeriod=(periodStartDate==null && periodEndDate==null);
                 var isPeriod=periodStartDate!=null && currentTime>=periodStartDate.getTime() && periodEndDate!=null && currentTime<=periodEndDate.getTime();
-                if(isPeriod && type=='speak_not_allowed'){//禁言
-                    resultTip=[];
-                    resultTip.push(tip);
-                    callback(resultTip.join(";"));
+                if((isNullPeriod||isPeriod) && type=='speak_not_allowed'){//禁言
+                    callback(tip);
+                    return;
+                }
+                if(isImg && (isNullPeriod||isPeriod) && type=='img_not_allowed'){//禁止发送图片
+                    callback(tip);
                     return;
                 }
                 if(!isImg && (isNullPeriod || isPeriod) && type!='speak_not_allowed' && common.isValid(beforeVal)){
@@ -110,18 +122,14 @@ var userService = {
                     beforeVal=beforeVal.replace(/,|，/g,'|');//逗号替换成|，便于统一使用正则表达式
                     if(type=='keyword_filter'){//过滤关键字或过滤链接
                         if(eval('/'+beforeVal+'/').test(contentVal)){
-                            resultTip=[];
-                            resultTip.push(tip);
-                            callback(resultTip.join(";"));
+                            callback(tip);
                             return;
                         }
                     }
                     if(type=='url_not_allowed'){//禁止链接
                         var val=beforeVal.replace(/\//g,'\\\/').replace(/\./g,'\\\.');
                         if(eval('/'+beforeVal+'/').test(contentVal)){
-                            resultTip=[];
-                            resultTip.push(tip);
-                            callback(resultTip.join(";"));
+                            callback(tip);
                             return;
                         }
                     }
@@ -136,13 +144,21 @@ var userService = {
                         }
                     }
                 }
+                if((isNullPeriod||isPeriod) && type=='need_approval'){//需要审批
+                    needApproval=true;
+                    needApprovalTip=tip;
+                }
             }
             if(!isImg && urlArr.length>0 && common.urlReg().test(contentVal)){
                 var val=urlArr.join("|").replace(/\//g,'\\\/').replace(/\./g,'\\\.');
                 if(!eval('/'+val+'/').test(contentVal)){
-                    resultTip=[];
-                    resultTip.push(urlTipArr.join(";"));
+                    callback(urlTipArr.join(";"));
+                    return;
                 }
+            }
+            if(needApproval){//需要审批
+                callback({needApproval:true,tip:needApprovalTip});//需要审批，设置为true
+                return;
             }
             callback(resultTip.join(";"));
         });
@@ -156,6 +172,32 @@ var userService = {
                 callback(null);
             }
             callback(members);
+        });
+    },
+    /**
+     * 检查角色是否有审批权限
+     */
+    checkRoleHasApproval:function(groupId,callback){
+        boRole.find({'valid':1,'chatGroupList._id':groupId},"_id roleNo",function(err,rowList) {
+            if(err || !rowList){
+                callback(null);
+            }else{
+                var idArr=[],idStr=null,idList=[];
+                for(var row in rowList){
+                    idStr=rowList[row]._id;
+                    idList[idStr]=rowList[row].roleNo;
+                    idArr.push(idStr);
+                }
+                boMenu.find({'roleList._id':{ '$in':idArr},'valid':1,code:'approval_chat_msg',type:1},"roleList.$",function(err,menuList) {
+                    if(!err && menuList){
+                        var roleNoArr=[];
+                        for(var i in menuList){
+                            roleNoArr.push(idList[menuList[i].roleList[0]._id]);
+                        }
+                        callback(roleNoArr);
+                    }
+                });
+            }
         });
     },
     /**
@@ -177,6 +219,7 @@ var userService = {
                 for(var p in constant.roleUserType){
                     if(eval('/^'+p+'.*?/g').test(row.role.roleNo)){
                         userTypeTmp=constant.roleUserType[p];
+                        result.roleNo=newUserInfo.roleNo=row.role.roleNo;
                         break;
                     }
                 }
@@ -235,6 +278,7 @@ var userService = {
                                 nickname:userInfo.nickname,//昵称
                                 accountNo:userInfo.accountNo, //账号
                                 userType:userInfo.userType, //用户类型
+                                roleNo:userInfo.roleNo, //角色编号
                                 isBindWechat:userInfo.isBindWechat,//是否绑定微信
                                 intoChatTimes:1
                             }]
@@ -333,7 +377,7 @@ var userService = {
      */
     checkUserLogin:function(userInfo,callback){
         if(constant.fromPlatform.pm_mis==userInfo.fromPlatform){
-            member.findOne().select("loginPlatform.chatUserGroup.$").where('loginPlatform.chatUserGroup.accountNo').equals(userInfo.accountNo).where('loginPlatform.chatUserGroup._id').equals(userInfo.groupId).exec(function (err, row){
+            member.findOne().select("mobilePhone loginPlatform.chatUserGroup.$").where('loginPlatform.chatUserGroup.accountNo').equals(userInfo.accountNo).where('loginPlatform.chatUserGroup._id').equals(userInfo.groupId).exec(function (err, row){
                 if(!err && row){
                     callback(row);
                 }else{
@@ -341,7 +385,7 @@ var userService = {
                 }
             });
         }else{
-            member.findOne().select("loginPlatform.chatUserGroup.$").where('loginPlatform.chatUserGroup.userId').equals(userInfo.userId).where('loginPlatform.chatUserGroup._id').equals(userInfo.groupId).exec(function (err, row){
+            member.findOne().select("mobilePhone loginPlatform.chatUserGroup.$").where('loginPlatform.chatUserGroup.userId').equals(userInfo.userId).where('loginPlatform.chatUserGroup._id').equals(userInfo.groupId).exec(function (err, row){
                 if(!err && row){
                     callback(row);
                 }else{

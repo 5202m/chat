@@ -1,5 +1,5 @@
 /**
- * 聊天器客户端操作类
+ * 聊天器客户端通用操作类
  * @type {{init: Function, setKindEdit: Function, setSocket: Function}}
  * author Alan.wu
  */
@@ -228,8 +228,13 @@ var chat={
             if(common.isValid(msg)) {
                 msg= $("#txtNicknameId").html()+msg.replace(/<[^>].*?>/g,'');//去掉所有html标志
                 var sendObj={uiId:chat.getUiId(),fromUser:chat.userInfo,content:{msgType:chat.msgType.text,value:common.escapeHtml(msg)}};
-                chat.setContent(sendObj,true,false);//直接把数据填入内容栏
                 chat.socket.emit('sendMsg',sendObj);//发送数据
+                var strRegex = '(((https|http)://)?)[A-Za-z0-9-_]+\\.[A-Za-z0-9-_&\?\/.=]+';
+                var regex=new RegExp(strRegex,"gi");
+                sendObj.content.value=sendObj.content.value.replace(regex,function(m){
+                    return !isNaN(m)?m:'<a href="'+m+'" target="_blank">'+m+'</a>';
+                });
+                chat.setContent(sendObj,true,false);//直接把数据填入内容栏
                 chat.removeTxtOfNickname();
                 //清空输入框
                 $("#contentText").val("");
@@ -507,9 +512,18 @@ var chat={
             chat.openLoginBox();
             return;
         }
+        if(isLoadData && $("#"+fromUser.publishTime).length>0){
+            $("#"+fromUser.publishTime+" .talk-content p em[class=ruleTipStyle]").remove();
+            $("#"+fromUser.publishTime+" input").remove();
+            return;
+        }
         if(data.rule){
             chat.removeLoadDom(data.uiId);
-            $('#'+data.uiId+' .talk-content p').append('<em style="color:#ff0000;font-size:12px;margin-left:5px;">'+data.value+'</em>');
+            if(data.value && data.value.needApproval){
+                $('#'+data.uiId).attr("id",fromUser.publishTime);
+            }else{
+                $('#'+data.uiId+' .talk-content p').append('<em class="ruleTipStyle">'+(data.value.tip||data.value)+'</em>');
+            }
             return;
         }
         if(data.isShowWechatTip){
@@ -533,11 +547,11 @@ var chat={
             }
              return;
         }
-
+        var contentDivDom=$("#content_div")[0],isScroll=(contentDivDom.scrollTop + $(contentDivDom).height() >= contentDivDom.scrollHeight);
         var li=chat.formatContentHtml(data,isMeSend);
         var ul=$("#content_ul");
         ul.append(li);
-        if(!isLoadData) {
+        if(!isLoadData && isScroll) {
             $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
         }
         //内容@事件设置
@@ -649,6 +663,33 @@ var chat={
                 case 'removeMsg':
                     $("#"+result.data.msgIds.replace(/,/g,",#")).remove();
                     break;
+                case 'approvalResult':
+                {
+                    var data=result.data;
+                    if(data.refuseMsg){
+                        var publishTimeArr=data.publishTimeArr;
+                        for(var i in publishTimeArr){
+                            $("#"+publishTimeArr[i]+" .talk-content p em[class=ruleTipStyle]").html("已拒绝");
+                        }
+                    }else{
+                        var fromUser=null,row=null;
+                        for (var i in data) {
+                            row = data[i];
+                            fromUser = {
+                                userId: row.userId,
+                                nickname: row.nickname,
+                                avatar: row.avatar,
+                                userType: row.userType,
+                                groupId: row.groupId,
+                                publishTime: row.publishTime//发布日期
+                            };
+                            chat.setContent({fromUser: fromUser,content:row.content},false,true);
+                        }
+                        $('.swipebox').swipebox();
+                        $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
+                    }
+                    break;
+                }
             }
         });
         //信息传输

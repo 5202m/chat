@@ -24,6 +24,7 @@ var mongoose = require('mongoose')
                 gagEndDate:Date,//禁言-结束时间
                 gagTips:String,//禁言提示语
                 accountNo:{type:String,index:true}, //账号
+                roleNo:String,//角色编号（后台用户）
                 isBindWechat:Boolean, //是否绑定微信
                 userType:{type:Number, default:0},//区分系统用户还是会员，0表示会员，1表示管理员，2、分析师
                 intoChatTimes:{type:Number, default:0}//进入聊天室次数

@@ -8,7 +8,6 @@ var constant = require('../../constant/constant');//引入constant
 var config = require('../../resources/config');//引入config
 var common = require('../../util/common');//引入common
 var errorMessage = require('../../util/errorMessage');
-var chatOnlineUser = require('../../models/chatOnlineUser');//引入chatOnlineUser对象
 var userService = require('../../service/userService');//引入userService
 var messageService = require('../../service/messageService');//引入messageService
 var chatService = require('../../service/chatService');//引入chatService
@@ -19,29 +18,31 @@ var logger=require('../../resources/logConf').getLogger('index');//引入log4js
  */
 router.get('/chat', function(req, res) {
     var token=req.param("token");
-    chatOnlineUser.userId=req.param("userId");
-    chatOnlineUser.groupId=req.param("groupId");
-    chatOnlineUser.nickname=req.param("nickname");
-    chatOnlineUser.avatar=req.param("avatar");
-    chatOnlineUser.mobilePhone=req.param("mobilePhone");
-    chatOnlineUser.fromPlatform=req.param("fromPlatform");//是否后台进入
-    if(common.isBlank(token)||common.isBlank(chatOnlineUser.groupId)||(common.isBlank(chatOnlineUser.userId))){
+    var chatUser={};
+    chatUser.userId=req.param("userId");
+    chatUser.groupId=req.param("groupId");
+    chatUser.nickname=req.param("nickname");
+    chatUser.avatar=req.param("avatar");
+    chatUser.mobilePhone=req.param("mobilePhone");
+    chatUser.fromPlatform=req.param("fromPlatform");//是否后台进入
+    logger.info("chat->param:"+JSON.stringify(chatUser));
+    if(common.isBlank(token)||common.isBlank(chatUser.groupId)||(common.isBlank(chatUser.userId))){
         logger.warn('chat->非法访问,ip:'+ common.getClientIp(req));
         res.render('chat/error',{error: '输入参数有误，请检查链接的输入参数！'});
     }else{
-        if(common.isBlank(chatOnlineUser.userType)){
-            chatOnlineUser.userType=0;
+        if(common.isBlank(chatUser.userType)){
+            chatUser.userType=0;
         }
-        if(common.isBlank(chatOnlineUser.nickname)){
-            chatOnlineUser.nickname=chatOnlineUser.userId;
+        if(common.isBlank(chatUser.nickname)){
+            chatUser.nickname=chatUser.userId;
         }
         chatService.destroyHomeToken(token,function(isTrue){
             if(isTrue) {
                 req.session.token=token;
                 async.parallel({
                         checkResult: function(callback){
-                            if(common.isValid(chatOnlineUser.fromPlatform)&&constant.fromPlatform.pm_mis==chatOnlineUser.fromPlatform){//检查系统用户
-                                userService.checkSystemUserInfo(chatOnlineUser,function(result){
+                            if(common.isValid(chatUser.fromPlatform)&&constant.fromPlatform.pm_mis==chatUser.fromPlatform){//检查系统用户
+                                userService.checkSystemUserInfo(chatUser,function(result){
                                     callback(null,result);
                                 });
                             }else{
@@ -50,10 +51,10 @@ router.get('/chat', function(req, res) {
                         },
                         returnObj: function(callback){
                             var obj={};//输出参数
-                            if(chatOnlineUser.groupId==constant.weChatGroupId){
+                            if(chatUser.groupId==constant.weChatGroupId){
                                 var isFromWeChat=true,error='';
                                 var deviceAgent = req.headers["user-agent"].toLowerCase();
-                                if(!config.isAllowCopyHomeUrl && deviceAgent.indexOf('micromessenger') == -1 && constant.fromPlatform.pm_mis!=chatOnlineUser.fromPlatform){
+                                if(!config.isAllowCopyHomeUrl && deviceAgent.indexOf('micromessenger') == -1 && constant.fromPlatform.pm_mis!=chatUser.fromPlatform){
                                     isFromWeChat=false;
                                     error='请在微信客户端打开链接!';
                                 }
@@ -68,13 +69,18 @@ router.get('/chat', function(req, res) {
                         }else{
                             var obj=results.returnObj;
                             if(results.checkResult!=null){
-                                chatOnlineUser.userType=results.checkResult.userType;
-                                chatOnlineUser.nickname=results.checkResult.nickname;
-                                chatOnlineUser.accountNo= chatOnlineUser.userId;//后台进入的用户，账户与userId保持一致，保存到member表时，userId不保存
+                                chatUser.userType=results.checkResult.userType;
+                                chatUser.roleNo=results.checkResult.roleNo;
+                                chatUser.nickname=results.checkResult.nickname;
+                                chatUser.accountNo= chatUser.userId;//后台进入的用户，账户与userId保持一致，保存到member表时，userId不保存
                             }
                             obj.socketUrl=config.socketServerUrl;
-                            obj.userInfo=JSON.stringify(chatOnlineUser);
-                            res.render(constant.chatIndexUrl[chatOnlineUser.groupId],obj);
+                            obj.userInfo=JSON.stringify(chatUser);
+                            if(constant.fromPlatform.pm_mis==chatUser.fromPlatform){//后台用户从后台进入则直接进入后台模板
+                                res.render("chat/adminChat",obj);
+                            }else{
+                                res.render(constant.chatIndexUrl[chatUser.groupId],obj);
+                            }
                         }
                     });
             }else{

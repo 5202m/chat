@@ -10,6 +10,7 @@ var userService = require('../../service/userService');
 var chatService = require('../../service/chatService');//引入chatService
 var common = require('../../util/common'); //引入公共的js
 var errorMessage = require('../../util/errorMessage');
+var constant = require('../../constant/constant');//引入constant
 /*＃＃＃＃＃＃＃＃＃＃ 引入所需服务类 ＃＃＃＃＃＃＃＃end */
 
 /**
@@ -40,6 +41,26 @@ router.post('/removeMsg', function(req, res) {
         result.error=errorMessage.code_1000;
     }else{
         chatService.clientNotice(chatService.noticeType.removeMsg,groupId,{msgIds:msgIds});
+        result.isOk=true;
+    }
+    res.json(result);
+});
+
+/**
+ * 审核信息，通知客户端
+ */
+router.post('/approvalMsg', function(req, res) {
+    var publishTimeArr=req.param("publishTimeArr"),
+        fUserIdArr=req.param("fUserIdArr"),
+        status=req.param("status"),
+        groupId=req.param("groupId"),
+        approvalUserNo=req.param("approvalUserNo");
+    var result={isOk:false,error:null};
+    if(common.isBlank(publishTimeArr)||common.isBlank(fUserIdArr)||common.isBlank(status)||common.isBlank(groupId)){
+        result.error=errorMessage.code_1000;
+    }else{
+        var data={fromUser:{groupId:groupId,userId:approvalUserNo,fromPlatform:constant.fromPlatform.pm_mis},status:status,publishTimeArr:publishTimeArr.split(","),fuIdArr:fUserIdArr.split(",")};
+        chatService.approvalMsg(data,null);
         result.isOk=true;
     }
     res.json(result);
