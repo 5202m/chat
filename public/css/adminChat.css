@@ -77,6 +77,8 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .arrow-outer{position:absolute;height:7px;width:30px;overflow:hidden;top:-6px;left:7px;z-index:6}
 .arrow-shadow{-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);background:#fff;height:20px;position:absolute;top:7px;width:20px;border:solid #bdbdbd 1px}
 .talk-content p{border:solid #BDBDBD 1px;border-radius:4px;padding:5px;font-size:13px;text-align:justify;background:#fff}
+.talk-content p a{color:#0082D5}
+.talk-content p .ruleTipStyle {color:#ff0000;font-size:12px;margin-left:5px;}
 .expert-li .talk-content p,.expert-li .arrow-shadow{border-color:#DE5555;background:#DE5555;color:#fff}
 .me-li .talk-dlbox,.me-li .talk-content{float:right}
 .me-li .talk-dlbox dt{float:right;margin-right:0}

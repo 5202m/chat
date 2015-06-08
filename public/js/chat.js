@@ -502,6 +502,7 @@ var chat={
      * @param data
      */
     setContent:function(data,isMeSend,isLoadData){
+        console.log("setContent:"+JSON.stringify(data));
         var fromUser=data.fromUser;
         if(isMeSend){//发送，并检查状态
             fromUser.publishTime=data.uiId;
@@ -522,7 +523,7 @@ var chat={
             if(data.value && data.value.needApproval){
                 $('#'+data.uiId).attr("id",fromUser.publishTime);
             }else{
-                $('#'+data.uiId+' .talk-content p').append('<em class="ruleTipStyle">'+(data.value.tip||data.value)+'</em>');
+                $('#'+data.uiId+' .talk-content p').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
             }
             return;
         }

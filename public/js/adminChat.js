@@ -367,6 +367,11 @@ var adminChat={
             fromUser.publishTime=data.uiId;
             adminChat.timeOutSend(data.uiId, true);//一分钟后检查是否发送成功，不成功提示重发
         }
+        if(data.rule){
+            adminChat.removeLoadDom(data.uiId);
+            $('#'+data.uiId+' .talk-content p').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
+            return;
+        }
         if(isLoadData && $("#"+fromUser.publishTime).length>0){
             $("#"+fromUser.publishTime+" input").remove();
             return;

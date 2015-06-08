@@ -75,7 +75,7 @@ var userService = {
         var isImg=content.msgType!='text';
 		var contentVal=content.value.replace(/&lt;label class=\\"dt-send-name\\" tid=\\".+\\"&gt;@.*&lt;\/label&gt;/g,'');//排除@它html
         if(/&lt;[^(&gt;)].*?&gt;/g.test(contentVal) && !isImg){ //过滤特殊字符
-            callback(" 有特殊字符，已被拒绝！");
+            callback({isOK:false,tip:"有特殊字符，已被拒绝!"});
             return;
         }
         if(!isImg){//如果是文字，替换成链接
@@ -86,13 +86,13 @@ var userService = {
             });
         }
         if(userType && constant.roleUserType.member!=userType){//后台用户无需使用规则
-            callback(null);
+            callback({isOK:true,tip:''});
             return;
         }
         //预定义规则
         chatGroup.findById(groupId,function (err,row) {
             if(err||!row){
-                callback(null);
+                callback({isOK:true,tip:''});
                 return;
             }
             var ruleArr=row.chatRules,resultTip=[],beforeVal='',type='',tip='';
@@ -110,11 +110,11 @@ var userService = {
                 var isNullPeriod=(periodStartDate==null && periodEndDate==null);
                 var isPeriod=periodStartDate!=null && currentTime>=periodStartDate.getTime() && periodEndDate!=null && currentTime<=periodEndDate.getTime();
                 if((isNullPeriod||isPeriod) && type=='speak_not_allowed'){//禁言
-                    callback(tip);
+                    callback({isOK:false,tip:tip});
                     return;
                 }
                 if(isImg && (isNullPeriod||isPeriod) && type=='img_not_allowed'){//禁止发送图片
-                    callback(tip);
+                    callback({isOK:false,tip:tip});
                     return;
                 }
                 if(!isImg && (isNullPeriod || isPeriod) && type!='speak_not_allowed' && common.isValid(beforeVal)){
@@ -122,14 +122,14 @@ var userService = {
                     beforeVal=beforeVal.replace(/,|，/g,'|');//逗号替换成|，便于统一使用正则表达式
                     if(type=='keyword_filter'){//过滤关键字或过滤链接
                         if(eval('/'+beforeVal+'/').test(contentVal)){
-                            callback(tip);
+                            callback({isOK:false,tip:tip});
                             return;
                         }
                     }
                     if(type=='url_not_allowed'){//禁止链接
                         var val=beforeVal.replace(/\//g,'\\\/').replace(/\./g,'\\\.');
                         if(eval('/'+beforeVal+'/').test(contentVal)){
-                            callback(tip);
+                            callback({isOK:false,tip:tip});
                             return;
                         }
                     }
@@ -152,15 +152,15 @@ var userService = {
             if(!isImg && urlArr.length>0 && common.urlReg().test(contentVal)){
                 var val=urlArr.join("|").replace(/\//g,'\\\/').replace(/\./g,'\\\.');
                 if(!eval('/'+val+'/').test(contentVal)){
-                    callback(urlTipArr.join(";"));
+                    callback({isOK:false,tip:urlTipArr.join(";")});
                     return;
                 }
             }
             if(needApproval){//需要审批
-                callback({needApproval:true,tip:needApprovalTip});//需要审批，设置为true
+                callback({isOK:false,needApproval:true,tip:needApprovalTip});//需要审批，设置为true
                 return;
             }
-            callback(resultTip.join(";"));
+            callback({isOK:true,tip:urlTipArr.join(";")});
         });
     },
     /**

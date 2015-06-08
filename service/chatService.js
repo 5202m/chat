@@ -75,7 +75,6 @@ var chatService ={
      * 审核信息
      */
     approvalMsg:function(data,socket){
-        console.log("approvalMsg->data:"+JSON.stringify(data));
         messageService.updateMsgStatus(data,function(msgResult){
             if(msgResult) {//通过则通知客户端
                 //通知相同组别的会员
@@ -120,12 +119,12 @@ var chatService ={
                 var sameGroupUserArr=userService.cacheUserArr[groupId];
                 //验证规则
                 userService.verifyRule(userInfo.userType,groupId,data.content,function(resultVal){
-                    if(resultVal && !resultVal.needApproval){//匹配规则，则按规则逻辑提示
-                        console.log('resultVal:'+resultVal);
+                    if(!resultVal.isOK){//匹配规则，则按规则逻辑提示
+                        console.log('resultVal:'+JSON.stringify(resultVal));
+                        //通知自己的客户端
                         chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:resultVal,rule:true});
-                    } else{
                         //如果会员发送内容需要审核，把内容转个审核人审核
-                        if(resultVal && resultVal.needApproval && constant.roleUserType.member==userInfo.userType){
+                        if(resultVal.needApproval && constant.roleUserType.member==userInfo.userType){
                             userService.checkRoleHasApproval(groupId,function(roleNoArr){//检查那个角色可以审核聊天内容
                                 if(roleNoArr){
                                     data.content.status=0;//设为等待审批
@@ -134,34 +133,33 @@ var chatService ={
                                         console.log("roleNoArr["+i+"]:"+roleNoArr[i]);
                                         chatService.sendMsgToOther(userInfo,roleNoArr[i],{fromUser: userInfo, content: data.content});
                                     }
-                                    //通知自己的客户端
-                                    chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:resultVal,rule:true});
                                 }else{
                                     console.log('后台聊天内容审核角色权限配置有误，请检查！');
                                 }
                             });
-                        }else{//没有定义审核规则，无需审核
-                            data.content.status=1;//设为通过
-                            messageService.saveMsg(data);
-                            //发送聊天信息
-                            if(data.content.msgType=='img'){
-                                data.content.maxValue='';
-                            }
-                            var userInfoTmp=null,user=null,subRow=null,isBindWechatTmp=false,sendInfo=null;
-                            for(var i=0;i<sameGroupUserArr.length;i++){
-                                user = sameGroupUserArr[i];
-                                userInfoTmp=user.userInfo;
-                                if(user.socket!=null){
-                                    if((!userInfo.socketId && userInfo.userId == userInfoTmp.userId)|| (userInfo.socketId && userInfo.socketId == user.socket.id)){//如果是自己，清空内容，告知客户端发送成功即可
-                                        sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}};
-                                        user.socket.emit('sendMsg',sendInfo);
-                                    }else{
-                                        user.socket.emit('sendMsg',{fromUser:userInfo,content:data.content});
-                                    }
+                        }
+                    } else{
+                        //没有定义审核规则，无需审核
+                        data.content.status=1;//设为通过
+                        messageService.saveMsg(data);
+                        //发送聊天信息
+                        if(data.content.msgType=='img'){
+                            data.content.maxValue='';
+                        }
+                        var userInfoTmp=null,user=null,sendInfo=null;
+                        for(var i=0;i<sameGroupUserArr.length;i++){
+                            user = sameGroupUserArr[i];
+                            userInfoTmp=user.userInfo;
+                            if(user.socket!=null){
+                                if((!userInfo.socketId && userInfo.userId == userInfoTmp.userId)|| (userInfo.socketId && userInfo.socketId == user.socket.id)){//如果是自己，清空内容，告知客户端发送成功即可
+                                    sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}};
+                                    user.socket.emit('sendMsg',sendInfo);
+                                }else{
+                                    user.socket.emit('sendMsg',{fromUser:userInfo,content:data.content});
                                 }
                             }
-                            userInfoTmp.isNewIntoChat=false;
                         }
+                        userInfoTmp.isNewIntoChat=false;
                     }
                 });
             }else{
@@ -261,8 +259,6 @@ var chatService ={
      * @param val
      */
     destroyHomeToken:function(val,callback){
-        callback(true);
-        return;
         token.findOne({value:val},function (err,row) {
             if(err||!row){
                 callback(false);
