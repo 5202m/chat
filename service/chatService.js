@@ -104,7 +104,6 @@ var chatService ={
         //如果首次发言需要登录验证(备注：微信取openId为userId，即验证openId）
         userService.checkUserLogin(userInfo,function(row){
             if(row){
-                var tip=userService.checkUserGag(row);
                 var currentDate = new Date();
                 userInfo.publishTime = currentDate.getTime()+"_"+process.hrtime()[1];//产生唯一的id
                 var userGroupTmp=row.loginPlatform.chatUserGroup[0];
@@ -112,8 +111,9 @@ var chatService ={
                 userInfo.nickname=userGroupTmp.nickname;
                 userInfo.mobilePhone=row.mobilePhone;
                 userInfo.accountNo=userGroupTmp.accountNo;
-                if(tip){
-                    chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:tip,rule:true});
+                var tipResult=userService.checkUserGag(row);//\检查用户禁言
+                if(!tipResult.isOK){//是否设置了用户禁言
+                    chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:tipResult,rule:true});
                     return false;
                 }
                 var sameGroupUserArr=userService.cacheUserArr[groupId];

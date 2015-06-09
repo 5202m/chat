@@ -60,9 +60,9 @@ var userService = {
     checkUserGag:function(row){
         var subRow = row.loginPlatform.chatUserGroup[0],currentDate=new Date();
         if(subRow.gagStartDate && subRow.gagEndDate && subRow.gagStartDate<=currentDate && subRow.gagEndDate>=currentDate){
-            return subRow.gagTips;
+            return {isOK:false,tip:subRow.gagTips};
         }else{
-            return null;
+            return {isOK:true};
         }
     },
     /**
@@ -81,7 +81,7 @@ var userService = {
         if(!isImg){//如果是文字，替换成链接
             var strRegex = '(((https|http)://)?)[A-Za-z0-9-_]+\\.[A-Za-z0-9-_&\?\/.=]+';
             var regex=new RegExp(strRegex,"gi");
-            content.value=contentVal.replace(regex,function(m){
+            content.value=content.value.replace(regex,function(m){
                 return !isNaN(m)?m:'<a href="'+m+'" target="_blank">'+m+'</a>';
             });
         }

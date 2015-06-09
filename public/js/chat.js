@@ -502,7 +502,6 @@ var chat={
      * @param data
      */
     setContent:function(data,isMeSend,isLoadData){
-        console.log("setContent:"+JSON.stringify(data));
         var fromUser=data.fromUser;
         if(isMeSend){//发送，并检查状态
             fromUser.publishTime=data.uiId;

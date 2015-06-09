@@ -94,11 +94,12 @@ var wechat={
                     $.each(data,function(i,obj){
                         if(obj != null){
                             var row=obj.detailList[0];
-                            $("#bulletin ul").append('<li txt="'+row.content+'"><a href="#">'+row.title+'</a><i>'+ common.formatterDate(obj.createDate,'.')+'</i></li>');
+                            row.content=row.content.replace("/")
+                            $("#bulletin ul").append('<li><span txt="txt" style="display:none;">'+row.content+'</span><a href="#">'+row.title+'</a><i>'+ common.formatterDate(obj.createDate,'.')+'</i></li>');
                         }
                     });
                     $("#bulletin ul li").click(function(){
-                        wechat.showBulletin($(this).children("a").text(),$(this).children("i").text(),$(this).attr("txt"));
+                        wechat.showBulletin($(this).children("a").text(),$(this).children("i").text(),$(this).children("span[txt]").html());
                     });
                 }
             });
@@ -149,6 +150,15 @@ var wechat={
         $(".gg-h-tt").html(title);
         $(".gg-time").html(date);
         $(".anounce-detail").html(content);
+        var imgObj= $(".anounce-detail img");
+        imgObj.width("100%").height("auto");
+        imgObj.click( function(e) {
+            e.preventDefault();
+            var _thisImg=$(this);
+            $.swipebox( [
+                { href:_thisImg.attr("src")},
+            ] );
+        } );
         $("#bulletinBoxCloseBtn").unbind("click");
         common.showBox("#bulletinBox");
         $("#bulletinBoxCloseBtn").click(function(){
