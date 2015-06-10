@@ -25,7 +25,7 @@ router.get('/chat', function(req, res) {
     chatUser.avatar=req.param("avatar");
     chatUser.mobilePhone=req.param("mobilePhone");
     chatUser.fromPlatform=req.param("fromPlatform");//是否后台进入
-    logger.info("chat->param:"+JSON.stringify(chatUser));
+    logger.info("chat->param:token["+token+"],otherParam:"+JSON.stringify(chatUser));
     if(common.isBlank(token)||common.isBlank(chatUser.groupId)||(common.isBlank(chatUser.userId))){
         logger.warn('chat->非法访问,ip:'+ common.getClientIp(req));
         res.render('chat/error',{error: '输入参数有误，请检查链接的输入参数！'});
