@@ -11,7 +11,7 @@ var messageService ={
      */
     loadMsg:function(groupId,roleNo,callback){
         var selectSQL='userId nickname avatar userType groupId content.msgType content.value content.needMax publishTime status';
-        chatMessage.find({groupId:groupId,status:1,valid:1}).select(selectSQL).limit(this.maxRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
+        chatMessage.find({groupId:groupId,status:1,valid:1,userType:2}).select(selectSQL).limit(this.maxRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
             if(roleNo){//如果是审核角色登录，则加载审核通过的以及指定该角色执行的待审核信息
                 var beginDate=new Date(),endDate=new Date();
                 beginDate.setHours(0,0,0);

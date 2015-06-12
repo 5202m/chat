@@ -19,6 +19,7 @@ var adminChat={
         this.setSocket();
         this.setEvent();
         this.createImgDB();//创建数据库
+        this.setPageUserInfo();
     },
     createImgDB:function(){//创建数据库
         try{
@@ -74,6 +75,13 @@ var adminChat={
      */
     refreshVerifyCode:function(){
         $("#verifyCodeId img").attr("src",'/getVerifyCode?v='+Math.random());
+    },
+    /**
+     * 设置页面用户信息
+     */
+    setPageUserInfo:function(){
+        $(".user-name").html(adminChat.userInfo.nickname);
+        $(".user-img img").attr("src","/images/ren.png");
     },
     /**
      * 事件设置
@@ -139,13 +147,18 @@ var adminChat={
             $('.add-img').hide();
         });
         /**
-         * 输入框退格事件
+         * 键盘事件
          */
         $("#contentText").keydown(function(e){
-            if(e.keyCode==8){
+            if(e.keyCode==8){//输入框退格事件
                 if(common.isBlank($(this).val())){
                     adminChat.removeTxtOfNickname();
                 }
+            }
+            if(e.keyCode==13){//按回车键发送
+                $("#sendBtn").click();
+                e.returnValue = false;//控制回车键换行
+                return false;
             }
         });
 
