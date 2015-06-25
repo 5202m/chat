@@ -17,6 +17,7 @@ var mongoose = require('mongoose')
             chatUserGroup:[{  _id:String,//组id，与聊天室组对应
                 userId:{type:String,index:true},//第三方用户id，对于微信，userId为微信的openId;
                 onlineStatus: {type:Number, default:0}, //在线状态：0 、下线 ；1、在线
+                sendMsgCount:{type:Number, default:0}, //发言条数统计
                 onlineDate: Date,//上线时间
                 avatar:String,//头像
                 nickname:String,//昵称
@@ -25,9 +26,7 @@ var mongoose = require('mongoose')
                 gagTips:String,//禁言提示语
                 accountNo:{type:String,index:true}, //账号
                 roleNo:String,//角色编号（后台用户）
-                isBindWechat:Boolean, //是否绑定微信
-                userType:{type:Number, default:0},//区分系统用户还是会员，0表示会员，1表示管理员，2、分析师
-                intoChatTimes:{type:Number, default:0}//进入聊天室次数
+                userType:{type:Number, default:0}//区分系统用户还是会员，0表示会员，1表示管理员，2、分析师
                 }]
         }
    });
