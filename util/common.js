@@ -27,7 +27,7 @@ var common = {
      * @returns {boolean}
      */
     isBlank:function(v) {
-        return v == undefined || v == null ||v ==''|| this.trim(v) == '';
+        return v == undefined || v == null||v == 'null'||v == 'undefined' || this.trim(v) == '';
     },
     /**
      * 非空判断

@@ -17,39 +17,21 @@ var request = require('request');
  * @type {{getMemberList: Function, updateMemberInfo: Function}}
  */
 var userService = {
-    cacheUserArr:[],//按组别分类保存用户信息的二维数组
     /**
      * 移除在线用户
-     * @param socketId
+     * @param groupId
+     * @param userId
+     * @param callback
      */
-    removeOnlineUser:function(socketId,callback){
-        //从缓存中移除
-        var groupArr=userService.cacheUserArr;
-        var subArr=null,obj=null;
-        var userId='',groupId='';
-        for(var i in groupArr){
-            subArr=groupArr[i];
-            for(var k=0;k<subArr.length;k++){
-                obj=subArr[k];
-                if(obj.socket.id==socketId){
-                    userId=obj.userInfo.userId;
-                    groupId=obj.userInfo.groupId;
-                    subArr.splice(k,1);
-                    break;
-                }
-            }
-            if(common.isValid(userId) && common.isValid(groupId)){
-                break;
-            }
-        }
+    removeOnlineUser:function(userInfo,sendMsgCount,callback){
         //更新用户记录表的在线状态(下线设置为0）
-        if(common.isValid(userId) && common.isValid(groupId)) {
-            userService.updateChatUserGroupStatus({userId:userId,groupId:groupId}, 0, function (err) {
+        if(common.isValid(userInfo.userId) && common.isValid(userInfo.groupId)) {
+            userService.updateChatUserGroupStatus(userInfo, 0,sendMsgCount, function (err) {
                 if (!err) {
                     console.log("update member status success!");
                 }
             });
-            callback(groupId);
+            callback(userInfo.groupId);
         }else{
             callback(null);
         }
@@ -73,12 +55,13 @@ var userService = {
      */
     verifyRule:function(userType,groupId,content,callback){
         var isImg=content.msgType!='text';
-		var contentVal=content.value.replace(/&lt;label class=\\"dt-send-name\\" tid=\\".+\\"&gt;@.*&lt;\/label&gt;/g,'');//排除@它html
-        if(/&lt;[^(&gt;)].*?&gt;/g.test(contentVal) && !isImg){ //过滤特殊字符
-            callback({isOK:false,tip:"有特殊字符，已被拒绝!"});
-            return;
-        }
+		var contentVal=content.value;
         if(!isImg){//如果是文字，替换成链接
+            contentVal=contentVal.replace(/&lt;label class=\\"dt-send-name\\" tid=\\".+\\"&gt;@.*&lt;\/label&gt;/g,'');//排除@它html
+            if(/&lt;[^(&gt;)].*?&gt;/g.test(contentVal)){ //过滤特殊字符
+                callback({isOK:false,tip:"有特殊字符，已被拒绝!"});
+                return;
+            }
             var strRegex = '(((https|http)://)?)[A-Za-z0-9-_]+\\.[A-Za-z0-9-_&\?\/.=]+';
             var regex=new RegExp(strRegex,"gi");
             content.value=content.value.replace(regex,function(m){
@@ -278,9 +261,7 @@ var userService = {
                                 nickname:userInfo.nickname,//昵称
                                 accountNo:userInfo.accountNo, //账号
                                 userType:userInfo.userType, //用户类型
-                                roleNo:userInfo.roleNo, //角色编号
-                                isBindWechat:userInfo.isBindWechat,//是否绑定微信
-                                intoChatTimes:1
+                                roleNo:userInfo.roleNo //角色编号
                             }]
                         }
                     };
@@ -315,12 +296,21 @@ var userService = {
      * @param userInfo
      * @param callback
      */
-    updateMemberInfo:function(userInfo){
+    updateMemberInfo:function(userInfo,callback){
         //存在则更新上线状态及上线时间
-        member.findOneAndUpdate({'loginPlatform.chatUserGroup.userId':userInfo.userId,'loginPlatform.chatUserGroup._id':userInfo.groupId},
+        var searchObj=null;
+        if(constant.fromPlatform.pm_mis == userInfo.fromPlatform){
+            searchObj = {'loginPlatform.chatUserGroup._id':userInfo.groupId,'loginPlatform.chatUserGroup.accountNo':userInfo.userId};
+        }else{
+            searchObj = {'loginPlatform.chatUserGroup._id':userInfo.groupId,'loginPlatform.chatUserGroup.userId':userInfo.userId};
+        }
+        member.findOneAndUpdate(searchObj,
             {'$set':{'loginPlatform.chatUserGroup.$.onlineDate':userInfo.onlineDate,'loginPlatform.chatUserGroup.$.onlineStatus':userInfo.onlineStatus}},function(err,row){
                 if(!err && row){
                     console.log("updateMemberInfo->update member success!");
+                    callback(row.loginPlatform.chatUserGroup[0].sendMsgCount);
+                }else{
+                    callback(0);
                 }
             });
     },
@@ -347,29 +337,18 @@ var userService = {
     },
 
     /**
-     *下线更新会员状态
+     *下线更新会员状态及发送记录条数
      */
-    updateChatUserGroupStatus:function(userInfo,chatStatus,callback){
-        member.findOneAndUpdate({'loginPlatform.chatUserGroup.userId':userInfo.userId,'loginPlatform.chatUserGroup._id':userInfo.groupId},
-            {'$set':{'loginPlatform.chatUserGroup.$.onlineStatus':chatStatus}},function(err,row){
+    updateChatUserGroupStatus:function(userInfo,chatStatus,sendMsgCount,callback){
+        var searchObj =null;
+        if(constant.fromPlatform.pm_mis == userInfo.fromPlatform){
+            searchObj = {'loginPlatform.chatUserGroup._id':userInfo.groupId,'loginPlatform.chatUserGroup.accountNo':userInfo.userId};
+        }else{
+            searchObj = {'loginPlatform.chatUserGroup._id':userInfo.groupId,'loginPlatform.chatUserGroup.userId':userInfo.userId};
+        }
+        member.findOneAndUpdate(searchObj,{'$set':{'loginPlatform.chatUserGroup.$.onlineStatus':chatStatus,'loginPlatform.chatUserGroup.$.sendMsgCount':sendMsgCount}},function(err,row){
             callback(err);
         });
-    },
-
-    /**
-     * 更新微信用户组绑定微信的信息
-     * @param groupId
-     * @param userId
-     * @param isBindWechat
-     * @param callback
-     */
-    updateChatUserGroupWechat:function(groupId,userId,isBindWechat,intoChatTimes){
-        member.findOneAndUpdate({'loginPlatform.chatUserGroup.userId':userId,'loginPlatform.chatUserGroup._id':groupId},
-            {'$set':{'loginPlatform.chatUserGroup.$.isBindWechat':isBindWechat,'loginPlatform.chatUserGroup.$.intoChatTimes':intoChatTimes}},function(err,row){
-                if(!err && row){
-                    console.log("updateChatUserGroupWechat->update success!");
-                }
-            });
     },
     /**
      * 通过userId及组别检测用户是否已经登录过
@@ -454,12 +433,10 @@ var userService = {
                         } else if (result.isBindWeichat!=1) {
                             flagResult.flag = 1;//未绑定微信
                             //验证通过，成为聊天室会员，记录信息
-                            userInfo.isBindWechat=false;
                             userService.createUser(userInfo);
                         }else {
                             flagResult.flag = 3;//绑定微信并且已经入金激活
                             //验证通过，成为聊天室会员，记录信息
-                            userInfo.isBindWechat=true;
                             userService.createUser(userInfo);
                         }
                     }else if (result.isBindWeichat==1){

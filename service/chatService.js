@@ -9,7 +9,8 @@ var messageService = require('../service/messageService');//引入messageService
  * author Alan.wu
  */
 var chatService ={
-    socket:null,
+    socketSpaceArr:["wechatGroup"],
+    socket:null,//socket对象
     noticeType:{ //通知客户端类型
        removeMsg:'removeMsg',//移除信息
        onlineNum:'onlineNum',//在线人数
@@ -19,46 +20,75 @@ var chatService ={
      * 初始化
      */
     init:function(){
-        this.setSocket();
+        for(var i in this.socketSpaceArr){
+            this.setSocket(this.socketSpaceArr[i]);
+        }
+    },
+    /**
+     * 格式命名空间对应的名称
+     */
+    formatSpaceName:function(spaceName){
+        spaceName=spaceName.replace(/_+.*/g,"");//去掉多余的下划线后缀
+        return spaceName.indexOf("Group")==-1?('/'+spaceName+"Group"):('/'+spaceName);
+    },
+    /**
+     * 通过空间与组名提取对应房间
+     * @param groupId
+     */
+    getRoomSockets:function(groupId){
+        return chatService.socket.of(chatService.formatSpaceName(groupId)).in(groupId);
+    },
+    /**
+     * 提取命名空间的socket
+     * @param spaceName
+     * @returns {*}
+     */
+    getSpaceSocket:function(spaceName){
+        return chatService.socket.of(chatService.formatSpaceName(spaceName));
     },
     /**
      * 设置socket连接相关信息
+     * @param spaceName 命名空间对应的名称
      */
-    setSocket: function () {
+    setSocket: function (spaceName) {
+        console.log("spaceName:"+spaceName);
         //连接socket，并处理相关操作
-        this.socket.on('connection', function(socket){
-            //登录(缓存用户信息）
-            socket.on('login',function(info){
-                var groupRow=userService.cacheUserArr[info.groupId];
-                if(groupRow==null||groupRow==undefined){
-                    groupRow=[];
-                }
-                //设置用户进入聊天室的信息
-                info.onlineDate=new Date();
-                info.isNewIntoChat=true;
-                //记录用户缓存信息
-                groupRow.push({socket: socket, userInfo: info});
-                //同步用户信息,在线状态设为1
-                info.onlineStatus='1';
-                userService.updateMemberInfo(info);
-                //加载已有内容
-                messageService.loadMsg(info.groupId,info.roleNo,function(data){
-                    socket.emit('loadMsg', data);//同步数据到客户端
+        this.getSpaceSocket(spaceName).on('connection', function(socket){
+            //登录则加入房间,groupId作为唯一的房间号
+            socket.on('login',function(data){
+                var userInfo=data.userInfo,lastPublishTime=data.lastPublishTime;
+                socket.userInfo={groupId:userInfo.groupId,userId:userInfo.userId,roleNo:userInfo.roleNo,fromPlatform:userInfo.fromPlatform};//缓存用户信息
+                socket.join(userInfo.groupId);
+                //更新在线状态
+                userInfo.onlineStatus='1';
+                userInfo.onlineDate=new Date();
+                userService.updateMemberInfo(userInfo,function(sendMsgCount){
+                    socket.sendMsgCount=sendMsgCount;
                 });
-                userService.cacheUserArr[info.groupId]=groupRow;
-                //通知客户端
-                chatService.clientNotice(chatService.noticeType.onlineNum,info.groupId);
+                //加载已有内容
+                messageService.loadMsg(userInfo.groupId,userInfo.roleNo,lastPublishTime,function(msgData){
+                    //同步数据到客户端
+                    socket.emit('loadMsg', {msgData:msgData,isAdd:common.isValid(lastPublishTime)?true:false});
+                });
+                //通知客户端在线人数
+                var roomSockets=chatService.getRoomSockets(userInfo.groupId);
+                roomSockets.onlineSize=roomSockets.onlineSize?(roomSockets.onlineSize+1):1;//数目加1
+                roomSockets.emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserNum:roomSockets.onlineSize}});
             });
             //断开连接
             socket.on('disconnect',function(){
                 //移除在线用户
-                userService.removeOnlineUser(socket.id,function(groupId){
+                var userInfo=socket.userInfo;
+                userService.removeOnlineUser(userInfo,socket.sendMsgCount,function(groupId){
                     if(groupId){
-                        //通知客户端
-                        chatService.clientNotice(chatService.noticeType.onlineNum,groupId);
+                        //通知客户端在线人数
+                        socket.leave(groupId);
+                        var roomSockets=chatService.getRoomSockets(groupId);
+                        //通知客户端在线人数
+                        roomSockets.onlineSize-=(roomSockets.onlineSize==0?0:1);//数目减一
+                        roomSockets.emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserNum:roomSockets.onlineSize}});
                     }
                 });
-                //socket.emit('disconnect', {reConnect:true});//同步数据到客户端
                 console.log('disconnect,please check!');
             });
             //审核信息
@@ -76,15 +106,24 @@ var chatService ={
      */
     approvalMsg:function(data,socket){
         messageService.updateMsgStatus(data,function(msgResult){
+            var fromUser=data.fromUser;
             if(msgResult) {//通过则通知客户端
                 //通知相同组别的会员
-                if(msgResult.status==1){//通过则通知相同组别的会员
-                    chatService.clientNotice(chatService.noticeType.approvalResult, data.fromUser.groupId, msgResult.data, (constant.fromPlatform.pm_mis==data.fromUser.fromPlatform)?null:data.fromUser.userId);
-                }else{//拒绝则通知发送者，信息已经拒绝
+                if(msgResult.status==1){//通过则通知相同组别的会员,如果是聊天室发送过来的，排除自己，如果是聊天记录直接审核的，则发给全部用户
+                    (socket?socket.broadcast.to(fromUser.groupId):chatService.getRoomSockets(fromUser.groupId)).emit('notice',{type:chatService.noticeType.approvalResult,data:msgResult.data});
+                }else{//拒绝则通知审核角色，信息已经拒绝
                     var roleNoArr=msgResult.data;
-                    console.log("approvalMsg->roleNoArr:"+roleNoArr);
                     //发送给审核角色，更新记录状态(备注，如果是审核员在聊天室审核的，则排除自己，因为后面会统一处理)
-                    chatService.clientNoticeByRejectMsg(chatService.noticeType.approvalResult, data.fromUser.groupId,roleNoArr,data.publishTimeArr,(socket? data.fromUser.userId:null));
+                    var sockets=chatService.getRoomSockets(fromUser.groupId).sockets;
+                    var roleNoStr=","+roleNoArr.join(",")+",";
+                    console.log("approvalMsg->roleNoStr:"+roleNoStr);
+                    var socketTmp=null,socketId=socket?socket.id:null;
+                    for(var i=0;i<sockets.length;i++) {
+                        socketTmp = sockets[i];
+                        if (socketTmp.id!=socketId && roleNoStr.indexOf(","+socketTmp.userInfo.roleNo +",")!=-1){
+                            socketTmp.emit('notice',{type:chatService.noticeType.approvalResult,data:{refuseMsg:true,publishTimeArr:data.publishTimeArr}});
+                        }
+                    }
                 }
             }
             //通知审核者，已经审核
@@ -100,7 +139,7 @@ var chatService ={
      * 接收信息数据
      */
     acceptMsg:function(data,socket){
-        var userInfo=data.fromUser,groupId=userInfo.groupId;;
+        var userInfo=data.fromUser,groupId=userInfo.groupId;
         //如果首次发言需要登录验证(备注：微信取openId为userId，即验证openId）
         userService.checkUserLogin(userInfo,function(row){
             if(row){
@@ -113,26 +152,26 @@ var chatService ={
                 userInfo.accountNo=userGroupTmp.accountNo;
                 var tipResult=userService.checkUserGag(row);//\检查用户禁言
                 if(!tipResult.isOK){//是否设置了用户禁言
-                    chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:tipResult,rule:true});
+                    chatService.sendMsgToUser(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:tipResult,rule:true});
                     return false;
                 }
-                var sameGroupUserArr=userService.cacheUserArr[groupId];
                 //验证规则
                 userService.verifyRule(userInfo.userType,groupId,data.content,function(resultVal){
                     if(!resultVal.isOK){//匹配规则，则按规则逻辑提示
                         console.log('resultVal:'+JSON.stringify(resultVal));
                         //通知自己的客户端
-                        chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:resultVal,rule:true});
+                        chatService.sendMsgToUser(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:resultVal,rule:true});
                         //如果会员发送内容需要审核，把内容转个审核人审核
                         if(resultVal.needApproval && constant.roleUserType.member==userInfo.userType){
                             userService.checkRoleHasApproval(groupId,function(roleNoArr){//检查那个角色可以审核聊天内容
                                 if(roleNoArr){
                                     data.content.status=0;//设为等待审批
                                     messageService.saveMsg(data,roleNoArr);//保存聊天数据
-                                    for(var i in roleNoArr){//发送信息给审核人
-                                        console.log("roleNoArr["+i+"]:"+roleNoArr[i]);
-                                        chatService.sendMsgToOther(userInfo,roleNoArr[i],{fromUser: userInfo, content: data.content});
+                                    if(socket){//统计发言总数
+                                        socket.sendMsgCount+=1
                                     }
+                                    //发送信息给审核人
+                                    chatService.sendMsgToRole(userInfo,roleNoArr,null,{fromUser: userInfo, content: data.content});
                                 }else{
                                     console.log('后台聊天内容审核角色权限配置有误，请检查！');
                                 }
@@ -147,111 +186,71 @@ var chatService ={
                             data.content.maxValue='';
                         }
                         var userInfoTmp=null,user=null,sendInfo=null;
-                        for(var i=0;i<sameGroupUserArr.length;i++){
-                            user = sameGroupUserArr[i];
-                            userInfoTmp=user.userInfo;
-                            if(user.socket!=null){
-                                if((!userInfo.socketId && userInfo.userId == userInfoTmp.userId)|| (userInfo.socketId && userInfo.socketId == user.socket.id)){//如果是自己，清空内容，告知客户端发送成功即可
-                                    sendInfo={uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}};
-                                    user.socket.emit('sendMsg',sendInfo);
-                                }else{
-                                    user.socket.emit('sendMsg',{fromUser:userInfo,content:data.content});
+                        //发送给自己
+                        chatService.sendMsgToUser(socket,userInfo,{uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}});
+                        //发送给除自己之外的用户
+                        if(socket){
+                            socket.broadcast.to(groupId).emit('sendMsg', {fromUser:userInfo,content:data.content});
+                            socket.sendMsgCount+=1;//统计发言数据
+                        }else{
+                            chatService.getRoomSockets(groupId).sockets.forEach(function(socketRow){
+                                if(socketRow.id==userInfo.socketId){
+                                    socketRow.broadcast.to(groupId).emit('sendMsg', {fromUser:userInfo,content:data.content});
+                                    return false;
                                 }
-                            }
+                            });
                         }
-                        userInfoTmp.isNewIntoChat=false;
                     }
                 });
             }else{
-                chatService.sendMsgToSelf(socket,userInfo,{isVisitor:true,uiId:data.uiId});
+                //通知自己的客户端
+                chatService.sendMsgToUser(socket,userInfo,{isVisitor:true,uiId:data.uiId});
             }
         });
     },
-
     /**
-     * 发送给其他人数据
+     * 移除数据
+     * @param groupId
+     * @param msgIds
+     */
+    removeMsg:function(groupId,msgIds){
+        chatService.getRoomSockets(groupId).emit("notice",{type:chatService.noticeType.removeMsg,data:msgIds});
+    },
+    /**
+     * 发送给角色对应的用户
+     * @param userInfo
+     * @param roleNoArr
+     * @param socketId 要排除的socketId
      * @param data
      */
-    sendMsgToOther:function(userInfo,roleNo,data){
-        var userSocket=chatService.getSocket(userInfo,roleNo);
-        if(userSocket){
-            userSocket.emit('sendMsg',data);
+    sendMsgToRole:function(userInfo,roleNoArr,socketId,data){
+        var sockets=chatService.getRoomSockets(userInfo.groupId).sockets;
+        var socket=null;
+        var roleNoStr=","+roleNoArr.join(",")+",";
+        console.log("roleNoStr:"+roleNoStr);
+        for(var i=0;i<sockets.length;i++) {
+            socket = sockets[i];
+            if (socket.id!=socketId && roleNoStr.indexOf(","+socket.userInfo.roleNo +",")!=-1){
+                socket.emit('sendMsg',data);
+            }
         }
     },
     /**
-     * 发送给自己数据
+     * 发送给某个用户
      * @param data
      */
-    sendMsgToSelf:function(socket,userInfo,data){
-        socket=socket||chatService.getSocket(userInfo);
+    sendMsgToUser:function(socket,userInfo,data){
         if(socket){
             socket.emit('sendMsg',data);
-        }
-    },
-    /**
-     * 根据组id、用户id找对应socket
-     * @param groupId
-     * @param userInfo
-     */
-    getSocket:function(userInfo,roleNo){
-        var groupUserArr=userService.cacheUserArr[userInfo.groupId],user=null;
-        if(roleNo){
-            for(var i=0;i<groupUserArr.length;i++) {
-                user = groupUserArr[i];
-                if(user.userInfo.roleNo == roleNo){
-                    return user.socket;
-                }
-            }
         }else{
-            for(var i=0;i<groupUserArr.length;i++) {
-                user = groupUserArr[i];
-                if ((!userInfo.socketId && user.userInfo.userId == userInfo.userId)|| (userInfo.socketId && userInfo.socketId == user.socket.id)) {
-                    return user.socket;
+            var sockets=chatService.getRoomSockets(userInfo.groupId).sockets;
+            for(var i=0;i<sockets.length;i++) {
+                socket = sockets[i];
+                if (socket.userInfo.userId == userInfo.userId||socket.id==userInfo.socketId){//如果客户端有socketId,则直接发给对应socketId的用户(图片上传会使用到）
+                    socket.emit('sendMsg',data);
+                    break;
                 }
             }
-        }
-        return null;
-    },
-
-    /**
-     * 客户端通知信息
-     * @param type
-     * @param groupId
-     * @param data
-     * @param filterUserId 排除某个用户
-     */
-    clientNotice:function(type,groupId,data,filterUserId){
-        var groupRow=userService.cacheUserArr[groupId];
-        if(groupRow){
-            var sendData=data;
-            if(chatService.noticeType.onlineNum==type){//在线人数
-                sendData={onlineUserNum:groupRow.length}
-            }
-            groupRow.forEach(function(row){
-                if(!filterUserId||(filterUserId && row.userInfo.userId!=filterUserId)){
-                    row.socket.emit('notice',{type:type,data:sendData});
-                }
-            });
-        }
-    },
-
-    /**
-     * 通知审核角色信息被拒绝
-     * @param type
-     * @param groupId
-     * @param roleNoArr
-     * @param publishTimeArr
-     * @param filterUserId
-     */
-    clientNoticeByRejectMsg:function(type,groupId,roleNoArr,publishTimeArr,filterUserId){
-        var groupRow=userService.cacheUserArr[groupId];
-        if(groupRow){
-            var roleNoStr=","+roleNoArr.join(",")+",";
-            groupRow.forEach(function(row){
-                if(row.userInfo.userId!=filterUserId && roleNoStr.indexOf(","+row.userInfo.roleNo+",")!=-1){
-                    row.socket.emit('notice',{type:type,data:{refuseMsg:true,publishTimeArr:publishTimeArr}});
-                }
-            });
         }
     },
     /**

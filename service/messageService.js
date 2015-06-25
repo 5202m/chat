@@ -1,4 +1,5 @@
 var chatMessage = require('../models/chatMessage');//引入chatMessage数据模型
+var common = require('../util/common');//引入common类
 /**
  * 聊天室服务类
  * 备注：处理聊天室接受发送的所有信息及其管理
@@ -9,9 +10,16 @@ var messageService ={
     /**
      * 从数据库中加载已有的聊天记录
      */
-    loadMsg:function(groupId,roleNo,callback){
+    loadMsg:function(groupId,roleNo,lastPublishTime,callback){
         var selectSQL='userId nickname avatar userType groupId content.msgType content.value content.needMax publishTime status';
-        chatMessage.find({groupId:groupId,status:1,valid:1,userType:2}).select(selectSQL).limit(this.maxRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
+        var searchObj=null;
+        if(common.isValid(lastPublishTime)){
+            searchObj={groupId:groupId,status:1,valid:1,publishTime:{ "$gt":lastPublishTime}};
+        }else{
+            searchObj={groupId:groupId,status:1,valid:1,userType:2};
+        }
+        console.log("loadMsg->searchObj :"+JSON.stringify(searchObj));
+        chatMessage.find(searchObj).select(selectSQL).limit(this.maxRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
             if(roleNo){//如果是审核角色登录，则加载审核通过的以及指定该角色执行的待审核信息
                 var beginDate=new Date(),endDate=new Date();
                 beginDate.setHours(0,0,0);
@@ -36,7 +44,7 @@ var messageService ={
      * @param publishTime
      * @param callback
      */
-    loadBigImg:function(userId,publishTime,callback){//{'content.maxValue':1}
+    loadBigImg:function(userId,publishTime,callback){
         chatMessage.findOne({userId:userId,publishTime:publishTime},{'content.maxValue':1},function (err,data) {
             if(!err && data) {
                 callback(data.content.maxValue);
@@ -102,8 +110,9 @@ var messageService ={
             createDate:new Date(),//创建日期
             valid:1
         });
-        chatMessageModel.save(function(){
+        chatMessageModel.save(function(err){
             console.log('save chatMessage success!');
+            
         });
     }
 };

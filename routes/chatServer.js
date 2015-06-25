@@ -10,7 +10,7 @@ var chatServer ={
      * @param server
      */
     start:function(server){
-        chatService.socket =require('socket.io')(server);
+        chatService.socket=require('socket.io')(server);
         if(chatService.socket){
             chatService.init();
         }
@@ -21,7 +21,7 @@ var chatServer ={
     stop:function(){
         chatService.socket.close();
     }
-}
+};
 //导出服务
 module.exports =chatServer;
 

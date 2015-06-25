@@ -509,7 +509,7 @@ var adminChat={
         this.socket.on('connect',function(){
             console.log('connected to server!');
             $(".loading-box").show();
-            adminChat.socket.emit('login',adminChat.userInfo);
+            adminChat.socket.emit('login',{userInfo:adminChat.userInfo,lastPublishTime:$("#content_ul li:last").attr("id")});
         });
         //登录成功返回信息
         this.socket.on('loginResult',function(data){});
@@ -536,11 +536,10 @@ var adminChat={
                     $("#onlineUserNum").text(result.data.onlineUserNum);
                     break;
                 case 'removeMsg':
-                    $("#"+result.data.msgIds.replace(/,/g,",#")).remove();
+                    $("#"+result.data.replace(/,/g,",#")).remove();
                     break;
                 case 'approvalResult':{
                     var data=result.data,fromUser=null,row=null;
-                    console.log("data:"+JSON.stringify(data));
                     if(data.fromUserId==adminChat.userInfo.userId){//自己在聊天室审核成功或拒绝
                         if(data.isOk){
                             var publishTimeArr=data.publishTimeArr;
@@ -584,14 +583,17 @@ var adminChat={
         });
         //信息传输
         this.socket.on('loadMsg',function(data){
-            $("#content_ul").html("");
+            var msgData=data.msgData,isAdd=data.isAdd;
+            if(!isAdd) {
+                $("#content_ul").html("");
+            }
             $(".loading-box").hide();
             var fromUser = null, row = null, result = [];
-            if(data && $.isArray(data)) {
-                data.reverse();
+            if(msgData && $.isArray(msgData)) {
+                msgData.reverse();
                 var content=null;
-                for (var i in data) {
-                    row = data[i];
+                for (var i in msgData) {
+                    row = msgData[i];
                     fromUser = {
                         userId: row.userId,
                         nickname: row.nickname,
@@ -604,7 +606,9 @@ var adminChat={
                     adminChat.setContent({fromUser: fromUser,content:row.content},false,true);
                 }
                 $('.swipebox').swipebox();
-                $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
+                if(!isAdd) {
+                    $("#content_div")[0].scrollTop = $("#content_div")[0].scrollHeight;
+                }
             }
         });
     }

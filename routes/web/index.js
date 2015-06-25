@@ -30,6 +30,15 @@ router.get('/chat', function(req, res) {
         logger.warn('chat->非法访问,ip:'+ common.getClientIp(req));
         res.render('chat/error',{error: '输入参数有误，请检查链接的输入参数！'});
     }else{
+        var viewDataObj={};//输出参数
+        if(chatUser.groupId.indexOf(constant.weChatGroupId)!=-1){
+            var deviceAgent = req.headers["user-agent"].toLowerCase();
+            if(!config.isAllowCopyHomeUrl && deviceAgent.indexOf('micromessenger') == -1 && constant.fromPlatform.pm_mis!=chatUser.fromPlatform){
+                res.render('chat/error',{error: '请在微信客户端打开链接!'});
+                return;
+            }
+            viewDataObj={web24kPriceUrl:(config.pmApiUrl+'/common/get24kPrice')};
+        }
         if(common.isBlank(chatUser.userType)){
             chatUser.userType=0;
         }
@@ -49,37 +58,25 @@ router.get('/chat', function(req, res) {
                                 callback(null,null);
                             }
                         },
-                        returnObj: function(callback){
-                            var obj={};//输出参数
-                            if(chatUser.groupId==constant.weChatGroupId){
-                                var isFromWeChat=true,error='';
-                                var deviceAgent = req.headers["user-agent"].toLowerCase();
-                                if(!config.isAllowCopyHomeUrl && deviceAgent.indexOf('micromessenger') == -1 && constant.fromPlatform.pm_mis!=chatUser.fromPlatform){
-                                    isFromWeChat=false;
-                                    error='请在微信客户端打开链接!';
-                                }
-                                obj={web24kPriceUrl:(config.pmApiUrl+'/common/get24kPrice'),isFromWeChat:isFromWeChat,error:error};
-                            }
-                            callback(null,obj);
-                        }
+                        returnObj: function(callback){ callback(null,null);}
                     },
                     function(err, results) {
                         if(results.checkResult!=null && !results.checkResult.isOk){
                             res.render('chat/error',{error: '您缺少访问权限，请联系管理员！'});
                         }else{
-                            var obj=results.returnObj;
                             if(results.checkResult!=null){
                                 chatUser.userType=results.checkResult.userType;
                                 chatUser.roleNo=results.checkResult.roleNo;
                                 chatUser.nickname=results.checkResult.nickname;
                                 chatUser.accountNo= chatUser.userId;//后台进入的用户，账户与userId保持一致，保存到member表时，userId不保存
                             }
-                            obj.socketUrl=config.socketServerUrl;
-                            obj.userInfo=JSON.stringify(chatUser);
+                            var mainKey=chatUser.groupId.replace(/_+.*/g,"");//去掉后缀
+                            viewDataObj.socketUrl=config.socketServerUrl+"/"+mainKey+constant.socketSpaceSuffix;
+                            viewDataObj.userInfo=JSON.stringify(chatUser);
                             if(constant.fromPlatform.pm_mis==chatUser.fromPlatform){//后台用户从后台进入则直接进入后台模板
-                                res.render("chat/adminChat",obj);
+                                res.render("chat/adminChat",viewDataObj);
                             }else{
-                                res.render(constant.chatIndexUrl[chatUser.groupId],obj);
+                                res.render(constant.chatIndexUrl[mainKey],viewDataObj);
                             }
                         }
                     });
@@ -120,6 +117,7 @@ router.post('/uploadData', function(req, res) {
             res.json({success:false});
         }
     }else{
+        console.log("warn:please upload img by linux server!");
         res.json({success:false});
     }
 });

@@ -14,24 +14,6 @@ var constant = require('../../constant/constant');//引入constant
 /*＃＃＃＃＃＃＃＃＃＃ 引入所需服务类 ＃＃＃＃＃＃＃＃end */
 
 /**
- * 提取聊天室缓存中在线用户
- */
-router.get('/getOnlineUser', function(req, res) {
-    var groupId=req.param("groupId");
-    if(common.isBlank(groupId)){
-        res.json(errorMessage.code_1000);
-    }else{
-        var userArr=userService.cacheUserArr[groupId];
-        var result=[];
-        for(var i=0;i<userArr.length;i++){
-            result.push(userArr[i].userInfo);
-        }
-        res.json(result);
-    }
-});
-
-
-/**
  * 移除客户端信息
  */
 router.post('/removeMsg', function(req, res) {
@@ -40,7 +22,7 @@ router.post('/removeMsg', function(req, res) {
     if(common.isBlank(msgIds)||common.isBlank(groupId)){
         result.error=errorMessage.code_1000;
     }else{
-        chatService.clientNotice(chatService.noticeType.removeMsg,groupId,{msgIds:msgIds});
+        chatService.removeMsg(groupId,msgIds);
         result.isOk=true;
     }
     res.json(result);
