@@ -19,16 +19,15 @@ var request = require('request');
 var userService = {
     /**
      * 移除在线用户
-     * @param groupId
-     * @param userId
+     * @param userInfo
      * @param callback
      */
-    removeOnlineUser:function(userInfo,sendMsgCount,callback){
+    removeOnlineUser:function(userInfo,callback){
         //更新用户记录表的在线状态(下线设置为0）
         if(common.isValid(userInfo.userId) && common.isValid(userInfo.groupId)) {
-            userService.updateChatUserGroupStatus(userInfo, 0,sendMsgCount, function (err) {
+            userService.updateChatUserGroupStatus(userInfo, 0,userInfo.sendMsgCount, function (err) {
                 if (!err) {
-                    console.log("update member status success!");
+                    console.log("removeOnlineUser=>update member status success!");
                 }
             });
             callback(userInfo.groupId);
