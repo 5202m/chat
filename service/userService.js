@@ -11,7 +11,7 @@ var config = require('../resources/config');//引入配置
 var constant = require('../constant/constant');//引入constant
 var common = require('../util/common');//引入common类
 var request = require('request');
-
+var logger=require('../resources/logConf').getLogger('userService');//引入log4js
 /**
  * 定义用户服务类
  * @type {{getMemberList: Function, updateMemberInfo: Function}}
@@ -27,7 +27,7 @@ var userService = {
         if(common.isValid(userInfo.userId) && common.isValid(userInfo.groupId)) {
             userService.updateChatUserGroupStatus(userInfo, 0,userInfo.sendMsgCount, function (err) {
                 if (!err) {
-                    console.log("removeOnlineUser=>update member status success!");
+                    logger.info("removeOnlineUser=>update member status success!");
                 }
             });
             callback(userInfo.groupId);
@@ -193,7 +193,7 @@ var userService = {
             newUserInfo.userId='';//不需要填值
             newUserInfo.isFromBack=true;//来自后台
         }
-        console.log("newUserInfo:"+JSON.stringify(newUserInfo));
+        logger.info("checkSystemUserInfo=>newUserInfo:"+JSON.stringify(newUserInfo));
         boUser.findOne({'userNo':newUserInfo.accountNo,'telephone':newUserInfo.mobilePhone},function(err,row) {
             if(!err && row){
                 result.isOk=true;
@@ -212,7 +212,7 @@ var userService = {
                 result.userType=newUserInfo.userType=userInfo.userType=userTypeTmp;
                 result.nickname=userInfo.nickname=newUserInfo.nickname=row.userName+"("+row.role.roleName+")";
                 if(common.isBlank(result.userType)){
-                    console.error("checkBackUserInfo->userType has error,please the constant.roleUserType");
+                    logger.error("checkBackUserInfo->userType has error,please the constant.roleUserType");
                 }
                 userService.createUser(newUserInfo, function (isOk) {
                     if(!isOk){
@@ -266,7 +266,7 @@ var userService = {
                     };
                     member.create(memberModel,function(err,count){
                         if(err){
-                            console.log('create member fail,'+err);
+                            logger.error('createUser=>create member fail,'+err);
                         }
                         if(callback){
                             callback(!err && count);
@@ -285,7 +285,7 @@ var userService = {
         var jsonStr={_id:userInfo.groupId,userId:userInfo.userId,onlineStatus:1,onlineDate:new Date(),avatar:userInfo.avatar,nickname:userInfo.nickname};
         member.findOneAndUpdate({'mobilePhone':userInfo.mobilePhone,'loginPlatform.chatUserGroup._id':{$ne:userInfo.groupId}},{'$push':{'loginPlatform.chatUserGroup':jsonStr}},function(err,row){
                 if(!err && row){
-                    console.log('create ChatUserGroupInfo!');
+                    logger.info('createChatUserGroupInfo=>create ChatUserGroupInfo success!');
                 }
         });
     },
@@ -306,7 +306,7 @@ var userService = {
         member.findOneAndUpdate(searchObj,
             {'$set':{'loginPlatform.chatUserGroup.$.onlineDate':userInfo.onlineDate,'loginPlatform.chatUserGroup.$.onlineStatus':userInfo.onlineStatus}},function(err,row){
                 if(!err && row){
-                    console.log("updateMemberInfo->update member success!");
+                    logger.info("updateMemberInfo->update member success!");
                     callback(row.loginPlatform.chatUserGroup[0].sendMsgCount);
                 }else{
                     callback(0);
@@ -331,7 +331,7 @@ var userService = {
         member.findOneAndUpdate({'mobilePhone':userInfo.mobilePhone,'loginPlatform.chatUserGroup.accountNo':userInfo.accountNo,'loginPlatform.chatUserGroup._id':userInfo.groupId},setObj
            ,function(err,row){
                 callback(!err && row);
-                console.log("updateUserGroupByAccountNo->update info!");
+                logger.info("updateUserGroupByAccountNo->update info!");
             });
     },
 
@@ -389,7 +389,6 @@ var userService = {
                 });
             }else{
                 var accountNoTemp=userInfo.accountNo.substring(1,userInfo.accountNo.length);
-                console.log("checkClient->accountNoTemp:"+accountNoTemp);
                 var searchObj = { "$or" : [{ 'loginPlatform.chatUserGroup.accountNo': eval('/.+'+accountNoTemp+'$/')}
                     ,{'mobilePhone':userInfo.mobilePhone,'loginPlatform.chatUserGroup.userId':{ '$nin':['',null]}}]};
                 member.find(searchObj).where('loginPlatform.chatUserGroup._id').equals(userInfo.groupId).count(function (err,count){
