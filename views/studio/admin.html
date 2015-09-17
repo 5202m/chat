@@ -1,0 +1,188 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>视频直播间【<%= groupInfo.name %>】</title>
+    <meta content="实盘直播,贵金属实盘直播室,金道贵金属实盘直播,金道贵金属" name="keywords">
+    <meta content="金道贵金属打造在线贵金属实盘直播室，金道研究院名家观点即时播报，让您的掘金之旅在此起航！携手金道，生金有道！" name="description">
+    <link href="/css/studio/admin.min.css" type="text/css" rel="stylesheet" />
+    <link href="/css/face.css" type="text/css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <link href="/css/studio/studioIE.css" rel="stylesheet" type="text/css">
+    <![endif]-->
+</head>
+<body>
+<div class="box-header">
+    <div class="box-header-in clearfix">
+        <h1 class="fl"><a class="header-logo hide-t" target="_blank" href="http://www.24k.hk">金道贵金属</a><h2 class="hide-t"></h2></h1>
+        <div style="margin-top: 14px;font-size: 20px;color: #b59030;position: absolute;left:330px;">【<strong><%= groupInfo.name %></strong>】</div>
+        <div class="header-right fr clearfix">
+            <a href="javascript:"><img src="" id="header_img_id" style="width:34px;height:48px;"/><span></span></a>
+            <a href="javascript:" class="username" class="real"><%= nickname %></a>
+        </div>
+        <span style="display:none;" id="groupInfoId" aw="<%= groupInfo.allowWhisper %>"></span>
+    </div>
+</div>
+<!-- wrapper begin -->
+<div class="wrapper clearfix">
+    <div class="left_row clearfix">
+        <div class="left2">
+            <div class="mod_video">
+                <div class="mod_video dn" id="yyVideoDiv" yc="<%= groupInfo.chatStudio.yyChannel %>" mc="<%= groupInfo.chatStudio.minChannel %>"></div>
+            </div>
+            <div class="mod_userlist mod_left1">
+                <h3 class="title">在线用户【<span id="onLineSizeNum"></span>】</h3>
+                <div class="scrollbox user_box">
+                    <ul id="userListId"></ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="right_row">
+        <div class="chat clearfix">
+            <div class="line_bar">
+                <div class="view_select">
+                    <div class="se_cont">
+                        <div class="selected">看所有人</div>
+                        <div class="selectlist scrollbox">
+                            <a href="javascript:void(0)" class="on" t="all">看所有人</a>
+                            <a href="javascript:void(0)" class="" t="analyst">只看分析师</a>
+                            <a href="javascript:void(0)" class="" t="me">与我相关</a>
+                        </div>
+                    </div>
+                    <i></i>
+                </div>
+            </div>
+
+            <div class="chat_content">
+                <div class="scrollbox2">
+                    <div class="dialoglist clearfix" id="dialog_list"></div>
+                </div>
+            </div>
+        </div>
+        <!-- chat_input begin -->
+        <div class="chat_input">
+            <div class="mymsg dn">
+                <p><span class="sender"></span>对&nbsp;你说：<span class="xcont"></span></p>
+                <a href="javascript:" class="replybtn" uId="">回复</a>
+                <a href="javascript:" class="closebtn">关闭</a>
+            </div>
+            <div class="input_box">
+                <div class="toolbar">
+                    <a href="javascript:" class="facebtn">表情</a>
+                    <a href="javascript:" class="tbtn clearbtn">清屏</a>
+                    <a href="javascript:" class="tbtn scrollbtn on">滚动</a>
+                    <a href="javascript:" class="tbtn approveall" id="approveAllHandler">
+                        <input type="checkbox" id="approveCheckAll"/>
+                        <label for="approveCheckAll">全选</label>
+                        &nbsp;
+                        <button btnType="1">通过</button>
+                        &nbsp;
+                        <button btnType="2">拒绝</button>
+                    </a>
+
+                    <div class="send_select">
+                        <div class="se_cont">
+                            <div class="selected">对所有人说</div>
+                            <div class="selectlist scrollbox">
+                                <div id="send_selelct_list">
+                                    <a href="javascript:void(0)" class="on" uId="all">对所有人说</a>
+                                </div>
+                            </div>
+                        </div>
+                        <i></i>
+                    </div>
+
+                </div>
+
+                <div class="input_area">
+                    <div class="adiv">
+                        <div id="contentText" contenteditable="true" class="ctextarea"></div>
+                    </div>
+                    <a href="javascript:void(0)" class="sendbtn" id="sendBtn"><i></i><span>发送</span></a>
+                </div>
+
+            </div>
+        </div>
+        <!-- chat_input end -->
+        <div class="dialogbtn" style="display:none">
+            <a href="">对话</a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
+<script language="javascript" src="/js/lib/jscroll.js"></script>
+<script type="text/javascript" src="/js/lib/jquery.superslide.2.1.1.js"></script>
+<script type="text/javascript" src="/js/lib/jquery.face.js"></script>
+<script type="text/javascript" src="/js/lib/socket.io.js"></script>
+<script type="text/javascript" src="/js/util/common.min.js?t=<%=new Date()%>"></script>
+<script type="text/javascript" src="/js/studio/admin.min.js?t=<%=new Date()%>"></script>
+
+<script type="text/javascript">
+    studioChat.filePath='<%= filePath %>';
+    studioChat.apiUrl='<%= apiUrl %>';
+    studioChat.userInfo=JSON.parse('<%- userInfo %>');
+    studioChat.socketUrl='<%= socketUrl %>';
+    $(function(){
+        widthCheck();
+        /*滚动*/
+        $('.te_ul li').width(function(){
+            return $('.te_list').width()*0.25+4*0.25;
+        });
+        $(".te_list").slide({ mainCell:".te_ul" , effect:"leftLoop", vis:4, autoPlay:false, delayTime:600 ,interTime:3000, autoPage: false, prevCell:".te_prev",nextCell:".te_next"});
+        heightCalcu();
+        /*滚动条*/
+        if($(window).width()>768){
+            myscroll();
+        }
+    });
+    $(window).resize(function(e){
+        widthCheck();
+        heightCalcu();
+        /*滚动条*/
+        if($(window).width()>768){
+            myscroll();
+        }
+    });
+    function widthCheck(){
+        var ww = $(window).width();
+        if(ww > 1680 ){
+            $('body').attr('class','');
+            $('body').addClass('wid1');
+        }
+        if(ww <= 1680 && ww > 1480 ){
+            $('body').attr('class','');
+            $('body').addClass('wid2');
+
+        }
+        if(ww <= 1480 && ww >= 1280 ){
+            $('body').attr('class','');
+            $('body').addClass('wid3');
+        }
+        if(ww < 1280 ){
+            $('body').attr('class','');
+            $('body').addClass('wid4');
+        }
+    }
+
+    function heightCalcu(){
+        hh = $(window).height();
+        $('.user_box').height(hh-650);
+        //$('.mod_video').height(hh-405);
+        $('.scrollbox2').height(hh-235-$('.mymsg').height());
+        $('.chat').height(hh-85);
+    }
+    //滚动条控制js
+    function myscroll(){
+        studioChat.setUserListScroll();
+        studioChat.setTalkListScroll();
+    }
+</script>
+
+
+</body>
+</html>

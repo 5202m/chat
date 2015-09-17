@@ -1,0 +1,101 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>金道贵金属微解盘【<%=roomName%>】</title>
+    <meta name="keywords" content="金道贵金属微解盘" />
+    <meta name="description" content="金道贵金属微解盘" />
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+    <link rel="stylesheet" href="/css/swipebox.min.css">
+    <link type="text/css" rel="stylesheet" href="/css/wechat/admin.min.css?t=<%=new Date()%>"/>
+    <style type="text/css">
+        /**---------------开发加入，begin----------**/
+        .paste-img{ position: absolute;top: 1px;left: 5px; }
+        .paste-img .show-img{position: absolute;top: -125px;width:100px;height:120px;border: 1px solid #BDBDBD;border-radius: 4px;}
+        .paste-img img{width:100%;height:100%}
+        .paste-img .min-img div{width: 50px;height: 50px;float:left;border: 1px solid #BDBDBD;border-radius: 4px;}
+        .paste-img .paste-close{width: 30px;height: 10px;float:right;margin: 5px 0px 0px 5px;cursor:pointer;}
+        .paste-img .paste-close i{background:url(/images/wechat/mainbg.png) no-repeat;background-size:140px auto;-moz-background-size:140px auto;display:block; background-position:-55px -25px; width:14px; height:14px; position:absolute; right:10px; top:8px;}
+        .dt-txt-name{ position: absolute;top: 8px;left: 5px; }
+        .reply-st{color:#64DE11;}
+        .reply-def{color:#093491;}
+        .dt-send-name{ margin-right:5px; cursor:pointer;white-space:nowrap;display: inline-block;}
+        /**---------------开发加入，end----------**/
+    </style>
+</head>
+<body>
+<!-- header begin -->
+<header id="header">
+    <section class="cop-info clearfix">
+        <h1 id="logo" class="fl"><a href="http://m.24k.hk" class="hide-t">金道贵金属</a></h1>
+        <p class="online-count fl">在线人数<span id="onlineUserNum"></span></p>
+        <aside class="user-intr fr">
+            <span style="float:left;width: 57px;font-size: 14px;color: #d9d9d9;white-space: nowrap;text-overflow: ellipsis; -o-text-overflow: ellipsis;overflow: hidden;"><%=roomName%></span>
+            <span id="show_top_btn" style="width: 57px;font-size: 14px;color: #d9d9d9;white-space: nowrap;text-overflow: ellipsis;cursor: pointer;margin-right:50px;">@记录<strong>【0】</strong><label></label></span>
+            <span class="user-img"><img src="" width="20" height="20" alt="头像" /></span>
+            <span class="user-name"></span>
+        </aside>
+    </section>
+</header>
+<section class="top-box dn">
+    <div style="height: 20px;"><h3 style="float:left;">等待回复的@记录<strong id="top_num">【0】</strong>：</h3><i id="close-top-box"></i></div>
+    <div class="cont" id="talk_top_id" style="overflow-y: auto;height:220px;"></div>
+</section>
+<!-- header end -->
+<aside class="fxs-ony-box clearfix">
+    <section class="ss-tk-info dn" id="top_info"><label></label><span style="margin-left:5px;text-align:justify;"></span><i id="close_top_btn"></i></section>
+</aside>
+<section class="wrapper pub-top" id="content_div">
+    <article class="talk-infobox">
+        <ul id="content_ul"></ul>
+    </article>
+</section>
+
+<!-- footer begin -->
+<footer class="float-box">
+    <article class="float-con">
+        <section class="operator-tool">
+           <input type="checkbox"/>全选<input type="button" class="btn" value="通过" btnType="1" style="margin-left:15px;" /><input type="button" class="btn" btnType="2" value="拒绝" />
+        </section>
+        <section class="inp-fon-tix">
+            <dt class="dt-txt-name" id="txtNicknameId"></dt>
+            <div class="paste-img dn">
+                <div class="show-img dn"><img src=""/></div>
+                <div class="min-img">
+                    <div><img src=""/></div>
+                    <span title="删除" class="paste-close"><i></i></span>
+                </div>
+            </div>
+            <textarea  id="contentText" class="text-area-box"></textarea>
+        </section>
+        <button class="add-btn hide-t" id="addBtn">添加</button>
+        <section class="add-img dn">
+            <article class="add-img-in">
+                <aside class="select-img"></aside>
+                <input type="file" class="file-img" id="fileBtn" accept="image/*" capture="camera"/>
+                <p>图片</p>
+            </article>
+        </section>
+        <button class="send-btn" style="display:none" id="sendBtn">发送</button>
+    </article>
+</footer>
+<!-- footer end -->
+<!-- shadow begin -->
+<section class="layer-shadow dn"></section>
+<!-- shadow end -->
+<!-- loading begin -->
+<section class="loading-box dn"></section>
+<!-- loading end -->
+<script type="text/javascript" src="/js/lib/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="/js/lib/jquery.swipebox.min.js"></script>
+<script type="text/javascript" src="/js/lib/socket.io.js"></script>
+<script type="text/javascript" src="/js/lib/paste.js"></script>
+<script type="text/javascript" src="/js/util/common.min.js?t=<%=new Date()%>"></script>
+<script type="text/javascript" src="/js/wechat/admin.min.js?t=<%=new Date()%>"></script>
+
+<script type="text/javascript">
+    adminChat.userInfo=JSON.parse('<%- userInfo %>');
+    adminChat.socketUrl='<%= socketUrl %>';
+</script>
+</body>
+</html>

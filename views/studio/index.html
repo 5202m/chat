@@ -1,0 +1,708 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta charset="utf-8"/>
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<title>视频直播间 - 金道贵金属打造在线贵金属实盘直播室，掘金之旅在此起航！</title>
+<meta content="实盘直播,贵金属实盘直播室,金道贵金属实盘直播,金道贵金属" name="keywords">
+<meta content="金道贵金属打造在线贵金属实盘直播室，金道研究院名家观点即时播报，让您的掘金之旅在此起航！携手金道，生金有道！" name="description">
+<link href="/css/studio/index.min.css" type="text/css" rel="stylesheet" />
+<link href="/css/face.css" type="text/css" rel="stylesheet" />
+<!--[if lt IE 9]>
+<link href="/css/studio/studioIE.css" rel="stylesheet" type="text/css">
+<![endif]-->
+</head>
+<body>
+<!-- header begin -->
+<div class="box-header">
+  <div class="box-header-in clearfix">
+      <h1 class="fl"><a onclick="_gaq.push(['_trackEvent', $GA_NAME, 'top', 'logo',1,true]);" class="header-logo hide-t" target="_blank" href="http://www.24k.hk">金道贵金属</a><h2 class="hide-t">视频直播间</h2></h1>
+      <div class="header-right fr clearfix">
+       	<a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank"><i class="real"></i><span>开立真实账户</span></a>
+        <a href="http://oa.24k.hk/zh/account_02.html" target="_blank"><i class="mn"></i><span>开立模拟账户</span></a>
+        <a onclick="openLive800Chat();_gaq.push(['_trackEvent', $GA_NAME, 'chat', 'live800',1,true]);" href="javascript:void(0);"><i class="kf"></i><span>在线客服</span></a>
+          <%if(userSession.isLogin){%>
+              <a href="javascript:" class="username"><%= userSession.nickname %></a>
+              <a href="/studio/logout" class="logout">注销</a>
+          <%} else {%>
+              <a href="javascript:" class="login" id="login_a">登录</a>
+              <a href="javascript:" class="register" id="register_a">注册</a>
+          <%}%>
+      </div>
+  </div>
+</div>
+
+<!-- header end -->
+
+<!-- wrapper begin -->
+<div class="wrapper clearfix">
+	<div class="left_row clearfix">
+    	<div class="left1">
+            <div class="video_room">
+                <div class="areabg">
+                    <div class="btnarea clearfix" id="studioListId">
+                        <% if (studioList!='[]') { %>
+                        <% studioList.forEach(function(row,index){ %>
+                           <a href="javascript:" id="<%=row._id %>" title="<%=row.chatStudio.remark %>" class="<%if(row.level==1){%>vip<%}else if(row.level==2){%>r1<%} else if(row.level==3){%>r2<%}else{%>normal<%}%> <%if(row.disable){%>locked<%}else if(row.isCurr){%>ing<%}else{%>normal<%}%>" aw="<%= row.allowWhisper %>" yc="<%= row.chatStudio.yyChannel %>" av="<%= row.allowVisitor %>" mc="<%= row.chatStudio.minChannel %>">
+                               <span class="s1"><%= row.name %></span><span class="s2"><i></i></span>
+                           </a>
+                        <% }); %>
+                        <% } %>
+                    </div>
+                    <a href="javascript:void(0)" class="more"><i></i></a>
+                </div>
+            </div>
+            <div class="mod_videolist mod_left1">
+            	<h3 class="title">教学视频</h3>
+                <div class="scrollbox videolist_box">
+                    <ul id="studioTeachId"></ul>
+                    <i class="img-loading" style="top: 50%;right: 50%;display:none;" pf="studioTeachId"></i>
+                </div>
+            </div>
+            
+            <div class="mod_userlist mod_left1">
+            	<h3 class="title">在线用户</h3>
+                <div class="scrollbox user_box">
+                    <ul id="userListId"></ul>
+                </div>
+            </div>
+            
+        </div>
+        <div class="left2">
+            <div class="mod_video" id="yyVideoDiv"></div>
+            <div class="mod_video dn">
+                <div  id="tVideoDiv" style="width:100%;height: 100%;"></div>
+                <a href="javascript:" class="vbackbtn">返回<br>直播</a>
+            </div>
+            <!-- mod_notice begin -->
+            <div class="mod_notice">
+                <div class="pro_notice">
+                    <ul class="pro_box">
+                        <li>
+                            <div class="pro_info" name="022">
+                                <div class="bor">
+                                <span class="pro_name n1"><strong>伦敦金</strong></span>
+                                <span class="pro_c"></span>
+                                <span class="pro_n red"></span>
+                                </div>
+                            </div>
+                            <div class="pro_info" name="023">
+                                <span class="pro_name n2"><strong>伦敦银</strong></span>
+                                <span class="pro_c"></span>
+                                <span class="pro_n green"></span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="pro_info"  name="050">
+                                <div class="bor">
+                                <span class="pro_name n3"><strong>美元指数</strong></span>
+                                <span class="pro_c"></span>
+                                <span class="pro_n red"></span>
+                                </div>
+                            </div>
+                            <div class="pro_info"  name="00E">
+                                <span class="pro_name n4"><strong>原油指数</strong></span>
+                                <span class="pro_c"></span>
+                                <span class="pro_n green"></span>
+                            </div>
+                        </li>
+                        
+                    </ul>
+                    <a class="pro_btn pro_prev" href="javascript:void(0)"><span></span></a>
+                    <a class="pro_btn pro_next" href="javascript:void(0)"><span></span></a>
+                </div>
+                
+                <div class="sro_notice">
+                	<ul class="sro_list">
+                    </ul>
+                </div>
+               
+            </div>
+            <!-- mod_notice end -->
+            
+            <!-- mod_tab end -->
+        	<div class="mod_tab">
+            	<div class="tab_nav">
+                	<a href="javascript:" class="on fir" t="bulletinTab">公告</a>
+                    <a href="javascript:" t="studioPlanTab">直播安排</a>
+                    <a href="javascript:" t="tradeInfoTab">交易策略</a>
+                    <a href="javascript:" t="commentTab">专业评论</a>
+                    <a href="javascript:" class="last" t="downloadTab">下载</a>
+                </div>
+                <div class="tabcont">
+                	<div class="tab_box on" t="needScoll">
+                    	<p class="notice_cont" id="bulletinTab"></p>
+                	</div>
+                    <div class="tab_box" t="needScoll">
+                        <p class="notice_cont" id="studioPlanTab"></p>
+                	</div>
+                    <div class="tab_box">
+                    	<ul class="tab_list" id="tradeInfoTab"></ul>
+                	</div>
+                    <div class="tab_box">
+                    	<ul class="tab_list notice_l" id="commentTab">
+                        </ul>
+                	</div>
+                    <div class="tab_box" style="overflow: auto;height: 100%;" t="needScoll">
+                    	<ul class="tab_list download" id="downloadTab">
+                        </ul>
+                	</div>
+                </div>
+            </div>
+        	<!-- mod_tab end -->
+        </div>
+    	
+    </div>
+    <div class="right_row">
+    	<div class="chat clearfix">
+        	<div class="te_list">
+                <div class="tempwrap">
+            	    <ul class="te_ul" id="teacherListId"></ul>
+                </div>
+                <a class="jt_btn te_prev" href="javascript:void(0)"><span></span></a>
+                <a class="jt_btn te_next" href="javascript:void(0)"><span></span></a>
+            </div>
+            <div class="te_dialoglist"></div>
+            <div class="line_bar">
+            	<div class="te_ctrl">
+            		<a href="javascript:void(0)" class="show_btn"><i></i>显示咨询对象</a>
+               		<a href="javascript:void(0)" class="hide_btn show"><i></i>隐藏咨询对象</a>
+                </div>
+                
+                <div class="view_select">
+                	<div class="se_cont">
+                        <div class="selected">看所有人</div>
+                        <div class="selectlist scrollbox">
+                            <a href="javascript:void(0)" class="on" t="all">看所有人</a>
+                            <a href="javascript:void(0)" class="" t="analyst">只看分析师</a>
+                            <a href="javascript:void(0)" class="" t="me">与我相关</a>
+                        </div>
+                    </div>
+                    <i></i>
+                </div>
+            </div>
+            
+            <div class="chat_content">
+            	<div class="scrollbox2">
+                    <div class="dialoglist clearfix" id="dialog_list"></div>
+                </div>
+            </div>
+            
+            
+        </div>
+        <!-- chat_input begin -->
+        <div class="chat_input">
+            <div class="mymsg dn">
+                <p><span class="sender"></span>对&nbsp;你说：<span class="xcont"></span></p>
+                <a href="javascript:" class="replybtn" uid="">回复</a>
+                <a href="javascript:" class="closebtn">关闭</a>
+            </div>
+            <div class="input_box">
+            	<div class="toolbar">
+                	<a href="javascript:" class="facebtn">表情</a>
+                    <a href="javascript:" class="tbtn clearbtn">清屏</a>
+                    <a href="javascript:" class="tbtn scrollbtn on">滚动</a>
+                    
+                    <div class="send_select">
+                        <div class="se_cont">
+                            <div class="selected">对所有人说</div>
+                            <div class="selectlist scrollbox">
+                                <div id="send_selelct_list">
+                                    <a href="javascript:void(0)" class="on" uid="all">对所有人说</a>
+                                </div>
+                            </div>
+                        </div>
+                        <i></i>
+                    </div>
+                    
+                </div>
+                
+                <div class="input_area">
+                	<div class="adiv">
+                        <div id="contentText" contenteditable="true" class="ctextarea"></div>
+                    </div>
+                    <a href="javascript:void(0)" class="sendbtn" id="sendBtn"><i></i><span>发送</span></a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- wrapper end -->
+
+<div class="blackbg dn">
+    <!--注册弹框begin-->
+    <div id="registBox">
+        <div class="popup_box dn" id="registFromBox">
+            <div class="tit t5"><b>直播间注册</b></div>
+            <div class="cont">
+                <form method="post" action="" id="registFrom">
+                    <div class="formcont">
+                            <div class="in_line">
+                                <i class="ic_phone"></i>
+                                <input type="text" placeholder="手机号" name="mobilePhone" class="in1">
+                            </div>
+                            <div class="in_line clearfix">
+                                <i class="ic_msg"></i>
+                                <input type="text" placeholder="短信验证码" name="verifyCode" class="in1 in2">
+                                <a href="javascript:" class="rbtn" pf="registFromBox">获取验证码</a>
+                            </div>
+                            <div class="in_line">
+                                <i class="ic_user"></i>
+                                <input type="text" placeholder="用户昵称" name="nickname" class="in1">
+                            </div>
+                            <div class="in_line">
+                                <i class="ic_pwd"></i>
+                                <input type="password" placeholder="设置密码" name="firstPwd" class="in1">
+                            </div>
+                            <div class="in_line">
+                                <i class="ic_pwd"></i>
+                                <input type="password" placeholder="再次输入密码" name="pwd" class="in1">
+                            </div>
+                    </div>
+                    <div class="btnbar">
+                        <a href="javascript:" class="formbtn reg" id="registBtn"><span>注册</span></a>
+                    </div>
+                    <div class="errorbar">
+                        <span class="wrong-info" t="registFrom"></span>
+                    </div>
+                </form>
+                <div class="botbar">
+                    <a href="javascript:" id="login_c">直播间登录</a>
+                    <span></span>
+                    <a href="javascript:" id="toGetPwd">找回密码</a>
+                </div>
+                <a href="javascript:void(0)" class="pop_close">关闭</a>
+            </div>
+        </div>
+        <div class="popup_box dn" id="registTipBox">
+            <div class="tit t3"><b>直播间注册</b></div>
+            <div class="cont re_cont">
+                <div class="resultbar">
+                    <i></i>
+                    <span>恭喜您注册直播间成功！</span>
+                </div>
+                <a href="javascript:" class="pop_close">关闭</a>
+            </div>
+        </div>
+        <i class="img-loading" style="top: 50%;right: 50%;display:none;" id="registLoad"></i>
+    </div>
+    <!--注册弹框end-->
+
+    <!--登录弹框begin-->
+    <div id="loginBox" class="dn">
+            <div class="popup_box dn" id="loginComBox">
+                <div class="tit t6"><b>直播间登录</b></div>
+                <div class="cont">
+                    <form method="post" id="loginComForm">
+                        <input type="hidden" name="isPM" value="false"/>
+                        <div class="formcont">
+                            <div class="in_line">
+                                <i class="ic_phone"></i>
+                                <input type="text" name="mobilePhone" placeholder="手机号" class="in1">
+                            </div>
+
+                            <div class="in_line">
+                                <i class="ic_pwd"></i>
+                                <input type="password" name="pwd" placeholder="密码" class="in1">
+                                <a href="javascript:" class="frbtn">找回密码</a>
+                            </div>
+                        </div>
+                        <div class="btnbar">
+                            <a href="javascript:" class="formbtn login" tn="loginBtn"><span>登录</span></a>
+                        </div>
+                        <div class="errorbar">
+                            <span class="wrong-info"></span>
+                        </div>
+                        <div class="botbar">
+                            <a href="javascript:" id="toPmLogin">金道用户免注册</a>
+                            <span></span>
+                            <a href="javascript:" id="toRegister">还没有账户?</a>
+                        </div>
+                    </form>
+                    <a href="javascript:void(0)" class="pop_close">关闭</a>
+                </div>
+            </div>
+
+            <div class="popup_box dn" id="loginPmBox">
+                <div class="tit t7"><b>金道用户登录</b></div>
+                <div class="cont">
+                    <form method="post" id="loginPmForm">
+                        <input type="hidden" name="isPM" value="true"/>
+                        <div class="formcont">
+                            <!--<div class="in_line">
+                                <input type="text" name="accountNo" placeholder="交易账号" class="in1"/>
+                            </div>-->
+                            <div class="in_line">
+                                <i class="ic_phone"></i>
+                                <input type="text" name="mobilePhone" placeholder="手机号" class="in1"/>
+                            </div>
+                            <div class="in_line clearfix">
+                                <i class="ic_msg"></i>
+                                <input type="text"  name="verifyCode" placeholder="短信验证码" class="in1 in2"/>
+                                <a href="javascript:" class="rbtn" pf="loginPmBox">获取验证码</a>
+                            </div>
+                        </div>
+                        <div class="btnbar">
+                            <a href="javascript:" class="formbtn login" tn="loginBtn"><span>登录</span></a>
+                        </div>
+                        <div class="errorbar">
+                            <span class="wrong-info"></span>
+                        </div>
+                   </form>
+                    <div class="botbar">
+                        <a href="javascript:" id="login_b">直播间登录</a>
+                        <span></span>
+                        <a href="javascript:" id="register_b">直播间注册</a>
+                    </div>
+                    <a href="javascript:void(0)" class="pop_close">关闭</a>
+                </div>
+            </div>
+           <i class="img-loading" style="top: 50%;right: 50%;display:none;" id="formBtnLoad"></i>
+    </div>
+    <!--登录弹框end-->
+
+    <div class="popup_box dn" id="pmInfoSetBox">
+    	<div class="tit t4"><b>直播间设置</b></div>
+        <div class="cont">
+        	<form method="post" id="pmInfoSetForm">
+                <input type="hidden" name="mobilePhone"/>
+                <input type="hidden" name="clientGroup"/>
+                <input type="hidden" name="verifyCode"/>
+                <div class="formcont">
+                    <div class="in_line">
+                        <i class="ic_user"></i>
+                        <input type="text" placeholder="用户昵称" name="nickname" class="in1"/>
+                    </div>
+                    <div class="in_line">
+                        <i class="ic_pwd"></i>
+                        <input type="password" placeholder="设置密码" name="firstPwd" class="in1"/>
+                    </div>
+                    <div class="in_line">
+                        <i class="ic_pwd"></i>
+                        <input type="password" placeholder="再次输入密码"  name="pwd" class="in1"/>
+                    </div>
+                </div>
+                <div class="btnbar">
+                    <a href="javascript:" class="formbtn login" id="pmInfoSetBtn"><span>确定</span></a>
+                </div>
+                <div class="errorbar">
+                    <span class="wrong-info"></span>
+                </div>
+            </form>
+            
+            <a href="javascript:" class="pop_close">关闭</a>
+        </div>
+        <i class="img-loading" style="top: 50%;right: 50%;display:none;" id="pmInfoSetLoad"></i>
+    </div>
+
+    
+    <div class="popup_box dn" id="userInfoBox">
+    	<div class="tit t1"><b>个人信息</b></div>
+        <div class="cont pdb50">
+                <div class="formcont formcont2">
+                    <div class="in_line clearfix">
+                        <span class="item_name">昵称：</span>
+                        <input type="text" placeholder="" readonly="readonly" class="in_value" value="<%= userSession.nickname %>">
+                    </div>
+
+                    <div class="in_line clearfix">
+                        <span class="item_name">账号：</span>
+                        <input type="text" placeholder="" class="in_value"  readonly="readonly" value="<%= userSession.mobilePhone %>">
+                        <div class="in_rbtn"><a href="javascript:" id="resetPwdLink">修改密码</a></div>
+                    </div>
+                    <div class="in_line clearfix">
+                        <span class="item_name">等级：</span>
+                            <%if('vip'==userSession.clientGroup){%>
+                                <div class="level l2">
+                                    <i></i>
+                                    <span>[V]</span>
+                                </div>
+                            <%} else if('real'==userSession.clientGroup) {%>
+                                <div class="level l3">
+                                    <i></i>
+                                    <span>[R]</span>
+                                </div>
+                            <%} else if('simulate'==userSession.clientGroup) {%>
+                                <div class="level l4">
+                                    <i></i>
+                                    <span>[D]</span>
+                                </div>
+                            <%} else if('register'==userSession.clientGroup) {%>
+                                <div class="level l5">
+                                    <i></i>
+                                    <span>[M]</span>
+                                </div>
+                            <%} else {%>
+                                <div class="level l1">
+                                    <i></i>
+                                    <span>游客</span>
+                                </div>
+                            <%}%>
+                        <div class="in_rbtn upg">
+                            <a href="javascript:" class="upg_btn">升级</a>
+                            <a href="javascript:" class="qu_btn"></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="upg_tip"><p>直播间等级由高至低包括V、R、D、M、游客，等级愈高，拥有的权限亦愈多</p></div>
+                <div class="upg_fail dn" id="upg_fail">
+                    <div class="upg_cont">
+                        <div class="resultbar">
+                            <i></i>
+                            <span></span>
+                        </div>
+                        <div class="btnbar">
+                            <a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank"><i class="real"></i><span>开立真实账户</span></a>
+                            <a href="http://oa.24k.hk/zh/account_02.html" target="_blank"><i class="mn"></i><span>开立模拟账户</span></a>
+                        </div>
+                        <a href="javascript:void(0)" class="pop_close">关闭</a>
+                    </div>
+                </div>
+                <div class="upg_succ dn">
+                    <div class="upg_cont">
+                        <div class="resultbar">
+                            <i></i>
+                            <span>直播间等级升级成功！您可享用更多直播间权限。</span>
+                        </div>
+                        <!--<div class="btnbar">
+                            <a href="" class="formbtn"><span>确定</span></a>
+                        </div>-->
+                        <a href="javascript:void(0)" class="pop_close">关闭</a>
+                    </div>
+                </div>
+                <div class="upg_list dn">
+                    <div class="upg_cont">
+                        <p>金道直播间用户分为5级，根据用户注册情况选择升级，详情如下：</p>
+                        <div class="upg_table">
+                            <table width="490" border="0" cellspacing="0" cellpadding="0">
+                                <tbody>
+                                    <tr>
+                                        <th width="70" align="center" valign="middle" scope="col">级别</th>
+                                        <th width="189" align="center" valign="middle" scope="col">说明</th>
+                                        <th width="141" align="center" valign="middle" scope="col">权限</th>
+                                        <th width="90" align="center" valign="middle" scope="col">操作</th>
+                                    </tr>
+                                </tbody>
+                                <tbody id="upg_tbody_id">
+                                </tbody>
+                            </table>
+                        </div>
+                        <a href="javascript:void(0)" class="pop_close">关闭</a>
+                        <i class="img-loading" style="top: 50%;right: 50%;display:none;"  id="up_loading"></i>
+                    </div>
+                </div>
+                <a href="javascript:void(0)" class="pop_close">关闭</a>
+        </div>
+    </div>
+    
+    <div class="popup_box dn" id="modifyPwdBox">
+    	<div class="tit t2"><b>修改密码</b></div>
+        <div class="cont">
+        	<form method="post" action="" id="modifyPwdForm">
+                <div class="formcont">
+                    <div class="in_line">
+                        <i class="ic_pwd"></i>
+                        <input type="password" placeholder="原有密码" name="oldPwd" class="in1">
+                    </div>
+                    <div class="in_line">
+                        <i class="ic_pwd"></i>
+                        <input type="password" placeholder="设置密码"  name="firstPwd" class="in1">
+                    </div>
+                    <div class="in_line">
+                        <i class="ic_pwd"></i>
+                        <input type="password" placeholder="再次输入密码"  name="pwd" class="in1">
+                    </div>
+                </div>
+                <div class="btnbar btn2">
+                    <a href="javascript:" class="formbtn" id="modifyPwdBtn"><span>确定</span></a>
+                </div>
+                <div class="errorbar">
+                    <span class="wrong-info"></span>
+                </div>
+            </form>
+            <a href="javascript:" class="pop_close">关闭</a>
+        </div>
+        <i class="img-loading" style="top: 50%;right: 50%;display:none;"  pf="modifyPwdForm"></i>
+    </div>
+    
+    <div class="popup_box dn" id="modifyPwdTipBox">
+    	<div class="tit t2"><b>修改密码</b></div>
+        <div class="cont re_cont">
+			<div class="resultbar">
+            	<i></i>
+                <span>恭喜您成功修改密碼！</span>
+            </div>
+            <!--<div class="btnbar">
+            	<a href="javascript:" class="formbtn"><span>确定</span></a>
+            </div>-->
+            <a href="javascript:" class="pop_close">关闭</a>
+        </div>
+    </div>
+
+
+    <div class="popup_box dn" id="mobileCheckBox">
+        <div class="tit t3"><b>手机验证</b></div>
+        <div class="cont">
+            <form method="post" action="" id="mobileCheckForm">
+                <input type="hidden" name="isCheck" value="true"/>
+                <div class="formcont">
+                    <div class="in_line">
+                        <i class="ic_phone"></i>
+                        <input type="text" placeholder="手机号" name="mobilePhone" class="in1">
+                    </div>
+                    <div class="in_line clearfix">
+                        <i class="ic_msg"></i>
+                        <input type="text" placeholder="短信验证码" class="in1 in2" name="verifyCode">
+                        <a href="javascript:" class="rbtn"  pf="mobileCheckBox">获取验证码</a>
+                    </div>
+                </div>
+                <div class="btnbar">
+                    <a href="javascript:" class="formbtn" id="mobileCheckBtn" pf="mobileCheckForm"><span>确定</span></a>
+                </div>
+                <div class="errorbar">
+                    <span class="wrong-info"></span>
+                </div>
+            </form>
+            <a href="javascript:void(0)" class="pop_close">关闭</a>
+        </div>
+        <i class="img-loading" style="top: 50%;right: 50%;display:none;" pf="mobileCheckForm"></i>
+    </div>
+    <div class="popup_box dn" id="getPwdBox">
+    	<div class="tit t8"><b>重设密码</b></div>
+        <div class="cont">
+        	<form method="post" action="" id="getPwdForm">
+                <input type="hidden" name="isCheck" value="false"/>
+                <input type="hidden" name="mobilePhone" />
+                <input type="hidden" name="verifyCode" />
+                <div class="formcont">
+                    <div class="in_line">
+                        <i class="ic_pwd"></i>
+                        <input type="password" placeholder="设置密码" name="firstPwd" class="in1">
+                    </div>
+
+                    <div class="in_line">
+                        <i class="ic_pwd"></i>
+                        <input type="password" placeholder="再次输入密码" name="pwd" class="in1">
+                    </div>
+                </div>
+                <div class="btnbar">
+                    <a href="javascript:" class="formbtn" id="getPwdBtn" pf="getPwdForm"><span>确定</span></a>
+                </div>
+                <div class="errorbar">
+                    <span class="wrong-info"></span>
+                </div>
+            </form>
+            <a href="javascript:" class="pop_close">关闭</a>
+        </div>
+        <i class="img-loading" style="top: 50%;right: 50%;display:none;" pf="getPwdForm"></i>
+    </div>
+    
+    <div class="popup_box dn" id="getPwdTipBox">
+    	<div class="tit t8"><b>重设密码</b></div>
+        <div class="cont re_cont">
+			<div class="resultbar">
+            	<i></i>
+                <span>恭喜您成功重设密碼！</span>
+            </div>
+            <a href="javascript:" class="pop_close">关闭</a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="/js/lib/socket.io.js"></script>
+<script type="text/javascript" src="/js/lib/jscroll.js"></script>
+<script type="text/javascript" src="/js/lib/jquery.superslide.2.1.1.js"></script>
+<script type="text/javascript" src="/js/lib/jquery.xdomainrequest.min.js"></script>
+<script type="text/javascript" src="/js/lib/jquery.face.js"></script>
+<script type="text/javascript" src="/js/util/common.min.js?t=<%=new Date().getTime()%>"></script>
+<script type="text/javascript" src="/js/studio/index.min.js?t=<%=new Date().getTime()%>"></script>
+
+<script type="text/javascript">
+studioChat.web24kPath='<%= web24kPath %>';
+studioChat.apiUrl='<%= apiUrl %>';
+studioChat.filePath='<%= filePath %>';
+studioChat.userInfo=JSON.parse('<%- userInfo %>');
+studioChat.studioDate='<%- studioDate %>';
+studioChat.socketUrl='<%= socketUrl %>';
+$(function(){
+	widthCheck();
+	/*滚动*/
+    teachSlide();
+	heightCalcu();
+	/*滚动条*/
+	if($(window).width()>768){
+		myscroll();
+	}
+});
+$(window).resize(function(e){
+	widthCheck();
+	heightCalcu();
+	/*滚动条*/	
+	if($(window).width()>768){
+		myscroll();
+	}
+});
+function widthCheck(){
+	var ww = $(window).width();
+	if(ww > 1680 ){
+		$('body').attr('class','');
+		$('body').addClass('wid1');
+	}
+	if(ww <= 1680 && ww > 1480 ){
+		$('body').attr('class','');
+		$('body').addClass('wid2');
+		
+	}
+	if(ww <= 1480 && ww >= 1280 ){
+		$('body').attr('class','');
+		$('body').addClass('wid3');
+	}
+	if(ww < 1280 ){
+		$('body').attr('class','');
+		$('body').addClass('wid4');
+	}
+}
+
+function heightCalcu(){
+	var hh = $(window).height();
+	$('.user_box').height(hh-464);
+	$('.mod_video').height(hh-395);
+	$('.scrollbox2').height(hh-280-$('.mymsg').height());
+	$('.chat').height(hh-75);
+}
+//滚动条控制js  
+function myscroll(){
+    studioChat.setUserListScroll();
+    studioChat.setTalkListScroll();
+    studioChat.setTabInfoScroll();
+}
+
+function teachSlide(){
+    var nowIndex = 0;
+    $("#teacherListId").width(0);
+
+    $('.te_next').click(function(){
+        var itemW = $('.te_ul li:first').width();
+        if($('.te_ul').width()-nowIndex*itemW -$('.te_list .tempwrap').width()>0){
+            nowIndex ++;
+            $('.te_ul').animate({left: -nowIndex*itemW}, "slow");
+        }
+    });
+
+    $('.te_prev').click(function(){
+        if(nowIndex!=0){
+            nowIndex --;
+            var itemW = $('.te_ul li:first').width();
+            $('.te_ul').animate({left: -nowIndex*itemW}, "slow");
+        }
+    });
+}
+</script>
+
+</body>
+</html>

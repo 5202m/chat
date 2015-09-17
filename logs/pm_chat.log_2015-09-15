@@ -1,0 +1,943 @@
+[2015-09-15 13:30:05.130] [INFO] console - spaceName:wechatGroup
+[2015-09-15 13:30:05.134] [INFO] console - spaceName:studioGroup
+[2015-09-15 13:30:05.135] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 13:30:05.136] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 13:31:11.289] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan"}
+[2015-09-15 13:31:11.355] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan HTTP/1.1" 200 4804 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:31:11.647] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 13:31:11.648] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 13:31:11.731] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 13:31:11.772] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 4789 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:31:13.895] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 13:31:13.948] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 304 - "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:32:52.647] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 13:32:52.647] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 13:32:52.712] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 13:32:52.747] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 4789 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:32:52.786] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 13:32:53.107] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 13:32:53.151] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:33:52.203] [INFO] console - spaceName:wechatGroup
+[2015-09-15 13:33:52.206] [INFO] console - spaceName:studioGroup
+[2015-09-15 13:33:52.208] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 13:33:52.208] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 13:33:52.917] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 13:34:40.229] [INFO] console - spaceName:wechatGroup
+[2015-09-15 13:34:40.232] [INFO] console - spaceName:studioGroup
+[2015-09-15 13:34:40.234] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 13:34:40.234] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 13:34:40.302] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 13:38:57.967] [INFO] console - spaceName:wechatGroup
+[2015-09-15 13:38:57.972] [INFO] console - spaceName:studioGroup
+[2015-09-15 13:38:57.974] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 13:38:57.974] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 13:38:58.205] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 13:38:58.207] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 13:38:59.079] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 13:38:59.160] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 4695 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:38:59.803] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:38:59.836] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 13:48:07.665] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 13:48:07.668] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 13:48:07.734] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 13:48:07.769] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 4695 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:48:07.783] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 13:48:08.590] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 13:48:08.603] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:51:39.399] [INFO] console - spaceName:wechatGroup
+[2015-09-15 13:51:39.403] [INFO] console - spaceName:studioGroup
+[2015-09-15 13:51:39.404] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 13:51:39.404] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 13:51:41.485] [INFO] console - spaceName:wechatGroup
+[2015-09-15 13:51:41.488] [INFO] console - spaceName:studioGroup
+[2015-09-15 13:51:41.490] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 13:51:41.490] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 13:51:42.264] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 13:52:02.236] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 13:52:02.238] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 13:52:02.307] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 13:52:02.356] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 4695 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:52:02.372] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 13:52:02.919] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:52:03.021] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 13:52:13.674] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 13:52:13.675] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 13:52:13.739] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 13:52:13.771] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 4695 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:52:13.777] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 13:52:14.309] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:52:14.403] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 13:52:37.186] [INFO] console - spaceName:wechatGroup
+[2015-09-15 13:52:37.190] [INFO] console - spaceName:studioGroup
+[2015-09-15 13:52:37.192] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 13:52:37.192] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 13:52:37.917] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 13:52:37.918] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 13:52:38.042] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 13:52:38.105] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 4695 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:52:38.841] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 13:52:38.852] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:53:16.080] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 13:53:16.080] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 13:53:16.146] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 13:53:16.180] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 4695 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:53:16.195] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 13:53:22.069] [INFO] console - spaceName:wechatGroup
+[2015-09-15 13:53:22.072] [INFO] console - spaceName:studioGroup
+[2015-09-15 13:53:22.074] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 13:53:22.074] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 13:53:22.173] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 13:53:24.882] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 13:53:24.884] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 13:53:24.972] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 13:53:25.017] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 4695 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:53:25.054] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 13:53:25.573] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:53:25.599] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 13:54:19.198] [INFO] console - spaceName:wechatGroup
+[2015-09-15 13:54:19.201] [INFO] console - spaceName:studioGroup
+[2015-09-15 13:54:19.203] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 13:54:19.204] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 13:54:19.237] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 13:54:19.239] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 13:54:20.037] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 13:54:20.088] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 4695 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:54:20.695] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 13:54:20.710] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:57:48.877] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 13:57:48.878] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 13:57:48.944] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 13:57:48.984] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 4812 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:57:48.993] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 13:57:49.411] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 13:57:49.424] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:09:02.994] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:09:02.995] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:09:03.058] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:09:03.102] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 6936 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:09:03.119] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:09:03.835] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:09:04.005] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:13:20.560] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:13:20.561] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:13:20.638] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:13:20.672] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 6987 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:13:20.681] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:13:21.315] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:13:21.431] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:15:59.257] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:15:59.257] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:15:59.325] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:15:59.353] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7122 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:15:59.359] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:15:59.876] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:15:59.963] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:19:08.700] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:19:08.701] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:19:08.763] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:19:08.793] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7125 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:19:08.801] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:19:09.477] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:19:09.520] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:19:40.627] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:19:40.627] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:19:40.691] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:19:40.721] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7131 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:19:40.734] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:19:41.266] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:19:41.368] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:21:09.319] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:21:09.321] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:21:09.383] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:21:09.416] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7131 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:21:09.423] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:21:10.040] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:21:10.059] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:21:46.978] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:21:46.979] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:21:47.041] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:21:47.078] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7131 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:21:47.086] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:21:47.702] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:21:47.713] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:24:57.353] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:24:57.353] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:24:57.419] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:24:57.450] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7155 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:24:57.455] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:24:57.988] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:24:58.079] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:26:12.952] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:26:12.952] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:26:13.016] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:26:13.044] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7165 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:26:13.052] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:26:13.696] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:26:13.724] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:27:37.421] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:27:37.422] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:27:37.486] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:27:37.516] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7172 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:27:37.524] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:27:38.198] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:27:38.335] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:35:12.024] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:35:12.024] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:35:12.087] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:35:12.118] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7422 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:35:12.136] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:35:12.744] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:35:12.749] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:35:36.819] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:35:36.819] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:35:36.884] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:35:36.911] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7431 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:35:36.949] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:35:37.621] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:35:37.926] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:37:26.093] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:37:26.093] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:37:26.157] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:37:26.188] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7431 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:37:26.196] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:37:26.782] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:37:26.786] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:41:21.234] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:41:21.238] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:41:21.239] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:41:21.240] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:41:21.273] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:41:21.275] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:41:22.073] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:41:22.133] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7430 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:41:22.696] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:41:22.746] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:42:05.521] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:42:05.522] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:42:05.586] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:42:05.619] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7426 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:42:05.631] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:42:06.338] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:42:06.346] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:47:09.349] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:47:09.354] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:47:09.356] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:47:09.356] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:47:10.455] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 14:48:17.882] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:48:17.886] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:48:17.889] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:48:17.889] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:48:21.088] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 14:48:27.391] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:48:27.395] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:48:27.396] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:48:27.397] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:48:28.618] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 14:48:37.061] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:48:37.064] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:48:37.066] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:48:37.066] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:48:37.800] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 14:48:47.054] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:48:47.057] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:48:47.058] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:48:47.059] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:48:48.199] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 14:48:52.429] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:48:52.433] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:48:52.435] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:48:52.435] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:48:53.886] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 14:48:58.269] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:48:58.273] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:48:58.275] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:48:58.275] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:49:00.108] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 14:49:26.415] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:49:26.416] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:49:26.490] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:49:26.543] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7491 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:49:26.571] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:49:27.204] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:49:27.319] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:51:04.511] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:51:04.514] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:51:04.516] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:51:04.516] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:51:04.551] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:51:04.552] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:51:05.392] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:51:05.444] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 7491 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:51:06.011] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:51:06.045] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:51:26.884] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:51:26.885] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:51:26.950] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:51:26.987] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5368 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:51:27.003] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:51:27.597] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:51:27.682] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:51:44.073] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:51:44.073] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:51:44.142] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:51:44.171] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5371 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:51:44.182] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:51:44.783] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:51:44.924] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:52:28.158] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:52:28.162] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:52:28.164] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:52:28.164] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:52:28.245] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 14:52:31.127] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:52:31.129] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:52:31.201] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:52:31.249] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5371 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:52:31.264] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:52:31.966] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 14:52:31.982] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:58:09.612] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:58:09.616] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:58:09.617] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:58:09.618] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:58:12.342] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 14:58:27.657] [INFO] console - spaceName:wechatGroup
+[2015-09-15 14:58:27.660] [INFO] console - spaceName:studioGroup
+[2015-09-15 14:58:27.662] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 14:58:27.663] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 14:58:27.766] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 14:59:02.753] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 14:59:02.755] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 14:59:02.826] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 14:59:02.873] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5653 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:59:02.883] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 14:59:04.585] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 14:59:04.604] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:00:23.492] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:00:23.492] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:00:23.557] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:00:23.588] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5664 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:00:23.600] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:00:24.259] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:00:24.376] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:02:11.920] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:02:11.920] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:02:11.985] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:02:12.014] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5655 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:02:12.022] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:02:12.759] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:02:12.794] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:03:10.091] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:03:10.095] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:03:10.096] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:03:10.096] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:03:10.964] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 15:03:47.968] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:03:47.972] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:03:47.973] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:03:47.974] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:03:48.966] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:04:28.290] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:04:28.293] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:04:28.295] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:04:28.295] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:04:29.987] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:04:30.614] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:04:30.616] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:04:30.685] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:04:30.734] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5655 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:04:30.756] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:04:31.381] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:04:31.430] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:05:14.737] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:05:14.740] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:05:14.741] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:05:14.742] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:05:14.842] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 15:06:08.560] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:06:08.565] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:06:08.567] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:06:08.567] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:06:11.024] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:08:07.049] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:08:07.053] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:08:07.055] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:08:07.055] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:08:11.339] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:08:23.380] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:08:23.383] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:08:23.385] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:08:23.385] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:08:26.016] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:08:58.603] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:08:58.606] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:08:58.608] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:08:58.608] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:08:59.385] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:09:06.739] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:09:06.741] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:09:06.813] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:09:06.888] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5655 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:09:06.901] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:09:07.517] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:09:07.545] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:09:53.319] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:09:53.322] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:09:53.324] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:09:53.324] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:09:54.074] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 15:10:31.625] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:10:31.626] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:10:31.696] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:10:31.744] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5658 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:10:31.754] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:10:32.422] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:10:32.436] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:12:51.977] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:12:51.978] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:12:52.042] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:12:52.076] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5659 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:12:52.084] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:12:52.624] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:12:52.713] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:14:15.872] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:14:15.873] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:14:15.948] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:14:15.977] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5750 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:14:15.984] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:14:16.737] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:14:16.771] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:16:55.961] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:16:55.962] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:16:56.025] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:16:56.066] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5750 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:16:56.075] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:16:56.647] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:16:56.659] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:18:38.307] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:18:38.307] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:18:38.375] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:18:38.409] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5750 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:18:38.424] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:18:39.116] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:18:39.158] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:19:39.636] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:19:39.637] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:19:39.700] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:19:39.729] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5750 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:19:39.739] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:19:40.254] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:19:40.359] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:25:39.165] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:25:39.165] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:25:39.234] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:25:39.263] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5750 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:25:39.268] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:25:39.721] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:25:39.741] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:26:00.657] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:26:00.657] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:26:00.719] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:26:00.749] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5750 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:26:00.756] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:26:01.565] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:26:01.577] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:29:16.843] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:29:16.846] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:29:16.848] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:29:16.849] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:29:19.965] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 15:29:30.397] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:29:30.400] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:29:30.401] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:29:30.402] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:29:31.151] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:29:45.269] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:29:45.274] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:29:45.275] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:29:45.276] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:29:45.371] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:30:20.206] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:30:20.210] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:30:20.212] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:30:20.213] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:30:20.923] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:30:35.719] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:30:35.723] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:30:35.727] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:30:35.728] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:30:36.542] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:31:30.081] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:31:30.084] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:31:30.086] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:31:30.086] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:31:30.963] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:32:10.917] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:32:10.932] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:32:10.934] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:32:10.934] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:32:12.969] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:32:41.609] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:32:41.615] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:32:41.617] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:32:41.617] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:32:42.336] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:32:42.338] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:32:42.456] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:32:42.504] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5750 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:32:42.903] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:32:42.912] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:33:27.263] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:33:27.264] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:33:27.330] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:33:27.362] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5750 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:33:27.370] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:33:27.711] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:33:27.723] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:33:30.261] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:33:30.264] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:33:30.266] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:33:30.267] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:33:30.336] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 15:34:07.612] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:34:07.613] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:34:07.690] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:34:07.735] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5750 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:34:07.746] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:34:08.149] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:34:08.169] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:34:11.427] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:34:11.429] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:34:11.431] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:34:11.431] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:34:13.107] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 15:35:52.524] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:35:52.526] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:35:52.606] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:35:52.651] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5750 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:35:52.661] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:35:53.001] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:35:53.061] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:35:57.489] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:35:57.492] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:35:57.494] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:35:57.494] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:35:58.249] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 15:37:05.858] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:37:05.861] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:37:05.862] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:37:05.863] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:37:06.784] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:37:30.498] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:37:30.501] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:37:30.503] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:37:30.503] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:37:31.236] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:39:18.782] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:39:18.787] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:39:18.789] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:39:18.789] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:39:20.041] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:39:25.971] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:39:25.974] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:39:25.976] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:39:25.976] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:39:26.054] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:39:56.083] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:39:56.087] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:39:56.088] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:39:56.088] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:39:56.965] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:40:35.775] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:40:35.778] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:40:35.780] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:40:35.780] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:40:36.595] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:40:52.005] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:40:52.009] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:40:52.010] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:40:52.011] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:40:55.095] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:41:00.627] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:41:00.630] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:41:00.632] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:41:00.632] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:41:00.749] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:41:10.577] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:41:10.577] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:41:10.649] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:41:10.701] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5767 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:41:10.746] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:41:11.100] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:41:11.114] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:44:38.972] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:44:38.975] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:44:38.976] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:44:38.977] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:44:39.744] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 15:44:40.267] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:44:40.269] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:44:40.349] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:44:40.396] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5779 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:44:40.406] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:44:40.746] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:44:40.823] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:45:36.388] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:45:36.391] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:45:36.393] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:45:36.394] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:45:39.047] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 15:45:46.413] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:45:46.416] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:45:46.418] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:45:46.419] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:45:48.402] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:46:01.231] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:46:01.235] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:46:01.237] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:46:01.237] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:46:01.305] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:46:05.039] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 15:46:05.041] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 15:46:05.115] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 15:46:05.158] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5794 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:46:05.167] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 15:46:05.513] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 15:46:05.532] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 15:51:06.895] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:51:06.897] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:51:06.899] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:51:06.900] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:51:07.968] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288166781_77879046"},"toUser.talkStyle":0}
+[2015-09-15 15:53:28.308] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:53:28.311] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:53:28.313] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:53:28.313] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:53:31.640] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:53:31.644] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:53:31.645] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:53:31.646] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:53:38.963] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 15:57:13.385] [INFO] console - spaceName:wechatGroup
+[2015-09-15 15:57:13.388] [INFO] console - spaceName:studioGroup
+[2015-09-15 15:57:13.391] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 15:57:13.391] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 15:57:17.070] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:00:02.531] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:00:02.534] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:00:02.536] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:00:02.537] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:00:03.305] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:01:53.985] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:01:53.989] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:01:53.990] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:01:53.990] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:01:57.595] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:01:57.599] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:01:57.600] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:01:57.601] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:02:02.963] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:02:18.990] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:02:18.993] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:02:18.994] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:02:18.995] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:02:22.026] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:03:00.023] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:03:00.030] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:03:00.033] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:03:00.034] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:03:02.964] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:03:47.806] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:03:47.809] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:03:47.812] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:03:47.812] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:03:47.880] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:05:08.070] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:05:08.073] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:05:08.074] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:05:08.075] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:05:08.965] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:06:27.983] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:06:27.986] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:06:27.988] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:06:27.989] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:06:28.965] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:06:39.032] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:06:39.036] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:06:39.041] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:06:39.042] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:06:39.969] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:06:57.830] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:06:57.833] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:06:57.834] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:06:57.835] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:06:57.901] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:07:43.380] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:07:43.384] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:07:43.385] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:07:43.385] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:07:44.157] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:08:14.380] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:08:14.383] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:08:14.384] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:08:14.384] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:08:17.964] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:09:34.359] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:09:34.362] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:09:34.363] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:09:34.364] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:09:34.437] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:10:15.098] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:10:15.102] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:10:15.103] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:10:15.104] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:10:18.177] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:10:48.220] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:10:48.223] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:10:48.225] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:10:48.225] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:10:48.302] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:12:43.659] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:12:43.662] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:12:43.664] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:12:43.664] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:12:43.732] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:13:03.455] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:13:03.458] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:13:03.460] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:13:03.460] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:13:04.213] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:16:30.886] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:16:30.890] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:16:30.892] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:16:30.893] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:16:34.964] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:16:54.798] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:16:54.802] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:16:54.803] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:16:54.804] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:16:56.137] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:17:59.250] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:17:59.254] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:17:59.255] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:17:59.256] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:17:59.350] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:19:21.389] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:19:21.393] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:19:21.395] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:19:21.395] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:19:24.964] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:19:29.071] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:19:29.075] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:19:29.077] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:19:29.078] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:19:29.190] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:20:04.059] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:20:04.062] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:20:04.064] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:20:04.064] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:20:04.963] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:20:09.101] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:20:09.104] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:20:09.107] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:20:09.108] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:20:09.195] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:21:04.296] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:21:04.300] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:21:04.302] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:21:04.302] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:21:05.021] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:21:44.239] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:21:44.242] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:21:44.243] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:21:44.244] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:21:44.321] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:23:54.720] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:23:54.723] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:23:54.726] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:23:54.726] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:23:54.803] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:24:09.832] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:24:09.836] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:24:09.837] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:24:09.838] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:24:09.926] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:24:34.572] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:24:34.575] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:24:34.577] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:24:34.578] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:24:37.212] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:25:14.698] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:25:14.701] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:25:14.703] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:25:14.703] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:25:16.628] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:26:17.760] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:26:17.763] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:26:17.765] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:26:17.766] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:26:17.954] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:26:35.426] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:26:35.429] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:26:35.430] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:26:35.431] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:26:36.191] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:28:05.603] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:28:05.605] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:28:05.607] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:28:05.607] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:28:06.407] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:28:41.330] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:28:41.333] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:28:41.335] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:28:41.335] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:28:42.314] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:28:55.266] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:28:55.269] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:28:55.271] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:28:55.272] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:28:56.769] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:29:25.237] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:29:25.241] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:29:25.242] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:29:25.243] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:29:27.348] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:30:47.533] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:30:47.536] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:30:47.537] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:30:47.538] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:30:47.621] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442288216506_803154298"},"toUser.talkStyle":0}
+[2015-09-15 16:31:21.468] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 16:31:21.470] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 16:31:21.555] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 16:31:21.686] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5794 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 16:31:21.696] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 16:31:22.746] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 16:31:23.048] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 16:31:27.951] [INFO] console - save chatMessage success!
+[2015-09-15 16:31:30.347] [INFO] console - save chatMessage success!
+[2015-09-15 16:33:11.385] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:33:11.388] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:33:11.389] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:33:11.390] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:33:11.470] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442305890314_8469608"},"toUser.talkStyle":0}
+[2015-09-15 16:33:41.146] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:33:41.150] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:33:41.151] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:33:41.152] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:33:41.239] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442305890314_8469608"},"toUser.talkStyle":0}
+[2015-09-15 16:35:31.725] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:35:31.728] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:35:31.729] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:35:31.730] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:35:31.801] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442305890314_8469608"},"toUser.talkStyle":0}
+[2015-09-15 16:35:35.372] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:35:35.375] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:35:35.376] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:35:35.376] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:35:35.456] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442305890314_8469608"},"toUser.talkStyle":0}
+[2015-09-15 16:36:03.901] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 16:36:03.903] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 16:36:03.975] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 16:36:04.024] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5798 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 16:36:04.033] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 16:36:09.350] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 200 319 "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 16:36:09.352] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 16:37:58.270] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:37:58.272] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:37:58.274] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:37:58.274] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:38:01.061] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442305890314_8469608"},"toUser.talkStyle":0}
+[2015-09-15 16:41:45.179] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:41:45.184] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:41:45.185] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:41:45.186] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:41:45.270] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442305890314_8469608"},"toUser.talkStyle":0}
+[2015-09-15 16:42:22.580] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:42:22.583] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:42:22.585] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:42:22.586] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:42:22.703] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442305890314_8469608"},"toUser.talkStyle":0}
+[2015-09-15 16:42:26.221] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:42:26.224] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:42:26.225] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:42:26.227] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:42:26.315] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442305890314_8469608"},"toUser.talkStyle":0}
+[2015-09-15 16:48:53.416] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:48:53.419] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:48:53.421] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:48:53.422] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:48:53.525] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442305890314_8469608"},"toUser.talkStyle":0}
+[2015-09-15 16:51:21.560] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 16:57:59.654] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:57:59.657] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:57:59.659] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:57:59.659] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 16:58:13.035] [INFO] console - spaceName:wechatGroup
+[2015-09-15 16:58:13.038] [INFO] console - spaceName:studioGroup
+[2015-09-15 16:58:13.040] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 16:58:13.040] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 17:06:00.158] [INFO] console - spaceName:wechatGroup
+[2015-09-15 17:06:00.161] [INFO] console - spaceName:studioGroup
+[2015-09-15 17:06:00.162] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 17:06:00.163] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 17:06:26.547] [INFO] console - spaceName:wechatGroup
+[2015-09-15 17:06:26.550] [INFO] console - spaceName:studioGroup
+[2015-09-15 17:06:26.552] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 17:06:26.553] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 17:06:38.013] [INFO] index - chat->param:token[11],otherParam:{"userId":"112","groupId":"wechat"}
+[2015-09-15 17:06:38.063] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&groupId=wechat&userId=112 HTTP/1.1" 200 4821 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 17:06:38.904] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat/getRoomList HTTP/1.1" 200 625 "http://127.0.0.1:3001/wechat?token=11&groupId=wechat&userId=112" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 17:06:39.007] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 304 - "http://127.0.0.1:3001/wechat?token=11&groupId=wechat&userId=112" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 17:06:39.096] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat/getUserPraiseNum?praiseId=U150520B000009%2CU150511B000006 HTTP/1.1" 200 212 "http://127.0.0.1:3001/wechat?token=11&groupId=wechat&userId=112" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 17:06:40.743] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat/getArticleList?code=advertisement&platform=wechat_home&hasContent=0&pageNo=1&pageSize=3&orderByStr=%7B%22sequence%22%3A%22asc%22%7D HTTP/1.1" 200 1053 "http://127.0.0.1:3001/wechat?token=11&groupId=wechat&userId=112" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 17:06:40.850] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat/getArticleList?code=bulletin_system&platform=wechat_home&hasContent=1&pageNo=1&pageSize=5&orderByStr= HTTP/1.1" 200 1532 "http://127.0.0.1:3001/wechat?token=11&groupId=wechat&userId=112" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 17:06:41.610] [INFO] index - chat->param:token[11],otherParam:{"userId":"alan","groupId":"wechat_2","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 17:06:41.611] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 17:06:41.683] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 17:06:41.770] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2 HTTP/1.1" 200 5798 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 17:06:41.829] [ERROR] chatService - setSocket[disconnect]=>out of room client disconnect,please check!
+[2015-09-15 17:06:42.815] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 304 - "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 17:06:42.829] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0}
+[2015-09-15 17:06:47.147] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat/getBigImg?publishTime=1442307609423_719830632&userId=alan HTTP/1.1" 200 - "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 17:06:48.159] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat/getBigImg?publishTime=1442307590984_281110307&userId=alan HTTP/1.1" 200 - "http://127.0.0.1:3001/wechat?token=11&userId=alan&mobilePhone=13444455550&fromPlatform=pm_mis&groupId=wechat_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 17:07:06.840] [INFO] console - spaceName:wechatGroup
+[2015-09-15 17:07:06.844] [INFO] console - spaceName:studioGroup
+[2015-09-15 17:07:06.846] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 17:07:06.846] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 17:07:06.916] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442307609423_719830632"},"toUser.talkStyle":0}
+[2015-09-15 17:07:19.938] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 17:11:25.051] [INFO] console - spaceName:wechatGroup
+[2015-09-15 17:11:25.054] [INFO] console - spaceName:studioGroup
+[2015-09-15 17:11:25.056] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 17:11:25.057] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 17:22:39.548] [INFO] console - spaceName:wechatGroup
+[2015-09-15 17:22:39.552] [INFO] console - spaceName:studioGroup
+[2015-09-15 17:22:39.553] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 17:22:39.553] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 18:09:43.363] [INFO] index - chat->param:token[a89e54ee4f064db3a75f702b4e4961b7],otherParam:{"userId":"alan","groupId":"wechat_2","nickname":"alan_wu(分析师)","mobilePhone":"13444455550","fromPlatform":"pm_mis"}
+[2015-09-15 18:09:43.364] [INFO] userService - checkSystemUserInfo=>newUserInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true}
+[2015-09-15 18:09:43.444] [INFO] console - createUser->userInfo:{"groupType":"wechat","groupId":"wechat_2","accountNo":"alan","userId":"","mobilePhone":"13444455550","isFromBack":true,"roleNo":"analyst_01","userType":2,"nickname":"alan_wu"}
+[2015-09-15 18:09:43.551] [INFO] app - ::ffff:127.0.0.1 - - "GET /wechat?userId=alan&mobilePhone=13444455550&nickname=alan_wu(%E5%88%86%E6%9E%90%E5%B8%88)&fromPlatform=pm_mis&groupId=wechat_2&token=a89e54ee4f064db3a75f702b4e4961b7&roomName=%E5%BE%AE%E4%BF%A1%E7%BB%84%E6%88%BF%E9%97%B4_2 HTTP/1.1" 200 5832 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 18:09:44.411] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 304 - "http://127.0.0.1:3001/wechat?userId=alan&mobilePhone=13444455550&nickname=alan_wu(%E5%88%86%E6%9E%90%E5%B8%88)&fromPlatform=pm_mis&groupId=wechat_2&token=a89e54ee4f064db3a75f702b4e4961b7&roomName=%E5%BE%AE%E4%BF%A1%E7%BB%84%E6%88%BF%E9%97%B4_2" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+[2015-09-15 18:09:44.418] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"toUser.talkStyle":0,"userType":2}
+[2015-09-15 18:12:52.553] [INFO] console - save chatMessage success!
+[2015-09-15 18:12:54.640] [INFO] console - save chatMessage success!
+[2015-09-15 18:13:11.429] [INFO] console - save chatMessage success!
+[2015-09-15 18:13:13.241] [INFO] console - save chatMessage success!
+[2015-09-15 18:13:19.969] [INFO] console - save chatMessage success!
+[2015-09-15 18:13:51.360] [INFO] console - spaceName:wechatGroup
+[2015-09-15 18:13:51.363] [INFO] console - spaceName:studioGroup
+[2015-09-15 18:13:51.365] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 18:13:51.365] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 18:13:52.177] [INFO] console - loadMsg->searchObj :{"groupId":"wechat_2","status":1,"valid":1,"publishTime":{"$gt":"1442311999936_703795744"},"toUser.talkStyle":0}
+[2015-09-15 18:15:23.191] [INFO] chatService - setSocket[disconnect]=>client[alan] disconnect!
+[2015-09-15 18:16:45.153] [INFO] console - spaceName:wechatGroup
+[2015-09-15 18:16:45.157] [INFO] console - spaceName:studioGroup
+[2015-09-15 18:16:45.158] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 18:16:45.159] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-09-15 18:17:36.145] [INFO] console - spaceName:wechatGroup
+[2015-09-15 18:17:36.148] [INFO] console - spaceName:studioGroup
+[2015-09-15 18:17:36.149] [INFO] console - Chat web server running. Listening on port 3001
+[2015-09-15 18:17:36.150] [INFO] console - Chat socket server running. Listening on port 3002

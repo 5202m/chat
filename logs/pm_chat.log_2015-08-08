@@ -1,0 +1,179 @@
+[2015-08-08 09:15:16.674] [INFO] console - spaceName:wechatGroup
+[2015-08-08 09:15:16.677] [INFO] console - spaceName:studioGroup
+[2015-08-08 09:15:16.678] [INFO] console - Chat web server running. Listening on port 3001
+[2015-08-08 09:15:16.678] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-08-08 09:15:49.946] [INFO] console - spaceName:wechatGroup
+[2015-08-08 09:15:49.949] [INFO] console - spaceName:studioGroup
+[2015-08-08 09:15:49.951] [INFO] console - Chat web server running. Listening on port 3001
+[2015-08-08 09:15:49.951] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-08-08 09:18:12.209] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_787437","clientGroup":"visitor","nickname":"游客_787437","groupType":"studio","userType":0}
+[2015-08-08 09:18:12.339] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.599] [INFO] app - ::ffff:127.0.0.1 - - "GET /css/studio.css HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.604] [INFO] app - ::ffff:127.0.0.1 - - "GET /css/face.css HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.604] [INFO] app - ::ffff:127.0.0.1 - - "GET /js/lib/jquery-1.7.min.js HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.605] [INFO] app - ::ffff:127.0.0.1 - - "GET /js/lib/socket.io.js HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.606] [INFO] app - ::ffff:127.0.0.1 - - "GET /js/lib/jscroll.js HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.608] [INFO] app - ::ffff:127.0.0.1 - - "GET /js/lib/jquery.superslide.2.1.1.js HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.657] [INFO] app - ::ffff:127.0.0.1 - - "GET /js/lib/jquery.xdomainrequest.min.js HTTP/1.1" 200 1926 "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.696] [INFO] app - ::ffff:127.0.0.1 - - "GET /js/lib/jquery.face.js HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.732] [INFO] app - ::ffff:127.0.0.1 - - "GET /js/studio/index.js?t=Sat%20Aug%2008%202015%2009:18:12%20GMT+0800%20(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4) HTTP/1.1" 200 44208 "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.742] [INFO] app - ::ffff:127.0.0.1 - - "GET /js/util/common.js?t=Sat%20Aug%2008%202015%2009:18:12%20GMT+0800%20(%E4%B8%AD%E5%9B%BD%E6%A0%87%E5%87%86%E6%97%B6%E9%97%B4) HTTP/1.1" 200 6807 "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.914] [INFO] app - ::ffff:127.0.0.1 - - "GET /images/studio/bg.jpg HTTP/1.1" 304 - "http://127.0.0.1:3001/css/studio.css" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.915] [INFO] app - ::ffff:127.0.0.1 - - "GET /images/studio/logotit.png HTTP/1.1" 304 - "http://127.0.0.1:3001/css/studio.css" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.918] [INFO] app - ::ffff:127.0.0.1 - - "GET /images/studio/videobtn.png HTTP/1.1" 304 - "http://127.0.0.1:3001/css/studio.css" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:12.949] [INFO] app - ::ffff:127.0.0.1 - - "GET /images/studio/img_css.png HTTP/1.1" 304 - "http://127.0.0.1:3001/css/studio.css" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:13.054] [INFO] app - ::ffff:127.0.0.1 - - "GET /images/loading2.gif HTTP/1.1" 200 16246 "http://127.0.0.1:3001/css/studio.css" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:13.395] [INFO] app - ::ffff:127.0.0.1 - - "GET /images/studio/scroll.png HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:13.412] [INFO] app - ::ffff:127.0.0.1 - - "GET /images/studio/scroll2.png HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:13.761] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:18:13.783] [INFO] app - ::ffff:127.0.0.1 - - "GET /favicon.ico HTTP/1.1" 404 318 "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:14.419] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:18:14.423] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 200 4 "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:14.425] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:18:14.426] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 200 4 "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:18.910] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/index HTTP/1.1" 404 318 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:18:18.940] [INFO] chatService - setSocket[disconnect]=>client[visitor_787437] disconnect!
+[2015-08-08 09:18:18.972] [INFO] userService - removeOnlineUser=>update member status success!
+[2015-08-08 09:19:21.702] [INFO] console - spaceName:wechatGroup
+[2015-08-08 09:19:21.705] [INFO] console - spaceName:studioGroup
+[2015-08-08 09:19:21.707] [INFO] console - Chat web server running. Listening on port 3001
+[2015-08-08 09:19:21.708] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-08-08 09:20:05.337] [INFO] console - spaceName:wechatGroup
+[2015-08-08 09:20:05.340] [INFO] console - spaceName:studioGroup
+[2015-08-08 09:20:05.341] [INFO] console - Chat web server running. Listening on port 3001
+[2015-08-08 09:20:05.342] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-08-08 09:20:16.112] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/index HTTP/1.1" 404 318 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:33.160] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/ HTTP/1.1" 302 70 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:33.164] [INFO] console - dddd-----------
+[2015-08-08 09:20:33.164] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_132645","clientGroup":"visitor","nickname":"游客_132645","groupType":"studio","userType":0}
+[2015-08-08 09:20:33.244] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:34.570] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:20:34.572] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:34.573] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:20:34.574] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:35.105] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:20:36.281] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/ HTTP/1.1" 302 70 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:36.291] [INFO] console - dddd-----------
+[2015-08-08 09:20:36.292] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_132645","clientGroup":"visitor","nickname":"游客_132645","groupType":"studio","userType":0,"groupId":"studio_teach"}
+[2015-08-08 09:20:36.355] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:36.370] [INFO] chatService - setSocket[disconnect]=>client[visitor_132645] disconnect!
+[2015-08-08 09:20:36.399] [INFO] userService - removeOnlineUser=>update member status success!
+[2015-08-08 09:20:36.829] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:20:37.643] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:20:37.645] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:37.646] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:20:37.647] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:40.885] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/ HTTP/1.1" 302 70 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:40.897] [INFO] console - dddd-----------
+[2015-08-08 09:20:40.898] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_132645","clientGroup":"visitor","nickname":"游客_132645","groupType":"studio","userType":0,"groupId":"studio_teach"}
+[2015-08-08 09:20:40.965] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:40.975] [INFO] chatService - setSocket[disconnect]=>client[visitor_132645] disconnect!
+[2015-08-08 09:20:41.005] [INFO] userService - removeOnlineUser=>update member status success!
+[2015-08-08 09:20:41.460] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:20:42.301] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:20:42.302] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:42.302] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:20:42.303] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:48.441] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/ HTTP/1.1" 302 70 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:48.450] [INFO] console - dddd-----------
+[2015-08-08 09:20:48.450] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_132645","clientGroup":"visitor","nickname":"游客_132645","groupType":"studio","userType":0,"groupId":"studio_teach"}
+[2015-08-08 09:20:48.511] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:48.520] [INFO] chatService - setSocket[disconnect]=>client[visitor_132645] disconnect!
+[2015-08-08 09:20:48.549] [INFO] userService - removeOnlineUser=>update member status success!
+[2015-08-08 09:20:49.037] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:20:49.782] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:20:49.783] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:20:49.888] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:20:49.889] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:21.245] [INFO] console - spaceName:wechatGroup
+[2015-08-08 09:21:21.248] [INFO] console - spaceName:studioGroup
+[2015-08-08 09:21:21.250] [INFO] console - Chat web server running. Listening on port 3001
+[2015-08-08 09:21:21.250] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-08-08 09:21:23.500] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:21:24.185] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/ HTTP/1.1" 302 70 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:24.197] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_269035","clientGroup":"visitor","nickname":"游客_269035","groupType":"studio","userType":0}
+[2015-08-08 09:21:24.278] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:24.290] [INFO] chatService - setSocket[disconnect]=>client[visitor_132645] disconnect!
+[2015-08-08 09:21:24.320] [INFO] userService - removeOnlineUser=>update member status success!
+[2015-08-08 09:21:24.805] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:21:25.621] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:21:25.623] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:25.624] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:21:25.626] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:28.269] [INFO] app - ::ffff:127.0.0.1 - - "GET /studiow HTTP/1.1" 404 318 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:28.278] [INFO] chatService - setSocket[disconnect]=>client[visitor_269035] disconnect!
+[2015-08-08 09:21:28.308] [INFO] userService - removeOnlineUser=>update member status success!
+[2015-08-08 09:21:32.409] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_269035","clientGroup":"visitor","nickname":"游客_269035","groupType":"studio","userType":0,"groupId":"studio_teach"}
+[2015-08-08 09:21:32.470] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:32.651] [INFO] app - ::ffff:127.0.0.1 - - "GET /studioxx HTTP/1.1" 404 318 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:33.081] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:21:33.901] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:21:33.902] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:33.903] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:21:33.904] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:36.294] [INFO] chatService - setSocket[disconnect]=>client[visitor_269035] disconnect!
+[2015-08-08 09:21:36.322] [INFO] userService - removeOnlineUser=>update member status success!
+[2015-08-08 09:21:36.379] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_269035","clientGroup":"visitor","nickname":"游客_269035","groupType":"studio","userType":0,"groupId":"studio_teach"}
+[2015-08-08 09:21:36.447] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:36.868] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:21:37.641] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:21:37.642] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:21:37.657] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:21:37.658] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:22:21.795] [INFO] app - ::ffff:127.0.0.1 - - "GET /studioj HTTP/1.1" 404 318 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:22:21.806] [INFO] chatService - setSocket[disconnect]=>client[visitor_269035] disconnect!
+[2015-08-08 09:22:21.836] [INFO] userService - removeOnlineUser=>update member status success!
+[2015-08-08 09:22:29.283] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/ HTTP/1.1" 302 70 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:22:29.291] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_269035","clientGroup":"visitor","nickname":"游客_269035","groupType":"studio","userType":0,"groupId":"studio_teach"}
+[2015-08-08 09:22:29.354] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:22:29.857] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:22:30.660] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:22:30.661] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:22:30.662] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:22:30.663] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:24:41.545] [INFO] console - spaceName:wechatGroup
+[2015-08-08 09:24:41.547] [INFO] console - spaceName:studioGroup
+[2015-08-08 09:24:41.549] [INFO] console - Chat web server running. Listening on port 3001
+[2015-08-08 09:24:41.549] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-08-08 09:24:41.620] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:25:55.937] [INFO] console - spaceName:wechatGroup
+[2015-08-08 09:25:55.940] [INFO] console - spaceName:studioGroup
+[2015-08-08 09:25:55.942] [INFO] console - Chat web server running. Listening on port 3001
+[2015-08-08 09:25:55.942] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-08-08 09:25:56.010] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:26:12.107] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_859890","clientGroup":"visitor","nickname":"游客_859890","groupType":"studio","userType":0}
+[2015-08-08 09:26:12.205] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:12.218] [INFO] chatService - setSocket[disconnect]=>client[visitor_269035] disconnect!
+[2015-08-08 09:26:12.248] [INFO] userService - removeOnlineUser=>update member status success!
+[2015-08-08 09:26:12.701] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:26:13.465] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:26:13.467] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:13.494] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:26:13.496] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:15.903] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/ HTTP/1.1" 302 70 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:15.909] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_859890","clientGroup":"visitor","nickname":"游客_859890","groupType":"studio","userType":0,"groupId":"studio_teach"}
+[2015-08-08 09:26:15.972] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:16.015] [INFO] chatService - setSocket[disconnect]=>client[visitor_859890] disconnect!
+[2015-08-08 09:26:16.044] [INFO] userService - removeOnlineUser=>update member status success!
+[2015-08-08 09:26:16.587] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:26:17.352] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:26:17.353] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:17.354] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:26:17.355] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:18.942] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/ee HTTP/1.1" 200 319 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:18.948] [INFO] chatService - setSocket[disconnect]=>client[visitor_859890] disconnect!
+[2015-08-08 09:26:18.977] [INFO] userService - removeOnlineUser=>update member status success!
+[2015-08-08 09:26:19.270] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/ HTTP/1.1" 302 70 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:24.053] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/ HTTP/1.1" 302 70 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:24.061] [INFO] index - chatUser:{"isLogin":false,"userId":"visitor_859890","clientGroup":"visitor","nickname":"游客_859890","groupType":"studio","userType":0,"groupId":"studio_teach"}
+[2015-08-08 09:26:24.125] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio HTTP/1.1" 200 27382 "" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:24.579] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}
+[2015-08-08 09:26:25.366] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:26:25.368] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=teach_video&platform=studio_teach&curPageNo=1&pageSize=100&orderByStr=%7B%22squence%22%3A-1%7D HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:26:25.369] [ERROR] pmApiService - getStudioVideo>>>error:Error: connect ECONNREFUSED
+[2015-08-08 09:26:25.372] [INFO] app - ::ffff:127.0.0.1 - - "GET /studio/getArticleList?code=bulletin_system&platform=studio_teach&curPageNo=1&pageSize=1&orderByStr= HTTP/1.1" 304 - "http://127.0.0.1:3001/studio" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/43.0.2357.65 Safari/537.36"
+[2015-08-08 09:27:01.533] [INFO] console - spaceName:wechatGroup
+[2015-08-08 09:27:01.537] [INFO] console - spaceName:studioGroup
+[2015-08-08 09:27:01.539] [INFO] console - Chat web server running. Listening on port 3001
+[2015-08-08 09:27:01.541] [INFO] console - Chat socket server running. Listening on port 3002
+[2015-08-08 09:27:02.362] [INFO] console - loadMsg->searchObj :{"groupId":"studio_teach","status":1,"valid":1}

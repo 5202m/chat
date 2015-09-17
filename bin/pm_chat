@@ -1,0 +1,21 @@
+﻿#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+process.env.NODE_ENV='DEV';
+
+var app = require('../app');
+var express = require('express');
+var debug = require('debug')('pm_chat:server');
+// web server start
+var chatWebServer = app.listen('3001', function() {
+    console.log('Chat web server running. Listening on port ' + chatWebServer.address().port);
+});
+
+//chat server start
+var chatSocketServerApp=express();
+var chatSocketServer=chatSocketServerApp.listen('3002', function() {
+    console.log('Chat socket server running. Listening on port ' + chatSocketServer.address().port);
+});
+require("../routes/chatServer").start(chatSocketServer);
