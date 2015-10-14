@@ -66,7 +66,7 @@ router.get('/admin', function(req, res) {
                             }
                             if(results.getGroup){
                                 viewDataObj.groupInfo=results.getGroup.toObject();
-                                viewDataObj.groupInfo.allowWhisper=common.containSplitStr(viewDataObj.groupInfo.chatStudio.talkStyle,1);
+                                viewDataObj.groupInfo.allowWhisper=common.containSplitStr(viewDataObj.groupInfo.talkStyle,1);
                             }
                             var mainKey=chatUser.groupId.replace(/_+.*/g,"");//去掉后缀
                             viewDataObj.socketUrl=config.socketServerUrl+"/"+mainKey+constant.socketSpaceSuffix;
@@ -150,7 +150,7 @@ function toStudioView(chatUser,groupId,clientGroup,res){
         var isVisitor=(constant.clientGroup.visitor==clientGroup);
         data.studioList.forEach(function(row){
             var nRow=row.toObject();
-            nRow.allowWhisper=common.containSplitStr(nRow.chatStudio.talkStyle,1);
+            nRow.allowWhisper=common.containSplitStr(nRow.talkStyle,1);
             nRow.disable=(!common.containSplitStr(nRow.chatStudio.clientGroup,clientGroup));
             nRow.allowVisitor=isVisitor?(!nRow.disable):common.containSplitStr(nRow.chatStudio.clientGroup,constant.clientGroup.visitor);
             nRow.chatStudio.yyChannel=common.trim(nRow.chatStudio.yyChannel);

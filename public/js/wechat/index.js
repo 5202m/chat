@@ -407,14 +407,16 @@ var wechat={
             domArr.push('<li id="'+id+'"><a href="javascript:" class="ali video-li"><dl class="trade-cl clearfix">');
             domArr.push('<dt class="dt-fon fl"><img src="images/wechat/cate2.jpg" width="100%" alt="" /></dt>');
             domArr.push('<dd><p class="trade-time"><i>'+row.tag+'</i>'+common.formatterDateTime(createDate)+'</p>');
-            domArr.push('<h3>'+row.title+'</h3>');
+            //domArr.push('<h3>'+row.title+'</h3>');
+            domArr.push('<h3>'+(common.isValid(row.author)?'<span>【'+row.author+'】</span>':'')+row.title+'</h3>');
             domArr.push('<div class="thumb"><img src="'+data.mediaImgUrl+'"><div class="iplay"><i></i></div></div>');
             domArr.push('<span class="morelink">详情 &gt;</span>');
             domArr.push('</dd></dl></a></li>');
         }else if(code.indexOf('audio')!=-1){
             domArr.push('<li id="'+id+'"><dl class="trade-cl clearfix voice-li"><dt class="dt-fon fl"><img src="images/wechat/cate3.jpg" width="100%" alt="" /></dt><dd>');
             domArr.push('<p class="trade-time"><i>'+row.tag+'</i>'+common.formatterDateTime(createDate)+'</p>');
-            domArr.push('<h3>'+row.title+'</h3>');
+            //domArr.push('<h3>'+row.title+'</h3>');
+            domArr.push('<h3>'+(common.isValid(row.author)?'<span>【'+row.author+'】</span>':'')+row.title+'</h3>');
             domArr.push('<a class="voicebar"><i></i><span>00:00</span><audio style="display:none;" src="'+data.mediaUrl+'"></audio></a>');
             //domArr.push('<a><audio src="'+data.mediaUrl+'" controls="controls" style="width:250px;"></audio><i></i><span></span></a>');
             domArr.push('</dd></dl></li>');

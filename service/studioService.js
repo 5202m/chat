@@ -41,7 +41,7 @@ var studioService = {
      * 提取直播间列表
      */
      getStudioList:function(callback){
-        chatGroup.find({valid:1,status:1,'chatStudio':{ $exists:true},groupType:constant.fromPlatform.studio}).select({chatStudio:1,name:1,level:1,groupType:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
+        chatGroup.find({valid:1,status:1,'chatStudio':{ $exists:true},groupType:constant.fromPlatform.studio}).select({chatStudio:1,name:1,level:1,groupType:1,talkStyle:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
             if(err){
                 logger.error("getStudioList fail:"+err);
             }

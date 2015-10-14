@@ -258,6 +258,59 @@ var chatService ={
         });
     },
     /**
+     * 选择客服并发送信息
+     * 备注：如果csUserId有值表示已选择客服，无需再次随机选择；否则随机选择客服发送信息
+     * @param userInfo
+     * @param csUserId
+     * @param data
+     */
+    toOnlineCS:function(sendSocket,userInfo,data,callback){
+        var room=chatService.getRoomSockets(userInfo.groupType,userInfo.groupId),sockets=room.sockets,socket=null;
+        var isOnline=false,csUserId=constant.roleUserType.cs==userInfo.toUser.userId?null:userInfo.toUser.userId;
+        if(csUserId){
+            for(var i=0;i<sockets.length;i++) {
+                socket = sockets[i];
+                if (socket.userInfo && userInfo.groupId==socket.userInfo.groupId && socket.userInfo.userType ==constant.roleUserType.cs && csUserId == socket.userInfo.userId){
+                    socket.emit('sendMsg',data);
+                    isOnline=true;
+                    callback({userId:userInfo.userId,nickname:socket.userInfo.nickname});
+                    return;
+                }
+            }
+            if(!isOnline){
+                //如果客服不在线
+                callback({userId:userInfo.toUser.userId,nickname:userInfo.toUser.nickname});
+            }
+        }else{//如果首次@客服，则随机分配客服
+            var csArr=[];
+            for(var i=0;i<sockets.length;i++) {
+                socket = sockets[i];
+                if (socket.userInfo && userInfo.groupId==socket.userInfo.groupId && socket.userInfo.userType ==constant.roleUserType.cs){
+                    csArr.push(socket);
+                }
+            }
+            if(csArr.length>0){//如果客服在线
+                var csArrIndex=parseInt(Math.round(Math.random()*csArr.length));
+                if(csArrIndex>csArr.length-1){
+                    csArrIndex=csArr.length-1;
+                }
+                var csSocket=csArr[csArrIndex],csUserId=csSocket.userInfo.userId,nickname=csSocket.userInfo.nickname;
+                sendSocket.emit('targetCS',{userId:csUserId,nickname:nickname});//通知客户端目前所选客服，确定客户与客服之间的信息交换
+                csSocket.emit('sendMsg',data);
+                callback({userId:csUserId,nickname:nickname});
+            }else{//如果客服不在线，随机给某个客服留言
+                userService.getRoomCsUser(userInfo.groupId,function(info){
+                    if(info) {
+                        sendSocket.emit('targetCS', {userId: info.userNo, nickname: info.userName});//通知客户端目前所选客服，确定客户与客服之间的信息交换
+                        callback({userId:info.userNo,nickname:info.userName});
+                    }else{
+                        callback(null);
+                    }
+                });
+            }
+        }
+    },
+    /**
      * 审核信息
      */
     approvalMsg:function(data,socket){
@@ -349,7 +402,12 @@ var chatService ={
                     } else{
                         //没有定义审核规则，无需审核
                         data.content.status=1;//设为通过
-                        messageService.saveMsg({fromUser:userSaveInfo,content:data.content});
+                        var toUser=userInfo.toUser,isWh=toUser && common.isValid(toUser.userId) && "1"==toUser.talkStyle;//私聊
+                        console.log("isToCSUser->userInfo:"+JSON.stringify(userInfo));
+                        var isToCSUser=toUser && common.isValid(toUser.userId) && (constant.roleUserType.cs==userInfo.toUser.userType || constant.roleUserType.cs==userInfo.toUser.userId);//判断是否客服
+                        if(!isToCSUser) {//非发送给客服
+                            messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
+                        }
                         //发送聊天信息
                         if(data.content.msgType=='img'){
                             data.content.maxValue='';
@@ -358,17 +416,26 @@ var chatService ={
                         //发送给自己
                         chatService.sendMsgToUser(socket,userInfo,{uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}});
                         //发送给除自己之外的用户
-                        var toUser=userInfo.toUser,isWh=toUser && common.isValid(toUser.userId) && "1"==toUser.talkStyle;//私聊
                         if(socket){
-                            if(isWh){//私聊
-                                chatService.getRoomSockets(userInfo.groupType,groupId).sockets.forEach(function(socketRow){
-                                    if(socketRow.userInfo && socketRow.userInfo.userId==toUser.userId){
-                                        socketRow.emit('sendMsg', {fromUser:userInfo,content:data.content});
-                                        return false;
-                                    }
+                            if(isToCSUser){//发送信息给客服
+                                chatService.toOnlineCS(socket,userInfo,{fromUser:userInfo,content:data.content},function(newUserInfo){
+                                    userSaveInfo.toUser.nickname=newUserInfo.nickname;
+                                    userSaveInfo.toUser.userId=newUserInfo.userId;
+                                    userSaveInfo.toUser.talkStyle=1;
+                                    console.log(" userSaveInfo.toUser:"+JSON.stringify(userSaveInfo.toUser));
+                                    messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
                                 });
                             }else{
-                                socket.broadcast.to(groupId).emit('sendMsg', {fromUser:userInfo,content:data.content});
+                                if(isWh){//私聊
+                                    chatService.getRoomSockets(userInfo.groupType,groupId).sockets.forEach(function(socketRow){
+                                        if(socketRow.userInfo && socketRow.userInfo.userId==toUser.userId){
+                                            socketRow.emit('sendMsg', {fromUser:userInfo,content:data.content});
+                                            return false;
+                                        }
+                                    });
+                                }else{
+                                    socket.broadcast.to(groupId).emit('sendMsg', {fromUser:userInfo,content:data.content});
+                                }
                             }
                             socket.userInfo.sendMsgCount+=1;//统计发言数据
                         }else{

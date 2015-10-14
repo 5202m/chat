@@ -569,6 +569,35 @@ var userService = {
         });
     },
     /**
+     * 提取cs客服信息
+     * @param roomId
+     */
+    getRoomCsUser:function(roomId,callback){
+        chatGroup.findById(roomId,"authUsers",function(err,row){
+            if(!row || err){
+                callback(null);
+                return;
+            }
+            boUser.find({userNo:{"$in":row.authUsers}},function(err,rowList){
+                if(!rowList || err){
+                    callback(null);
+                    return;
+                }
+                var userObj=null;
+                for(var i in rowList){
+                    if(common.hasPrefix("cs",rowList[i].role.roleNo)){
+                        userObj=rowList[i];
+                        break;
+                    }
+                    if(userObj){
+                        break;
+                    }
+                }
+                callback(userObj);
+            });
+        });
+    },
+    /**
      * 检查房间是否在开放时间内，或可用
      * @param groupId
      * @returns {boolean}

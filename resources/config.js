@@ -4,7 +4,7 @@
  */
 var config = {
     isAllowCopyHomeUrl:true,//是否允许copy链接（针对微信进入聊天室）
-    pmApiUrl:'http://172.30.6.22:3000/api',//pmApi地址
+    pmApiUrl:'http://192.168.35.91:3000/api',//pmApi地址
     goldApiUrl: 'http://192.168.35.160/goldoffice_api/RESTful',//gwapi地址
     simulateApiUrl:'http://192.168.35.160/goldoffice_api_demo/RESTful',//模拟账户api地址
     socketServerUrl:'http://172.30.6.22:3002',

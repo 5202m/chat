@@ -308,7 +308,7 @@ input[type=button],input[type=text],input[type=password]{-webkit-appearance:none
 .errorbox .cont{ display:inline-block; padding:0 10px; height:38px; background:rgba(0,0,0,.7); color:#fff; line-height:38px; font-size:14px; border-radius:2px;}
 
 /*行情漂浮按钮*/
-.hq-btn{ width:29px; height:29px; background:rgba(49,53,61,.5); position:absolute; overflow:hidden; border-radius:29px; right:0px; margin:5px;}
+.hq-btn{ width:35px; height:35px; background:rgba(49,53,61,.5); position:absolute; overflow:hidden; border-radius:29px; left:320px; top:117px}
 .hq-btn .wave{ position:absolute; bottom:2px;height:22px; width:600%;}
 .hq-btn .wave.wave1{ background:url(../../images/wechat/wave1.png) repeat-x; background-size:83px auto;left:-50px;  animation:wave1 7s linear .4s infinite normal;-moz-animation:wave1 7s linear .4s infinite normal;-webkit-animation:wave1 7s linear .4s infinite normal;-o-animation:wave1 7s linear .4s infinite normal;}
 .hq-btn .wave.wave2{ background:url(../../images/wechat/wave2.png) repeat-x;background-size:83px auto; left:0px;animation:wave2 10s linear .4s infinite normal;-moz-animation:wave2 10s linear .4s infinite normal;-webkit-animation:wave2 10s linear .4s infinite normal;-o-animation:wave2 10s linear .4s infinite normal;}
@@ -336,6 +336,7 @@ to{left:-83px}
 @keyframes wave2{from{left:0}
 to{left:-83px}
 }
+.kf-btn{ width:35px; height:35px; background:url(../../images/wechat/kf.png) 0 0 no-repeat; background-size:35px auto; position:absolute; overflow:hidden; border-radius:29px; left:320px; top:157}
 
 @media(max-width:480px){
 /*	.wrapper{padding-top:0}

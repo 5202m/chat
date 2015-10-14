@@ -20,8 +20,8 @@ var pmApiService = {
      * @param val
      */
     destroyHomeToken:function(val,callback){
-        callback(true);
-        return;
+        /*callback(true);
+        return;*/
         request.post({url:this.formatApiUrl('/token/destroyToken'), form:{token:val}}, function(err,response,data){
             if(err) {
                 logger.error("destroyHomeToken>>>error:"+err);

@@ -14,6 +14,7 @@ var mongoose = require('mongoose')
           valid:{type:Number, default:1}, //是否删除：0 、删除 ；1、正常
           sequence:{type:Number, default:0},//排序序列
           level:{type:Number, default:0},//级别
+          talkStyle:String,//聊天方式,多个逗号分隔
           openDate:String,//开放时间
           maxCount: {type:Number, default:0},//最大人数
           authUsers : [String],//授权用户
@@ -33,7 +34,6 @@ var mongoose = require('mongoose')
           }],
           chatStudio:{
               clientGroup:String,//客户组（对应数据字典的客户组,多个逗号分隔）
-              talkStyle:String,//聊天方式,多个逗号分隔
               yyChannel:{type:String,default:''},//YY频道号
               minChannel:{type:String,default:''},//小频道号
               studioDate:String,//直播时间

@@ -14,18 +14,20 @@ var messageService ={
     loadMsg:function(userInfo,lastPublishTime,callback){
         var groupType = userInfo.groupType,groupId = userInfo.groupId;
         var selectSQL='userId nickname avatar clientGroup position toUser userType groupId content.msgType content.value content.needMax publishTime status';
-        var searchObj=null;
+        var searchObj=null,talkStyle=(userInfo.userType==constant.roleUserType.cs)?1:0;
         if(common.isValid(lastPublishTime)){
-            searchObj={groupId:groupId,status:1,valid:1,publishTime:{ "$gt":lastPublishTime},"toUser.talkStyle":0};
+            searchObj={groupId:groupId,status:1,valid:1,publishTime:{ "$gt":lastPublishTime},"toUser.talkStyle":talkStyle};
         }else{
-            searchObj={groupId:groupId,status:1,valid:1,"toUser.talkStyle":0};
-            if(constant.fromPlatform.wechat==groupType) {
+            searchObj={groupId:groupId,status:1,valid:1,"toUser.talkStyle":talkStyle};
+            if(userInfo.userType==constant.roleUserType.cs){
+                searchObj.userType={$in:[0,3]};
+            }else if(constant.fromPlatform.wechat==groupType) {
                 searchObj.userType=2;
             }
         }
         console.log("loadMsg->searchObj :"+JSON.stringify(searchObj));
         chatMessage.find(searchObj).select(selectSQL).limit(this.maxRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
-            if(userInfo.userType != 0){//如果是审核角色登录，则加载审核通过的以及指定该角色执行的待审核信息
+            if(userInfo.userType != 0 && userInfo.userType!=3){//如果是审核角色登录，则加载审核通过的以及指定该角色执行的待审核信息
                 var beginDate=new Date(),endDate=new Date();
                 beginDate.setHours(0,0,0);
                 endDate.setHours(23,59,59);

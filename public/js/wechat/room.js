@@ -18,7 +18,7 @@ var room={
     userInfo:null,
     verifyCodeIntervalId:'',
     init:function(){
-        room.wrapAdjust();//先调整高度，防止出现空白
+        room.wrapAdjust(true);//先调整高度，防止出现空白
         this.setUserInfo();
         this.setSocket();
         this.setEvent();
@@ -83,7 +83,7 @@ var room={
                     }
                     $("#room_advertisement img").attr("src",data[0].mediaUrl);
                     $('#room_advertisement').show();
-                    room.wrapAdjust();
+                    room.wrapAdjust(true);
                 }
             }
         });
@@ -175,13 +175,35 @@ var room={
     /**
      * 调整高度
      */
-    wrapAdjust:function(){
+    wrapAdjust:function(isAdjustFloat){
         $('.wrapper').css('top',$('#header').height());
+        if(isAdjustFloat){
+            $('.hq-btn').css({
+                left:function(){
+                    return $(window).width()-$(this).width()-5;
+                },
+                top:function(){
+                    return $('#header').height()+7;
+                }
+            });
+
+            $('.kf-btn').css({
+                left:function(){
+                    return $(window).width()-$(this).width()-5;
+                },
+                top:function(){
+                    return $('#header').height()+52;
+                }
+            });
+        }
     },
     /**
      * 事件设置
      */
     setEvent:function(){
+        /**
+         * 手机输入监听
+         */
         $('#loginForm input[name=mobilePhone]')[0].addEventListener("input", function(e) {
             var domBtn=$(this).parents("form").find(".rbtn");
             if(common.isMobilePhone(this.value)){
@@ -221,12 +243,51 @@ var room={
             room.wrapAdjust();
         });
 
-        /*行情漂浮按钮*/
-        $('.hq-btn').click(function(){
-            $('.date-box').show();
-            $(this).hide();
-            room.wrapAdjust();
-        });
+        /*行情、客服漂浮按钮*/
+        (function(){
+            util.rangeControl = function(num,max){
+                num = Math.max(num,0);
+                return Math.min(num,max);
+            };
+
+            var start_left,start_top;
+            util.toucher($(".hq-btn")[0])
+                .on('singleTap',function(e){
+                    $('.date-box').show();
+                    $(this).hide();
+                    room.wrapAdjust()
+                })
+                .on('swipeStart',function(e){
+                    start_left = parseInt(this.style.left) || 0;
+                    start_top = parseInt(this.style.top) || 0;
+                    this.style.transition = 'none';
+
+                }).on('swipe',function(e){
+                    this.style.left = util.rangeControl(start_left + e.moveX,$(window).width() - this.clientWidth) + 'px';
+                    this.style.top = util.rangeControl(start_top + e.moveY,$(window).height() - this.clientHeight) + 'px';
+                    return false;
+                }).on('swipeEnd',function(e){
+                    return false;
+                });
+
+            util.toucher($(".kf-btn")[0])
+                .on('singleTap',function(e){
+                    var uId=$(this).attr("uId"),name=$(this).attr("n");
+                    room.setTxtOfNickname(common.isValid(uId)?uId:3,common.isValid(name)?name:"金道贵金属客服",null,3);//@客服,如果不存在客服id则存入客服角色id
+                })
+                .on('swipeStart',function(e){
+                    start_left = parseInt(this.style.left) || 0;
+                    start_top = parseInt(this.style.top) || 0;
+                    this.style.transition = 'none';
+
+                }).on('swipe',function(e){
+                    this.style.left = util.rangeControl(start_left + e.moveX,$(window).width() - this.clientWidth) + 'px';
+                    this.style.top = util.rangeControl(start_top + e.moveY,$(window).height() - this.clientHeight) + 'px';
+                    return false;
+                }).on('swipeEnd',function(e){
+                    return false;
+                });
+        })();
 
         /*广告关闭*/
         $('#room_advertisement s').click(function(){
@@ -249,7 +310,7 @@ var room={
         $("#readSet").click(function(){
             if($(this).hasClass("guan-fon")){
                 $(this).removeClass("guan-fon").addClass("on-fon");
-                $("#content_ul li[utype!=2]").hide();
+                $("#content_ul li[uType!=2]").hide();
             }else{
                 $(this).removeClass("on-fon").addClass("guan-fon");
                 $("#content_ul li").show();
@@ -303,7 +364,7 @@ var room={
          * top信息点击
          */
         $("#top_info label").click(function(){
-            room.setTxtOfNickname($(this).attr("fuserId"),$(this).attr("fnickname"),$("#top_info span").html());
+            room.setTxtOfNickname($(this).attr("fuserId"),$(this).attr("fnickname"),$("#top_info span").html(),$(this).attr("fuType"));
             $(this).html("");
             $("#top_info").hide();
             $(".talk-infobox").css("margin-top","25px");
@@ -611,16 +672,20 @@ var room={
             $("#contentText").css({"padding-left":"1%"}).width("98%");//重置输入框宽度
         }
     },
+
     /**
      * 设置@发送的昵称
+     * @param tId
+     * @param name
+     * @param txt
      */
-    setTxtOfNickname:function(tId,name,txt){
+    setTxtOfNickname:function(tId,name,txt,userType){
         $("#contentText").width('98%');//重置输入框宽度
         var sp='';
         if(common.isValid(txt)){
             sp='<span style="display:none;">'+txt+'</span>';
         }
-        $("#txtNicknameId").html('<span class="dt-send-name" tId="'+tId+'">@<label>'+name+'</label>'+sp+'</span>');
+        $("#txtNicknameId").html('<span class="dt-send-name" tId="'+tId+'" uType="'+userType+'">@<label>'+name+'</label>'+sp+'</span>');
         var w=parseInt($("#txtNicknameId").width());
         $("#contentText").css({"padding-left":w+5}).width($("#contentText").width()-w);//调整输入框宽度
     },
@@ -722,7 +787,8 @@ var room={
     getToUser:function(){
         var curDom=$('#txtNicknameId .dt-send-name');
         if(curDom.length>0){
-            var obj={userId:curDom.attr("tId"),nickname:curDom.find("label").text(),talkStyle:0},sp=curDom.find("span");
+            var userType=common.trim(curDom.attr("uType"));
+            var obj={userId:common.trim(curDom.attr("tId")),nickname:curDom.find("label").text(),userType:userType,talkStyle:("3"==userType?1:0)},sp=curDom.find("span");
             if(sp.length>0){
                 obj.question=sp.text();
             }
@@ -796,29 +862,29 @@ var room={
             if(!isLoadData && fromUser.toUser.userId==room.userInfo.userId && fromUser.userId!=room.userInfo.userId){//如果是@自己，则在顶部浮动层显示
                 $("#top_info").show();
                 $(".talk-infobox").css("margin-top",(25+$("#top_info").height())+"px");
-                $("#top_info label").html(fromUser.nickname+':@'+fromUser.toUser.nickname).attr("tId",fromUser.toUser.userId).attr("fnickname",fromUser.nickname).attr("fuserId",fromUser.userId);
+                $("#top_info label").html(fromUser.nickname+':@'+fromUser.toUser.nickname).attr("tId",fromUser.toUser.userId).attr("fuType",fromUser.userType).attr("fnickname",fromUser.nickname).attr("fuserId",fromUser.userId);
                 $("#top_info span").html(data.content.value);
             }
             var dtObj=null;
             if(common.isValid(fromUser.toUser.question)){
                 dtObj=$('#'+fromUser.publishTime+' .dialog .asker');
                 dtObj.click(function () {
-                    room.setTxtOfNickname($(this).attr("tId"),$(this).html());
+                    room.setTxtOfNickname($(this).attr("tId"),$(this).html(),null,$(this).attr("uType"));
                 });
             }else{
                 dtObj=$('#'+fromUser.publishTime+' .dialog .dt-send-name');
                 dtObj.click(function () {
-                    room.setTxtOfNickname($(this).attr("tId"),$(this).find("label").text());
+                    room.setTxtOfNickname($(this).attr("tId"),$(this).find("label").text(),null,$(this).attr("uType"));
                 });
             }
         }
         //设计师@事件设置
         $('#'+fromUser.publishTime+' .headimg img').click(function () {
             var pDom=$(this).parent().parent();
-            room.setTxtOfNickname($(this).parent().attr("tId"),pDom.find(".uname strong").text());
+            room.setTxtOfNickname($(this).parent().attr("tId"),pDom.find(".uname strong").text(),null,pDom.attr("uType"));
         });
         if($("#readSet").hasClass("on-fon")){ //如果开启了只看分析师，则隐藏不是分析师的内容
-            $("#content_ul li[utype!=2]").hide();
+            $("#content_ul li[uType!=2]").hide();
         }
     },
 
@@ -881,7 +947,7 @@ var room={
         if(common.isBlank(unameHtml)){
             unameHtml='<strong>'+nickname+'</strong>'+room.formatPublishTime(fromUser.publishTime);
         }
-        liDom.push('<li class="'+liClass+' clearfix" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'">');
+        liDom.push('<li class="'+liClass+' clearfix" id="'+fromUser.publishTime+'" uType="'+fromUser.userType+'" mType="'+content.msgType+'">');
         liDom.push('<div class="headimg" tId="'+fromUser.userId+'"><img src="'+room.getUserAvatar(fromUser.avatar,fromUser.userType)+'"/></div>');
         liDom.push('<div class="detail">');
         liDom.push('<span class="uname">'+unameHtml+'</span>');
@@ -900,10 +966,10 @@ var room={
             if(content.msgType==room.msgType.text && fromUser.toUser && common.isValid(fromUser.toUser.userId)){
                 if(common.isValid(fromUser.toUser.question) && !isMeSend){
                     liDom.push('<div class="dialog">');
-                    liDom.push('<p class="question"><span class="asker" tId="'+fromUser.toUser.userId+'">'+fromUser.toUser.nickname+'</span><label>&nbsp;:&nbsp;</label><span>'+fromUser.toUser.question+'</span></p>');
+                    liDom.push('<p class="question"><span class="asker" tId="'+fromUser.toUser.userId+'" uType="'+fromUser.toUser.userType+'">'+fromUser.toUser.nickname+'</span><label>&nbsp;:&nbsp;</label><span>'+fromUser.toUser.question+'</span></p>');
                     liDom.push('<p class="reply"><span>回复:</span>'+common.encodeHtml(content.value)+'</p></div>');
                 }else{
-                    dtHtml='<span class="dt-send-name" tId="'+fromUser.toUser.userId+'">@<label>'+fromUser.toUser.nickname+'</label></span>';
+                    dtHtml='<span class="dt-send-name" tId="'+fromUser.toUser.userId+'" uType="'+fromUser.toUser.userType+'">@<label>'+fromUser.toUser.nickname+'</label></span>';
                     liDom.push('<div class="dialog"><span class="to"></span>'+dtHtml+common.encodeHtml(content.value)+'</div>');
                 }
             }else{
@@ -1017,6 +1083,11 @@ var room={
                     room.setScrollToBottom();
                 }
             }
+        });
+        //选择目标客服信息通知
+        this.socket.on('targetCS',function(data){
+            $(".kf-btn").attr("uId",data.userId).attr("n",data.nickname);
+            $("#content_ul .dialog .dt-send-name[tId=3]").attr("tId",data.userId).find("label").html(data.nickname);
         });
     },
     /**

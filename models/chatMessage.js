@@ -21,6 +21,7 @@ var mongoose = require('mongoose')
       approvalUserNo:String,//审核人编号
       groupId:{type:String,index:true},//组别Id
       toUser:{ //@用户
+          userType:{type:Number, default:0},//区分系统用户还是会员，0表示会员，1表示系统用户
           userId:String,
           nickname:String,
           talkStyle:{type:Number, default:0}, //聊天方式

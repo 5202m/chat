@@ -4,6 +4,7 @@
  */
 var adminChat={
     maxRows:50,//显示的最大条数
+    desktopNotice:null,//桌面通知提示对象
     //信息类型
     msgType:{
         text:'text' ,
@@ -89,12 +90,12 @@ var adminChat={
      */
     setTalkTop:function(isAdd,data){
        if(isAdd){
-           $("#talk_top_id").prepend('<section class="ss-tk-info clearfix" tId="'+data.fromUser.publishTime+'"><label><strong>'+data.fromUser.nickname+'</strong>：</label><span style="margin-left:5px;text-align:justify;">'+data.content.value+'</span><button type="button">关闭</button><button type="button" fuserId="'+data.fromUser.userId+'">回复</button></section>');
+           $("#talk_top_id").prepend('<section class="ss-tk-info clearfix" tId="'+data.fromUser.publishTime+'"><label><strong>'+data.fromUser.nickname+'</strong>：</label><span style="margin-left:5px;text-align:justify;">'+data.content.value+'</span><button type="button">关闭</button><button type="button" fuserId="'+data.fromUser.userId+'" uType="'+data.fromUser.userType+'">回复</button></section>');
            var pDom=$('#talk_top_id .ss-tk-info[tId='+data.fromUser.publishTime+']');
            pDom.find("button").click(function(){
                var tp=$(this).parents(".ss-tk-info");
                if(common.isValid($(this).attr("fuserId"))){
-                   adminChat.setTxtOfNickname($(this).attr("fuserId"),tp.find("strong").addClass("reply-st").html(),tp.find("span").html(),tp.attr("tId"));
+                   adminChat.setTxtOfNickname($(this).attr("fuserId"),tp.find("strong").addClass("reply-st").html(),tp.find("span").html(),tp.attr("tId"),$(this).attr("uType"));
                }else{
                    tp.remove();
                    $('#top_info label[ptime='+data.publishTime+']').html("").parent().hide();//移除存在top提示记录
@@ -154,7 +155,7 @@ var adminChat={
          * top信息点击
          */
         $("#top_info label").click(function(){
-            adminChat.setTxtOfNickname($(this).attr("fuserId"),$(this).attr("fnickname"),$("#top_info span").html(),$(this).attr("ptime"));
+            adminChat.setTxtOfNickname($(this).attr("fuserId"),$(this).attr("fnickname"),$("#top_info span").html(),$(this).attr("ptime"),$(this).attr("fuType"));
             $(this).html("");
             $("#top_info").hide();
             $(".talk-infobox").css("margin-top","25px");
@@ -223,6 +224,11 @@ var adminChat={
 
         //聊天内容发送事件
         $("#sendBtn").click(function(){
+            var toUser=adminChat.getToUser();
+            if(adminChat.userInfo.userType==3 && (!toUser||common.isBlank(toUser.userId))){
+                alert("请选择某个客户，再发言！");
+                return false;
+            }
             if(!$(".paste-img").is(':hidden')){//存在图片
                 adminChat.setUploadImg($(".paste-img .min-img img").attr("src"));//处理并发送图片
                 $(".paste-close").click();
@@ -237,7 +243,7 @@ var adminChat={
                     return !isNaN(m)?m:'<a href="'+m+'" target="_blank">'+m+'</a>';
                 });
                 var sendObj={uiId:adminChat.getUiId(),fromUser:adminChat.userInfo,content:{msgType:adminChat.msgType.text,value:msg}};
-                sendObj.fromUser.toUser=adminChat.getToUser();
+                sendObj.fromUser.toUser=toUser;
                 adminChat.socket.emit('sendMsg',sendObj);//发送数据
                 adminChat.setContent(sendObj,true,false);//直接把数据填入内容栏
                 sendObj.fromUser.toUser=null;//发送成功后，把toUser设置为空
@@ -321,9 +327,13 @@ var adminChat={
     getToUser:function(){
         var curDom=$('#txtNicknameId .dt-send-name');
         if(curDom.length>0){
-            var obj={userId:curDom.attr("tId"),nickname:curDom.find("label").text(),talkStyle:0},sp=curDom.find("span");
+            var userType=common.trim(curDom.attr("uType"));
+            var obj={userId:common.trim(curDom.attr("tId")),nickname:curDom.find("label").text(),userType:userType,talkStyle:("3"==userType?1:0)},sp=curDom.find("span");
             if(sp.length>0){
                 obj.question=sp.text();
+            }
+            if(adminChat.userInfo.userType==3){//如果是客服，则只能发送私聊信息
+                obj.talkStyle=1;
             }
             return obj;
         }else{
@@ -444,15 +454,20 @@ var adminChat={
     },
     /**
      * 设置@发送的昵称
+     * @param tId
+     * @param name
+     * @param txt
+     * @param publishTime
+     * @param userType
      */
-    setTxtOfNickname:function(tId,name,txt,publishTime){
+    setTxtOfNickname:function(tId,name,txt,publishTime,userType){
         adminChat.clearPasteImg();
         $("#contentText").width('98%');//重置输入框宽度
         var sp='';
         if(common.isValid(txt)){
             sp='<span style="display:none;">'+txt+'</span>';
         }
-        $("#txtNicknameId").attr("ptime",publishTime?publishTime:'').html('<span class="dt-send-name reply-st" tId="'+tId+'">@<label >'+name+'</label>'+sp+'</span>');
+        $("#txtNicknameId").attr("ptime",publishTime?publishTime:'').html('<span class="dt-send-name reply-st" tId="'+tId+'" uType="'+userType+'">@<label >'+name+'</label>'+sp+'</span>');
         var w=parseInt($("#txtNicknameId").width());
         $("#contentText").css({"padding-left":w+5}).width($("#contentText").width()-w);//调整输入框宽度
     },
@@ -521,7 +536,7 @@ var adminChat={
             if(!isLoadData && fromUser.toUser.userId==adminChat.userInfo.userId && fromUser.userId!=adminChat.userInfo.userId){//如果是@自己，则在顶部浮动层显示
                 $("#top_info").show();
                 $(".talk-infobox").css("margin-top",(25+$("#top_info").height())+"px");
-                $("#top_info label").html(fromUser.nickname+':@'+fromUser.toUser.nickname).attr("tId",fromUser.toUser.userId).attr("ptime",fromUser.publishTime).attr("fnickname",fromUser.nickname).attr("fuserId",fromUser.userId);
+                $("#top_info label").html(fromUser.nickname+':@'+fromUser.toUser.nickname).attr("tId",fromUser.toUser.userId).attr("fuType",fromUser.userType).attr("ptime",fromUser.publishTime).attr("fnickname",fromUser.nickname).attr("fuserId",fromUser.userId);
                 $("#top_info span").html(data.content.value);
                 adminChat.setTalkTop(true,data);//同步数据到@列表
             }
@@ -529,12 +544,12 @@ var adminChat={
             if(common.isValid(fromUser.toUser.question)){//存在问题，则回复样式显示
                 dtObj=$('#'+fromUser.publishTime+' .dialog .asker');
                 dtObj.click(function () {
-                    adminChat.setTxtOfNickname($(this).attr("tId"),$(this).html());
+                    adminChat.setTxtOfNickname($(this).attr("tId"),$(this).html(),null,null,$(this).attr("uType"));
                 });
             }else{
                 dtObj=$('#'+fromUser.publishTime+' .talk-content .dt-send-name');
                 dtObj.click(function () {
-                    adminChat.setTxtOfNickname($(this).attr("tId"),$(this).find("label").text());//普通@，不支持直接回复，回复可以通过顶部的@功能
+                    adminChat.setTxtOfNickname($(this).attr("tId"),$(this).find("label").text(),null,null,$(this).attr("uType"));//普通@，不支持直接回复，回复可以通过顶部的@功能
                 });
             }
         }
@@ -545,7 +560,7 @@ var adminChat={
             $(this).addClass("reply-st");
             $(".dt-send-name").addClass('reply-def').removeClass("reply-st");
             _this.removeClass("reply-def").addClass("reply-st");
-            adminChat.setTxtOfNickname(_this.attr("tId"),_this.next().text());
+            adminChat.setTxtOfNickname(_this.attr("tId"),_this.next().text(),null,null,_this.attr("uType"));
         });
         //审核按钮事件
         $("#content_ul li[id="+fromUser.publishTime+"] .btn").click(function(){
@@ -602,7 +617,7 @@ var adminChat={
             fromUser=data.fromUser,
             content=data.content,
             nickname=adminChat.formatNickname(fromUser.userType,fromUser.nickname,fromUser.position);
-        var dtHtml='<dt class="dt-send-name reply-def" tId="'+fromUser.userId+'">@</dt>';
+        var dtHtml='<dt class="dt-send-name reply-def" tId="'+fromUser.userId+'" uType="'+fromUser.userType+'">@</dt>';
         if(adminChat.userInfo.userId==fromUser.userId){
             dtHtml='';
             liClass='me-li';
@@ -628,16 +643,16 @@ var adminChat={
         }else{
             if(content.msgType==adminChat.msgType.text && fromUser.toUser && common.isValid(fromUser.toUser.userId)){
                 if(common.isValid(fromUser.toUser.question)){
-                    contentDtHtml='<div class="dialog"><p class="question"><span class="asker" tId="'+fromUser.toUser.userId+'">'+fromUser.toUser.nickname+'</span><label>&nbsp;:&nbsp;</label><span>'+fromUser.toUser.question+'</span></p>';
+                    contentDtHtml='<div class="dialog"><p class="question"><span class="asker" tId="'+fromUser.toUser.userId+'" uType="'+fromUser.toUser.userType+'">'+fromUser.toUser.nickname+'</span><label>&nbsp;:&nbsp;</label><span>'+fromUser.toUser.question+'</span></p>';
                     contentDtHtml+='<p class="reply"><span>回复</span><label>:&nbsp;</label>'+common.encodeHtml(content.value)+'</p></div>';
                 }else{
-                    contentDtHtml='<p class="cp"><span class="dt-send-name" tId="'+fromUser.toUser.userId+'">@<label>'+fromUser.toUser.nickname+'</label></span><span class="contents">'+common.encodeHtml(content.value)+'</span></p>';
+                    contentDtHtml='<p class="cp"><span class="dt-send-name" tId="'+fromUser.toUser.userId+'" uType="'+fromUser.toUser.userType+'">@<label>'+fromUser.toUser.nickname+'</label></span><span class="contents">'+common.encodeHtml(content.value)+'</span></p>';
                 }
             }else{
                 contentDtHtml='<p class="cp"><span class="contents">'+common.encodeHtml(content.value)+'</span></p>';
             }
         }
-        var html='<li class="'+liClass+' clearfix" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" fuId="'+fromUser.userId+'">';
+        var html='<li class="'+liClass+' clearfix" id="'+fromUser.publishTime+'" uType="'+fromUser.userType+'" mType="'+content.msgType+'" fuId="'+fromUser.userId+'">';
         if(content.status==0){//需要审批
             html+=  '<dl class="talk-dlbox"><input type="checkbox"/>'+dtHtml+'<dt>'+nickname+'</dt><dd tId="time">'+adminChat.formatPublishTime(fromUser.publishTime)+'</dd><input type="button" class="btn" value="通过" btnType="1" /><input type="button" class="btn" value="拒绝" btnType="2"/></dl>';
             $(".operator-tool").show();
@@ -655,6 +670,33 @@ var adminChat={
      */
     removeLoadDom:function(uiId){
         $('#'+uiId+' .img-loading,#'+uiId+' .img-load-gan,#'+uiId+' .shadow-box,#'+uiId+' .shadow-conut').remove();
+    },
+    /**
+     * 设置桌面通知
+     */
+    setDesktopNotice:function(data){
+        if(this.desktopNotice){
+            this.desktopNotice.update({
+                type: 'info',
+                text: data.fromUser.nickname+'：'+data.content.value,
+                icon: data.fromUser.avatar
+            });
+        }else{
+            PNotify.desktop.permission();
+            this.desktopNotice = (new PNotify({
+                title: '客户求助信息',
+                text: data.fromUser.nickname+'：'+data.content.value,
+                desktop: {
+                    desktop: true,
+                    icon: data.fromUser.avatar
+                }
+            }));
+            this.desktopNotice.get().click(function(e) {
+                if ($('.ui-pnotify-closer, .ui-pnotify-sticker, .ui-pnotify-closer *, .ui-pnotify-sticker *').is(e.target)) return;
+                $(this).trigger('pnotify.history-all');
+                alert("你有新的信息！");
+            });
+        }
     },
     /**
      * 设置socket
@@ -679,9 +721,18 @@ var adminChat={
         });
         //信息传输
         this.socket.on('sendMsg',function(data){
-            adminChat.setContent(data,false,false);
-            if(data.content && data.content.msgType==adminChat.msgType.img){
-                $('.swipebox').swipebox();
+            if(adminChat.userInfo.userType==3){
+                if((data.fromUser.toUser && data.fromUser.toUser.userId==adminChat.userInfo.userId)||adminChat.userInfo.userId==data.fromUser.userId){//非客服信息则无需接收
+                    adminChat.setContent(data,false,false);
+                    if(adminChat.userInfo.userId!=data.fromUser.userId){
+                        adminChat.setDesktopNotice(data);//信息提示
+                    }
+                }
+            }else{
+                adminChat.setContent(data,false,false);
+                if(data.content && data.content.msgType==adminChat.msgType.img){
+                    $('.swipebox').swipebox();
+                }
             }
         });
         //通知信息
