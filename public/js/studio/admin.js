@@ -107,7 +107,7 @@ var studioChat={
         });
         //回复对话
         $(".replybtn").click(function(){
-            studioChat.setDialog($(this).attr("uId"),$(".sender").html(),$(this).attr("ts"));//设置对话
+            studioChat.setDialog($(this).attr("uId"),$(".sender").html(),$(this).attr("ts"),$(this).attr("futype"));//设置对话
         });
         //关闭对话
         $(".closebtn").click(function(){
@@ -267,9 +267,9 @@ var studioChat={
      * 提取@对话html
      */
     getToUser:function(){
-        var curDom=$('#send_selelct_list a[class=on]'),userId=curDom.attr("uId"),ts=curDom.attr("ts");
+        var curDom=$('#send_selelct_list a[class=on]'),userId=curDom.attr("uId"),ts=curDom.attr("ts"),utype=curDom.attr("utype");
         if(userId!='all'){
-            return {userId:userId,nickname:curDom.find("label[t=nk]").html(),talkStyle:ts};
+            return {userId:userId,nickname:curDom.find("label[t=nk]").html(),talkStyle:ts,userType:utype};
         }
         return null;
     },
@@ -284,8 +284,9 @@ var studioChat={
      * @param userId
      * @param nickname
      * @param talkStyle
+     * @param userType 用户类别(0客户；1管理员；2分析师；3客服）
      */
-    setDialog:function(userId,nickname,talkStyle){
+    setDialog:function(userId,nickname,talkStyle,userType){
         $(".send_select div.selectlist a").removeClass("on");
         var obj=$('.send_select div.selectlist a[uId='+userId+']');
         var nm="1"==talkStyle?" (私聊)":"";
@@ -295,7 +296,7 @@ var studioChat={
             obj.attr("ts",talkStyle);
             obj.addClass("on");
         }else{
-            var loc_sendElem = $('<a href="javascript:void(0)" class="on" uId="'+userId+'" ts="'+talkStyle+'"><label t="nk">'+nickname+'</label><label t="wh">'+nm+'</label></a>');
+            var loc_sendElem = $('<a href="javascript:void(0)" class="on" uId="'+userId+'" ts="'+talkStyle+'" utype="'+userType+'"><label t="nk">'+nickname+'</label><label t="wh">'+nm+'</label></a>');
             $("#send_selelct_list").append(loc_sendElem);
             loc_sendElem.click(function(){
                 if($(this).is(".on")){
@@ -394,7 +395,7 @@ var studioChat={
          diaDom.show();
          diaDom.find("a").click(function(){
              var tp=$(this).parent();
-             studioChat.setDialog(tp.attr("uId"),tp.attr("nk"),$(this).attr("t"));//设置对话
+             studioChat.setDialog(tp.attr("uId"),tp.attr("nk"),$(this).attr("t"),tp.attr("utype"));//设置对话
              tp.hide();
         });
      },
@@ -429,12 +430,13 @@ var studioChat={
             if(fromUser.userType==1){
                 cls+='admin';
             }
-            dialog=studioChat.getDialogHtml(fromUser.userId,nickname);
+            dialog=studioChat.getDialogHtml(fromUser.userId,nickname,fromUser.userType);
             if(!isLoadData && toUser){
                 if(studioChat.userInfo.userId==toUser.userId){
                     $(".mymsg").show();
                     $(".replybtn").attr("uId",fromUser.userId);
                     $(".replybtn").attr("ts",toUser.talkStyle);
+                    $(".replybtn").attr("futype",fromUser.userType);
                     $(".sender").html(fromUser.nickname);
                     $(".xcont").html(pHtml);
                 }
@@ -482,11 +484,12 @@ var studioChat={
      * 提取对话html
      * @param userId
      * @param nickname
+     * @param userType
      * @returns {string}
      */
-    getDialogHtml:function(userId,nickname){
+    getDialogHtml:function(userId,nickname,userType){
         if(studioChat.userInfo.userId!=userId && studioChat.userInfo.userId.indexOf('visitor_')==-1 && userId.indexOf('visitor_')==-1){
-            return '<div class="dialogbtn" style="display:none;" nk="'+nickname+'" uId="'+userId+'"><a href="javascript:" class="d1" t="0"><span><b></b>对话</span></a>'+($("#groupInfoId").attr("aw")=="true"?'<a href="javascript:" class="d2" t="1"><span><b></b>私聊</span></a>':'')+'</div>'
+            return '<div class="dialogbtn" style="display:none;" nk="'+nickname+'" uId="'+userId+'" utype="'+userType+'"><a href="javascript:" class="d1" t="0"><span><b></b>对话</span></a>'+($("#groupInfoId").attr("aw")=="true"?'<a href="javascript:" class="d2" t="1"><span><b></b>私聊</span></a>':'')+'</div>'
         }else{
             return '';
         }
@@ -500,7 +503,7 @@ var studioChat={
         if($("#userListId #"+row.userId).length>0){
             return false;
         }
-        var dialogHtml=studioChat.getDialogHtml(row.userId,row.nickname),isMeHtml="",unameCls = "uname",seq=row.sequence;
+        var dialogHtml=studioChat.getDialogHtml(row.userId,row.nickname,row.userType),isMeHtml="",unameCls = "uname",seq=row.sequence;
         if(studioChat.userInfo.userId==row.userId){
             isMeHtml = "【我】";
             unameCls += " ume";

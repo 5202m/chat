@@ -713,7 +713,7 @@ var studioChat={
         });
         //回复对话
         $(".replybtn").click(function(){
-            studioChat.setDialog($(this).attr("uId"),$(".sender").html(),$(this).attr("ts"));//设置对话
+            studioChat.setDialog($(this).attr("uId"),$(".sender").html(),$(this).attr("ts"),$(this).attr("futype"));//设置对话
         });
         //关闭对话
         $(".closebtn").click(function(){
@@ -933,9 +933,9 @@ var studioChat={
      * 提取@对话html
      */
     getToUser:function(){
-      var curDom=$('#send_selelct_list a[class=on]'),userId=curDom.attr("uid"),ts=curDom.attr("ts");
+      var curDom=$('#send_selelct_list a[class=on]'),userId=curDom.attr("uid"),ts=curDom.attr("ts"),utype=curDom.attr("utype");
       if(userId!='all'){
-          return {userId:userId,nickname:curDom.find("label[t=nk]").html(),talkStyle:ts};
+          return {userId:userId,nickname:curDom.find("label[t=nk]").html(),talkStyle:ts,userType:utype};
       }
       return null;
     },
@@ -1040,9 +1040,10 @@ var studioChat={
      * 设置对话
      * @param userId
      * @param nickname
-     * @param talkStyle
+     * @param talkStyle聊天方式（0对话，1私聊）
+     * @param userType 用户类别(0客户；1管理员；2分析师；3客服）
      */
-    setDialog:function(userId,nickname,talkStyle){
+    setDialog:function(userId,nickname,talkStyle,userType){
         $("#teacherListId a.te_btn.on").removeClass("on");
         $("#teacherListId li[uid='" + userId + "']").trigger("talking");
         $(".send_select div.selectlist a").removeClass("on");
@@ -1054,7 +1055,7 @@ var studioChat={
             obj.attr("ts",talkStyle);
             obj.addClass("on");
         }else{
-            var loc_sendElem = $('<a href="javascript:void(0)" class="on" uid="'+userId+'" ts="'+talkStyle+'"><label t="nk">'+nickname+'</label><label t="wh">'+nm+'</label></a>');
+            var loc_sendElem = $('<a href="javascript:void(0)" class="on" uid="'+userId+'" ts="'+talkStyle+'" utype="'+userType+'"><label t="nk">'+nickname+'</label><label t="wh">'+nm+'</label></a>');
             $("#send_selelct_list").append(loc_sendElem);
             loc_sendElem.click(function(){
                 if($(this).is(".on")){
@@ -1149,7 +1150,7 @@ var studioChat={
          diaDom.show();
          diaDom.find("a").click(function(){
              var tp=$(this).parent();
-             studioChat.setDialog(tp.attr("uid"),tp.attr("nk"),$(this).attr("t"));//设置对话
+             studioChat.setDialog(tp.attr("uid"),tp.attr("nk"),$(this).attr("t"),tp.attr("utype"));//设置对话
              tp.hide();
         });
      },
@@ -1190,6 +1191,7 @@ var studioChat={
                     $(".mymsg").show();
                     $(".replybtn").attr("uid",fromUser.userId);
                     $(".replybtn").attr("ts",toUser.talkStyle);
+                    $(".replybtn").attr("futype",fromUser.userType);
                     $(".sender").html(fromUser.nickname);
                     $(".xcont").html(pHtml);
                 }
@@ -1275,7 +1277,7 @@ var studioChat={
             if($("#teacherListId li[uid='" + row.userId + "']").length>0){
                 return false;
             }
-            var loc_teElem = $('<li uid="'+row.userId+'"><a title="' + (row.introduction||"") + '" href="javascript:" class="te_btn"><img class="headimg" src="'+row.avatar+'"><span><strong>'+row.nickname+'</strong><i>'+(row.position||'')+'</i></span><div class="mp"><b></b></div></a></li>');
+            var loc_teElem = $('<li uid="'+row.userId+'" utype="'+row.userType+'"><a title="' + (row.introduction||"") + '" href="javascript:" class="te_btn"><img class="headimg" src="'+row.avatar+'"><span><strong>'+row.nickname+'</strong><i>'+(row.position||'')+'</i></span><div class="mp"><b></b></div></a></li>');
             $("#teacherListId").append(loc_teElem);
             $("#teacherListId").width($("#teacherListId").width() + loc_teElem.width());
             if($("#studioListId a[class~=ing]").attr("aw")=="true"){
@@ -1299,7 +1301,7 @@ var studioChat={
                     if(loc_isOn){
                         studioChat.setDialog("all","对所有人说");//设置对话
                     }else{
-                        studioChat.setDialog($(this).attr("uid"),$(this).find("strong").text());//设置对话
+                        studioChat.setDialog($(this).attr("uid"),$(this).find("strong").text(),0,$(this).attr("utype"));//设置对话
                     }
                 }
             });
@@ -1307,7 +1309,7 @@ var studioChat={
             if($("#userListId #"+row.userId).length>0){
                 return false;
             }
-            var dialogHtml=studioChat.getDialogHtml(row.userId,row.nickname),isMeHtml="",unameCls = "uname",seq=row.sequence;
+            var dialogHtml=studioChat.getDialogHtml(row.userId,row.nickname,row.userType),isMeHtml="",unameCls = "uname",seq=row.sequence;
             if(studioChat.userInfo.userId==row.userId){
                 isMeHtml = "【我】";
                 unameCls += " ume";
