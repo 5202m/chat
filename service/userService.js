@@ -52,16 +52,24 @@ var userService = {
      */
     checkUserGag:function(row, groupId){
         var subRow = row.loginPlatform.chatUserGroup[0];
-        var currRoom = !subRow.rooms ? null : subRow.rooms.id(groupId);
-        if(currRoom){
-            if(common.dateTimeWeekCheck(currRoom.gagDate, false)){
-                return {isOK:false,tip:currRoom.gagTips};
+        if(common.isBlank(subRow.gagDate)){
+            var currRoom = !subRow.rooms ? null : subRow.rooms.id(groupId);
+            if(currRoom){
+                if(common.dateTimeWeekCheck(currRoom.gagDate, false)){
+                    return {isOK:false,tip:currRoom.gagTips};
+                }else{
+                    return {isOK:true};
+                }
             }else{
+                //房间信息不存在？？
                 return {isOK:true};
             }
         }else{
-            //房间信息不存在？？
-            return {isOK:true};
+            if(common.dateTimeWeekCheck(subRow.gagDate, false)){
+                return {isOK:false,tip:subRow.gagTips};
+            }else{
+                return {isOK:true};
+            }
         }
     },
     /**
