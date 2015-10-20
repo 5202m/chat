@@ -904,13 +904,16 @@ var studioChat={
      * 设置聊天列表滚动条
      */
     setTalkListScroll:function(isCurr) {
-        var dh=$("#dialog_list").height();
+        var dh=$("#dialog_list").height(),sh=$(".scrollbox2").height(),vPosDir='down';
+        if(dh<sh){//判断内容高度小于滚动高度则设置顶部对齐
+            vPosDir='up';
+        }
         $(".scrollbox2").jscroll({
             W: "6px",
             BgUrl: "url(/images/studio/scroll2.png)",
             Bg: "0 0 repeat-y",
             Bar: {
-                Pos: "down",
+                Pos: vPosDir,
                 isCurr:isCurr,
                 Bd: {Out: "#b3cfe2", Hover: "#4e90bd"},
                 Bg: {Out: "-10px center repeat-y", Hover: "-20px center repeat-y", Focus: "-20px center repeat-y"}
