@@ -21,8 +21,8 @@
   <div class="box-header-in clearfix">
       <h1 class="fl"><a onclick="_gaq.push(['_trackEvent', $GA_NAME, 'top', 'logo',1,true]);" class="header-logo hide-t" target="_blank" href="http://www.24k.hk">金道贵金属</a><h2 class="hide-t">视频直播间</h2></h1>
       <div class="header-right fr clearfix">
-       	<a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank"><i class="real"></i><span>开立真实账户</span></a>
-        <a href="http://oa.24k.hk/zh/account_02.html" target="_blank"><i class="mn"></i><span>开立模拟账户</span></a>
+       	<a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank"  onclick="_gaq.push(['_trackEvent', 'studio', 'real_click','访问开立真实账户']);"><i class="real"></i><span>开立真实账户</span></a>
+        <a href="http://oa.24k.hk/zh/account_02.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'studio', 'simulate_click','访问开立模拟账户']);"><i class="mn"></i><span>开立模拟账户</span></a>
         <a onclick="openLive800Chat();_gaq.push(['_trackEvent', $GA_NAME, 'chat', 'live800',1,true]);" href="javascript:void(0);"><i class="kf"></i><span>在线客服</span></a>
           <%if(userSession.isLogin){%>
               <a href="javascript:" class="username"><%= userSession.nickname %></a>
@@ -619,6 +619,7 @@
 <script type="text/javascript" src="/js/lib/jquery.superslide.2.1.1.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.xdomainrequest.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.face.js"></script>
+<script type="text/javascript" src="/js/util/chatGA.js"></script>
 <script type="text/javascript" src="/js/util/common.min.js?t=<%=new Date().getTime()%>"></script>
 <script type="text/javascript" src="/js/studio/index.min.js?t=<%=new Date().getTime()%>"></script>
 

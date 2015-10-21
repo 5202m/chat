@@ -233,7 +233,7 @@ var studioChat={
                var row=null;
                for(var i in data){
                    row=data[i].detailList[0];
-                   $("#studioTeachId").append('<li><a title="' + row.title + '" href="javascript:" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'"><i></i>'+row.title+'</a></li>');
+                   $("#studioTeachId").append('<li><a title="' + row.title + '" href="javascript:" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'studio\', \'video_play\',$(this).text()]);"><i></i>'+row.title+'</a></li>');
                }
                //播放视频
                $("#studioTeachId li a").click(function(){
@@ -452,7 +452,7 @@ var studioChat={
                         var data=dataList.data,row=null;
                         for(var i in data){
                             row=data[i].detailList[0];
-                            $("#downloadTab").append('<li><span>'+row.title+'</span><a href="'+data[i].mediaUrl+'" target="_blank" class="downbtn" >下载</a></li>');
+                            $("#downloadTab").append('<li><span>'+row.title+'</span><a href="'+data[i].mediaUrl+'" target="_blank" class="downbtn" onclick="_gaq.push([\'_trackEvent\', \'studio\', \'file_download\',$(this).prev().text()]);" >下载</a></li>');
                         }
                         studioChat.setTabInfoScroll();
                     }
@@ -586,6 +586,7 @@ var studioChat={
                                     $("#pmInfoSetForm .wrong-info").html(result.error.errmsg);
                                     return false;
                                 }else{
+                                    _gaq.push(['_trackEvent', 'studio', 'register','成功注册数']);//记录登录数
                                     $("#pmInfoSetBox").hide();
                                     studioChat.toRefreshView();
                                 }
@@ -600,6 +601,7 @@ var studioChat={
                     $("#"+thisFormId+" .wrong-info").html(result.error.errmsg);
                     return false;
                 }else{
+                    _gaq.push(['_trackEvent', 'studio', 'login','成功登录数']);//记录登录数
                     $(".blackbg,#loginBox").hide();
                     studioChat.toRefreshView();
                 }
@@ -628,6 +630,7 @@ var studioChat={
                     $("#registFrom .wrong-info").html(result.error.errmsg);
                     return false;
                 }else{
+                    _gaq.push(['_trackEvent', 'studio', 'register','成功注册数']);//记录登录数
                    $("#registTipBox").show();
                    $("#registFromBox").hide();
                    studioChat.toRefreshView();
