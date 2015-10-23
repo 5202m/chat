@@ -259,16 +259,16 @@ var studioChat={
      * @param tId
      */
     setVerifyCodeTime:function(tId){
-        var t=parseInt($(tId).attr("t")||60);
+        var t=parseInt($(tId).attr("t"))||60;
         if(!studioChat.verifyCodeIntervalId){
             studioChat.verifyCodeIntervalId=setInterval("studioChat.setVerifyCodeTime('"+tId+"')",1000);
         }
         if(t>1){
             $(tId).attr("t",t-1).html((t-1)+"秒后重新获取");
         }else{
-            $(tId).attr("t",60).html("获取验证码").addClass("pressed");
             clearInterval(studioChat.verifyCodeIntervalId);
             studioChat.verifyCodeIntervalId="";
+            $(tId).attr("t",60).html("获取验证码").addClass("pressed");
         }
     },
     /**
@@ -496,6 +496,7 @@ var studioChat={
                 $.getJSON('/studio/getMobileVerifyCode',{mobilePhone:mobile},function(data){
                     if(!data || !data.isOK){
                         console.error("提取数据有误！");
+                        studioChat.resetVerifyCode("#" + pf);
                     }
                 });
             }catch (e){
@@ -1011,7 +1012,8 @@ var studioChat={
             clearInterval(studioChat.verifyCodeIntervalId);
             studioChat.verifyCodeIntervalId='';
         }
-        $(dom + " .rbtn").removeClass("pressed").html("获取验证码");
+        $(dom + " .rbtn").attr("t",60).html("获取验证码");
+        $(dom + " input[name=mobilePhone]").trigger("input");
     },
     /**
      * 打开登录框
@@ -1031,7 +1033,6 @@ var studioChat={
     openRegistBox:function(){
         $("#registFrom")[0].reset();
         this.resetVerifyCode("#registFrom");
-        $("#registBox .rbtn").removeClass("pressed");
         $(".blackbg").children().hide();
         $("#registBox,#registFromBox,.blackbg").show();
     },
