@@ -223,16 +223,15 @@ var room={
             $(this).attr("disabled" ,true);
             var mobile=$("#loginForm input[name=mobilePhone]").val();
             try{
+            	room.setVerifyCodeTime('#loginForm .rbtn');
                 $.getJSON('/wechat/getMobileVerifyCode',{mobilePhone:mobile},function(data){
                     if(!data || !data.isOK){
                         console.error("提取数据有误！");
-                        room.setVerifyCodeTime('#loginForm .rbtn',0);
-                    }else{
-                        room.setVerifyCodeTime('#loginForm .rbtn');
+                        room.setVerifyCodeTime('#loginForm .rbtn',true);
                     }
                 });
             }catch (e){
-                room.setVerifyCodeTime('#loginForm .rbtn',0);
+                room.setVerifyCodeTime('#loginForm .rbtn',true);
                 console.error("setMobileVerifyCode->"+e);
             }
         });
@@ -373,11 +372,7 @@ var room={
          * 关闭登录框按钮事件
          */
         $("#loginSection .del-btn,#tipSection .del-btn").click(function(){
-            if(common.isValid(room.verifyCodeIntervalId)){
-                clearInterval(room.verifyCodeIntervalId);
-                room.verifyCodeIntervalId="";
-                $(".rbtn").val('获取验证码');
-            }
+            room.setVerifyCodeTime('#loginForm .rbtn',true);
             common.hideBox('#openBox');
             $('#formBtnLoad').hide();
             $("#loginForm")[0].reset();
@@ -722,25 +717,24 @@ var room={
     /**
      * 设置验证码
      * @param tId
-     * @param tm
+     * @param isCleaer
      */
-    setVerifyCodeTime:function(tId,tm){
+    setVerifyCodeTime:function(tId,isCleaer){
         var t=0;
-        if(tm){
-            t=tm;
-        }else{
+        if(!isCleaer){
             t=parseInt($(tId).attr("t"))||60;
-        }
-        if(common.isBlank(room.verifyCodeIntervalId)){
-            room.verifyCodeIntervalId=setInterval("room.setVerifyCodeTime('"+tId+"')",1000);
-        }else{
-            if(t>1){
-                $(tId).attr("t",t-1).val((t-1)+"秒后重新获取");
-            }else{
-                clearInterval(room.verifyCodeIntervalId);
-                room.verifyCodeIntervalId="";
-                $(tId).attr("t",60).attr("disabled",false).val("获取验证码");
+            if(t>1 && common.isBlank(room.verifyCodeIntervalId)){
+                room.verifyCodeIntervalId=setInterval("room.setVerifyCodeTime('"+tId+"')",1000);
             }
+        }
+        if(t>1){
+            $(tId).attr("t",t-1).val((t-1)+"秒后重新获取");
+        }else{
+        	if(common.isValid(room.verifyCodeIntervalId)){
+        		clearInterval(room.verifyCodeIntervalId);
+                room.verifyCodeIntervalId="";
+        	}
+            $(tId).attr("t",60).attr("disabled",false).val("获取验证码");
         }
     },
     /**
