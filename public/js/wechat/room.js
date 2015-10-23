@@ -375,6 +375,7 @@ var room={
         $("#loginSection .del-btn,#tipSection .del-btn").click(function(){
             if(common.isValid(room.verifyCodeIntervalId)){
                 clearInterval(room.verifyCodeIntervalId);
+                room.verifyCodeIntervalId="";
                 $(".rbtn").val('获取验证码');
             }
             common.hideBox('#openBox');
@@ -732,13 +733,14 @@ var room={
         }
         if(common.isBlank(room.verifyCodeIntervalId)){
             room.verifyCodeIntervalId=setInterval("room.setVerifyCodeTime('"+tId+"')",1000);
-        }
-        if(t>1){
-            $(tId).attr("t",t-1).val((t-1)+"秒后重新获取");
         }else{
-            $(tId).attr("t",60).attr("disabled",false).val("获取验证码");
-            clearInterval(room.verifyCodeIntervalId);
-            room.verifyCodeIntervalId="";
+            if(t>1){
+                $(tId).attr("t",t-1).val((t-1)+"秒后重新获取");
+            }else{
+                clearInterval(room.verifyCodeIntervalId);
+                room.verifyCodeIntervalId="";
+                $(tId).attr("t",60).attr("disabled",false).val("获取验证码");
+            }
         }
     },
     /**
