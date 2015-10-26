@@ -561,7 +561,7 @@ var studioChat={
         this.socket.on('connect',function(){
             console.log('connected to server!');
             //$(".loading-box").show();
-            studioChat.socket.emit('login',{userInfo:studioChat.userInfo,lastPublishTime:$("#content_ul li:last").attr("id")});
+            studioChat.socket.emit('login',{userInfo:studioChat.userInfo,lastPublishTime:$("#content_ul li:last").attr("id"), allowWhisper : $("#groupInfoId").attr("aw")});
         });
         //进入聊天室加载的在线用户
         this.socket.on('onlineUserList',function(data){

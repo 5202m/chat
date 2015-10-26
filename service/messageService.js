@@ -11,20 +11,35 @@ var messageService ={
     /**
      * 从数据库中加载已有的聊天记录
      */
-    loadMsg:function(userInfo,lastPublishTime,callback){
+    loadMsg:function(userInfo,lastPublishTime,allowWhisper,callback){
         var groupType = userInfo.groupType,groupId = userInfo.groupId;
         var selectSQL='userId nickname avatar clientGroup position toUser userType groupId content.msgType content.value content.needMax publishTime status';
-        var searchObj=null,talkStyle=(userInfo.userType==constant.roleUserType.cs)?1:0;
+        var searchObj={groupId:groupId,status:1,valid:1};
         if(common.isValid(lastPublishTime)){
-            searchObj={groupId:groupId,status:1,valid:1,publishTime:{ "$gt":lastPublishTime},"toUser.talkStyle":talkStyle};
+            searchObj.publishTime = { "$gt":lastPublishTime};
+        }
+        if(userInfo.userType==constant.roleUserType.cs){
+            searchObj.userType={$in:[0,3]};
+        }else if(constant.fromPlatform.wechat==groupType) {
+            searchObj.userType=2;
+        }
+
+        if(userInfo.userType==constant.roleUserType.cs){
+            //客服
+            searchObj["toUser.talkStyle"] = 1;
+        }else if(userInfo.userType==constant.roleUserType.member && !userInfo.isLogin){
+            //游客
+            searchObj["toUser.talkStyle"] = 0;
         }else{
-            searchObj={groupId:groupId,status:1,valid:1,"toUser.talkStyle":talkStyle};
-            if(userInfo.userType==constant.roleUserType.cs){
-                searchObj.userType={$in:[0,3]};
-            }else if(constant.fromPlatform.wechat==groupType) {
-                searchObj.userType=2;
+            if(allowWhisper){
+                //允许私聊
+                searchObj.$or = [{"userId" : userInfo.userId}, {"toUser.talkStyle": 0}, {"toUser.talkStyle" : 1, "toUser.userId" : userInfo.userId}];
+            }else{
+                //不允许私聊
+                searchObj["toUser.talkStyle"] = 0;
             }
         }
+
         console.log("loadMsg->searchObj :"+JSON.stringify(searchObj));
         chatMessage.find(searchObj).select(selectSQL).limit(this.maxRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
             if(userInfo.userType != 0 && userInfo.userType!=3){//如果是审核角色登录，则加载审核通过的以及指定该角色执行的待审核信息

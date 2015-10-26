@@ -167,7 +167,7 @@ var chatService ={
             });
             //登录则加入房间,groupId作为唯一的房间号
             socket.on('login',function(data){
-                var userInfo=data.userInfo,lastPublishTime=data.lastPublishTime;
+                var userInfo=data.userInfo,lastPublishTime=data.lastPublishTime, allowWhisper = data.allowWhisper;
                 if(common.isBlank(userInfo.groupType)){
                     return false;
                 }
@@ -197,7 +197,7 @@ var chatService ={
                     }
                 });
                 //加载已有内容
-                messageService.loadMsg(userInfo,lastPublishTime,function(msgData){
+                messageService.loadMsg(userInfo,lastPublishTime,allowWhisper,function(msgData){
                     //同步数据到客户端
                     socket.emit('loadMsg', {msgData:msgData,isAdd:common.isValid(lastPublishTime)?true:false});
                 });
