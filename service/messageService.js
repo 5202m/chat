@@ -18,7 +18,7 @@ var messageService ={
         if(common.isValid(lastPublishTime)){
             searchObj.publishTime = { "$gt":lastPublishTime};
         }
-        if(userInfo.userType==constant.roleUserType.cs){
+        if(constant.roleUserType.cs==userInfo.userType){
             //客服
             searchObj.userType={$in:[0,3]};
             searchObj["toUser.talkStyle"] = 1;
@@ -26,7 +26,7 @@ var messageService ={
             // 微解盘
             searchObj.userType=2;
             searchObj["toUser.talkStyle"] = 0;
-        }else if(allowWhisper && userInfo.clientGroup!=constant.clientGroup.visitor){
+        }else if(allowWhisper && constant.clientGroup.visitor!=userInfo.clientGroup){
             //直播间-允许私聊且不是游客
             searchObj.$or = [{"userId" : userInfo.userId}, {"toUser.talkStyle": 0}, {"toUser.talkStyle" : 1, "toUser.userId" : userInfo.userId}];
         }else{
