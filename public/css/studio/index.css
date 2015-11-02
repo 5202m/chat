@@ -189,10 +189,10 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .te_list li{ /*width:35%;*/ width:160px; float:left; position:relative;}
 .te_list .te_btn{ margin-right:4px; position:relative; overflow:hidden; display:block; background:#f6f6f6; padding-left:41px; text-align:left; height:53px; border-radius:2px;}
 .te_list .te_btn:hover{ text-decoration:none; cursor:pointer}
-.te_list .te_btn span { display:inline-block; *display:inline; *zoom:1; text-align:left; width:auto; vertical-align:top; height:40px; padding-top:8px; color:#393939; font-size:10pt; line-height:18px;}
+.te_list .te_btn span { display:inline-block; *display:inline; *zoom:1; text-align:left; width:auto; vertical-align:top; height:40px; padding-top:8px; color:#393939; font-size:10pt; line-height:18px;margin-left: 10px;}
 .te_list .te_btn strong {color:#4e4e4e; font-size:10.5pt; line-height:18px;font-family:'Microsoft JhengHei','Microsoft YaHei','SimSun'; display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
 .te_list .te_btn i{ display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:84px; font-style:normal}
-.te_list .te_btn .headimg{ display:block; position:absolute; left:5px; top:4px; width:33px; height:46px; vertical-align:bottom; border-radius:3px}
+.te_list .te_btn .headimg{ display:block; position:absolute; left:5px; top:6px; width:38px; height:42px; vertical-align:bottom; border-radius:3px}
 .te_list .te_btn .mp{ width:26px; border-top-right-radius:2px; border-bottom-right-radius:2px; background:#f6f6f6; border-left:1px solid #e8e8e8; height:53px; position:absolute; right:0; top:0}
 .te_list .te_btn b{ display:block; width:17px; height:27px; background-position:-20px -280px; margin:13px auto 0; }
 .te_list .te_btn:hover .mp,.te_list .te_btn.on .mp{ background:#92c04a; border-color:#92c04a;}
