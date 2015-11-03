@@ -828,7 +828,7 @@ var studioChat={
 
         var msg = $("#contentText").html();
         //排除表情,去除其他所有html标签
-        msg = msg.replace(/<\/?(?!img\s+src="[^>"]+\/face\/[^>"]+"\s*>)[^>]*>/g,'');
+        msg = msg.replace(/<\/?(?!(img|IMG)\s+src="[^>"]+\/face\/[^>"]+"\s*>)[^>]*>/g,'');
         if(common.isBlank(msg)){
             $("#contentText").html("");
             return false;
