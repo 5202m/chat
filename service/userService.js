@@ -84,7 +84,7 @@ var userService = {
             callback({isOK:false,tip:"发送的内容有误，已被拒绝!"});
             return;
         }
-        contentVal = contentVal.replace(/(<label class="dt-send-name" tid="[^>"]+">@.*<\/label>)|(<img\s+src="[^>"]+face\/[^>"]+"\s*>)|(<a href="[^>"]+" target="_blank">.*<\/a>)/g,'');
+        contentVal = contentVal.replace(/(<(label|label) class="dt-send-name" tid="[^>"]+">@.*<\/label>)|(<(img|IMG)\s+src="[^>"]+face\/[^>"]+"\s*>)|(<a href="[^>"]+" target="_blank">.*<\/a>)/g,'');
         if(!isImg){//如果是文字，替换成链接
             if(/<[^>]*>/g.test(contentVal)){ //过滤特殊字符
                 callback({isOK:false,tip:"有特殊字符，已被拒绝!"});
