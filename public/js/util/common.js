@@ -301,6 +301,13 @@ function openLive800Chat(type){
         window.open (url,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
     }
 }
+/**
+ * 打开客服QQ
+ */
+function openQQChatByCommonv3(){
+    var url="http://crm2.qq.com/page/portalpage/wpa.php?uin=800018282&cref=&ref=&f=1&ty=1&ap=&as=";
+    window.open (url,'QQChatindow','height=544, width=644,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+}
 //如果没有定义console,直接用alert替代
 if(!window.console){
     console = (function(){

@@ -75,24 +75,57 @@ var pmApiService = {
             }
         });
     },
+
     /**
      * 提取手机验证码
      * @param mobilePhone
+     * @param useType
+     * @param ip
+     * @param callback
      */
-    getMobileVerifyCode:function(mobilePhone,callback){
-        request(config.pmApiUrl+"/sms/send?mobile="+mobilePhone,function(error, response, data){
+    getMobileVerifyCode:function(mobilePhone, useType, ip, callback){
+        request.post(config.pmApiUrl+"/sms/send",function(error, response, data){
             if (!error && response.statusCode == 200 && common.isValid(data)) {
                 data=JSON.parse(data);
-                if(data.result==0){
-                    callback({isOK:true,verifyCode:data.content});
-                }else{
-                    logger.error("sendSms fail:"+data.error);
-                    callback({isOK:false});
+                if(data.result!=0){
+                    logger.error("getMobileVerifyCode fail:" + data.errmsg);
                 }
+                callback(data);
             }else{
-                logger.error("sendSms fail:"+error);
-                callback({isOK:false});
+                logger.error("getMobileVerifyCode fail:"+error);
+                callback({result : 1, errcode : -1, errmsg : "短信发送失败！"});
             }
+        }).form({
+            mobilePhone : mobilePhone,
+            useType : useType,
+            deviceKey : ip,
+            validTime : 86400000
+        });
+    },
+
+    /**
+     * 验证手机验证码
+     * @param mobilePhone
+     * @param useType
+     * @param verifyCode
+     * @param callback
+     */
+    checkMobileVerifyCode : function(mobilePhone, useType, verifyCode, callback){
+        request.post(config.pmApiUrl+"/sms/checkAuth",function(error, response, data){
+            if (!error && response.statusCode == 200 && common.isValid(data)) {
+                data=JSON.parse(data);
+                if(data.result!=0){
+                    logger.error("checkMobileVerifyCode fail:" + data.error);
+                }
+                callback(data);
+            }else{
+                logger.error("checkMobileVerifyCode fail:"+error);
+                callback({result : 1, errcode : -1, errmsg : "短信验证失败！"});
+            }
+        }).form({
+            mobilePhone : mobilePhone,
+            useType : useType,
+            authCode : verifyCode
         });
     },
 

@@ -267,6 +267,8 @@ router.get('/getMobileVerifyCode',function(req, res){
     var ip = common.getClientIp(req);
     if(common.isBlank(mobilePhone)||!common.isMobilePhone(mobilePhone)){
         res.json(errorMessage.code_1003);
+    }else if(useType !== "studio_reg" && useType !== "studio_login" && useType !== "studio_resetPWD"){
+        res.json(errorMessage.code_1000);
     }else{
         pmApiService.getMobileVerifyCode(mobilePhone,useType,ip,function(result){
             res.json(result);

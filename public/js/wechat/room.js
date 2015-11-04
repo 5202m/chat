@@ -222,11 +222,16 @@ var room={
             }
             $(this).attr("disabled" ,true);
             var mobile=$("#loginForm input[name=mobilePhone]").val();
+            var useType = $(this).attr("ut");
             try{
             	room.setVerifyCodeTime('#loginForm .rbtn');
-                $.getJSON('/wechat/getMobileVerifyCode',{mobilePhone:mobile},function(data){
-                    if(!data || !data.isOK){
-                        console.error("提取数据有误！");
+                $.getJSON('/wechat/getMobileVerifyCode',{mobilePhone:mobile,useType:useType},function(data){
+                    if(!data || data.result != 0){
+                        if(data.errcode == "1005"){
+                            alert(data.errmsg);
+                        }else{
+                            console.error("提取数据有误！");
+                        }
                         room.setVerifyCodeTime('#loginForm .rbtn',true);
                     }
                 });
