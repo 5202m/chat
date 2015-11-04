@@ -494,7 +494,7 @@ var studioChat={
             var mobile=$("#"+pf+" input[name=mobilePhone]").val();
             try{
                 studioChat.setVerifyCodeTime('.rbtn[pf='+pf+']');
-                $.getJSON('/studio/getMobileVerifyCode',{mobilePhone:mobile, useType:useType},function(data){
+                $.getJSON('/studio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:useType},function(data){
                     if(!data || data.result != 0){
                         if(data.errcode == "1005"){
                             alert(data.errmsg);

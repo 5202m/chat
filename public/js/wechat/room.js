@@ -225,7 +225,7 @@ var room={
             var useType = $(this).attr("ut");
             try{
             	room.setVerifyCodeTime('#loginForm .rbtn');
-                $.getJSON('/wechat/getMobileVerifyCode',{mobilePhone:mobile,useType:useType},function(data){
+                $.getJSON('/wechat/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile,useType:useType},function(data){
                     if(!data || data.result != 0){
                         if(data.errcode == "1005"){
                             alert(data.errmsg);
