@@ -138,13 +138,12 @@ router.get('/room', function(req, res) {
  */
 router.get('/getMobileVerifyCode',function(req, res){
     var mobilePhone=req.query["mobilePhone"];
+    var useType=req.query["useType"];
+    var ip = common.getClientIp(req);
     if(common.isBlank(mobilePhone)||!common.isMobilePhone(mobilePhone)){
         res.json(errorMessage.code_1003);
     }else{
-        pmApiService.getMobileVerifyCode(mobilePhone,function(result){
-            if(result.isOK){
-                req.session.mobileVerifyCode={mobilePhone:mobilePhone,verifyCode:result.verifyCode};
-            }
+        pmApiService.getMobileVerifyCode(mobilePhone, useType, ip, function(result){
             res.json(result);
         });
     }
@@ -192,17 +191,19 @@ router.post('/checkClient', function(req, res) {
     }else if(!common.isMobilePhone(userInfo.mobilePhone)){
         res.json(errorMessage.code_1003);
     }else{
-        var codeObj=req.session.mobileVerifyCode;
-        if(common.isBlank(codeObj)||userInfo.mobilePhone!=codeObj.mobilePhone || verifyCode!=codeObj.verifyCode){
-            res.json(errorMessage.code_1007);
-        }else{
-            userInfo.ip=common.getClientIp(req);
-            userInfo.groupType=constant.fromPlatform.wechat;//微信组
-            userService.checkClient(userInfo,function(result){
-                console.log("result:"+JSON.stringify(result));
-                res.json(result);
-            });
-        }
+        //微信登录，校验验证码
+        pmApiService.checkMobileVerifyCode(userInfo.mobilePhone, "wechat_login", verifyCode, function(result){
+            if(!result || result.result != 0 || !result.data){
+                res.json(errorMessage.code_1007);
+            }else{
+                userInfo.ip=common.getClientIp(req);
+                userInfo.groupType=constant.fromPlatform.wechat;//微信组
+                userService.checkClient(userInfo,function(result){
+                    console.log("result:"+JSON.stringify(result));
+                    res.json(result);
+                });
+            }
+        });
     }
 });
 

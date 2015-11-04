@@ -490,12 +490,17 @@ var studioChat={
             }
             $(this).removeClass("pressed").html("");
             var pf=$(this).attr("pf");
+            var useType = $(this).attr("ut");
             var mobile=$("#"+pf+" input[name=mobilePhone]").val();
             try{
                 studioChat.setVerifyCodeTime('.rbtn[pf='+pf+']');
-                $.getJSON('/studio/getMobileVerifyCode',{mobilePhone:mobile},function(data){
-                    if(!data || !data.isOK){
-                        console.error("提取数据有误！");
+                $.getJSON('/studio/getMobileVerifyCode',{mobilePhone:mobile, useType:useType},function(data){
+                    if(!data || data.result != 0){
+                        if(data.errcode == "1005"){
+                            alert(data.errmsg);
+                        }else{
+                            console.error("提取数据有误！");
+                        }
                         studioChat.resetVerifyCode("#" + pf);
                     }
                 });

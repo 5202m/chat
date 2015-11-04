@@ -174,35 +174,36 @@ router.post('/getPwd',function(req, res){
         verifyCode=req.body["verifyCode"],
         isCheck=req.body["isCheck"],
         pwd=req.body["pwd"],
-        codeObj=req.session.mobileVerifyCode,
         result={isOK:false,error:null};
     if(common.isBlank(mobilePhone)||common.isBlank(verifyCode)){
         result.error=errorMessage.code_1000;
     }
+    if(!common.isMobilePhone(mobilePhone)){
+        result.error=errorMessage.code_1003;
+    }
     if(!result.error){
-        if(common.isBlank(codeObj)||mobilePhone!=codeObj.mobilePhone || verifyCode!=codeObj.verifyCode){
-            result.error=errorMessage.code_1007;
-        }
-        if(!result.error && !common.isMobilePhone(mobilePhone)){
-            result.error=errorMessage.code_1003;
-        }
-        if(!result.error){
-            if(isCheck=="true"){//验证短信验证码
-                result.isOK=true;
+        //校验验证码
+        pmApiService.checkMobileVerifyCode(mobilePhone, "studio_resetPWD", verifyCode, function(result){
+            if(!result || result.result != 0 || !result.data){
+                result.error=errorMessage.code_1007;
                 res.json(result);
             }else{
-               if(common.isBlank(pwd)){
-                   result.error=errorMessage.code_1000;
-                   res.json(result);
-               }else{
-                   studioService.resetPwd(mobilePhone,pwd,null,function(result){
-                       res.json(result);
-                   });
+                //验证码正确
+                if(isCheck=="true"){//验证短信验证码
+                    result.isOK=true;
+                    res.json(result);
+                }else{
+                    if(common.isBlank(pwd)){
+                        result.error=errorMessage.code_1000;
+                        res.json(result);
+                    }else{
+                        studioService.resetPwd(mobilePhone,pwd,null,function(result){
+                            res.json(result);
+                        });
+                    }
                 }
             }
-        }else{
-            res.json(result);
-        }
+        });
     }else{
         res.json(result);
     }
@@ -237,21 +238,23 @@ router.post('/reg',function(req, res){
         pwd=req.body["pwd"];
     if(common.isBlank(mobilePhone)||common.isBlank(nickname)||common.isBlank(pwd)||(common.isBlank(clientGroup)&&common.isBlank(verifyCode))){
         res.json({isOK:false,error:errorMessage.code_1000});
+    }else if(!common.isMobilePhone(mobilePhone)){
+        res.json({isOK:false,error:errorMessage.code_1003});
     }else{
-        var codeObj=req.session.mobileVerifyCode;
-        if(!common.isMobilePhone(mobilePhone)){
-            res.json({isOK:false,error:errorMessage.code_1003});
-        }else if(common.isBlank(codeObj)||mobilePhone!=codeObj.mobilePhone || verifyCode!=codeObj.verifyCode){
-            res.json({isOK:false,error:errorMessage.code_1007});
-        }else{
-            var userInfo={mobilePhone:mobilePhone,nickname:nickname,pwd:pwd,ip:common.getClientIp(req),groupType:constant.fromPlatform.studio};
-            studioService.studioRegister(userInfo,clientGroup,function(result){
-                if(result.isOK){
-                    req.session.studioUserInfo={isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
-                }
-                res.json(result);
-            });
-        }
+        pmApiService.checkMobileVerifyCode(mobilePhone, "studio_reg", verifyCode, function(result){
+            if(!result || result.result != 0 || !result.data){
+                res.json({isOK:false,error:errorMessage.code_1007});
+            }else{
+                //验证码正确
+                var userInfo={mobilePhone:mobilePhone,nickname:nickname,pwd:pwd,ip:common.getClientIp(req),groupType:constant.fromPlatform.studio};
+                studioService.studioRegister(userInfo,clientGroup,function(result){
+                    if(result.isOK){
+                        req.session.studioUserInfo={isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
+                    }
+                    res.json(result);
+                });
+            }
+        });
     }
 });
 
@@ -260,13 +263,12 @@ router.post('/reg',function(req, res){
  */
 router.get('/getMobileVerifyCode',function(req, res){
     var mobilePhone=req.query["mobilePhone"];
+    var useType=req.query["useType"];
+    var ip = common.getClientIp(req);
     if(common.isBlank(mobilePhone)||!common.isMobilePhone(mobilePhone)){
         res.json(errorMessage.code_1003);
     }else{
-        pmApiService.getMobileVerifyCode(mobilePhone,function(result){
-            if(result.isOK){
-                req.session.mobileVerifyCode={mobilePhone:mobilePhone,verifyCode:result.verifyCode};
-            }
+        pmApiService.getMobileVerifyCode(mobilePhone,useType,ip,function(result){
             res.json(result);
         });
     }
@@ -290,33 +292,37 @@ router.post('/login',function(req, res){
     if(!common.isMobilePhone(mobilePhone)){
         result.error=errorMessage.code_1003;
     }
-    var codeObj=req.session.mobileVerifyCode;
-    if(isPM && (common.isBlank(codeObj)||mobilePhone!=codeObj.mobilePhone || verifyCode!=codeObj.verifyCode)){
-        result.error=errorMessage.code_1007;
-    }
-    if(!result.error){
-        studioService.login({mobilePhone:mobilePhone,pwd:pwd,groupType:constant.fromPlatform.studio},isPM,function(newResult){
-            if(newResult.isOK){
-                newResult.userInfo.isLogin=true;
-                req.session.studioUserInfo=newResult.userInfo;
-                res.json({isOK:true});
-            }else if(isPM){//金道用户首次登录,如本地库没有记录，则证明是首次登录，直接返回
-                studioService.checkClientGroup(mobilePhone,null,function(clientGroup){
-                    if(clientGroup!=constant.clientGroup.register){
-                        newResult.hasPM=true;
-                        newResult.mobilePhone=mobilePhone;
-                        newResult.clientGroup=clientGroup;
-                        newResult.verifyCode=verifyCode;
-                    }
-                    logger.info("studioLogin:pm user first to login！"+JSON.stringify(newResult));
-                    res.json(newResult);
-                });
+    if(result.error){
+        res.json(result);
+    }else{
+        pmApiService.checkMobileVerifyCode(mobilePhone, "studio_login", verifyCode, function(result){
+            if(!result || result.result != 0 || !result.data){
+                result.error=errorMessage.code_1007;
+                res.json(result);
             }else{
-                res.json(newResult);
+                //验证码正确
+                studioService.login({mobilePhone:mobilePhone,pwd:pwd,groupType:constant.fromPlatform.studio},isPM,function(newResult){
+                    if(newResult.isOK){
+                        newResult.userInfo.isLogin=true;
+                        req.session.studioUserInfo=newResult.userInfo;
+                        res.json({isOK:true});
+                    }else if(isPM){//金道用户首次登录,如本地库没有记录，则证明是首次登录，直接返回
+                        studioService.checkClientGroup(mobilePhone,null,function(clientGroup){
+                            if(clientGroup!=constant.clientGroup.register){
+                                newResult.hasPM=true;
+                                newResult.mobilePhone=mobilePhone;
+                                newResult.clientGroup=clientGroup;
+                                newResult.verifyCode=verifyCode;
+                            }
+                            logger.info("studioLogin:pm user first to login！"+JSON.stringify(newResult));
+                            res.json(newResult);
+                        });
+                    }else{
+                        res.json(newResult);
+                    }
+                });
             }
         });
-    }else{
-        res.json(result);
     }
 });
 /**
@@ -324,7 +330,6 @@ router.post('/login',function(req, res){
  */
 router.get('/logout', function(req, res) {
     req.session.studioUserInfo=null;
-    req.session.mobileVerifyCode=null;
     res.redirect("/studio");
 });
 

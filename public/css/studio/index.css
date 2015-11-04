@@ -279,6 +279,10 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .toolbar .tbtn.clearbtn{ background-position:-95px -170px}
 .toolbar .tbtn.scrollbtn{ background-position:-95px -120px}
 .toolbar .tbtn.scrollbtn.on{ background-position:-95px -145px}
+.toolbar .tbtn.qqbtn{ background-position:-95px -232px; background-color:#b59030; border-color:#b59030; width:70px; color:#fff; }
+.toolbar .tbtn.qqbtn span{font-family:'Arial'}
+.toolbar .tbtn.qqbtn:hover{ background-color:#bd9b35;border-color:#bd9b35}
+
 
 .send_select{ width:145px;float:right; height:27px; position:relative; z-index:100000}
 .send_select i { display:block; position:absolute; right:11px; top:9px; background-position:0 -210px; width:14px; height:9px;}
