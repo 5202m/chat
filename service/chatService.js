@@ -1,4 +1,4 @@
-var common = require('../util/common');//引入common类
+﻿var common = require('../util/common');//引入common类
 var constant = require('../constant/constant');//引入constant
 var userService = require('../service/userService');//引入userService服务类
 var messageService = require('../service/messageService');//引入messageService服务类
@@ -319,7 +319,11 @@ var chatService ={
             if(msgResult) {//通过则通知客户端
                 //通知相同组别的会员
                 if(msgResult.status==1){//通过则通知相同组别的会员,如果是聊天室发送过来的，排除自己，如果是聊天记录直接审核的，则发给全部用户
-                    (socket?socket.broadcast.to(fromUser.groupId):chatService.getRoomSockets(fromUser.groupType,fromUser.groupId)).emit('notice',{type:chatService.noticeType.approvalResult,data:msgResult.data});
+                    if(socket){
+                        socket.broadcast.to(fromUser.groupId).emit('notice',{type:chatService.noticeType.approvalResult,data:msgResult.data});
+                    }else{
+                        chatService.sendMsgToRoom(fromUser.groupId,"notice",{type:chatService.noticeType.approvalResult,data:msgResult.data});
+                    }
                 }else{//拒绝则通知审核角色，信息已经拒绝
                     var userNoArr=msgResult.data;
                     //发送给审核角色，更新记录状态(备注，如果是审核员在聊天室审核的，则排除自己，因为后面会统一处理)
@@ -467,7 +471,7 @@ var chatService ={
      * @param msgIds
      */
     removeMsg:function(groupId,msgIds){
-        chatService.getRoomSockets(null,groupId).emit("notice",{type:chatService.noticeType.removeMsg,data:msgIds});
+        chatService.sendMsgToRoom(groupId,"notice",{type:chatService.noticeType.removeMsg,data:msgIds});
     },
 
     /**
@@ -477,7 +481,24 @@ var chatService ={
     leaveRoom:function(groupIds){
         var groupIdArr=groupIds.split(",");
         for(var i in groupIdArr){
-            chatService.getRoomSockets(null,groupIdArr[i]).emit("notice",{type:chatService.noticeType.leaveRoom});
+            chatService.sendMsgToRoom(groupIdArr[i],"notice",{type:chatService.noticeType.leaveRoom});
+        }
+    },
+    /**
+     * 发送信息到房间
+     * @param roomId 房间id
+     * @param eventKey 事件关键字
+     * @param data 发送的内容
+     */
+    sendMsgToRoom:function(roomId,eventKey,data){
+        var sockets=chatService.getRoomSockets(null,roomId).sockets,socket=null;
+        for(var i=0;i<sockets.length;i++) {
+            socket=sockets[i];
+            if(socket.userInfo && socket.userInfo.groupId==roomId){
+                socket.broadcast.to(roomId).emit(eventKey,data);
+                socket.emit(eventKey,data);
+                return;
+            }
         }
     },
     /**
