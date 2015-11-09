@@ -334,7 +334,7 @@ var userService = {
      * @param callback
      */
     joinNewRoom:function(userInfo,callback){
-        var searchObj={valid:1,'loginPlatform.chatUserGroup':{$elemMatch:{_id:userInfo.groupType,userId:userInfo.userId,"rooms._id":{$ne:userInfo.groupId}}}};
+        var searchObj={'mobilePhone':userInfo.mobilePhone,valid:1,'loginPlatform.chatUserGroup':{$elemMatch:{_id:userInfo.groupType,userId:userInfo.userId,"rooms._id":{$ne:userInfo.groupId}}}};
         var setValObj={'$push':{'loginPlatform.chatUserGroup.$.rooms':{
             _id:userInfo.groupId,
             onlineStatus:1,

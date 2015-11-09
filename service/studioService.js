@@ -205,7 +205,7 @@ var studioService = {
                 result.defGroupId=defId;
                 userInfo.pwd=common.getMD5(constant.pwdKey+userInfo.pwd);
                 if(memberRow){//插入记录
-                    var hasRoomsRow=common.checkArrExist(memberRow.loginPlatform.chatUserGroup);
+                    var hasRoomsRow=common.checkArrExist(memberRow.loginPlatform.chatUserGroup) && memberRow.loginPlatform.chatUserGroup.id(userInfo.groupType);
                     userService.createChatUserGroupInfo(userInfo,hasRoomsRow,function(isSuccess){
                         result.isOK=isSuccess;
                         callback(result);
