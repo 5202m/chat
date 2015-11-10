@@ -196,7 +196,11 @@ router.post('/checkClient', function(req, res) {
         //微信登录，校验验证码
         pmApiService.checkMobileVerifyCode(userInfo.mobilePhone, "wechat_login", verifyCode, function(result){
             if(!result || result.result != 0 || !result.data){
-                res.json(errorMessage.code_1007);
+                if(result.errcode === "1006" || result.errcode === "1007"){
+                    res.json({'errcode' : result.errcode, 'errmsg' : result.errmsg});
+                }else{
+                    res.json(errorMessage.code_1007);
+                }
             }else{
                 userInfo.ip=common.getClientIp(req);
                 userInfo.groupType=constant.fromPlatform.wechat;//微信组

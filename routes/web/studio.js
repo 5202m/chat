@@ -185,8 +185,13 @@ router.post('/getPwd',function(req, res){
         //校验验证码
         pmApiService.checkMobileVerifyCode(mobilePhone, "studio_resetPWD", verifyCode, function(result){
             if(!result || result.result != 0 || !result.data){
-                result.error=errorMessage.code_1007;
-                res.json(result);
+                if(result.errcode === "1006" || result.errcode === "1007"){
+                    result.error = {'errcode' : result.errcode, 'errmsg' : result.errmsg};
+                    res.json(result);
+                }else{
+                    result.error=errorMessage.code_1007;
+                    res.json(result);
+                }
             }else{
                 //验证码正确
                 if(isCheck=="true"){//验证短信验证码
@@ -241,10 +246,9 @@ router.post('/reg',function(req, res){
     }else if(!common.isMobilePhone(mobilePhone)){
         res.json({isOK:false,error:errorMessage.code_1003});
     }else{
-        pmApiService.checkMobileVerifyCode(mobilePhone, "studio_reg", verifyCode, function(result){
-            if(!result || result.result != 0 || !result.data){
-                res.json({isOK:false,error:errorMessage.code_1007});
-            }else{
+        if(clientGroup){
+            //金道用户的首次登录，之前已经校验了手机验证码，并保存在session中。
+            if(verifyCode === req.session.mobileVerifyCode){
                 //验证码正确
                 var userInfo={mobilePhone:mobilePhone,nickname:nickname,pwd:pwd,ip:common.getClientIp(req),groupType:constant.fromPlatform.studio};
                 studioService.studioRegister(userInfo,clientGroup,function(result){
@@ -253,8 +257,30 @@ router.post('/reg',function(req, res){
                     }
                     res.json(result);
                 });
+            }else{
+                res.json({isOK:false, error : errorMessage.code_1007});
             }
-        });
+            req.session.mobileVerifyCode = null;
+        }else{
+            pmApiService.checkMobileVerifyCode(mobilePhone, "studio_reg", verifyCode, function(result){
+                if(!result || result.result != 0 || !result.data){
+                    if(result.errcode === "1006" || result.errcode === "1007"){
+                        res.json({isOK:false, error : {'errcode' : result.errcode, 'errmsg' : result.errmsg}});
+                    }else{
+                        res.json({isOK:false, error : errorMessage.code_1007});
+                    }
+                }else{
+                    //验证码正确
+                    var userInfo={mobilePhone:mobilePhone,nickname:nickname,pwd:pwd,ip:common.getClientIp(req),groupType:constant.fromPlatform.studio};
+                    studioService.studioRegister(userInfo,clientGroup,function(result){
+                        if(result.isOK){
+                            req.session.studioUserInfo={isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
+                        }
+                        res.json(result);
+                    });
+                }
+            });
+        }
     }
 });
 
@@ -321,8 +347,13 @@ router.post('/login',function(req, res){
     }else{
         pmApiService.checkMobileVerifyCode(mobilePhone, "studio_login", verifyCode, function(result){
             if(!result || result.result != 0 || !result.data){
-                result.error=errorMessage.code_1007;
-                res.json(result);
+                if(result.errcode === "1006" || result.errcode === "1007"){
+                    result.error = {'errcode' : result.errcode, 'errmsg' : result.errmsg};
+                    res.json(result);
+                }else{
+                    result.error=errorMessage.code_1007;
+                    res.json(result);
+                }
             }else{
                 //验证码正确
                 studioService.login({mobilePhone:mobilePhone,pwd:pwd,groupType:constant.fromPlatform.studio},isPM,function(newResult){
@@ -339,6 +370,7 @@ router.post('/login',function(req, res){
                                 newResult.verifyCode=verifyCode;
                             }
                             logger.info("studioLogin:pm user first to login！"+JSON.stringify(newResult));
+                            req.session.mobileVerifyCode = verifyCode;
                             res.json(newResult);
                         });
                     }else{
