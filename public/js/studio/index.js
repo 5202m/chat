@@ -1226,7 +1226,7 @@ var studioChat={
      */
     getUserAImgCls:function(clientGroup,userType,avatar){
         var aImgCls='';
-        if(userType==1 || userType==2){
+        if(userType && userType!=0 && common.isValid(avatar)){
             return '<img src="'+avatar+'">';
         }else if("vip"==clientGroup){
             aImgCls="user_v";
@@ -1328,7 +1328,7 @@ var studioChat={
                 seq = "0";
             }
             var lis=$("#userListId li"),
-                liDom='<li id="'+row.userId+'" t="'+seq+'">'+dialogHtml+'<a href="javascript:" t="header" class="' + unameCls + '"><div class="headimg">'+studioChat.getUserAImgCls(row.clientGroup)+'</div>'+row.nickname+isMeHtml+'</a></li>';
+                liDom='<li id="'+row.userId+'" t="'+seq+'">'+dialogHtml+'<a href="javascript:" t="header" class="' + unameCls + '"><div class="headimg">'+studioChat.getUserAImgCls(row.clientGroup,row.userType,row.avatar)+'</div>'+row.nickname+isMeHtml+'</a></li>';
             if(lis.length==0){
                 $("#userListId").append(liDom);
             }else if(isMeHtml!=""){
@@ -1491,4 +1491,3 @@ var studioChat={
 $(function() {
     studioChat.init();
 });
- 

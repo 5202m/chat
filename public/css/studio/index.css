@@ -116,7 +116,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .user_box li .uname:hover { background:#cfd1d2}
 .user_box li .uname.ume { background:#cfd1d2}
 .user_box .dialogbtn{ left:7px; top:33px; z-index:100000}
-
+.user_box li .headimg img{width:33px;height:33px;}
 /*left2*/
 .mod_left2{ }
 .mod_video{ background:rgba(246,246,246,0.1); text-align:center; vertical-align:middle; height:504px; margin-bottom:5px; overflow:hidden; position:relative}
