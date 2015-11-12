@@ -98,8 +98,7 @@ var pmApiService = {
         }).form({
             mobilePhone : mobilePhone,
             useType : useType,
-            deviceKey : ip,
-            validTime : 86400000
+            deviceKey : ip
         });
     },
 
