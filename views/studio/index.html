@@ -74,8 +74,18 @@
         <div class="left2">
             <div class="mod_video" id="yyVideoDiv"></div>
             <div class="mod_video dn">
-                <div  id="tVideoDiv" style="width:100%;height: 100%;"></div>
-                <a href="javascript:" class="vbackbtn">返回<br>直播</a>
+                <div id="tVideoDiv" style="width:100%;height: 100%;"></div>
+                <div class="ctrlblock" id="tVideoCtrl" style="display: none;">
+	                <a href="javascript:" class="vbackbtn">返回<br>直播</a>
+	                <div class="vcenter">
+                        <div class="ctrlbtn replay"><a href="javascript:void(0)"></a><span>重播</span></div>
+                        <div class="ctrlbtn nextbtn"><a href="javascript:void(0)"></a><span>下一集</span></div>
+                        <div class="video_ad">
+                            <a href="" target="_blank" class="ad"><img src=""></a>
+                            <a href="javascript:void(0)" class="close_ad"><i></i></a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- mod_notice begin -->
             <div class="mod_notice">

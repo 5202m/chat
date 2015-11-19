@@ -24,6 +24,7 @@ var studioChat={
     init:function(){
         this.setSocket();
         this.setVideoList();
+        this.setVideoAdvertisement();
         this.setEvent();
         this.setScrollNotice();
         this.setPrice(true);
@@ -75,6 +76,21 @@ var studioChat={
                         script.src = srcPath;
                         $("#tVideoDiv").get(0).appendChild(script);
                         this.initSewise=true;
+
+                        //轮播控制
+                        var checkOverFunc = function(){
+                            if(!window.SewisePlayer){
+                                window.setTimeout(checkOverFunc, 500);
+                                return;
+                            }
+                            SewisePlayer.onPause(function(id){
+                                if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
+                                    $("#tVideoCtrl").show();
+                                    $("#tVideoCtrl div.video_ad").show();
+                                }
+                            });
+                        };
+                        checkOverFunc();
                     }else{
                         SewisePlayer.toPlay(vUrl, title, 0, true);
                     }
@@ -248,6 +264,23 @@ var studioChat={
        });
     },
     /**
+     * 设置视频广告
+     */
+    setVideoAdvertisement:function(){
+        this.getArticleList("video_advertisement",this.userInfo.groupId,0,1,1,'{"createDate":"desc"}',function(dataList){
+            var loc_elem = $("#tVideoCtrl a.ad");
+            if(dataList && dataList.result==0 && dataList.data && dataList.data.length === 1){
+                var loc_ad=dataList.data[0];
+                loc_elem.attr("href", loc_ad.linkUrl || "javascript:void(0);");
+                loc_elem.find("img").attr("src", loc_ad.mediaUrl);
+            }else{
+                //每次暂停会show div.video_ad广告块，所以需要设置子块隐藏
+                loc_elem.hide();
+                loc_elem.next().hide();
+            }
+        });
+    },
+    /**
      * 通过默认房间刷新对应页面
      * @param defId
      */
@@ -281,6 +314,35 @@ var studioChat={
         $(".vbackbtn").click(function(){
             studioChat.setVideo(true);
         });
+
+        /**
+         * 视频广告，重播
+         */
+        $("#tVideoCtrl div.replay a").bind("click", function(){
+            var loc_nextDom = $("#studioTeachId li a.on");
+            loc_nextDom.trigger("click");
+            $("#tVideoCtrl").hide();
+        });
+
+        /**
+         * 视频广告，下一集
+         */
+        $("#tVideoCtrl div.nextbtn a").bind("click", function(){
+            var loc_nextDom = $("#studioTeachId li a.on").parent().next();
+            if (loc_nextDom.size() === 0) {
+                loc_nextDom = $("#studioTeachId li:first");
+            }
+            loc_nextDom.find("a").trigger("click");
+            $("#tVideoCtrl").hide();
+        });
+
+        /**
+         * 视频广告关闭
+         */
+        $("#tVideoCtrl a.close_ad").bind("click", function(){
+            $("#tVideoCtrl div.video_ad").hide();
+        });
+
         /*咨询对象*/
         $('.te_ctrl .show_btn').click(function(){
             $(".te_list").animate({
