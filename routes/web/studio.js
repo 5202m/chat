@@ -329,17 +329,6 @@ router.post('/login',function(req, res){
                 newResult.userInfo.isLogin=true;
                 req.session.studioUserInfo=newResult.userInfo;
                 res.json({isOK:true});
-            }else if(isPM){//金道用户首次登录,如本地库没有记录，则证明是首次登录，直接返回
-                studioService.checkClientGroup(mobilePhone,null,function(clientGroup){
-                    if(clientGroup!=constant.clientGroup.register){
-                        newResult.hasPM=true;
-                        newResult.mobilePhone=mobilePhone;
-                        newResult.clientGroup=clientGroup;
-                        newResult.verifyCode=verifyCode;
-                    }
-                    logger.info("studioLogin:pm user first to login！"+JSON.stringify(newResult));
-                    res.json(newResult);
-                });
             }else{
                 res.json(newResult);
             }
@@ -361,7 +350,7 @@ router.post('/login',function(req, res){
                         newResult.userInfo.isLogin=true;
                         req.session.studioUserInfo=newResult.userInfo;
                         res.json({isOK:true});
-                    }else if(isPM){//金道用户首次登录,如本地库没有记录，则证明是首次登录，直接返回
+                    }else{//金道用户首次登录,如本地库没有记录，则证明是首次登录，直接返回
                         studioService.checkClientGroup(mobilePhone,null,function(clientGroup){
                             if(clientGroup!=constant.clientGroup.register){
                                 newResult.hasPM=true;
@@ -373,8 +362,6 @@ router.post('/login',function(req, res){
                             req.session.mobileVerifyCode = verifyCode;
                             res.json(newResult);
                         });
-                    }else{
-                        res.json(newResult);
                     }
                 });
             }
