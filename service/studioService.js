@@ -287,6 +287,75 @@ var studioService = {
                 callback(result);
             }
         });
+    },
+    /**
+     * 通过手机号码检测客户组
+     * @param mobilePhone
+     * @param clientGroup
+     * @param callback
+     */
+    upgradeClientGroup:function(mobilePhone,clientGroup,callback){
+        if(clientGroup === constant.clientGroup.real) {
+            //升级到真实
+            userService.checkAClient({accountNo: null, mobilePhone: mobilePhone}, function (result) {
+                console.log("checkAClient->flagResult:" + JSON.stringify(result));
+                if (result.flag != 0) {
+                    studioService.updateClientGroup(mobilePhone, constant.clientGroup.real, function (isOk) {
+                        if (isOk) {
+                            callback(true);
+                        }else{
+                            callback(false);
+                        }
+                    });
+                }else{
+                    callback(false);
+                }
+            });
+        }else if(clientGroup === constant.clientGroup.simulate){
+            //升级到模拟
+            userService.checkSimulateClient(mobilePhone,function(hasRow){
+                if(hasRow){
+                    studioService.updateClientGroup(mobilePhone, constant.clientGroup.simulate, function(isOk){
+                        if(isOk){
+                            callback(true);
+                        }else{
+                            callback(false);
+                        }
+                    });
+                }else{
+                    callback(false);
+                }
+            });
+        }else{
+            callback(false);
+        }
+    },
+    /**
+     * 更新客户组别
+     * @param mobilePhone
+     * @param newClientGroup
+     * @param callback
+     */
+    updateClientGroup : function(mobilePhone, newClientGroup, callback){
+        member.findOneAndUpdate(
+            {
+                mobilePhone : mobilePhone,
+                "loginPlatform.chatUserGroup._id" : "studio",
+                valid : 1,
+                status : 1
+            },
+            {
+                $set : {
+                    "loginPlatform.chatUserGroup.$.clientGroup" : newClientGroup
+                }
+            },
+            {'new' : true}, function(err){
+                if(err){
+                    logger.error("updateClientGroup fail:" + err);
+                    callback(false);
+                }
+                callback(true);
+            });
     }
 };
 

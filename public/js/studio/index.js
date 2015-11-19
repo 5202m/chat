@@ -373,12 +373,12 @@ var studioChat={
                         //点击事件
                         $("#upg_tbody_id a").click(function(){
                             var _this=$(this);
-                            common.getJson("/studio/upgrade",null,function(result){
+                            var loc_upLevel = _this.attr("t");
+                            common.getJson("/studio/upgrade",{clientGroup : loc_upLevel},function(result){
                                 _this.attr('disabled',false);
                                 if(result.isOK){
                                     $(".upg_succ").show();
                                 }else{
-                                    var loc_upLevel = _this.attr("t");
                                     var loc_msg = "";
                                     if("real" === loc_upLevel){
                                         loc_msg = "很遗憾，您未开通金道真实交易账户，升级失败！<br>如有疑问请联系客服！";

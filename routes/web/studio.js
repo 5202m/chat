@@ -431,17 +431,20 @@ router.post('/checkGroupAuth',function(req, res){
  */
 router.post('/upgrade',function(req, res){
     var result={isOK:false,error:null},chatUser=req.session.studioUserInfo;
-    studioService.checkClientGroup(chatUser.mobilePhone,null,function(clientGroup){
-        if(clientGroup==constant.clientGroup.register){
-            result.error=errorMessage.code_1011;
-        }else{
-            if(clientGroup==chatUser.clientGroup){
-                result.error=errorMessage.code_1010;
-            }else{
-                result.isOK=true;
-            }
-        }
+    var clientGroup = req.body["clientGroup"];
+    if(clientGroup === constant.clientGroup.register){
+        result.error=errorMessage.code_1011;
         res.json(result);
-    });
+    }else if(clientGroup==chatUser.clientGroup){
+        result.error=errorMessage.code_1010;
+        res.json(result);
+    }else{
+        studioService.upgradeClientGroup(chatUser.mobilePhone,clientGroup,function(isOk){
+            if(isOk){
+                result.isOK = true;
+            }
+            res.json(result);
+        });
+    }
 });
 module.exports = router;
