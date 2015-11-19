@@ -557,7 +557,7 @@ var userService = {
      * @param callback
      */
     checkSimulateClient:function(mobilePhone,callback){
-        request.post({url:(config.simulateApiUrl+'/account/demo/checkEmailMobile'), form: {args:'["","'+mobilePhone+'"]'}}, function(error,response,data){
+        request.post({url:(config.simulateApiUrl+'/account/demo/checkEmailMobile'), form: {args:'["","86-'+mobilePhone+'"]'}}, function(error,response,data){
             var hasRow=false;
             logger.info("checkEmailMobile->error:"+error+";tmpData:"+data);
             if(!error && common.isValid(data)) {
