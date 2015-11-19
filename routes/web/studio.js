@@ -437,6 +437,8 @@ router.post('/upgrade',function(req, res){
         }else{
             if(clientGroup==chatUser.clientGroup){
                 result.error=errorMessage.code_1010;
+            }else{
+                result.isOK=true;
             }
         }
         res.json(result);
