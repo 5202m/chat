@@ -237,7 +237,7 @@ var userService = {
                         member.findOne({valid:1,'mobilePhone':userInfo.mobilePhone,'loginPlatform.chatUserGroup':{$elemMatch:{_id:userInfo.groupType,accountNo:userInfo.accountNo,"rooms._id":userInfo.groupId}}},
                             function(err,row){
                                 if(err){
-                                    logger.err("updateUserGroupByAccountNo->update fail!"+err);
+                                    logger.error("updateUserGroupByAccountNo->update fail!"+err);
                                 }else{
                                     var group=row.loginPlatform.chatUserGroup.id(userInfo.groupType),room=group.rooms.id(userInfo.groupId);
                                     group.userId=userInfo.userId;
@@ -517,7 +517,7 @@ var userService = {
         var flagResult={flag:0};//客户记录标志:0（记录不存在）、1（未绑定微信）、2（未入金激活）、3（绑定微信并且已经入金激活）
         if(common.isBlank(userInfo.accountNo)){
             request.post({url:(config.goldApiUrl+'/account/checkContactInfo'), form: {args:'["","","","'+userInfo.mobilePhone+'"]'}}, function(error,response,tmpData){
-                console.log("checkContactInfo->error:"+error+";tmpData:"+tmpData);
+                logger.info("checkContactInfo->error:"+error+";tmpData:"+tmpData);
                 if(!error && common.isValid(tmpData)) {
                     var allData = JSON.parse(tmpData);
                     var result = allData.result;
@@ -559,6 +559,7 @@ var userService = {
     checkSimulateClient:function(mobilePhone,callback){
         request.post({url:(config.simulateApiUrl+'/account/demo/checkEmailMobile'), form: {args:'["","'+mobilePhone+'"]'}}, function(error,response,data){
             var hasRow=false;
+            logger.info("checkEmailMobile->error:"+error+";tmpData:"+data);
             if(!error && common.isValid(data)) {
                 var allData = JSON.parse(data),result = allData.result;
                 hasRow=(allData.code == 'SUCCESS'&& result!=null && result.code=='1044');
