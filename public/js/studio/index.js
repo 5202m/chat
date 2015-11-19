@@ -1466,7 +1466,9 @@ var studioChat={
                 }
                 if(!isAdd) {
                     this.oldTalkDivH=this.newTalkDivH;
-                    studioChat.setTalkListScroll();
+                    window.setTimeout(function(){
+                    	studioChat.setTalkListScroll();
+                    }, 20);
                 }
             }
         });
