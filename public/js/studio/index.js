@@ -1534,7 +1534,7 @@ var studioChat={
                     this.oldTalkDivH=this.newTalkDivH;
                     window.setTimeout(function(){
                     	studioChat.setTalkListScroll();
-                    }, 20);
+                    }, 50);
                 }
             }
         });
