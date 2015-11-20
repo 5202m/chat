@@ -58,7 +58,6 @@ var studioChat={
                 $("#yyVideoDiv").show();
             }else{
                     $("#tVideoDiv").parent().show();
-                    $("#tVideoCtrl").hide();
                     $("#yyVideoDiv").hide();
                     var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
                     if(!this.initSewise){
@@ -87,12 +86,16 @@ var studioChat={
                             SewisePlayer.onPause(function(id){
                             	window.setTimeout(function(){
                             		if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
-                                        $("#tVideoCtrl").show();
-                                        var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
-                                        $("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
-                                        $("#tVideoCtrl div.video_ad").show();
+                            			$("#tVideoCtrl").show();
+                            			var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
+                            			$("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
+                            			$("#tVideoCtrl div.video_ad").show();
                             		}
                             	}, 1000);
+                            });
+                            
+                            SewisePlayer.onStart(function(){
+                            	$("#tVideoCtrl").hide();
                             });
                         };
                         checkOverFunc();
