@@ -58,6 +58,7 @@ var studioChat={
                 $("#yyVideoDiv").show();
             }else{
                     $("#tVideoDiv").parent().show();
+                    $("#tVideoCtrl").hide();
                     $("#yyVideoDiv").hide();
                     var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
                     if(!this.initSewise){
@@ -86,6 +87,7 @@ var studioChat={
                             SewisePlayer.onPause(function(id){
                                 if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
                                     $("#tVideoCtrl").show();
+                                    $("#tVideoCtrl div.vcenter").css("margin-top", "-150px");
                                     $("#tVideoCtrl div.video_ad").show();
                                 }
                             });
@@ -321,7 +323,6 @@ var studioChat={
         $("#tVideoCtrl div.replay a").bind("click", function(){
             var loc_nextDom = $("#studioTeachId li a.on");
             loc_nextDom.trigger("click");
-            $("#tVideoCtrl").hide();
         });
 
         /**
@@ -333,13 +334,13 @@ var studioChat={
                 loc_nextDom = $("#studioTeachId li:first");
             }
             loc_nextDom.find("a").trigger("click");
-            $("#tVideoCtrl").hide();
         });
 
         /**
          * 视频广告关闭
          */
         $("#tVideoCtrl a.close_ad").bind("click", function(){
+            $("#tVideoCtrl div.vcenter").css("margin-top", "-68px");
             $("#tVideoCtrl div.video_ad").hide();
         });
 
@@ -1380,7 +1381,7 @@ var studioChat={
                 }
             });
         }else{
-            if($("#userListId #"+row.userId).length>0){
+            if($("#userListId li[id='" + row.userId + "']").length>0){
                 return false;
             }
             var dialogHtml=studioChat.getDialogHtml(row.userId,row.nickname,row.userType),isMeHtml="",unameCls = "uname",seq=row.sequence;
