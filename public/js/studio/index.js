@@ -87,7 +87,8 @@ var studioChat={
                             SewisePlayer.onPause(function(id){
                                 if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
                                     $("#tVideoCtrl").show();
-                                    $("#tVideoCtrl div.vcenter").css("margin-top", "-150px");
+                                    var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
+                                    $("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
                                     $("#tVideoCtrl div.video_ad").show();
                                 }
                             });
