@@ -407,6 +407,9 @@ var userService = {
                     var group=row.loginPlatform.chatUserGroup.id(userInfo.groupType);
                     if(group){
                         var room=group.rooms.id(userInfo.groupId);
+                        if(common.isValid(userInfo.accountNo)){
+                            group.accountNo=userInfo.accountNo;
+                        }
                         group.nickname=userInfo.nickname;
                         group.avatar=userInfo.avatar;
                         room.onlineDate=userInfo.onlineDate;
