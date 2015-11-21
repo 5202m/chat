@@ -223,19 +223,20 @@ var studioService = {
     /**
      * 加入新的房间组
      * @param groupType
+     * @param mobilePhone
      * @param userId
      * @param newGroupId
      * @param isLogin
      * @param callback
      */
-    joinNewGroup:function(groupType,userId,newGroupId,isLogin,callback){
+    joinNewGroup:function(groupType, mobilePhone,userId,newGroupId,isLogin,callback){
         var result={isOK:false,error:null};
         if(!isLogin){
             result.isOK=true;
             callback(result);
             return;
         }
-        userService.joinNewRoom({groupType:groupType,userId:userId,groupId:newGroupId},function(){
+        userService.joinNewRoom({groupType:groupType,userId:userId,groupId:newGroupId, mobilePhone : mobilePhone},function(){
             result.isOK=true;
             callback(result);
         });

@@ -15,7 +15,7 @@ var errorMessage = {
     "code_1006" : {'errcode' : '1006','errmsg' : '请输入手机号码、验证码!'},
     "code_1007" : {'errcode' : '1007','errmsg' : '手机验证码有误！'},
     "code_1008" : {'errcode' : '1008','errmsg' : '用户不存在，请检查输入是否正确！'},
-    "code_1009" : {'errcode' : '1009','errmsg' : '原密码输入有误！'},
+    "code_1009" : {'errcode' : '1009','errmsg' : '原密码输入有误或用户不存在！'},
     "code_1010" : {'errcode' : '1010','errmsg' : '你已经是与该操作相同等级的用户，无需升级！'},
     "code_1011" : {'errcode' : '1011','errmsg' : '还未开通金道相关账户，请联系客服！'},
     "code_1012" : {'errcode' : '1012','errmsg' : '该昵称已被使用！'}

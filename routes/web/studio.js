@@ -112,7 +112,7 @@ router.get('/', function(req, res) {
             userService.checkRoomStatus(targetGroupId,chatService.getRoomOnlineNum(constant.fromPlatform.studio, targetGroupId),function(isOK) {
                 if(isOK){
                     if(targetGroupId != chatUser.groupId){//目标房间不是当前已登录房间==>追加到目标房间，后跳转
-                        studioService.joinNewGroup(chatUser.groupType, chatUser.userId, targetGroupId, chatUser.isLogin, function (resultTmp) {
+                        studioService.joinNewGroup(chatUser.groupType, chatUser.mobilePhone, chatUser.userId, targetGroupId, chatUser.isLogin, function (resultTmp) {
                             req.session.studioUserInfo.toGroup = null;
                             req.session.studioUserInfo.groupId = targetGroupId;
                             toStudioView(chatUser, targetGroupId, clientGroup, res);
