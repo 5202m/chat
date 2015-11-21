@@ -87,10 +87,10 @@ var studioChat={
                             	window.setTimeout(function(){
                             		if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
                             			$("#tVideoCtrl").show();
-                            			var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
-                            			$("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
-                            			$("#tVideoCtrl div.video_ad").show();
-                            		}
+                                        $("#tVideoCtrl div.video_ad").show();
+                                        var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
+                                        $("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
+                                    }
                             	}, 1000);
                             });
                             
