@@ -625,6 +625,33 @@ var studioChat={
             }
         });
         /**
+         * 金道用户验证手机号后，设置昵称等信息
+         */
+        $("#pmInfoSetBtn").click(function(){
+            if(!studioChat.checkFormInput("#pmInfoSetForm")){
+                return;
+            }
+            $(this).attr('disabled',true);
+            var _this=this;
+            $('#pmInfoSetLoad').show();
+            common.getJson("/studio/reg",$("#pmInfoSetForm").serialize(),function(result){
+                $("#pmInfoSetForm .wrong-info").html("");
+                $(_this).attr('disabled',false);
+                $('#pmInfoSetLoad').hide();
+                if(!result.isOK){
+                    $("#pmInfoSetForm .wrong-info").html(result.error.errmsg);
+                    return false;
+                }else{
+                    _gaq.push(['_trackEvent', 'studio', 'register','成功注册数']);//记录登录数
+                    $("#pmInfoSetBox").hide();
+                    studioChat.toRefreshView();
+                }
+            },true,function(err){
+                $(_this).attr('disabled',false);
+                $('#pmInfoSetLoad').hide();
+            });
+        });
+        /**
          * 登录按钮事件
          */
         $("#loginComForm a[tn=loginBtn],#loginPmForm a[tn=loginBtn]").click(function(){
@@ -646,30 +673,6 @@ var studioChat={
                         $("#pmInfoSetForm input[name=verifyCode]").val(result.verifyCode);
                         $("#loginBox").hide();
                         $("#pmInfoSetBox").show();
-                        $("#pmInfoSetBtn").click(function(){
-                            if(!studioChat.checkFormInput("#pmInfoSetForm")){
-                                return;
-                            }
-                            $(this).attr('disabled',true);
-                            var _this=this;
-                            $('#pmInfoSetLoad').show();
-                            common.getJson("/studio/reg",$("#pmInfoSetForm").serialize(),function(result){
-                                $("#pmInfoSetForm .wrong-info").html("");
-                                $(_this).attr('disabled',false);
-                                $('#pmInfoSetLoad').hide();
-                                if(!result.isOK){
-                                    $("#pmInfoSetForm .wrong-info").html(result.error.errmsg);
-                                    return false;
-                                }else{
-                                    _gaq.push(['_trackEvent', 'studio', 'register','成功注册数']);//记录登录数
-                                    $("#pmInfoSetBox").hide();
-                                    studioChat.toRefreshView();
-                                }
-                            },true,function(err){
-                                $(_this).attr('disabled',false);
-                                $('#pmInfoSetLoad').hide();
-                            });
-                        });
                         return false;
                     }
                     $("#"+thisFormId+" input[name=verifyCode],#loginForm input[name=pwd]").val("");

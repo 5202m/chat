@@ -183,32 +183,39 @@ router.post('/getPwd',function(req, res){
     }
     if(!result.error){
         //校验验证码
-        pmApiService.checkMobileVerifyCode(mobilePhone, "studio_resetPWD", verifyCode, function(result){
-            if(!result || result.result != 0 || !result.data){
-                if(result.errcode === "1006" || result.errcode === "1007"){
-                    result.error = {'errcode' : result.errcode, 'errmsg' : result.errmsg};
-                    res.json(result);
-                }else{
-                    result.error=errorMessage.code_1007;
-                    res.json(result);
-                }
-            }else{
-                //验证码正确
-                if(isCheck=="true"){//验证短信验证码
-                    result.isOK=true;
-                    res.json(result);
-                }else{
-                    if(common.isBlank(pwd)){
-                        result.error=errorMessage.code_1000;
+    	if(isCheck=="true"){
+    		//验证手机号（手机验证码）
+    		pmApiService.checkMobileVerifyCode(mobilePhone, "studio_resetPWD", verifyCode, function(checkResult){
+    			if(!checkResult || checkResult.result != 0 || !checkResult.data){
+    				//验证码错误
+                    if(checkResult.errcode === "1006" || checkResult.errcode === "1007"){
+                        result.error = {'errcode' : checkResult.errcode, 'errmsg' : checkResult.errmsg};
                         res.json(result);
                     }else{
-                        studioService.resetPwd(mobilePhone,pwd,null,function(result){
-                            res.json(result);
-                        });
+                        result.error=errorMessage.code_1007;
+                        res.json(result);
                     }
+                }else{
+                	//验证码正确
+                	result.isOK=true;
+                	req.session.mobileVerifyCode = verifyCode;
+                    res.json(result);
                 }
+    		});
+    	}else{
+            if(common.isBlank(pwd)){
+                result.error=errorMessage.code_1000;
+                res.json(result);
+            }else if(req.session.mobileVerifyCode !== verifyCode){
+                result.error=errorMessage.code_1007;
+                res.json(result);
+            }else{
+                req.session.mobileVerifyCode = null;
+                studioService.resetPwd(mobilePhone,pwd,null,function(resetResult){
+                    res.json(resetResult);
+                });
             }
-        });
+    	}
     }else{
         res.json(result);
     }
