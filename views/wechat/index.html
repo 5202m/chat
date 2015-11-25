@@ -131,7 +131,7 @@
 <script type="text/javascript" src="/js/wechat/index.min.js?t=<%=new Date()%>"></script>
 <script type="text/javascript">
     wechat.userInfo=JSON.parse('<%- userInfo %>');
-    wechat.socketUrl='<%= socketUrl %>';
+    wechat.socketUrl=JSON.parse('<%- socketUrl %>');
 </script>
 </body>
 </html>

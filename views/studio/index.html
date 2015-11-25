@@ -199,9 +199,8 @@
             	<div class="scrollbox2">
                     <div class="dialoglist clearfix" id="dialog_list"></div>
                 </div>
+                <i class="img-loading" style="top: 50%;right: 50%;display: none;" pf="chatMessage"></i>
             </div>
-            
-            
         </div>
         <!-- chat_input begin -->
         <div class="chat_input">
@@ -623,7 +622,15 @@
             <a href="javascript:" class="pop_close">关闭</a>
         </div>
     </div>
+    <!--提示框-->
+    <div class="popup_box" id="tipMsgBox" style="width:500px;">
+        <div style="height:25px;font-size:20px;"><b>登出提示</b></div>
+        <div class="cont" style="padding-top:5px;padding-bottom:5px;">
+            <span style="height:30px;font-size:20px;margin-left:20px;"></span>
+        </div>
+    </div>
 </div>
+
 <script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
 <script type="text/javascript" src="/js/lib/jscroll.js"></script>
@@ -631,7 +638,7 @@
 <script type="text/javascript" src="/js/lib/jquery.xdomainrequest.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.face.js"></script>
 <script type="text/javascript" src="/js/util/chatGA.js"></script>
-<script type="text/javascript" src="/js/util/common.min.js?t=<%=new Date().getTime()%>"></script>
+<script type="text/javascript" src="/js/util/common.min.js"></script>
 <script type="text/javascript" src="/js/studio/index.min.js?t=<%=new Date().getTime()%>"></script>
 
 <script type="text/javascript">
@@ -640,7 +647,7 @@ studioChat.apiUrl='<%= apiUrl %>';
 studioChat.filePath='<%= filePath %>';
 studioChat.userInfo=JSON.parse('<%- userInfo %>');
 studioChat.studioDate='<%- studioDate %>';
-studioChat.socketUrl='<%= socketUrl %>';
+studioChat.socketUrl=JSON.parse('<%- socketUrl %>');
 $(function(){
 	widthCheck();
 	/*滚动*/

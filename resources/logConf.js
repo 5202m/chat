@@ -16,7 +16,7 @@ var initConfig = function(){
             },
             {//日志文件输出
                 type: "dateFile",
-                filename: 'logs/pm_chat.log',
+                filename: 'e://logs/pm_chat.log',
                 pattern: "_yyyy-MM-dd",//日期文件格式
                 alwaysIncludePattern: true  //当天的日志文件名是否加上日期
 

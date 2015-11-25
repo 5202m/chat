@@ -92,7 +92,7 @@ router.get('/', function(req, res) {
                                 chatUser.avatar=results.checkResult.avatar;
                                 chatUser.accountNo= chatUser.userId;//后台进入的用户，账户与userId保持一致，保存到member表时，userId不保存
                             }
-                            viewDataObj.socketUrl=config.socketServerUrl+"/"+constant.fromPlatform.wechat+constant.socketSpaceSuffix;
+                            viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
                             req.session.wechatUserInfo=chatUser;
                             viewDataObj.userInfo=JSON.stringify(chatUser);
                             viewDataObj.roomName=roomName;
@@ -118,15 +118,17 @@ router.get('/room', function(req, res) {
     var userInfo=req.session.wechatUserInfo;
     if(userInfo){
         userInfo.groupId=req.query.groupId;
-        userService.checkRoomStatus(userInfo.groupId,chatService.getRoomOnlineNum(constant.fromPlatform.wechat,userInfo.groupId),function(isOK){
-            if(isOK){
-                userService.joinNewRoom(userInfo,function(){
-                    var viewObj={apiUrl:(config.pmApiUrl+'/common'),userInfo:JSON.stringify(userInfo),socketUrl:(config.socketServerUrl+"/"+constant.fromPlatform.wechat+constant.socketSpaceSuffix)};
-                    res.render('wechat/room',viewObj);
-                });
-            }else{
-                res.redirect("/wechat");
-            }
+        chatService.getRoomOnlineNumByRoomId(constant.fromPlatform.wechat,userInfo.groupId,function(onlineNum){
+            userService.checkRoomStatus(userInfo.groupId,onlineNum,function(isOK){
+                if(isOK){
+                    userService.joinNewRoom(userInfo,function(){
+                        var viewObj={apiUrl:(config.pmApiUrl+'/common'),userInfo:JSON.stringify(userInfo),socketUrl:JSON.stringify(config.socketServerUrl)};
+                        res.render('wechat/room',viewObj);
+                    });
+                }else{
+                    res.redirect("/wechat");
+                }
+            });
         });
     }else{
         res.redirect("/wechat");

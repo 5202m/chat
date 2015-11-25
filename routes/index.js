@@ -20,4 +20,8 @@ exports.init = function(app){
         }
     });
     app.use('/studio', studioRoutes);
+    //用于session的刷新，防止session过期用户掉线，暂未使用（对应前台common.js的refreshSession方法）
+    app.get('/refreshSession', function(req, res) {
+        res.end();
+    });
 };

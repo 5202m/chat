@@ -8,7 +8,7 @@
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
     <link rel="stylesheet" href="/css/swipebox.min.css">
     <link rel="stylesheet" href="/js/lib/pnotify/pnotify.custom.min.css">
-    <link type="text/css" rel="stylesheet" href="/css/wechat/admin.min.css?t=<%=new Date()%>"/>
+    <link type="text/css" rel="stylesheet" href="/css/wechat/admin.min.css"/>
     <style type="text/css">
         /**---------------开发加入，begin----------**/
         .paste-img{ position: absolute;top: 1px;left: 5px; }
@@ -92,12 +92,12 @@
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
 <script type="text/javascript" src="/js/lib/paste.js"></script>
 <script type="text/javascript" src="/js/lib/pnotify/pnotify.custom.min.js"></script>
-<script type="text/javascript" src="/js/util/common.min.js?t=<%=new Date()%>"></script>
+<script type="text/javascript" src="/js/util/common.min.js"></script>
 <script type="text/javascript" src="/js/wechat/admin.min.js?t=<%=new Date()%>"></script>
 
 <script type="text/javascript">
     adminChat.userInfo=JSON.parse('<%- userInfo %>');
-    adminChat.socketUrl='<%= socketUrl %>';
+    adminChat.socketUrl=JSON.parse('<%- socketUrl %>');
 </script>
 </body>
 </html>

@@ -556,12 +556,14 @@ var studioChat={
      * 设置socket
      */
     setSocket:function(){
-        this.socket = io.connect(this.socketUrl);
+        this.socket = common.getSocket(io,this.socketUrl,this.userInfo.groupType);
         //建立连接
         this.socket.on('connect',function(){
             console.log('connected to server!');
             //$(".loading-box").show();
+            studioChat.userInfo.socketId=studioChat.socket.id;
             studioChat.socket.emit('login',{userInfo:studioChat.userInfo,lastPublishTime:$("#content_ul li:last").attr("id"), allowWhisper : $("#groupInfoId").attr("aw")});
+            $(".img-loading[pf=chatMessage]").show();
         });
         //进入聊天室加载的在线用户
         this.socket.on('onlineUserList',function(data){
@@ -611,7 +613,7 @@ var studioChat={
                 case 'approvalResult':{
                     var data=result.data;
                     if(data.fromUserId==studioChat.userInfo.userId){//自己在聊天室审核成功或拒绝
-                        if(data.isOk){
+                        if(data.isOK){
                             var publishTimeArr=data.publishTimeArr;
                             if(data.status==2){//拒绝
                                 for (var i in publishTimeArr) {
@@ -646,11 +648,11 @@ var studioChat={
         });
         //信息传输
         this.socket.on('loadMsg',function(data){
+            $(".img-loading[pf=chatMessage]").hide();
             var msgData=data.msgData,isAdd=data.isAdd;
             if(!isAdd) {
                 $("#content_ul").html("");
             }
-            $(".loading-box").hide();
             if(msgData && $.isArray(msgData)) {
                 msgData.reverse();
                 for (var i in msgData) {

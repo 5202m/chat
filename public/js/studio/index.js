@@ -75,6 +75,7 @@ var studioChat={
                         script.type = "text/javascript";
                         script.src = srcPath;
                         $("#tVideoDiv").get(0).appendChild(script);
+                        //this.setSewisePlayerPlay();
                         this.initSewise=true;
 
                         //轮播控制
@@ -1437,28 +1438,47 @@ var studioChat={
         }
         return true;
     },
-
+    /**
+     * 离开房间提示
+     */
+    leaveRoomTip:function(flag){
+        if("visitor"==studioChat.userInfo.clientGroup){
+             return;
+        }
+        var txt='';
+        if(flag=="roomClose"){
+            txt='房间已停用，';
+        }
+        if(flag=="otherLogin"){
+            txt='您的账号已在其他地方登陆，';
+        }
+        $(".blackbg").show();
+        $("#tipMsgBox").fadeIn(0).delay(6000).fadeOut(200).find("span").text("注意："+txt+"正自动登出.....");
+        window.setTimeout(function(){//3秒钟后登出
+            window.location.href="/studio/logout";
+        },3000);
+    },
      /*
      * 设置socket
      */
     setSocket:function(){
-        this.socket = io.connect(this.socketUrl);
+        this.socket = common.getSocket(io,this.socketUrl,this.userInfo.groupType);
         //建立连接
         this.socket.on('connect',function(){
             console.log('connected to server!');
-            //$(".loading-box").show();
+            studioChat.userInfo.socketId=studioChat.socket.id;
             studioChat.socket.emit('login',{userInfo:studioChat.userInfo,lastPublishTime:$("#dialog_list>div:last").attr("id"), allowWhisper : $("#studioListId a[class~=ing]").attr("aw")});
+            $(".img-loading[pf=chatMessage]").show();
         });
         //进入聊天室加载的在线用户
-        this.socket.on('onlineUserList',function(data){
+        this.socket.on('onlineUserList',function(data,dataLength){
             $('#userListId').html("");
             //如客户数小于200，则追加额外游客数
-            var length=data.length;
-            if($("#studioListId a[class~=ing]").attr("av")=="true" && length<=200){
-                var randId= 0,size=length<=10?60:(200/length)*3+10;
+            if($("#studioListId a[class~=ing]").attr("av")=="true" && dataLength<=200){
+                var randId= 0,size=dataLength<=10?60:(200/dataLength)*3+10;
                 for(var i=0;i<size;i++){
                     randId=common.randomNumber(6);
-                    data.push({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:0});
+                    data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:0});
                 }
             }
             var row=null;
@@ -1506,6 +1526,10 @@ var studioChat={
                 case 'removeMsg':
                     $("#"+result.data.replace(/,/g,",#")).remove();
                     break;
+                case 'leaveRoom':{
+                    studioChat.leaveRoomTip(result.flag);
+                    break;
+                }
                 case 'approvalResult':
                 {
                     var data=result.data;
@@ -1526,11 +1550,11 @@ var studioChat={
         });
         //信息传输
         this.socket.on('loadMsg',function(data){
+            $(".img-loading[pf=chatMessage]").hide();
             var msgData=data.msgData,isAdd=data.isAdd;
             if(!isAdd) {
                 $("#content_ul").html("");
             }
-            $(".loading-box").hide();
             if(msgData && $.isArray(msgData)) {
                 msgData.reverse();
                 for (var i in msgData) {

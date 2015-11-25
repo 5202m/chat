@@ -28,14 +28,19 @@ var imgUtil = {
                     img.height = h;
                     img.width = w;
                 }
+            }else{
+                if(h>=800 && w>=800){
+                    h = h*0.50;
+                    w = w*0.50;
+                }
             }
             // 将图像绘制到canvas上
             var canvas = new Canvas(w, h);
             var ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, w, h);
             var data = [];
-            var stream = canvas.createJPEGStream({
-                bufsize : 2048*1024,
+            var stream = canvas.jpegStream({
+                bufsize :4096,
                 quality :quality
             });
             stream.on('data', function(result){

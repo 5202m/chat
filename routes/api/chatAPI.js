@@ -58,7 +58,7 @@ router.post('/leaveRoom', function(req, res) {
     if(common.isBlank(groupId)){
         result.error=errorMessage.code_1000;
     }else{
-        chatService.leaveRoom(groupId);
+        chatService.leaveRoom(groupId,chatService.leaveRoomFlag.roomClose);
         result.isOK=true;
     }
     res.json(result);

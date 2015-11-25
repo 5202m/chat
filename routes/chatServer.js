@@ -1,4 +1,5 @@
 var chatService = require('../service/chatService');//引入chatService
+var config=require('./../resources/config');//资源文件
 /**
  * 聊天室服务器
  * 备注：处理聊天室接受发送的所有信息及其管理
@@ -11,8 +12,10 @@ var chatServer ={
      */
     start:function(server){
         chatService.socket=require('socket.io')(server);
+        var adapter = require('socket.io-redis');
+        chatService.socket.adapter(adapter({host: config.redisUrlObj.host, port: config.redisUrlObj.port }));
         if(chatService.socket){
-            chatService.init();
+            chatService.init();//初始化
         }
     },
     /**

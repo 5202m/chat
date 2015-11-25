@@ -69,7 +69,7 @@ router.get('/admin', function(req, res) {
                                 viewDataObj.groupInfo.allowWhisper=common.containSplitStr(viewDataObj.groupInfo.talkStyle,1);
                             }
                             var mainKey=chatUser.groupId.replace(/_+.*/g,"");//去掉后缀
-                            viewDataObj.socketUrl=config.socketServerUrl+"/"+mainKey+constant.socketSpaceSuffix;
+                            viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
                             viewDataObj.userInfo=JSON.stringify(chatUser);
                             viewDataObj.nickname=chatUser.nickname;
                             res.render("studio/admin",viewDataObj);
@@ -109,29 +109,31 @@ router.get('/', function(req, res) {
             res.render('error',{error: '默认房间设置有误，请检查！'});
         }else{
             var targetGroupId = chatUser.toGroup || chatUser.groupId || groupId;
-            userService.checkRoomStatus(targetGroupId,chatService.getRoomOnlineNum(constant.fromPlatform.studio, targetGroupId),function(isOK) {
-                if(isOK){
-                    if(targetGroupId != chatUser.groupId){//目标房间不是当前已登录房间==>追加到目标房间，后跳转
-                        studioService.joinNewGroup(chatUser.groupType, chatUser.mobilePhone, chatUser.userId, targetGroupId, chatUser.isLogin, function (resultTmp) {
+            chatService.getRoomOnlineNumByRoomId(constant.fromPlatform.studio, targetGroupId,function(onlineNum){
+                userService.checkRoomStatus(targetGroupId,onlineNum,function(isOK) {
+                    if(isOK){
+                        if(targetGroupId != chatUser.groupId){//目标房间不是当前已登录房间==>追加到目标房间，后跳转
+                            studioService.joinNewGroup(chatUser.groupType,chatUser.mobilePhone,chatUser.userId, targetGroupId, chatUser.isLogin, function (resultTmp) {
+                                req.session.studioUserInfo.toGroup = null;
+                                req.session.studioUserInfo.groupId = targetGroupId;
+                                toStudioView(chatUser, targetGroupId, clientGroup, res);
+                            });
+                        }else{//目标房间是当前已登录房间==>直接跳转
                             req.session.studioUserInfo.toGroup = null;
                             req.session.studioUserInfo.groupId = targetGroupId;
                             toStudioView(chatUser, targetGroupId, clientGroup, res);
-                        });
-                    }else{//目标房间是当前已登录房间==>直接跳转
-                        req.session.studioUserInfo.toGroup = null;
-                        req.session.studioUserInfo.groupId = targetGroupId;
-                        toStudioView(chatUser, targetGroupId, clientGroup, res);
-                    }
-                }else if(targetGroupId == chatUser.toGroup){//目标房间是跳转房间==>清空跳转，重新刷新
+                        }
+                    }else if(targetGroupId == chatUser.toGroup){//目标房间是跳转房间==>清空跳转，重新刷新
                         req.session.studioUserInfo.toGroup = null;
                         res.redirect("/studio");
-                }else if(targetGroupId == chatUser.groupId){//目标房间是当前房间==>登出重新跳转
-                    req.session.studioUserInfo=null;
-                    res.redirect("/studio");
-                }else{//目标房间是默认房间(此时肯定未登录状态，否则会满足“目标房间是当前房间”)==>直接报错
-                    req.session.studioUserInfo=null;
-                    res.render("error",{error: '非常抱歉，你进入的默认房间已限制访问！'});
-                }
+                    }else if(targetGroupId == chatUser.groupId){//目标房间是当前房间==>登出重新跳转
+                        req.session.studioUserInfo=null;
+                        res.redirect("/studio");
+                    }else{//目标房间是默认房间(此时肯定未登录状态，否则会满足“目标房间是当前房间”)==>直接报错
+                        req.session.studioUserInfo=null;
+                        res.render("error",{error: '非常抱歉，你进入的默认房间已限制访问！'});
+                    }
+                });
             });
         }
     });
@@ -143,7 +145,7 @@ function toStudioView(chatUser,groupId,clientGroup,res){
         var viewDataObj={apiUrl:config.pmApiUrl+'/common',filePath:config.filesDomain,web24kPath:config.web24kPath};//输出参数
         var mainKey=groupId.replace(/_+.*/g,"");//去掉后缀
         chatUser.groupId=groupId;
-        viewDataObj.socketUrl=config.socketServerUrl+"/"+mainKey+constant.socketSpaceSuffix;
+        viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
         viewDataObj.userInfo=JSON.stringify({groupType:constant.fromPlatform.studio,isLogin:chatUser.isLogin,groupId:chatUser.groupId,userId:chatUser.userId,clientGroup:chatUser.clientGroup,nickname:chatUser.nickname,userType:chatUser.userType});
         viewDataObj.userSession=chatUser;
         var newStudioList=[];

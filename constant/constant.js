@@ -8,7 +8,6 @@ var constant={
         studio:'chat/studioChat',
         pm_finance:'chat/index'
     },
-    socketSpaceSuffix:"Group",//socket命名空间后缀
     fromPlatform:{//来源平台,区分系统用户登录来源
         pm_mis:'pm_mis',//后台
         wechat:'wechat',//微信

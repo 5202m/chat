@@ -61,6 +61,7 @@
                 <div class="scrollbox2">
                     <div class="dialoglist clearfix" id="dialog_list"></div>
                 </div>
+                <i class="img-loading" style="top: 50%;right: 50%;display: none;" pf="chatMessage"></i>
             </div>
         </div>
         <!-- chat_input begin -->
@@ -119,14 +120,14 @@
 <script type="text/javascript" src="/js/lib/jquery.superslide.2.1.1.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.face.js"></script>
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
-<script type="text/javascript" src="/js/util/common.min.js?t=<%=new Date()%>"></script>
+<script type="text/javascript" src="/js/util/common.min.js"></script>
 <script type="text/javascript" src="/js/studio/admin.min.js?t=<%=new Date()%>"></script>
 
 <script type="text/javascript">
     studioChat.filePath='<%= filePath %>';
     studioChat.apiUrl='<%= apiUrl %>';
     studioChat.userInfo=JSON.parse('<%- userInfo %>');
-    studioChat.socketUrl='<%= socketUrl %>';
+    studioChat.socketUrl=JSON.parse('<%- socketUrl %>');
     $(function(){
         widthCheck();
         /*滚动*/

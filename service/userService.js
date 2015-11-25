@@ -29,10 +29,11 @@ var userService = {
     /**
      * 移除在线用户
      * @param userInfo
+     * @param isUpdate 是否需要更新数据
      * @param callback
      */
-    removeOnlineUser:function(userInfo,callback){
-        if(common.hasPrefix(constant.clientGroup.visitor,userInfo.userId)){
+    removeOnlineUser:function(userInfo,isUpdate,callback){
+        if(common.hasPrefix(constant.clientGroup.visitor,userInfo.userId) || !isUpdate){
             callback(true);
             return;
         }

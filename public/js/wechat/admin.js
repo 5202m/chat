@@ -702,11 +702,12 @@ var adminChat={
      * 设置socket
      */
     setSocket:function(){
-        this.socket = io.connect(this.socketUrl);
+        this.socket = common.getSocket(io,this.socketUrl,this.userInfo.groupType);
         //建立连接
         this.socket.on('connect',function(){
             console.log('connected to server!');
             $(".loading-box").show();
+            adminChat.userInfo.socketId=adminChat.socket.id;
             adminChat.socket.emit('login',{userInfo:adminChat.userInfo,lastPublishTime:$("#content_ul li:last").attr("id")});
         });
         //登录成功返回信息
@@ -748,7 +749,7 @@ var adminChat={
                 case 'approvalResult':{
                     var data=result.data,fromUser=null,row=null;
                     if(data.fromUserId==adminChat.userInfo.userId){//自己在聊天室审核成功或拒绝
-                        if(data.isOk){
+                        if(data.isOK){
                             var publishTimeArr=data.publishTimeArr;
                             if(data.status==2){//拒绝
                                 for (var i in publishTimeArr) {

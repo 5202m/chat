@@ -27,10 +27,10 @@ var wechat={
      * 建立socket
      */
     setSocket:function(){
-        this.socket = io.connect(this.socketUrl);
+        this.socket = common.getSocket(io,this.socketUrl,this.userInfo.groupType);
         //建立连接
         this.socket.on('connect',function(){
-            wechat.socket.emit('outRoomLogin',{login:true});
+            wechat.socket.emit('outRoomLogin',{groupType:wechat.userInfo.groupType});
             console.log('connected to server!');
         });
         this.socket.on('disconnect',function(e){

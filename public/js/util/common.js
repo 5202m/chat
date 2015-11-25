@@ -286,9 +286,37 @@ var common = {
             }
         }
         return res;
+    },
+    /**
+     * 是否支持websocket
+     */
+    isWebSocket:function(){
+       return window.WebSocket;
+    },
+    /**
+     * 提取socketIo
+     * @param io
+     * @param url
+     * @returns {*|Mongoose}
+     */
+    getSocket:function(io,url,groupType){
+        if(common.isWebSocket()){
+            console.log("used websocket!");
+            return io.connect(url.webSocket+'/'+groupType,{transports: ['websocket']});
+        }else{
+            return io.connect(url.socketIO+'/'+groupType);
+        }
+    },
+    /**
+     * 刷新session
+     * 每隔15分钟
+     */
+    refreshSession:function(){
+        setInterval(function(){
+            $.get("/refreshSession?t="+new Date(),function(){});
+        },1000*60*15);//每间隔15分钟刷新下报价信息*/
     }
 };
-
 /**
  * 打开客户界面
  * @param type

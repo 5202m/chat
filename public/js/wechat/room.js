@@ -246,7 +246,6 @@ var room={
             $('.hq-btn').show();
             room.wrapAdjust();
         });
-
         /*行情、客服漂浮按钮*/
         (function(){
             util.rangeControl = function(num,max){
@@ -983,9 +982,18 @@ var room={
     /**
      * 离开房间提示
      */
-    leaveRoomTip:function(){
-        this.showTipBox("注意：房间已停用，正自动退出房间！");
-        window.location.href="/wechat";
+    leaveRoomTip:function(flag){
+        var txt='';
+        if(flag=="roomClose"){
+            txt='房间已停用，';
+        }
+        if(flag=="otherLogin"){
+            txt='您的账号已在其他地方登陆，';
+        }
+        this.showTipBox("注意："+txt+"正自动退出房间.....");
+        window.setTimeout(function(){//3秒钟退出房间
+            window.location.href="/wechat";
+        },3000);
     },
     /**
      * 显示提示框
@@ -1006,10 +1014,11 @@ var room={
      * 设置socket
      */
     setSocket:function(){
-        this.socket = io.connect(this.socketUrl);
+        this.socket = common.getSocket(io,this.socketUrl,this.userInfo.groupType);
         //建立连接
         this.socket.on('connect',function(){
             console.log('connected to server!');
+            room.userInfo.socketId=room.socket.id;
             room.socket.emit('login',{userInfo:room.userInfo,lastPublishTime:$("#content_ul li:last").attr("id")});
             room.setLoadImg($("#content_ul"),true);
         });
@@ -1046,7 +1055,7 @@ var room={
                     $("#"+data.replace(/,/g,",#")).remove();
                     break;
                 case 'leaveRoom':{
-                    room.leaveRoomTip();
+                    room.leaveRoomTip(result.flag);
                     break;
                 }
                 case 'approvalResult':
