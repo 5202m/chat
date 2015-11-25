@@ -1,17 +1,17 @@
 ﻿#!/usr/bin/env node
 var cluster = require('cluster'),numCPUs = require('os').cpus().length;
 var config=require('../resources/config');//资源文件
-if(!global.memored){//引入全局内存块，以便多线程多端口共享数据
+if(!global.memored){//引入全局内存块，以便多进程多端口共享数据
     global.memored=require('memored');
 }
-numCPUs=config.clusterWorkCount>=numCPUs?(numCPUs>2?numCPUs-1:numCPUs):config.clusterWorkCount;//结合clusterWorkCount分配实际可开启的线程数
-//如果是主线程，负责分配工作线程
+numCPUs=config.clusterWorkCount>=numCPUs?(numCPUs>2?numCPUs-1:numCPUs):config.clusterWorkCount;//结合clusterWorkCount分配实际可开启的进程数
+//如果是主进程，负责分配工作进程
 if (cluster.isMaster) {
     console.log("The Master Start....");
     for (var i = 1; i <= numCPUs; i++) {
         cluster.fork();
     }
-} else {//工作线程处理各自任务
+} else {//工作进程处理各自任务
     console.log('The Worker Start[workId:' + cluster.worker.id+']');
     var mongoose = require('mongoose');
     var logger=require('../resources/logConf');//日志文件
@@ -24,13 +24,13 @@ if (cluster.isMaster) {
     mongoose.connect(config.dbURL,dbOptions);
     /*＃＃＃＃＃＃＃＃＃＃数据库连接配置＃＃＃＃＃＃＃＃end */
     var app =null,chatWebServer=null,chatSocketServer=null;
-    if (cluster.worker.id==1) {//单线程处理（针对不支持WebSocket）交给id号为1的工作线程处理
+    if (cluster.worker.id==1) {//单进程处理（针对不支持WebSocket）交给id号为1的工作进程处理
         app=require('express')();
         chatSocketServer=app.listen('3003', function() {
             console.log('Chat socket one server running. Listening on port 3003');
         });
         require("../routes/chatServer").start(chatSocketServer);//启动socket
-    }else{//多线程处理（针对支持WebSocket）
+    }else{//多进程处理（针对支持WebSocket）
         app = require('../app');
         chatWebServer = app.listen('3001', function () {
             console.log('Chat web multi server running. Listening on port 3001');
