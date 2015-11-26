@@ -33,5 +33,7 @@ var chatGA = {
     }
 };
 $(function() {
-    chatGA.init();
+    if(window.location.href.indexOf("24k")!=-1) {
+        chatGA.init();
+    }
 });

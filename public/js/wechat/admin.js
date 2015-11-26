@@ -699,6 +699,30 @@ var adminChat={
         }
     },
     /**
+     * 显示提示框
+     */
+    showTipBox:function(text){
+        var dom=$(".errorbox");
+        dom.find("span").html(text);
+        dom.fadeIn(0).delay(6000).fadeOut(200);
+    },
+    /**
+     * 离开房间提示
+     */
+    leaveRoomTip:function(flag){
+        var txt='';
+        if(flag=="roomClose"){
+            txt='房间已停用，';
+        }
+        if(flag=="otherLogin"){
+            txt='您的账号已在其他地方进入该房间，';
+        }
+        this.showTipBox("注意："+txt+"正自动退出.....");
+        window.setTimeout(function(){//3秒钟退出房间
+            window.close();
+        },3000);
+    },
+    /**
      * 设置socket
      */
     setSocket:function(){
@@ -745,6 +769,9 @@ var adminChat={
                     break;
                 case 'removeMsg':
                     $("#"+result.data.replace(/,/g,",#")).remove();
+                    break;
+                case 'leaveRoom':
+                    adminChat.leaveRoomTip(result.flag);
                     break;
                 case 'approvalResult':{
                     var data=result.data,fromUser=null,row=null;

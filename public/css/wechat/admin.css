@@ -171,3 +171,5 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
     .pub-two{top:156px}
     .date-box{background-size:7px 7px}
 }
+.errorbox{ position:fixed; top:50%; width:100%; left:0; margin-top:-19px; height:38px; font-size:0; text-align:center; z-index:100}
+.errorbox .cont{ display:inline-block; padding:0 10px; height:38px; background:rgba(0,0,0,.7); color:#fff; line-height:38px; font-size:14px; border-radius:2px;}
