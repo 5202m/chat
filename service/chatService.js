@@ -4,6 +4,7 @@ var userService = require('../service/userService');//引入userService服务类
 var messageService = require('../service/messageService');//引入messageService服务类
 var logger=require('../resources/logConf').getLogger('chatService');//引入log4js
 var config=require('../resources/config');//资源文件
+var async = require('async');//引入async
 /**
  * 聊天室服务类
  * 备注：处理聊天室接受发送的所有信息及其管理
@@ -114,12 +115,10 @@ var chatService ={
                         logger.error("getRoomOnlineUser[memored.store]->err:"+err);
                     }
                 });
-                if(callback){
-                    callback(roomUserArr);
-                }
+                callback(roomUserArr);
             }else{
+                var isRemove=false;
                 if(roomUserArr){
-                    var isRemove=false;
                     if(userInfo.socketId && roomUserArr.hasOwnProperty(userInfo.userId) && userInfo.socketId==roomUserArr[userInfo.userId].socketId){
                         delete roomUserArr[userInfo.userId];
                         isRemove=true;
@@ -129,8 +128,10 @@ var chatService ={
                             logger.error("getRoomOnlineUser[memored.store]->err:"+err);
                         }
                     });
-                    callback(isRemove);
+                }else{
+                    isRemove=true;
                 }
+                callback(isRemove);
             }
         });
     },
@@ -157,55 +158,46 @@ var chatService ={
      * @param callback
      */
     setRoomOnlineNum:function(groupType,groupId,isAdd,callback){
-        this.getRoomOnlineNum(groupType,function(groupArr){
-            var val= 0,unitVal=isAdd?1: -1;
-            if(!groupArr){
-                groupArr={};
-                val=unitVal>0?1:0;
-            }else{
-                if(groupArr.hasOwnProperty(groupId)){
-                    val=groupArr[groupId]+unitVal;
-                }else{
-                    val=unitVal>0?1:0;
-                }
+        this.getRoomOnlineNum(groupType,groupId,function(val){
+            var unitVal=isAdd?1: -1;
+            if(!val){
+                val=0;
             }
-            groupArr[groupId]=val;
-            global.memored.store("onlineNum_"+groupType,groupArr,function(err){
+            val+=unitVal;
+            val=val<0?0:val;
+            global.memored.store(("onlineNum_"+groupType+"_"+groupId),val,function(err){
                 if(err){
                     logger.error("setRoomOnlineNum[memored.store]->err:"+err);
                 }
+                callback(val);
             });
-            callback(val);
         });
     },
     /**
      * 提取房间在线人数
      * @param groupType 房间大类
+     * @param groupId
      * @param callback
      */
-    getRoomOnlineNum:function(groupType,callback){
-        global.memored.read("onlineNum_"+groupType, function(err, groupArr) {
+    getRoomOnlineNum:function(groupType,groupId,callback){
+        global.memored.read(("onlineNum_"+groupType+"_"+groupId), function(err, val) {
             if(err){
                 logger.error("getRoomOnlineNum[memored.read]->err:"+err);
-                callback(null);
+                callback(0);
             }else{
-                callback(groupArr);
+                callback(val?val:0);
             }
         });
     },
-    /**
-     * 提取房间在线人数
-     * @param groupType
-     * @param callback
+    /***
+     * 移除缓存的房间
+     * 备注：房间被禁用
+     * @param roomId
      */
-    getRoomOnlineNumByRoomId:function(groupType,roomId,callback){
-        this.getRoomOnlineNum(groupType, function(groupArr) {
-            if(groupArr && groupArr.hasOwnProperty(roomId)){
-                callback(groupArr[roomId]);
-            }else{
-                callback(0);
-            }
-        });
+    removeCacheRoom:function(roomId){
+        var groupType=roomId.replace(/_+.*/g,"");
+        global.memored.remove(("onlineNum_"+groupType+"_"+roomId),function(){});//移除统计在线人数的房间
+        global.memored.remove(("onlineUser_"+roomId),function(){});//移除在线人的房间
     },
     /**
      * 显示socket对应的session
@@ -218,6 +210,14 @@ var chatService ={
                 logger.info('handshake=>data:'+JSON.stringify(data));
             });
         }
+    },
+    /**
+     * 提取房间外的id
+     * @param groupType
+     * @returns {string}
+     */
+    getOutRoomId:function(groupType){
+        return groupType+"_"+chatService.oRoomId;
     },
     /**
      * 设置socket连接相关信息
@@ -239,28 +239,25 @@ var chatService ={
             //房间外的socket登录
             socket.on('outRoomLogin',function(data){
                 socket.isOutRoom=true;//区分是房间里面的socket还是房间外的socket，true表示房间外的socket
-                socket.join(chatService.oRoomId);
+                socket.join(chatService.getOutRoomId(data.groupType));
                 chatService.setRoomOnlineNum(data.groupType,chatService.oRoomId,true,function(val){
                     var sendData = {
                         type: chatService.noticeType.onlineNum,
                         data: {onlineUserNum: val}
                     };
-                    socket.broadcast.to(chatService.oRoomId).emit('outRoomNotice', sendData);
+                    socket.broadcast.to(chatService.getOutRoomId(data.groupType)).emit('outRoomNotice', sendData);
                     socket.emit('outRoomNotice', sendData);
                 });
             });
             socket.on('outRoomGet',function(data){//提取在线人数
-                var groupIdArr=data.groupIds,groupId='',rOnlineSizeArr=[],groupOnlineNum=0;
-                chatService.getRoomOnlineNum(data.groupType,function(valArr){
-                    for(var i in groupIdArr){
-                        groupId=groupIdArr[i];
-                        rOnlineSizeArr.push({groupId:groupId,onlineSize:((valArr && valArr.hasOwnProperty(groupId))?valArr[groupId]:0)});
-                    }
-                    var sendData = {
-                        type: chatService.noticeType.onlineNum,
-                        data: {rOnlineSizeArr: rOnlineSizeArr}
-                    };
-                    socket.emit('outRoomNotice', sendData);
+                var groupIdArr=data.groupIds,rOnlineSizeArr=[];
+                async.each(groupIdArr, function (groupId, callbackTmp) {
+                    chatService.getRoomOnlineNum(data.groupType,groupId,function(val){
+                        rOnlineSizeArr.push({groupId:groupId,onlineSize:val});
+                        callbackTmp(null);
+                    });
+                }, function (err) {
+                    socket.emit('outRoomNotice', {type: chatService.noticeType.onlineNum,data: {rOnlineSizeArr: rOnlineSizeArr}});
                 });
             });
             //登录则加入房间,groupId作为唯一的房间号
@@ -290,10 +287,10 @@ var chatService ={
                     }else{
                         chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,true,function(roomNum){
                             var noticeData={type:chatService.noticeType.onlineNum,data:{onlineUserNum:roomNum,userId:userInfo.userId,hasRegister:userInfo.hasRegister}};
-                            socket.emit('notice',noticeData);
-                            socket.broadcast.to(userInfo.groupId).emit('notice',noticeData);
                             chatService.setRoomOnlineNum(userInfo.groupType,chatService.oRoomId,true,function(outRoomNum){
-                                socket.broadcast.to(chatService.oRoomId).emit('outRoomNotice',{type:chatService.noticeType.onlineNum,data:{groupId:userInfo.groupId,rOnlineUserNum:roomNum,onlineUserNum:outRoomNum}});
+                                socket.emit('notice',noticeData);
+                                socket.broadcast.to(userInfo.groupId).emit('notice',noticeData);
+                                socket.broadcast.to(chatService.getOutRoomId(userInfo.groupType)).emit('outRoomNotice',{type:chatService.noticeType.onlineNum,data:{groupId:userInfo.groupId,rOnlineUserNum:roomNum,onlineUserNum:outRoomNum}});
                             });
                         });
                     }
@@ -325,13 +322,13 @@ var chatService ={
                             }else{
                                 //计算房间人数
                                 chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,false,function(roomNum){
-                                    //通知客户端在线人数
-                                    socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserNum:roomNum}});
-                                    socket.leave(userInfo.groupId);
                                     //计算房间外的总人数
                                     chatService.setRoomOnlineNum(userInfo.groupType,chatService.oRoomId,false,function(outRoomNum){
+                                        //通知客户端在线人数
+                                        socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserNum:roomNum}});
                                         //通知非房间的socket
-                                        socket.broadcast.to(chatService.oRoomId).emit('outRoomNotice',{type:chatService.noticeType.onlineNum,data:{groupId:userInfo.groupId,rOnlineUserNum:roomNum,onlineUserNum:outRoomNum}});
+                                        socket.broadcast.to(chatService.getOutRoomId(userInfo.groupType)).emit('outRoomNotice',{type:chatService.noticeType.onlineNum,data:{groupId:userInfo.groupId,rOnlineUserNum:roomNum,onlineUserNum:outRoomNum}});
+                                        socket.leave(userInfo.groupId);//离开房间
                                         if(socket){
                                             delete socket;
                                         }
@@ -345,9 +342,11 @@ var chatService ={
                     if(socket.nsp) {
                         var nsp=socket.nsp,socketArr = nsp.sockets, socketTmp = null;
                         if(socket.isOutRoom){//如果是房间外的socket断开，则通知客户端,目前只是微解盘使用
-                            chatService.setRoomOnlineNum(nsp.name.replace(/\//g,""),chatService.oRoomId,false,function(outRoomNum){
-                                socket.broadcast.to(chatService.oRoomId).emit('outRoomNotice',{type:chatService.noticeType.onlineNum,data:{onlineUserNum:outRoomNum}});
-                                socket.leave(chatService.oRoomId);
+                            var groupType=nsp.name.replace(/\//g,"");
+                            chatService.setRoomOnlineNum(groupType,chatService.oRoomId,false,function(outRoomNum){
+                                var outRoomId=chatService.getOutRoomId(groupType);
+                                socket.broadcast.to(outRoomId).emit('outRoomNotice',{type:chatService.noticeType.onlineNum,data:{onlineUserNum:outRoomNum}});
+                                socket.leave(outRoomId);
                                 if(socket){
                                     delete socket;
                                 }
@@ -576,9 +575,11 @@ var chatService ={
      * @param groupIds
      */
     leaveRoom:function(groupIds,flag){
-        var groupIdArr=groupIds.split(",");
+        var groupIdArr=groupIds.split(","),groupId='';
         for(var i in groupIdArr){
-            chatService.sendMsgToRoom(true,null,groupIdArr[i],"notice",{type:chatService.noticeType.leaveRoom,flag:flag});
+            groupId=groupIdArr[i];
+            chatService.sendMsgToRoom(true,null,groupId,"notice",{type:chatService.noticeType.leaveRoom,flag:flag});
+            chatService.removeCacheRoom(groupId);
         }
     },
     /**

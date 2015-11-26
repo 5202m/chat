@@ -118,7 +118,7 @@ router.get('/room', function(req, res) {
     var userInfo=req.session.wechatUserInfo;
     if(userInfo){
         userInfo.groupId=req.query.groupId;
-        chatService.getRoomOnlineNumByRoomId(constant.fromPlatform.wechat,userInfo.groupId,function(onlineNum){
+        chatService.getRoomOnlineNum(constant.fromPlatform.wechat,userInfo.groupId,function(onlineNum){
             userService.checkRoomStatus(userInfo.groupId,onlineNum,function(isOK){
                 if(isOK){
                     userService.joinNewRoom(userInfo,function(){

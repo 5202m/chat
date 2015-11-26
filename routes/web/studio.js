@@ -109,7 +109,7 @@ router.get('/', function(req, res) {
             res.render('error',{error: '默认房间设置有误，请检查！'});
         }else{
             var targetGroupId = chatUser.toGroup || chatUser.groupId || groupId;
-            chatService.getRoomOnlineNumByRoomId(constant.fromPlatform.studio, targetGroupId,function(onlineNum){
+            chatService.getRoomOnlineNum(constant.fromPlatform.studio, targetGroupId,function(onlineNum){
                 userService.checkRoomStatus(targetGroupId,onlineNum,function(isOK) {
                     if(isOK){
                         if(targetGroupId != chatUser.groupId){//目标房间不是当前已登录房间==>追加到目标房间，后跳转
