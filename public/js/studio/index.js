@@ -1359,9 +1359,7 @@ var studioChat={
      */
     setOnlineUser:function(row){
         if(row.userType==2){
-            if($("#teacherListId li[uid='" + row.userId + "']").length>0){
-                return false;
-            }
+            $("#teacherListId li[uid='"+row.userId+"']").remove();//存在则移除旧的记录
             var loc_teElem = $('<li uid="'+row.userId+'" utype="'+row.userType+'"><a title="' + (row.introduction||"") + '" href="javascript:" class="te_btn"><img class="headimg" src="'+row.avatar+'"><span><strong>'+row.nickname+'</strong><i>'+(row.position||'')+'</i></span><div class="mp"><b></b></div></a></li>');
             $("#teacherListId").append(loc_teElem);
             $("#teacherListId").width($("#teacherListId").width() + loc_teElem.width());
@@ -1391,9 +1389,7 @@ var studioChat={
                 }
             });
         }else{
-            if($("#userListId li[id='" + row.userId + "']").length>0){
-                return false;
-            }
+            $("#userListId li[id='"+row.userId+"']").remove();//存在则移除旧的记录
             var dialogHtml=studioChat.getDialogHtml(row.userId,row.nickname,row.userType),isMeHtml="",unameCls = "uname",seq=row.sequence;
             if(studioChat.userInfo.userId==row.userId){
                 isMeHtml = "【我】";
@@ -1484,9 +1480,7 @@ var studioChat={
             var row=null;
             for(var i in data){
                 row=data[i];
-                if(!studioChat.setOnlineUser(row)){
-                    continue;
-                }
+                studioChat.setOnlineUser(row);
             }
             studioChat.setUserListScroll();
         });

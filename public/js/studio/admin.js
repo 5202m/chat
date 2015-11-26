@@ -504,9 +504,7 @@ var studioChat={
      * @returns {boolean}
      */
     setOnlineUser:function(row){
-        if($("#userListId #"+row.userId).length>0){
-            return false;
-        }
+        $("#userListId li[id='"+row.userId+"']").remove();//存在则移除旧的记录
         var dialogHtml=studioChat.getDialogHtml(row.userId,row.nickname,row.userType),isMeHtml="",unameCls = "uname",seq=row.sequence;
         if(studioChat.userInfo.userId==row.userId){
             isMeHtml = "【我】";
@@ -551,7 +549,25 @@ var studioChat={
         }
         return true;
     },
-
+    /**
+     * 离开房间提示
+     */
+    leaveRoomTip:function(flag){
+        if("visitor"==studioChat.userInfo.clientGroup){
+            return;
+        }
+        var txt='';
+        if(flag=="roomClose"){
+            txt='房间已停用，';
+        }
+        if(flag=="otherLogin"){
+            txt='您的账号已在其他地方进入该房间，';
+        }
+        $("#tipMsgBox").fadeIn(0).delay(6000).fadeOut(200).find("span").text("注意："+txt+"正自动退出.....");
+        window.setTimeout(function(){//3秒钟后登出
+            window.close();
+        },3000);
+    },
      /*
      * 设置socket
      */
@@ -570,9 +586,7 @@ var studioChat={
             var row=null;
             for(var i in data){
                 row=data[i];
-                if(!studioChat.setOnlineUser(row)){
-                    continue;
-                }
+                studioChat.setOnlineUser(row);
             }
             studioChat.setUserListScroll();
             $("#onLineSizeNum").text($("#userListId li").length);
@@ -610,6 +624,10 @@ var studioChat={
                 case 'removeMsg':
                     $("#"+result.data.replace(/,/g,",#")).remove();
                     break;
+                case 'leaveRoom':{
+                    studioChat.leaveRoomTip(result.flag);
+                    break;
+                }
                 case 'approvalResult':{
                     var data=result.data;
                     if(data.fromUserId==studioChat.userInfo.userId){//自己在聊天室审核成功或拒绝

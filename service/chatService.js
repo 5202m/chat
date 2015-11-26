@@ -313,7 +313,9 @@ var chatService ={
                             }
                             //通知客户端在线人数
                             if(constant.fromPlatform.studio==userInfo.groupType){//如果是直播间,则移除页面在线用户
-                                socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:false}});
+                                if(isRemove){
+                                    socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:false}});
+                                }
                                 socket.leave(userInfo.groupId);
                                 if(socket){
                                     delete socket;
