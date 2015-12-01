@@ -421,10 +421,20 @@ var wechat={
             //domArr.push('<a><audio src="'+data.mediaUrl+'" controls="controls" style="width:250px;"></audio><i></i><span></span></a>');
             domArr.push('</dd></dl></li>');
         }else{
+            var author=row.author,avatar='images/wechat/cate1.jpg';
+            if(common.isValid(row.author)){
+                if(row.author.indexOf(";")!=-1){
+                    var authorAvatarArr=row.author.split(";");
+                    author=authorAvatarArr[0];
+                    if(common.isValid(authorAvatarArr[1])){
+                        avatar=authorAvatarArr[1];
+                    }
+                }
+            }
             domArr.push('<li id="'+id+'"><a href="javascript:" class="ali text-li"><dl class="trade-cl clearfix">');
-            domArr.push('<dt class="dt-fon fl"></i><img src="images/wechat/cate1.jpg" width="100%" alt="" /></dt>');
+            domArr.push('<dt class="dt-fon fxs-img fl"><img src="'+avatar+'" width="100%" alt="" /></dt>');
             domArr.push('<dd><p class="trade-time"><i>'+row.tag+'</i>'+common.formatterDateTime(createDate)+'</p>');
-            domArr.push('<h3>'+(common.isValid(row.author)?'<span>【'+row.author+'】</span>':'')+row.title+'</h3>');
+            domArr.push('<h3>'+'<span>【'+author+'】</span>'+row.title+'</h3>');
             domArr.push('<p class="miaox-p">'+(common.isValid(row.remark) && row.remark.length>40?row.remark.substr(0,40)+' ....':row.remark)+'<span>详情 &gt;</span></p>');
             domArr.push('</dd></dl></a></li>');
         }
