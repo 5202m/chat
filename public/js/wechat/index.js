@@ -434,7 +434,7 @@ var wechat={
             domArr.push('<li id="'+id+'"><a href="javascript:" class="ali text-li"><dl class="trade-cl clearfix">');
             domArr.push('<dt class="dt-fon fxs-img fl"><img src="'+avatar+'" width="100%" alt="" /></dt>');
             domArr.push('<dd><p class="trade-time"><i>'+row.tag+'</i>'+common.formatterDateTime(createDate)+'</p>');
-            domArr.push('<h3>'+'<span>【'+author+'】</span>'+row.title+'</h3>');
+            domArr.push('<h3>'+(common.isValid(author)?'<span>【'+author+'】</span>':'')+row.title+'</h3>');
             domArr.push('<p class="miaox-p">'+(common.isValid(row.remark) && row.remark.length>40?row.remark.substr(0,40)+' ....':row.remark)+'<span>详情 &gt;</span></p>');
             domArr.push('</dd></dl></a></li>');
         }
