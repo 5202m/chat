@@ -27,7 +27,7 @@ var studioChat={
         this.setVideoAdvertisement();
         this.setEvent();
         this.setScrollNotice();
-        this.setPrice(true);
+        this.setPrice();
     },
     /**
      * 按时间点播放yy视频,不符合时间点直接播放视频
@@ -118,54 +118,19 @@ var studioChat={
     /**
      * 设置价格
      */
-    setPrice:function(isFirst){
-        try{
-            $.getJSON(this.apiUrl+'/get24kPrice').done(function(data){
-                if(!data){
-                    $(".pro_box .pro_c,.pro_box .pro_n").text("--");
-                    return false;
-                }
-                var result = data.result.row,subObj=null;
-                $.each(result,function(i,obj){
-                    if(obj != null){
-                        subObj =obj.attr;
-                        var gmCode = subObj.gmcode,															 //产品种类
-                            bid = subObj.bid,																 //最新
-                            change = subObj.change,															 //涨跌0.31
-                            direction = ($.trim(change) != '' && change.indexOf('-') !=-1 ? 'down' : 'up'),  //升或降
-                            range = change/(bid-change) *100 ;											 	 //幅度0.03%
-                        var product = $(".pro_box div[name="+gmCode+"]");   //获取对应的code的产品
-                        product.find(".pro_c").text(Number(bid).toFixed(2));
-                        var rangeDom=product.find(".pro_n");
-                        rangeDom.text(Number(range).toFixed(2)+'%');
-                        if(direction == 'up'){					     //设置产品的颜色变化
-                            rangeDom.removeClass("red").addClass("green");
-                        }else if(direction == 'down'){
-                            rangeDom.removeClass("green").addClass("red");
-                        }
-                    }
-                });
-            });
-            if(isFirst){
-                $(".pro_notice").slide(
-                    {
-                        titCell: ".num ul",
-                        mainCell: ".pro_box",
-                        effect: "fade",
-                        autoPlay: true,
-                        delayTime: 800,
-                        interTime: 5000,
-                        autoPage: false,
-                        prevCell: ".pro_prev",
-                        nextCell: ".pro_next",
-                        endFun: function(){
-                            studioChat.setPrice(false);
-                        }
-                    });
-            }
-        }catch (e){
-            console.error("setPrice->"+e);
-        }
+    setPrice:function(){
+        getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache", {downCss:"red",upCss:'green'});
+        $(".pro_notice").slide({
+                titCell: ".num ul",
+                mainCell: ".pro_box",
+                effect: "fade",
+                autoPlay: true,
+                delayTime: 800,
+                interTime: 5000,
+                autoPage: false,
+                prevCell: ".pro_prev",
+                nextCell: ".pro_next"
+         });
     },
     /**
      * 提取咨询信息

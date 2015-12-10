@@ -10,7 +10,7 @@ var apiChatRoutes = require('./api/chatAPI');//配置聊天室api路由
  * @param app
  */
 exports.init = function(app){
-    app.use('/wechat', wechatRoutes);
+    app.use(['/wechat','/fxchat'], wechatRoutes);//贵金属、外汇微解盘共享路由代码
     app.use('/api', apiChatRoutes);
     app.all('/studio/*', function(req, res, next) {//拦截非登录用户使用登录操作
         if((!req.session.studioUserInfo || (req.session.studioUserInfo && !req.session.studioUserInfo.isLogin)) && "/studio/resetPwd,/studio/logout".indexOf(req.url)!=-1){

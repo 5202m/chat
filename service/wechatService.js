@@ -18,8 +18,8 @@ var wechatService = {
     /**
      * 提取组列表
      */
-     getRoomList:function(callback){
-        chatGroup.find({valid:1,status:1,'chatStudio':{ $exists:false},groupType:constant.fromPlatform.wechat}).select("name groupType defaultAnalyst openDate sequence status maxCount").sort({'sequence':'asc'}).exec(function (err,rows) {
+     getRoomList:function(groupType,callback){
+        chatGroup.find({valid:1,status:1,'chatStudio':{ $exists:false},groupType:groupType}).select("name groupType defaultAnalyst openDate sequence status maxCount").sort({'sequence':'asc'}).exec(function (err,rows) {
             if(err){
                 logger.error("getGroupList fail:"+err);
             }

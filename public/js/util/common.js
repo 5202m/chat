@@ -233,15 +233,16 @@ var common = {
      * @param nullResult 空值结果
      *          1）对于禁言设置，空值表示没有设置禁言，即当前时间不包含在其中。传值false
      *          2）对于聊天规则设置，空值表示永久生效，即当前时间包含在其中。传值true
+     *  @param serverDate
      */
-    dateTimeWeekCheck:function(dateTime, nullResult){
+    dateTimeWeekCheck:function(dateTime, nullResult,serverDate){
         if(this.isBlank(dateTime)){
             return !!nullResult;
         }
         if(!$.isPlainObject(dateTime)){
             dateTime=JSON.parse(dateTime);
         }
-        var currDate=new Date(),isPass=false, currDateStr = this.formatterDate(currDate);
+        var currDate=serverDate?new Date(serverDate):new Date(),isPass=false, currDateStr = this.formatterDate(currDate);
         isPass=this.isBlank(dateTime.beginDate)||currDateStr>=dateTime.beginDate;
         if(isPass){
             isPass=this.isBlank(dateTime.endDate)||currDateStr<=dateTime.endDate;

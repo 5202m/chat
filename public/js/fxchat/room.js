@@ -4,6 +4,7 @@
  * author Alan.wu
  */
 var room={
+    kpSocket:null,//k线报价socket
     maxRows:50,//显示的最大条数
     //信息类型
     msgType:{
@@ -24,7 +25,7 @@ var room={
         this.setEvent();
         this.createImgDB();//创建数据库
         this.setAdvertisement();
-        this.setPrice();//设置报价
+        this.setPrice(true);//设置报价
     },
     /**
      * 提取头像
@@ -35,9 +36,9 @@ var room={
         if(common.isValid(avatar)){
             return avatar;
         }else if(!userType || userType==0){
-            return '/images/wechat/user.jpg';
+            return '/images/fxchat/user.jpg';
         }else{
-            return '/images/wechat/def_b_user.png';
+            return '/images/fxchat/def_b_user.png';
         }
     },
     /**
@@ -57,7 +58,7 @@ var room={
      */
     getArticleList:function(code,platform,hasContent,curPageNo,pageSize,orderByStr,callback){
         try{
-            $.getJSON('/wechat/getArticleList',{code:code,platform:platform,hasContent:hasContent,pageNo:curPageNo,pageSize:pageSize,orderByStr:orderByStr},function(data){
+            $.getJSON('/fxchat/getArticleList',{code:code,platform:platform,hasContent:hasContent,pageNo:curPageNo,pageSize:pageSize,orderByStr:orderByStr},function(data){
                 /*console.log("getArticleList->data:"+JSON.stringify(data));*/
                 callback(data);
             });
@@ -71,7 +72,7 @@ var room={
      */
     setAdvertisement:function(){
         /*$('#room_advertisement s').click();*/
-        this.getArticleList("advertisement","wechat_room","0",1,1,'',function(dataList){
+        this.getArticleList("advertisement","fxchat_room","0",1,1,'',function(dataList){
             if(dataList.result==0){
                 var data=dataList.data;
                 if(data && data[0]){
@@ -136,10 +137,41 @@ var room={
     },
     /**
      * 设置报价
+     * @param isInit 是否初始化
+     * @param symbol 产品
+     * @param time 时间类型
+     * @param fillDataDom 填充数据div块
      */
-    setPrice:function(){
+    setPrice:function(isInit,symbol,time,fillDataDom){
         try{
-            getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache");
+            if(isInit){
+                getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache");
+            }else{
+                ChartFactory.create(fillDataDom,{
+                    url:"http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getKDataFromCache",
+                    data : {
+                        symbol:symbol,
+                        dataType :time
+                    }
+                },$("#kchatLayer .loading-box"));
+                /* 图表数据的推送更新代码如下，因为只是时、日线无需推送更新
+                if(room.kpSocket){
+                 room.kpSocket.close();
+                 }
+                room.kpSocket = new WebSocket("ws://kdata.gwfx.com:8087/websocket.do");
+                $(room.kpSocket).on("open",function(){
+                    room.kpSocket.send('service=HqDataWebSocketService&method=pushKData&symbol='+symbol+'&dataType='+time);
+                });
+                $(room.kpSocket).on("message",function(e){
+                    var data = e.originalEvent.data;
+                    if(data){
+                        data = JSON.parse(data);
+                        if(data.code.toLowerCase() == "ok" && data.listResult.length){
+                            ChartFactory.add(fillDataDom,data.listResult,time);
+                        }
+                    }
+                });*/
+            }
         }catch (e){
             console.error("setPrice->"+e);
         }
@@ -197,7 +229,7 @@ var room={
             var useType = $(this).attr("ut");
             try{
             	room.setVerifyCodeTime('#loginForm .rbtn');
-                $.getJSON('/wechat/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile,useType:useType},function(data){
+                $.getJSON('/fxchat/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile,useType:useType},function(data){
                     if(!data || data.result != 0){
                         if(data.errcode == "1005"){
                             alert(data.errmsg);
@@ -218,6 +250,33 @@ var room={
             $('.hq-btn').show();
             room.wrapAdjust();
         });
+        /**
+         * 打开K线图
+         */
+        $("#product_price_ul li").click(function(){
+            $("#kchatLayer").attr("symbol",$(this).attr("name")).show().find(".lay-tt").text($(this).find("h2").text());
+            $("#kchat_ul li:first").click();
+        });
+        /**
+         * 关闭K线图
+         */
+        $("#kchatLayer .del-btn").click(function(){
+            $("#kchatLayer").attr("symbol",'').hide().find(".lay-tt").text('');
+            $(".layer-shadow").hide();
+        });
+        /**
+         * K线类型切换选择事件
+         */
+        $("#kchat_ul li").click(function(){
+            $("#kchat_ul li").removeClass("on");
+            $(this).addClass("on");
+            $(".date-chart").hide();
+            var dom=$(".date-chart").eq($(this).index());
+            dom.show();
+            $(".layer-shadow").show();
+            room.setPrice(false,$("#kchatLayer").attr("symbol"),$(this).attr("t"),dom);
+        });
+
         /*行情、客服漂浮按钮*/
         (function(){
             util.rangeControl = function(num,max){
@@ -248,7 +307,7 @@ var room={
             util.toucher($(".kf-btn")[0])
                 .on('singleTap',function(e){
                     var uId=$(this).attr("uId"),name=$(this).attr("n");
-                    room.setTxtOfNickname(common.isValid(uId)?uId:3,common.isValid(name)?name:"金道贵金属客服",null,3);//@客服,如果不存在客服id则存入客服角色id
+                    room.setTxtOfNickname(common.isValid(uId)?uId:3,common.isValid(name)?name:"金道客服",null,3);//@客服,如果不存在客服id则存入客服角色id
                 })
                 .on('swipeStart',function(e){
                     start_left = parseInt(this.style.left) || 0;
@@ -378,7 +437,7 @@ var room={
             }
             $('#formBtn').attr('disabled',true);
             $('#formBtnLoad').show();
-            common.getJson("/wechat/checkClient",$("#loginForm").serialize(),function(result){
+            common.getJson("/fxchat/checkClient",$("#loginForm").serialize(),function(result){
                 room.clearVerifyInter('#loginForm .rbtn');
                 $(".wrong-info").html("");
                 $('#formBtn').attr('disabled',false);
@@ -395,22 +454,16 @@ var room={
                         $(".user-stadus").hide();
                         $("#loginSection").hide();
                         $("#tipSection h2").html("验证成功");
-                        $("#tipSection .succ-p-info").html("尊贵的客户：欢迎光临金道贵金属微解盘！");
+                        $("#tipSection .succ-p-info").html("尊贵的客户：欢迎光临金道环球投资微解盘！");
                         $("#tipSection").show();
                     }else{
                         $(".wrong-info").html("账号或手机号验证不通过，请重新输入！");
                     }
                 }else{
-                    if(flag==1||flag==3){//客户记录标志:0（记录不存在）、1（未绑定微信）、2（未入金激活）、3（绑定微信并且已经入金激活）
+                    if(flag==1){//客户记录标志:0（记录不存在）、1（未绑定微信）
                         $("#loginSection").hide();
                         $("#tipSection h2").html("登录成功");
-                        $("#tipSection .succ-p-info").html("尊贵的客户：欢迎光临金道贵金属微解盘，即时参与和分析师互动，让投资变得更简单！");
-                        $("#tipSection").show();
-                        $(".user-stadus").hide();
-                    }else if(flag==2){
-                        $("#loginSection").hide();
-                        $("#tipSection h2").html("提示");
-                        $("#tipSection .succ-p-info").html("欢迎光临金道贵金属微解盘，目前发言功能暂仅对激活客户开放，了解更多请咨询金道微信客服！");
+                        $("#tipSection .succ-p-info").html("尊贵的客户：欢迎光临金道环球投资微解盘，即时参与和分析师互动，让投资变得更简单！");
                         $("#tipSection").show();
                         $(".user-stadus").hide();
                     }else if(flag==4){
@@ -516,7 +569,7 @@ var room={
     dataUpload:function(data){
         //上传图片到后端
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/wechat/uploadData');
+        xhr.open('POST', '/fxchat/uploadData');
         xhr.addEventListener("progress", function(e){
             if (e.lengthComputable) {
                 var ra= ((e.loaded / e.total *100)|0)+"%";
@@ -618,7 +671,7 @@ var room={
      * 检查发送权限
      */
     checkSendAuthority:function(callback){
-        common.getJson("/wechat/checkSendAuthority",{accountNo:room.userInfo.accountNo,userId:room.userInfo.userId,groupId:room.userInfo.groupId,fromPlatform:room.userInfo.fromPlatform},function(result){
+        common.getJson("/fxchat/checkSendAuthority",{accountNo:room.userInfo.accountNo,userId:room.userInfo.userId,groupId:room.userInfo.groupId,fromPlatform:room.userInfo.fromPlatform},function(result){
             if(result.isVisitor) {
                 room.openLoginBox();
                 callback(false);
@@ -686,7 +739,7 @@ var room={
     /**
      * 设置验证码
      * @param tId
-     * @param isClear
+     * @param isCleaer
      */
     setVerifyCodeTime:function(tId,isClear){
         var t=0;
@@ -815,7 +868,7 @@ var room={
                     room.deleteImgDataById(data.uiId);
                 }
                 var imgdiv=$('#'+fromUser.publishTime+' .imgdiv');
-                var url=data.content.needMax?'/wechat/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:imgdiv.find("a img").attr("src");
+                var url=data.content.needMax?'/fxchat/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:imgdiv.find("a img").attr("src");
                 imgdiv.find('a[class=swipebox]').attr("href",url);
                 //上传成功后可以点击查看
                 $('.swipebox').swipebox();
@@ -928,7 +981,7 @@ var room={
             liDom.push('<div class="imgdiv">');
             var pHtml='';
             if(content.needMax){
-                liDom.push('<a href="/wechat/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" class="swipebox" ><img src="'+content.value+'" alt="图片"/></a>');
+                liDom.push('<a href="/fxchat/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" class="swipebox" ><img src="'+content.value+'" alt="图片"/></a>');
             }else{
                 liDom.push('<a href="'+content.value+'" class="swipebox" ><img src="'+content.value+'" alt="图片" /></a>');
             }
@@ -964,7 +1017,7 @@ var room={
         }
         this.showTipBox("注意："+txt+"正自动退出房间.....");
         window.setTimeout(function(){//3秒钟退出房间
-            window.location.href="/wechat";
+            window.location.href="/fxchat";
         },3000);
     },
     /**

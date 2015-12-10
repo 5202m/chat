@@ -12,7 +12,7 @@ var async = require('async');//引入async
  */
 var chatService ={
     oRoomId:'oRoomId',//自定义房间外的房间，用于房间外的socket通讯，目前只用于微解盘
-    socketSpaceArr:["wechat","studio"],//组空间,与房间大类groupType保持一致
+    socketSpaceArr:["wechat","studio","fxchat"],//组空间,与房间大类groupType保持一致
     socket:null,//socket对象
     noticeType:{ //通知客户端类型
         removeMsg:'removeMsg',//移除信息
@@ -22,7 +22,8 @@ var chatService ={
     },
     leaveRoomFlag:{//离开房间标志
         roomClose:'roomClose',//房间关闭或禁用或开放时间结束
-        otherLogin:'otherLogin'//被相同账号登陆
+        otherLogin:'otherLogin',//被相同账号登陆
+        forcedOut:'forcedOut'//被管理员强制下线
     },
     /**
      * 初始化
@@ -239,25 +240,26 @@ var chatService ={
             //房间外的socket登录
             socket.on('outRoomLogin',function(data){
                 socket.isOutRoom=true;//区分是房间里面的socket还是房间外的socket，true表示房间外的socket
-                socket.join(chatService.getOutRoomId(data.groupType));
+                var outRoomId=chatService.getOutRoomId(data.groupType);
+                socket.join(outRoomId);
                 chatService.setRoomOnlineNum(data.groupType,chatService.oRoomId,true,function(val){
                     var sendData = {
                         type: chatService.noticeType.onlineNum,
-                        data: {onlineUserNum: val}
+                        data: {groupId:outRoomId,onlineUserNum: val}
                     };
-                    socket.broadcast.to(chatService.getOutRoomId(data.groupType)).emit('outRoomNotice', sendData);
-                    socket.emit('outRoomNotice', sendData);
+                    socket.broadcast.to(outRoomId).emit('notice', sendData);
+                    socket.emit('notice', sendData);
                 });
             });
             socket.on('outRoomGet',function(data){//提取在线人数
-                var groupIdArr=data.groupIds,rOnlineSizeArr=[];
+                var groupIdArr=data.groupIds,rOnlineSizeArr={};
                 async.each(groupIdArr, function (groupId, callbackTmp) {
                     chatService.getRoomOnlineNum(data.groupType,groupId,function(val){
-                        rOnlineSizeArr.push({groupId:groupId,onlineSize:val});
+                        rOnlineSizeArr[groupId]=val;
                         callbackTmp(null);
                     });
                 }, function (err) {
-                    socket.emit('outRoomNotice', {type: chatService.noticeType.onlineNum,data: {rOnlineSizeArr: rOnlineSizeArr}});
+                    socket.emit('notice', {type: chatService.noticeType.onlineNum,data: {rOnlineSizeArr: rOnlineSizeArr}});
                 });
             });
             //登录则加入房间,groupId作为唯一的房间号
@@ -286,12 +288,9 @@ var chatService ={
                         socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:true}});
                     }else{
                         chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,true,function(roomNum){
-                            var noticeData={type:chatService.noticeType.onlineNum,data:{onlineUserNum:roomNum,userId:userInfo.userId,hasRegister:userInfo.hasRegister}};
-                            chatService.setRoomOnlineNum(userInfo.groupType,chatService.oRoomId,true,function(outRoomNum){
-                                socket.emit('notice',noticeData);
-                                socket.broadcast.to(userInfo.groupId).emit('notice',noticeData);
-                                socket.broadcast.to(chatService.getOutRoomId(userInfo.groupType)).emit('outRoomNotice',{type:chatService.noticeType.onlineNum,data:{groupId:userInfo.groupId,rOnlineUserNum:roomNum,onlineUserNum:outRoomNum}});
-                            });
+                            var noticeData={type:chatService.noticeType.onlineNum,data:{userId:userInfo.userId,hasRegister:userInfo.hasRegister,groupId:userInfo.groupId,onlineUserNum:roomNum}};
+                            socket.emit('notice',noticeData);
+                            socket.broadcast.to(userInfo.groupId).to(chatService.getOutRoomId(userInfo.groupType)).emit('notice',noticeData);
                         });
                     }
                 });
@@ -324,18 +323,14 @@ var chatService ={
                             }else{
                                 //计算房间人数
                                 chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,false,function(roomNum){
-                                    //计算房间外的总人数
-                                    chatService.setRoomOnlineNum(userInfo.groupType,chatService.oRoomId,false,function(outRoomNum){
-                                        //通知客户端在线人数
-                                        socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserNum:roomNum}});
-                                        //通知非房间的socket
-                                        socket.broadcast.to(chatService.getOutRoomId(userInfo.groupType)).emit('outRoomNotice',{type:chatService.noticeType.onlineNum,data:{groupId:userInfo.groupId,rOnlineUserNum:roomNum,onlineUserNum:outRoomNum}});
-                                        socket.leave(userInfo.groupId);//离开房间
-                                        if(socket){
-                                            delete socket;
-                                        }
-                                        logger.info('setSocket['+logRemoveTip+']=>client['+(userInfo.accountNo||userInfo.userId)+'] disconnect!');
-                                    });
+                                    //通知客户端在线人数
+                                    socket.broadcast.to(userInfo.groupId).to(chatService.getOutRoomId(userInfo.groupType)).emit('notice',{type:chatService.noticeType.onlineNum,data:{groupId:userInfo.groupId,onlineUserNum:roomNum}});
+                                    //通知非房间的socket
+                                    socket.leave(userInfo.groupId);//离开房间
+                                    if(socket){
+                                        delete socket;
+                                    }
+                                    logger.info('setSocket['+logRemoveTip+']=>client['+(userInfo.accountNo||userInfo.userId)+'] disconnect!');
                                 });
                             }
                         });
@@ -347,7 +342,7 @@ var chatService ={
                             var groupType=nsp.name.replace(/\//g,"");
                             chatService.setRoomOnlineNum(groupType,chatService.oRoomId,false,function(outRoomNum){
                                 var outRoomId=chatService.getOutRoomId(groupType);
-                                socket.broadcast.to(outRoomId).emit('outRoomNotice',{type:chatService.noticeType.onlineNum,data:{onlineUserNum:outRoomNum}});
+                                socket.broadcast.to(outRoomId).emit('notice',{type:chatService.noticeType.onlineNum,data:{groupId:outRoomId,onlineUserNum:outRoomNum}});
                                 socket.leave(outRoomId);
                                 if(socket){
                                     delete socket;
@@ -575,6 +570,7 @@ var chatService ={
     /**
      * 离开房间(房间关闭）
      * @param groupIds
+     * @param flag
      */
     leaveRoom:function(groupIds,flag){
         var groupIdArr=groupIds.split(","),groupId='';
@@ -585,12 +581,30 @@ var chatService ={
         }
     },
     /**
-     * 离开房间
+     * 根据socketId离开房间
      * @param groupType
      * @param socketId
+     * @param flag
      */
     leaveRoomBySocketId:function(groupType,socketId,flag){
         chatService.getSpaceSocket(groupType,false).to(socketId).emit('notice',{type:chatService.noticeType.leaveRoom,flag:flag});
+    },
+    /**
+     * 根据userId离开房间
+     * @param roomIds 若干房间
+     * @param userIds 若干用户
+     * @param flag
+     */
+    leaveRoomByUserId:function(roomIds,userIds,flag){
+        if(common.isBlank(roomIds)||common.isBlank(userIds)){
+            logger.error("leaveRoomByUserId=>userId is null");
+            return;
+        }
+        var roomIdArr=roomIds.split(","),groupType='';
+        for(var i in roomIdArr){
+            groupType=roomIdArr[i].replace(/_+.*/g,"");
+            chatService.sendMsgToUserArr(true,{groupType:groupType,groupId:roomIdArr[i]},userIds.split(','),null,'notice',{type:chatService.noticeType.leaveRoom,flag:flag});
+        }
     },
     /**
      * 发送信息到房间

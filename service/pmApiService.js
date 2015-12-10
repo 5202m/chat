@@ -20,8 +20,8 @@ var pmApiService = {
      * @param val
      */
     destroyHomeToken:function(val,callback){
-        /*callback(true);
-        return;*/
+        callback(true);
+        return;
         request.post({url:this.formatApiUrl('/token/destroyToken'), form:{token:val}}, function(err,response,data){
             if(err) {
                 logger.error("destroyHomeToken>>>error:"+err);
@@ -132,10 +132,11 @@ var pmApiService = {
      * 检查点赞记录是否已经点赞
      * @param clientId
      * @param praiseId
+     * @param fromPlatform
      * @param callback
      */
-    checkChatPraise:function(clientId,praiseId,callback){
-        request.post({url:this.formatApiUrl('/chat/checkChatPraise'), form:{clientId:clientId,praiseId:praiseId}},function(err, response, data){
+    checkChatPraise:function(clientId,praiseId,fromPlatform,callback){
+        request.post({url:this.formatApiUrl('/chat/checkChatPraise'), form:{clientId:clientId,praiseId:praiseId,fromPlatform:fromPlatform}},function(err, response, data){
             if (err){
                 callback(false);
             }else{

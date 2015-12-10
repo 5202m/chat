@@ -22,7 +22,7 @@ var messageService ={
             //客服
             searchObj.userType={$in:[0,3]};
             searchObj["toUser.talkStyle"] = 1;
-        }else if(constant.fromPlatform.wechat==groupType) {
+        }else if(constant.fromPlatform.wechat==groupType||constant.fromPlatform.fxchat==groupType) {
             // 微解盘
             searchObj.userType=2;
             searchObj["toUser.talkStyle"] = 0;

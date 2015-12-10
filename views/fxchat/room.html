@@ -2,12 +2,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>金道贵金属微解盘</title>
-    <meta name="keywords" content="金道贵金属微解盘" />
-    <meta name="description" content="金道贵金属微解盘" />
+    <title>金道环球投资微解盘</title>
+    <meta name="keywords" content="金道环球投资微解盘" />
+    <meta name="description" content="金道环球投资微解盘" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
     <link rel="stylesheet" href="/css/swipebox.min.css">
-    <link type="text/css" rel="stylesheet" href="/css/wechat/index.min.css?t=<%=new Date()%>" media="screen"/>
+    <link type="text/css" rel="stylesheet" href="/css/fxchat/index.min.css?t=<%=new Date()%>" media="screen"/>
     <style type="text/css">
         /**---------------开发加入，begin----------**/
         .dt-txt-name{ position: absolute;top: 5px;left: 5px; }
@@ -18,12 +18,12 @@
 <body>
 <header id="header">
   <section class="cop-info clearfix">
-    <h1 id="logo" class="fl"><a href="http://m.24k.hk" class="hide-t">金道贵金属</a></h1>
+    <h1 id="logo" class="fl"><a href="http://m.gwfx.com" class="hide-t">金道环球投资</a></h1>
     <p class="online-count fl">房间人数<span id="onlineUserNum"></span></p>
     <aside class="user-intr fr">
       <span class="user-img"><img src="" width="20" height="20" alt="头像" /><i class="user-stadus">游客</i></span>
       <span class="user-name"></span>
-      <a href="/wechat" class="leavebtn">退出</a>
+      <a href="/fxchat" class="leavebtn">退出</a>
     </aside>
   </section>
   <section class="date-box dn">
@@ -31,33 +31,33 @@
         <li name="XAUUSD" class="date-up">
             <h2>伦敦金</h2>
             <p class="date-sz" id="price_XAUUSD">--</p>
-            <p><span id="deltaPrice_XAUUSD">--</span> <span id="deltaPercent_XAUUSD" changeCss="true">--</span></p>
-        </li>
-        <li name="XAGUSD" class="date-up">
-            <h2>伦敦银</h2>
-            <p class="date-sz" id="price_XAGUSD">--</p>
-            <p><span id="deltaPrice_XAGUSD">--</span> <span id="deltaPercent_XAGUSD" changeCss="true">--</span></p>
+            <p><span id="deltaPrice_XAUUSD">--</span> <span id="deltaPercent_XAUUSD">--</span></p>
         </li>
         <li name="USDX" class="date-up">
             <h2>美元指数</h2>
             <p class="date-sz" id="price_USDX">--</p>
-            <p><span id="deltaPrice_USDX">--</span> <span id="deltaPercent_USDX" changeCss="true">--</span></p>
+            <p><span id="deltaPrice_USDX">--</span> <span id="deltaPercent_USDX">--</span></p>
         </li>
-        <li name="CLWTI" class="date-up">
-            <h2>纽约原油</h2>
-            <p class="date-sz" id="price_CLWTI">--</p>
-            <p><span id="deltaPrice_CLWTI">--</span> <span id="deltaPercent_CLWTI" changeCss="true">--</span></p>
+        <li name="EURUSD" class="date-up">
+            <h2>欧元/美元</h2>
+            <p class="date-sz" id="price_EURUSD">--</p>
+            <p><span id="deltaPrice_EURUSD">--</span> <span id="deltaPercent_EURUSD">--</span></p>
+        </li>
+        <li name="USDJPY" class="date-up">
+            <h2>美元/日元</h2>
+            <p class="date-sz" id="price_USDJPY">--</p>
+            <p><span id="deltaPrice_USDJPY">--</span> <span id="deltaPercent_USDJPY">--</span></p>
         </li>
     </ul>
-    <a href="javascript:void(0)" class="hide-btn">收</a>
+    <a href="javascript:void(0)" class="hide-btn"><i></i></a>
   </section>
 
   <aside class="adbox dn" id="room_advertisement"><a href="javascript:"><img src=""  style="width:100%;height:auto;" alt="广告"></a><s></s></aside>
   <section class="ss-tk-info dn" id="top_info"><label></label><span style="margin-left:5px;text-align:justify;"></span><i id="close_top_btn"></i></section>
-  <section class="hq-btn">
-  	<div class="wave wave1"></div>
-    <div class="wave wave2"></div>
-  </section>
+    <section class="hq-btn" id="pbar" style="left:320px; top:117px">
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+    </section>
   <section class="kf-btn"></section>
 </header>
 <!-- header end -->
@@ -115,7 +115,7 @@
                 </div>
                 <div class="line line_d clearfix">
                     <input type="text" placeholder="请输入短信验证码" class="input_l" name="verifyCode">
-                    <div class="rbtn_out"><input type="button" class="rbtn" disabled="disabled" ut="wechat_login" value="获取验证码"/></div>
+                    <div class="rbtn_out"><input type="button" class="rbtn" disabled="disabled" ut="fxchat_login" value="获取验证码"/></div>
                 </div>
            </div>
            <p class="wrong-info"></p>
@@ -133,6 +133,23 @@
     <!--登录成功 begin-->
 </section>
 <!--登录 end-->
+<!--图表 begin-->
+<section class="layer-out dn" id="kchatLayer" style="background:#fff">
+    <section class="layer-con">
+        <a href="javascript://" class="del-btn" title="关闭"></a>
+        <h3 class="lay-tt"></h3>
+        <nav class="nav-lbox" style="padding:0 2px;">
+            <ul class="cen-ulist clearfix" id="kchat_ul">
+                <li class="on" t="1hour"><span>60M</span></li>
+                <li t="day"><span>日K</span></li>
+            </ul>
+            <div class="date-chart"></div>
+            <div class="date-chart dn"></div>
+            <i class="loading-box"></i>
+        </nav>
+    </section>
+</section>
+<!--图表 end-->
 <section class="layer-shadow dn"></section>
 <!--登录 end-->
 <section class="errorbox my dn">
@@ -145,9 +162,10 @@
 <script type="text/javascript" src="/js/lib/jquery.swipebox.min.js"></script>
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
 <script type="text/javascript" src="/js/lib/toucher.js"></script>
+<script type="text/javascript" src="/js/lib/highstock.js"></script>
 <script type="text/javascript" src="/js/lib/newquote.js"></script>
 <script type="text/javascript" src="/js/util/common.min.js?t=<%=new Date()%>"></script>
-<script type="text/javascript" src="/js/wechat/room.min.js?t=<%=new Date()%>"></script>
+<script type="text/javascript" src="/js/fxchat/room.min.js?t=<%=new Date()%>"></script>
 <script type="text/javascript">
     room.userInfo=JSON.parse('<%- userInfo %>');
     room.socketUrl=JSON.parse('<%- socketUrl %>');

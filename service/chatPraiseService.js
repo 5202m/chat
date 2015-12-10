@@ -21,8 +21,8 @@ var chatPraiseService ={
      * @param praiseId
      * @param type
      */
-    setPraise:function(praiseId,type){
-        chatPraise.findOne({praiseId:praiseId,praiseType:type},function(err,row){
+    setPraise:function(praiseId,type,fromPlatform){
+        chatPraise.findOne({praiseId:praiseId,praiseType:type,fromPlatform:fromPlatform},function(err,row){
            if(row){
                row.praiseNum+=1;
                row.save(function(err,rowTmp){
@@ -33,6 +33,7 @@ var chatPraiseService ={
                    _id:null,
                    praiseId:praiseId,
                    praiseType:type,
+                   fromPlatform:fromPlatform,
                    praiseNum:1
                });
                chatPraiseModel.save(function(err){

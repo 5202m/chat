@@ -60,6 +60,10 @@ fileZip.zipJs(["public\\js\\wechat\\room.js"],'public\\js\\wechat\\room.min.js')
 fileZip.zipCss(["public\\css\\wechat\\admin.css"],'public\\css\\wechat\\admin.min.css');
 fileZip.zipCss(["public\\css\\wechat\\index.css"],'public\\css\\wechat\\index.min.css');
 
+fileZip.zipJs(["public\\js\\fxchat\\index.js"],'public\\js\\fxchat\\index.min.js');
+fileZip.zipJs(["public\\js\\fxchat\\room.js"],'public\\js\\fxchat\\room.min.js');
+fileZip.zipCss(["public\\css\\fxchat\\index.css"],'public\\css\\fxchat\\index.min.css');
+
 //直播间前端js/css压缩
 fileZip.zipJs(["public\\js\\studio\\admin.js"],'public\\js\\studio\\admin.min.js');
 fileZip.zipJs(["public\\js\\studio\\index.js"],'public\\js\\studio\\index.min.js');

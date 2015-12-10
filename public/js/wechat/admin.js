@@ -717,6 +717,9 @@ var adminChat={
         if(flag=="otherLogin"){
             txt='您的账号已在其他地方进入该房间，';
         }
+        if(flag=="forcedOut"){
+            txt='您已被管理员强制退出房间，';
+        }
         this.showTipBox("注意："+txt+"正自动退出.....");
         window.setTimeout(function(){//3秒钟退出房间
             window.close();

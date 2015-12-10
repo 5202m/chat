@@ -18,6 +18,40 @@ var logger=require('../resources/logConf').getLogger('userService');//引入log4
  */
 var userService = {
     /**
+     * 提取gw或fx接口的签名
+     * @param data
+     */
+    getApiSignature:function(data){
+        var invokerVal='';
+        if(data["_principal_"]){
+            var pl=data["_principal_"];
+            if(typeof pl!="object"){
+                pl=JSON.parse(pl);
+            }
+            if(!pl.invoker || !constant.goldOrfxApiInvoker.hasOwnProperty(pl.invoker)){
+                return null;
+            }
+            invokerVal=constant.goldOrfxApiInvoker[pl.invoker].value;
+        }
+        var names = [];
+        for(var name in data){
+            if(name == '_signature_'){
+                continue;
+            }else{
+                names.push(name);
+            }
+        }
+        names.sort();
+        var str = '',value='';
+        for(var i = 0; i < names.length; i++){
+            value = data[names[i]];
+            value = (value == null)? "" :(typeof value=="object"?JSON.stringify(value):value);
+            str += value + '&';
+        }
+        str+=invokerVal;
+        return common.getMD5(str);
+    },
+    /**
      * 通过用户id提取信息
      * @param id
      */
@@ -341,12 +375,31 @@ var userService = {
             onlineStatus:1,
             onlineDate:new Date()
         }}};
-        member.findOneAndUpdate(searchObj,setValObj,function(err,row){
-            if(err){
-                logger.error('joinNewGroup=>fail!'+err);
-            }
-            callback(true);
-        });
+        if(common.isBlank(userInfo.mobilePhone)){//如果不存在手机号码，先提取手机号码
+            member.findOne({valid:1,'loginPlatform.chatUserGroup':{$elemMatch:{_id:userInfo.groupType,userId:userInfo.userId}}},function(err,row){
+                if(row){
+                    searchObj.mobilePhone=row.mobilePhone;
+                    var mainRow=row.loginPlatform.chatUserGroup.id(userInfo.groupType);
+                    if(!mainRow.rooms.id(userInfo.groupId)){//不存在对应房间则新增房间信息
+                        member.findOneAndUpdate(searchObj,setValObj,function(err,row){
+                            if(err){
+                                logger.error('joinNewGroup=>fail!'+err);
+                            }
+                        });
+                    }
+                    callback(true,{mobilePhone:row.mobilePhone,accountNo:mainRow.accountNo});
+                }else{
+                    callback(false);
+                }
+            });
+        }else{
+            member.findOneAndUpdate(searchObj,setValObj,function(err,row){
+                if(err){
+                    logger.error('joinNewGroup=>fail!'+err);
+                }
+                callback(true);
+            });
+        }
     },
     /**
      * 新增会员登录聊天室的用户组信息
@@ -460,7 +513,7 @@ var userService = {
     checkUserLogin:function(userInfo,callback){
         var searchObj={};
         if(constant.fromPlatform.pm_mis==userInfo.fromPlatform){
-            searchObj={_id:userInfo.groupType,accountNo:userInfo.accountNo};
+            searchObj={_id:userInfo.groupType,accountNo:(common.isBlank(userInfo.accountNo)?userInfo.userId:userInfo.accountNo)};
         }else{
             searchObj={_id:userInfo.groupType,userId:userInfo.userId};
         }
@@ -478,7 +531,7 @@ var userService = {
      * 通过账号与手机号检查用户客户
      * @param userInfo
      */
-    checkClient:function(userInfo,callback){
+    checkClient:function(isfx,userInfo,callback){
         //系统用户，检查是否已经存在
         if(eval("/^"+constant.systemUserPrefix+'/').test(userInfo.accountNo)){
             userInfo.accountNo=userInfo.accountNo.replace(constant.systemUserPrefix,"");
@@ -494,10 +547,10 @@ var userService = {
                     callback({flag:4});//账号已被绑定
                 }else{
                     userInfo.userType=0;//默认为0
-                    userService.checkAClient(userInfo,function(result,backUserInfo){
+                    userService.checkAClient(isfx,userInfo.mobilePhone,userInfo.accountNo,userInfo.ip,function(result){
                         if(result.flag==1||result.flag==3){
                             //验证通过，成为聊天室会员，记录信息
-                            userService.createUser(backUserInfo,function(isOk){
+                            userService.createUser(userInfo,function(isOk){
                                 callback(result);
                             });
                         }else{
@@ -508,16 +561,33 @@ var userService = {
             });
         }
     },
-
     /**
      * 通过账号与手机号检查用户是否A客户
-     * 备注：目前只是微信组聊天室客户发言时需检测
+     * @param isfx 是否外汇
+     * @param userInfo
+     * @param callback
+     */
+    checkAClient:function(isfx,mobile,accountNo,ip,callback){
+       if(isfx){//外汇
+           this.checkFxAClient(mobile,accountNo,ip,function(flagResult){
+               callback(flagResult);
+           });
+       }else{//黄金
+           this.checkGoldAClient(mobile,accountNo,function(flagResult){
+               callback(flagResult);
+           });
+       }
+    },
+
+    /**黄金接口
+     * 通过账号与手机号检查用户是否A客户
+     * 备注：目前只是微信组聊天室客户发言时需检测，只针对goldApi
      * @param userInfo
      */
-    checkAClient:function(userInfo,callback){
+    checkGoldAClient:function(mobile,accountNo,callback){
         var flagResult={flag:0};//客户记录标志:0（记录不存在）、1（未绑定微信）、2（未入金激活）、3（绑定微信并且已经入金激活）
-        if(common.isBlank(userInfo.accountNo)){
-            request.post({url:(config.goldApiUrl+'/account/checkContactInfo'), form: {args:'["","","","'+userInfo.mobilePhone+'"]'}}, function(error,response,tmpData){
+        if(common.isBlank(accountNo)){
+            request.post({url:(config.goldApiUrl+'/account/checkContactInfo'), form: {args:'["","","","'+mobile+'"]'}}, function(error,response,tmpData){
                 logger.info("checkContactInfo->error:"+error+";tmpData:"+tmpData);
                 if(!error && common.isValid(tmpData)) {
                     var allData = JSON.parse(tmpData);
@@ -529,13 +599,12 @@ var userService = {
                 callback(flagResult);
             });
         }else{
-            request.post({url:(config.goldApiUrl+'/account/getCustomerInfo'), form: {loginname:userInfo.accountNo}}, function(error,response,body){
-                var tmpData=body;
+            request.post({url:(config.goldApiUrl+'/account/getCustomerInfo'), form: {loginname:accountNo}}, function(error,response,tmpData){
                 if(!error && common.isValid(tmpData)) {
                     var allData = JSON.parse(tmpData);
                     var result = allData.result;
                     if (allData.code == 'SUCCESS'&& result!=null) {
-                        if (result.mobilePhone.indexOf(userInfo.mobilePhone)==-1) {
+                        if (result.mobilePhone.indexOf(mobile)==-1) {
                             flagResult.flag = 0;//没有对应记录
                         }  else if (result.accountStatus != 'A') {
                             flagResult.flag = 2;//未入金激活
@@ -548,9 +617,53 @@ var userService = {
                         flagResult.flag = 0;//没有对应记录
                     }
                 }
-                callback(flagResult,userInfo);
+                callback(flagResult);
             });
         }
+    },
+
+    /**外汇接口
+     * 通过账号与手机号检查用户是否A客户
+     * 备注：目前只是微信组聊天室客户发言时需检测，只针对fxApi(外汇)
+     * @param mobile
+     * @param accountNo
+     * @param ip
+     * @param callback
+     * @returns {{flag: number}}
+     */
+    checkFxAClient:function(mobile,accountNo,ip,callback){
+        var flagResult={flag:0};
+        var submitInfo={
+            customerNumber:accountNo,
+            args:'[]',
+            _principal_:{loginName:accountNo, remoteIpAddress:ip, invoker:constant.goldOrfxApiInvoker.fx_website.key, companyId:2}
+        };
+        var sg=this.getApiSignature(submitInfo);
+        if(!sg){
+            callback(flagResult);
+            return flagResult;
+        }
+        submitInfo["_signature_"]=sg;
+        submitInfo['_principal_']=JSON.stringify(submitInfo['_principal_']);
+        request.post({url:(config.gwfxApiUrl+'/account/getCustomerByCustomerNumber'), form: submitInfo}, function(error,response,tmpData){
+           /* logger.info("tmpData:"+tmpData);*/
+            if(!error && common.isValid(tmpData)) {
+                var allData = JSON.parse(tmpData);
+                var result = allData.result,row=null;
+                if (allData && allData.code == 'SUCCESS'&& result!=null && result.code=='OK' && (row=result.result)!=null) {
+                    if (row.mobilePhone!=mobile) {
+                        flagResult.flag = 0;//没有对应记录
+                    }else {
+                        flagResult.flag = 1;//存在记录
+                    }
+                } else {
+                    flagResult.flag = 0;//没有对应记录
+                }
+            }else{
+                logger.error("checkFxAClient["+mobile+","+accountNo+"]->error:"+error);
+            }
+            callback(flagResult);
+        });
     },
     /**
      * 通过手机号检查模拟账户
@@ -560,7 +673,7 @@ var userService = {
     checkSimulateClient:function(mobilePhone,callback){
         request.post({url:(config.simulateApiUrl+'/account/demo/checkEmailMobile'), form: {args:'["","86-'+mobilePhone+'"]'}}, function(error,response,data){
             var hasRow=false;
-            logger.info("checkEmailMobile->error:"+error+";tmpData:"+data);
+            logger.info("checkEmailMobile["+mobilePhone+"]->error:"+error+";tmpData:"+data);
             if(!error && common.isValid(data)) {
                 var allData = JSON.parse(data),result = allData.result;
                 hasRow=(allData.code == 'SUCCESS'&& result!=null && result.code=='1044');

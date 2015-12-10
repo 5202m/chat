@@ -52,14 +52,19 @@ router.post('/approvalMsg', function(req, res) {
  * 离开房间
  */
 router.post('/leaveRoom', function(req, res) {
-    var groupId=req.body["groupId"];
+    var groupIds=req.body["groupIds"],userIds=req.body["userIds"];
     var result={isOK:false,error:null};
-    console.log("leaveRoom->groupId:"+groupId);
-    if(common.isBlank(groupId)){
+    console.log("leaveRoom->groupId:"+groupIds+";userIds:"+userIds);
+    if(common.isBlank(groupIds)){
         result.error=errorMessage.code_1000;
     }else{
-        chatService.leaveRoom(groupId,chatService.leaveRoomFlag.roomClose);
-        result.isOK=true;
+        if(common.isValid(userIds)){//存在用户id
+            chatService.leaveRoomByUserId(groupIds,userIds,chatService.leaveRoomFlag.forcedOut);
+            result.isOK=true;
+        }else{//不存在用户id，则通知房间所有用户下线
+            chatService.leaveRoom(groupIds,chatService.leaveRoomFlag.roomClose);
+            result.isOK=true;
+        }
     }
     res.json(result);
 });

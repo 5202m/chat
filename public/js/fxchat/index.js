@@ -2,7 +2,7 @@
  * 微信聊天室客户端操作类
  * author Alan.wu
  */
-var wechat={
+var fxchat={
     userInfo:null,
     socketUrl:'',
     socket:null,
@@ -22,7 +22,7 @@ var wechat={
         var groupIds= $(".expert-ul li .enter-on").map(function(){
             return $(this).attr("rId");
         }).get();
-        wechat.socket.emit('outRoomGet',{groupIds:groupIds,groupType:wechat.userInfo.groupType});
+        fxchat.socket.emit('outRoomGet',{groupIds:groupIds,groupType:fxchat.userInfo.groupType});
     },
     /**
      * 建立socket
@@ -31,7 +31,7 @@ var wechat={
         this.socket = common.getSocket(io,this.socketUrl,this.userInfo.groupType);
         //建立连接
         this.socket.on('connect',function(){
-            wechat.socket.emit('outRoomLogin',{groupType:wechat.userInfo.groupType});
+            fxchat.socket.emit('outRoomLogin',{groupType:fxchat.userInfo.groupType});
             console.log('connected to server!');
         });
         this.socket.on('disconnect',function(e){
@@ -52,7 +52,7 @@ var wechat={
                         var onlineSize=0,fo=null;
                         for(var gId in data.rOnlineSizeArr){
                             onlineSize=data.rOnlineSizeArr[gId];
-                            wechat.onlineNumArr[gId]=onlineSize;
+                            fxchat.onlineNumArr[gId]=onlineSize;
                             fo=$('.expert-ul li .fj-rens[rId='+gId+']');
                             fo.html(onlineSize);
                             var aDom=$('.expert-ul li .fxs-btn a[rId='+gId+']');
@@ -64,10 +64,10 @@ var wechat={
                                 }
                             }
                         }
-                        wechat.calOnlineTotalNum();
+                        fxchat.calOnlineTotalNum();
                     }
                     if(data.groupId){
-                        wechat.onlineNumArr[data.groupId]=data.onlineUserNum;
+                        fxchat.onlineNumArr[data.groupId]=data.onlineUserNum;
                         if(data.groupId.indexOf("oRoomId")==-1){
                             var fj=$('.expert-ul li .fj-rens[rId='+data.groupId+']'),aDom=$('.expert-ul li .fxs-btn a[rId='+data.groupId+']');
                             fj.html(data.onlineUserNum);
@@ -79,7 +79,7 @@ var wechat={
                                 }
                             }
                         }
-                        wechat.calOnlineTotalNum();
+                        fxchat.calOnlineTotalNum();
                     }
                     break;
                 }
@@ -91,8 +91,8 @@ var wechat={
      */
     calOnlineTotalNum:function(){
         var totalNum=0;
-        for(var i in wechat.onlineNumArr){
-            totalNum+=wechat.onlineNumArr[i];
+        for(var i in fxchat.onlineNumArr){
+            totalNum+=fxchat.onlineNumArr[i];
         }
         $("#onlineUserNum").html(totalNum);
     },
@@ -106,10 +106,10 @@ var wechat={
                 $($('.cen-ulist li')[mySwiper.activeIndex]).addClass('on');
                 if(mySwiper.activeIndex==0){
                     $(".expert-ul").html("");
-                    wechat.setRoomList(mySwiper.activeIndex);
+                    fxchat.setRoomList(mySwiper.activeIndex);
                 }else{
                     $(".tactics-ul").html("");
-                    wechat.setTradeInfo(1);
+                    fxchat.setTradeInfo(1);
                 }
             },
             onInit: function(mySwiper){
@@ -125,16 +125,16 @@ var wechat={
             }
             $('.cen-ulist li').removeClass('on');
             $(this).addClass('on');
-            wechat.tabSwiper.slideTo($(this).index(), 300, true);
+            fxchat.tabSwiper.slideTo($(this).index(), 300, true);
         });
         /*弹出框关闭*/
         $('.pop-close').click(function(){
             $(".videobox iframe,.videobox video").remove();
-            wechat.hideBox();
+            fxchat.hideBox();
         });
         /*点赞+1*/
         $('.expert-intro .conut-on').click(function(){
-            wechat.setPraise($(this));
+            fxchat.setPraise($(this));
         });
         /*交易策略更多操作*/
         $(".moreitem").click(function(){
@@ -148,7 +148,7 @@ var wechat={
                 return false;
             }
             $(this).html("加载中...");
-            wechat.setTradeInfo(pageNo+1);
+            fxchat.setTradeInfo(pageNo+1);
         });
     },
     /**
@@ -224,7 +224,7 @@ var wechat={
      * @param avatar
      */
     getBackUserAvatar:function(avatar){
-      return common.isValid(avatar)?avatar:'/images/wechat/def_b_user.png';
+      return common.isValid(avatar)?avatar:'/images/fxchat/def_b_user.png';
     },
 
     /**
@@ -234,8 +234,8 @@ var wechat={
     setRoomList:function(activeIndex){
         try{
             this.setLoadImg($(".expert-ul"),true);
-            $.getJSON('/wechat/getRoomList',function(dataResult){
-                wechat.setLoadImg($(".expert-ul"),false);
+            $.getJSON('/fxchat/getRoomList',function(dataResult){
+                fxchat.setLoadImg($(".expert-ul"),false);
                 var data=dataResult.rList,serverDate=dataResult.serverDate;
                 if(data){
                     var domArr=[],row=null,defAnalyst=null,analystIdArr=[],openDateAllow=false;
@@ -248,11 +248,11 @@ var wechat={
                         openDateAllow=common.dateTimeWeekCheck(row.openDate,true,serverDate);
                         domArr.push('<li><aside class="fangj-ac clearfix">');
                         domArr.push('<p>'+row.name+'</p>');
-                        domArr.push('<p>开放时间：'+wechat.formatOpenDate(row.openDate,serverDate)+'</p>');
+                        domArr.push('<p>开放时间：'+fxchat.formatOpenDate(row.openDate,serverDate)+'</p>');
                         domArr.push('<p>房间人数：<span class="fj-rens" rId="'+row._id+'">0</span>/<label>'+row.maxCount+'</label></p>');
                         domArr.push('</aside>');
                         domArr.push('<article class="fangj-space clearfix" rId="'+row._id+'" uid="'+defAnalyst._id+'">');
-                        domArr.push('<figure class="fxs-img fl"><img src="'+wechat.getBackUserAvatar(defAnalyst.avatar)+'" width="100%" alt="" /></figure>');
+                        domArr.push('<figure class="fxs-img fl"><img src="'+fxchat.getBackUserAvatar(defAnalyst.avatar)+'" width="100%" alt="" /></figure>');
                         domArr.push('<aside class="fxs-name fl">');
                         domArr.push('<h3>'+defAnalyst.userName+'</h3>');
                         domArr.push('<p>'+defAnalyst.position+'</p>');
@@ -262,9 +262,9 @@ var wechat={
                         analystIdArr.push(defAnalyst._id);
                     }
                    $(".expert-ul").html(domArr.join(""));
-                    wechat.getOutRoomOnline();//页面元素生成则提取在线人数
+                    fxchat.getOutRoomOnline();//页面元素生成则提取在线人数
                     if(analystIdArr.length>0){
-                        $.getJSON('/wechat/getUserPraiseNum',{praiseId:analystIdArr.join(",")},function(data){
+                        $.getJSON('/fxchat/getUserPraiseNum',{praiseId:analystIdArr.join(",")},function(data){
                             if(data){
                                 for(var i in data){
                                     $('.expert-ul li .conut-on[uid='+data[i].praiseId+'] span').html(data[i].praiseNum);
@@ -276,21 +276,21 @@ var wechat={
                     $('.fxs-img,.fxs-name h3').click(function(){
                         var spaceDom=$(this).parents(".fangj-space");
                         $('.expert-intro .conut-on').attr("uid",spaceDom.attr("uid")).find("span").html(spaceDom.find(".conut-on span").html());
-                        $.getJSON('/wechat/getUserInfo',{id:spaceDom.attr("uid")},function(user){
+                        $.getJSON('/fxchat/getUserInfo',{id:spaceDom.attr("uid")},function(user){
                               if(common.isValid(user)){
                                  $(".expert-intro img").attr("src",user.descImg).attr("alt",user.name);
                                  $(".expert-intro .zw").html(user.desc);
                               }
                         });
-                        wechat.showBox($('.expert-intro'));
+                        fxchat.showBox($('.expert-intro'));
                     });
                     /*点赞+1*/
                     $('.expert-ul .conut-on').click(function(){
-                        wechat.setPraise($(this));
+                        fxchat.setPraise($(this));
                     });
                     //进入房间
                     $(".expert-ul .enter-on").click(function(){
-                         wechat.joinRooms($(this));
+                         fxchat.joinRooms($(this));
                     });
                     $('.cen-qhcon').height(function(){
                         return $($('.cen-pubox')[activeIndex]).find('.boxcont').height();
@@ -307,7 +307,7 @@ var wechat={
      */
     setPraise:function(dom){
        try{
-           common.getJson("/wechat/setUserPraise",{clientId:wechat.userInfo.userId,praiseId:dom.attr("uid")},function(result){
+           common.getJson("/fxchat/setUserPraise",{clientId:fxchat.userInfo.userId,praiseId:dom.attr("uid")},function(result){
                var pBoxDom=dom.parents(".expert-intro");
                if(result.isOK) {
                    if(dom.hasClass('conut-on')){
@@ -320,7 +320,7 @@ var wechat={
                        }
                    }
                }else{
-                   wechat.showTipBox("亲，已点赞，当天只能点赞一次！");
+                   fxchat.showTipBox("亲，已点赞，当天只能点赞一次！");
                }
            },true);
        }catch(e){
@@ -333,9 +333,9 @@ var wechat={
     joinRooms:function(dom){
         var li=dom.parents("li"),fens=li.find(".fj-rens"),ft=fens.text(),lb=fens.parent().find("label").text();
         if(parseInt(ft)>=parseInt(lb)){
-            wechat.showTipBox('亲，已满员，换个房间吧');
+            fxchat.showTipBox('亲，已满员，换个房间吧');
         }else{
-            window.location.href="/wechat/room?groupId="+dom.attr("rId");
+            window.location.href="/fxchat/room?groupId="+dom.attr("rId");
         }
     },
     /**
@@ -355,7 +355,7 @@ var wechat={
      */
     getArticleList:function(code,platform,hasContent,curPageNo,pageSize,orderByStr,callback){
         try{
-            $.getJSON('/wechat/getArticleList',{code:code,platform:platform,hasContent:hasContent,pageNo:curPageNo,pageSize:pageSize,orderByStr:orderByStr},function(data){
+            $.getJSON('/fxchat/getArticleList',{code:code,platform:platform,hasContent:hasContent,pageNo:curPageNo,pageSize:pageSize,orderByStr:orderByStr},function(data){
                 /*console.log("getArticleList->data:"+JSON.stringify(data));*/
                 callback(data);
             });
@@ -368,7 +368,7 @@ var wechat={
      * 设置公告
      */
     setBulletin:function(){
-        this.getArticleList("bulletin_system",'wechat_home',"1",1,5,'',function(dataList){
+        this.getArticleList("bulletin_system",'fxchat_home',"1",1,5,'',function(dataList){
             $("#bulletinDomId").html("");
             if(dataList.result==0){
                 $.each(dataList.data,function(i,obj){
@@ -378,7 +378,7 @@ var wechat={
                     }
                 });
                 $("#bulletinDomId li").click(function(){
-                    wechat.showBulletin($(this).children("a").text(),$(this).children("i").text(),$(this).children("span[txt]").html());
+                    fxchat.showBulletin($(this).children("a").text(),$(this).children("i").text(),$(this).children("span[txt]").html());
                 });
                 $(".anounce").slide({ mainCell:".anouncelist" , effect:"topLoop", autoPlay:true, delayTime:600 ,interTime:3000, autoPage: false});
             }
@@ -388,7 +388,7 @@ var wechat={
      * 设置广告
      */
     setAdvertisement:function(){
-        this.getArticleList("advertisement","wechat_home","0",1,3,'{"sequence":"asc"}',function(dataList){
+        this.getArticleList("advertisement","fxchat_home","0",1,3,'{"sequence":"asc"}',function(dataList){
             if(dataList.result==0){
                 var data=dataList.data;
                 for(var i in data){
@@ -423,7 +423,7 @@ var wechat={
         }
         if(code.indexOf('video')!=-1){
             domArr.push('<li id="'+id+'"><a href="javascript:" class="ali video-li"><dl class="trade-cl clearfix">');
-            domArr.push('<dt class="dt-fon fl"><img src="images/wechat/cate2.jpg" width="100%" alt="" /></dt>');
+            domArr.push('<dt class="dt-fon fl"><img src="images/fxchat/cate2.jpg" width="100%" alt="" /></dt>');
             domArr.push('<dd><p class="trade-time"><i>'+row.tag+'</i>'+common.formatterDateTime(createDate)+'</p>');
             //domArr.push('<h3>'+row.title+'</h3>');
             domArr.push('<h3>'+(common.isValid(row.author)?'<span>【'+row.author+'】</span>':'')+row.title+'</h3>');
@@ -431,7 +431,7 @@ var wechat={
             domArr.push('<span class="morelink">详情 &gt;</span>');
             domArr.push('</dd></dl></a></li>');
         }else if(code.indexOf('audio')!=-1){
-            domArr.push('<li id="'+id+'"><dl class="trade-cl clearfix voice-li"><dt class="dt-fon fl"><img src="images/wechat/cate3.jpg" width="100%" alt="" /></dt><dd>');
+            domArr.push('<li id="'+id+'"><dl class="trade-cl clearfix voice-li"><dt class="dt-fon fl"><img src="images/fxchat/cate3.jpg" width="100%" alt="" /></dt><dd>');
             domArr.push('<p class="trade-time"><i>'+row.tag+'</i>'+common.formatterDateTime(createDate)+'</p>');
             //domArr.push('<h3>'+row.title+'</h3>');
             domArr.push('<h3>'+(common.isValid(row.author)?'<span>【'+row.author+'】</span>':'')+row.title+'</h3>');
@@ -439,7 +439,7 @@ var wechat={
             //domArr.push('<a><audio src="'+data.mediaUrl+'" controls="controls" style="width:250px;"></audio><i></i><span></span></a>');
             domArr.push('</dd></dl></li>');
         }else{
-            var author=row.author,avatar='images/wechat/cate1.jpg';
+            var author=row.author,avatar='images/fxchat/cate1.jpg';
             if(common.isValid(row.author)){
                 if(row.author.indexOf(";")!=-1){
                     var authorAvatarArr=row.author.split(";");
@@ -464,7 +464,7 @@ var wechat={
      */
     getArticleInfo:function(id,callback){
         try{
-            $.getJSON('/wechat/getArticleInfo',{id:id},function(data){
+            $.getJSON('/fxchat/getArticleInfo',{id:id},function(data){
                 /*console.log("getArticleList->data:"+JSON.stringify(data));*/
                 callback(data);
             });
@@ -499,13 +499,13 @@ var wechat={
      */
     setTradeInfo:function(pageNo){
         this.setLoadImg($(".tactics-ul"),true);
-        this.getArticleList("trade_strategy","wechat_home","0",(pageNo||1),3,'',function(dataList){
-            wechat.setLoadImg($(".tactics-ul"),false);
+        this.getArticleList("trade_strategy","fxchat_home","0",(pageNo||1),3,'',function(dataList){
+            fxchat.setLoadImg($(".tactics-ul"),false);
             $(".moreitem").html("更多交易策略...");
             if(dataList.result==0){
                 var data=dataList.data;
                 for(var i in data){
-                    $(".tactics-ul").append(wechat.getTradeInfoDom(data[i]));
+                    $(".tactics-ul").append(fxchat.getTradeInfoDom(data[i]));
                 }
                 $('.cen-qhcon').height(function(){
                     return $($('.cen-pubox')[1]).find('.boxcont').height();
@@ -513,13 +513,13 @@ var wechat={
                 $(".voicebar").click(function(){
                     var audioDom=$(this).find("audio"),audio=audioDom[0];
                     /*audioDom.bind("progress",function(){
-                        $(this).parent().find("span").html(wechat.formatAudioPlayTime(this.currentTime));
+                        $(this).parent().find("span").html(fxchat.formatAudioPlayTime(this.currentTime));
                     });*/
                     $(this).addClass("read");
                     if(audio.paused){
                         $(this).addClass("on");
                         audio.play();
-                        $(this).find("span").html(wechat.formatAudioPlayTime(audio.duration));
+                        $(this).find("span").html(fxchat.formatAudioPlayTime(audio.duration));
                     }else{
                         audio.pause();
                         $(this).removeClass("on");
@@ -528,12 +528,12 @@ var wechat={
                 $(".moreitem").attr("pageNo",dataList.pageNo).attr("totalR",dataList.totalRecords);
                 /*文本信息详细*/
                 $('.text-li').click(function(){
-                    wechat.showBox($('.text-info'));
+                    fxchat.showBox($('.text-info'));
                     var id=$(this).parent().attr("id");
                     if(id==$(".text-info").attr("id")){
                         return false;
                     }
-                    wechat.getArticleInfo(id,function(result){
+                    fxchat.getArticleInfo(id,function(result){
                         if(common.isValid(result)){
                             var row=result.detailList[0];
                             $(".text-info").attr("id",result._id);
@@ -546,12 +546,12 @@ var wechat={
                 });
                 /*视频详细*/
                 $('.video-li').click(function(){
-                    wechat.showBox($('.video-info'));
+                    fxchat.showBox($('.video-info'));
                    var id=$(this).parent().attr("id");
                      /* if(id==$(".video-info").attr("id")){
                         return false;
                     }*/
-                    wechat.getArticleInfo(id,function(result){
+                    fxchat.getArticleInfo(id,function(result){
                         $(".videobox").html("");
                         if(common.isValid(result)){
                             var row=result.detailList[0];
@@ -595,13 +595,13 @@ var wechat={
         $(".anounce-info .titlebar2 h3").html(title);
         $(".anounce-info .titlebar2 span").html(date);
         $(".anounce-info .zw").html(content);
-        wechat.showBox($('.anounce-info'));
+        fxchat.showBox($('.anounce-info'));
         $(".anounce-info img").width("100%").height("auto");
     }
 };
 // 初始化
 $(function() {
-    wechat.init();
+    fxchat.init();
 });
 
  

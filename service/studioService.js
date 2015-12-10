@@ -247,7 +247,7 @@ var studioService = {
      */
     checkClientGroup:function(mobilePhone,accountNo,callback){
         var clientGroup=constant.clientGroup.register;
-        userService.checkAClient({accountNo:accountNo,mobilePhone:mobilePhone},function(result){
+        userService.checkAClient(false,mobilePhone,accountNo,'',function(result){
             console.log("checkAClient->flagResult:"+JSON.stringify(result));
             if(result.flag!=0){
                 clientGroup=constant.clientGroup.real;
@@ -298,7 +298,7 @@ var studioService = {
     upgradeClientGroup:function(mobilePhone,clientGroup,callback){
         if(clientGroup === constant.clientGroup.real) {
             //升级到真实
-            userService.checkAClient({accountNo: null, mobilePhone: mobilePhone}, function (result) {
+            userService.checkAClient(false,mobilePhone,null,'', function (result) {
                 console.log("checkAClient->flagResult:" + JSON.stringify(result));
                 if (result.flag != 0) {
                     studioService.updateClientGroup(mobilePhone, constant.clientGroup.real, function (isOk) {

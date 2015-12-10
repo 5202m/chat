@@ -221,6 +221,21 @@ var common = {
      */
     checkArrExist:function(arr){
         return arr && arr.length>0;
+    },
+    /**
+     * 过滤某个属性
+     * @param dataObj
+     * @param fieldStr
+     * @returns {{}}
+     */
+    filterField:function(dataObj,fieldStr){
+        var result={};
+        for(var f in  dataObj){
+            if(!this.containSplitStr(fieldStr,f)){
+                result[f]=dataObj[f];
+            }
+        }
+        return result;
     }
 };
 //导出类

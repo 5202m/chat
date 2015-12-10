@@ -15,14 +15,7 @@ var pmApiService = require('../../service/pmApiService');//引入pmApiService
 var wechatService = require('../../service/wechatService');//引入studioService
 var chatPraiseService = require('../../service/chatPraiseService');//引入chatPraiseService
 var logger=require('../../resources/logConf').getLogger('index');//引入log4js
-/**
- * 数据同步
- */
-/*router.get('/dbSynch',function(req, res){
-    var dbSynchService = require('../../service/dbSynchService');//引入studioService
-    //dbSynchService.synchMember();
-    res.end("the data synch finish!")
-});*/
+
 /**
  * 聊天室页面入口
  */
@@ -64,7 +57,7 @@ router.get('/', function(req, res) {
         if(common.isBlank(chatUser.nickname)){
             chatUser.nickname=chatUser.userId;
         }
-        chatUser.groupType=constant.fromPlatform.wechat;//微信组
+        chatUser.groupType=getGroupType(req);//微信组
         pmApiService.destroyHomeToken(token,function(isTrue){
             if(isTrue||(constant.fromPlatform.pm_mis!=chatUser.fromPlatform && userInfo)) {
                 async.parallel({
@@ -94,12 +87,15 @@ router.get('/', function(req, res) {
                             }
                             viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
                             req.session.wechatUserInfo=chatUser;
-                            viewDataObj.userInfo=JSON.stringify(chatUser);
                             viewDataObj.roomName=roomName;
                             if(constant.fromPlatform.pm_mis==chatUser.fromPlatform){//后台用户从后台进入则直接进入后台模板
-                                res.render("wechat/admin",viewDataObj);
+                                //过滤输出mobilePhone，防止后台页面看到
+                                viewDataObj.userInfo=JSON.stringify(common.filterField(chatUser,"mobilePhone"));
+                                res.render(getRenderPath(req,"admin"),viewDataObj);
                             }else{
-                                res.render("wechat/index",viewDataObj);
+                                //过滤输出mobilePhone,accountNo，防止前台页面看到
+                                viewDataObj.userInfo=JSON.stringify(common.filterField(chatUser,"mobilePhone,accountNo"));
+                                res.render(getRenderPath(req,"index"),viewDataObj);
                             }
                         }
                     });
@@ -118,20 +114,24 @@ router.get('/room', function(req, res) {
     var userInfo=req.session.wechatUserInfo;
     if(userInfo){
         userInfo.groupId=req.query.groupId;
-        chatService.getRoomOnlineNum(constant.fromPlatform.wechat,userInfo.groupId,function(onlineNum){
+        chatService.getRoomOnlineNum(getGroupType(req),userInfo.groupId,function(onlineNum){
             userService.checkRoomStatus(userInfo.groupId,onlineNum,function(isOK){
                 if(isOK){
-                    userService.joinNewRoom(userInfo,function(){
-                        var viewObj={apiUrl:(config.pmApiUrl+'/common'),userInfo:JSON.stringify(userInfo),socketUrl:JSON.stringify(config.socketServerUrl)};
-                        res.render('wechat/room',viewObj);
+                    userService.joinNewRoom(userInfo,function(isTrue,result){
+                        if(isTrue && result && result.mobilePhone){//更新session值
+                            req.session.wechatUserInfo.mobilePhone=result.mobilePhone;
+                            req.session.wechatUserInfo.accountNo=result.accountNo;
+                        }
+                        //进入房间页面，过滤输出mobilePhone,accountNo，防止页面看到
+                        res.render(getRenderPath(req,"room"),{userInfo:JSON.stringify(common.filterField(userInfo,"mobilePhone,accountNo")),socketUrl:JSON.stringify(config.socketServerUrl)});
                     });
                 }else{
-                    res.redirect("/wechat");
+                    res.redirect(req.baseUrl);
                 }
             });
         });
     }else{
-        res.redirect("/wechat");
+        res.redirect(req.baseUrl);
     }
 });
 
@@ -139,12 +139,11 @@ router.get('/room', function(req, res) {
  * 提取手机验证码
  */
 router.get('/getMobileVerifyCode',function(req, res){
-    var mobilePhone=req.query["mobilePhone"];
-    var useType=req.query["useType"];
-    var ip = common.getClientIp(req);
+    var mobilePhone=req.query["mobilePhone"],useType=req.query["useType"],
+    ip = common.getClientIp(req),userTypeMb=getGroupType(req)+"_login";
     if(common.isBlank(mobilePhone)||!common.isMobilePhone(mobilePhone)){
         res.json(errorMessage.code_1003);
-    }else if(useType != "wechat_login"){
+    }else if(useType != userTypeMb){
         res.json(errorMessage.code_1000);
     }else{
         pmApiService.getMobileVerifyCode(mobilePhone, useType, ip, function(result){
@@ -196,7 +195,8 @@ router.post('/checkClient', function(req, res) {
         res.json(errorMessage.code_1003);
     }else{
         //微信登录，校验验证码
-        pmApiService.checkMobileVerifyCode(userInfo.mobilePhone, "wechat_login", verifyCode, function(result){
+        var userTypeMb=getGroupType(req)+"_login";
+        pmApiService.checkMobileVerifyCode(userInfo.mobilePhone, userTypeMb, verifyCode, function(result){
             if(!result || result.result != 0 || !result.data){
                 if(result.errcode === "1006" || result.errcode === "1007"){
                     res.json({'errcode' : result.errcode, 'errmsg' : result.errmsg});
@@ -205,8 +205,8 @@ router.post('/checkClient', function(req, res) {
                 }
             }else{
                 userInfo.ip=common.getClientIp(req);
-                userInfo.groupType=constant.fromPlatform.wechat;//微信组
-                userService.checkClient(userInfo,function(result){
+                userInfo.groupType=getGroupType(req);//微信组
+                userService.checkClient(constant.fromPlatform.fxchat==userInfo.groupType,userInfo,function(result){
                     console.log("result:"+JSON.stringify(result));
                     res.json(result);
                 });
@@ -238,7 +238,7 @@ router.post('/checkSendAuthority', function(req, res) {
     if(common.isBlank(userId)||common.isBlank(groupId)){
         res.json(result);
     }else {
-        userService.checkUserLogin({userId:userId,groupId:groupId,fromPlatform:fromPlatform,accountNo:accountNo,groupType:constant.fromPlatform.wechat},function(row) {
+        userService.checkUserLogin({userId:userId,groupId:groupId,fromPlatform:fromPlatform,accountNo:accountNo,groupType:getGroupType(req)},function(row) {
             if (row) {
                 result.isVisitor=false;
             }
@@ -303,8 +303,8 @@ router.get('/getArticleInfo', function(req, res) {
  * 提取文档信息
  */
 router.get('/getRoomList', function(req, res) {
-    wechatService.getRoomList(function(data){
-        res.json(data);
+    wechatService.getRoomList(getGroupType(req),function(data){
+        res.json({rList:data,serverDate:new Date()});
     });
 });
 
@@ -334,9 +334,10 @@ router.post('/setUserPraise', function(req, res) {
     if(common.isBlank(clientId)||common.isBlank(praiseId)){
         res.json({isOK:false});
     }else{
-        pmApiService.checkChatPraise(clientId,praiseId,function(isOK){
+        var fromPlatform=getGroupType(req);
+        pmApiService.checkChatPraise(clientId,praiseId,fromPlatform,function(isOK){
             if(isOK){
-                chatPraiseService.setPraise(praiseId,constant.chatPraiseType.user);
+                chatPraiseService.setPraise(praiseId,constant.chatPraiseType.user,fromPlatform);
             }
             res.json({isOK:isOK});
         });
@@ -356,4 +357,20 @@ router.get('/getUserPraiseNum', function(req, res) {
     }
 });
 
+/**
+ * 从基本路径提取groupType
+ * 备注：route的基本路径配置的字符基本是与groupType保持一致的，所以可以直接从baseUrl中提取
+ * @param baseUrl
+ */
+function getGroupType(req){
+    return req.baseUrl.replace(/\//g,"");
+}
+
+/**
+ *  提取模板的定向路径
+ * @param pageName
+ */
+function getRenderPath(req,pageName){
+    return getGroupType(req)+"/"+pageName;
+}
 module.exports = router;
