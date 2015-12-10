@@ -2,15 +2,10 @@
  * Created by Administrator on 2015/5/5.
  */
 var constant={
-    weChatGroupId:'wechat',//微信组id
-    chatIndexUrl:{//聊天室主页路径
-        wechat:'chat/wechat',
-        studio:'chat/studioChat',
-        pm_finance:'chat/index'
-    },
     fromPlatform:{//来源平台,区分系统用户登录来源
         pm_mis:'pm_mis',//后台
-        wechat:'wechat',//微信
+        wechat:'wechat',//黄金微解盘
+        fxchat:'fxchat',//外汇微解盘
         studio:'studio'//直播间
     },
     clientGroup:{//客户类别
@@ -31,6 +26,9 @@ var constant={
     chatPraiseType:{//点赞类型
         user:'user',//用户
         article:'article'//文章
+    },
+    goldOrfxApiInvoker:{//黄金外汇restful接口对应的invoker
+        fx_website:{key:'fx_website',value:'2ac168bbb45d396a3315d95aa4215191'}//外汇网站
     }
 };
 //导出常量类

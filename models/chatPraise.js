@@ -8,6 +8,7 @@ var mongoose = require('mongoose')
         _id:ObjectId,
         praiseId : String,
         praiseType : String,
+        fromPlatform:String,
         praiseNum:{type:Number, default:0},
         remark:String
    });
