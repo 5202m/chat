@@ -67,11 +67,18 @@ var studioChat={
           }
           if(!hasExStudio){//非返回直播以及不存在外接直播则播放教学视频
               if(!isBackStudio){
-                  $("#studioTeachId li:first a").click();
+                  if($("#studioTeachId a[class=on]").length<=0){
+                      $("#studioTeachId li:first a").click();
+                  }
               }else{
                   this.setVideo(true);
               }
           }
+      }
+      if(!isBackStudio){//如果是返回直播按钮触发的，无需再次检查
+         setTimeout(function(){//每分钟检查一次
+            studioChat.playVideoByDate(false);
+         },60*1000);
       }
     },
     /**
@@ -91,6 +98,10 @@ var studioChat={
             SewisePlayer.doStop();
             $("#tVideoDiv").parent().hide();
             $("#studioTeachId a").removeClass("on");
+        }
+        //已经是直播相同内容无需切换
+        if($("#studioVideoDiv:visible").length>0 &&  $("#studioVideoDiv embed").attr("src")==url){
+             return;
         }
         $("#studioVideoDiv .img-loading").fadeIn(0).delay(3000).fadeOut(200);
         $("#studioVideoDiv embed").remove();
@@ -181,7 +192,7 @@ var studioChat={
                 autoPage: false,
                 prevCell: ".pro_prev",
                 nextCell: ".pro_next"
-         });
+        });
     },
     /**
      * 提取咨询信息
