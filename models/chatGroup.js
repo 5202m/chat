@@ -37,6 +37,7 @@ var mongoose = require('mongoose')
               yyChannel:{type:String,default:''},//YY频道号
               minChannel:{type:String,default:''},//小频道号
               studioDate:String,//直播时间
+              externalStudio:String,//外接直播
               remark:{type:String,default:''} //备注
            }
         });
