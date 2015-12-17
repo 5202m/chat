@@ -374,7 +374,7 @@ var fxchat={
                 $.each(dataList.data,function(i,obj){
                     if(obj != null){
                         var row=obj.detailList[0];
-                        $("#bulletinDomId").append('<li class="swiper-slide"><span txt="txt" style="display:none;">'+row.content+'</span><a href="javascript:">'+row.title+'</a><i>'+ common.formatterDate(obj.createDate,'.')+'</i></li>');
+                        $("#bulletinDomId").append('<li class="swiper-slide"><span txt="txt" style="display:none;">'+row.content+'</span><a href="javascript:">'+row.title+'</a><i>'+ common.formatterDate(obj.publishStartDate,'.')+'</i></li>');
                     }
                 });
                 $("#bulletinDomId li").click(function(){
@@ -417,7 +417,7 @@ var fxchat={
      * @param row
      */
     getTradeInfoDom:function(data){
-        var domArr=[],code=data.categoryId,id=data._id,createDate=data.createDate,row=data.detailList[0];
+        var domArr=[],code=data.categoryId,id=data._id,createDate=data.publishStartDate,row=data.detailList[0];
         if(!row){
             return;
         }
@@ -538,7 +538,7 @@ var fxchat={
                             var row=result.detailList[0];
                             $(".text-info").attr("id",result._id);
                             $(".text-info .titlebar2 h3").html(row.title);
-                            $(".text-info .titlebar2 label").html(common.formatterDateTime(result.createDate));
+                            $(".text-info .titlebar2 label").html(common.formatterDateTime(result.publishStartDate));
                             $(".text-info .zw").html(row.content||'');
                             $(".text-info .zw img").width("100%").height("auto");
                         }
@@ -557,7 +557,7 @@ var fxchat={
                             var row=result.detailList[0];
                             $(".video-info").attr("id",result._id);
                             $(".video-info .titlebar2 h3").html(row.title||'');
-                            $(".video-info .titlebar2 label").html(common.formatterDateTime(result.createDate));
+                            $(".video-info .titlebar2 label").html(common.formatterDateTime(result.publishStartDate));
                             $(".video-info .brief").html('<i>摘要</i>'+(row.remark||''));
                             if(common.isValid(result.mediaUrl)){
                                 if(result.mediaUrl.indexOf(".html")!=-1){

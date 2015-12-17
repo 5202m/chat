@@ -3,7 +3,7 @@
  * Created by Alan.wu on 2015/4/18.
  */
 var config = {
-    clusterWorkCount:4,//开启多进程个数，如果该参数大于系统内核个数，默认是开启(cpu核数-1)个进程
+    clusterWorkCount:2,//开启多进程个数，如果该参数大于系统内核个数，默认是开启(cpu核数-1)个进程
     sessionConfig:{key:'connect.sid',secret:'pm@chat'},//session 对应key,secret
     redisUrlObj:{ host: '192.168.35.236', port: 6379 },	//链接redis缓存客户端连接
     isAllowCopyHomeUrl:true,//是否允许copy链接（针对微信进入聊天室）

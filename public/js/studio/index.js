@@ -8,6 +8,7 @@ var studioChat={
     web24kPath:'',
     filePath:'',
     apiUrl:'',
+    exStudioStr:'',
     studioDate:'',//直播时间点
     verifyCodeIntervalId:null,
     //信息类型
@@ -28,16 +29,73 @@ var studioChat={
         this.setEvent();
         this.setScrollNotice();
         this.setPrice();
+        this.showLoginOrRegistTip();
     },
     /**
-     * 按时间点播放yy视频,不符合时间点直接播放视频
+     * 显示登陆或注册提示
+     * 备注：停留5分钟则直接提示
      */
-    playVideoByDate:function(){
-      if(common.dateTimeWeekCheck(this.studioDate, true)){
+    showLoginOrRegistTip:function(){
+        if(studioChat.userInfo.clientGroup=='visitor'){
+            window.setTimeout(function(){
+                if($(".blackbg").children("div:visible").length==0){
+                    $(".blackbg").children("div").hide();
+                    $("#loginOrRegistTip,.blackbg").show();
+                }
+            }, 5*60*1000);
+        }
+    },
+    /**按直播时间播放
+     * @param isBackStudio 返回直播
+     * 备注：按时间点播放yy视频,不符合时间点直接播放视频
+     */
+    playVideoByDate:function(isBackStudio){
+      if(common.dateTimeWeekCheck(this.studioDate, false)){
           this.setVideo(true);
       }else{
-          $("#studioTeachId li:first a").click();
+          var hasExStudio=false;
+          if(common.isValid(this.exStudioStr)){
+              var exObj=JSON.parse(this.exStudioStr),row=null;
+              for(var index in exObj){
+                  row=exObj[index];
+                  if(common.dateTimeWeekCheck(row.studioDate, true) &&  common.isValid(row.srcUrl)){
+                      studioChat.setStudioVideoDiv(row.srcUrl);
+                      hasExStudio=true;
+                      break;
+                  }
+              }
+          }
+          if(!hasExStudio){//非返回直播以及不存在外接直播则播放教学视频
+              if(!isBackStudio){
+                  $("#studioTeachId li:first a").click();
+              }else{
+                  this.setVideo(true);
+              }
+          }
       }
+    },
+    /**
+     * 提取embed对应的dom
+     * @param url
+     */
+    getEmbedDom:function(url){
+      return $('<embed src="'+url+'" autostart="true" wmode="Opaque" quality="high" width="100%" height="100%" align="middle" allowScriptAccess="never" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>');
+    },
+
+    /**
+     * 设置直播视频
+     * @param url
+     */
+    setStudioVideoDiv:function(url){
+        if(this.initSewise){//停播放教学视频
+            SewisePlayer.doStop();
+            $("#tVideoDiv").parent().hide();
+            $("#studioTeachId a").removeClass("on");
+        }
+        $("#studioVideoDiv .img-loading").fadeIn(0).delay(3000).fadeOut(200);
+        $("#studioVideoDiv embed").remove();
+        studioChat.getEmbedDom(url).appendTo('#studioVideoDiv');
+        $("#studioVideoDiv").show();
     },
     /**
      * 设置视频
@@ -47,18 +105,13 @@ var studioChat={
     setVideo:function(isYy,thisDom){
         try{
             if(isYy){
-                if(this.initSewise){
-                    SewisePlayer.doStop();
-                    $("#tVideoDiv").parent().hide();
-                }
-                if($("#yyVideoDiv embed").length==0){
-                    var aDom=$("#studioListId a[class~=ing]"),yc=aDom.attr("yc"),mc=aDom.attr("mc");
-                    $('<embed src="'+'http://yy.com/s/'+yc+(common.isValid(mc)?'/'+mc:'')+'/mini.swf" wmode="Opaque" quality="high" width="100%" height="100%" align="middle" allowScriptAccess="never" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>').appendTo('#yyVideoDiv');
-                }
-                $("#yyVideoDiv").show();
+                var aDom=$("#studioListId a[class~=ing]"),yc=aDom.attr("yc"),mc=aDom.attr("mc");
+                studioChat.setStudioVideoDiv('http://yy.com/s/'+yc+(common.isValid(mc)?'/'+mc:'')+'/mini.swf');
             }else{
                     $("#tVideoDiv").parent().show();
-                    $("#yyVideoDiv").hide();
+                    $("#studioVideoDiv").hide();
+                    $("#studioVideoDiv embed").remove();
+                    $("#tVideoDiv .img-loading").fadeIn(0).delay(3000).fadeOut(200);
                     var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
                     if(!this.initSewise){
                         var srcPathAr=[];
@@ -77,7 +130,6 @@ var studioChat={
                         $("#tVideoDiv").get(0).appendChild(script);
                         //this.setSewisePlayerPlay();
                         this.initSewise=true;
-
                         //轮播控制
                         var checkOverFunc = function(){
                             if(!window.SewisePlayer){
@@ -94,14 +146,13 @@ var studioChat={
                                     }
                             	}, 1000);
                             });
-                            
                             SewisePlayer.onStart(function(){
                             	$("#tVideoCtrl").hide();
                             });
                         };
                         checkOverFunc();
                     }else{
-                        SewisePlayer.toPlay(vUrl, title, 0, true);
+                       SewisePlayer.toPlay(vUrl, title, 0, true);
                     }
             }
         }catch(e){
@@ -234,7 +285,7 @@ var studioChat={
                    studioChat.setVideo(false,$(this));
                });
            }
-            studioChat.playVideoByDate();
+            studioChat.playVideoByDate(false);
        });
     },
     /**
@@ -286,7 +337,7 @@ var studioChat={
          * 返回直播
          */
         $(".vbackbtn").click(function(){
-            studioChat.setVideo(true);
+            studioChat.playVideoByDate(true);
         });
 
         /**
@@ -352,13 +403,13 @@ var studioChat={
             if($(this).hasClass("ing")){
                 return false;
             }
-            if("disable"==$(this).attr("disable")){
-                alert("您未获取访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
+            if($(this).hasClass("locked")){
+                alert("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
                 return false;
             }
             common.getJson("/studio/checkGroupAuth",{groupId:this.id},function(result){
                 if(!result.isOK){
-                    alert("您未获取访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
+                    alert("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
                 }else{
                     studioChat.toRefreshView();
                 }
@@ -498,13 +549,15 @@ var studioChat={
         /**
          * 转到登录页面
          */
-        $('#login_a,#login_b,#login_c').click(function(){
+        $('#login_a,#login_b,#login_c,#lrtip_l').click(function(){
+            $("#loginOrRegistTip").hide();
             studioChat.openLoginBox();
         });
         /**
          * 转到注册页面
          */
-        $('#register_a,#register_b,#toRegister').click(function(){
+        $('#register_a,#register_b,#toRegister,#lrtip_r').click(function(){
+            $("#loginOrRegistTip").hide();
             studioChat.openRegistBox();
         });
         //手机号码输入控制验证码样式

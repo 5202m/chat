@@ -32,7 +32,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .jscroll-h,.jscroll-e { border-radius:4px}
 
 /*images*/
-.header-right a i,.pro_notice .pro_btn span,.sro_notice li i,.tab_list li,.te_list .jt_btn span,.te_ctrl a i,.view_select i,.dialog i,.mymsg .closebtn,.toolbar .tbtn,.toolbar .facebtn,.send_select i,.input_area .sendbtn i,.popup_box .pop_close,.resultbar i,.in_line .level i,.in_line .in_rbtn .qu_btn,.video_room a .s2 i ,.hztip i,.videolist_box li i,.tab_list.download li a,.tab_list li a.listmore,.te_list .te_btn b,.dialogbtn a b,.dialog.analyst .headimg b,.upg_cont .btnbar a i,.mod_video .close_ad i{ background-image:url(../../images/studio/img_css.png); background-repeat:no-repeat;}
+.header-right a i,.pro_notice .pro_btn span,.sro_notice li i,.tab_list li,.te_list .jt_btn span,.te_ctrl a i,.view_select i,.dialog i,.mymsg .closebtn,.toolbar .tbtn,.toolbar .facebtn,.send_select i,.input_area .sendbtn i,.popup_box .pop_close,.resultbar i,.in_line .level i,.in_line .in_rbtn .qu_btn,.video_room a .s2 i ,.hztip i,.videolist_box li i,.tab_list.download li a,.tab_list li a.listmore,.te_list .te_btn b,.dialogbtn a b,.dialog.analyst .headimg b,.upg_cont .btnbar a i,.mod_video .close_ad i,.popup_box.hint .kfbtn i{ background-image:url(../../images/studio/img_css.png); background-repeat:no-repeat;}
 .img-loading{position:absolute;bottom:0;display:block;width:25px;height:25px;border-radius:4px;background:url(../../images/loading2.gif) no-repeat center;background-size:40px 40px;z-index:9}
 /*header*/
 .box-header{width:100%;min-width:1024px;background:#fff; height:50px;}
@@ -421,6 +421,15 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .upg_cont .btnbar a:hover{text-decoration:none; color:#b59030}
 .upg_cont .btnbar a:hover i.real{ background-position:0 -30px ; }
 .upg_cont .btnbar a:hover i.mn{ background-position:-30px -30px }
+.popup_box.hint{ background:#fff; width:520px; margin-left:-260px;}
+.reghint{ text-align:center;font-family:'Microsoft YaHei'}
+.reghint strong { color:#b59030; font-size:16pt; line-height:40px;}
+.reghint p { color:#4e4e4e; font-size:12pt; line-height:34px;}
+.hint .btnbar .formbtn{ width:120px;}
+.popup_box.hint .pop_close{ top:20px;}
+.popup_box.hint .kfbtn{ display:inline-block; *display:inline; *zoom:1; width:118px;height:38px; background:#fff; border:1px solid #b59030; text-align:center;border-radius:2px; text-decoration:none; font-size:14pt;  color:#b59030; line-height:38px; margin:0 7px; position:relative}
+.popup_box.hint .kfbtn i{ display:block; position:absolute; left:12px; top:9px; width:22px; height:22px; background-position:-50px -270px; }
+.popup_box.hint .kfbtn span{ padding-left:28px}
 
 /*响应式*/
 .wid1 .te_list .te_btn i{ /*left:12px;*/}

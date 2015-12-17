@@ -148,19 +148,25 @@ function toStudioView(chatUser,groupId,clientGroup,res){
         viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
         viewDataObj.userInfo=JSON.stringify({groupType:constant.fromPlatform.studio,isLogin:chatUser.isLogin,groupId:chatUser.groupId,userId:chatUser.userId,clientGroup:chatUser.clientGroup,nickname:chatUser.nickname,userType:chatUser.userType});
         viewDataObj.userSession=chatUser;
-        var newStudioList=[];
+        var newStudioList=[],rowTmp=null;
         var isVisitor=(constant.clientGroup.visitor==clientGroup);
         data.studioList.forEach(function(row){
-            var nRow=row.toObject();
-            nRow.allowWhisper=common.containSplitStr(nRow.talkStyle,1);
-            nRow.disable=(!common.containSplitStr(nRow.chatStudio.clientGroup,clientGroup));
-            nRow.allowVisitor=isVisitor?(!nRow.disable):common.containSplitStr(nRow.chatStudio.clientGroup,constant.clientGroup.visitor);
-            nRow.chatStudio.yyChannel=common.trim(nRow.chatStudio.yyChannel);
-            nRow.chatStudio.minChannel=common.trim(nRow.chatStudio.minChannel);
-            nRow.chatStudio.remark=common.trim(nRow.chatStudio.remark);
-            nRow.isCurr=(nRow._id==groupId);
-            viewDataObj.studioDate=common.trim(nRow.chatStudio.studioDate);
-            newStudioList.push(nRow);
+            rowTmp={chatStudio:{}};
+            rowTmp.id=row._id;
+            rowTmp.name=row.name;
+            rowTmp.level=row.level;
+            rowTmp.allowWhisper=common.containSplitStr(row.talkStyle,1);
+            rowTmp.disable=(!common.containSplitStr(row.chatStudio.clientGroup,clientGroup));
+            rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.chatStudio.clientGroup,constant.clientGroup.visitor);
+            rowTmp.chatStudio.yyChannel=common.trim(row.chatStudio.yyChannel);
+            rowTmp.chatStudio.minChannel=common.trim(row.chatStudio.minChannel);
+            rowTmp.chatStudio.remark=common.trim(row.chatStudio.remark);
+            rowTmp.isCurr=(row._id==groupId);
+            if(rowTmp.isCurr) {
+                viewDataObj.studioDate = common.trim(row.chatStudio.studioDate);
+                viewDataObj.exStudioStr= common.trim(row.chatStudio.externalStudio);
+            }
+            newStudioList.push(rowTmp);
         });
         viewDataObj.studioList= newStudioList;
         res.render("studio/index",viewDataObj);

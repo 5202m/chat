@@ -46,7 +46,7 @@
                     <div class="btnarea clearfix" id="studioListId">
                         <% if (studioList!='[]') { %>
                         <% studioList.forEach(function(row,index){ %>
-                           <a href="javascript:" id="<%=row._id %>" title="<%=row.chatStudio.remark %>" class="<%if(row.level==1){%>vip<%}else if(row.level==2){%>r1<%} else if(row.level==3){%>r2<%}else{%>normal<%}%> <%if(row.disable){%>locked<%}else if(row.isCurr){%>ing<%}else{%>normal<%}%>" aw="<%= row.allowWhisper %>" yc="<%= row.chatStudio.yyChannel %>" av="<%= row.allowVisitor %>" mc="<%= row.chatStudio.minChannel %>">
+                           <a href="javascript:" id="<%=row.id %>" title="<%=row.chatStudio.remark %>" class="<%if(row.level==1){%>vip<%}else if(row.level==2){%>r1<%} else if(row.level==3){%>r2<%}else{%>normal<%}%> <%if(row.disable){%>locked<%}else if(row.isCurr){%>ing<%}else{%>normal<%}%>" aw="<%= row.allowWhisper %>" yc="<%= row.chatStudio.yyChannel %>" av="<%= row.allowVisitor %>" mc="<%= row.chatStudio.minChannel %>">
                                <span class="s1"><%= row.name %></span><span class="s2"><i></i></span>
                            </a>
                         <% }); %>
@@ -72,9 +72,13 @@
             
         </div>
         <div class="left2">
-            <div class="mod_video" id="yyVideoDiv"></div>
+            <div class="mod_video" id="studioVideoDiv">
+                <i class="img-loading" style="top: 50%;right: 50%;display:none;"></i>
+            </div>
             <div class="mod_video dn">
-                <div id="tVideoDiv" style="width:100%;height: 100%;"></div>
+                <div id="tVideoDiv" style="width:100%;height: 100%;">
+                    <i class="img-loading" style="top: 50%;right: 50%;display:none;"></i>
+                </div>
                 <div class="ctrlblock" id="tVideoCtrl" style="display: none;">
 	                <div class="vcenter">
                         <div class="ctrlbtn replay"><a href="javascript:void(0)"></a><span>重播</span></div>
@@ -623,10 +627,25 @@
         </div>
     </div>
     <!--提示框-->
-    <div class="popup_box" id="tipMsgBox" style="width:500px;">
+    <div class="popup_box dn" id="tipMsgBox" style="width:500px;">
         <div style="height:25px;font-size:20px;"><b>登出提示</b></div>
         <div class="cont" style="padding-top:5px;padding-bottom:5px;">
             <span style="height:30px;font-size:20px;margin-left:20px;"></span>
+        </div>
+    </div>
+
+    <div class="popup_box hint dn" id="loginOrRegistTip">
+        <div class="cont">
+            <div class="reghint">
+                <strong>哇哦！您已经在金道直播室收听了5分钟！</strong>
+                <p>赶快登录直播室畅所欲言，与老师零距离交流吧<br>联系下方老师助理QQ，可免费领取投资宝典</p>
+                <div class="btnbar">
+                    <a href="javascript:" class="formbtn" id="lrtip_l"><span>登录</span></a>
+                    <a href="javascript:" class="formbtn" id="lrtip_r"><span>注册</span></a>
+                    <a href="javascript:" class="kfbtn" onclick="openQQChatByCommonv3();_gaq.push(['_trackEvent', 'studio', 'CS', 'qq']);"><i></i><span>QQ客服</span></a>
+                </div>
+            </div>
+            <a href="javascript:void(0)" class="pop_close">关闭</a>
         </div>
     </div>
 </div>
@@ -648,6 +667,7 @@ studioChat.apiUrl='<%= apiUrl %>';
 studioChat.filePath='<%= filePath %>';
 studioChat.userInfo=JSON.parse('<%- userInfo %>');
 studioChat.studioDate='<%- studioDate %>';
+studioChat.exStudioStr='<%- exStudioStr %>';
 studioChat.socketUrl=JSON.parse('<%- socketUrl %>');
 $(function(){
 	widthCheck();
