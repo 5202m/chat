@@ -25,7 +25,6 @@ var room={
         this.setEvent();
         this.createImgDB();//创建数据库
         this.setAdvertisement();
-        this.setPrice(true);//设置报价
     },
     /**
      * 提取头像
@@ -145,32 +144,17 @@ var room={
     setPrice:function(isInit,symbol,time,fillDataDom){
         try{
             if(isInit){
-                getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache");
+                getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice&symbol=USDX|EURUSD|USDJPY|XAUUSD","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache");
             }else{
                 ChartFactory.create(fillDataDom,{
                     url:"http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getKDataFromCache",
+                    /*wsUrl:'ws://kdata.gwfx.com:8087/websocket.do',//如需推送则配置wsUrl，wsParam，否则无需配置这些数据
+                    wsParam:'service=HqDataWebSocketService&method=pushKData',*/
                     data : {
                         symbol:symbol,
                         dataType :time
                     }
                 },$("#kchatLayer .loading-box"));
-                /* 图表数据的推送更新代码如下，因为只是时、日线无需推送更新
-                if(room.kpSocket){
-                 room.kpSocket.close();
-                 }
-                room.kpSocket = new WebSocket("ws://kdata.gwfx.com:8087/websocket.do");
-                $(room.kpSocket).on("open",function(){
-                    room.kpSocket.send('service=HqDataWebSocketService&method=pushKData&symbol='+symbol+'&dataType='+time);
-                });
-                $(room.kpSocket).on("message",function(e){
-                    var data = e.originalEvent.data;
-                    if(data){
-                        data = JSON.parse(data);
-                        if(data.code.toLowerCase() == "ok" && data.listResult.length){
-                            ChartFactory.add(fillDataDom,data.listResult,time);
-                        }
-                    }
-                });*/
             }
         }catch (e){
             console.error("setPrice->"+e);
@@ -283,10 +267,13 @@ var room={
                 num = Math.max(num,0);
                 return Math.min(num,max);
             };
-
             var start_left,start_top;
             util.toucher($(".hq-btn")[0])
                 .on('singleTap',function(e){
+                    if("1"!=$(this).attr("set_p")){
+                        room.setPrice(true);//设置报价
+                    }
+                    $(this).attr("set_p","1");
                     $('.date-box').show();
                     $(this).hide();
                     room.wrapAdjust();

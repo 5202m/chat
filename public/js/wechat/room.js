@@ -24,7 +24,6 @@ var room={
         this.setEvent();
         this.createImgDB();//创建数据库
         this.setAdvertisement();
-        this.setPrice();//设置报价
     },
     /**
      * 提取头像
@@ -139,7 +138,7 @@ var room={
      */
     setPrice:function(){
         try{
-            getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache");
+            getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice&symbol=XAGUSD|XAUUSD|USDX|CLWTI","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache");
         }catch (e){
             console.error("setPrice->"+e);
         }
@@ -228,6 +227,10 @@ var room={
             var start_left,start_top;
             util.toucher($(".hq-btn")[0])
                 .on('singleTap',function(e){
+                    if("1"!=$(this).attr("set_p")){
+                        room.setPrice();//设置报价
+                    }
+                    $(this).attr("set_p","1");
                     $('.date-box').show();
                     $(this).hide();
                     room.wrapAdjust();

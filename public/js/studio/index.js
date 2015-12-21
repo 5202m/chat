@@ -75,11 +75,11 @@ var studioChat={
               }
           }
       }
-      if(!isBackStudio){//如果是返回直播按钮触发的，无需再次检查
+      /*if(!isBackStudio){//如果是返回直播按钮触发的，无需再次检查
          setTimeout(function(){//每分钟检查一次
             studioChat.playVideoByDate(false);
          },60*1000);
-      }
+      }*/
     },
     /**
      * 提取embed对应的dom
@@ -181,7 +181,7 @@ var studioChat={
      * 设置价格
      */
     setPrice:function(){
-        getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache", {downCss:"red",upCss:'green'});
+        getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice&symbol=XAGUSD|XAUUSD|USDX|CLWTI","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache", {downCss:"red",upCss:'green'});
         $(".pro_notice").slide({
                 titCell: ".num ul",
                 mainCell: ".pro_box",

@@ -1,3 +1,4 @@
+var pkMarketSocket=null;//定义标价socket
 var ChartFactory=!window.Highcharts?null:(function() {
 	var KType = {
 		"realtime" : "1min",
@@ -8,6 +9,7 @@ var ChartFactory=!window.Highcharts?null:(function() {
 	var ErrorCode = {
 		"ELEMENT_NOTFOUND" : "没有指定画板元素",
 		"SERVICE_ERROR" : "服务器出现错误",
+        "NOT_KEEP_WEBSOCKET_ERROR" : "不支持websocket",
 		"NO_DATA" : "没有数据"
 	};
 	var defaultParser = {
@@ -56,7 +58,12 @@ var ChartFactory=!window.Highcharts?null:(function() {
 		}
 	});
 	return {
-		supportWebSocket : window.WebSocket,
+        pkSocket:null,//设置socket
+        closeSocket:function(){
+            if(this.pkSocket){
+                this.pkSocket.close();
+            }
+        },
 		create : function(element, options,loadDom) {
             if(loadDom){
                 loadDom.show();
@@ -91,10 +98,47 @@ var ChartFactory=!window.Highcharts?null:(function() {
 							}
 							var ktype = finalOptions.data.dataType;
 							var chartType = _this.getChartType(ktype);
-							var data = _this.parseData(data.listResult
-									.reverse(), chartType, finalOptions);
+							var data = _this.parseData(data.listResult.reverse(), chartType, finalOptions);
 							_this.createChart(element, chartType, ktype, data);
 							def.resolve();
+                            //请求数据成功后，如外部存在socket请求配置推送，则设置推送，
+                            if(options.wsUrl){
+                                options.wsParam+='&symbol='+options.data.symbol+'&dataType='+options.data.dataType;
+                                console.log("options.wsParam:"+options.wsParam);
+                                if (!window.WebSocket) {
+                                    window.WebSocket = window.MozWebSocket;
+                                }
+                                if (!window.WebSocket) {
+                                    return def.reject(ErrorCode.NOT_KEEP_WEBSOCKET_ERROR);
+                                }
+                                try{
+                                    if(!ChartFactory.pkSocket){
+                                        ChartFactory.pkSocket=new WebSocket(options.wsUrl);
+                                        ChartFactory.pkSocket.onmessage = function (evt) {
+                                            var socketData = evt.originalEvent?evt.originalEvent.data:null;
+                                            if(socketData){
+                                                socketData = JSON.parse(socketData);
+                                                //如符合条件则填充到对应图表中
+                                                if(socketData.code.toLowerCase() == "ok" && socketData.condition && socketData.condition.symbol==options.data.symbol
+                                                    && socketData.condition.dataType==options.data.dataType && socketData.listResult.length>0){
+                                                    ChartFactory.add(element,socketData.listResult,time);
+                                                }
+                                            }
+                                        };
+                                        ChartFactory.pkSocket.onopen = function (event) {
+                                            if (ChartFactory.pkSocket.readyState == WebSocket.OPEN) {
+                                                ChartFactory.pkSocket.send(options.wsParam);
+                                            }
+                                        };
+                                    }else{
+                                        if (ChartFactory.pkSocket.readyState == WebSocket.OPEN) {
+                                            ChartFactory.pkSocket.send(options.wsParam);
+                                        }
+                                    }
+                                }catch(e){
+                                    console.log("get kdata price has error!"+e);
+                                }
+                            }
 						} else {
 							return def.reject(ErrorCode.SERVICE_ERROR);
 						}
@@ -383,26 +427,30 @@ function parseMarketpriceIndex(data,selfOptions) {
         }
     }
 }
-
 function getAllMarketpriceIndex(wsUrl, wsData, httpUrl,selfOptions) {
     try{
-        var socket;
         if (!window.WebSocket) {
             window.WebSocket = window.MozWebSocket;
         }
         if (window.WebSocket) {
-            socket = new WebSocket(wsUrl);
-            socket.onmessage = function (event) {
-                var retData = JSON.parse(event.data);
-                if ("OK" == retData.code) {
-                    parseMarketpriceIndex(retData,selfOptions);
+            if(!pkMarketSocket){
+                pkMarketSocket=new WebSocket(wsUrl);
+                pkMarketSocket.onmessage = function (event) {
+                    var retData = JSON.parse(event.data);
+                    if ("OK" == retData.code) {
+                        parseMarketpriceIndex(retData,selfOptions);
+                    }
+                };
+                pkMarketSocket.onopen = function (event) {
+                    if (pkMarketSocket.readyState == WebSocket.OPEN) {
+                        pkMarketSocket.send(wsData);
+                    }
+                };
+            }else{
+                if (pkMarketSocket.readyState == WebSocket.OPEN) {
+                    pkMarketSocket.send(wsData);
                 }
-            };
-            socket.onopen = function (event) {
-                if (socket.readyState == WebSocket.OPEN) {
-                    socket.send(wsData);
-                }
-            };
+            }
         } else {
             setInterval(function () {
                 getMarketpriceCrossDomainIndex(httpUrl,selfOptions)
