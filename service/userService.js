@@ -633,37 +633,72 @@ var userService = {
      */
     checkFxAClient:function(mobile,accountNo,ip,callback){
         var flagResult={flag:0};
-        var submitInfo={
-            customerNumber:accountNo,
-            args:'[]',
-            _principal_:{loginName:accountNo, remoteIpAddress:ip, invoker:constant.goldOrfxApiInvoker.fx_website.key, companyId:2}
-        };
-        var sg=this.getApiSignature(submitInfo);
-        if(!sg){
+        if(common.isBlank(accountNo)||common.isBlank(mobile)){//检查输入参数是否为空
             callback(flagResult);
             return flagResult;
         }
-        submitInfo["_signature_"]=sg;
-        submitInfo['_principal_']=JSON.stringify(submitInfo['_principal_']);
-        request.post({url:(config.gwfxApiUrl+'/account/getCustomerByCustomerNumber'), form: submitInfo}, function(error,response,tmpData){
-           /* logger.info("tmpData:"+tmpData);*/
-            if(!error && common.isValid(tmpData)) {
-                var allData = JSON.parse(tmpData);
-                var result = allData.result,row=null;
-                if (allData && allData.code == 'SUCCESS'&& result!=null && result.code=='OK' && (row=result.result)!=null) {
-                    if (row.mobilePhone!=mobile) {
-                        flagResult.flag = 0;//没有对应记录
-                    }else {
-                        flagResult.flag = 1;//存在记录
-                    }
-                } else {
-                    flagResult.flag = 0;//没有对应记录
-                }
-            }else{
-                logger.error("checkFxAClient["+mobile+","+accountNo+"]->error:"+error);
+        mobile=common.trim(mobile);
+        accountNo=common.trim(accountNo);
+        if(/^8[0-9]+$/g.test(accountNo)){//GTS2接口
+            var submitInfo={
+                customerNumber:accountNo,
+                args:'[]',
+                _principal_:{loginName:accountNo, remoteIpAddress:ip, invoker:constant.goldOrfxApiInvoker.fx_website.key, companyId:2}
+            };
+            var sg=this.getApiSignature(submitInfo);
+            if(!sg){
+                callback(flagResult);
+                return flagResult;
             }
+            submitInfo["_signature_"]=sg;
+            submitInfo['_principal_']=JSON.stringify(submitInfo['_principal_']);
+            request.post({url:(config.gwfxGTS2ApiUrl+'/account/getCustomerByCustomerNumber'), form: submitInfo}, function(error,response,tmpData){
+                /* logger.info("tmpData:"+tmpData);*/
+                if(!error && common.isValid(tmpData)) {
+                    var allData = JSON.parse(tmpData);
+                    var result = allData.result,row=null;
+                    if (allData && allData.code == 'SUCCESS'&& result!=null && result.code=='OK' && (row=result.result)!=null) {
+                        if (row.mobilePhone!=mobile) {
+                            flagResult.flag = 0;//没有对应记录
+                        }else {
+                            flagResult.flag = 1;//存在记录
+                        }
+                    } else {
+                        flagResult.flag = 0;//没有对应记录
+                    }
+                }else{
+                    logger.error("checkFxAClient by GTS2Api["+mobile+","+accountNo+"]->error:"+error);
+                }
+                callback(flagResult);
+            });
+        }else if(/^(90|95)[0-9]+$/g.test(accountNo)){//MT4接口 NZ：95开头 UK：90开头
+            request.post({url:(config.gwfxMT4ApiUrl+'/ForexCustomerManager/findCustomerInfoByLoginname'), form: {loginname:accountNo}}, function(error,response,tmpData){
+                try{
+                    if(!error && common.isValid(tmpData)) {
+                        var allData = JSON.parse(tmpData);
+                        if (allData && allData.code == 'SUCCESS'&& allData.result!=null) {
+                            if (allData.result.mobilePhone && allData.result.mobilePhone.indexOf(mobile)!=-1) {
+                                flagResult.flag = 1;//存在记录
+                            }else {
+                                flagResult.flag = 0;//没有对应记录
+                            }
+                        } else {
+                            flagResult.flag = 0;//没有对应记录
+                        }
+                    }else{
+                        logger.error("checkFxAClient by MT4Api["+mobile+","+accountNo+"]->error:"+error);
+                    }
+                    callback(flagResult);
+                }catch(e){
+                    logger.info("MT4Api->tmpData:"+tmpData);
+                    logger.error("checkFxAClient by MT4Api["+mobile+","+accountNo+"]->e:"+e);
+                    flagResult.flag=0;
+                    callback(flagResult);
+                }
+            });
+        }else{
             callback(flagResult);
-        });
+        }
     },
     /**
      * 通过手机号检查模拟账户

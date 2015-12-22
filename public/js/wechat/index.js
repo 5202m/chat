@@ -154,10 +154,11 @@ var wechat={
     /**
      * 格式开放日期
      * @param openDate
+     * @param openDateAllow
      * @param serverDate
      * @returns {string}
      */
-    formatOpenDate:function(openDate,serverDate){
+    formatOpenDate:function(openDate,openDateAllow,serverDate){
         var dateStrArr=[];
         serverDate=serverDate?new Date(serverDate):new Date();
         if(common.isValid(openDate)){
@@ -179,10 +180,13 @@ var wechat={
                     if(row.week && serverDate.getDay()!=row.week){
                         continue;
                     }
+                    if(row.week && serverDate.getDay()==row.week && common.isBlank(timeStr)){
+                        timeStr="不限";
+                    }
                     dateStrArr.push(timeStr);
                 }
             }
-            return dateStrArr.length>0?common.arrayUnique(dateStrArr).join(" "):"不限";
+            return dateStrArr.length>0?common.arrayUnique(dateStrArr).join(" "):(openDateAllow?'不限':'不开放');
         }else{
             return "不限";
         }
@@ -238,7 +242,7 @@ var wechat={
                 wechat.setLoadImg($(".expert-ul"),false);
                 var data=dataResult.rList,serverDate=dataResult.serverDate;
                 if(data){
-                    var domArr=[],row=null,defAnalyst=null,analystIdArr=[],openDateAllow=false;
+                    var domArr=[],row=null,defAnalyst=null,analystIdArr=[],openDateAllow=false,openTimeStr='';
                     for(var i in data){
                         row=data[i];
                         defAnalyst=row.defaultAnalyst;
@@ -248,7 +252,7 @@ var wechat={
                         openDateAllow=common.dateTimeWeekCheck(row.openDate,true,serverDate);
                         domArr.push('<li><aside class="fangj-ac clearfix">');
                         domArr.push('<p>'+row.name+'</p>');
-                        domArr.push('<p>开放时间：'+wechat.formatOpenDate(row.openDate,serverDate)+'</p>');
+                        domArr.push('<p>开放时间：'+wechat.formatOpenDate(row.openDate,openDateAllow,serverDate)+'</p>');
                         domArr.push('<p>房间人数：<span class="fj-rens" rId="'+row._id+'">0</span>/<label>'+row.maxCount+'</label></p>');
                         domArr.push('</aside>');
                         domArr.push('<article class="fangj-space clearfix" rId="'+row._id+'" uid="'+defAnalyst._id+'">');
