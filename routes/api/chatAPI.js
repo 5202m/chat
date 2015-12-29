@@ -8,6 +8,7 @@ var router = express.Router();
 /*＃＃＃＃＃＃＃＃＃＃ 引入所需类 ＃＃＃＃＃＃＃＃begin */
 var userService = require('../../service/userService');
 var chatService = require('../../service/chatService');//引入chatService
+var visitorService = require('../../service/visitorService');//引入visitorService
 var common = require('../../util/common'); //引入公共的js
 var errorMessage = require('../../util/errorMessage');
 var constant = require('../../constant/constant');//引入constant
@@ -69,5 +70,23 @@ router.post('/leaveRoom', function(req, res) {
     res.json(result);
 });
 
+/**
+ * 提取访客记录列表
+ */
+router.get('/getChatVisitorList', function(req, res) {
+    visitorService.getChatVisitorList(req.query,function(data){
+        res.json(data);
+    });
+});
+
+/**
+ * 删除访客记录
+ */
+router.post('/deleteChatVisitor', function(req, res) {
+    var type=req.body.groupType,ids=req.body.ids;
+    visitorService.deleteVisitorRecord(type,ids,function(isOK){
+        res.json({isOK:isOK});
+    });
+});
 
 module.exports = router;

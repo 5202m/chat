@@ -236,6 +236,29 @@ var common = {
             }
         }
         return result;
+    },
+    /**
+     * 对象copy
+     * @param srcObj
+     * @param targetObj
+     * @param hasTargetField 包含目标对象属性
+     */
+    copyObject:function(srcObj,targetObj,hasTargetField){
+        if(!targetObj){
+            return srcObj;
+        }
+        for(var row in srcObj){
+            if(targetObj.hasOwnProperty(row) && common.isValid(targetObj[row])){
+                srcObj[row]=targetObj[row];
+            }
+        }
+        if(hasTargetField){
+            for(var row in targetObj){
+                if(!srcObj.hasOwnProperty(row)){
+                    srcObj[row]=targetObj[row];
+                }
+            }
+        }
     }
 };
 //导出类

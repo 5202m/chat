@@ -3,6 +3,7 @@ var constant = require('../constant/constant');//引入constant
 var userService = require('../service/userService');//引入userService服务类
 var messageService = require('../service/messageService');//引入messageService服务类
 var logger=require('../resources/logConf').getLogger('chatService');//引入log4js
+var visitorService=require('../service/visitorService');
 var config=require('../resources/config');//资源文件
 var async = require('async');//引入async
 /**
@@ -228,13 +229,13 @@ var chatService ={
         console.log("spaceName:"+spaceName);
         //连接socket，并处理相关操作
         var spaceObj=this.getSpaceSocket(spaceName,false);
-        ///该注释代码用于与socketIO与session绑定，暂未启用
-        /*var chatSession=require('../routes/chatSession');
+        //该注释代码用于与socketIO与session绑定，暂未启用
+         /*var chatSession=require('../routes/chatSession');
          if(chatSession.session){//绑定session
-         var sharedSession = require("express-socket.io-session");
-         spaceObj.use(sharedSession(chatSession.session, {
-         autoSave: false
-         }));
+             var sharedSession = require("express-socket.io-session");
+             spaceObj.use(sharedSession(chatSession.session, {
+                  autoSave: false
+             }));
          }*/
         spaceObj.on('connection', function(socket){
             //房间外的socket登录
@@ -286,6 +287,9 @@ var chatService ={
                     if(constant.fromPlatform.studio==userInfo.groupType){//如果是直播间网页版聊天室,则追加在线用户的输出
                         //广播自己的在线信息
                         socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:true}});
+                        //直播间创建访客记录
+                        var userAgent=socket.client.request.headers["user-agent"];
+                        visitorService.saveVisitorRecord('online',{userAgent:userAgent,userId:userInfo.userId,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address});
                     }else{
                         chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,true,function(roomNum){
                             var noticeData={type:chatService.noticeType.onlineNum,data:{userId:userInfo.userId,hasRegister:userInfo.hasRegister,groupId:userInfo.groupId,onlineUserNum:roomNum}};
@@ -314,6 +318,8 @@ var chatService ={
                             if(constant.fromPlatform.studio==userInfo.groupType){//如果是直播间,则移除页面在线用户
                                 if(isRemove){
                                     socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:false}});
+                                    //直播间记录离线数据
+                                    visitorService.saveVisitorRecord('offline',{userId:userInfo.userId,groupType:userInfo.groupType,clientStoreId:userInfo.clientStoreId});
                                 }
                                 socket.leave(userInfo.groupId);
                                 if(socket){
@@ -530,11 +536,13 @@ var chatService ={
                         //发送给除自己之外的用户
                         if(isToCSUser && socket){//判断是否发送信息给客服
                             chatService.toOnlineCS(socket,userInfo,{fromUser:userInfo,content:data.content},function(newUserInfo){
-                                userSaveInfo.toUser.nickname=newUserInfo.nickname;
-                                userSaveInfo.toUser.userId=newUserInfo.userId;
-                                userSaveInfo.toUser.talkStyle=1;
-                                console.log("userSaveInfo.toUser:"+JSON.stringify(userSaveInfo.toUser));
-                                messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
+                                if(newUserInfo) {
+                                    userSaveInfo.toUser.nickname = newUserInfo.nickname;
+                                    userSaveInfo.toUser.userId = newUserInfo.userId;
+                                    userSaveInfo.toUser.talkStyle = 1;
+                                    console.log("userSaveInfo.toUser:" + JSON.stringify(userSaveInfo.toUser));
+                                    messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
+                                }
                             });
                         }else{
                             if(isWh){//私聊

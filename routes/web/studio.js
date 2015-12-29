@@ -12,7 +12,9 @@ var userService = require('../../service/userService');//引入userService
 var pmApiService = require('../../service/pmApiService');//引入pmApiService
 var studioService = require('../../service/studioService');//引入studioService
 var chatService = require('../../service/chatService');//引入chatService
+var visitorService = require('../../service/visitorService');//引入visitorService
 var logger=require('../../resources/logConf').getLogger('index');//引入log4js
+
 /**
  * 聊天室页面入口
  */
@@ -92,12 +94,12 @@ router.get('/', function(req, res) {
     }else{
         if(!chatUser){
             chatUser={};
-            var randId=common.randomNumber(6);
             chatUser.isLogin=false;
-            chatUser.userId="visitor_"+randId;
             chatUser.clientGroup=clientGroup;
-            chatUser.nickname='游客_'+randId;
+            chatUser.initVisit=true;//首次访问
             req.session.studioUserInfo=chatUser;
+        }else{
+            chatUser.initVisit=false;//已经在页面
         }
     }
     chatUser.groupType=constant.fromPlatform.studio;
@@ -146,7 +148,7 @@ function toStudioView(chatUser,groupId,clientGroup,res){
         var mainKey=groupId.replace(/_+.*/g,"");//去掉后缀
         chatUser.groupId=groupId;
         viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
-        viewDataObj.userInfo=JSON.stringify({groupType:constant.fromPlatform.studio,isLogin:chatUser.isLogin,groupId:chatUser.groupId,userId:chatUser.userId,clientGroup:chatUser.clientGroup,nickname:chatUser.nickname,userType:chatUser.userType});
+        viewDataObj.userInfo=JSON.stringify({initVisit:chatUser.initVisit,groupType:constant.fromPlatform.studio,isLogin:chatUser.isLogin,groupId:chatUser.groupId,userId:chatUser.userId,clientGroup:chatUser.clientGroup,nickname:chatUser.nickname,userType:chatUser.userType});
         viewDataObj.userSession=chatUser;
         var newStudioList=[],rowTmp=null;
         var isVisitor=(constant.clientGroup.visitor==clientGroup);
@@ -323,6 +325,7 @@ router.post('/login',function(req, res){
     var mobilePhone=req.body["mobilePhone"],
         isPM=req.body["isPM"],
         verifyCode=req.body["verifyCode"],
+        clientStoreId=req.body["clientStoreId"],
         pwd=req.body["pwd"];
     var result={isOK:false,error:null};
     isPM=(isPM=='true');
@@ -341,6 +344,8 @@ router.post('/login',function(req, res){
         //非PM直接登陆
         studioService.login({mobilePhone:mobilePhone,pwd:pwd,groupType:constant.fromPlatform.studio},isPM,function(newResult){
             if(newResult.isOK){
+                //记录访客信息
+                visitorService.saveVisitorRecord("login",{clientStoreId:clientStoreId,groupType:constant.fromPlatform.studio,mobile:mobilePhone});
                 newResult.userInfo.isLogin=true;
                 req.session.studioUserInfo=newResult.userInfo;
                 res.json({isOK:true});
@@ -388,6 +393,7 @@ router.post('/login',function(req, res){
  */
 router.get('/logout', function(req, res) {
     req.session.studioUserInfo=null;
+    visitorService.saveVisitorRecord("logout",{clientStoreId:req.session.clientStoreId,groupType:constant.fromPlatform.studio});
     res.redirect("/studio");
 });
 
@@ -462,4 +468,5 @@ router.post('/upgrade',function(req, res){
         });
     }
 });
+
 module.exports = router;

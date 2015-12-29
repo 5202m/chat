@@ -113,7 +113,7 @@ var ChartFactory=!window.Highcharts?null:(function() {
                                 }
                                 try{
                                     if(!ChartFactory.pkSocket){
-                                        ChartFactory.pkSocket=new WebSocket(options.wsUrl);
+                                        ChartFactory.pkSocket=new ReconnectingWebSocket(options.wsUrl,null,{reconnectInterval: 3000});
                                         ChartFactory.pkSocket.onmessage = function (evt) {
                                             var socketData = evt.originalEvent?evt.originalEvent.data:null;
                                             if(socketData){
@@ -434,7 +434,7 @@ function getAllMarketpriceIndex(wsUrl, wsData, httpUrl,selfOptions) {
         }
         if (window.WebSocket) {
             if(!pkMarketSocket){
-                pkMarketSocket=new WebSocket(wsUrl);
+                pkMarketSocket=new ReconnectingWebSocket(wsUrl,null,{reconnectInterval: 3000});
                 pkMarketSocket.onmessage = function (event) {
                     var retData = JSON.parse(event.data);
                     if ("OK" == retData.code) {

@@ -316,6 +316,18 @@ var common = {
         setInterval(function(){
             $.get("/refreshSession?t="+new Date(),function(){});
         },1000*60*15);//每间隔15分钟刷新下报价信息*/
+    },
+    /**
+     * 随机生成数字
+     * @param _idx  位数
+     * @returns {string}
+     */
+    randomNumber:function(_idx){
+        var str = '';
+        for(var i = 0; i < _idx; i++){
+            str += Math.floor(Math.random() * 10);
+        }
+        return str;
     }
 };
 /**

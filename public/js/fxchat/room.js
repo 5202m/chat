@@ -144,7 +144,7 @@ var room={
     setPrice:function(isInit,symbol,time,fillDataDom){
         try{
             if(isInit){
-                getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice&symbol=USDX|EURUSD|USDJPY|XAUUSD","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache");
+                getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice&symbol=USDX|EURUSD|USDJPY|XAUUSD&dataType=simpleMarketPrice","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache");
             }else{
                 ChartFactory.create(fillDataDom,{
                     url:"http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getKDataFromCache",

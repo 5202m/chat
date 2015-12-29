@@ -53,7 +53,6 @@ var fileZip = {
 };
 
 //微解盘前端js/css压缩
-fileZip.zipJs(["public\\js\\util\\common.js"],'public\\js\\util\\common.min.js');
 fileZip.zipJs(["public\\js\\wechat\\admin.js"],'public\\js\\wechat\\admin.min.js');
 fileZip.zipJs(["public\\js\\wechat\\index.js"],'public\\js\\wechat\\index.min.js');
 fileZip.zipJs(["public\\js\\wechat\\room.js"],'public\\js\\wechat\\room.min.js');
@@ -69,5 +68,10 @@ fileZip.zipJs(["public\\js\\studio\\admin.js"],'public\\js\\studio\\admin.min.js
 fileZip.zipJs(["public\\js\\studio\\index.js"],'public\\js\\studio\\index.min.js');
 fileZip.zipCss(["public\\css\\studio\\admin.css"],'public\\css\\studio\\admin.min.css');
 fileZip.zipCss(["public\\css\\studio\\index.css"],'public\\css\\studio\\index.min.css');
+
+//通用js/css压缩
+fileZip.zipJs(["public\\js\\util\\common.js"],'public\\js\\util\\common.min.js');
+fileZip.zipJs(["public\\js\\lib\\jsWindows\\jsWindows.js"],'public\\js\\lib\\jsWindows\\jsWindows.min.js');
+fileZip.zipCss(["public\\js\\lib\\jsWindows\\jsWindows.css"],'public\\js\\lib\\jsWindows\\jsWindows.min.css');
 //导出类
 module.exports = fileZip;

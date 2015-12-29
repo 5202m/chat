@@ -8,7 +8,8 @@ var studioChat={
     web24kPath:'',
     filePath:'',
     apiUrl:'',
-    exStudioStr:'',
+    studioUrl:'',//直播地址
+    exStudioStr:'',//外接直播JSON字符串
     studioDate:'',//直播时间点
     verifyCodeIntervalId:null,
     //信息类型
@@ -23,13 +24,40 @@ var studioChat={
     oldTalkDivH:0,
     newTalkDivH:0,
     init:function(){
-        this.setSocket();
-        this.setVideoList();
-        this.setVideoAdvertisement();
-        this.setEvent();
-        this.setScrollNotice();
-        this.setPrice();
-        this.showLoginOrRegistTip();
+        this.setVisitStore();//设置访客存储
+        this.setSocket();//设置socket连接
+        this.setVideoList();//设置视频列表
+        this.setVideoAdvertisement();//设置视频广告
+        this.setEvent();//设置各种事件
+        this.setScrollNotice();//设置滚动走马灯
+        this.setPrice();//设置行情报价
+        this.showLoginOrRegistTip();//设置访客5分钟未登录或注册提示
+    },
+    /**
+     * 设置访客存储信息
+     * @param userInfo
+     */
+    setVisitStore:function(){
+        if (!store.enabled){
+            console.log('Local storage is not supported by your browser.');
+            return;
+        }
+        var key='storeInfo_'+this.userInfo.groupType,keyVal=store.get(key);
+        var obj={};
+        if(common.isBlank(keyVal)){
+            var randId=common.randomNumber(6);
+            obj.clientStoreId=new Date().getTime()+"_"+randId;
+            obj.userId="visitor_"+randId;
+            obj.nickname='游客_'+randId;
+            store.set(key,obj);
+        }else{
+            obj=keyVal;
+        }
+        this.userInfo.clientStoreId= obj.clientStoreId;
+        if(this.userInfo.clientGroup && this.userInfo.clientGroup=='visitor'){
+            this.userInfo.userId= obj.userId;
+            this.userInfo.nickname= obj.nickname;
+        }
     },
     /**
      * 显示登陆或注册提示
@@ -59,7 +87,8 @@ var studioChat={
               for(var index in exObj){
                   row=exObj[index];
                   if(common.dateTimeWeekCheck(row.studioDate, true) &&  common.isValid(row.srcUrl)){
-                      studioChat.setStudioVideoDiv(row.srcUrl);
+                      studioChat.studioUrl=row.srcUrl;
+                      studioChat.setStudioVideoDiv(studioChat.studioUrl);
                       hasExStudio=true;
                       break;
                   }
@@ -86,9 +115,8 @@ var studioChat={
      * @param url
      */
     getEmbedDom:function(url){
-      return $('<embed src="'+url+'" autostart="true" wmode="Opaque" quality="high" width="100%" height="100%" align="middle" allowScriptAccess="never" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>');
+      return '<embed src="'+url+'" autostart="true" wmode="Opaque" quality="high" width="100%" height="100%" align="middle" allowScriptAccess="never" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>';
     },
-
     /**
      * 设置直播视频
      * @param url
@@ -105,7 +133,7 @@ var studioChat={
         }
         $("#studioVideoDiv .img-loading").fadeIn(0).delay(3000).fadeOut(200);
         $("#studioVideoDiv embed").remove();
-        studioChat.getEmbedDom(url).appendTo('#studioVideoDiv');
+        $(studioChat.getEmbedDom(url)).appendTo('#studioVideoDiv');
         $("#studioVideoDiv").show();
     },
     /**
@@ -117,7 +145,8 @@ var studioChat={
         try{
             if(isYy){
                 var aDom=$("#studioListId a[class~=ing]"),yc=aDom.attr("yc"),mc=aDom.attr("mc");
-                studioChat.setStudioVideoDiv('http://yy.com/s/'+yc+(common.isValid(mc)?'/'+mc:'')+'/mini.swf');
+                studioChat.studioUrl='http://yy.com/s/'+yc+(common.isValid(mc)?'/'+mc:'')+'/mini.swf';
+                studioChat.setStudioVideoDiv(studioChat.studioUrl);
             }else{
                     $("#tVideoDiv").parent().show();
                     $("#studioVideoDiv").hide();
@@ -181,7 +210,7 @@ var studioChat={
      * 设置价格
      */
     setPrice:function(){
-        getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice&symbol=XAGUSD|XAUUSD|USDX|CLWTI","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache", {downCss:"red",upCss:'green'});
+        getAllMarketpriceIndex("ws://kdata.gwfx.com:8087/websocket.do","service=HqDataWebSocketService&method=pushMarketprice&symbol=XAGUSD|XAUUSD|USDX|CLWTI&dataType=simpleMarketPrice","http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache", {downCss:"red",upCss:'green'});
         $(".pro_notice").slide({
                 titCell: ".num ul",
                 mainCell: ".pro_box",
@@ -285,7 +314,7 @@ var studioChat={
                var row=null;
                for(var i in data){
                    row=data[i].detailList[0];
-                   $("#studioTeachId").append('<li><a title="' + row.title + '" href="javascript:" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'studio\', \'video_play\',$(this).text()]);"><i></i>'+row.title+'</a></li>');
+                   $("#studioTeachId").append('<li><a title="' + row.title + '" href="javascript:" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',$(this).text()]);"><i></i>'+row.title+'</a></li>');
                }
                //播放视频
                $("#studioTeachId li a").click(function(){
@@ -350,7 +379,31 @@ var studioChat={
         $(".vbackbtn").click(function(){
             studioChat.playVideoByDate(true);
         });
-
+        /**
+         * 设置弹框显示直播
+         */
+        $(".vopenbtn").click(function(){
+            //设置弹框显示直播
+            jqWindowsEngineZIndex=100000;
+            $("#studioVideoDiv embed").remove();
+            $("#showOutVideo").newWindow({
+                windowTitle:"视频直播",
+                content: studioChat.getEmbedDom(studioChat.studioUrl),
+                windowType: "video",
+                minimizeButton:false,
+                resizeIcon:'<= =>',
+                width:700,
+                height:620,
+                afterClose:function(){
+                    $("#studioVideoDiv .tipMsg").hide();
+                    studioChat.playVideoByDate(true);
+                }
+            });
+            $("#showOutVideo").click();
+            window.setTimeout(function(){//1秒钟后提示信息
+                $("#studioVideoDiv .tipMsg").show();
+            },1000);
+        });
         /**
          * 视频广告，重播
          */
@@ -549,7 +602,7 @@ var studioChat={
                         var data=dataList.data,row=null;
                         for(var i in data){
                             row=data[i].detailList[0];
-                            $("#downloadTab").append('<li><span>'+row.title+'</span><a href="'+data[i].mediaUrl+'" target="_blank" class="downbtn" onclick="_gaq.push([\'_trackEvent\', \'studio\', \'file_download\',$(this).prev().text()]);" >下载</a></li>');
+                            $("#downloadTab").append('<li><span>'+row.title+'</span><a href="'+data[i].mediaUrl+'" target="_blank" class="downbtn" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'file_download\',$(this).prev().text()]);" >下载</a></li>');
                         }
                         studioChat.setTabInfoScroll();
                     }
@@ -563,6 +616,9 @@ var studioChat={
         $('#login_a,#login_b,#login_c,#lrtip_l').click(function(){
             $("#loginOrRegistTip").hide();
             studioChat.openLoginBox();
+            if(common.isValid($(this).attr("tp"))){
+                _gaq.push(['_trackEvent', 'pmchat_studio', 'login', $(this).attr("tp"),1,true]);
+            }
         });
         /**
          * 转到注册页面
@@ -570,6 +626,9 @@ var studioChat={
         $('#register_a,#register_b,#toRegister,#lrtip_r').click(function(){
             $("#loginOrRegistTip").hide();
             studioChat.openRegistBox();
+            if(common.isValid($(this).attr("tp"))){
+                _gaq.push(['_trackEvent', 'pmchat_studio', 'register', $(this).attr("tp"),1,true]);
+            }
         });
         //手机号码输入控制验证码样式
         $.each(["#loginPmForm input[name=mobilePhone]","#mobileCheckForm input[name=mobilePhone]","#registFrom input[name=mobilePhone]"],function(i,obj){
@@ -672,7 +731,6 @@ var studioChat={
                     $("#pmInfoSetForm .wrong-info").html(result.error.errmsg);
                     return false;
                 }else{
-                    _gaq.push(['_trackEvent', 'studio', 'register','成功注册数']);//记录登录数
                     $("#pmInfoSetBox").hide();
                     studioChat.toRefreshView();
                 }
@@ -686,6 +744,7 @@ var studioChat={
          */
         $("#loginComForm a[tn=loginBtn],#loginPmForm a[tn=loginBtn]").click(function(){
             var thisFormId=$(this).parents("form").attr("id");
+            $("#"+thisFormId+' input[name=clientStoreId]').val(studioChat.userInfo.clientStoreId);
             if(!studioChat.checkFormInput("#"+thisFormId)){
                 return;
             }
@@ -709,7 +768,6 @@ var studioChat={
                     $("#"+thisFormId+" .wrong-info").html(result.error.errmsg);
                     return false;
                 }else{
-                    _gaq.push(['_trackEvent', 'studio', 'login','成功登录数']);//记录登录数
                     $(".blackbg,#loginBox").hide();
                     studioChat.toRefreshView();
                 }
@@ -738,7 +796,6 @@ var studioChat={
                     $("#registFrom .wrong-info").html(result.error.errmsg);
                     return false;
                 }else{
-                    _gaq.push(['_trackEvent', 'studio', 'register','成功注册数']);//记录登录数
                    $("#registTipBox").show();
                    $("#registFromBox").hide();
                    studioChat.toRefreshView();

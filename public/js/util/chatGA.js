@@ -4,7 +4,7 @@
  * 2015-10-21
  */
 var _gaq = _gaq || [];
- _gaq.push(['_setAccount', 'UA-31478987-4']);
+ _gaq.push(['_setAccount', 'UA-31478987-1']);
  _gaq.push(['_setDomainName', '24k.hk']);
  _gaq.push(['_addIgnoredRef', '24k.hk']);
  _gaq.push(['_setAllowLinker', true]);

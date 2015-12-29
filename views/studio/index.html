@@ -9,6 +9,7 @@
 <title>视频直播间 - 金道贵金属打造在线贵金属实盘直播室，掘金之旅在此起航！</title>
 <meta content="实盘直播,贵金属实盘直播室,金道贵金属实盘直播,金道贵金属" name="keywords">
 <meta content="金道贵金属打造在线贵金属实盘直播室，金道研究院名家观点即时播报，让您的掘金之旅在此起航！携手金道，生金有道！" name="description">
+<link href="/js/lib/jsWindows/jsWindows.min.css" rel="stylesheet" type="text/css">
 <link href="/css/studio/index.min.css" type="text/css" rel="stylesheet" />
 <link href="/css/face.css" type="text/css" rel="stylesheet" />
 <!--[if lt IE 9]>
@@ -19,17 +20,17 @@
 <!-- header begin -->
 <div class="box-header">
   <div class="box-header-in clearfix">
-      <h1 class="fl"><a onclick="_gaq.push(['_trackEvent', 'studio', 'logo', 'top']);" class="header-logo hide-t" target="_blank" href="http://www.24k.hk">金道贵金属</a><h2 class="hide-t">视频直播间</h2></h1>
+      <h1 class="fl"><a  onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'logo', 'content_top',1,true]);"  class="header-logo hide-t" target="_blank" href="http://www.24k.hk">金道贵金属</a><h2 class="hide-t">视频直播间</h2></h1>
       <div class="header-right fr clearfix">
-       	<a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank"  onclick="_gaq.push(['_trackEvent', 'studio', 'real_click','访问开立真实账户']);"><i class="real"></i><span>开立真实账户</span></a>
-        <a href="http://oa.24k.hk/zh/account_02.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'studio', 'simulate_click','访问开立模拟账户']);"><i class="mn"></i><span>开立模拟账户</span></a>
-        <a onclick="openLive800Chat();_gaq.push(['_trackEvent','studio', 'CS', 'live800']);" href="javascript:void(0);"><i class="kf"></i><span>在线客服</span></a>
+       	<a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank"  onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'open_real_account', 'content_top',1,true]);"><i class="real"></i><span>开立真实账户</span></a>
+        <a href="http://oa.24k.hk/zh/account_02.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'open_demo_account', 'content_top',1,true]);"><i class="mn"></i><span>开立模拟账户</span></a>
+        <a onclick="openLive800Chat();_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_live800', 'content_top',1,true]);" href="javascript:void(0);"><i class="kf"></i><span>在线客服</span></a>
           <%if(userSession.isLogin){%>
               <a href="javascript:" class="username"><%= userSession.nickname %></a>
               <a href="/studio/logout" class="logout">注销</a>
           <%} else {%>
-              <a href="javascript:" class="login" id="login_a">登录</a>
-              <a href="javascript:" class="register" id="register_a">注册</a>
+              <a href="javascript:" class="login" id="login_a" tp="content_top">登录</a>
+              <a href="javascript:" class="register" id="register_a" tp="content_top">注册</a>
           <%}%>
       </div>
   </div>
@@ -74,6 +75,9 @@
         <div class="left2">
             <div class="mod_video" id="studioVideoDiv">
                 <i class="img-loading" style="top: 50%;right: 50%;display:none;"></i>
+                <a href="javascript:" class="vopenbtn">弹出</a>
+                <a href="javascript:" style="display:none;" id="showOutVideo"></a>
+                <strong style="display:none;font-size:14px;color:#ff0000;top: 50%;right: 30%;position: absolute;" class="tipMsg">视频已用弹出模式播放，如需换成默认模式，请关闭弹出框！</strong>
             </div>
             <div class="mod_video dn">
                 <div id="tVideoDiv" style="width:100%;height: 100%;">
@@ -218,7 +222,7 @@
                 	<a href="javascript:void(0)" class="facebtn">表情</a>
                     <a href="javascript:void(0)" class="tbtn clearbtn">清屏</a>
                     <a href="javascript:void(0)" class="tbtn scrollbtn on">滚动</a>
-                    <a href="javascript:void(0)" onclick="openQQChatByCommonv3();_gaq.push(['_trackEvent', 'studio', 'CS', 'qq']);" class="tbtn qqbtn"><span>QQ</span>客服</a>
+                    <a href="javascript:void(0)" onclick="openQQChatByCommonv3();_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_QQ', 'content_last',1,true]);" class="tbtn qqbtn"><span>QQ</span>客服</a>
 
                     <div class="send_select">
                         <div class="se_cont">
@@ -314,6 +318,7 @@
                 <div class="cont">
                     <form method="post" id="loginComForm">
                         <input type="hidden" name="isPM" value="false"/>
+                        <input type="hidden" name="clientStoreId"/>
                         <div class="formcont">
                             <div class="in_line">
                                 <i class="ic_phone"></i>
@@ -333,9 +338,9 @@
                             <span class="wrong-info"></span>
                         </div>
                         <div class="botbar">
-                            <a href="javascript:" id="toPmLogin">金道用户免注册</a>
+                            <a href="javascript:" id="toPmLogin" tp="content_top">金道用户免注册</a>
                             <span></span>
-                            <a href="javascript:" id="toRegister">还没有账户?</a>
+                            <a href="javascript:" id="toRegister" tp="content_top">还没有账户?</a>
                         </div>
                     </form>
                     <a href="javascript:void(0)" class="pop_close">关闭</a>
@@ -347,6 +352,7 @@
                 <div class="cont">
                     <form method="post" id="loginPmForm">
                         <input type="hidden" name="isPM" value="true"/>
+                        <input type="hidden" name="clientStoreId"/>
                         <div class="formcont">
                             <!--<div class="in_line">
                                 <input type="text" name="accountNo" placeholder="交易账号" class="in1"/>
@@ -369,9 +375,9 @@
                         </div>
                    </form>
                     <div class="botbar">
-                        <a href="javascript:" id="login_b">直播间登录</a>
+                        <a href="javascript:" id="login_b" tp="content_top">直播间登录</a>
                         <span></span>
-                        <a href="javascript:" id="register_b">直播间注册</a>
+                        <a href="javascript:" id="register_b" tp="content_top">直播间注册</a>
                     </div>
                     <a href="javascript:void(0)" class="pop_close">关闭</a>
                 </div>
@@ -640,9 +646,9 @@
                 <strong>哇哦！您已经在金道直播室收听了5分钟！</strong>
                 <p>赶快登录直播室畅所欲言，与老师零距离交流吧<br>欢迎您联系下方QQ客服，可免费领取投资宝典</p>
                 <div class="btnbar">
-                    <a href="javascript:" class="formbtn" id="lrtip_l"><span>登录</span></a>
-                    <a href="javascript:" class="formbtn" id="lrtip_r"><span>注册</span></a>
-                    <a href="javascript:" class="kfbtn" onclick="openQQChatByCommonv3();_gaq.push(['_trackEvent', 'studio', 'CS', 'qq']);"><i></i><span>QQ客服</span></a>
+                    <a href="javascript:" class="formbtn" id="lrtip_l" tp="content_tc"><span>登录</span></a>
+                    <a href="javascript:" class="formbtn" id="lrtip_r" tp="content_tc"><span>注册</span></a>
+                    <a href="javascript:" class="kfbtn" onclick="openQQChatByCommonv3();_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_QQ', 'content_tc',1,true]);"><i></i><span>QQ客服</span></a>
                 </div>
             </div>
             <a href="javascript:void(0)" class="pop_close">关闭</a>
@@ -655,6 +661,9 @@
 <script type="text/javascript" src="/js/lib/jscroll.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.superslide.2.1.1.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.xdomainrequest.min.js"></script>
+<script type="text/javascript" src="/js/lib/jsWindows/jsWindows.min.js"></script>
+<script type="text/javascript" src="/js/lib/websocket.min.js"></script>
+<script type="text/javascript" src="/js/lib/store.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.face.js"></script>
 <script type="text/javascript" src="/js/util/chatGA.js"></script>
 <script type="text/javascript" src="/js/lib/newquote.js"></script>

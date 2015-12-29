@@ -123,7 +123,8 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .mod_video img{ width:100%; height:auto; }
 .mod_video .ctrlblock{position:absolute; left:0; top:0; width:100%; height:100%; text-align:center; background:rgba(0,0,0,.7); filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#B2000000,endColorstr=#B2000000); }
 .mod_video .vbackbtn{ background:rgba(181,144,48,.5); display:block; width:43px; height:40px; padding-top:3px; color:#fff; border-radius:2px; font-size:12pt; line-height:14pt; position:absolute; top:10px; right:10px}
-.mod_video .vbackbtn:hover { text-decoration:none}
+.mod_video .vopenbtn{ background:rgba(181,144,48,.5); display:block; width:43px; height:22px; padding-top:3px; color:#fff; border-radius:2px; font-size:12pt; line-height:14pt; position:absolute; top:10px; right:10px}
+.mod_video .vbackbtn:hover,.mod_video .vopenbtn:hover  { text-decoration:none}
 .mod_video .ctrlbtn { display:inline-block; *display:inline; *zoom:1; text-align:center; width:68px; height:110px; margin:0 72px; text-align:center;}
 .mod_video .ctrlbtn a{ display:block; height:68px; width:68px; background-image:url(../../images/studio/ctrlbtn.png); background-repeat:no-repeat; background-position:left top;}
 .mod_video .replay a:hover{ background-position: right top;}
@@ -329,8 +330,8 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .dialogbtn a.d2:hover b{background-position:-70px -355px; }
 
 /*弹出框*/
-.blackbg{ background:rgba(0,0,0,.6); width:100%; height:100%; position:fixed; top:0; left:0; z-index:100002}
-.popup_box{ position:absolute; top:50%; margin-top:-200px; left:50%; height:auto; width:630px; margin-left:-315px; background:url(../../images/studio/popbg.jpg) center top no-repeat; border-radius:2px;font-family:'SimSun';}
+.blackbg{ background:rgba(0,0,0,.6); width:100%; height:100%; position:fixed; top:0; left:0; z-index:110000}
+.popup_box{position:absolute; top:50%; margin-top:-200px; left:50%; height:auto; width:630px; margin-left:-315px; background:url(../../images/studio/popbg.jpg) center top no-repeat; border-radius:2px;font-family:'SimSun';}
 .popup_box .tit { text-indent:-9999px; font-size:0; height:60px; padding-top:21px; background:#fff;border-top-left-radius:2px;border-top-right-radius:2px}
 .popup_box .tit b{ height:60px; display:block; width:100%; background-image:url(../../images/studio/poptit.jpg); background-repeat:no-repeat;}
 .popup_box .tit.t1 b{ background-position:center 0}
