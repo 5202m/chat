@@ -233,10 +233,13 @@ var visitorService = {
                     if (err){
                         callback(null);
                     }else{
-                        var rStartNo=(pageNo-1)*pageSize+1;
+                        var rStartNo=(pageNo-1)*pageSize;
+                        searchArr.push("by");
+                        searchArr.push("store");
+                        searchArr.push('limit');
                         searchArr.push(rStartNo);
-                        searchArr.push(rStartNo+pageSize);
-                        cacheClient.zrangebyscore(searchArr,function (err, data) {
+                        searchArr.push(pageSize);
+                        cacheClient.sort(searchArr,function (err, data) {
                             if (err){
                                 callback(null);
                             }else{

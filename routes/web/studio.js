@@ -89,6 +89,7 @@ router.get('/admin', function(req, res) {
  */
 router.get('/', function(req, res) {
     var chatUser=req.session.studioUserInfo,clientGroup=constant.clientGroup.visitor;
+    var initVisit=req.session.initVisit;
     if(chatUser && chatUser.isLogin){
         clientGroup=chatUser.clientGroup;
     }else{
@@ -96,8 +97,9 @@ router.get('/', function(req, res) {
             chatUser={};
             chatUser.isLogin=false;
             chatUser.clientGroup=clientGroup;
-            chatUser.initVisit=true;//首次访问
+            chatUser.initVisit=(initVisit!=null||initVisit!=undefined)?initVisit:true;//首次访问
             req.session.studioUserInfo=chatUser;
+            req.session.initVisit=null;//清空对应值
         }else{
             chatUser.initVisit=false;//已经在页面
         }
@@ -393,6 +395,7 @@ router.post('/login',function(req, res){
  */
 router.get('/logout', function(req, res) {
     req.session.studioUserInfo=null;
+    req.session.initVisit=false;//表示已经进入页面
     visitorService.saveVisitorRecord("logout",{clientStoreId:req.session.clientStoreId,groupType:constant.fromPlatform.studio});
     res.redirect("/studio");
 });

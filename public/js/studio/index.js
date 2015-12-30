@@ -78,7 +78,7 @@ var studioChat={
      * 备注：按时间点播放yy视频,不符合时间点直接播放视频
      */
     playVideoByDate:function(isBackStudio){
-      if(common.dateTimeWeekCheck(this.studioDate, false)){
+      if(common.dateTimeWeekCheck(this.studioDate, true)){
           this.setVideo(true);
       }else{
           var hasExStudio=false;
