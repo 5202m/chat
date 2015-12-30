@@ -302,6 +302,26 @@ var studioChat={
         }
     },
     /**
+     * 查询课程表信息
+     * @param groupType
+     * @param groupId
+     * @param callback (html)
+     */
+    getSyllabus : function(groupType, groupId, callback){
+        try{
+            $.getJSON('/studio/getSyllabus',{groupType:groupType,groupId:groupId},function(data){
+                if(!data || !data.courses){
+                    callback("");
+                    return;
+                }
+                callback(common.formatSyllabus(data.courses, data.currTime, 1));
+            });
+        }catch (e){
+            console.error("getSyllabus->"+e);
+            callback("");
+        }
+    },
+    /**
      * 设置视频
      */
     setVideoList:function(){
@@ -574,15 +594,9 @@ var studioChat={
             }else if(t=='commentTab'){
                 studioChat.setNewsInfo("#commentTab",3,3);
             }else if(t=='studioPlanTab'){
-                studioChat.getArticleList("studio_plan",studioChat.userInfo.groupId,1,1,1,'{"sequence":"asc"}',function(dataList){
-                    $("#studioPlanTab").html("");
-                    if(dataList && dataList.result==0){
-                        var data=dataList.data;
-                        if(data && data.length > 0){
-                            $("#studioPlanTab").html(data[0].detailList[0].content);
-                            studioChat.setTabInfoScroll();
-                        }
-                    }
+                studioChat.getSyllabus(studioChat.userInfo.groupType, studioChat.userInfo.groupId, function(syllabusHtml){
+                    $("#studioPlanTab").html(syllabusHtml);
+                    studioChat.setTabInfoScroll();
                 });
             }else if(t=='bulletinTab'){
                 studioChat.getArticleList("bulletin_system",studioChat.userInfo.groupId,1,1,1,'{"sequence":"asc"}',function(dataList){

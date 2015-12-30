@@ -400,7 +400,6 @@ router.get('/logout', function(req, res) {
     res.redirect("/studio");
 });
 
-
 /**
  * 提取文档信息
  */
@@ -424,6 +423,27 @@ router.get('/getArticleList', function(req, res) {
  */
 router.get('/getClientGroupList', function(req, res) {
     studioService.getClientGroupList(function(data){
+        res.json(data);
+    });
+});
+
+/**
+ * 提取课程安排
+ */
+router.get('/getSyllabus', function(req, res) {
+    var groupType=req.query["groupType"];
+    var groupId=req.query["groupId"];
+    pmApiService.getSyllabus(groupType, groupId, function(data){
+        if(data){
+            var loc_time = new Date();
+            var loc_timeStr = (loc_time.getHours() < 10 ? "0" : "") + loc_time.getHours();
+            loc_timeStr += ":";
+            loc_timeStr += (loc_time.getMinutes() < 10 ? "0" : "") + loc_time.getMinutes();
+            data.currTime = {
+                day : loc_time.getDay(),
+                time : loc_timeStr
+            };
+        }
         res.json(data);
     });
 });

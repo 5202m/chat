@@ -300,6 +300,34 @@ router.get('/getArticleInfo', function(req, res) {
 });
 
 /**
+ * 提取课程安排
+ */
+router.get('/getSyllabus', function(req, res) {
+    var groupType=req.query["groupType"];
+    var groupId=req.query["groupId"];
+    pmApiService.getSyllabus(groupType, groupId, function(data){
+        if(data){
+            var loc_nowTime = new Date();
+            var loc_timeStr = (loc_nowTime.getHours() < 10 ? "0" : "") + loc_nowTime.getHours();
+            loc_timeStr += ":";
+            loc_timeStr += (loc_nowTime.getMinutes() < 10 ? "0" : "") + loc_nowTime.getMinutes();
+            var loc_day = loc_nowTime.getDay();
+            data.currTime = {
+                day : loc_day,
+                time : loc_timeStr
+            };
+            //#月#日-#月#日老师课程表安排，以当前时间计算当周的开始结束日期
+            loc_day = (loc_day + 6) % 7;
+            var loc_startDate = new Date(loc_nowTime.getTime() - loc_day * 86400000);
+            var loc_endDate = new Date(loc_nowTime.getTime() + (6 - loc_day) * 86400000);
+            data.title = (loc_startDate.getMonth() + 1) + '月' + loc_startDate.getDate() + '日-'
+                + (loc_endDate.getMonth() + 1) + '月' + loc_endDate.getDate() + '日老师课程表安排';
+        }
+        res.json(data);
+    });
+});
+
+/**
  * 提取文档信息
  */
 router.get('/getRoomList', function(req, res) {

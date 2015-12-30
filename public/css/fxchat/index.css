@@ -79,6 +79,14 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .anounce li{ position:relative}
 .anounce i{position:absolute;right:0;bottom:0px; height:30px;font:normal 10px arial; line-height:30px;color:#7e7e7f}
 .anounce-info img{ width:100%; height:auto; vertical-align:bottom;}
+.anounce-info table.syllabus{background-color: #BBBBBB; color: #424242; font-size: 14px; margin-bottom: 10px;}
+.anounce-info table.syllabus tr{height: 42px;}
+.anounce-info table.syllabus th{width: 110px; background-color: #E5E5E5; text-align: center; vertical-align: middle;}
+.anounce-info table.syllabus th span{font-size: 80%; font-weight: normal;}
+.anounce-info table.syllabus td{background-color: #fdfdfd; text-align: center; vertical-align: middle;}
+.anounce-info table.syllabus td.prev{color: #757575;}
+.anounce-info table.syllabus td.ing{color: #3181c6;}
+.anounce-info table.syllabus td.next{color: #343434;}
 
 /* 切换内容 */
 .nav-lbox{padding:0 15px;background:#fff}

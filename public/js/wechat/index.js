@@ -369,23 +369,61 @@ var wechat={
         }
     },
     /**
+     * 查询课程表信息
+     * @param groupType
+     * @param groupId
+     * @param callback (html)
+     */
+    getSyllabus : function(groupType, groupId, callback){
+        try{
+            $.getJSON('/wechat/getSyllabus',{groupType:groupType,groupId:groupId},function(data){
+                var loc_html = "";
+                try
+                {
+                    if(data && data.courses)
+                    {
+                        loc_html = common.formatSyllabus(data.courses, data.currTime, 2);
+                    }
+                }
+                catch(e1)
+                {
+                    console.error("getSyllabus->"+e1);
+                    loc_html = "";
+                }
+                var loc_result = "";
+                if(loc_html.length > 0)
+                {
+                    loc_result = '<li class="swiper-slide"><span txt="txt" style="display:none;">'+loc_html+'</span><a href="javascript:">'+data.title+'</a><i>'+ common.formatterDate(data.updateDate,'.')+'</i></li>';
+                }
+                callback(loc_result);
+            });
+        }catch (e){
+            console.error("getSyllabus->"+e);
+            callback("");
+        }
+    },
+    /**
      * 设置公告
      */
     setBulletin:function(){
-        this.getArticleList("bulletin_system",'wechat_home',"1",1,5,'',function(dataList){
-            $("#bulletinDomId").html("");
-            if(dataList.result==0){
-                $.each(dataList.data,function(i,obj){
-                    if(obj != null){
-                        var row=obj.detailList[0];
-                        $("#bulletinDomId").append('<li class="swiper-slide"><span txt="txt" style="display:none;">'+row.content+'</span><a href="javascript:">'+row.title+'</a><i>'+ common.formatterDate(obj.publishStartDate,'.')+'</i></li>');
-                    }
-                });
+        //获取课表
+        wechat.getSyllabus(wechat.userInfo.groupType, '', function(syllabusHtml){
+            $("#bulletinDomId").html(syllabusHtml);
+            //获取公告
+            wechat.getArticleList("bulletin_system",'wechat_home',"1",1,5,'',function(dataList){
+                if(dataList.result==0){
+                    $.each(dataList.data,function(i,obj){
+                        if(obj != null){
+                            var row=obj.detailList[0];
+                            $("#bulletinDomId").append('<li class="swiper-slide"><span txt="txt" style="display:none;">'+row.content+'</span><a href="javascript:">'+row.title+'</a><i>'+ common.formatterDate(obj.publishStartDate,'.')+'</i></li>');
+                        }
+                    });
+                }
                 $("#bulletinDomId li").click(function(){
                     wechat.showBulletin($(this).children("a").text(),$(this).children("i").text(),$(this).children("span[txt]").html());
                 });
                 $(".anounce").slide({ mainCell:".anouncelist" , effect:"topLoop", autoPlay:true, delayTime:600 ,interTime:3000, autoPage: false});
-            }
+            });
         });
     },
     /**
