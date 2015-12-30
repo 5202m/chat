@@ -492,4 +492,11 @@ router.post('/upgrade',function(req, res){
     }
 });
 
+
+/**
+ * 直播测试
+ */
+router.get('/test', function(req, res) {
+    res.render("test/index");
+});
 module.exports = router;

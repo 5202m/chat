@@ -318,9 +318,9 @@ var chatService ={
                             if(constant.fromPlatform.studio==userInfo.groupType){//如果是直播间,则移除页面在线用户
                                 if(isRemove){
                                     socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:false}});
-                                    //直播间记录离线数据
-                                    visitorService.saveVisitorRecord('offline',{userId:userInfo.userId,groupType:userInfo.groupType,clientStoreId:userInfo.clientStoreId});
                                 }
+                                //直播间记录离线数据
+                                visitorService.saveVisitorRecord('offline',{userId:userInfo.userId,groupType:userInfo.groupType,clientStoreId:userInfo.clientStoreId});
                                 socket.leave(userInfo.groupId);
                                 if(socket){
                                     delete socket;

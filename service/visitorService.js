@@ -158,10 +158,10 @@ var visitorService = {
             case 'online':{
                 if(data.initVisit){//首次进入页面，访问次数加1，否则访问次数不变
                     data.visitTimes+=1;
+                    data.onlinePreDate=data.onlineDate;
+                    data.onlineDate=currTime;
                 }
                 data.onlineStatus=1;
-                data.onlinePreDate=data.onlineDate;
-                data.onlineDate=currTime;
                 if(data.userId.indexOf("visitor_")==-1){
                     data.loginStatus=1;
                 }
