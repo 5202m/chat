@@ -77,26 +77,6 @@ var pmApiService = {
     },
 
     /**
-     * 提取课程安排
-     * @param groupType
-     * @param groupId
-     * @param callback
-     */
-    getSyllabus:function(groupType, groupId,callback){
-        request.post({url:this.formatApiUrl('/chat/getSyllabus'), form:{groupType:groupType,groupId:groupId}},function(err, response, data){
-            if(!err){
-                data=JSON.parse(data);
-                if(data.result == 0)
-                {
-                    callback(data.data);
-                    return;
-                }
-            }
-            callback(false);
-        });
-    },
-
-    /**
      * 提取手机验证码
      * @param mobilePhone
      * @param useType

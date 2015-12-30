@@ -10,6 +10,7 @@ var common = require('../../util/common');//引入common
 var errorMessage = require('../../util/errorMessage');
 var userService = require('../../service/userService');//引入userService
 var pmApiService = require('../../service/pmApiService');//引入pmApiService
+var syllabusService = require('../../service/syllabusService');//引入syllabusService
 var studioService = require('../../service/studioService');//引入studioService
 var chatService = require('../../service/chatService');//引入chatService
 var visitorService = require('../../service/visitorService');//引入visitorService
@@ -433,7 +434,7 @@ router.get('/getClientGroupList', function(req, res) {
 router.get('/getSyllabus', function(req, res) {
     var groupType=req.query["groupType"];
     var groupId=req.query["groupId"];
-    pmApiService.getSyllabus(groupType, groupId, function(data){
+    syllabusService.getSyllabus(groupType, groupId, function(data){
         if(data){
             var loc_time = new Date();
             var loc_timeStr = (loc_time.getHours() < 10 ? "0" : "") + loc_time.getHours();

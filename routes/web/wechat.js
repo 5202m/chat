@@ -12,6 +12,7 @@ var userService = require('../../service/userService');//引入userService
 var messageService = require('../../service/messageService');//引入messageService
 var chatService = require('../../service/chatService');//引入chatService
 var pmApiService = require('../../service/pmApiService');//引入pmApiService
+var syllabusService = require('../../service/syllabusService');//引入syllabusService
 var wechatService = require('../../service/wechatService');//引入studioService
 var chatPraiseService = require('../../service/chatPraiseService');//引入chatPraiseService
 var logger=require('../../resources/logConf').getLogger('index');//引入log4js
@@ -305,7 +306,7 @@ router.get('/getArticleInfo', function(req, res) {
 router.get('/getSyllabus', function(req, res) {
     var groupType=req.query["groupType"];
     var groupId=req.query["groupId"];
-    pmApiService.getSyllabus(groupType, groupId, function(data){
+    syllabusService.getSyllabus(groupType, groupId, function(data){
         if(data){
             var loc_nowTime = new Date();
             var loc_timeStr = (loc_nowTime.getHours() < 10 ? "0" : "") + loc_nowTime.getHours();
