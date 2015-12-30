@@ -73,7 +73,7 @@ var studioService = {
         member.findOneAndUpdate(searchObj,{'$set':{'loginPlatform.chatUserGroup.$.pwd':common.getMD5(constant.pwdKey+newPwd)}},function(err,row){
             if(err || !row){
                 logger.error("resetPwd fail:"+err);
-                callback({isOK:false,error:errorMessage.code_1009});
+                callback({isOK:false,error:errorMessage.code_1008});
             }else{
                 callback({isOK:true,error:null});
             }
