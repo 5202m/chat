@@ -124,7 +124,7 @@ var studioChat={
     setStudioVideoDiv:function(url){
         if(this.initSewise){//停播放教学视频
             SewisePlayer.doStop();
-            $("#tVideoDiv").parent().hide();
+            $("#tvDivId").hide();
             $("#studioTeachId a").removeClass("on");
         }
         //已经是直播相同内容无需切换

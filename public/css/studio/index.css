@@ -137,7 +137,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .ctrlblock .close_ad i{ background-position:-30px -270px; display:block; width:7px; height:7px;}
 .ctrlblock .close_ad:hover{ background:#7d7d7d}
 .ctrlblock .vcenter{ text-align:center; width:100%; position:absolute; top:50%; margin-top:-150px; left:0}
-
+.mod_video .tipMsg{display:none;font-size:14px;color:#f6f6f6;top: 50%;right: 30%;position: absolute;}
 .mod_notice{background:rgba(246,246,246,0.1); border-radius:2px; padding:0 10px; height:63px; margin-bottom:5px }
 .pro_notice{ border-bottom:1px solid #3e4d5b; padding:0 22px; position:relative;overflow:hidden;}
 .pro_notice li{ height:31px; float:left; width:100%}
