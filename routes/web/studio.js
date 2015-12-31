@@ -260,6 +260,7 @@ router.post('/reg',function(req, res){
         nickname=req.body["nickname"],
         verifyCode=req.body["verifyCode"],
         clientGroup=req.body["clientGroup"],//主要用于金道用户的首次登录转注册
+        clientStoreId=req.body["clientStoreId"],
         pwd=req.body["pwd"];
     if(common.isBlank(mobilePhone)||common.isBlank(nickname)||common.isBlank(pwd)||(common.isBlank(clientGroup)&&common.isBlank(verifyCode))){
         res.json({isOK:false,error:errorMessage.code_1000});
@@ -274,6 +275,8 @@ router.post('/reg',function(req, res){
                 studioService.studioRegister(userInfo,clientGroup,function(result){
                     if(result.isOK){
                         req.session.studioUserInfo={isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
+                        //记录访客信息
+                        visitorService.saveVisitorRecord("login",{clientStoreId:clientStoreId,groupType:constant.fromPlatform.studio,mobile:mobilePhone});
                     }
                     res.json(result);
                 });
@@ -295,6 +298,8 @@ router.post('/reg',function(req, res){
                     studioService.studioRegister(userInfo,clientGroup,function(result){
                         if(result.isOK){
                             req.session.studioUserInfo={isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
+                            //记录访客信息
+                            visitorService.saveVisitorRecord("login",{clientStoreId:clientStoreId,groupType:constant.fromPlatform.studio,mobile:mobilePhone});
                         }
                         res.json(result);
                     });

@@ -731,6 +731,7 @@ var studioChat={
          * 金道用户验证手机号后，设置昵称等信息
          */
         $("#pmInfoSetBtn").click(function(){
+            $("#pmInfoSetForm input[name=clientStoreId]").val(studioChat.userInfo.clientStoreId);
             if(!studioChat.checkFormInput("#pmInfoSetForm")){
                 return;
             }
@@ -796,6 +797,7 @@ var studioChat={
          * 注册按钮事件
          */
         $("#registBtn").click(function(){
+            $("#registFrom input[name=clientStoreId]").val(studioChat.userInfo.clientStoreId);
             if(!studioChat.checkFormInput("#registFrom")){
                 return;
             }
