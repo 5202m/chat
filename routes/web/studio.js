@@ -447,7 +447,8 @@ router.get('/getSyllabus', function(req, res) {
             loc_timeStr += (loc_time.getMinutes() < 10 ? "0" : "") + loc_time.getMinutes();
             data.currTime = {
                 day : loc_time.getDay(),
-                time : loc_timeStr
+                time : loc_timeStr,
+                timeLong : loc_time.getTime()
             };
         }
         res.json(data);

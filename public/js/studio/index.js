@@ -594,9 +594,20 @@ var studioChat={
             }else if(t=='commentTab'){
                 studioChat.setNewsInfo("#commentTab",3,3);
             }else if(t=='studioPlanTab'){
-                studioChat.getSyllabus(studioChat.userInfo.groupType, studioChat.userInfo.groupId, function(syllabusHtml){
-                    $("#studioPlanTab").html(syllabusHtml);
-                    studioChat.setTabInfoScroll();
+                studioChat.getSyllabus(studioChat.userInfo.groupType, studioChat.userInfo.groupId, function(syllabusView){
+                    var loc_panel = $("#studioPlanTab");
+                    loc_panel.html(syllabusView);
+                    loc_panel.find(".sy_nav a").bind("click", function(){
+                        var loc_this = $(this);
+                        loc_this.siblings(".active").removeClass("active");
+                        loc_this.addClass("active");
+                        var loc_day = loc_this.attr("d");
+                        var loc_panel = loc_this.parent().next();
+                        loc_panel.find("tbody:visible").hide();
+                        loc_panel.find("tbody[d='" + loc_day + "']").show();
+                        studioChat.setTabInfoScroll();
+                    });
+                    loc_panel.find(".sy_nav a.active").trigger("click");
                 });
             }else if(t=='bulletinTab'){
                 studioChat.getArticleList("bulletin_system",studioChat.userInfo.groupId,1,1,1,'{"sequence":"asc"}',function(dataList){

@@ -176,13 +176,19 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .mod_tab .tab_box.on{ display:block;}
 .mod_tab .notice_cont{ padding:15px 40px 0;color:#4e4e4e; line-height:22pt; font-size:11pt;overflow: auto;height: 100%;}
 .mod_tab .notice_cont img{width:100%; height:auto;}
-.mod_tab .notice_cont table.syllabus{background-color: #BBBBBB; color: #424242; font-size: 14px; margin-bottom: 10px;}
-.mod_tab .notice_cont table.syllabus tr{height: 66px;}
-.mod_tab .notice_cont table.syllabus th{width: 110px; background-color: #E5E5E5; text-align: center; vertical-align: middle;}
+.mod_tab .notice_cont .sy_panel{width:100%; margin: 0 auto; background-color: rgba(219,219,219,.9);}
+.mod_tab .notice_cont .sy_panel .sy_nav a{float: left; display: block; color: #757575; font-size: 12pt; padding: 6px 0px 6px 0px; text-align: center; text-decoration: none; line-height: 16px; height: auto;}
+.mod_tab .notice_cont .sy_panel .sy_nav a span{margin-top: 5px; font-size:12px;}
+.mod_tab .notice_cont .sy_panel .sy_nav a.active{ color: #a17d20; background: #f6f6f6;}
+.mod_tab .notice_cont .sy_panel .sy_cont{clear: both;}
+.mod_tab .notice_cont .sy_cont div{padding-top: 5px; background-color: #f6f6f6; display: block; height: auto;}
+.mod_tab .notice_cont table.syllabus{background-color: #BBBBBB; color: #424242; font-size: 14px; margin-bottom: 10px; width: 100%;}
+.mod_tab .notice_cont table.syllabus tbody{display: none;}
+.mod_tab .notice_cont table.syllabus th{background-color: #E5E5E5; text-align: center; vertical-align: middle;}
 .mod_tab .notice_cont table.syllabus td{background-color: #fdfdfd; text-align: center; vertical-align: middle;}
-.mod_tab .notice_cont table.syllabus td.prev{color: #757575;}
-.mod_tab .notice_cont table.syllabus td.ing{color: #3181c6;}
-.mod_tab .notice_cont table.syllabus td.next{color: #343434;}
+.mod_tab .notice_cont table.syllabus tr.prev{color: #757575;}
+.mod_tab .notice_cont table.syllabus tr.ing{color: #3181c6;}
+.mod_tab .notice_cont table.syllabus tr.next{color: #343434;}
 .tab_box .tab_list{ padding:13px 30px 0 30px; padding-top:13px;}
 .tab_list li{ line-height:22pt; font-size:10.5pt; padding-left:24px; background-position:-110px -339px; }
 .tab_list li a{color:#4e4e4e; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block}
