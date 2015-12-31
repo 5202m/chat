@@ -131,7 +131,7 @@ var studioChat={
         if($("#studioVideoDiv:visible").length>0 &&  $("#studioVideoDiv embed").attr("src")==url){
              return;
         }
-        $("#studioVideoDiv .img-loading").fadeIn(0).delay(3000).fadeOut(200);
+        $("#studioVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
         $("#studioVideoDiv embed").remove();
         $(studioChat.getEmbedDom(url)).appendTo('#studioVideoDiv');
         $("#studioVideoDiv").show();
@@ -148,10 +148,10 @@ var studioChat={
                 studioChat.studioUrl='http://yy.com/s/'+yc+(common.isValid(mc)?'/'+mc:'')+'/mini.swf';
                 studioChat.setStudioVideoDiv(studioChat.studioUrl);
             }else{
-                    $("#tVideoDiv").parent().show();
+                    $("#tvDivId").show();
                     $("#studioVideoDiv").hide();
                     $("#studioVideoDiv embed").remove();
-                    $("#tVideoDiv .img-loading").fadeIn(0).delay(3000).fadeOut(200);
+                    $("#tVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
                     var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
                     if(!this.initSewise){
                         var srcPathAr=[];
@@ -390,39 +390,16 @@ var studioChat={
         }
     },
     /**
-     * 事件设置
+     *
+     * 设置视频广告事件
      */
-    setEvent:function(){
+    setVdEvent:function(){
         /**
-         * 返回直播
+         * 视频广告关闭
          */
-        $(".vbackbtn").click(function(){
-            studioChat.playVideoByDate(true);
-        });
-        /**
-         * 设置弹框显示直播
-         */
-        $(".vopenbtn").click(function(){
-            //设置弹框显示直播
-            jqWindowsEngineZIndex=100000;
-            $("#studioVideoDiv embed").remove();
-            $("#showOutVideo").newWindow({
-                windowTitle:"视频直播",
-                content: studioChat.getEmbedDom(studioChat.studioUrl),
-                windowType: "video",
-                minimizeButton:false,
-                resizeIcon:'<= =>',
-                width:700,
-                height:620,
-                afterClose:function(){
-                    $("#studioVideoDiv .tipMsg").hide();
-                    studioChat.playVideoByDate(true);
-                }
-            });
-            $("#showOutVideo").click();
-            window.setTimeout(function(){//1秒钟后提示信息
-                $("#studioVideoDiv .tipMsg").show();
-            },1000);
+        $("#tVideoCtrl a.close_ad").bind("click", function(){
+            $("#tVideoCtrl div.vcenter").css("margin-top", "-68px");
+            $("#tVideoCtrl div.video_ad").hide();
         });
         /**
          * 视频广告，重播
@@ -442,15 +419,69 @@ var studioChat={
             }
             loc_nextDom.find("a").trigger("click");
         });
-
+    },
+    /**
+     * 事件设置
+     */
+    setEvent:function(){
         /**
-         * 视频广告关闭
+         * 返回直播
          */
-        $("#tVideoCtrl a.close_ad").bind("click", function(){
-            $("#tVideoCtrl div.vcenter").css("margin-top", "-68px");
-            $("#tVideoCtrl div.video_ad").hide();
+        $(".vbackbtn").click(function(){
+            studioChat.playVideoByDate(true);
         });
-
+        /**
+         * 设置弹框显示直播
+         */
+        $(".vopenbtn").click(function(){
+            //设置弹框显示直播
+            jqWindowsEngineZIndex=100000;
+            var type=$(this).attr("t");
+            if(type=="s") {
+                $("#studioVideoDiv embed").remove();
+                $("#showOutSV").newWindow({
+                    windowTitle: "视频直播",
+                    content: studioChat.getEmbedDom(studioChat.studioUrl),
+                    windowType: "video",
+                    minimizeButton: false,
+                    resizeIcon: '<= =>',
+                    width: 700,
+                    height: 620,
+                    afterClose: function (content) {
+                        $("#studioVideoDiv .tipMsg").hide();
+                        studioChat.playVideoByDate(true);
+                    }
+                });
+                $("#showOutSV").click();
+                window.setTimeout(function(){//1秒钟后提示信息
+                    $("#studioVideoDiv .tipMsg").show();
+                },1000);
+            }else{
+                $(".vbackbtn").hide();
+                $("#showOutTV").newWindow({
+                    windowTitle: "教学视频",
+                    content: $("#tvDivId .tv-div")[0],
+                    windowType: "video",
+                    minimizeButton: false,
+                    resizeIcon: '<= =>',
+                    width: 700,
+                    height: 620,
+                    afterClose: function (content) {
+                        $("#tv_tipMsg").hide();
+                        $(".vbackbtn").show();
+                        $("#tvDivId").get(0).appendChild(content);
+                        //重设视频广告事件
+                        studioChat.setVdEvent();
+                    }
+                });
+                $("#showOutTV").click();
+                window.setTimeout(function(){//1秒钟后提示信息
+                    $("#tv_tipMsg").show();
+                },1000);
+            }
+        });
+        //设置视频广告事件
+        this.setVdEvent();
         /*咨询对象*/
         $('.te_ctrl .show_btn').click(function(){
             $(".te_list").animate({

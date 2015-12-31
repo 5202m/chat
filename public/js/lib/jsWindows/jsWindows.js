@@ -73,7 +73,7 @@ $.fn.newWindow = function(options){
 		resizeable: true,
 		resizeIcon: "#",
 		windowType: "standard",
-        afterClose:function(){}//关闭后事件
+        afterClose:null//关闭后事件
     };
   
     var options = $.extend(defaults, options);
@@ -239,7 +239,9 @@ $.fn.newWindow = function(options){
 	$windowCloseButton.bind('click', function(e){
 	  $(e.target).parent().parent().fadeOut();
 	  $(e.target).parent().parent().children(".window-content").html("");
-      options.afterClose();
+      if(options.afterClose!=null){
+         options.afterClose(options.content);
+      }
     });
 	
 	$windowContent.click(function(e){
@@ -298,7 +300,11 @@ $.fn.newWindow = function(options){
 				 });
 			}
 			else{
-                $window.children(".window-content").html(options.content);
+                if($.type(options.content)=="object"){
+                    $window.children(".window-content").get(0).appendChild(options.content);
+                }else{
+                    $window.children(".window-content").html(options.content);
+                }
             }
 			if(!options.draggable){
 			    $window.children(".window-titleBar").css("cursor","default");

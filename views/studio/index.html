@@ -75,25 +75,30 @@
         <div class="left2">
             <div class="mod_video" id="studioVideoDiv">
                 <i class="img-loading" style="top: 50%;right: 50%;display:none;"></i>
-                <a href="javascript:" class="vopenbtn">弹出</a>
-                <a href="javascript:" style="display:none;" id="showOutVideo"></a>
+                <a href="javascript:" class="vopenbtn" t="s">弹出</a>
+                <a href="javascript:" style="display:none;" id="showOutSV"></a>
                 <strong style="display:none;font-size:14px;color:#f6f6f6;top: 50%;right: 30%;position: absolute;" class="tipMsg">视频已用弹出模式播放，如需换成默认模式，请关闭弹出框！</strong>
             </div>
-            <div class="mod_video dn">
-                <div id="tVideoDiv" style="width:100%;height: 100%;">
-                    <i class="img-loading" style="top: 50%;right: 50%;display:none;"></i>
-                </div>
-                <div class="ctrlblock" id="tVideoCtrl" style="display: none;">
-	                <div class="vcenter">
-                        <div class="ctrlbtn replay"><a href="javascript:void(0)"></a><span>重播</span></div>
-                        <div class="ctrlbtn nextbtn"><a href="javascript:void(0)"></a><span>下一集</span></div>
-                        <div class="video_ad">
-                            <a href="" target="_blank" class="ad"><img src=""></a>
-                            <a href="javascript:void(0)" class="close_ad"><i></i></a>
+            <div class="mod_video dn" id="tvDivId">
+                <a href="javascript:" style="display:none;" id="showOutTV"></a>
+                <a href="javascript:" class="vopenbtn" t="v">弹出</a>
+                <a href="javascript:" class="vbackbtn">返回<br>直播</a>
+                <strong style="display:none;font-size:14px;color:#f6f6f6;top: 50%;right: 30%;position: absolute;" id="tv_tipMsg" class="tipMsg">视频已用弹出模式播放，如需换成默认模式，请关闭弹出框！</strong>
+                <div style="width:100%;height: 100%;" class="tv-div">
+                    <div id="tVideoDiv" style="width:100%;height: 100%;">
+                        <i class="img-loading" style="top: 50%;right: 50%;display:none;"></i>
+                    </div>
+                    <div class="ctrlblock" id="tVideoCtrl" style="display: none;">
+                        <div class="vcenter">
+                            <div class="ctrlbtn replay"><a href="javascript:void(0)"></a><span>重播</span></div>
+                            <div class="ctrlbtn nextbtn"><a href="javascript:void(0)"></a><span>下一集</span></div>
+                            <div class="video_ad">
+                                <a href="" target="_blank" class="ad"><img src=""></a>
+                                <a href="javascript:void(0)" class="close_ad"><i></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <a href="javascript:" class="vbackbtn">返回<br>直播</a>
             </div>
             <!-- mod_notice begin -->
             <div class="mod_notice">

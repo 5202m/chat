@@ -124,7 +124,7 @@ var visitorService = {
                     if(data && data[1]){
                         if(data[1].length==0){
                             if(type=='online'){
-                                visitorService.modifyDataByType(type,model);//按类型调整要保存的数据结构
+                                visitorService.modifyDataByType(type,model,true);//按类型调整要保存的数据结构
                                 visitorService.createVisitorRecord(model,null,function(isOK){});
                             }
                         }else{
@@ -150,13 +150,14 @@ var visitorService = {
      * 通过输入类型修改数据
      * @param type
      * @param data
+     * @param isFirst 是否首次插入
      */
-    modifyDataByType:function(type,data){
+    modifyDataByType:function(type,data,isFirst){
        var currTime = new Date().getTime();
         switch (type)
         {
             case 'online':{
-                if(data.initVisit){//首次进入页面，访问次数加1，否则访问次数不变
+                if(data.initVisit||isFirst){//首次进入页面，访问次数加1，否则访问次数不变
                     data.visitTimes+=1;
                     data.onlinePreDate=data.onlineDate;
                     data.onlineDate=currTime;

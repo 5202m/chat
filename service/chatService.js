@@ -341,7 +341,7 @@ var chatService ={
                             }
                         });
                     });
-                }else{//服务端断开，房间外socket的客户端断开对应的处理逻辑
+                }else{//房间外socket的客户端断开对应的处理逻辑
                     if(socket.nsp) {
                         var nsp=socket.nsp,socketArr = nsp.sockets, socketTmp = null;
                         if(socket.isOutRoom){//如果是房间外的socket断开，则通知客户端,目前只是微解盘使用
@@ -355,7 +355,7 @@ var chatService ={
                                 }
                                 logger.error('setSocket[disconnect]=>out of room client disconnect,please check!');
                             });
-                        }else{//房间内，且是服务端断开,则需更新在线状态为下线
+                        }else{//服务端断开,则需更新在线状态为下线
                             logger.error('setSocket[disconnect]=>server disconnect,please check!');
                             /*for (var i in socketArr) {
                              socketTmp = socketArr[i];
