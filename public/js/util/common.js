@@ -467,7 +467,7 @@ var common = {
                                 for(var j = 0; j < lenJ; j++){
                                     loc_timeBucket = loc_courses.timeBuckets[j];
                                     loc_timeCls = loc_timeClsFunc(loc_day.day, loc_timeBucket.startTime, loc_timeBucket.endTime, currTime, false);
-                                    loc_html.push('<td class="' + loc_timeCls + '">' + (loc_timeBucket.status == 0 ? "休市" : loc_timeBucket.course[j].lecturer) + '</td>');
+                                    loc_html.push('<td class="' + loc_timeCls + '">' + (loc_timeBucket.course[i].status == 0 ? "休市" : loc_timeBucket.course[i].lecturer) + '</td>');
                                 }
                             }
                             loc_html.push('</tr>');
