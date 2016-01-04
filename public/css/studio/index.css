@@ -181,11 +181,11 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .mod_tab .notice_cont .sy_panel .sy_nav a span{margin-top: 5px; font-size:12px;}
 .mod_tab .notice_cont .sy_panel .sy_nav a.active{ color: #a17d20; background: #f6f6f6;}
 .mod_tab .notice_cont .sy_panel .sy_cont{clear: both;}
-.mod_tab .notice_cont .sy_cont div{padding-top: 5px; background-color: #f6f6f6; display: block; height: auto;}
+.mod_tab .notice_cont .sy_cont div{background-color: #f6f6f6; display: block; height: auto;}
 .mod_tab .notice_cont table.syllabus{background-color: #BBBBBB; color: #424242; font-size: 14px; margin-bottom: 10px; width: 100%;}
 .mod_tab .notice_cont table.syllabus tbody{display: none;}
-.mod_tab .notice_cont table.syllabus th{background-color: #E5E5E5; text-align: center; vertical-align: middle;}
-.mod_tab .notice_cont table.syllabus td{background-color: #fdfdfd; text-align: center; vertical-align: middle;}
+.mod_tab .notice_cont table.syllabus th{background-color: #E5E5E5; text-align: center; vertical-align: middle; border-bottom: 1px solid #BBBBBB;}
+.mod_tab .notice_cont table.syllabus td{background-color: #fdfdfd; text-align: center; vertical-align: middle; border-bottom: 1px solid #BBBBBB;}
 .mod_tab .notice_cont table.syllabus tr.prev{color: #757575;}
 .mod_tab .notice_cont table.syllabus tr.ing{color: #3181c6;}
 .mod_tab .notice_cont table.syllabus tr.next{color: #343434;}

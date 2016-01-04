@@ -396,7 +396,7 @@ var common = {
                         loc_html.push('</div>');
                         //课程
                         loc_html.push('<div class="sy_cont"><div>');
-                        loc_html.push('<table cellpadding="0" cellspacing="1" border="0" class="' + loc_constants.tableCls + '">');
+                        loc_html.push('<table cellpadding="0" cellspacing="0" border="0" class="' + loc_constants.tableCls + '">');
                         var loc_timeBucket = null;
                         var loc_timeCls = null;
                         for(var i = 0; i < loc_dayLen; i++)
