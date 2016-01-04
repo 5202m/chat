@@ -128,13 +128,13 @@ var studioChat={
             $("#studioTeachId a").removeClass("on");
         }
         //已经是直播相同内容无需切换
-        if($("#studioVideoDiv:visible").length>0 &&  $("#studioVideoDiv embed").attr("src")==url){
+        if($("#stVideoDiv:visible").length>0 &&  $("#studioVideoDiv embed").attr("src")==url){
              return;
         }
-        $("#studioVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
+        $("#stVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
         $("#studioVideoDiv embed").remove();
         $(studioChat.getEmbedDom(url)).appendTo('#studioVideoDiv');
-        $("#studioVideoDiv").show();
+        $("#stVideoDiv").show();
     },
     /**
      * 设置视频
@@ -149,7 +149,7 @@ var studioChat={
                 studioChat.setStudioVideoDiv(studioChat.studioUrl);
             }else{
                     $("#tvDivId").show();
-                    $("#studioVideoDiv").hide();
+                    $("#stVideoDiv").hide();
                     $("#studioVideoDiv embed").remove();
                     $("#tVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
                     var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
@@ -194,6 +194,9 @@ var studioChat={
                     }else{
                        SewisePlayer.toPlay(vUrl, title, 0, true);
                     }
+                if($(".window-container #studioVideoDiv").length>0){
+                    $(".vopenbtn[t=v]").click();
+                }
             }
         }catch(e){
             console.error("setVideo has error:"+e);
@@ -421,6 +424,14 @@ var studioChat={
         });
     },
     /**
+     * 播放教学视频
+     */
+    doPlayTeachVideo:function(){
+        if(this.initSewise && SewisePlayer.duration()> SewisePlayer.playTime()) {
+            SewisePlayer.doPlay();
+        }
+    },
+    /**
      * 事件设置
      */
     setEvent:function(){
@@ -438,25 +449,32 @@ var studioChat={
             jqWindowsEngineZIndex=100000;
             var type=$(this).attr("t");
             if(type=="s") {
-                $("#studioVideoDiv embed").remove();
                 $("#showOutSV").newWindow({
                     windowTitle: "视频直播",
-                    content: studioChat.getEmbedDom(studioChat.studioUrl),
+                    content:$("#stVideoDiv .tv-div")[0],
                     windowType: "video",
                     minimizeButton: false,
                     resizeIcon: '<= =>',
                     width: 700,
                     height: 620,
                     afterClose: function (content) {
-                        $("#studioVideoDiv .tipMsg").hide();
-                        studioChat.playVideoByDate(true);
+                        $("#stVideoDiv .tipMsg").hide();
+                        $("#stVideoDiv").get(0).appendChild(content);
+                        $("#stVideoDiv .vopenbtn").show();
                     }
                 });
                 $("#showOutSV").click();
+                $("#stVideoDiv .vopenbtn").hide();
                 window.setTimeout(function(){//1秒钟后提示信息
-                    $("#studioVideoDiv .tipMsg").show();
-                },1000);
+                    $("#stVideoDiv .tipMsg").show();
+                },500);
             }else{
+                if($(".window-container #studioVideoDiv").length>0){
+                    $("#stVideoDiv").get(0).appendChild($("#studioVideoDiv").parent().get(0));
+                    $("#studioVideoDiv embed,.window-container").remove();
+                    $("#stVideoDiv .vopenbtn").show();
+                    $("#stVideoDiv .tipMsg").hide();
+                }
                 $(".vbackbtn").hide();
                 $("#showOutTV").newWindow({
                     windowTitle: "教学视频",
@@ -467,17 +485,20 @@ var studioChat={
                     width: 700,
                     height: 620,
                     afterClose: function (content) {
-                        $("#tv_tipMsg").hide();
-                        $(".vbackbtn").show();
+                        $("#tvDivId .tipMsg").hide();
+                        $(".vbackbtn,#tvDivId .vopenbtn").show();
                         $("#tvDivId").get(0).appendChild(content);
+                        studioChat.doPlayTeachVideo();
                         //重设视频广告事件
                         studioChat.setVdEvent();
                     }
                 });
                 $("#showOutTV").click();
+                $("#tvDivId .vopenbtn").hide();
                 window.setTimeout(function(){//1秒钟后提示信息
-                    $("#tv_tipMsg").show();
-                },1000);
+                    $("#tvDivId .tipMsg").show();
+                    studioChat.doPlayTeachVideo();
+                },500);
             }
         });
         //设置视频广告事件

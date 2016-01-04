@@ -238,7 +238,8 @@ $.fn.newWindow = function(options){
 	
 	$windowCloseButton.bind('click', function(e){
 	  $(e.target).parent().parent().fadeOut();
-	  $(e.target).parent().parent().children(".window-content").html("");
+	  //$(e.target).parent().parent().children(".window-content").html("");
+      $(e.target).parent().parent().remove();
       if(options.afterClose!=null){
          options.afterClose(options.content);
       }
