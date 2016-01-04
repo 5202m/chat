@@ -312,7 +312,7 @@ var studioChat={
      */
     getSyllabus : function(groupType, groupId, callback){
         try{
-            $.getJSON('/studio/getSyllabus',{groupType:groupType,groupId:groupId},function(data){
+            $.getJSON('/studio/getSyllabus?t=' + new Date().getTime(),{groupType:groupType,groupId:groupId},function(data){
                 if(!data || !data.courses){
                     callback("");
                     return;

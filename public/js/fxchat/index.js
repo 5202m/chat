@@ -376,7 +376,7 @@ var fxchat={
      */
     getSyllabus : function(groupType, groupId, callback){
         try{
-            $.getJSON('/fxchat/getSyllabus',{groupType:groupType,groupId:groupId},function(data){
+            $.getJSON('/fxchat/getSyllabus?t=' + new Date().getTime(),{groupType:groupType,groupId:groupId},function(data){
                 var loc_html = "";
                 try
                 {

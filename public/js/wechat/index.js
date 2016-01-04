@@ -376,7 +376,7 @@ var wechat={
      */
     getSyllabus : function(groupType, groupId, callback){
         try{
-            $.getJSON('/wechat/getSyllabus',{groupType:groupType,groupId:groupId},function(data){
+            $.getJSON('/wechat/getSyllabus?t=' + new Date().getTime(),{groupType:groupType,groupId:groupId},function(data){
                 var loc_html = "";
                 try
                 {
