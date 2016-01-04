@@ -414,18 +414,23 @@ var common = {
                                 {
                                     loc_timeBucket = loc_courses.timeBuckets[j];
                                     loc_timeCls = loc_timeClsFunc(loc_courses.days[i].day, loc_timeBucket.startTime, loc_timeBucket.endTime, currTime, false);
-                                    loc_html.push('<tr class="' + loc_timeCls + '">');
-                                    loc_html.push('<td width="25%">' + loc_timeBucket.startTime + '-' + loc_timeBucket.endTime + '</td>');
                                     if(loc_timeBucket.course[i].status == 0)
                                     {
+                                    	//时间段休市
+                                    	loc_html.push('<tr class="' + loc_timeCls + '">');
+                                    	loc_html.push('<td width="25%">' + loc_timeBucket.startTime + '-' + loc_timeBucket.endTime + '</td>');
                                         loc_html.push('<td colspan="2" width="75%">休市</td>');
+                                        loc_html.push('</tr>');
                                     }
-                                    else
+                                    else if(loc_timeBucket.course[i].lecturer)
                                     {
+                                    	//讲师内容不为空才会显示对应的时间段
+                                    	loc_html.push('<tr class="' + loc_timeCls + '">');
+                                    	loc_html.push('<td width="25%">' + loc_timeBucket.startTime + '-' + loc_timeBucket.endTime + '</td>');
                                         loc_html.push('<td width="25%">' + loc_timeBucket.course[i].lecturer + '</td>');
                                         loc_html.push('<td width="50%">' + loc_timeBucket.course[i].title + '</td>');
+                                        loc_html.push('</tr>');
                                     }
-                                    loc_html.push('</tr>');
                                 }
                             }
                             loc_html.push('</tbody>');
