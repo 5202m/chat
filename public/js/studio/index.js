@@ -440,6 +440,9 @@ var studioChat={
          */
         $(".vbackbtn").click(function(){
             studioChat.playVideoByDate(true);
+            if($(".window-container #tVideoDiv").length>0){//如果教学视频打开弹框切直播
+                $(".vopenbtn[t=s]").click();
+            }
         });
         /**
          * 设置弹框显示直播
@@ -448,7 +451,15 @@ var studioChat={
             //设置弹框显示直播
             jqWindowsEngineZIndex=100000;
             var type=$(this).attr("t");
+            var windowContainerStyle={};
             if(type=="s") {
+                if($(".window-container #tVideoDiv").length>0){
+                    $("#tvDivId").get(0).appendChild($("#tVideoDiv").parent().get(0));
+                    $(".window-container").remove();
+                    SewisePlayer.doStop();
+                    $("#tvDivId .vopenbtn").show();
+                    $("#tvDivId .tipMsg").hide();
+                }
                 $("#showOutSV").newWindow({
                     windowTitle: "视频直播",
                     content:$("#stVideoDiv .tv-div")[0],
@@ -475,7 +486,6 @@ var studioChat={
                     $("#stVideoDiv .vopenbtn").show();
                     $("#stVideoDiv .tipMsg").hide();
                 }
-                $(".vbackbtn").hide();
                 $("#showOutTV").newWindow({
                     windowTitle: "教学视频",
                     content: $("#tvDivId .tv-div")[0],
@@ -486,7 +496,7 @@ var studioChat={
                     height: 620,
                     afterClose: function (content) {
                         $("#tvDivId .tipMsg").hide();
-                        $(".vbackbtn,#tvDivId .vopenbtn").show();
+                        $("#tvDivId .vopenbtn").show();
                         $("#tvDivId").get(0).appendChild(content);
                         studioChat.doPlayTeachVideo();
                         //重设视频广告事件

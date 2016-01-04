@@ -122,9 +122,10 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .mod_video{ background:rgba(246,246,246,0.1); text-align:center; vertical-align:middle; height:504px; margin-bottom:5px; overflow:hidden; position:relative}
 .mod_video img{ width:100%; height:auto; }
 .ctrlblock{position:absolute; left:0; top:18px; width:100%; height:100%; text-align:center; background:rgba(0,0,0,.7); filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#B2000000,endColorstr=#B2000000); }
-.mod_video .vbackbtn{z-index:100;background:rgba(181,144,48,.5); display:block; width:43px; height:40px; padding-top:3px; color:#fff; border-radius:2px; font-size:12pt; line-height:14pt; position:absolute; top:10px; right:10px}
+.vbackbtn{z-index:100;background:rgba(181,144,48,.5); display:block; width:63px; height:22px; padding-top:3px; color:#fff; border-radius:2px; font-size:12pt; line-height:14pt; position:absolute; top:10px; right:10px}
 .mod_video .vopenbtn{z-index:100;background:rgba(181,144,48,.5); display:block; width:43px; height:22px; padding-top:3px; color:#fff; border-radius:2px; font-size:12pt; line-height:14pt; position:absolute; top:10px; left:10px}
-.mod_video .vbackbtn:hover,.mod_video .vopenbtn:hover  { text-decoration:none}
+.vbackbtn:hover,.mod_video .vopenbtn:hover  { text-decoration:none}
+.window-content .vbackbtn{top: 26px;padding: 4px 2px 4px 8px;width: 52px;line-height: 16pt;}
 .ctrlblock .ctrlbtn { display:inline-block; *display:inline; *zoom:1; text-align:center; width:68px; height:110px; margin:0 72px; text-align:center;}
 .ctrlblock .ctrlbtn a{ display:block; height:68px; width:68px; background-image:url(../../images/studio/ctrlbtn.png); background-repeat:no-repeat; background-position:left top;}
 .ctrlblock .replay a:hover{ background-position: right top;}

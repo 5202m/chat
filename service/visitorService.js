@@ -39,7 +39,8 @@ var visitorService = {
            loginPreDate:model.loginPreDate,//上次登录时间
            mobile:model.mobile,//手机号
            accountNo:model.accountNo,//账号
-           userAgent:model.userAgent//用户客户端信息
+           userAgent:model.userAgent,//用户客户端信息
+           updateDate:model.updateDate//更新时间
         };
         var key=visitorService.getVRKey(model.groupType);
         if(index){
@@ -157,15 +158,16 @@ var visitorService = {
         switch (type)
         {
             case 'online':{
-                if(data.initVisit||isFirst){//首次进入页面，访问次数加1，否则访问次数不变
+                if((data.initVisit||isFirst) || (data.updateDate && Number(currTime)-Number(data.updateDate)>=1000*60)){//首次进入页面或大于等于60秒，访问次数加1，否则访问次数不变
                     data.visitTimes+=1;
                     data.onlinePreDate=data.onlineDate;
                     data.onlineDate=currTime;
                 }
-                data.onlineStatus=1;
                 if(data.userId.indexOf("visitor_")==-1){
                     data.loginStatus=1;
                 }
+                data.onlineStatus=1;
+                data.updateDate=currTime;
                 break;
             }
             case 'offline':{
