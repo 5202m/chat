@@ -16,8 +16,8 @@ var mongoose = require('mongoose')
 
 var smsInfoSchema = new Schema({
     _id : ObjectId,
-    groupType : String, //聊天室组别
-    groupId : String,   //聊天室编号
+    groupType : {type:String,index:true}, //聊天室组别
+    groupId : {type:String,index:true},   //聊天室编号
     courses : String,   //课程json字符串：{days : [{day: Integer, status : Integer}], timeBuckets : [startTime : String, endTime : String, course : [{lecturer : String, title : String, status : Integer}]]}；备注： status 0-休市, 1-有效, 2-无效
     publishStart : Date, //发布开始时间
     publishEnd : Date, //发布结束时间
