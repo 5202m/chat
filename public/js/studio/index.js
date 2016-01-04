@@ -422,6 +422,13 @@ var studioChat={
             }
             loc_nextDom.find("a").trigger("click");
         });
+        //重设返回直播事件
+        $(".vbackbtn").click(function(){
+            studioChat.playVideoByDate(true);
+            if($(".window-container #tVideoDiv").length>0){//如果教学视频打开弹框切直播
+                $(".vopenbtn[t=s]").click();
+            }
+        });
     },
     /**
      * 播放教学视频
