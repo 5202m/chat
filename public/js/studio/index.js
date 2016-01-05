@@ -703,7 +703,7 @@ var studioChat={
                 });
             }
         });
-        $('.mod_tab .tab_nav a[t=bulletinTab]').click();
+        $(".mod_tab .tab_nav a[t='studioPlanTab']").click();
         /**
          * 转到登录页面
          */
