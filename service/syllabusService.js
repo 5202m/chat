@@ -24,7 +24,6 @@ var syllabusService = {
             publishStart : {$lte : loc_dateNow},
             publishEnd : {$gt : loc_dateNow}
         }, function(err, row){
-            console.info(row);
             if(err){
                 logger.error("查询聊天室课程安排失败!", err);
                 callback(null);
