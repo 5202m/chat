@@ -275,7 +275,7 @@ var chatService ={
                 userInfo.onlineDate=new Date();
                 chatService.setClientSequence(userInfo);
                 socket.userInfo=userInfo;//缓存用户信息
-                userService.updateMemberInfo(userInfo,function(sendMsgCount){
+                userService.updateMemberInfo(userInfo,function(sendMsgCount,dbMobile){
                     socket.userInfo.sendMsgCount=sendMsgCount;
                     socket.join(userInfo.groupId);
                     chatService.setRoomOnlineUser(userInfo,true,function(roomUserArr){
@@ -289,7 +289,7 @@ var chatService ={
                         socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:true}});
                         //直播间创建访客记录
                         var userAgent=socket.client.request.headers["user-agent"];
-                        visitorService.saveVisitorRecord('online',{userAgent:userAgent,userId:userInfo.userId,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address});
+                        visitorService.saveVisitorRecord('online',{userAgent:userAgent,mobile:dbMobile,userId:userInfo.userId,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address});
                     }else{
                         chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,true,function(roomNum){
                             var noticeData={type:chatService.noticeType.onlineNum,data:{userId:userInfo.userId,hasRegister:userInfo.hasRegister,groupId:userInfo.groupId,onlineUserNum:roomNum}};

@@ -276,7 +276,7 @@ router.post('/reg',function(req, res){
                     if(result.isOK){
                         req.session.studioUserInfo={isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
                         //记录访客信息
-                        visitorService.saveVisitorRecord("login",{clientStoreId:clientStoreId,groupType:constant.fromPlatform.studio,mobile:mobilePhone});
+                        visitorService.saveVisitorRecord("login",{clientStoreId:clientStoreId,groupType:constant.fromPlatform.studio,mobile:mobilePhone,ip:common.getClientIp(req)});
                     }
                     res.json(result);
                 });
@@ -299,7 +299,7 @@ router.post('/reg',function(req, res){
                         if(result.isOK){
                             req.session.studioUserInfo={isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
                             //记录访客信息
-                            visitorService.saveVisitorRecord("login",{clientStoreId:clientStoreId,groupType:constant.fromPlatform.studio,mobile:mobilePhone});
+                            visitorService.saveVisitorRecord("login",{clientStoreId:clientStoreId,groupType:constant.fromPlatform.studio,mobile:mobilePhone,ip:common.getClientIp(req)});
                         }
                         res.json(result);
                     });
@@ -353,7 +353,7 @@ router.post('/login',function(req, res){
         studioService.login({mobilePhone:mobilePhone,pwd:pwd,groupType:constant.fromPlatform.studio},isPM,function(newResult){
             if(newResult.isOK){
                 //记录访客信息
-                visitorService.saveVisitorRecord("login",{clientStoreId:clientStoreId,groupType:constant.fromPlatform.studio,mobile:mobilePhone});
+                visitorService.saveVisitorRecord("login",{clientStoreId:clientStoreId,groupType:constant.fromPlatform.studio,mobile:mobilePhone,ip:common.getClientIp(req)});
                 newResult.userInfo.isLogin=true;
                 req.session.studioUserInfo=newResult.userInfo;
                 res.json({isOK:true});
@@ -377,6 +377,8 @@ router.post('/login',function(req, res){
                     if(newResult.isOK){
                         newResult.userInfo.isLogin=true;
                         req.session.studioUserInfo=newResult.userInfo;
+                        //记录访客信息
+                        visitorService.saveVisitorRecord("login",{clientStoreId:clientStoreId,groupType:constant.fromPlatform.studio,mobile:mobilePhone,ip:common.getClientIp(req)});
                         res.json({isOK:true});
                     }else{//金道用户首次登录,如本地库没有记录，则证明是首次登录，直接返回
                         studioService.checkClientGroup(mobilePhone,null,function(clientGroup){
@@ -402,7 +404,7 @@ router.post('/login',function(req, res){
 router.get('/logout', function(req, res) {
     req.session.studioUserInfo=null;
     req.session.initVisit=false;//表示已经进入页面
-    visitorService.saveVisitorRecord("logout",{clientStoreId:req.session.clientStoreId,groupType:constant.fromPlatform.studio});
+    visitorService.saveVisitorRecord("logout",{clientStoreId:req.session.clientStoreId,groupType:constant.fromPlatform.studio,ip:common.getClientIp(req)});
     res.redirect("/studio");
 });
 

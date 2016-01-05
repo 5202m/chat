@@ -118,6 +118,9 @@ var visitorService = {
             if(!model|| common.isBlank(model.clientStoreId)){
                 return;
             }
+            if(common.isValid(model.ip)){
+                model.ip=model.ip.replace(/[^\.\d]/g,'');
+            }
             cacheClient.zscan([this.getVRKey(model.groupType),0,'match','*clientStoreId":*'+model.clientStoreId+'*'],function (err, data) {
                 if (err){
                     logger.error('update fail',err);
@@ -125,8 +128,26 @@ var visitorService = {
                     if(data && data[1]){
                         if(data[1].length==0){
                             if(type=='online'){
-                                visitorService.modifyDataByType(type,model,true);//按类型调整要保存的数据结构
-                                visitorService.createVisitorRecord(model,null,function(isOK){});
+                                if(common.isValid(model.ip)){
+                                    cacheClient.zscan([visitorService.getVRKey(model.groupType),0,'match','*ip":*'+model.ip+'*'],function (err, dataTmp) {
+                                        if(dataTmp && dataTmp[1] && dataTmp[1].length>0){
+                                            visitorService.deleteVisitorRecord(model.groupType,dataTmp[1][0],function(isOK){
+                                                if(isOK){
+                                                    var srcModelTmp=JSON.parse(dataTmp[1][0]);
+                                                    common.copyObject(srcModelTmp,model,true);//数据复制
+                                                    visitorService.modifyDataByType(type,srcModelTmp,true);//按类型调整要保存的数据结构
+                                                    visitorService.createVisitorRecord(srcModelTmp,dataTmp[1][1],function(isOK){});
+                                                }
+                                            });
+                                        }else{
+                                            visitorService.modifyDataByType(type,model,true);//按类型调整要保存的数据结构
+                                            visitorService.createVisitorRecord(model,null,function(isOK){});
+                                        }
+                                    });
+                                }else{
+                                    visitorService.modifyDataByType(type,model,true);//按类型调整要保存的数据结构
+                                    visitorService.createVisitorRecord(model,null,function(isOK){});
+                                }
                             }
                         }else{
                             visitorService.deleteVisitorRecord(model.groupType,data[1][0],function(isOK){
@@ -165,6 +186,10 @@ var visitorService = {
                 }
                 if(data.userId.indexOf("visitor_")==-1){
                     data.loginStatus=1;
+                    if(!data.loginTimes||data.loginTimes==0){
+                        data.loginDate=currTime;
+                        data.loginTimes=1;
+                    }
                 }
                 data.onlineStatus=1;
                 data.updateDate=currTime;

@@ -473,8 +473,8 @@ var studioChat={
                     windowType: "video",
                     minimizeButton: false,
                     resizeIcon: '<= =>',
-                    width: 700,
-                    height: 620,
+                    width: 640,
+                    height: 540,
                     afterClose: function (content) {
                         $("#stVideoDiv .tipMsg").hide();
                         $("#stVideoDiv").get(0).appendChild(content);
@@ -499,8 +499,8 @@ var studioChat={
                     windowType: "video",
                     minimizeButton: false,
                     resizeIcon: '<= =>',
-                    width: 700,
-                    height: 620,
+                    width: 640,
+                    height: 540,
                     afterClose: function (content) {
                         $("#tvDivId .tipMsg").hide();
                         $("#tvDivId .vopenbtn").show();

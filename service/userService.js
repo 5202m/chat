@@ -470,7 +470,7 @@ var userService = {
                             if(err){
                                 logger.error("updateMemberInfo->update member fail!:"+err);
                             }
-                            callback(room.sendMsgCount);
+                            callback(room.sendMsgCount,row.mobilePhone);
                         });
                     }else{
                         callback(0);
