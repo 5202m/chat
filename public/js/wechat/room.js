@@ -177,6 +177,11 @@ var room={
          */
         $('#loginForm input[name=mobilePhone]')[0].addEventListener("input", function(e) {
             var domBtn=$(this).parents("form").find(".rbtn");
+            if(parseInt(domBtn.attr("t")) < 60 && domBtn.prop("disabled"))
+            {
+                //倒计时状态不修改样式
+                return;
+            }
             if(common.isMobilePhone(this.value)){
                 domBtn.attr("disabled" ,false);
             }else{
@@ -191,11 +196,10 @@ var room={
             if($(this).is(':disabled')){
                 return;
             }
-            $(this).attr("disabled" ,true);
+            $(this).attr("disabled" ,true).val("发送中...");
             var mobile=$("#loginForm input[name=mobilePhone]").val();
             var useType = $(this).attr("ut");
             try{
-            	room.setVerifyCodeTime('#loginForm .rbtn');
                 $.getJSON('/wechat/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile,useType:useType},function(data){
                     if(!data || data.result != 0){
                         if(data.errcode == "1005"){
@@ -204,6 +208,8 @@ var room={
                             console.error("提取数据有误！");
                         }
                         room.setVerifyCodeTime('#loginForm .rbtn',true);
+                    }else{
+                        room.setVerifyCodeTime('#loginForm .rbtn');
                     }
                 });
             }catch (e){

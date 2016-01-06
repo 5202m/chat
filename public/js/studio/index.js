@@ -728,6 +728,11 @@ var studioChat={
         $.each(["#loginPmForm input[name=mobilePhone]","#mobileCheckForm input[name=mobilePhone]","#registFrom input[name=mobilePhone]"],function(i,obj){
             $(obj).bind("input propertychange", function() {
                 var domBtn=$(this).parents("form").find(".rbtn");
+                if(parseInt(domBtn.attr("t")) < 60 && domBtn.is(".pressed") == false)
+                {
+                    //倒计时状态不修改样式
+                    return;
+                }
                 if(common.isMobilePhone(this.value)){
                     domBtn.addClass("pressed");
                 }else{
@@ -740,12 +745,11 @@ var studioChat={
             if(!$(this).hasClass("pressed")){
                 return;
             }
-            $(this).removeClass("pressed").html("");
+            $(this).removeClass("pressed").html("发送中...");
             var pf=$(this).attr("pf");
             var useType = $(this).attr("ut");
             var mobile=$("#"+pf+" input[name=mobilePhone]").val();
             try{
-                studioChat.setVerifyCodeTime('.rbtn[pf='+pf+']');
                 $.getJSON('/studio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:useType},function(data){
                     if(!data || data.result != 0){
                         if(data.errcode == "1005"){
@@ -754,9 +758,12 @@ var studioChat={
                             console.error("提取数据有误！");
                         }
                         studioChat.resetVerifyCode("#" + pf);
+                    }else{
+                        studioChat.setVerifyCodeTime('.rbtn[pf='+pf+']');
                     }
                 });
             }catch (e){
+                studioChat.resetVerifyCode("#" + pf);
                 console.error("setMobileVerifyCode->"+e);
             }
         });
