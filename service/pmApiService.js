@@ -140,7 +140,12 @@ var pmApiService = {
             if (err){
                 callback(false);
             }else{
-                callback(JSON.parse(data).result);
+                try{
+                    callback(JSON.parse(data).result);
+                }catch(e){
+                    logger.error("checkChatPraise fail:"+e);
+                    callback(false);
+                }
             }
         });
     }

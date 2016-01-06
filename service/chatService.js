@@ -226,7 +226,6 @@ var chatService ={
      * @param spaceName 命名空间对应的名称
      */
     setSocket: function (spaceName) {
-        console.log("spaceName:"+spaceName);
         //连接socket，并处理相关操作
         var spaceObj=this.getSpaceSocket(spaceName,false);
         //该注释代码用于与socketIO与session绑定，暂未启用

@@ -11,6 +11,12 @@ if (cluster.isMaster) {
     for (var i = 1; i <= numCPUs; i++) {
         cluster.fork();
     }
+    cluster.on('listening',function(worker,address){
+        console.log('Listening: worker process pid ' + worker.process.pid +', Port:'+address.port);
+    });
+    cluster.on('exit', function(worker, code, signal) {
+        console.log('Worker process pid ' + worker.process.pid + ' died');
+    });
 } else {//工作进程处理各自任务
     console.log('The Worker Start[workId:' + cluster.worker.id+']');
     var mongoose = require('mongoose');
@@ -29,7 +35,6 @@ if (cluster.isMaster) {
         chatSocketServer=app.listen('3003', function() {
             console.log('Chat socket one server running. Listening on port 3003');
         });
-        require("../routes/chatServer").start(chatSocketServer);//启动socket
     }else{//多进程处理（针对支持WebSocket）
         app = require('../app');
         chatWebServer = app.listen('3001', function () {
