@@ -5,6 +5,7 @@ var common = require('../util/common');
 var logger=require('../resources/logConf').getLogger('visitorService');//引入log4js
 var cacheClient=require('../cache/cacheClient');
 var async = require('async');//引入async
+var util = require('util');//引入util
 /**
  * 定义访问者服务类
  */
@@ -75,8 +76,8 @@ var visitorService = {
     deleteVisitorRecord:function(groupType,ids,callback){
         try{
             var key=visitorService.getVRKey(groupType);
-            if(ids.indexOf('{')!=-1){
-                cacheClient.zrem(key,ids,function(err,count){
+            if(util.isNumber(ids)){
+                cacheClient.zremrangebyscore(key,ids,ids,function(err,count){
                     if (err){
                         logger.error('delete fail:['+ids+']',err);
                         callback(false);
@@ -89,7 +90,8 @@ var visitorService = {
                 async.eachSeries(ids, function (item, callbackTmp) {
                     cacheClient.zscan([key,0,'match','*clientStoreId":*'+item+'*'],function (err, data) {
                         if (data && data[1].length>0){
-                            cacheClient.zrem(key,data[1][0],function(err,count){
+                            var score=data[1][1];
+                            cacheClient.zremrangebyscore(key,score,score,function(err,count){
                                 if (err){
                                     logger.error('delete fail:[clientStoreId='+item+']',err);
                                 }
@@ -131,7 +133,7 @@ var visitorService = {
                                 if(common.isValid(model.ip)){
                                     cacheClient.zscan([visitorService.getVRKey(model.groupType),0,'match','*ip":*'+model.ip+'*'],function (err, dataTmp) {
                                         if(dataTmp && dataTmp[1] && dataTmp[1].length>0){
-                                            visitorService.deleteVisitorRecord(model.groupType,dataTmp[1][0],function(isOK){
+                                            visitorService.deleteVisitorRecord(model.groupType,dataTmp[1][1],function(isOK){
                                                 if(isOK){
                                                     var srcModelTmp=JSON.parse(dataTmp[1][0]);
                                                     common.copyObject(srcModelTmp,model,true);//数据复制
@@ -150,7 +152,7 @@ var visitorService = {
                                 }
                             }
                         }else{
-                            visitorService.deleteVisitorRecord(model.groupType,data[1][0],function(isOK){
+                            visitorService.deleteVisitorRecord(model.groupType,data[1][1],function(isOK){
                                 if(isOK){
                                     var srcModel=JSON.parse(data[1][0]);
                                     common.copyObject(srcModel,model,true);//数据复制
@@ -290,18 +292,21 @@ var visitorService = {
         if(!data ||common.isBlank(data)) {
             return null;
         }
-        if(isRange){
-            if(data.length>0){
-                return JSON.parse("["+data+"]");
+        try{
+            if(isRange){
+                if(data.length>0){
+                    return JSON.parse("["+data+"]");
+                }else{
+                    return JSON.parse(data);
+                }
             }else{
-                return JSON.parse(data);
+                return JSON.parse('['+data[1]+']');
             }
-        }else{
-            return JSON.parse('['+data[1]+']');
+        }catch(e){
+            return null;
         }
     }
 };
-
 //导出服务类
 module.exports =visitorService;
 
