@@ -14,7 +14,7 @@ var mongoose = require('mongoose')
     , Schema = mongoose.Schema
     , ObjectId = Schema.ObjectId;
 
-var smsInfoSchema = new Schema({
+var chatSyllabusSchema = new Schema({
     _id : ObjectId,
     groupType : {type:String,index:true}, //聊天室组别
     groupId : {type:String,index:true},   //聊天室编号
@@ -24,4 +24,4 @@ var smsInfoSchema = new Schema({
     isDelete : Number, //是否删除 1-删除 0-未删除
     updateDate : Date
 });
-module.exports = mongoose.model('chatSyllabus',smsInfoSchema,"chatSyllabus");
+module.exports = mongoose.model('chatSyllabus',chatSyllabusSchema,"chatSyllabus");

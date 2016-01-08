@@ -70,23 +70,4 @@ router.post('/leaveRoom', function(req, res) {
     res.json(result);
 });
 
-/**
- * 提取访客记录列表
- */
-router.get('/getChatVisitorList', function(req, res) {
-    visitorService.getChatVisitorList(req.query,function(data){
-        res.json(data);
-    });
-});
-
-/**
- * 删除访客记录
- */
-router.post('/deleteChatVisitor', function(req, res) {
-    var type=req.body.groupType,ids=req.body.ids;
-    visitorService.deleteVisitorRecord(type,ids,function(isOK){
-        res.json({isOK:isOK});
-    });
-});
-
 module.exports = router;

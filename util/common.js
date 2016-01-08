@@ -253,8 +253,9 @@ var common = {
             }
         }
         if(hasTargetField){
+            var srcTmp = (typeof srcObj.toObject === "function") ? srcObj.toObject() : srcObj;
             for(var row in targetObj){
-                if(!srcObj.hasOwnProperty(row)){
+                if(!srcTmp.hasOwnProperty(row)){
                     srcObj[row]=targetObj[row];
                 }
             }
