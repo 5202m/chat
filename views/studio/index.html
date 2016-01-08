@@ -47,7 +47,7 @@
                     <div class="btnarea clearfix" id="studioListId">
                         <% if (studioList!='[]') { %>
                         <% studioList.forEach(function(row,index){ %>
-                           <a href="javascript:" id="<%=row.id %>" title="<%=row.chatStudio.remark %>" class="<%if(row.level==1){%>vip<%}else if(row.level==2){%>r1<%} else if(row.level==3){%>r2<%}else{%>normal<%}%> <%if(row.disable){%>locked<%}else if(row.isCurr){%>ing<%}else{%>normal<%}%>" aw="<%= row.allowWhisper %>" yc="<%= row.chatStudio.yyChannel %>" av="<%= row.allowVisitor %>" mc="<%= row.chatStudio.minChannel %>">
+                           <a href="javascript:" id="<%=row.id %>" title="<%=row.chatStudio.remark %>" class="<%if(row.level==1){%>vip<%}else if(row.level==2){%>r1<%} else if(row.level==3){%>r2<%}else{%>normal<%}%> <%if(row.disable){%>locked<%}else if(row.isCurr){%>ing<%}else{%>normal<%}%>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>" yc="<%= row.chatStudio.yyChannel %>" av="<%= row.allowVisitor %>"  mc="<%= row.chatStudio.minChannel %>">
                                <span class="s1"><%= row.name %></span><span class="s2"><i></i></span>
                            </a>
                         <% }); %>
@@ -222,8 +222,8 @@
         <!-- chat_input begin -->
         <div class="chat_input">
             <div class="mymsg dn">
-                <p><span class="sender"></span>对&nbsp;你说：<span class="xcont"></span></p>
-                <a href="javascript:" class="replybtn" uid="">回复</a>
+                <p><span class="sender"></span>对&nbsp;你说<label></label>：<span class="xcont"></span></p>
+                <a href="javascript:" class="replybtn" uid="">回复</a><em style="position: absolute;top: 10px;right: 40px;font-size: 12px;display:none;">正在输入...</em>
                 <a href="javascript:" class="closebtn">关闭</a>
             </div>
             <div class="input_box">

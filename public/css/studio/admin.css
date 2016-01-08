@@ -219,6 +219,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .dialog.analyst .uname { color:#3181c6}
 .dialog .uname:hover{ text-decoration:none}
 .dialog .dcont{  white-space: normal;word-break: break-all; overflow:auto; display:block;}
+.dialog .dcont em.ruleTipStyle{color:#ff0000;font-size:12px;margin-left:5px;}
 .dialog .to{ padding-left:5px}
 .dialog .toname { padding-left:5px; font-weight:normal}
 .dialog .headimg{ display:block; width:33px; height:auto; position:absolute; left:0; top:0; }

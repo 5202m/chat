@@ -521,6 +521,13 @@ var chatService ={
                         //没有定义审核规则，无需审核
                         data.content.status=1;//设为通过
                         var toUser=userInfo.toUser,isWh=toUser && common.isValid(toUser.userId) && "1"==toUser.talkStyle;//私聊
+                        //私聊权限逻辑判断
+                        if(isWh && (!common.containSplitStr(resultVal.talkStyle,toUser.talkStyle)||(constant.roleUserType.member!=userInfo.userType && !common.containSplitStr(resultVal.whisperRoles,userInfo.userType))||
+                                    (constant.roleUserType.member==userInfo.userType && !common.containSplitStr(resultVal.whisperRoles,toUser.userType)))){
+                            //通知自己的客户端
+                            chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:{tip:'你或对方没私聊权限'},rule:true});
+                            return false;
+                        }
                         var isToCSUser=toUser && common.isValid(toUser.userId) && (constant.roleUserType.cs==userInfo.toUser.userType || constant.roleUserType.cs==userInfo.toUser.userId);//判断是否客服
                         if(!isToCSUser) {//非发送给客服
                             messageService.saveMsg({fromUser: userSaveInfo, content: data.content});

@@ -154,6 +154,17 @@ var common = {
         $(bgCls||".layer-shadow").hide();
     },
     /**
+     * 包含字符，逗号分隔
+     * @param src
+     * @param subStr
+     */
+    containSplitStr:function(src,subStr){
+        if(common.isBlank(src)||common.isBlank(subStr)) {
+            return false;
+        }
+        return (','+src+',').indexOf((','+subStr+','))!=-1;
+    },
+    /**
      * 通用ajax方法
      * @param url
      * @param params

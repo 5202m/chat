@@ -127,14 +127,14 @@ var userService = {
             }
         }
         contentVal = common.encodeHtml(contentVal);
-        if(userType && constant.roleUserType.member!=userType){//后台用户无需使用规则
-            callback({isOK:true,tip:''});
-            return;
-        }
         //预定义规则
         chatGroup.findById(groupId,function (err,row) {
             if(err||!row){
                 callback({isOK:false,tip:'系统异常，请检查房间对应房间是否存在！',leaveRoom:true});
+                return;
+            }
+            if(userType && constant.roleUserType.member!=userType){//后台用户无需使用规则
+                callback({isOK:true,tip:'',talkStyle:row.talkStyle,whisperRoles:row.whisperRoles});
                 return;
             }
             if(!common.dateTimeWeekCheck(row.openDate, true) || row.status!=1|| row.valid!=1){
@@ -205,7 +205,7 @@ var userService = {
                 callback({isOK:false,needApproval:true,tip:needApprovalTip});//需要审批，设置为true
                 return;
             }
-            callback({isOK:true,tip:resultTip.join(";")});
+            callback({isOK:true,tip:resultTip.join(";"),talkStyle:row.talkStyle,whisperRoles:row.whisperRoles});
         });
     },
     /**

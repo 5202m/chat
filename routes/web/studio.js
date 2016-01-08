@@ -161,6 +161,7 @@ function toStudioView(chatUser,groupId,clientGroup,res){
             rowTmp.name=row.name;
             rowTmp.level=row.level;
             rowTmp.allowWhisper=common.containSplitStr(row.talkStyle,1);
+            rowTmp.whisperRoles=row.whisperRoles;
             rowTmp.disable=(!common.containSplitStr(row.chatStudio.clientGroup,clientGroup));
             rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.chatStudio.clientGroup,constant.clientGroup.visitor);
             rowTmp.chatStudio.yyChannel=common.trim(row.chatStudio.yyChannel);

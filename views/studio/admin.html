@@ -22,7 +22,7 @@
             <a href="javascript:"><img src="" id="header_img_id" style="width:34px;height:48px;"/><span></span></a>
             <a href="javascript:" class="username" class="real"><%= nickname %></a>
         </div>
-        <span style="display:none;" id="groupInfoId" aw="<%= groupInfo.allowWhisper %>"></span>
+        <span style="display:none;" id="groupInfoId" aw="<%= groupInfo.allowWhisper %>" awr="<%= groupInfo.whisperRoles %>"></span>
     </div>
 </div>
 <!-- wrapper begin -->
@@ -67,8 +67,8 @@
         <!-- chat_input begin -->
         <div class="chat_input">
             <div class="mymsg dn">
-                <p><span class="sender"></span>对&nbsp;你说：<span class="xcont"></span></p>
-                <a href="javascript:" class="replybtn" uId="">回复</a>
+                <p><span class="sender"></span>对&nbsp;你说<label></label>：<span class="xcont"></span></p>
+                <a href="javascript:" class="replybtn" uId="">回复</a><em style="position: absolute;top: 10px;right: 40px;font-size: 12px;display:none;">正在输入...</em>
                 <a href="javascript:" class="closebtn">关闭</a>
             </div>
             <div class="input_box">
@@ -127,7 +127,7 @@
 <script type="text/javascript" src="/js/lib/jquery.face.js"></script>
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
 <script type="text/javascript" src="/js/util/common.min.js"></script>
-<script type="text/javascript" src="/js/studio/admin.min.js?t=<%=new Date()%>"></script>
+<script type="text/javascript" src="/js/studio/admin.js?t=<%=new Date()%>"></script>
 
 <script type="text/javascript">
     studioChat.filePath='<%= filePath %>';
