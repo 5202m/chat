@@ -15,6 +15,7 @@ var mongoose = require('mongoose')
           sequence:{type:Number, default:0},//排序序列
           level:{type:Number, default:0},//级别
           talkStyle:String,//聊天方式,多个逗号分隔
+          whisperRoles:String,//私聊角色类型,多个逗号分隔
           openDate:String,//开放时间
           maxCount: {type:Number, default:0},//最大人数
           authUsers : [String],//授权用户
