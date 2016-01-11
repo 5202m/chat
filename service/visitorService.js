@@ -4,7 +4,6 @@
 var common = require('../util/common');
 var logger=require('../resources/logConf').getLogger('visitorService');//引入log4js
 var chatVisitor = require('../models/chatVisitor');//引入chatVisitor数据模型
-var ObjectId = require('mongoose').Types.ObjectId;
 /**
  * 定义访问者服务类
  */
@@ -16,7 +15,7 @@ var visitorService = {
      */
     createVisitorRecord:function(model,callback) {
         var insertModel = {
-            _id: new ObjectId(),
+            _id: null,
             clientStoreId: model.clientStoreId,//客服端id
             groupType: model.groupType,//房间组别
             roomId: model.roomId,//所在房间id
@@ -71,7 +70,7 @@ var visitorService = {
                 if(!data){
                     if(type=='online'){
                         visitorService.modifyDataByType(type,model,true);//按类型调整要保存的数据结构
-                        visitorService.createVisitorRecord(model,null,function(createResult){
+                        visitorService.createVisitorRecord(model,function(createResult){
                             if(!createResult.isOK){
                                 logger.error('saveVisitorRecord-create fail');
                             }
