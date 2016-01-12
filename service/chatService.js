@@ -525,7 +525,7 @@ var chatService ={
                         if(isWh && (!common.containSplitStr(resultVal.talkStyle,toUser.talkStyle)||(constant.roleUserType.member!=userInfo.userType && !common.containSplitStr(resultVal.whisperRoles,userInfo.userType))||
                                     (constant.roleUserType.member==userInfo.userType && !common.containSplitStr(resultVal.whisperRoles,toUser.userType)))){
                             //通知自己的客户端
-                            chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:{tip:'你或对方没私聊权限'},rule:true});
+                            chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:{tip:'你或对方没有私聊权限'},rule:true});
                             return false;
                         }
                         var isToCSUser=toUser && common.isValid(toUser.userId) && (constant.roleUserType.cs==userInfo.toUser.userType || constant.roleUserType.cs==userInfo.toUser.userId);//判断是否客服
