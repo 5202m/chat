@@ -3,7 +3,6 @@
  */
 var http = require('http');//引入http
 var async = require('async');//引入async
-var constant = require('../constant/constant');//引入constant
 var chatGroup = require('../models/chatGroup');//引入chatGroup数据模型
 var member = require('../models/member');//引入member数据模型
 var common = require('../util/common');//引入common类

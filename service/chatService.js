@@ -153,6 +153,43 @@ var chatService ={
         });
     },
     /**
+     * 清除缓存数据及强制离线，清除缓存的在线线用户
+     */
+    clearAllData:function(callback){
+        //更新缓存在线用户状态改成下线
+        global.memored.keys(function(err, keys) {
+            if(err){
+                logger.error("clearAllData has error!",err);
+                callback(true);
+                return;
+            }
+            async.each(keys, function (key, callbackTmp) {
+                if(key.indexOf("onlineUser_")!=-1){
+                    var roomId=key.replace("onlineUser_","");
+                    visitorService.batchUpdateStatus(roomId);//更新访客记录状态
+                    chatService.getRoomOnlineUser(roomId,function(roomUserArr) {
+                        if(roomUserArr){
+                            for(var k in roomUserArr){
+                                userService.removeOnlineUser(roomUserArr[k],true,function(){});
+                            }
+                            callbackTmp(null);
+                        }
+                    });
+                }else{
+                    callbackTmp(null);
+                }
+            }, function (err) {
+                if(err){
+                    logger.error("clearAllData has error!",err);
+                }
+                global.memored.clean(function() {//移除所有缓存记录
+                    logger.info('All cache entries have been deleted.');
+                });
+                callback(true);
+            });
+        });
+    },
+    /**
      * 设置在线人数
      * @param groupType
      * @param groupId

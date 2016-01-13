@@ -91,6 +91,14 @@ var visitorService = {
             logger.error('saveVisitorRecord fail',e);
         }
     },
+
+    /**
+     * 批量更新状态
+     * @param roomId
+     */
+    batchUpdateStatus:function(roomId){
+        chatVisitor.update({'roomId':roomId},{$set:{ onlineStatus:0,loginStatus:0,offlineDate:new Date()}},{ multi: true },function(err,row){});
+    },
     /**
      * 通过输入类型修改数据
      * @param type
