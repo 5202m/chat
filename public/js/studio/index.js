@@ -145,7 +145,7 @@ var studioChat={
         try{
             if(isYy){
                 var aDom=$("#studioListId a[class~=ing]"),yc=aDom.attr("yc"),mc=aDom.attr("mc");
-                studioChat.studioUrl='http://yy.com/s/'+yc+(common.isValid(mc)?'/'+mc:'')+'/mini.swf';
+                studioChat.studioUrl='http://yy.com/s/'+yc+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf';
                 studioChat.setStudioVideoDiv(studioChat.studioUrl);
             }else{
                     $("#tvDivId").show();
