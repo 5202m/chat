@@ -41,7 +41,16 @@ if (cluster.isMaster) {
         chatSocketServer=app.listen('3003', function() {
             console.log('Chat socket one server running. Listening on port 3003');
         });
-        global.memored.store("pid3003",cluster.worker.process.pid);//记录端口对应的进程id
+        //监听pm2停止进程,释放资源，同步缓存数据到db等操作
+        process.on('SIGINT', function() {
+            require("../service/chatService").clearAllData(function () {
+                console.log('Synch data and clearing cache success!');
+            });
+            setTimeout(function() {//500毫秒钟后停止进程
+                console.log('500ms later the child process kill',process.pid);
+                process.exit(0);//退出进程
+            }, 500);
+        });
     }else{//多进程处理（针对支持WebSocket）
         app = require('../app');
         chatWebServer = app.listen('3001', function () {
@@ -53,24 +62,5 @@ if (cluster.isMaster) {
     }
     logger.use(app);//配置框架日志输出
     require("../routes/chatServer").start(chatSocketServer);//启动socket
-    //监听pm2停止进程,释放资源，同步缓存数据到db等操作
-    process.on('SIGINT', function() {
-        global.memored.read("pid3003",function(err,val){
-            if(err){
-                console.log('get the pid of port 3003 fail,please check!');
-            }else{
-                if(val==process.pid) {
-                    require("../service/chatService").clearAllData(function () {
-                        console.log('Clearing cache and synch data success!');
-                    });
-                }
-            }
-        });
-        setTimeout(function() {//500毫秒钟后停止进程
-            // 500ms later the process kill it self to allow a restart
-            console.log('500ms later the child process kill',process.pid);
-            process.exit(0);//退出进程
-        }, 500);
-    });
 }
 

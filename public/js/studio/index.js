@@ -57,6 +57,9 @@ var studioChat={
         if(this.userInfo.clientGroup && this.userInfo.clientGroup=='visitor'){
             this.userInfo.userId= obj.userId;
             this.userInfo.nickname= obj.nickname;
+            $("#contentText").attr("contenteditable",false).append('<span style="margin:15px 5px;">亲，<a href="javascript:;" onclick="studioChat.openLoginBox();" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');//设置登录后发言
+        }else{
+            $("#contentText").html("").attr("contenteditable",true);
         }
     },
     /**
@@ -277,6 +280,7 @@ var studioChat={
                     $(domId).append('<li><a href="'+studioChat.web24kPath+'/zh/goldreview/'+row.id+'_'+row.contenttype2+'.html" target="_blank"><span class="ndate">'+row.datestr+'</span>'+row.title+'</a></li>');
                 }
                 $(domId).append('<li><a href="'+studioChat.web24kPath+'/zh/goldreview/goldreviewlist_'+type2+'.html" target="_blank" class="listmore">更多</a></li>');
+                studioChat.setTabInfoScroll();
             }else{
                 console.error("提取数据有误！");
             }
@@ -668,6 +672,8 @@ var studioChat={
                     loc_panel.html(syllabusView);
                     loc_panel.find(".sy_nav a").bind("click", function(){
                         var loc_this = $(this);
+                        $(this).parent().find(".dir").hide();
+                        $(this).find(".dir").show();
                         loc_this.siblings(".active").removeClass("active");
                         loc_this.addClass("active");
                         var loc_day = loc_this.attr("d");
@@ -1063,6 +1069,10 @@ var studioChat={
         });
         //聊天内容发送事件
         $("#sendBtn").click(function(){
+            if(studioChat.userInfo.clientGroup=='visitor'){
+                studioChat.openLoginBox();
+                return;
+            }
             var msg = studioChat.getSendMsg();
             if(msg === false){
                 return;

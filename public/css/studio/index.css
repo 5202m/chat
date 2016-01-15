@@ -59,14 +59,19 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .left1{ width:263px; float:left}
 .left2{margin-left:270px;width:auto; margin-right:10px}
 
-.wid1 .left_row{ width:950px;}
-.wid1 .right_row{ margin-left:950px;}
-.wid2 .left_row{ width:850px;}
-.wid2 .right_row{ margin-left:850px;}
-.wid3 .left_row{ width:794px;}
-.wid3 .right_row{ margin-left:794px;}
-.wid4 .left_row{ width:660px;}
-.wid4 .right_row{ margin-left:660px;}
+.wid1 .left_row{ width:1250px;}
+.wid1 .right_row{ margin-left:1250px;}
+.wid2 .left_row{ width:1080px;}
+.wid2 .right_row{ margin-left:1080px;}
+.wid3 .left_row{ width:894px;}
+.wid3 .right_row{ margin-left:894px;}
+.wid4 .left_row{ width:795px;}
+.wid4 .right_row{ margin-left:795px;}
+.wid4 .right_row .send_select,.wid4 .right_row .se_cont{width: 135px;}
+.left_row .mod_tab{ height:200px;}
+.left_row .mod_tab .tabcont,.left_row .mod_tab .tab_box{ height: 170px;}
+.wid5 .left_row{ width:560px;}
+.wid5 .right_row{ margin-left:560px;}
 
 /*left1*/
 .video_room{ margin-bottom:5px;  height:116px; overflow:visible; position:relative}
@@ -168,30 +173,32 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 
 .mod_tab { background:rgba(219,219,219,0.9); border-radius:2px; height:252px;}
 .mod_tab .tab_nav{ width:100%;}
-.tab_nav a{ width:20%; float:left; display:block; height:52px;color:#757575; line-height:52px; font-size:12pt; text-align:center; text-decoration:none}
+.tab_nav a{ width:20%; float:left; display:block; height:40px;color:#757575; line-height:40px; font-size:12pt; text-align:center; text-decoration:none}
 .tab_nav a.on{ color:#a17d20; background:#f6f6f6}
 .tab_nav a.fir{ border-top-left-radius:2px;}
 .tab_nav a.last{ border-top-right-radius:2px;}
-.mod_tab .tabcont { height:200px; padding-top:52px;}
+.mod_tab .tabcont { height:200px; padding-top:40px;}
 .mod_tab .tab_box{background:#f6f6f6; height:200px; display:none; overflow:hidden;  border-bottom-left-radius: 2px;  border-bottom-right-radius: 2px;}
 .mod_tab .tab_box.on{ display:block;}
 .mod_tab .notice_cont{ padding:15px 40px 0;color:#4e4e4e; line-height:22pt; font-size:11pt;overflow: auto;height: 100%;}
 .mod_tab .notice_cont img{width:100%; height:auto;}
-.mod_tab .notice_cont .sy_panel{width:100%; margin: 0 auto; background-color: rgba(219,219,219,.9);}
+.mod_tab .notice_cont .sy_panel{width:100%; margin: 0 auto; /*background-color: rgba(219,219,219,.9);*/}
 .mod_tab .notice_cont .sy_panel .sy_nav a{float: left; display: block; color: #757575; font-size: 14px; padding: 6px 0px 6px 0px; text-align: center; text-decoration: none; line-height: 16px; height: auto;}
 .mod_tab .notice_cont .sy_panel .sy_nav a span{margin-top: 5px; font-size:12px;}
 .mod_tab .notice_cont .sy_panel .sy_nav a.active{ color: #a17d20; background: #f6f6f6;}
 .mod_tab .notice_cont .sy_panel .sy_cont{clear: both;}
-.mod_tab .notice_cont .sy_cont div{background-color: #f6f6f6; display: block; height: auto;}
-.mod_tab .notice_cont table.syllabus{background-color: #BBBBBB; color: #424242; font-size: 14px; margin-bottom: 10px; width: 100%;}
+.mod_tab .notice_cont .sy_nav a .dir{position: relative;top: 14px;left: -36px;display:none;}
+.mod_tab .notice_cont .sy_cont div{background-color: #f6f6f6; display: block; height: auto;border-top: 1px solid rgba(181, 144, 48, 0.25);}
+.mod_tab .notice_cont table.syllabus{/*background-color: #BBBBBB;*/ color: #424242; font-size: 14px; margin-bottom: 10px; width: 100%;}
 .mod_tab .notice_cont table.syllabus tbody{display: none;}
-.mod_tab .notice_cont table.syllabus th{background-color: #E5E5E5; text-align: center; vertical-align: middle; border-bottom: 1px solid #BBBBBB;}
-.mod_tab .notice_cont table.syllabus td{background-color: #fdfdfd; text-align: center; vertical-align: middle; border-bottom: 1px solid #BBBBBB;}
+.mod_tab .notice_cont table.syllabus th{/*background-color: #E5E5E5; */text-align: center; vertical-align: middle; border-bottom: 1px solid rgba(181, 144, 48, 0.25);}
+.mod_tab .notice_cont table.syllabus td:first-child{border-left: 1px solid rgba(181, 144, 48, 0.25);}
+.mod_tab .notice_cont table.syllabus td{/*background-color: #fdfdfd; */text-align: center; vertical-align: middle; border-bottom: 1px solid rgba(181, 144, 48, 0.25);border-right: 1px solid rgba(181, 144, 48, 0.25);}
 .mod_tab .notice_cont table.syllabus tr.prev{color: #757575;}
 .mod_tab .notice_cont table.syllabus tr.ing{color: #3181c6;}
 .mod_tab .notice_cont table.syllabus tr.next{color: #343434;}
 .tab_box .tab_list{ padding:13px 30px 0 30px; padding-top:13px;}
-.tab_list li{ line-height:22pt; font-size:10.5pt; padding-left:24px; background-position:-110px -339px; }
+.tab_list li{ line-height:20pt; font-size:10.5pt; padding-left:24px; background-position:-110px -339px; }
 .tab_list li a{color:#4e4e4e; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block}
 .tab_list li a:hover { text-decoration:none; color:#a17d20}
 .tab_list li .ndate {float: right; font-size: 80%;}

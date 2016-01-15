@@ -166,10 +166,10 @@
                     <div class="tab_box" t="needScoll">
                         <p class="notice_cont" id="studioPlanTab"></p>
                 	</div>
-                    <div class="tab_box">
+                    <div class="tab_box" style="overflow: auto;height: 100%;" t="needScoll">
                     	<ul class="tab_list" id="tradeInfoTab"></ul>
                 	</div>
-                    <div class="tab_box">
+                    <div class="tab_box" style="overflow: auto;height: 100%;" t="needScoll">
                     	<ul class="tab_list notice_l" id="commentTab">
                         </ul>
                 	</div>
@@ -718,20 +718,24 @@ function widthCheck(){
 		$('body').addClass('wid2');
 		
 	}
-	if(ww <= 1480 && ww >= 1280 ){
+	if(ww <= 1480 && ww >1280 ){
 		$('body').attr('class','');
 		$('body').addClass('wid3');
 	}
-	if(ww < 1280 ){
+	if(ww <= 1280 && ww>1024){
 		$('body').attr('class','');
 		$('body').addClass('wid4');
 	}
+    if(ww <= 1024){
+        $('body').attr('class','');
+        $('body').addClass('wid5');
+    }
 }
 
 function heightCalcu(){
 	var hh = $(window).height();
 	$('.user_box').height(hh-464);
-	$('.mod_video').height(hh-395);
+	$('.mod_video').height(hh-352);
 	$('.scrollbox2').height(hh-280-$('.mymsg').height());
 	$('.chat').height(hh-75);
 }
