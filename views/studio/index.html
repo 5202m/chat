@@ -708,28 +708,16 @@ $(window).resize(function(e){
 	}
 });
 function widthCheck(){
-	var ww = $(window).width();
-	if(ww > 1680 ){
-		$('body').attr('class','');
-		$('body').addClass('wid1');
+    var ww = $(window).width(),rw=440;
+	if(ww >= 1680 ){
+        rw=625;
 	}
-	if(ww <= 1680 && ww > 1480 ){
-		$('body').attr('class','');
-		$('body').addClass('wid2');
-		
+	if(ww < 1680 && ww > 1480 ){
+        rw=470;
 	}
-	if(ww <= 1480 && ww >1280 ){
-		$('body').attr('class','');
-		$('body').addClass('wid3');
-	}
-	if(ww <= 1280 && ww>1024){
-		$('body').attr('class','');
-		$('body').addClass('wid4');
-	}
-    if(ww <= 1024){
-        $('body').attr('class','');
-        $('body').addClass('wid5');
-    }
+    var w= $("body").width()-rw;
+    $(".left_row").css({ width:w});
+    $(".right_row").css({ "margin-left":w});
 }
 
 function heightCalcu(){

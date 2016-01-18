@@ -310,19 +310,19 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .input_box{ background:#f6f6f6;  border-bottom-left-radius: 2px;  border-bottom-right-radius: 2px;}
 .input_box .toolbar{ height:27px; padding:6px 10px 5px}
 .toolbar .facebtn{ display:block; float:left; width:23px; height:23px; margin-top:2px; text-indent:-9999px; background-position:-30px -120px}
-.toolbar .tbtn{ display:block; float:left; width:47px; height:25px; margin-left:10px; border:1px solid #e0e0e0; border-radius:2px; padding-left:23px; text-align:center;color:#4e4e4e; line-height:25px; font-size:11pt; text-decoration:none}
+.toolbar .tbtn{display: block;float: left;width: 38px;height: 25px;margin-left: 8px;border: 1px solid #e0e0e0;border-radius: 2px;padding-left: 22px;text-align: center;line-height: 25px;color:#4e4e4e; line-height:25px; font-size:11pt; text-decoration:none}
 .toolbar .tbtn:hover { background-color:#fff;}
 .toolbar .tbtn.clearbtn{ background-position:-95px -170px}
 .toolbar .tbtn.scrollbtn{ background-position:-95px -120px}
 .toolbar .tbtn.scrollbtn.on{ background-position:-95px -145px}
-.toolbar .tbtn.qqbtn{ background-position:-95px -232px; background-color:#b59030; border-color:#b59030; width:70px; color:#fff; }
+.toolbar .tbtn.qqbtn{ background-position:-95px -232px; background-color:#b59030; border-color:#b59030; width:65px; color:#fff; }
 .toolbar .tbtn.qqbtn span{font-family:'Arial'}
 .toolbar .tbtn.qqbtn:hover{ background-color:#bd9b35;border-color:#bd9b35}
 
 
-.send_select{ width:145px;float:right; height:27px; position:relative; z-index:100000}
+.send_select{ width:130px;float:right; height:27px; position:relative; z-index:100000}
 .send_select i { display:block; position:absolute; right:11px; top:9px; background-position:0 -210px; width:14px; height:9px;}
-.send_select .se_cont{  width:145px; height:25px; overflow:hidden; border:1px solid #e0e0e0; border-radius:2px; position:absolute; left:0; top:0}
+.send_select .se_cont{  width:130px; height:25px; overflow:hidden; border:1px solid #e0e0e0; border-radius:2px; position:absolute; left:0; top:0}
 .send_select.dw .se_cont{ height:auto;background:#fff;}
 .send_select .se_cont a{ display:block;padding-left:10px; color:#4e4e4e; line-height:25px; font-size:10pt; text-decoration:none}
 .send_select.dw .se_cont a.on {background:#f0f0f0;}
