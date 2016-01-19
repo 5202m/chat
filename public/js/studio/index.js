@@ -1077,11 +1077,6 @@ var studioChat={
             if(msg === false){
                 return;
             }
-            /*var strRegex = '(((https|http)://)?)[A-Za-z0-9-_\/:?]+\\.[A-Za-z0-9-_&\?\/.=]+';
-             var regex=new RegExp(strRegex,"gi");
-             sendObj.content.value=sendObj.content.value.replace(regex,function(m){
-             return (!isNaN(m)||(/\d+\.gif/g).test(m))?m:'<a href="'+m+'" target="_blank">'+m+'</a>';
-             });*/
             var sendObj={uiId:studioChat.getUiId(),fromUser:studioChat.userInfo,content:{msgType:studioChat.msgType.text,value:msg}};
             var toUser=studioChat.getToUser(),replyDom=$(".replybtn");
             if(toUser && toUser.userId==replyDom.attr("uid") && toUser.talkStyle==replyDom.attr("ts")){//如果对话userId匹配则表示当前回复结束
@@ -1396,6 +1391,7 @@ var studioChat={
         var dialog=studioChat.formatContentHtml(data,isMeSend,isLoadData);
         var list=$("#dialog_list");
         list.append(dialog);
+        this.formatMsgToLink(fromUser.publishTime);//格式链接
         if(!isLoadData && $(".scrollbtn").hasClass("on")) {
             studioChat.setTalkListScroll();
         }
@@ -1460,10 +1456,6 @@ var studioChat={
             cls+='mine';
             nickname='我';
             isMe='true';
-            /*if(isMeSend){
-             loadHtml='<i class="img-loading"></i>';
-             loadImgHtml='<span class="shadow-box"></span><s class="shadow-conut"></s>';
-             }*/
         }else{
             if(fromUser.userType==2){
                 cls+='analyst';
@@ -1492,6 +1484,26 @@ var studioChat={
         var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" isMe="'+isMe+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"><a href="javascript:" class="headimg" uid="'+fromUser.userId+'">'+studioChat.getUserAImgCls(fromUser.clientGroup,fromUser.userType,fromUser.avatar)+'</a><i></i>'+
         '<p><a href="javascript:"  class="'+uName+'">'+nickname+'</a>'+toUserHtml+'<span class="dtime">'+studioChat.formatPublishTime(fromUser.publishTime)+'</span><span class="dcont">'+pHtml+'</span></p>' +dialog+'</div>';
         return html;
+    },
+    /**
+     * 格式链接
+     * @param ptime
+     */
+    formatMsgToLink:function(ptime){
+        $('#'+ptime+' .dcont:contains("http:"),#'+ptime+' .dcont:contains("https:")').each(function (index,el){
+            var elHtml=$(el).html(),elArr=elHtml.split(/<img src="\S+">/g);
+            var linkTxt='';
+            for(var i in elArr){
+                linkTxt=elArr[i];
+                if(common.isBlank(linkTxt)){
+                    continue;
+                }
+                var newTest=linkTxt.replace(/(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|\\&|-)+)(:\d+)?(\/|\S)+/g,function(m){
+                    return '<a href="'+m+'" target="_blank" style="color:#3181c6;">'+m+'</a>';
+                });
+                el.innerHTML = el.innerHTML.replace(linkTxt,newTest);
+            }
+        });
     },
     /**
      * 移除加载提示的dom
