@@ -508,8 +508,8 @@ var adminChat={
         }
         if(!isMeSend && adminChat.userInfo.userId==fromUser.userId && data.serverSuccess){//发送成功，则去掉加载框，清除原始数据。
             adminChat.removeLoadDom(data.uiId);//去掉加载框
-            $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
             $('#'+data.uiId+' dd[tId=time]').html(adminChat.formatPublishTime(fromUser.publishTime));
+            $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
             //设置看大图的url
             if(data.content.msgType==adminChat.msgType.img){
                 if(data.content.needMax==1 && adminChat.isCanReSend){//清除重发前的原始数据

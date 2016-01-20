@@ -342,9 +342,8 @@ var studioChat={
             return;
         }
         if(!isMeSend && studioChat.userInfo.userId==fromUser.userId && data.serverSuccess){//发送成功，则去掉加载框，清除原始数据。
-            //studioChat.removeLoadDom(data.uiId);
-            $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
             $('#'+data.uiId+' .dtime').html(studioChat.formatPublishTime(fromUser.publishTime));
+            $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
              return;
         }
         var dialog=studioChat.formatContentHtml(data,isMeSend,isLoadData);
