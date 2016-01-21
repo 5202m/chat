@@ -7,6 +7,7 @@
     <title>视频直播间【<%= groupInfo.name %>】</title>
     <meta content="实盘直播,贵金属实盘直播室,金道贵金属实盘直播,金道贵金属" name="keywords">
     <meta content="金道贵金属打造在线贵金属实盘直播室，金道研究院名家观点即时播报，让您的掘金之旅在此起航！携手金道，生金有道！" name="description">
+    <link href="/js/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
     <link href="/css/studio/admin.min.css" type="text/css" rel="stylesheet" />
     <link href="/css/face.css" type="text/css" rel="stylesheet" />
     <!--[if lt IE 9]>
@@ -58,7 +59,7 @@
             </div>
 
             <div class="chat_content">
-                <div class="scrollbox2">
+                <div id="chatMsgContentDiv">
                     <div class="dialoglist clearfix" id="dialog_list"></div>
                 </div>
                 <i class="img-loading" style="top: 50%;right: 50%;display: none;" pf="chatMessage"></i>
@@ -122,7 +123,7 @@
     </div>
 </div>
 <script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
-<script language="javascript" src="/js/lib/jscroll.js"></script>
+<script type="text/javascript" src="/js/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.superslide.2.1.1.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.face.js"></script>
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
@@ -131,29 +132,15 @@
 
 <script type="text/javascript">
     studioChat.filePath='<%= filePath %>';
-    studioChat.apiUrl='<%= apiUrl %>';
     studioChat.userInfo=JSON.parse('<%- userInfo %>');
     studioChat.socketUrl=JSON.parse('<%- socketUrl %>');
     $(function(){
         widthCheck();
-        /*滚动*/
-        $('.te_ul li').width(function(){
-            return $('.te_list').width()*0.25+4*0.25;
-        });
-        $(".te_list").slide({ mainCell:".te_ul" , effect:"leftLoop", vis:4, autoPlay:false, delayTime:600 ,interTime:3000, autoPage: false, prevCell:".te_prev",nextCell:".te_next"});
         heightCalcu();
-        /*滚动条*/
-        if($(window).width()>768){
-            myscroll();
-        }
     });
     $(window).resize(function(e){
         widthCheck();
         heightCalcu();
-        /*滚动条*/
-        if($(window).width()>768){
-            myscroll();
-        }
     });
     function widthCheck(){
         var ww = $(window).width();
@@ -180,13 +167,8 @@
         hh = $(window).height();
         $('.user_box').height(hh-650);
         //$('.mod_video').height(hh-405);
-        $('.scrollbox2').height(hh-235-$('.mymsg').height());
+        $('#chatMsgContentDiv').height(hh-235-$('.mymsg').height());
         $('.chat').height(hh-85);
-    }
-    //滚动条控制js
-    function myscroll(){
-        studioChat.setUserListScroll();
-        studioChat.setTalkListScroll();
     }
 </script>
 

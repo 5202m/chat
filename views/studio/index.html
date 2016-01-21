@@ -10,6 +10,7 @@
 <meta content="实盘直播,贵金属实盘直播室,金道贵金属实盘直播,金道贵金属" name="keywords">
 <meta content="金道贵金属打造在线贵金属实盘直播室，金道研究院名家观点即时播报，让您的掘金之旅在此起航！携手金道，生金有道！" name="description">
 <link href="/js/lib/jsWindows/jsWindows.min.css" rel="stylesheet" type="text/css">
+<link href="/js/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
 <link href="/css/studio/index.min.css" type="text/css" rel="stylesheet" />
 <link href="/css/face.css" type="text/css" rel="stylesheet" />
 <!--[if lt IE 9]>
@@ -160,20 +161,20 @@
                     <a href="javascript:" class="last" t="downloadTab">下载</a>
                 </div>
                 <div class="tabcont">
-                	<div class="tab_box on" t="needScoll">
+                	<div class="tab_box on">
                     	<p class="notice_cont" id="bulletinTab"></p>
                 	</div>
-                    <div class="tab_box" t="needScoll">
+                    <div class="tab_box">
                         <p class="notice_cont" id="studioPlanTab"></p>
                 	</div>
-                    <div class="tab_box" style="overflow: auto;height: 100%;" t="needScoll">
+                    <div class="tab_box">
                     	<ul class="tab_list" id="tradeInfoTab"></ul>
                 	</div>
-                    <div class="tab_box" style="overflow: auto;height: 100%;" t="needScoll">
+                    <div class="tab_box">
                     	<ul class="tab_list notice_l" id="commentTab">
                         </ul>
                 	</div>
-                    <div class="tab_box" style="overflow: auto;height: 100%;" t="needScoll">
+                    <div class="tab_box" style="overflow: auto;height: 100%;">
                     	<ul class="tab_list download" id="downloadTab">
                         </ul>
                 	</div>
@@ -213,7 +214,7 @@
             </div>
             
             <div class="chat_content">
-            	<div class="scrollbox2">
+            	<div id="chatMsgContentDiv">
                     <div class="dialoglist clearfix" id="dialog_list"></div>
                 </div>
                 <i class="img-loading" style="top: 50%;right: 50%;display: none;" pf="chatMessage"></i>
@@ -669,18 +670,17 @@
 
 <script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
-<script type="text/javascript" src="/js/lib/jscroll.js"></script>
+<script type="text/javascript" src="/js/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.superslide.2.1.1.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.xdomainrequest.min.js"></script>
 <script type="text/javascript" src="/js/lib/jsWindows/jsWindows.min.js"></script>
 <script type="text/javascript" src="/js/lib/websocket.min.js"></script>
 <script type="text/javascript" src="/js/lib/store.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.face.js"></script>
-<script type="text/javascript" src="/js/util/chatGA.js"></script>
+<script type="text/javascript" src="/js/util/chatAnalyze.js"></script>
 <script type="text/javascript" src="/js/lib/newquote.js"></script>
 <script type="text/javascript" src="/js/util/common.min.js"></script>
 <script type="text/javascript" src="/js/studio/index.min.js?t=<%=new Date().getTime()%>"></script>
-
 <script type="text/javascript">
 studioChat.web24kPath='<%= web24kPath %>';
 studioChat.apiUrl='<%= apiUrl %>';
@@ -694,18 +694,10 @@ $(function(){
 	/*滚动*/
     teachSlide();
 	heightCalcu();
-	/*滚动条*/
-	if($(window).width()>768){
-		myscroll();
-	}
 });
 $(window).resize(function(e){
 	widthCheck();
 	heightCalcu();
-	/*滚动条*/	
-	if($(window).width()>768){
-		myscroll();
-	}
 });
 function widthCheck(){
     var ww = $(window).width(),rw=440;
@@ -724,14 +716,8 @@ function heightCalcu(){
 	var hh = $(window).height();
 	$('.user_box').height(hh-464);
 	$('.mod_video').height(hh-352);
-	$('.scrollbox2').height(hh-280-$('.mymsg').height());
+	$('#chatMsgContentDiv').height(hh-280-$('.mymsg').height());
 	$('.chat').height(hh-75);
-}
-//滚动条控制js  
-function myscroll(){
-    studioChat.setUserListScroll();
-    studioChat.setTalkListScroll();
-    studioChat.setTabInfoScroll();
 }
 
 function teachSlide(){

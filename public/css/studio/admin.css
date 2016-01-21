@@ -87,7 +87,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .videolist_box{ margin-top:5px;margin-right:10px; height:180px; overflow-y: scroll;overflow-x: hidden;}
 
 .mod_userlist {}
-.user_box{ margin-top:5px;margin-right:10px; height:445px; overflow-y: scroll;overflow-x: hidden;}
+.user_box{ margin-top:5px;height:445px; overflow-y:auto;}
 .user_box ul{ padding-right:10px;}
 .user_box li{ height:37px; position:relative; z-index:10; margin-bottom:1px;}
 .user_box li.zin { z-index:10000}

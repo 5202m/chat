@@ -5,7 +5,6 @@
  */
 var studioChat={
     filePath:'',
-    apiUrl:'',
     //信息类型
     msgType:{
        text:'text' ,
@@ -15,8 +14,6 @@ var studioChat={
     socket:null,
     socketUrl:'',
     userInfo:null,
-    oldTalkDivH:0,
-    newTalkDivH:0,
     init:function(){
         this.setEvent();
         this.setSocket();
@@ -124,8 +121,8 @@ var studioChat={
             if($(this).hasClass("on")){
                 $(this).removeClass("on");
             }else{
-                studioChat.setTalkListScroll();
                 $(this).addClass("on");
+                studioChat.setTalkListScroll(true);
             }
         });
         /*聊天屏蔽下拉框、定向聊天下拉框*/
@@ -140,21 +137,13 @@ var studioChat={
             $('.view_select .selectlist a').removeClass("on");
             $('.view_select .selected').text($(this).text());
             $(this).addClass("on");
-            if($(this).attr("t")=='analyst'){
-                $("#dialog_list").children("[utype!=2]").hide();
-                $("#dialog_list").children("[utype=2]").show();
-            }else if($(this).attr("t")=='me'){
-                $("#dialog_list").children("[isMe=false]").hide();
-                $("#dialog_list").children("[isMe=true]").show();
-            }else{
-                $("#dialog_list").children().show();
-            }
-            studioChat.setTalkListScroll();
+            studioChat.showViewSelect($(this).attr("t"));
+            studioChat.setTalkListScroll(true);
         });
         //对话下拉框事件
         $('.send_select').hover(function() {
             $(this).addClass('dw');
-            studioChat.setUserListScroll();
+            studioChat.setListScroll(".selectlist");
         },function(){
             $(this).removeClass('dw')
         });
@@ -202,6 +191,21 @@ var studioChat={
         });
     },
     /**
+     * 显示过滤的聊天记录
+     * @param t
+     */
+    showViewSelect:function(t){
+        if(t=='analyst'){
+            $("#dialog_list").children("[utype!=2]").hide();
+            $("#dialog_list").children("[utype=2]").show();
+        }else if(t=='me'){
+            $("#dialog_list").children("[isMe=false]").hide();
+            $("#dialog_list").children("[isMe=true]").show();
+        }else{
+            $("#dialog_list").children().show();
+        }
+    },
+    /**
      * 过滤发送消息：过滤一些特殊字符等。
      * 如果返回值为false,则终止发送消息。
      */
@@ -216,56 +220,30 @@ var studioChat={
         return msg;
     },
     /**
-     * 设置用户列表滚动条
+     * 设置列表滚动条
      */
-    setUserListScroll:function(){
-        $(".scrollbox").jscroll({
-            W:"6px",
-            BgUrl:"url(/images/studio/scroll.png)",
-            Bg:"0 0 repeat-y",
-            Bar:{
-                Pos:"up",
-                Bd:{Out:"#b3cfe2",Hover:"#4e90bd"},
-                Bg:{Out:"-10px center repeat-y",Hover:"-20px center repeat-y",Focus:"-20px center repeat-y"}
-            },
-            Btn:{btn:false}
-        });
-        $(".jscroll-h,.jscroll-e").css({
-            'border':'0',
-            'width':'6px'
-        });
+    setListScroll:function(domClass){
+        if($(domClass).hasClass("mCustomScrollbar")){
+            $(domClass).mCustomScrollbar("update");
+        }else{
+            $(domClass).mCustomScrollbar({scrollButtons:{enable:true},theme:"dark"});
+        }
     },
     /**
      * 设置聊天列表滚动条
+     * @param hasInit
+     * @param toBottom
      */
-    setTalkListScroll:function(isCurr) {
-        var dh=$("#dialog_list").height(),sh=$(".scrollbox2").height(),vPosDir='down';
-        if(dh<sh){//判断内容高度小于滚动高度则设置顶部对齐
-            vPosDir='up';
-        }
-        $(".scrollbox2").jscroll({
-            W: "6px",
-            BgUrl: "url(/images/studio/scroll2.png)",
-            Bg: "0 0 repeat-y",
-            Bar: {
-                Pos: vPosDir,
-                isCurr:isCurr,
-                Bd: {Out: "#b3cfe2", Hover: "#4e90bd"},
-                Bg: {Out: "-10px center repeat-y", Hover: "-20px center repeat-y", Focus: "-20px center repeat-y"}
-            },
-            Btn: {btn: false},
-            Fn:function(){
-                //符合条件才滚动
-                if(!$(".scrollbtn").hasClass("on") && studioChat.newTalkDivH>studioChat.oldTalkDivH && studioChat.newTalkDivH>350){
-                    studioChat.setTalkListScroll(true);
-                    studioChat.oldTalkDivH=studioChat.newTalkDivH;
-                }
+    setTalkListScroll:function(toBottom) {
+        if( $("#chatMsgContentDiv").hasClass("mCustomScrollbar")){
+            $("#chatMsgContentDiv").mCustomScrollbar("update");
+            if($(".scrollbtn").hasClass("on")||toBottom) {
+                $("#chatMsgContentDiv").mCustomScrollbar("scrollTo", "bottom");
             }
-        });
-        $(".jscroll-h,.jscroll-e").css({
-            'border': '0',
-            'width': '6px'
-        });
+        }else{
+            $("#chatMsgContentDiv").mCustomScrollbar({scrollButtons:{enable:true},theme:"light-2"});
+            $("#chatMsgContentDiv").mCustomScrollbar("scrollTo", "bottom");
+        }
     } ,
     /**
      * 提取@对话html
@@ -350,13 +328,18 @@ var studioChat={
         var list=$("#dialog_list");
         list.append(dialog);
         this.formatMsgToLink(fromUser.publishTime);//格式链接
+        var vst=$('.view_select .selectlist a[class=on]').attr("t");//按右上角下拉框过滤内容
+        if(vst!='all'){
+            studioChat.showViewSelect(vst);
+        }
         if(!isLoadData && $(".scrollbtn").hasClass("on")) {
-            studioChat.setTalkListScroll();
+            studioChat.setTalkListScroll(true);
         }
         //对话事件
         $('#'+fromUser.publishTime+' .headimg').click(function(){
             studioChat.openDiaLog($('#'+fromUser.publishTime+' .dialogbtn'));
         });
+        //昵称点击
         $('#'+fromUser.publishTime+' .uname').click(function(){
             var diaDom=$('#'+fromUser.publishTime+' .dialogbtn');
             studioChat.openDiaLog(diaDom);
@@ -371,11 +354,6 @@ var studioChat={
             fuIdArr.push(pObj.attr("fuId"));
             studioChat.socket.emit('approvalMsg',{fromUser:studioChat.userInfo,status:$(this).attr("btnType"),publishTimeArr:idArr,fuIdArr:fuIdArr});
         });
-        var readSetDom=$('.view_select .se_cont a[class=on]');
-        if(readSetDom.attr("t")!="on"){ //如果选择了不是查看全部
-            readSetDom.click();
-        }
-        studioChat.newTalkDivH=$("#dialog_list").height();
     },
     /**
      * 打开对话框
@@ -614,7 +592,6 @@ var studioChat={
                 row=data[i];
                 studioChat.setOnlineUser(row);
             }
-            studioChat.setUserListScroll();
             $("#onLineSizeNum").text($("#userListId li").length);
         });
         //断开连接
@@ -649,6 +626,7 @@ var studioChat={
                 }
                 case 'removeMsg':
                     $("#"+result.data.replace(/,/g,",#")).remove();
+                    studioChat.setTalkListScroll();
                     break;
                 case 'leaveRoom':{
                     studioChat.leaveRoomTip(result.flag);
@@ -663,6 +641,7 @@ var studioChat={
                                 for (var i in publishTimeArr) {
                                     $("#"+publishTimeArr[i]).remove();
                                 }
+                                studioChat.setTalkListScroll();
                             }else{
                                 for (var i in publishTimeArr) {
                                     $("#"+publishTimeArr[i]+" .approve").remove();
@@ -680,11 +659,12 @@ var studioChat={
                         for (var i in publishTimeArr) {
                             $("#"+publishTimeArr[i]).remove();
                         }
+                        studioChat.setTalkListScroll();
                     }else{
                         for (var i in data) {
                             studioChat.formatUserToContent(data[i]);
                         }
-                        studioChat.setTalkListScroll();
+                        studioChat.setTalkListScroll(true);
                     }
                     break;
                 }
@@ -704,10 +684,7 @@ var studioChat={
                     row.content.status=row.status;
                     studioChat.formatUserToContent(row);
                 }
-                if(!isAdd) {
-                    this.oldTalkDivH=this.newTalkDivH;
-                    studioChat.setTalkListScroll();
-                }
+                studioChat.setTalkListScroll(true);
             }
         });
     },

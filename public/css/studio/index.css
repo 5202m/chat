@@ -109,10 +109,10 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .videolist_box li a:hover i{ background-position:0 -230px;}
 .videolist_box li a.on i{ background-position:0 -230px;}
 .videolist_box li span { padding-right:10px;}
-.videolist_box{ margin-top:5px;margin-right:10px; height:180px; overflow-y: scroll;overflow-x: hidden;}
+.videolist_box{ margin-top:5px;height:180px;}
 
 .mod_userlist {}
-.user_box{ margin-top:5px;margin-right:10px; height:445px; overflow-y: scroll;overflow-x: hidden;}
+.user_box{ margin-top:5px;height:445px;}
 .user_box ul{ padding-right:10px;}
 .user_box li{ height:37px; position:relative; z-index:10; margin-bottom:1px;}
 .user_box li.zin { z-index:10000}
@@ -272,7 +272,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 
 /*聊天内容*/
 .chat_content{ margin-top:5px; }
-.chat_content .scrollbox2{ padding-right:10px;height:480px;overflow-y: scroll;overflow-x: hidden;}
+.chat_content .scrollbox2{ padding-right:10px;height:480px;}
 .dialog{ height:auto; position:relative; padding:0 53px; margin-bottom:8px; /*float:left;*/ width:auto; clear:both;}
 .dialog.mine{ float:right;}
 .dialog p { background:#fff; border-radius:2px; display:inline-block; *display:inline; *zoom:1;padding:5px 9px; color:#777; line-height:18pt; font-size:11pt;}
