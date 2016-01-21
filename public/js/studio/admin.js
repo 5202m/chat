@@ -231,20 +231,20 @@ var studioChat={
     },
     /**
      * 设置聊天列表滚动条
-     * @param hasInit
      * @param toBottom
      */
     setTalkListScroll:function(toBottom) {
-        if( $("#chatMsgContentDiv").hasClass("mCustomScrollbar")){
-            $("#chatMsgContentDiv").mCustomScrollbar("update");
-            if($(".scrollbtn").hasClass("on")||toBottom) {
-                $("#chatMsgContentDiv").mCustomScrollbar("scrollTo", "bottom");
+        var obj=$("#chatMsgContentDiv");
+        if(obj.hasClass("mCustomScrollbar")){
+            obj.mCustomScrollbar("update");
+            if(toBottom) {
+                obj.mCustomScrollbar("scrollTo", "bottom");
             }
         }else{
-            $("#chatMsgContentDiv").mCustomScrollbar({scrollButtons:{enable:true},theme:"light-2"});
-            $("#chatMsgContentDiv").mCustomScrollbar("scrollTo", "bottom");
+            obj.mCustomScrollbar({scrollInertia:1,scrollButtons:{enable:true},theme:"light-2"});
+            obj.mCustomScrollbar("scrollTo", "bottom");
         }
-    } ,
+    },
     /**
      * 提取@对话html
      */

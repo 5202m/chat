@@ -8,10 +8,10 @@ var studioChat={
     web24kPath:'',
     filePath:'',
     apiUrl:'',
-    studioUrl:'',//直播地址
     exStudioStr:'',//外接直播JSON字符串
     studioDate:'',//直播时间点
     verifyCodeIntervalId:null,
+    exStudioIntervalId:null,
     //信息类型
     msgType:{
         text:'text' ,
@@ -74,11 +74,25 @@ var studioChat={
             }, 5*60*1000);
         }
     },
+    /**
+     * 客户端视频任务
+     */
+    clientVideoTask:function(){
+        var exSrc=$("#studioVideoDiv embed").attr("src");
+        if(exSrc && exSrc.indexOf("yy.com")==-1 && $("#studioTeachId a[class=on]").length<=0){//如果非yy直播的其他直播
+            studioChat.exStudioIntervalId=setInterval(function(){
+                if($("#studioTeachId a[class=on]").length>0){//如果用户点击了教学视频，则无需播放直播
+                    return false;
+                }
+                studioChat.playVideoByDate(false,true);
+            },2*60*1000);//每2分钟检查一次
+        }
+    },
     /**按直播时间播放
      * @param isBackStudio 返回直播
      * 备注：按时间点播放yy视频,不符合时间点直接播放视频
      */
-    playVideoByDate:function(isBackStudio){
+    playVideoByDate:function(isBackStudio,exStudioPlay){
       if(common.dateTimeWeekCheck(this.studioDate, true)){
           this.setVideo(true);
       }else{
@@ -88,14 +102,20 @@ var studioChat={
               for(var index in exObj){
                   row=exObj[index];
                   if(common.dateTimeWeekCheck(row.studioDate, true) &&  common.isValid(row.srcUrl)){
-                      studioChat.studioUrl=row.srcUrl;
-                      studioChat.setStudioVideoDiv(studioChat.studioUrl);
+                      if(!exStudioPlay||isBackStudio) {
+                          studioChat.setStudioVideoDiv(row.srcUrl);
+                          studioChat.clientVideoTask();//开启任务
+                      }
                       hasExStudio=true;
                       break;
                   }
               }
           }
           if(!hasExStudio){//非返回直播以及不存在外接直播则播放教学视频
+              if(exStudioPlay && studioChat.exStudioIntervalId){//如果其他直播已经结束，要终止该定时任务
+                  clearInterval(studioChat.exStudioIntervalId);
+                  studioChat.exStudioIntervalId='';
+              }
               if(!isBackStudio){
                   if($("#studioTeachId a[class=on]").length<=0){
                       $("#studioTeachId li:first a").click();
@@ -105,11 +125,6 @@ var studioChat={
               }
           }
       }
-      /*if(!isBackStudio){//如果是返回直播按钮触发的，无需再次检查
-         setTimeout(function(){//每分钟检查一次
-            studioChat.playVideoByDate(false);
-         },60*1000);
-      }*/
     },
     /**
      * 提取embed对应的dom
@@ -144,10 +159,13 @@ var studioChat={
      */
     setVideo:function(isYy,thisDom){
         try{
+            if(studioChat.exStudioIntervalId){//如果转到yy直播，则终止其他直播
+                clearInterval(studioChat.exStudioIntervalId);
+                studioChat.exStudioIntervalId='';
+            }
             if(isYy){
                 var aDom=$("#studioListId a[class~=ing]"),yc=aDom.attr("yc"),mc=aDom.attr("mc");
-                studioChat.studioUrl='http://yy.com/s/'+yc+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf';
-                studioChat.setStudioVideoDiv(studioChat.studioUrl);
+                studioChat.setStudioVideoDiv('http://yy.com/s/'+yc+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf');
             }else{
                     $("#tvDivId").show();
                     $("#stVideoDiv").hide();
@@ -1161,20 +1179,20 @@ var studioChat={
     },
     /**
      * 设置聊天列表滚动条
-     * @param hasInit
      * @param toBottom
      */
     setTalkListScroll:function(toBottom) {
-        if( $("#chatMsgContentDiv").hasClass("mCustomScrollbar")){
-            $("#chatMsgContentDiv").mCustomScrollbar("update");
+        var obj=$("#chatMsgContentDiv");
+        if(obj.hasClass("mCustomScrollbar")){
+            obj.mCustomScrollbar("update");
             if(toBottom) {
-                $("#chatMsgContentDiv").mCustomScrollbar("scrollTo", "bottom");
+                obj.mCustomScrollbar("scrollTo", "bottom");
             }
         }else{
-            $("#chatMsgContentDiv").mCustomScrollbar({scrollButtons:{enable:true},theme:"light-2"});
-            $("#chatMsgContentDiv").mCustomScrollbar("scrollTo", "bottom");
+            obj.mCustomScrollbar({scrollInertia:1,scrollButtons:{enable:true},theme:"light-2"});
+            obj.mCustomScrollbar("scrollTo", "bottom");
         }
-    } ,
+    },
     /**
      * 提取@对话html
      */

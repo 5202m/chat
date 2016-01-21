@@ -4,7 +4,6 @@
 .mod_video,.mod_notice,.te_list .jt_btn{background:url(../../images/studio/bg1.png) repeat;}
 .mod_tab{ background:#c7c8cb}
 .mod_tab .tabcont{ *padding-top:0}
-.mod_tab .notice_cont .sy_panel{background:#c7c8cb;}
 .te_ctrl a,.view_select .se_cont{background:url(../../images/studio/black20.png) repeat;}
 .te_ctrl a:hover,.view_select.dw .se_cont,.blackbg{background:url(../../images/studio/black40.png) repeat;}
 .input_area .sendbtn{ margin-top:-51px}

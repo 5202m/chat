@@ -182,18 +182,18 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .mod_tab .tab_box.on{ display:block;}
 .mod_tab .notice_cont{ padding:15px 40px 0;color:#4e4e4e; line-height:22pt; font-size:11pt;overflow: auto;height: 100%;}
 .mod_tab .notice_cont img{width:100%; height:auto;}
-.mod_tab .notice_cont .sy_panel{width:100%; margin: 0 auto; /*background-color: rgba(219,219,219,.9);*/}
+.mod_tab .notice_cont .sy_panel{width:100%; margin: 0 auto;}
 .mod_tab .notice_cont .sy_panel .sy_nav a{float: left; display: block; color: #757575; font-size: 14px; padding: 6px 0px 6px 0px; text-align: center; text-decoration: none; line-height: 16px; height: auto;}
 .mod_tab .notice_cont .sy_panel .sy_nav a span{margin-top: 5px; font-size:12px;}
 .mod_tab .notice_cont .sy_panel .sy_nav a.active{ color: #a17d20; background: #f6f6f6;}
 .mod_tab .notice_cont .sy_panel .sy_cont{clear: both;}
 .mod_tab .notice_cont .sy_nav a .dir{position: relative;top: 14px;left: -36px;display:none;}
-.mod_tab .notice_cont .sy_cont div{background-color: #f6f6f6; display: block; height: auto;border-top: 1px solid rgba(181, 144, 48, 0.25);}
-.mod_tab .notice_cont table.syllabus{/*background-color: #BBBBBB;*/ color: #424242; font-size: 14px; margin-bottom: 10px; width: 100%;}
+.mod_tab .notice_cont .sy_cont div{background-color: #f6f6f6; display: block; height: auto;border-top: 1px solid #E5DCC4;}
+.mod_tab .notice_cont table.syllabus{color: #424242; font-size: 14px; margin-bottom: 10px; width: 100%;}
 .mod_tab .notice_cont table.syllabus tbody{display: none;}
-.mod_tab .notice_cont table.syllabus th{/*background-color: #E5E5E5; */text-align: center; vertical-align: middle; border-bottom: 1px solid rgba(181, 144, 48, 0.25);}
-.mod_tab .notice_cont table.syllabus td:first-child{border-left: 1px solid rgba(181, 144, 48, 0.25);}
-.mod_tab .notice_cont table.syllabus td{/*background-color: #fdfdfd; */text-align: center; vertical-align: middle; border-bottom: 1px solid rgba(181, 144, 48, 0.25);border-right: 1px solid rgba(181, 144, 48, 0.25);}
+.mod_tab .notice_cont table.syllabus th{text-align: center; vertical-align: middle; border-bottom: 1px solid #E5DCC4;}
+.mod_tab .notice_cont table.syllabus td:first-child{border-left: 1px solid #E5DCC4;}
+.mod_tab .notice_cont table.syllabus td{text-align: center; vertical-align: middle; border-bottom: 1px solid #E5DCC4;border-right: 1px solid #E5DCC4;}
 .mod_tab .notice_cont table.syllabus tr.prev{color: #757575;}
 .mod_tab .notice_cont table.syllabus tr.ing{color: #3181c6;}
 .mod_tab .notice_cont table.syllabus tr.next{color: #343434;}
