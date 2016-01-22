@@ -33,27 +33,46 @@ var messageService ={
             //直播间-不允许私聊或者是游客
             searchObj["toUser.talkStyle"] = 0;
         }
-
-        console.log("loadMsg->searchObj :"+JSON.stringify(searchObj));
-        chatMessage.find(searchObj).select(selectSQL).limit(this.maxRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
-            if(userInfo.userType != 0 && userInfo.userType!=3){//如果是审核角色登录，则加载审核通过的以及指定该角色执行的待审核信息
-                var beginDate=new Date(),endDate=new Date();
-                beginDate.setHours(0,0,0);
-                endDate.setHours(23,59,59);
-                chatMessage.find({groupId:groupId,approvalUserArr:userInfo.userId,status:0,valid:1,createDate:{ "$gte":beginDate,"$lte":endDate}}).select(selectSQL).sort({'publishTime':'desc'}).exec(function (unErr,unApprovalList) {
-                    if(!approvalList){
-                        approvalList=[];
-                    }
-                    if(!unErr && unApprovalList){
-                        callback(unApprovalList.concat(approvalList));
-                    }else{
-                        callback(approvalList);
-                    }
-                });
-            }else{
-                callback(approvalList);
-            }
+        chatMessage.db().find(searchObj).select(selectSQL).limit(this.maxRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
+            messageService.getUnApprovalList(approvalList,userInfo,selectSQL,function(resultList){
+                var diffLength=100-resultList.length;
+                if(diffLength>0){//往上一年查询
+                    var year=new Date().getFullYear();
+                    chatMessage.db(year<=2015?2015:year-1).find(searchObj).select(selectSQL).limit(diffLength).sort({'publishTime':'desc'}).exec(function (err,oldList) {
+                        callback(resultList.concat(oldList));
+                    });
+                }else{
+                    callback(resultList);
+                }
+            });
         });
+    },
+
+    /**
+     * 提取待审核的记录
+     * @param approvalList
+     * @param userInfo
+     * @param selectSQL
+     * @param callback
+     */
+    getUnApprovalList:function(approvalList,userInfo,selectSQL,callback){
+        if(userInfo.userType != 0 && userInfo.userType!=3){//如果是审核角色登录，则加载审核通过的以及指定该角色执行的待审核信息
+            var beginDate=new Date(),endDate=new Date();
+            beginDate.setHours(0,0,0);
+            endDate.setHours(23,59,59);
+            chatMessage.db().find({groupId: userInfo.groupId,approvalUserArr:userInfo.userId,status:0,valid:1,createDate:{ "$gte":beginDate,"$lte":endDate}}).select(selectSQL).sort({'publishTime':'desc'}).exec(function (unErr,unApprovalList) {
+                if(!approvalList){
+                    approvalList=[];
+                }
+                if(!unErr && unApprovalList){
+                    callback(unApprovalList.concat(approvalList));
+                }else{
+                    callback(approvalList);
+                }
+            });
+        }else{
+            callback(approvalList);
+        }
     },
     /**
      * 加载大图
@@ -61,7 +80,7 @@ var messageService ={
      * @param callback
      */
     loadBigImg:function(userId,publishTime,callback){
-        chatMessage.findOne({userId:userId,publishTime:publishTime},{'content.maxValue':1},function (err,data) {
+        chatMessage.db().findOne({userId:userId,publishTime:publishTime},{'content.maxValue':1},function (err,data) {
             if(!err && data) {
                 callback(data.content.maxValue);
             }else{
@@ -75,12 +94,11 @@ var messageService ={
      * @param callback
      */
     updateMsgStatus:function(data,callback){
-        //存在则更新上线状态及上线时间
         var fromUser=data.fromUser;
-        chatMessage.update({'groupId':fromUser.groupId,'publishTime':{ '$in':data.publishTimeArr}},{$set:{ status: data.status,approvalUserNo:fromUser.userId}},{ multi: true },function(err,row){
+        chatMessage.db().update({'groupId':fromUser.groupId,'publishTime':{ '$in':data.publishTimeArr}},{$set:{ status: data.status,approvalUserNo:fromUser.userId}},{ multi: true },function(err,row){
                 if(!err && row){
                     console.log("updateMsgStatus->update chatMessage success!");
-                    chatMessage.find({'groupId':data.fromUser.groupId,'publishTime':{ '$in':data.publishTimeArr}},function(err,rowList){
+                    chatMessage.db().find({'groupId':data.fromUser.groupId,'publishTime':{ '$in':data.publishTimeArr}},function(err,rowList){
                         if(!err && rowList && rowList.length>0){
                             if(data.status==1){//审批通过后，同步信息到客户端
                                 callback({status:data.status,data:rowList});
@@ -102,7 +120,7 @@ var messageService ={
     saveMsg:function(data,userNoArr){
         var userInfo=data.fromUser;
         var content=data.content;
-        var chatMessageModel = new chatMessage({
+        var chatMessageModel = new chatMessage.db()({
             _id:null,
             userId:userInfo.userId,
             nickname:userInfo.nickname||'',
@@ -117,6 +135,7 @@ var messageService ={
             accountNo:userInfo.accountNo,
             toUser:userInfo.toUser,
             content:{
+                msgStatus:(content.msgStatus==null || content.msgStatus==undefined)?1:content.msgStatus,//信息状态，默认为在线(1)，离线为0
                 msgType:content.msgType,
                 value:content.value,
                 maxValue:content.maxValue,

@@ -20,6 +20,7 @@ var visitorService = {
             groupType: model.groupType,//房间组别
             roomId: model.roomId,//所在房间id
             userId: model.userId,//用户id
+            nickname: model.nickname,//用户昵称
             ip: model.ip,//访问者ip
             visitTimes: model.visitTimes || 1,//累计访问次数
             loginTimes: model.loginTimes || 0,//累计登陆次数

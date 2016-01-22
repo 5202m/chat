@@ -325,7 +325,7 @@ var chatService ={
                         socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:true}});
                         //直播间创建访客记录
                         var userAgent=socket.client.request.headers["user-agent"];
-                        visitorService.saveVisitorRecord('online',{userAgent:userAgent,mobile:dbMobile,userId:userInfo.userId,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address});
+                        visitorService.saveVisitorRecord('online',{userAgent:userAgent,mobile:dbMobile,userId:userInfo.userId,nickname:userInfo.nickname,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address});
                     }else{
                         chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,true,function(roomNum){
                             var noticeData={type:chatService.noticeType.onlineNum,data:{userId:userInfo.userId,hasRegister:userInfo.hasRegister,groupId:userInfo.groupId,onlineUserNum:roomNum}};
@@ -356,7 +356,7 @@ var chatService ={
                                     socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:false}});
                                 }
                                 //直播间记录离线数据
-                                visitorService.saveVisitorRecord('offline',{userId:userInfo.userId,groupType:userInfo.groupType,clientStoreId:userInfo.clientStoreId});
+                                visitorService.saveVisitorRecord('offline',{groupType:userInfo.groupType,clientStoreId:userInfo.clientStoreId});
                                 socket.leave(userInfo.groupId);
                                 if(socket){
                                     delete socket;
@@ -447,7 +447,7 @@ var chatService ={
                     userService.getRoomCsUser(userInfo.groupId,function(info){
                         if(info) {
                             sendSocket.emit('targetCS', {userId: info.userNo, nickname: info.userName});//通知客户端目前所选客服，确定客户与客服之间的信息交换
-                            callback({userId:info.userNo,nickname:info.userName});
+                            callback({userId:info.userNo,nickname:info.userName,msgStatus:0});
                         }else{
                             callback(null);
                         }
