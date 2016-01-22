@@ -28,17 +28,27 @@ var mongoose = require('mongoose')
           question:String
       },
       content:{//内容
+          msgStatus:{type:Number, default:1},//信息状态，0 离线信息 1、在线信息，默认为在线信息
           msgType:String, //信息类型 txt,img缩略图的值。
           value:String,//默认值，
           maxValue:String, //如img大图值
           needMax:{type:Number, default:0} //是否需要最大值(0 表示不需要，1 表示需要）
       },
       fromPlatform:String,//平台来源
-      status:{type:Number, default:1}, //内容状态：0、等待审批，1、通过 ；2、拒绝
+      status:{type:Number, default:1}, //记录整体状态：0、等待审批，1、通过 ；2、拒绝
       publishTime:{type:String,index:true}, //发布日期
       createUser:{type:String,default:'admin'}, //新增记录的用户，默认admin
       createIp:String,//新增记录的Ip
       createDate:Date, //创建日期
       valid:{type:Number, default:1}//是否有效，1为有效，0为无效
     });
-module.exports =mongoose.model('chatMessage',chatMessageSchema,"chatMessage");
+module.exports ={
+    db:function(year){
+        var key="chatMessage_"+new Date().getFullYear();
+        if(year){
+           key="chatMessage_"+year;
+        }
+        return mongoose.model(key,chatMessageSchema,key);
+    }
+};
+

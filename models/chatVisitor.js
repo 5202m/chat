@@ -20,6 +20,7 @@ var chatVisitorSchema = new Schema({
     groupType: {type: String, index: true},//房间组别
     roomId: {type: String, index: true},//所在房间id
     userId: String,//用户id
+    nickname: String,//用户昵称
     ip: String,//访问者ip
     visitTimes: Number,//累计访问次数
     loginTimes: Number,//累计登陆次数
