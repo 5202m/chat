@@ -325,7 +325,7 @@ var chatService ={
                         socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:true}});
                         //直播间创建访客记录
                         var userAgent=socket.client.request.headers["user-agent"];
-                        visitorService.saveVisitorRecord('online',{userAgent:userAgent,mobile:dbMobile,userId:userInfo.userId,nickname:userInfo.nickname,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address});
+                        visitorService.saveVisitorRecord('online',{userAgent:userAgent,mobile:dbMobile,clientGroup:userInfo.clientGroup,userId:userInfo.userId,nickname:userInfo.nickname,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address});
                     }else{
                         chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,true,function(roomNum){
                             var noticeData={type:chatService.noticeType.onlineNum,data:{userId:userInfo.userId,hasRegister:userInfo.hasRegister,groupId:userInfo.groupId,onlineUserNum:roomNum}};

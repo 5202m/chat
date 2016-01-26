@@ -4,6 +4,7 @@
 var common = require('../util/common');
 var logger=require('../resources/logConf').getLogger('visitorService');//引入log4js
 var chatVisitor = require('../models/chatVisitor');//引入chatVisitor数据模型
+
 /**
  * 定义访问者服务类
  */
@@ -31,6 +32,7 @@ var visitorService = {
             loginDate: model.loginDate,//登录时间
             loginPreDate: model.loginPreDate,//上次登录时间
             mobile: model.mobile,//手机号
+            clientGroup: model.clientGroup,//客户组
             accountNo: model.accountNo,//账号
             userAgent: model.userAgent,//用户客户端信息
             updateDate: model.updateDate,//更新时间
@@ -77,9 +79,8 @@ var visitorService = {
                             }
                         });
                     }
-                }
-                else{
-                    common.copyObject(data,model,true);//数据复
+                }else{
+                    common.copyObject(data,model,true);//数据复制
                     visitorService.modifyDataByType(type,data,false);//按类型调整要保存的数据结构
                     data.save(function (err) {
                         if(err){
@@ -131,6 +132,18 @@ var visitorService = {
                 data.onlineStatus=0;
                 data.loginStatus=0;
                 data.offlineDate=currTime;
+                //计算累计当日累积在线时长
+                var loc_startTime = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate());
+                if(data.onlineMSDate instanceof Date == false || data.onlineMSDate.getTime() === loc_startTime.getTime()){
+                    data.onlineMS = 0;
+                    data.onlineMSDate = loc_startTime;
+                }
+                if(data.onlineDate instanceof Date){
+                    if(data.onlineDate > loc_startTime){
+                        loc_startTime = data.onlineDate;
+                    }
+                    data.onlineMS = (data.onlineMS || 0) + currTime.getTime() - loc_startTime.getTime();
+                }
                 break;
             }
             case 'login':{

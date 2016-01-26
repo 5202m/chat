@@ -24,6 +24,8 @@ var chatVisitorSchema = new Schema({
     ip: String,//访问者ip
     visitTimes: Number,//累计访问次数
     loginTimes: Number,//累计登陆次数
+    onlineMSDate : Date, //累积在线毫秒数数据日期
+    onlineMS : Number, //累积在线毫秒数
     onlineStatus: Number,//在线状态 1-在线 0-下线
     loginStatus: Number,//登陆状态 1-登入 0-登出
     onlineDate: Date,//最近上线时间
@@ -33,6 +35,7 @@ var chatVisitorSchema = new Schema({
     loginPreDate: Date,//上次登录时间
     mobile: String,//手机号
     accountNo: String,//账号
+    clientGroup: String,//客户组，详请见constant.clientGroup
     userAgent: String,//用户客户端信息
     updateDate: Date,//更新时间
     valid: {type:Number, default:1} //是否删除：0 、删除；1、正常
