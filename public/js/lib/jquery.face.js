@@ -5,7 +5,7 @@
 			id : 'facebox',
 			path : 'face/',
 			assign : 'content',
-            top:null,
+            zIndex:1000,
 			tip : ''
 		};
 		var option = $.extend(defaults, options);
@@ -26,33 +26,40 @@
             }
 			var strFace, labFace;
 			if($('#'+id).length<=0){
-				strFace = '<div id="'+id+'" style="position:absolute;display:none;z-index:1000;" class="qqFace">' +
+				strFace = '<div id="'+id+'" style="position:absolute;display:none;z-index:'+option.zIndex+';" class="qqFace">' +
 							  '<table border="0" cellspacing="0" cellpadding="0"><tr>';
 				for(var i=1; i<=75; i++){
 					labFace = path+tip+i+'.gif';
-					strFace += '<td><img src="'+path+i+'.gif" onclick="$(\'#'+option.assign+'\').insertAtCaret(\'' + labFace + '\');" /></td>';
+					strFace += '<td><img src="'+path+i+'.gif" tsg="'+option.assign+'" lf="'+labFace+'"/></td>';
 					if( i % 15 == 0 ) strFace += '</tr><tr>';
 				}
 				strFace += '</tr></table></div>';
-			}
-			$(this).parent().append(strFace);
-			var offset = $(this).position();
-            var cssTop=$('#'+id).css("top");
-            if(cssTop.indexOf('px')==-1){
-                var top = offset.top + $(this).outerHeight();
-                $('#'+id).css('top',top);
+                $(this).parent().append(strFace);
+                $(this).parent().find("img").click(function(){
+                    $('#'+$(this).attr("tsg")).insertAtCaret($(this).attr("lf"));
+                    $(this).parents("table").parent().hide();
+                });
+                var offset = $(this).position();
+                var cssTop=$('#'+id).css("top");
+                if(cssTop.indexOf('px')==-1){
+                    var top = offset.top + $(this).outerHeight();
+                    $('#'+id).css('top',top);
+                }
+                $('#'+id).css('left',offset.left);
+			}else{
+                $('#'+id).show();
             }
-			$('#'+id).css('left',offset.left);
-			$('#'+id).show();
 			e.stopPropagation();
 		});
+        $(this).click();
 	};
 
 })(jQuery);
-jQuery.fn.extend({ 
+jQuery.fn.extend({
 	insertAtCaret: function(textFeildValue){
 	    textFeildValue='<img src="'+textFeildValue+'"/>';
-		var textObj = $(this).get(0); 
-		textObj.innerHTML+=textFeildValue; 
-	} 
+		var textObj = $(this).get(0);
+        textObj.innerHTML+=textFeildValue;
+        $(this).focusEnd();
+    }
 });

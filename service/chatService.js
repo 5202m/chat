@@ -301,7 +301,7 @@ var chatService ={
             });
             //登录则加入房间,groupId作为唯一的房间号
             socket.on('login',function(data){
-                var userInfo=data.userInfo,lastPublishTime=data.lastPublishTime, allowWhisper = data.allowWhisper;
+                var userInfo=data.userInfo,lastPublishTime=data.lastPublishTime, allowWhisper = data.allowWhisper,fUserTypeStr=data.fUserTypeStr;
                 if(common.isBlank(userInfo.groupType)){
                     return false;
                 }
@@ -311,7 +311,7 @@ var chatService ={
                 userInfo.onlineDate=new Date();
                 chatService.setClientSequence(userInfo);
                 socket.userInfo=userInfo;//缓存用户信息
-                userService.updateMemberInfo(userInfo,function(sendMsgCount,dbMobile){
+                userService.updateMemberInfo(userInfo,function(sendMsgCount,dbMobile,offlineDate){
                     socket.userInfo.sendMsgCount=sendMsgCount;
                     socket.join(userInfo.groupId);
                     chatService.setRoomOnlineUser(userInfo,true,function(roomUserArr){
@@ -325,7 +325,23 @@ var chatService ={
                         socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:true}});
                         //直播间创建访客记录
                         var userAgent=socket.client.request.headers["user-agent"];
-                        visitorService.saveVisitorRecord('online',{userAgent:userAgent,mobile:dbMobile,clientGroup:userInfo.clientGroup,userId:userInfo.userId,nickname:userInfo.nickname,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address});
+                        if(parseInt(userInfo.userType)<=constant.roleUserType.member){
+                            var vrRow={userAgent:userAgent,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,nickname:userInfo.nickname,clientGroup:userInfo.clientGroup,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address};
+                            if(userInfo.clientGroup==constant.clientGroup.visitor){
+                                vrRow.visitorId=userInfo.userId;
+                            }else{
+                                vrRow.mobile=dbMobile;
+                                vrRow.userId=userInfo.userId;
+                                vrRow.loginStatus=1;
+                            }
+                            visitorService.saveVisitorRecord('online',vrRow);
+                        }
+                        //加载私聊离线信息提示
+                        if(allowWhisper && offlineDate && common.isValid(fUserTypeStr)){
+                            messageService.getWhUseMsgCount(userInfo.groupType,userInfo.groupId,userInfo.userType,fUserTypeStr.split(","),userInfo.userId,offlineDate, function(whUserData){
+                                socket.emit('loadWhMsg',{type:'offline',data:whUserData});
+                            });
+                        }
                     }else{
                         chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,true,function(roomNum){
                             var noticeData={type:chatService.noticeType.onlineNum,data:{userId:userInfo.userId,hasRegister:userInfo.hasRegister,groupId:userInfo.groupId,onlineUserNum:roomNum}};
@@ -335,7 +351,7 @@ var chatService ={
                     }
                 });
                 //加载已有内容
-                messageService.loadMsg(userInfo,lastPublishTime,allowWhisper,function(msgData){
+                messageService.loadMsg(userInfo,lastPublishTime,false,function(msgData){
                     //同步数据到客户端
                     socket.emit('loadMsg', {msgData:msgData,isAdd:common.isValid(lastPublishTime)?true:false});
                 });
@@ -356,7 +372,7 @@ var chatService ={
                                     socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:false}});
                                 }
                                 //直播间记录离线数据
-                                visitorService.saveVisitorRecord('offline',{groupType:userInfo.groupType,clientStoreId:userInfo.clientStoreId});
+                                visitorService.saveVisitorRecord('offline',{roomId:userInfo.groupId,groupType:userInfo.groupType,clientStoreId:userInfo.clientStoreId});
                                 socket.leave(userInfo.groupId);
                                 if(socket){
                                     delete socket;
@@ -411,6 +427,12 @@ var chatService ={
             //信息传输
             socket.on('sendMsg',function(data){
                 chatService.acceptMsg(data,socket);
+            });
+            //提取私聊信息
+            socket.on('getWhMsg',function(data){
+                messageService.loadMsg({groupType:data.groupType,groupId:data.groupId,userId:data.userId,toUser:{userId:data.toUserId}},null,true, function(result){
+                    socket.emit('loadWhMsg',{type:'online',data:result,toUserId:data.toUserId});
+                });
             });
         });
     },
@@ -511,26 +533,34 @@ var chatService ={
     acceptMsg:function(data,socket){
         var userInfo=data.fromUser,groupId=userInfo.groupId;
         //如果首次发言需要登录验证(备注：微信取openId为userId，即验证openId）
-        userService.checkUserLogin(userInfo,function(row){
+        var toUser=userInfo.toUser,isWh=toUser && common.isValid(toUser.userId) && "1"==toUser.talkStyle;//私聊
+        var isVistorWh=(isWh && constant.clientGroup.visitor==userInfo.clientGroup);
+        userService.checkUserLogin(userInfo,isVistorWh,function(row){
             if(row){
+                var userSaveInfo={};
+                if(!isVistorWh){
+                    var tipResult=userService.checkUserGag(row, userInfo.groupId);//检查用户禁言
+                    if(!tipResult.isOK){//是否设置了用户禁言
+                        chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:tipResult,rule:true});
+                        return false;
+                    }
+                    userSaveInfo=row.loginPlatform.chatUserGroup[0].toObject();//用于信息保存
+                    userSaveInfo.mobilePhone=row.mobilePhone;
+                    userInfo.nickname=userSaveInfo.nickname;
+                    userSaveInfo.userType=userInfo.userType=userSaveInfo.userType||userInfo.userType;
+                }else{
+                    userSaveInfo.userType=userInfo.userType=constant.roleUserType.visitor;//-1 表示游客
+                    userSaveInfo.nickname= userInfo.nickname;
+                }
                 var currentDate = new Date();
                 userInfo.publishTime = currentDate.getTime()+"_"+process.hrtime()[1];//产生唯一的id
-                var userSaveInfo=row.loginPlatform.chatUserGroup[0].toObject();//用于信息保存
-                userSaveInfo.userType=userInfo.userType=userSaveInfo.userType||userInfo.userType;
-                userInfo.nickname=userSaveInfo.nickname;
-                userSaveInfo.avatar=userInfo.avatar;
+                userSaveInfo.groupType=userSaveInfo._id||userInfo.groupType;
                 userSaveInfo.position=userInfo.position;
-                userSaveInfo.mobilePhone=row.mobilePhone;
+                userSaveInfo.avatar=userInfo.avatar;
                 userSaveInfo.groupId=userInfo.groupId;
                 userSaveInfo.publishTime=userInfo.publishTime;
                 userSaveInfo.userId=userInfo.userId;
                 userSaveInfo.toUser=userInfo.toUser;
-                userSaveInfo.groupType=userSaveInfo._id||userInfo.groupType;
-                var tipResult=userService.checkUserGag(row, userInfo.groupId);//\检查用户禁言
-                if(!tipResult.isOK){//是否设置了用户禁言
-                    chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:tipResult,rule:true});
-                    return false;
-                }
                 //验证规则
                 userService.verifyRule(userInfo.userType,groupId,data.content,function(resultVal){
                     if(!resultVal.isOK){//匹配规则，则按规则逻辑提示
@@ -557,25 +587,17 @@ var chatService ={
                     } else{
                         //没有定义审核规则，无需审核
                         data.content.status=1;//设为通过
-                        var toUser=userInfo.toUser,isWh=toUser && common.isValid(toUser.userId) && "1"==toUser.talkStyle;//私聊
                         //私聊权限逻辑判断
-                        if(isWh && (!common.containSplitStr(resultVal.talkStyle,toUser.talkStyle)||(constant.roleUserType.member!=userInfo.userType && !common.containSplitStr(resultVal.whisperRoles,userInfo.userType))||
-                                    (constant.roleUserType.member==userInfo.userType && !common.containSplitStr(resultVal.whisperRoles,toUser.userType)))){
+                        if(isWh && (!common.containSplitStr(resultVal.talkStyle,toUser.talkStyle)||(constant.roleUserType.member<parseInt(userInfo.userType) && !common.containSplitStr(resultVal.whisperRoles,userInfo.userType))||
+                                    (constant.roleUserType.member>=parseInt(userInfo.userType) && !common.containSplitStr(resultVal.whisperRoles,toUser.userType)))){
                             //通知自己的客户端
                             chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:{tip:'你或对方没有私聊权限'},rule:true});
                             return false;
                         }
-                        var isToCSUser=toUser && common.isValid(toUser.userId) && (constant.roleUserType.cs==userInfo.toUser.userType || constant.roleUserType.cs==userInfo.toUser.userId);//判断是否客服
-                        if(!isToCSUser) {//非发送给客服
-                            messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
-                        }
-                        //发送聊天信息
-                        if(data.content.msgType=='img'){
-                            data.content.maxValue='';
-                        }
-                        var userInfoTmp=null,user=null,sendInfo=null;
                         //发送给自己
                         chatService.sendMsgToSelf(socket,userInfo,{uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}});
+                        var isToCSUser=constant.fromPlatform.studio!=userInfo.groupType && toUser && common.isValid(toUser.userId) && (constant.roleUserType.cs==userInfo.toUser.userType || constant.roleUserType.cs==userInfo.toUser.userId);//判断是否客服
+                        var imgMaxValue=data.content.maxValue;
                         //发送给除自己之外的用户
                         if(isToCSUser && socket){//判断是否发送信息给客服
                             chatService.toOnlineCS(socket,userInfo,{fromUser:userInfo,content:data.content},function(newUserInfo){
@@ -589,8 +611,15 @@ var chatService ={
                             });
                         }else{
                             if(isWh){//私聊
-                                chatService.sendMsgToUser(socket?false:true,userInfo.groupType,groupId,toUser.userId,{fromUser:userInfo,content:data.content});
+                                data.content.maxValue="";
+                                chatService.sendMsgToUser(socket?false:true,userInfo.groupType,groupId,toUser.userId,{fromUser:userInfo,content:data.content},function(isOnline){
+                                    data.content.msgStatus=isOnline?1:0;//判断信息是否离线或在线
+                                    data.content.maxValue=imgMaxValue;
+                                    messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
+                                });
                             }else{
+                                messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
+                                data.content.maxValue="";
                                 if(socket) {
                                     socket.broadcast.to(groupId).emit('sendMsg', {fromUser:userInfo,content:data.content});
                                 }else{//如果是外部发送信息，即socket不存在，比如发送图片，直接使用sendMsgToRoom方法
@@ -715,16 +744,17 @@ var chatService ={
      */
     sendMsgToUser:function(isFromRedis,groupType,groupId,toUserId,data,callback){
         this.getRoomOnlineUser(groupId,function(roomUserArr){
-            var userInfoTmp=null,space=chatService.getSpaceSocket(groupType,isFromRedis);
+            var userInfoTmp=null,space=chatService.getSpaceSocket(groupType,isFromRedis),online=false;
             for(var i in roomUserArr){
                 userInfoTmp = roomUserArr[i];
                 if(userInfoTmp.userId==toUserId){
                     space.to(userInfoTmp.socketId).emit('sendMsg',data);
+                    online=true;
                     break;
                 }
             }
             if(callback){
-                callback();
+                callback(online);
             }
         });
     },

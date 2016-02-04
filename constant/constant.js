@@ -18,7 +18,8 @@ var constant={
     pwdKey:'pm_chat_pwd',//密码加密key
     systemUserPrefix:'sys_',//微信前台登录，系统用户默认前缀
     roleUserType:{ //角色与聊天室用户类别对应关系
-        member:0,//会员
+        visitor:-1,
+        member:0,//前台会员
         admin:1,//管理员
         analyst:2, //分析师
         cs:3 //客服

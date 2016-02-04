@@ -341,6 +341,15 @@ var common = {
         return str;
     },
     /**
+     * 清除html多余代码
+     *  排除表情,去除其他所有html标签
+     * @param msg
+     * @returns {XML|string|void}
+     */
+    clearMsgHtml:function(msg){
+       return msg.replace(/<\/?(?!(img|IMG)\s+src="[^>"]+\/face\/[^>"]+"\s*>)[^>]*>/g,'');
+    },
+    /**
      * 格式化显示课程安排表
      * @param syllabus {{days : [{day: Integer, status : Integer}], timeBuckets : [{startTime : String, endTime : String, course : [{lecturer : String, title : String, status : Integer}]}]}}
      * @param currTime {{day : Integer, time : String}}
@@ -543,3 +552,27 @@ if(!window.console){
         return getInstance();
     })();
 }
+/**
+ * 可编辑div焦点定位通用方法
+ * @returns {$.fn}
+ */
+$.fn.focusEnd = function() {
+    $(this).focus();
+    var tmp = $('<span />').appendTo($(this)),
+        node = tmp.get(0),
+        range = null,
+        sel = null;
+    if (document.selection) {
+        range = document.body.createTextRange();
+        range.moveToElementText(node);
+        range.select();
+    } else if (window.getSelection) {
+        range = document.createRange();
+        range.selectNode(node);
+        sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
+    tmp.remove();
+    return this;
+};

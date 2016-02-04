@@ -11,6 +11,7 @@
 <meta content="金道贵金属打造在线贵金属实盘直播室，金道研究院名家观点即时播报，让您的掘金之旅在此起航！携手金道，生金有道！" name="description">
 <link href="/js/lib/jsWindows/jsWindows.min.css" rel="stylesheet" type="text/css">
 <link href="/js/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+<link href="/js/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
 <link href="/css/studio/index.min.css" type="text/css" rel="stylesheet" />
 <link href="/css/face.css" type="text/css" rel="stylesheet" />
 <!--[if lt IE 9]>
@@ -26,13 +27,14 @@
        	<a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank"  onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'open_real_account', 'content_top',1,true]);"><i class="real"></i><span>开立真实账户</span></a>
         <a href="http://oa.24k.hk/zh/account_02.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'open_demo_account', 'content_top',1,true]);"><i class="mn"></i><span>开立模拟账户</span></a>
         <a onclick="openLive800Chat();_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_live800', 'content_top',1,true]);" href="javascript:void(0);"><i class="kf"></i><span>在线客服</span></a>
-          <%if(userSession.isLogin){%>
-              <a href="javascript:" class="username"><%= userSession.nickname %></a>
-              <a href="/studio/logout" class="logout">注销</a>
-          <%} else {%>
-              <a href="javascript:" class="login" id="login_a" tp="content_top">登录</a>
-              <a href="javascript:" class="register" id="register_a" tp="content_top">注册</a>
-          <%}%>
+        <a href="javascript:void(0);" class="fm_btn"><i class="fm"></i><span>手机解盘</span><div class="fm_qrdiv"><img src="/images/studio/firmlive_qr.jpg"><p>微信实盘直播  先机随身而行<br>专家边解盘  边派送美金红包</p></div><b></b></a>
+        <%if(userSession.isLogin){%>
+          <a href="javascript:" class="username"><%= userSession.nickname %></a>
+          <a href="/studio/logout" class="logout">注销</a>
+        <%} else {%>
+          <a href="javascript:" class="login" id="login_a" tp="content_top">登录</a>
+          <a href="javascript:" class="register" id="register_a" tp="content_top">注册</a>
+        <%}%>
       </div>
   </div>
 </div>
@@ -220,6 +222,16 @@
                 <i class="img-loading" style="top: 50%;right: 50%;display: none;" pf="chatMessage"></i>
             </div>
         </div>
+        <!-- 私信 begin -->
+        <div class="pletter_hint dn">
+            <div class="tit">您有新消息！</div>
+            <div class="cont">
+                <p><span></span><label class="more_p dn">等多人</label>，给你发了信息</p>
+                <a href="javascript:void(0)" class="showbtn" id="newMsgTipBtn">查看</a>
+                <a href="javascript:void(0)" class="pl_close" t="pletter_hint">关闭</a>
+            </div>
+        </div>
+        <a href="javascript:" style="display:none;" id="newMsgShowBtn"></a>
         <!-- chat_input begin -->
         <div class="chat_input">
             <div class="mymsg dn">
@@ -228,33 +240,23 @@
                 <a href="javascript:" class="closebtn">关闭</a>
             </div>
             <div class="input_box">
-            	<div class="toolbar">
-                	<a href="javascript:void(0)" class="facebtn">表情</a>
-                    <a href="javascript:void(0)" class="tbtn clearbtn">清屏</a>
-                    <a href="javascript:void(0)" class="tbtn scrollbtn on">滚动</a>
-                    <a href="javascript:void(0)" onclick="openQQChatByCommonv3();_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_QQ', 'content_last',1,true]);" class="tbtn qqbtn"><span>QQ</span>客服</a>
-
-                    <div class="send_select">
-                        <div class="se_cont">
-                            <div class="selected">对所有人说</div>
-                            <div class="selectlist scrollbox">
-                                <div id="send_selelct_list">
-                                    <a href="javascript:void(0)" class="on" uid="all">对所有人说</a>
-                                </div>
-                            </div>
-                        </div>
-                        <i></i>
+                <div class="toolbar">
+                    <a href="javascript:void(0)" class="facebtn" id="msgFaceBtn" title="添加表情">表情</a>
+                    <a href="javascript:void(0)" class="tbtn clearbtn" title="清屏">清屏</a>
+                    <a href="javascript:void(0)" class="tbtn scrollbtn on" title="自动滚屏">滚屏</a>
+                    <div class="cmtalk">
+                        <a href="javascript:void(0)" class="cm_prev dn"><i></i></a>
+                        <div class="cm_wrap"></div>
+                        <a href="javascript:void(0)" class="cm_next dn"><i></i></a>
+                        <a href="javascript:void(0)" class="wh_msg_ftip dn" title="我的私信"><i></i></a>
                     </div>
-                    
                 </div>
-                
                 <div class="input_area">
-                	<div class="adiv">
+                    <div class="adiv">
                         <div id="contentText" contenteditable="true" class="ctextarea"></div>
                     </div>
                     <a href="javascript:void(0)" class="sendbtn" id="sendBtn"><i></i><span>发送</span></a>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -569,9 +571,6 @@
             	<i></i>
                 <span>恭喜您成功修改密碼！</span>
             </div>
-            <!--<div class="btnbar">
-            	<a href="javascript:" class="formbtn"><span>确定</span></a>
-            </div>-->
             <a href="javascript:" class="pop_close">关闭</a>
         </div>
     </div>
@@ -671,6 +670,7 @@
 <script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
 <script type="text/javascript" src="/js/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript" src="/js/lib/jqueryUI/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.superslide.2.1.1.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.xdomainrequest.min.js"></script>
 <script type="text/javascript" src="/js/lib/jsWindows/jsWindows.min.js"></script>
@@ -718,6 +718,7 @@ function heightCalcu(){
 	$('.mod_video').height(hh-352);
 	$('#chatMsgContentDiv').height(hh-280-$('.mymsg').height());
 	$('.chat').height(hh-75);
+    $('.chat').height(hh-75);
 }
 
 function teachSlide(){

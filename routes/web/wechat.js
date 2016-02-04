@@ -239,7 +239,7 @@ router.post('/checkSendAuthority', function(req, res) {
     if(common.isBlank(userId)||common.isBlank(groupId)){
         res.json(result);
     }else {
-        userService.checkUserLogin({userId:userId,groupId:groupId,fromPlatform:fromPlatform,accountNo:accountNo,groupType:getGroupType(req)},function(row) {
+        userService.checkUserLogin({userId:userId,groupId:groupId,fromPlatform:fromPlatform,accountNo:accountNo,groupType:getGroupType(req)},false,function(row) {
             if (row) {
                 result.isVisitor=false;
             }

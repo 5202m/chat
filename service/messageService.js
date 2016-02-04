@@ -14,28 +14,33 @@ var messageService ={
     loadMsg:function(userInfo,lastPublishTime,allowWhisper,callback){
         var groupType = userInfo.groupType,groupId = userInfo.groupId;
         var selectSQL='userId nickname avatar clientGroup position toUser userType groupId content.msgType content.value content.needMax publishTime status';
-        var searchObj={groupId:groupId,status:1,valid:1};
-        if(common.isValid(lastPublishTime)){
-            searchObj.publishTime = { "$gt":lastPublishTime};
-        }
-        if(constant.roleUserType.cs==userInfo.userType){
-            //客服
-            searchObj.userType={$in:[0,3]};
-            searchObj["toUser.talkStyle"] = 1;
-        }else if(constant.fromPlatform.wechat==groupType||constant.fromPlatform.fxchat==groupType) {
-            // 微解盘
-            searchObj.userType=2;
-            searchObj["toUser.talkStyle"] = 0;
-        }else if(allowWhisper && constant.clientGroup.visitor!=userInfo.clientGroup){
-            //直播间-允许私聊且不是游客
-            searchObj.$or = [{"userId" : userInfo.userId}, {"toUser.talkStyle": 0}, {"toUser.talkStyle" : 1, "toUser.userId" : userInfo.userId}];
+        var searchObj={groupType:groupType,groupId:groupId,status:1,valid:1};
+        var selectRows=this.maxRows;
+        if(allowWhisper){
+            selectRows=50;
+            searchObj.$or = [{"userId" : userInfo.userId,"toUser.talkStyle": 1,"toUser.userId" : userInfo.toUser.userId},
+                {"userId" :userInfo.toUser.userId,"toUser.talkStyle" : 1, "toUser.userId" : userInfo.userId}];
         }else{
-            //直播间-不允许私聊或者是游客
-            searchObj["toUser.talkStyle"] = 0;
+            if(common.isValid(lastPublishTime)){
+                searchObj.publishTime = { "$gt":lastPublishTime};
+            }
+            //非直播间(微解盘)信息提示
+            if(constant.fromPlatform.studio!=groupType) {
+                if(constant.roleUserType.cs==userInfo.userType){
+                    //客服
+                    searchObj.userType={$in:[0,3]};
+                    searchObj["toUser.talkStyle"] = 1;
+                }else{
+                    searchObj.userType=2;
+                    searchObj["toUser.talkStyle"] = 0;
+                }
+            }else{
+                searchObj["toUser.talkStyle"] = 0;
+            }
         }
-        chatMessage.db().find(searchObj).select(selectSQL).limit(this.maxRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
+        chatMessage.db().find(searchObj).select(selectSQL).limit(selectRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
             messageService.getUnApprovalList(approvalList,userInfo,selectSQL,function(resultList){
-                var diffLength=100-resultList.length;
+                var diffLength=selectRows-resultList.length;
                 if(diffLength>0){//往上一年查询
                     var year=new Date().getFullYear();
                     chatMessage.db(year<=2015?2015:year-1).find(searchObj).select(selectSQL).limit(diffLength).sort({'publishTime':'desc'}).exec(function (err,oldList) {
@@ -47,7 +52,39 @@ var messageService ={
             });
         });
     },
-
+    /**
+     * 从数据库中加载已有的聊天记录
+     * @param groupType
+     * @param groupId
+     * @param fromUserTypeArr
+     * @param toUserId
+     * @param lastOfflineDate
+     * @param callback
+     */
+    getWhUseMsgCount:function(groupType,groupId,userType,whUserTypeArr,toUserId,lastOfflineDate,callback){
+        var searchObj={groupType:groupType,groupId:groupId,status:1,valid:1,"toUser.talkStyle": 1,"toUser.userId":toUserId,"content.msgStatus":0,createDate:{"$gte":lastOfflineDate}};
+        if(constant.roleUserType.member<parseInt(userType)){//后台用户发起，则验证自己是否匹配私聊授权角色
+            searchObj["toUser.userType"]={"$in":whUserTypeArr};
+        }else{//前台客户发起，则验证对方是否匹配私聊授权角色
+            searchObj.userType={"$in":whUserTypeArr};
+        }
+        chatMessage.db().find(searchObj).select('avatar userId nickname userType').exec(function (err,resultList) {
+            if(!err && resultList){
+                var userInfoList={},row=null;
+                for(var i in resultList){
+                    row=resultList[i];
+                    if(userInfoList.hasOwnProperty(row.userId)){
+                        userInfoList[row.userId].count+=1;
+                    }else{
+                        userInfoList[row.userId]={userType:row.userType,nickname:row.nickname,avatar:row.avatar,count:0};
+                    }
+                }
+                callback(userInfoList);
+            }else{
+                callback(null);
+            }
+        });
+    },
     /**
      * 提取待审核的记录
      * @param approvalList

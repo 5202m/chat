@@ -21,6 +21,7 @@ var visitorService = {
             groupType: model.groupType,//房间组别
             roomId: model.roomId,//所在房间id
             userId: model.userId,//用户id
+            visitorId: model.visitorId,//访客id
             nickname: model.nickname,//用户昵称
             ip: model.ip,//访问者ip
             visitTimes: model.visitTimes || 1,//累计访问次数
@@ -61,32 +62,40 @@ var visitorService = {
             if(common.isValid(model.ip)){
                 model.ip=model.ip.replace(/[^\.\d]/g,'');
             }
-            chatVisitor.findOne({
+            var searchObj={
                 groupType : model.groupType,
                 clientStoreId : model.clientStoreId,
                 valid : 1
-            }, function(err, data){
+            };
+            if(model.roomId){
+                searchObj.roomId=model.roomId;
+            }
+            chatVisitor.findOne(searchObj).sort({'onlineDate':'desc'}).exec(function(err, data){
                 if (err){
                     logger.error('saveVisitorRecord-query fail',err);
-                    return;
-                }
-                if(!data){
-                    if(type=='online'){
-                        visitorService.modifyDataByType(type,model,true);//按类型调整要保存的数据结构
-                        visitorService.createVisitorRecord(model,function(createResult){
-                            if(!createResult.isOK){
-                                logger.error('saveVisitorRecord-create fail');
+                }else{
+                    if(!data){
+                        if(type=='online'||type=='login'){
+                            visitorService.modifyDataByType(type,model,true);//按类型调整要保存的数据结构
+                            visitorService.createVisitorRecord(model,function(createResult){
+                                if(!createResult.isOK){
+                                    logger.error('saveVisitorRecord-create fail');
+                                }
+                            });
+                        }
+                    }else{
+                        if(model.visitorId && data.loginTimes>0){//已经登录过,防止数据覆盖
+                            model.nickname=data.nickname;
+                            model.clientGroup=data.clientGroup;
+                        }
+                        common.copyObject(data,model,true);//数据复制
+                        visitorService.modifyDataByType(type,data,false);//按类型调整要保存的数据结构
+                        data.save(function (err) {
+                            if(err){
+                                logger.error('saveVisitorRecord-update fail', err);
                             }
                         });
                     }
-                }else{
-                    common.copyObject(data,model,true);//数据复制
-                    visitorService.modifyDataByType(type,data,false);//按类型调整要保存的数据结构
-                    data.save(function (err) {
-                        if(err){
-                            logger.error('saveVisitorRecord-update fail', err);
-                        }
-                    });
                 }
             });
         }catch(e){
@@ -112,13 +121,12 @@ var visitorService = {
         switch (type)
         {
             case 'online':{
-                if((data.initVisit||isFirst) || (data.updateDate instanceof Date && currTime.getTime() - data.updateDate.getTime()>=1000*60)){//首次进入页面或大于等于60秒，访问次数加1，否则访问次数不变
+                //if((data.initVisit||isFirst) || (data.updateDate instanceof Date && currTime.getTime() - data.updateDate.getTime()>=1000*60)){//首次进入页面或大于等于60秒，访问次数加1，否则访问次数不变
                     data.visitTimes+=1;
                     data.onlinePreDate=data.onlineDate;
                     data.onlineDate=currTime;
-                }
-                if(data.userId.indexOf("visitor_")==-1){
-                    data.loginStatus=1;
+                //}
+                if(data.loginStatus==1){
                     if(!data.loginTimes||data.loginTimes==0){
                         data.loginDate=currTime;
                         data.loginTimes=1;
@@ -158,6 +166,36 @@ var visitorService = {
                 break;
             }
         }
+    },
+    /**
+     * 通过昵称查询访客名，访客userId
+     * @param nickname
+     */
+    getVistiorByName:function(groupType,roomId,nickname,callback){
+        chatVisitor.find({groupType:groupType,roomId:roomId,valid : 1,nickname:eval('/.*?'+nickname+'.*/g')}).select("nickname userId visitorId clientStoreId onlineStatus").sort({'onlineStatus':'desc'}).exec(function(err, data){
+            if (err){
+                logger.error('getVistiorByName fail',err);
+                callback(null);
+            }else{
+                callback(data);
+            }
+        });
+    },
+    /**
+     * 通过clientStoreId
+     * @param groupType
+     * @param groupId
+     * @param clientStoreId
+     */
+    getByClientStoreId:function(groupType,groupId,clientStoreId,callback){
+        chatVisitor.findOne({groupType:groupType,roomId:groupId,valid : 1,clientStoreId:clientStoreId}).select("nickname visitorId clientStoreId offlineDate").exec(function(err, data){
+            if (err||!data){
+                logger.error('getByClientStoreId fail',err);
+                callback(null);
+            }else{
+                callback(data.offlineDate);
+            }
+        });
     }
 };
 //导出服务类

@@ -8,6 +8,8 @@
     <meta content="实盘直播,贵金属实盘直播室,金道贵金属实盘直播,金道贵金属" name="keywords">
     <meta content="金道贵金属打造在线贵金属实盘直播室，金道研究院名家观点即时播报，让您的掘金之旅在此起航！携手金道，生金有道！" name="description">
     <link href="/js/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+    <link href="/js/lib/jsWindows/jsWindows.min.css" rel="stylesheet" type="text/css">
+    <link href="/js/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
     <link href="/css/studio/admin.min.css" type="text/css" rel="stylesheet" />
     <link href="/css/face.css" type="text/css" rel="stylesheet" />
     <!--[if lt IE 9]>
@@ -30,88 +32,81 @@
 <div class="wrapper clearfix">
     <div class="left_row clearfix">
         <div class="left2">
-            <div class="mod_video">
-                <div class="mod_video dn" id="yyVideoDiv" yc="<%= groupInfo.chatStudio.yyChannel %>" mc="<%= groupInfo.chatStudio.minChannel %>"></div>
-            </div>
             <div class="mod_userlist mod_left1">
-                <h3 class="title">在线用户【<span id="onLineSizeNum"></span>】</h3>
+                <div class="title">
+                    <h3 class="title" style="float:left;">在线用户【<span id="onLineSizeNum"></span>】</h3>
+                    <a href="javascript:" class="wh_msg_ftip" title="我的私信">私信</a>
+                    <span href="javascript:" class="pletter_hint dn">你有新信息</span>
+                </div>
                 <div class="scrollbox user_box">
                     <ul id="userListId"></ul>
                 </div>
             </div>
         </div>
-
     </div>
-    <div class="right_row">
-        <div class="chat clearfix">
-            <div class="line_bar">
-                <div class="view_select">
-                    <div class="se_cont">
-                        <div class="selected">看所有人</div>
-                        <div class="selectlist" style="background-color: #101010;">
-                            <a href="javascript:void(0)" class="on" t="all">看所有人</a>
-                            <a href="javascript:void(0)" class="" t="analyst">只看分析师</a>
-                            <a href="javascript:void(0)" class="" t="me">与我相关</a>
-                        </div>
-                    </div>
-                    <i></i>
-                </div>
-            </div>
-
-            <div class="chat_content">
-                <div id="chatMsgContentDiv">
-                    <div class="dialoglist clearfix" id="dialog_list"></div>
-                </div>
-                <i class="img-loading" style="top: 50%;right: 50%;display: none;" pf="chatMessage"></i>
-            </div>
-        </div>
-        <!-- chat_input begin -->
-        <div class="chat_input">
-            <div class="mymsg dn">
-                <p><span class="sender"></span>对&nbsp;你说<label></label>：<span class="xcont"></span></p>
-                <a href="javascript:" class="replybtn" uId="">回复</a><em style="position: absolute;top: 10px;right: 40px;font-size: 12px;display:none;">正在输入...</em>
-                <a href="javascript:" class="closebtn">关闭</a>
-            </div>
-            <div class="input_box">
-                <div class="toolbar">
-                    <a href="javascript:" class="facebtn">表情</a>
-                    <a href="javascript:" class="tbtn clearbtn">清屏</a>
-                    <a href="javascript:" class="tbtn scrollbtn on">滚动</a>
-                    <a href="javascript:" class="tbtn approveall" id="approveAllHandler">
-                        <input type="checkbox" id="approveCheckAll"/>
-                        <label for="approveCheckAll">全选</label>
-                        &nbsp;
-                        <button btnType="1">通过</button>
-                        &nbsp;
-                        <button btnType="2">拒绝</button>
-                    </a>
-
-                    <div class="send_select">
+    <div class="right_row" style="min-width: 900px">
+        <div style="width:55%;float:left;min-width: 500px;" id="right_chat">
+            <div class="chat clearfix">
+                <div class="line_bar">
+                    <div class="view_select">
                         <div class="se_cont">
-                            <div class="selected">对所有人说</div>
-                            <div class="selectlist scrollbox">
-                                <div id="send_selelct_list">
-                                    <a href="javascript:void(0)" class="on" uId="all">对所有人说</a>
-                                </div>
+                            <div class="selected">看所有人</div>
+                            <div class="selectlist" style="background-color: #101010;">
+                                <a href="javascript:void(0)" class="on" t="all">看所有人</a>
+                                <a href="javascript:void(0)" class="" t="analyst">只看分析师</a>
+                                <a href="javascript:void(0)" class="" t="me">与我相关</a>
                             </div>
                         </div>
                         <i></i>
                     </div>
-
                 </div>
 
-                <div class="input_area">
-                    <div class="adiv">
-                        <div id="contentText" contenteditable="true" class="ctextarea"></div>
+                <div class="chat_content">
+                    <div id="chatMsgContentDiv">
+                        <div class="dialoglist clearfix" id="dialog_list"></div>
                     </div>
-                    <a href="javascript:void(0)" class="sendbtn" id="sendBtn"><i></i><span>发送</span></a>
+                    <i class="img-loading" style="top: 50%;right: 50%;display: none;" pf="chatMessage"></i>
                 </div>
-
+                <a href="javascript:" style="display:none;" id="newMsgShowBtn"></a>
+                <span  id="newMsgTipBtn" style="display:none;">新信息</span>
+            </div>
+            <!-- chat_input begin -->
+            <div class="chat_input">
+                <div class="mymsg dn">
+                    <p><span class="sender"></span>对&nbsp;你说<label></label>：<span class="xcont"></span></p>
+                    <a href="javascript:" class="replybtn" uId="">回复</a><em style="position: absolute;top: 10px;right: 40px;font-size: 12px;display:none;">正在输入...</em>
+                    <a href="javascript:" class="closebtn">关闭</a>
+                </div>
+                <div class="input_box">
+                    <div class="toolbar">
+                        <a href="javascript:" class="facebtn">表情</a>
+                        <a href="javascript:" class="tbtn clearbtn">清屏</a>
+                        <a href="javascript:" class="tbtn scrollbtn on">滚动</a>
+                        <a href="javascript:" class="tbtn approveall" id="approveAllHandler">
+                            <input type="checkbox" id="approveCheckAll"/>
+                            <label for="approveCheckAll">全选</label>
+                            &nbsp;
+                            <button btnType="1">通过</button>
+                            &nbsp;
+                            <button btnType="2">拒绝</button>
+                        </a>
+                    </div>
+                    <div class="input_area">
+                        <div class="adiv">
+                            <div id="contentText" contenteditable="true" class="ctextarea"></div>
+                        </div>
+                        <a href="javascript:void(0)" class="sendbtn" id="sendBtn"><i></i><span>发送</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- chat_input end -->
+            <div class="dialogbtn" style="display:none">
+                <a href="">对话</a>
             </div>
         </div>
-        <!-- chat_input end -->
-        <div class="dialogbtn" style="display:none">
-            <a href="">对话</a>
+        <div class="right_row_1" style="width:45%;float:right;">
+            <div class="mod_video dn" style="margin-left:5px;width:100%;" id="yyVideoDiv" yc="<%= groupInfo.chatStudio.yyChannel %>" mc="<%= groupInfo.chatStudio.minChannel %>"></div>
+            <div class="mod_bottom_div" style="width:100%;height:auto;margin-left:5px;background-color: rgba(246,246,246,0.9);"></div>
         </div>
     </div>
     <!--提示框-->
@@ -124,6 +119,8 @@
 </div>
 <script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="/js/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript" src="/js/lib/jqueryUI/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/js/lib/jsWindows/jsWindows.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.superslide.2.1.1.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.face.js"></script>
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
@@ -164,11 +161,19 @@
     }
 
     function heightCalcu(){
-        hh = $(window).height();
-        $('.user_box').height(hh-650);
-        //$('.mod_video').height(hh-405);
-        $('#chatMsgContentDiv').height(hh-235-$('.mymsg').height());
-        $('.chat').height(hh-85);
+        var hh = $(window).height();
+        if($(window).width()<1160){
+            $('.right_row_1').hide();
+            $("#right_chat").css({width:"100%"});
+        }else{
+            $('.right_row_1').show();
+            $("#right_chat").css({width:"55%"});
+        }
+        $('.user_box').height(hh-125);
+        $('.mod_video').height($('.mod_video').width()-65);
+        $(".mod_bottom_div").height(hh-$('.mod_video').height()-70);
+        $('#chatMsgContentDiv').height(hh-232-$('.mymsg').height());
+        $('.chat').height(hh-$(".input_box").height()-72);
     }
 </script>
 

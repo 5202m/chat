@@ -11,6 +11,7 @@ var config = require('../resources/config');//引入配置
 var constant = require('../constant/constant');//引入constant
 var common = require('../util/common');//引入common类
 var request = require('request');
+var visitorService=require('../service/visitorService');
 var logger=require('../resources/logConf').getLogger('userService');//引入log4js
 /**
  * 定义用户服务类
@@ -133,7 +134,7 @@ var userService = {
                 callback({isOK:false,tip:'系统异常，请检查房间对应房间是否存在！',leaveRoom:true});
                 return;
             }
-            if(userType && constant.roleUserType.member!=userType){//后台用户无需使用规则
+            if(constant.roleUserType.member<parseInt(userType)){//后台用户无需使用规则
                 callback({isOK:true,tip:'',talkStyle:row.talkStyle,whisperRoles:row.whisperRoles});
                 return;
             }
@@ -451,12 +452,13 @@ var userService = {
      * @param callback
      */
     updateMemberInfo:function(userInfo,callback){
-        if(common.hasPrefix(constant.clientGroup.visitor,userInfo.userId)){
-            callback(0);
-            return;
-        }
-        //存在则更新上线状态及上线时间
-        member.findOne(this.getMemberRoomSearch(userInfo),function(err,row){
+        if(common.hasPrefix(constant.clientGroup.visitor,userInfo.userId)){//游客则提取离线日期
+            visitorService.getByClientStoreId(userInfo.groupType,userInfo.groupId,userInfo.clientStoreId,function(offlineDate){
+                callback(0,null,offlineDate);
+            });
+        }else{
+            //存在则更新上线状态及上线时间
+            member.findOne(this.getMemberRoomSearch(userInfo),function(err,row){
                 if(!err && row && common.checkArrExist(row.loginPlatform.chatUserGroup)){
                     var group=row.loginPlatform.chatUserGroup.id(userInfo.groupType);
                     if(group){
@@ -470,7 +472,7 @@ var userService = {
                             if(err){
                                 logger.error("updateMemberInfo->update member fail!:"+err);
                             }
-                            callback(room.sendMsgCount,row.mobilePhone);
+                            callback(room.sendMsgCount,row.mobilePhone,room.offlineDate);
                         });
                     }else{
                         callback(0);
@@ -479,6 +481,7 @@ var userService = {
                     callback(0);
                 }
             });
+        }
     },
 
     /**
@@ -492,6 +495,7 @@ var userService = {
                     var room = group.rooms.id(userInfo.groupId);
                     room.sendMsgCount = sendMsgCount;
                     room.onlineStatus = chatStatus;
+                    room.offlineDate=new Date();
                     row.save(function (err, rowTmp) {
                         if (err) {
                             logger.error("updateChatUserGroupStatus->fail!:" + err);
@@ -509,21 +513,26 @@ var userService = {
     /**
      * 通过userId及组别检测用户是否已经登录过
      * @param userInfo
+     * @param isWhVisitor
      */
-    checkUserLogin:function(userInfo,callback){
-        var searchObj={};
-        if(constant.fromPlatform.pm_mis==userInfo.fromPlatform){
-            searchObj={_id:userInfo.groupType,accountNo:(common.isBlank(userInfo.accountNo)?userInfo.userId:userInfo.accountNo)};
+    checkUserLogin:function(userInfo,isWhVisitor,callback){
+        if(isWhVisitor){//如果是私聊游客直接返回
+            callback(true);
         }else{
-            searchObj={_id:userInfo.groupType,userId:userInfo.userId};
-        }
-        member.findOne({'loginPlatform.chatUserGroup':{$elemMatch:searchObj}},"mobilePhone loginPlatform.chatUserGroup.$",function (err, row){
-            if(!err && row){
-                callback(row);
+            var searchObj={};
+            if(constant.fromPlatform.pm_mis==userInfo.fromPlatform){
+                searchObj={_id:userInfo.groupType,accountNo:(common.isBlank(userInfo.accountNo)?userInfo.userId:userInfo.accountNo)};
             }else{
-                callback(null);
+                searchObj={_id:userInfo.groupType,userId:userInfo.userId};
             }
-        });
+            member.findOne({'loginPlatform.chatUserGroup':{$elemMatch:searchObj}},"mobilePhone loginPlatform.chatUserGroup.$",function (err, row){
+                if(!err && row){
+                    callback(row);
+                }else{
+                    callback(null);
+                }
+            });
+        }
     },
 
 
@@ -731,28 +740,27 @@ var userService = {
      * @param roomId
      */
     getRoomCsUser:function(roomId,callback){
+        this.getRoomCsUserList(roomId,function(rowList){
+            callback(rowList?rowList[0]:null);
+        });
+    },
+    /**
+     * 提取cs客服信息
+     * @param roomId
+     */
+    getRoomCsUserList:function(roomId,callback){
         chatGroup.findById(roomId,"authUsers",function(err,row){
             if(!row || err){
                 callback(null);
-                return;
+            }else{
+                boUser.find({userNo:{"$in":row.authUsers},"role.roleNo":common.getPrefixReg("cs")},"userNo userName avatar position",function(err,rowList){
+                    if(!rowList || err){
+                        callback(null);
+                    }else{
+                        callback(rowList);
+                    }
+                });
             }
-            boUser.find({userNo:{"$in":row.authUsers}},function(err,rowList){
-                if(!rowList || err){
-                    callback(null);
-                    return;
-                }
-                var userObj=null;
-                for(var i in rowList){
-                    if(common.hasPrefix("cs",rowList[i].role.roleNo)){
-                        userObj=rowList[i];
-                        break;
-                    }
-                    if(userObj){
-                        break;
-                    }
-                }
-                callback(userObj);
-            });
         });
     },
     /**

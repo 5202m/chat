@@ -64,7 +64,7 @@ $.fn.newWindow = function(options){
 		onAjaxContentLoaded: null,
         statusBar: true,
 		minimizeButton: true,
-		minimizeIcon: "-",
+		minimizeIcon: "—",
 		maximizeButton: true,
 		maximizeIcon: "O",
 		closeButton: true,
@@ -73,11 +73,12 @@ $.fn.newWindow = function(options){
 		resizeable: true,
 		resizeIcon: "#",
 		windowType: "standard",
+        beforeMinimize:null,//最小化前事件
+        beforeClose:null,//关闭前事件
         afterClose:null//关闭后事件
     };
-  
     var options = $.extend(defaults, options);
-    $windowContainer = $('<div class="window-container"></div>');
+    $windowContainer = $('<div class="window-container" wid="'+$(this).attr("id")+'" '+($(this).attr("t")=='hide'?'style="display:none;"':'')+'></div>');
     $windowTitleBar = $('<div class="window-titleBar"></div>');        
     $windowMinimizeButton = $('<div class="window-minimizeButton"></div>');
 	$windowMaximizeButton = $('<div class="window-maximizeButton"></div>');
@@ -187,6 +188,9 @@ $.fn.newWindow = function(options){
     });
 	
 	$windowMinimizeButton.bind('click', function(e){
+        if(options.beforeMinimize!=null && !options.beforeMinimize($(e.target).parent().parent())){
+            return;
+        }
 	    var $obj = $(e.target).parent().parent();
 		setFocus($obj);
 		if($obj.attr("state") == "normal"){
@@ -237,6 +241,9 @@ $.fn.newWindow = function(options){
     });
 	
 	$windowCloseButton.bind('click', function(e){
+       if(options.beforeClose!=null && !options.beforeClose()){
+           return;
+       }
 	  $(e.target).parent().parent().fadeOut();
 	  //$(e.target).parent().parent().children(".window-content").html("");
       $(e.target).parent().parent().remove();
@@ -310,8 +317,10 @@ $.fn.newWindow = function(options){
 			if(!options.draggable){
 			    $window.children(".window-titleBar").css("cursor","default");
             }
-			setFocus($window);
-            $window.fadeIn();			
+            setFocus($window);
+            if("hide"!=$(this).attr("t")){
+                $window.fadeIn();
+            }
 		});
 	});
 }})(jQuery);

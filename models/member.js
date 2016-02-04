@@ -35,6 +35,7 @@ var mongoose = require('mongoose')
                     onlineStatus: {type:Number, default:0}, //在线状态：0 、下线 ；1、在线
                     sendMsgCount:{type:Number, default:0}, //发言条数统计
                     onlineDate: Date,//上线时间
+                    offlineDate:Date,//下线时间
                     gagDate:String,//禁言时间
                     gagTips:String,//禁言提示语
                     gagRemark:String//禁言备注
