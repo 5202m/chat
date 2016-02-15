@@ -349,8 +349,8 @@ var studioChat={
                     return false;
                 },
                 beforeClose: function () {
-                    if($(".visitorDiv ul li").length>0){
-                        return confirm("确定关闭私信框吗？如关闭,当前所有信息会被清空！");
+                    if($(".visitorDiv ul li").length>1){
+                        return confirm("确定关闭私信框吗？如关闭,当前所有私信会被清空！");
                     }
                     return true;
                 }
@@ -376,8 +376,8 @@ var studioChat={
                 $("#newMsgTipBtn").click();
             }
         });
-
         /*#################私聊事件#################end*/
+
         //审核操作类事件
         $("#approveAllHandler button").click(function(){
             var idArr=[],fuIdArr=[];

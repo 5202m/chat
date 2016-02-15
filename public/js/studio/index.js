@@ -763,7 +763,7 @@ var studioChat={
                     return false;
                 },
                 beforeClose: function () {
-                    if($(".mult_dialog a").length>0){
+                    if($(".mult_dialog a").length>1){
                         return confirm("确定关闭私信框吗？如关闭,会清除当前所有私信！");
                     }
                     return false;
