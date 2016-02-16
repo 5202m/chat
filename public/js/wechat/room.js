@@ -43,6 +43,9 @@ var room={
      * 设置用户信息
      */
     setUserInfo:function(){
+        if(room.userInfo.userType!=0){
+            $(".user-stadus").hide();
+        }
         $(".user-name").html(room.userInfo.nickname);//设置头像
         $(".user-img img").attr("src",this.getUserAvatar(room.userInfo.avatar,room.userInfo.userType));//设置头像
     },
@@ -401,6 +404,11 @@ var room={
                     if(result.isOK){
                         room.userInfo.nickname=result.nickname;
                         room.userInfo.userType=result.userType;
+                        room.userInfo.accountNo=result.accountNo;
+                        if(common.isBlank(room.userInfo.avatar)&&common.isValid(result.avatar)){
+                            room.userInfo.avatar=result.avatar;
+                            $(".user-img img").attr("src",result.avatar);//设置头像
+                        }
                         $(".user-stadus").hide();
                         $("#loginSection").hide();
                         $("#tipSection h2").html("验证成功");
@@ -627,7 +635,7 @@ var room={
      * 检查发送权限
      */
     checkSendAuthority:function(callback){
-        common.getJson("/wechat/checkSendAuthority",{accountNo:room.userInfo.accountNo,userId:room.userInfo.userId,groupId:room.userInfo.groupId,fromPlatform:room.userInfo.fromPlatform},function(result){
+        common.getJson("/wechat/checkSendAuthority",{accountNo:room.userInfo.accountNo,userId:room.userInfo.userId,groupId:room.userInfo.groupId,fromPlatform:room.userInfo.fromPlatform,userType:room.userInfo.userType},function(result){
             if(result.isVisitor) {
                 room.openLoginBox();
                 callback(false);
@@ -876,12 +884,12 @@ var room={
     getUserTypeName:function(userType){
         if(userType==1){
            return '(管理员)';
-        }
-        if(userType==2){
+        }else if(userType==2){
             return '(分析师)';
-        }
-        if(userType==3){
+        }else if(userType==3){
             return '(客服)';
+        }else{
+            return '';
         }
     },
     /**

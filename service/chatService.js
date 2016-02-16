@@ -326,10 +326,8 @@ var chatService ={
                         //直播间创建访客记录
                         var userAgent=socket.client.request.headers["user-agent"];
                         if(parseInt(userInfo.userType)<=constant.roleUserType.member){
-                            var vrRow={userAgent:userAgent,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,nickname:userInfo.nickname,clientGroup:userInfo.clientGroup,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address};
-                            if(userInfo.clientGroup==constant.clientGroup.visitor){
-                                vrRow.visitorId=userInfo.userId;
-                            }else{
+                            var vrRow={userAgent:userAgent,visitorId:userInfo.visitorId,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,nickname:userInfo.nickname,clientGroup:userInfo.clientGroup,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address};
+                            if(userInfo.clientGroup!=constant.clientGroup.visitor){
                                 vrRow.mobile=dbMobile;
                                 vrRow.userId=userInfo.userId;
                                 vrRow.loginStatus=1;
@@ -534,11 +532,13 @@ var chatService ={
         var userInfo=data.fromUser,groupId=userInfo.groupId;
         //如果首次发言需要登录验证(备注：微信取openId为userId，即验证openId）
         var toUser=userInfo.toUser,isWh=toUser && common.isValid(toUser.userId) && "1"==toUser.talkStyle;//私聊
-        var isVistorWh=(isWh && constant.clientGroup.visitor==userInfo.clientGroup);
-        userService.checkUserLogin(userInfo,isVistorWh,function(row){
+        //如果是私聊游客或水军发言直接保存数据
+        var isWhVisitor=(isWh && constant.clientGroup.visitor==userInfo.clientGroup);
+        var isAllowPass=isWhVisitor||userInfo.userType==constant.roleUserType.navy;
+        userService.checkUserLogin(userInfo,isAllowPass,function(row){
             if(row){
                 var userSaveInfo={};
-                if(!isVistorWh){
+                if(!isAllowPass){
                     var tipResult=userService.checkUserGag(row, userInfo.groupId);//检查用户禁言
                     if(!tipResult.isOK){//是否设置了用户禁言
                         chatService.sendMsgToSelf(socket,userInfo,{fromUser:userInfo,uiId:data.uiId,value:tipResult,rule:true});
@@ -549,8 +549,9 @@ var chatService ={
                     userInfo.nickname=userSaveInfo.nickname;
                     userSaveInfo.userType=userInfo.userType=userSaveInfo.userType||userInfo.userType;
                 }else{
-                    userSaveInfo.userType=userInfo.userType=constant.roleUserType.visitor;//-1 表示游客
+                    userSaveInfo.userType=isWhVisitor?constant.roleUserType.visitor:userInfo.userType;
                     userSaveInfo.nickname= userInfo.nickname;
+                    userSaveInfo.accountNo=userInfo.accountNo;
                 }
                 var currentDate = new Date();
                 userInfo.publishTime = currentDate.getTime()+"_"+process.hrtime()[1];//产生唯一的id

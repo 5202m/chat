@@ -55,6 +55,7 @@ var studioChat={
             obj=keyVal;
         }
         this.userInfo.clientStoreId= obj.clientStoreId;
+        this.userInfo.visitorId=obj.userId;
         if(this.userInfo.clientGroup && this.userInfo.clientGroup=='visitor'){
             this.userInfo.nickname=obj.nickname;
             this.userInfo.userId=obj.userId;
@@ -71,8 +72,13 @@ var studioChat={
             $.getJSON('/studio/getCS',{groupId:this.userInfo.groupId},function(data){
                 $(".cm_wrap").html("");
                 if(data){
+                    var index= 0,showStyle='';
                     for(var i in data){
-                        $(".cm_wrap").append('<a href="javascript:" uid="'+data[i].userNo+'" class="cm_item"><img src="'+(common.isValid(data[i].avatar)?data[i].avatar:'/images/studio/cm.png')+'"><span>'+data[i].userName+'</span></a>');
+                        if(index>1){//多于2个先隐藏多出部分
+                            showStyle="display:none;" ;
+                        }
+                        $(".cm_wrap").append('<a href="javascript:" uid="'+data[i].userNo+'" class="cm_item" style="'+showStyle+'"><img src="'+(common.isValid(data[i].avatar)?data[i].avatar:'/images/studio/cm.png')+'"><span>'+data[i].userName+'</span></a>');
+                        index++;
                         //studioChat.setOnlineUser({userType:3,useId:data[i].userNo,nickname:data[i].userName,avatar:data[i].avatar,sequence:2});
                     }
                     $(".cm_wrap a").click(function(){//点击客户经理
@@ -83,8 +89,22 @@ var studioChat={
                         $('.mult_dialog a[uid='+userId+']').click();
                     });
                 }
-                if($(".cm_wrap a").length>2){
-                    $(".cm_prev,.cm_next").show();
+                if($(".cm_wrap a").length>2){//多于2个，则控制左右切换
+                    $(".cm_prev,.cm_next").show().click(function(){
+                        if($(this).hasClass("cm_next")){
+                            var next=$(".cm_wrap a:not(:hidden):last").next();
+                            if(next.length>0){
+                                $(".cm_wrap a:not(:hidden):first").hide();
+                                next.show();
+                            }
+                        }else{
+                            var first=$(".cm_wrap a:not(:hidden):first").prev();
+                            if(first.length>0){
+                                $(".cm_wrap a:not(:hidden):last").hide();
+                                first.show();
+                            }
+                        }
+                    });
                 }else{
                     $(".cmtalk").css({"margin-left":"5px"});
                     $(".cm_prev,.cm_next").hide();
@@ -766,7 +786,7 @@ var studioChat={
                     if($(".mult_dialog a").length>1){
                         return confirm("确定关闭私信框吗？如关闭,会清除当前所有私信！");
                     }
-                    return false;
+                    return true;
                 }
             });
             studioChat.getWhBox().css({left:($(window).width()-610)+"px",top: ($(".right_row").height()-$(".right_row .chat_input").height()-320)+"px"}).find(".window-content").css({"background-color":"#475364"});

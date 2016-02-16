@@ -15,7 +15,7 @@ var studioService = require('../../service/studioService');//引入studioService
 var chatService = require('../../service/chatService');//引入chatService
 var visitorService = require('../../service/visitorService');//引入visitorService
 var messageService = require('../../service/messageService');//引入messageService
-var logger=require('../../resources/logConf').getLogger('index');//引入log4js
+var logger=require('../../resources/logConf').getLogger('studio');//引入log4js
 
 /**
  * 聊天室页面入口
@@ -38,7 +38,7 @@ router.get('/admin', function(req, res) {
         if(common.isBlank(chatUser.nickname)){
             chatUser.nickname=chatUser.userId;
         }
-        pmApiService.destroyHomeToken(token,function(isTrue){
+        pmApiService.destroyHomeToken(token,false,function(isTrue){
             if(isTrue) {
                 async.parallel({
                         checkResult: function(callback){

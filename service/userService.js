@@ -252,7 +252,7 @@ var userService = {
                 result.avatar=row.avatar;
                 var userTypeTmp=null;
                 for(var p in constant.roleUserType){
-                    if(eval('/^'+p+'.*?/g').test(row.role.roleNo)){
+                    if(common.hasPrefix(p,row.role.roleNo)){
                         userTypeTmp=constant.roleUserType[p];
                         result.roleNo=newUserInfo.roleNo=row.role.roleNo;
                         result.roleName=row.role.roleName;
@@ -267,6 +267,11 @@ var userService = {
                 result.nickname=userInfo.nickname=newUserInfo.nickname=row.userName;
                 if(common.isBlank(result.userType)){
                     logger.error("checkBackUserInfo->userType has error,please the constant.roleUserType");
+                }
+                if(userTypeTmp==constant.roleUserType.navy){//判断是否是后台水军用户，是则直接返回
+                    result.isOK=true;
+                    callback(result);
+                    return false;
                 }
                 userService.createUser(newUserInfo, function (isOk) {
                     if(!newUserInfo.isFromBack){
@@ -513,10 +518,10 @@ var userService = {
     /**
      * 通过userId及组别检测用户是否已经登录过
      * @param userInfo
-     * @param isWhVisitor
+     * @param isAllowPass 是否允许通过
      */
-    checkUserLogin:function(userInfo,isWhVisitor,callback){
-        if(isWhVisitor){//如果是私聊游客直接返回
+    checkUserLogin:function(userInfo,isAllowPass,callback){
+        if(isAllowPass){
             callback(true);
         }else{
             var searchObj={};

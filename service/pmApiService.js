@@ -18,10 +18,15 @@ var pmApiService = {
     /**
      * 销毁访问主页的token
      * @param val
+     * @param isAllowPass
      */
-    destroyHomeToken:function(val,callback){
+    destroyHomeToken:function(val,isAllowPass,callback){
         callback(true);
         return;
+        if(isAllowPass){
+            callback(true);
+            return;
+        }
         request.post({url:this.formatApiUrl('/token/destroyToken'), form:{token:val}}, function(err,response,data){
             if(err) {
                 logger.error("destroyHomeToken>>>error:"+err);

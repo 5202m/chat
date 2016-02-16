@@ -15,99 +15,104 @@ var pmApiService = require('../../service/pmApiService');//引入pmApiService
 var syllabusService = require('../../service/syllabusService');//引入syllabusService
 var wechatService = require('../../service/wechatService');//引入studioService
 var chatPraiseService = require('../../service/chatPraiseService');//引入chatPraiseService
-var logger=require('../../resources/logConf').getLogger('index');//引入log4js
+var logger=require('../../resources/logConf').getLogger('wechat');//引入log4js
 
 /**
- * 聊天室页面入口
+ * 聊天室前台页面入口
  */
 router.get('/', function(req, res) {
-    var token=req.query["token"],roomName=req.query["roomName"];
-    var chatUser={};
+    var token=req.query["token"],chatUser={};
+    chatUser.userId=req.query["userId"];
+    chatUser.nickname=req.query["nickname"];
+    chatUser.avatar=req.query["avatar"];
+    logger.info("chat-index->param:token["+token+"],otherParam:"+JSON.stringify(chatUser));
+    var userInfo=req.session.wechatUserInfo;
+    if(common.isBlank(token)||common.isBlank(chatUser.userId)){
+        if(userInfo){//存在session，则不需要判断请求参数
+            userInfo.groupId=null;//清空session保留的房间id
+            chatUser=userInfo;
+        }else {
+            req.session.wechatUserInfo=null;
+            logger.warn('chat-index->非法访问,ip:' + common.getClientIp(req));
+            res.render('error', {error: '链接参数失效，请重新访问！'});
+            return;
+        }
+    }
+    var deviceAgent = req.headers["user-agent"].toLowerCase();
+    if(!config.isAllowCopyHomeUrl && deviceAgent.indexOf('micromessenger') == -1){
+        req.session.wechatUserInfo=null;
+        res.render('error',{error: '请在微信客户端打开链接!'});
+        return;
+    }
+    if(common.isBlank(chatUser.userType)){
+        chatUser.userType=0;
+    }
+    if(common.isBlank(chatUser.nickname)){
+        chatUser.nickname=chatUser.userId;
+    }
+    chatUser.groupType=getGroupType(req);//房间组
+    pmApiService.destroyHomeToken(token,(userInfo!=null && userInfo!=undefined) ,function(isTrue){
+        if(isTrue) {
+            req.session.wechatUserInfo=chatUser;
+            //跳转页面，过滤输出mobilePhone,accountNo，防止前台页面看到,如是水军则直接过滤mobilePhone，因为accountNo需要发言是使用
+            var viewUserInfo=JSON.stringify(common.filterField(chatUser,chatUser.userType==constant.roleUserType.navy?"mobilePhone":"mobilePhone,accountNo"));
+            res.render(getRenderPath(req,"index"),{socketUrl:JSON.stringify(config.socketServerUrl),userInfo:viewUserInfo});
+        }else{
+            req.session.wechatUserInfo=null;
+            res.render('error',{error: '链接已过期，请重新访问！'});
+        }
+    });
+});
+
+/**
+ * 聊天室后台入口
+ */
+router.get('/admin', function(req, res) {
+    var token=req.query["token"],roomName=req.query["roomName"],chatUser={};
     chatUser.userId=req.query["userId"];
     chatUser.groupId=req.query["groupId"];
-    chatUser.nickname=req.query["nickname"];
     chatUser.avatar=req.query["avatar"];
     chatUser.mobilePhone=req.query["mobilePhone"];
     chatUser.fromPlatform=req.query["fromPlatform"];//是否后台进入
-    logger.info("chat->param:token["+token+"],otherParam:"+JSON.stringify(chatUser));
-    var userInfo=req.session.wechatUserInfo,toView=true;
-    if((!userInfo && common.isBlank(token))||(common.isBlank(chatUser.userId))){
-        if(constant.fromPlatform.pm_mis!=chatUser.fromPlatform && userInfo){
-            userInfo.groupId='';
-            chatUser=userInfo;
-        }else {
-            toView=false;
-            logger.warn('chat->非法访问,ip:' + common.getClientIp(req));
-            req.session.wechatUserInfo=null;
-            res.render('error', {error: '链接参数失效，请重新访问！'});
-        }
+    logger.info("chat-admin->param:token["+token+"],otherParam:"+JSON.stringify(chatUser));
+    if(common.isBlank(token)||common.isBlank(chatUser.groupId)||common.isBlank(chatUser.userId)||constant.fromPlatform.pm_mis!=chatUser.fromPlatform){
+        logger.warn('chat-admin->非法访问,ip:' + common.getClientIp(req));
+        res.render('error', {error: '链接参数失效或有误，请重新访问！'});
     }
-    if(toView){
-        var viewDataObj={};//输出参数
-        if(constant.fromPlatform.pm_mis!=chatUser.fromPlatform){
-            var deviceAgent = req.headers["user-agent"].toLowerCase();
-            if(!config.isAllowCopyHomeUrl && deviceAgent.indexOf('micromessenger') == -1){
-                req.session.wechatUserInfo=null;
-                res.render('error',{error: '请在微信客户端打开链接!'});
-                return;
-            }
-        }
-        if(common.isBlank(chatUser.userType)){
-            chatUser.userType=0;
-        }
-        if(common.isBlank(chatUser.nickname)){
-            chatUser.nickname=chatUser.userId;
-        }
-        chatUser.groupType=getGroupType(req);//微信组
-        pmApiService.destroyHomeToken(token,function(isTrue){
-            if(isTrue||(constant.fromPlatform.pm_mis!=chatUser.fromPlatform && userInfo)) {
-                async.parallel({
-                        checkResult: function(callback){
-                            if(common.isValid(chatUser.fromPlatform)&&constant.fromPlatform.pm_mis==chatUser.fromPlatform){//检查系统用户
-                                userService.checkSystemUserInfo(chatUser,function(result){
-                                    callback(null,result);
-                                });
-                            }else{
-                                callback(null,null);
-                            }
-                        },
-                        returnObj: function(callback){ callback(null,null);}
+    chatUser.groupType=getGroupType(req);//房间组
+    pmApiService.destroyHomeToken(token,false,function(isTrue){
+        if(isTrue) {
+            async.parallel({
+                    checkResult: function(callback){
+                        userService.checkSystemUserInfo(chatUser,function(result){
+                            callback(null,result);
+                        });
                     },
-                    function(err, results) {
-                        if(results.checkResult!=null && !results.checkResult.isOK){
-                            req.session.wechatUserInfo=null;
+                    returnObj: function(callback){ callback(null,null);}
+                },
+                function(err, results) {
+                    if(results.checkResult==null){
+                        res.render('error',{error: '系统检查参数出现异常，请联系管理员！'});
+                    }else{
+                        if(!results.checkResult.isOK){
                             res.render('error',{error: '您缺少访问权限，请联系管理员！'});
                         }else{
-                            if(results.checkResult!=null){
-                                chatUser.userType=results.checkResult.userType;
-                                chatUser.roleNo=results.checkResult.roleNo;
-                                chatUser.nickname=results.checkResult.nickname;
-                                chatUser.position=results.checkResult.position;
-                                chatUser.avatar=results.checkResult.avatar;
-                                chatUser.accountNo= chatUser.userId;//后台进入的用户，账户与userId保持一致，保存到member表时，userId不保存
-                            }
-                            viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
-                            req.session.wechatUserInfo=chatUser;
-                            viewDataObj.roomName=roomName;
-                            if(constant.fromPlatform.pm_mis==chatUser.fromPlatform){//后台用户从后台进入则直接进入后台模板
-                                //过滤输出mobilePhone，防止后台页面看到
-                                viewDataObj.userInfo=JSON.stringify(common.filterField(chatUser,"mobilePhone"));
-                                res.render(getRenderPath(req,"admin"),viewDataObj);
-                            }else{
-                                //过滤输出mobilePhone,accountNo，防止前台页面看到
-                                viewDataObj.userInfo=JSON.stringify(common.filterField(chatUser,"mobilePhone,accountNo"));
-                                res.render(getRenderPath(req,"index"),viewDataObj);
-                            }
+                            chatUser.userType=results.checkResult.userType;
+                            chatUser.roleNo=results.checkResult.roleNo;
+                            chatUser.nickname=results.checkResult.nickname;
+                            chatUser.position=results.checkResult.position;
+                            chatUser.avatar=results.checkResult.avatar;
+                            chatUser.accountNo= chatUser.userId;//后台进入的用户，账户与userId保持一致，保存到member表时，userId不保存
+                            //过滤输出mobilePhone，防止后台页面看到
+                            res.render(getRenderPath(req,"admin"),{socketUrl:JSON.stringify(config.socketServerUrl),roomName:roomName,userInfo:JSON.stringify(common.filterField(chatUser,"mobilePhone"))});
                         }
-                    });
-            }else{
-                req.session.wechatUserInfo=null;
-                res.render('error',{error: '链接已过期，请重新访问！'});
-            }
-        });
-    }
+                    }
+                });
+        }else{
+            res.render('error',{error: '链接已过期，请重新访问！'});
+        }
+    });
 });
-
 /**
  * 进入房间
  */
@@ -206,9 +211,18 @@ router.post('/checkClient', function(req, res) {
                 }
             }else{
                 userInfo.ip=common.getClientIp(req);
-                userInfo.groupType=getGroupType(req);//微信组
+                userInfo.groupType=getGroupType(req);
                 userService.checkClient(constant.fromPlatform.fxchat==userInfo.groupType,userInfo,function(result){
-                    console.log("result:"+JSON.stringify(result));
+                    if(result.isSys){
+                        req.session.wechatUserInfo.accountNo=userInfo.accountNo;
+                        req.session.wechatUserInfo.userType=result.userType;
+                        req.session.wechatUserInfo.nickname=result.nickname;
+                        result.accountNo=userInfo.accountNo;
+                        if(common.isBlank(req.session.wechatUserInfo.avatar)){
+                            req.session.wechatUserInfo.avatar=result.avatar;
+                        }
+                    }
+                    logger.info("checkClient->result:"+JSON.stringify(result));
                     res.json(result);
                 });
             }
@@ -235,10 +249,13 @@ router.get('/getVerifyCode', function(req, res) {
  * 检查发送权限
  */
 router.post('/checkSendAuthority', function(req, res) {
-    var userId=req.body["userId"],groupId=req.body["groupId"],fromPlatform=req.body["fromPlatform"],accountNo=req.body["accountNo"],result={isVisitor:true};
-    if(common.isBlank(userId)||common.isBlank(groupId)){
+    var userId=req.body["userId"],userType =req.body["userType"],groupId=req.body["groupId"],fromPlatform=req.body["fromPlatform"],accountNo=req.body["accountNo"],result={isVisitor:true};
+    if(common.isBlank(userId)||common.isBlank(groupId)||common.isBlank(userType)){
         res.json(result);
     }else {
+        if(userType==constant.roleUserType.navy){
+            res.json({isVisitor:false});
+        }
         userService.checkUserLogin({userId:userId,groupId:groupId,fromPlatform:fromPlatform,accountNo:accountNo,groupType:getGroupType(req)},false,function(row) {
             if (row) {
                 result.isVisitor=false;

@@ -22,7 +22,8 @@ var constant={
         member:0,//前台会员
         admin:1,//管理员
         analyst:2, //分析师
-        cs:3 //客服
+        cs:3, //客服
+        navy:4//水军
     },
     chatPraiseType:{//点赞类型
         user:'user',//用户
