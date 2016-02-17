@@ -142,7 +142,7 @@ var visitorService = {
                 data.offlineDate=currTime;
                 //计算累计当日累积在线时长
                 var loc_startTime = new Date(currTime.getFullYear(), currTime.getMonth(), currTime.getDate());
-                if(data.onlineMSDate instanceof Date == false || data.onlineMSDate.getTime() === loc_startTime.getTime()){
+                if(data.onlineMSDate instanceof Date == false || data.onlineMSDate.getTime() !== loc_startTime.getTime()){
                     data.onlineMS = 0;
                     data.onlineMSDate = loc_startTime;
                 }
