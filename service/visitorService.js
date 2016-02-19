@@ -36,7 +36,7 @@ var visitorService = {
             clientGroup: model.clientGroup,//客户组
             accountNo: model.accountNo,//账号
             userAgent: model.userAgent,//用户客户端信息
-            updateDate: model.updateDate,//更新时间
+            updateDate: new Date(),//更新时间
             valid: 1
         };
         //保存
@@ -108,7 +108,7 @@ var visitorService = {
      * @param roomId
      */
     batchUpdateStatus:function(roomId){
-        chatVisitor.update({'roomId':roomId},{$set:{ onlineStatus:0,loginStatus:0,offlineDate:new Date()}},{ multi: true },function(err,row){});
+        chatVisitor.update({'roomId':roomId,onlineStatus:1},{$set:{ onlineStatus:0,loginStatus:0,offlineDate:new Date()}},{ multi: true },function(err,row){});
     },
     /**
      * 通过输入类型修改数据
@@ -133,7 +133,6 @@ var visitorService = {
                     }
                 }
                 data.onlineStatus=1;
-                data.updateDate=currTime;
                 break;
             }
             case 'offline':{
@@ -194,6 +193,30 @@ var visitorService = {
                 callback(null);
             }else{
                 callback(data.offlineDate);
+            }
+        });
+    },
+    /**
+     * 通过userId或visitorId
+     * @param groupType
+     * @param groupId
+     * @param userId
+     */
+    getUserArrByUserId:function(groupType,groupId,userId,callback){
+        chatVisitor.findOne({groupType:groupType,roomId:groupId,valid : 1,$or:[{userId:userId},{visitorId:userId}]}).select("userId nickname visitorId clientStoreId offlineDate").sort({'updateDate':'desc'}).exec(function(err, data){
+            var userArr=[];
+            userArr.push(userId);
+            if (err||!data){
+                logger.error('getByClientUserId fail',err);
+                callback(userArr);
+            }else{
+                if(common.isValid(data.userId) && userId!=data.userId){
+                    userArr.push(data.userId);
+                }
+                if(common.isValid(data.visitorId) && userId!=data.visitorId){
+                    userArr.push(data.visitorId);
+                }
+                callback(userArr);
             }
         });
     }

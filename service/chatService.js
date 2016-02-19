@@ -428,7 +428,7 @@ var chatService ={
             });
             //提取私聊信息
             socket.on('getWhMsg',function(data){
-                messageService.loadMsg({groupType:data.groupType,groupId:data.groupId,userId:data.userId,toUser:{userId:data.toUserId}},null,true, function(result){
+                messageService.loadMsg({userType:data.userType,groupType:data.groupType,groupId:data.groupId,userId:data.userId,toUser:{userId:data.toUserId}},null,true, function(result){
                     socket.emit('loadWhMsg',{type:'online',data:result,toUserId:data.toUserId});
                 });
             });

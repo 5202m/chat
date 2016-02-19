@@ -12,7 +12,7 @@
 <link href="/js/lib/jsWindows/jsWindows.min.css" rel="stylesheet" type="text/css">
 <link href="/js/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
 <link href="/js/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
-<link href="/css/studio/index.min.css" type="text/css" rel="stylesheet" />
+<link href="/css/studio/index.css" type="text/css" rel="stylesheet" />
 <link href="/css/face.css" type="text/css" rel="stylesheet" />
 <!--[if lt IE 9]>
 <link href="/css/studio/studioIE.css" rel="stylesheet" type="text/css">
@@ -248,7 +248,6 @@
                         <a href="javascript:void(0)" class="cm_prev dn"><i></i></a>
                         <div class="cm_wrap"></div>
                         <a href="javascript:void(0)" class="cm_next dn"><i></i></a>
-                        <a href="javascript:void(0)" class="wh_msg_ftip dn" title="我的私信"><i></i></a>
                     </div>
                 </div>
                 <div class="input_area">
@@ -680,7 +679,7 @@
 <script type="text/javascript" src="/js/util/chatAnalyze.js"></script>
 <script type="text/javascript" src="/js/lib/newquote.js"></script>
 <script type="text/javascript" src="/js/util/common.min.js"></script>
-<script type="text/javascript" src="/js/studio/index.min.js?t=<%=new Date().getTime()%>"></script>
+<script type="text/javascript" src="/js/studio/index.js?t=<%=new Date().getTime()%>"></script>
 <script type="text/javascript">
 studioChat.web24kPath='<%= web24kPath %>';
 studioChat.apiUrl='<%= apiUrl %>';
@@ -698,6 +697,7 @@ $(function(){
 $(window).resize(function(e){
 	widthCheck();
 	heightCalcu();
+    studioChat.adjustWhBoxStyle();
 });
 function widthCheck(){
     var ww = $(window).width(),rw=440;

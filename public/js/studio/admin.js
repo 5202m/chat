@@ -96,7 +96,7 @@ var studioChat={
         if(userId){
             $("#newMsgTipBtn").attr("uid",userId);
         }
-        studioChat.seWhTipImgPlay(userId);
+        studioChat.setWhTipImgPlay(userId);
     },
     /**
      * 发送私聊信息
@@ -119,16 +119,37 @@ var studioChat={
      * @param toUserId
      * @param isOnline
      */
-    setWhOnlineTip:function(toUserId,isOnline){
-        var liDom=$('.visitorDiv ul li[uid='+toUserId+']');
-        if(liDom.length==0){
-            return;
-        }
+    setWhOnlineTip:function(toUserId,isOnline,userInfoTmp){
         if(isOnline){
-            liDom.removeClass("off");
+            if(userInfoTmp){
+                var targetDom='';
+                console.log("userInfoTmp:"+JSON.stringify(userInfoTmp));
+                if(userInfoTmp.userType=="-1" && common.isValid(userInfoTmp.loginId)){//用户登出转游客
+                    targetDom=$('.visitorDiv ul li[uid='+userInfoTmp.loginId+']');
+                    if(targetDom.length>0){
+                        targetDom.attr("uid",userInfoTmp.userId);
+                        $('#wh_msg_'+userInfoTmp.loginId).attr('id','wh_msg_'+userInfoTmp.userId);
+                    }
+                }else if(userInfoTmp.userType=="0" && common.isValid(userInfoTmp.visitorId)){//游客转用户登入
+                    targetDom=$('.visitorDiv ul li[uid='+userInfoTmp.visitorId+']');
+                    if(targetDom.length>0){
+                        targetDom.attr("uid",userInfoTmp.userId);
+                        $('#wh_msg_'+userInfoTmp.visitorId).attr('id','wh_msg_'+userInfoTmp.userId);
+                    }
+                }
+                var nk=$('#wh_msg_'+toUserId+' .wh-title label').text(),ttp=$('#wh_msg_'+toUserId+' .wh-title .title-tip');
+                if(common.isValid(nk) && nk!=userInfoTmp.nickname){
+                    ttp.text("账号转变:"+nk+' --> '+userInfoTmp.nickname).show();
+                }else{
+                    ttp.text("").hide();
+                }
+                $('.visitorDiv ul li[uid='+toUserId+'] label,#wh_msg_'+toUserId+' .wh-title label').text(userInfoTmp.nickname);
+
+            }
+            $('.visitorDiv ul li[uid='+toUserId+']').removeClass("off");
             $('#wh_msg_'+toUserId+' .wh-title strong').text("在线");
         }else{
-            liDom.addClass("off");
+            $('.visitorDiv ul li[uid='+toUserId+']').addClass("off");
             $('#wh_msg_'+toUserId+' .wh-title strong').text("离线");
         }
     },
@@ -159,8 +180,8 @@ var studioChat={
                 studioChat.closeWhTipMsg(userId);
                 $(".wh-right").children().hide();
                 if($("#"+whId).length==0){
-                    var msgHtml='<div id="'+whId+'" class="wh-tab-msg"><div class="wh-title"><span><label>'+$(this).find("label").text()+'</label>【<strong></strong>】</span></div><div class="wh-content"></div>'+
-                        '<div class="wh-txt"><div class="toolbar"><a href="javascript:" class="facebtn" style="">表情</a></div><div contenteditable="true" class="ctextarea" id="whTxt_'+userId+'"></div></div></div>';
+                    var msgHtml='<div id="'+whId+'" class="wh-tab-msg"><div class="wh-title"><span><label>'+$(this).find("label").text()+'</label>【<strong></strong>】</span><span class="title-tip"></span></div><div class="wh-content"></div>'+
+                        '<div class="wh-txt"><div class="toolbar"><a href="javascript:" class="facebtn" style="">表情</a></div><div contenteditable="true" class="ctextarea" id="whTxt_'+userId+'" data-placeholder="按回车键发送"></div></div></div>';
                     $(".wh-right").append(msgHtml);
                     //私聊天内容发送事件
                     $("#"+whId).find(".ctextarea").keydown(function(e){
@@ -182,6 +203,7 @@ var studioChat={
                     $("#"+whId).show();
                     studioChat.setTalkListScroll(true,$('#'+whId+' .wh-content'),'dark');
                 }
+                //上下线提示
                 studioChat.setWhOnlineTip(userId,!$(this).hasClass("off"));
             });
         }
@@ -197,7 +219,7 @@ var studioChat={
      * 设置提示框闪动
      * @param userId
      */
-    seWhTipImgPlay:function(userId){
+    setWhTipImgPlay:function(userId){
         $(".wh_msg_ftip").attr("uid",userId).attr("k",1).show().addClass("have");
         $('#userListId li[id='+userId+']').attr("k",1);
         studioChat.whTipIntervalId=setInterval(function(){
@@ -210,7 +232,7 @@ var studioChat={
     closeWhTipMsg:function(userId){
         $('.wh_msg_ftip[uid='+userId+']').attr("k",0).removeClass("have have_op");
         $('#userListId li[id='+userId+']').attr("k",0).removeClass("have_op");
-        if($('.wh_msg_ftip[k=1]').length==0 && $('.wh_msg_ftip[k=1]').length==0){
+        if($('#userListId[k=1]').length==0 && $('.wh_msg_ftip[k=1]').length==0){
             if(studioChat.whTipIntervalId){
                 clearInterval(studioChat.whTipIntervalId);
                 studioChat.whTipIntervalId=null;
@@ -222,8 +244,9 @@ var studioChat={
      * @param userType
      * @param userId
      * @param nickname
+     * @param isShowNum
      */
-    fillWhBox:function(userType,userId,nickname,isTip){
+    fillWhBox:function(userType,userId,nickname,isTip,isShowNum){
         var whBox=this.getWhBox();
         if(whBox.length==0){//私聊框不存在，则初始化私聊框
             studioChat.setWhBox(true);
@@ -251,11 +274,11 @@ var studioChat={
                         return false;
                     }
                     if(isTip){
-                        studioChat.seWhTipImgPlay(userId);
+                        studioChat.setWhTipImgPlay(userId);
                     }
                 }else{
                     if(!userTab.hasClass("on") && isTip){
-                        studioChat.seWhTipImgPlay(userId);
+                        studioChat.setWhTipImgPlay(userId);
                     }
                 }
             }
@@ -269,40 +292,39 @@ var studioChat={
      * @param isLoadData
      */
     setWhContent:function(data,isMeSend,isLoadData){
-        var fromUser=data.fromUser;
-        var cls='dialog ',content=data.content;
-        var whContent='';
-        if(studioChat.userInfo.userId==fromUser.userId){
-            if(!isMeSend && data.serverSuccess){//发送成功，则去掉加载框，清除原始数据。
-                $('#'+data.uiId+' .dtime').html(studioChat.formatPublishTime(fromUser.publishTime));
-                $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
-                return;
-            }
-            whContent=$('#wh_msg_'+fromUser.toUser.userId+' .wh-content');
-            cls+='mine';
-        }else{
-            if(!isMeSend && !isLoadData && !this.fillWhBox(fromUser.userType,fromUser.userId,fromUser.nickname,true)){//如接收他人私信
-                return false;
-            }
-            if(fromUser.userType==2){
-                cls+='analyst';
-            }
-            if(fromUser.userType==1){
-                cls+='admin';
-            }
-            whContent=$('#wh_msg_'+fromUser.userId+' .wh-content');
-        }
-        if(isMeSend){//发送，并检查状态
-            fromUser.publishTime=data.uiId;
-        }
+        var fromUser=data.fromUser,cls='dialog ',content=data.content,nkTitle='';
         if(data.rule){
             $('#'+data.uiId+' .dcont').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
             return;
         }
-        var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header">'
-            + '<a href="javascript:" class="headimg" uId="'+fromUser.userId+'">'+studioChat.getUserAImgCls(fromUser.clientGroup,fromUser.userType,fromUser.avatar)+'</a><i></i>'
-            + '<p><span class="dtime">'+studioChat.formatPublishTime(fromUser.publishTime)+'</span>';
+        if(!isLoadData){
+            fromUser.toWhUserId=fromUser.userId;
+        }
+        if(studioChat.userInfo.userId==fromUser.userId){
+            if(isMeSend){//发送，并检查状态
+                fromUser.publishTime=data.uiId;
+                fromUser.toWhUserId=fromUser.toUser.userId;
+            }
+            if(data.serverSuccess){//发送成功，则去掉加载框，清除原始数据。
+                $('#'+data.uiId+' .dtime').html(studioChat.formatPublishTime(fromUser.publishTime));
+                $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
+                return;
+            }
+            cls+='mine';
+            nkTitle='<span class="wh-dia-title"><label class="dtime">'+studioChat.formatPublishTime(fromUser.publishTime,isLoadData,'/')+'</label><label class="wh-nk">我</label></span>';
+        }else{
+            if(!isLoadData && !this.fillWhBox(fromUser.userType,fromUser.userId,fromUser.nickname,true,true)){//如接收他人私信
+                return false;
+            }
+            nkTitle='<span class="wh-dia-title"><label class="wh-nk">'+fromUser.nickname+'</label><label class="dtime">'+studioChat.formatPublishTime(fromUser.publishTime,isLoadData,'/')+'</label></span>';
+        }
+        if(common.isBlank(fromUser.toWhUserId)){
+            console.error("setWhContent->fromUser toWhUserId is null,please check!");
+            return;
+        }
+        var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header">'+ '<p>'+nkTitle;
         html += '<span class="dcont">'+content.value+'</span></p></div>';
+        var whContent=$('#wh_msg_'+fromUser.toWhUserId+' .wh-content');
         var scrContent=whContent.find(".mCSB_container");//是否存在滚动
         if(scrContent.length>0){
             scrContent.append(html);
@@ -341,18 +363,13 @@ var studioChat={
                 windowType: "normal",
                 minimizeButton: true,
                 maximizeButton:false,
+                statusBar:false,
                 resizeIcon: '',
-                width: 640,
-                height: 532,
+                width: 680,
+                height: 545,
                 beforeMinimize:function(bx){
                     bx.hide();
                     return false;
-                },
-                beforeClose: function () {
-                    if($(".visitorDiv ul li").length>1){
-                        return confirm("确定关闭私信框吗？如关闭,当前所有私信会被清空！");
-                    }
-                    return true;
                 }
             });
             $("#newMsgShowBtn").click();
@@ -593,8 +610,9 @@ var studioChat={
     /**
      * 格式发布日期
      */
-    formatPublishTime:function(time){
-        return common.isBlank(time)?'':common.getHHMM(Number(time.replace(/_.+/g,"")));
+    formatPublishTime:function(time,isfull,splitChar){
+        var nb=Number(time.replace(/_.+/g,""));
+        return common.isBlank(time)?'':isfull?common.formatterDateTime(nb,splitChar):common.getHHMM(nb);
     },
     /**
      * 设置对话
@@ -811,11 +829,11 @@ var studioChat={
         if(studioChat.userInfo.userId!=userId && studioChat.userInfo.userId.indexOf('visitor_')==-1){
             var hasMainDiv=false,gIdDom=$("#groupInfoId"),mainDiv='<div class="dialogbtn" style="display:none;" nk="'+nickname+'" uId="'+userId+'" utype="'+userType+'">';
             if(userId.indexOf('visitor_')==-1){
-                mainDiv+='<a href="javascript:" class="d1" t="0"><span><b></b>@TA</span></a>';
+                mainDiv+='<a href="javascript:" class="d1" t="0"><span>@TA</span></a>';
                 hasMainDiv=true;
             }
             if(gIdDom.attr("aw")=="true"&& common.containSplitStr(gIdDom.attr("awr"),studioChat.userInfo.userType)){
-                mainDiv+='<a href="javascript:" class="d2" t="1"><span><b></b>私信</span></a>';
+                mainDiv+='<a href="javascript:" class="d2" t="1"><span>私信</span></a>';
                 hasMainDiv=true;
             }
             return hasMainDiv?mainDiv+"</div>":'';
@@ -952,7 +970,7 @@ var studioChat={
                         }
                     }
                     //设置私聊在线情况
-                    studioChat.setWhOnlineTip(userInfoTmp.userId,data.online);
+                    studioChat.setWhOnlineTip(userInfoTmp.userId,data.online,userInfoTmp);
                     $("#onLineSizeNum").text($("#userListId li").length);
                     break;
                 }
@@ -1035,17 +1053,24 @@ var studioChat={
             }else{//私聊框中每个用户tab对应的私聊信息
                 if(data && $.isArray(data)) {
                     data.reverse();
+                    console.log("data.length:",data.length);
                     for (var i in data) {
                         var row = data[i];
                         row.content.status=row.status;
-                        studioChat.formatUserToContent(row,true);
+                        studioChat.formatUserToContent(row,true,result.toUserId);
                     }
                     studioChat.setTalkListScroll(true,$('#wh_msg_'+result.toUserId+' .wh-content'),'dark');
                 }
             }
         });
     },
-    formatUserToContent:function(row,isWh){
+    /**
+     * 聊天记录数据转换
+     * @param row
+     * @param isWh
+     * @param toWhUserId
+     */
+    formatUserToContent:function(row,isWh,toWhUserId){
         var fromUser = {
             userId: row.userId,
             nickname: row.nickname,
@@ -1058,6 +1083,7 @@ var studioChat={
             avatar:row.avatar
         };
         if(isWh){
+            fromUser.toWhUserId=toWhUserId;
             studioChat.setWhContent({fromUser: fromUser,content:row.content},false,true);
         }else{
             studioChat.setContent({fromUser: fromUser,content:row.content},false,true);

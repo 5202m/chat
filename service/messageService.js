@@ -1,6 +1,7 @@
 var chatMessage = require('../models/chatMessage');//引入chatMessage数据模型
 var common = require('../util/common');//引入common类
 var constant = require('../constant/constant');//引入constant
+var visitorService=require('../service/visitorService');
 /**
  * 聊天室服务类
  * 备注：处理聊天室接受发送的所有信息及其管理
@@ -18,8 +19,18 @@ var messageService ={
         var selectRows=this.maxRows;
         if(allowWhisper){
             selectRows=50;
-            searchObj.$or = [{"userId" : userInfo.userId,"toUser.talkStyle": 1,"toUser.userId" : userInfo.toUser.userId},
-                {"userId" :userInfo.toUser.userId,"toUser.talkStyle" : 1, "toUser.userId" : userInfo.userId}];
+            var vSearchId=userInfo.toUser.userId,searchUserId=userInfo.userId;
+            if(userInfo.userType==constant.roleUserType.member||userInfo.userType==constant.roleUserType.visitor){
+                vSearchId=userInfo.userId;
+                searchUserId=userInfo.toUser.userId;
+            }
+            visitorService.getUserArrByUserId(groupType,groupId,vSearchId,function(userArr){
+                searchObj.$or = [{"userId" : searchUserId,"toUser.talkStyle": 1,"toUser.userId" :{$in:userArr}},
+                    {"userId" :{$in:userArr},"toUser.talkStyle" : 1, "toUser.userId" : searchUserId}];
+                messageService.findMessageList(userInfo,searchObj,selectSQL,selectRows,function(result){
+                    callback(result);
+                });
+            });
         }else{
             if(common.isValid(lastPublishTime)){
                 searchObj.publishTime = { "$gt":lastPublishTime};
@@ -37,7 +48,18 @@ var messageService ={
             }else{
                 searchObj["toUser.talkStyle"] = 0;
             }
+            this.findMessageList(userInfo,searchObj,selectSQL,selectRows,function(result){
+                callback(result);
+            });
         }
+    },
+    /**
+     * 查询信息通用方法
+     * @param searchObj
+     * @param selectSQL
+     * @param selectRows
+     */
+    findMessageList:function(userInfo,searchObj,selectSQL,selectRows,callback){
         chatMessage.db().find(searchObj).select(selectSQL).limit(selectRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
             messageService.getUnApprovalList(approvalList,userInfo,selectSQL,function(resultList){
                 var diffLength=selectRows-resultList.length;
