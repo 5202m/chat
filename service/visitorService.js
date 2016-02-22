@@ -4,6 +4,7 @@
 var common = require('../util/common');
 var logger=require('../resources/logConf').getLogger('visitorService');//引入log4js
 var chatVisitor = require('../models/chatVisitor');//引入chatVisitor数据模型
+var async = require('async');//引入async
 
 /**
  * 定义访问者服务类
@@ -108,7 +109,18 @@ var visitorService = {
      * @param roomId
      */
     batchUpdateStatus:function(roomId){
-        chatVisitor.update({'roomId':roomId,onlineStatus:1},{$set:{ onlineStatus:0,loginStatus:0,offlineDate:new Date()}},{ multi: true },function(err,row){});
+        chatVisitor.find({'roomId':roomId,onlineStatus:1}).exec('find', function(err, datas){
+            //不处理异常错误
+            if(!err && datas){
+                async.each(datas, function(data, callbackTmp){
+                    visitorService.modifyDataByType("offline",data,false);//按类型调整要保存的数据结构
+                    data.save(function (err) {
+                        //不处理异常错误
+                        callbackTmp(null);
+                    });
+                }, function(err){});
+            }
+        });
     },
     /**
      * 通过输入类型修改数据
