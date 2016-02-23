@@ -427,9 +427,9 @@ var chatService ={
                 chatService.acceptMsg(data,socket);
             });
             //提取私聊信息
-            socket.on('getWhMsg',function(data){
-                messageService.loadMsg({userType:data.userType,groupType:data.groupType,groupId:data.groupId,userId:data.userId,toUser:{userId:data.toUserId}},null,true, function(result){
-                    socket.emit('loadWhMsg',{type:'online',data:result,toUserId:data.toUserId});
+            socket.on('getWhMsg',function(userInfo){
+                messageService.loadMsg(userInfo,null,true, function(result){
+                    socket.emit('loadWhMsg',{type:'online',data:result,toUserId:userInfo.toUser.userId});
                 });
             });
         });

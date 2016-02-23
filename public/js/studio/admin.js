@@ -180,7 +180,7 @@ var studioChat={
                 $('.visitorDiv ul li').removeClass('on');
                 $(this).addClass('on');
                 $(this).find(".close").attr("t",0).text("").removeClass('ym');
-                var userId=$(this).attr("uid"),whId='wh_msg_'+userId;
+                var userId=$(this).attr("uid"),whId='wh_msg_'+userId,userType=$(this).attr("utype");
                 studioChat.closeWhTipMsg(userId);
                 $(".wh-right").children().hide();
                 if($("#"+whId).length==0){
@@ -202,7 +202,7 @@ var studioChat={
                         path:studioChat.filePath+'/face/'//表情存放的路径
                     });
                     //加载私聊信息
-                    studioChat.socket.emit("getWhMsg",{groupId:studioChat.userInfo.groupId,groupType:studioChat.userInfo.groupType,userId:studioChat.userInfo.userId,toUserId:userId});
+                    studioChat.socket.emit("getWhMsg",{userType:studioChat.userInfo.userType,groupId:studioChat.userInfo.groupId,groupType:studioChat.userInfo.groupType,userId:studioChat.userInfo.userId,toUser:{userId:userId,userType:userType}});
                 }else{
                     $("#"+whId).show();
                     studioChat.setTalkListScroll(true,$('#'+whId+' .wh-content'),'dark');

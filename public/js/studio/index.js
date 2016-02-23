@@ -613,7 +613,7 @@ var studioChat={
                 $('.mult_dialog a').removeClass('on');
                 $(this).addClass('on');
                 $(this).find(".num").attr("t",0).text("").hide();
-                var userId=$(this).attr("uid"),whId='wh_msg_'+userId;
+                var userId=$(this).attr("uid"),whId='wh_msg_'+userId,userType=$(this).attr("utype");
                 studioChat.closeWhTipMsg(userId);
                 $(".wh-right").children().hide();
                 if($("#"+whId).length==0){
@@ -634,7 +634,7 @@ var studioChat={
                         studioChat.sendWhMsg($(this).parents('.cont').find(".ctextarea"));
                     });
                     //加载私聊信息
-                    studioChat.socket.emit("getWhMsg",{userType:studioChat.userInfo.userType,groupId:studioChat.userInfo.groupId,groupType:studioChat.userInfo.groupType,userId:studioChat.userInfo.userId,toUserId:userId});
+                    studioChat.socket.emit("getWhMsg",{clientStoreId:studioChat.userInfo.clientStoreId,userType:studioChat.userInfo.userType,groupId:studioChat.userInfo.groupId,groupType:studioChat.userInfo.groupType,userId:studioChat.userInfo.userId,toUser:{userId:userId,userType:userType}});
                     //初始化表情事件
                     $("#"+whId).find('.facebtn').qqFace({
                         id:'faceId_'+userId,
@@ -1466,8 +1466,7 @@ var studioChat={
                 at: "left top"
             },
             select: function(event,ui) {
-                $("#contentText").html("").append('<span class="txt_dia" contenteditable="false" uid="'+ui.item.value+'" utype="'+ui.item.userType+'">@<label>'+ui.item.label+'</label></span>');
-                $('#contentText').focusEnd();
+                studioChat.setDialog(ui.item.value,ui.item.label,0,ui.item.userType);
                 return false;
             }
         }).autocomplete("instance")._renderItem = function(ul, item ) {

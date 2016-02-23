@@ -17,6 +17,11 @@ var visitorService = require('../../service/visitorService');//引入visitorServ
 var messageService = require('../../service/messageService');//引入messageService
 var logger=require('../../resources/logConf').getLogger('studio');//引入log4js
 
+router.get('/synchYearMsg', function(req, res) {
+    require('../../service/messageService').synchYearMsg();
+    res.json({tip:"done,please check it"});
+});
+
 /**
  * 聊天室页面入口
  */

@@ -9,6 +9,49 @@ var visitorService=require('../service/visitorService');
  */
 var messageService ={
     maxRows:100,
+    synchYearMsg:function(){
+        var date=new Date("2016/01/01 00:00:00");
+        console.log("synchYearMsg->date",date);
+        chatMessage.db(2015).find({'createDate':{"$gte":date}},function (err,result) {
+          if(!err && result){
+             for(var i in result){
+                 var row=result[i];
+                 var chatMessageModel = new chatMessage.db(2016)({
+                     _id:null,
+                     userId:row.userId,
+                     nickname:row.nickname,
+                     avatar:row.avatar,
+                     userType:row.userType,
+                     position:row.position,
+                     groupId:row.groupId,
+                     groupType:row.groupType,
+                     clientGroup:row.clientGroup,
+                     mobilePhone:row.mobilePhone,
+                     accountNo:row.accountNo,
+                     toUser:row.toUser.toObject(),
+                     content:{
+                         msgStatus:row.content.msgStatus,//信息状态，默认为在线(1)，离线为0
+                         msgType:row.content.msgType,
+                         value:row.content.value,
+                         maxValue:row.content.maxValue,
+                         needMax:row.content.needMax
+                     },
+                     fromPlatform:row.fromPlatform,//平台来源
+                     status:row.status, //内容状态：0、等待审批，1、通过 ；2、拒绝
+                     publishTime:row.publishTime, //发布日期
+                     createUser:row.userId,
+                     createIp:row.createIp,//新增记录的Ip
+                     createDate:row.createDate,//创建日期
+                     valid:row.valid
+                 });
+                 chatMessageModel.save(function(err){
+                     console.log('synchYearMsg success!',i);
+                     row.remove();
+                 });
+             }
+          }
+        });
+    },
     /**
      * 从数据库中加载已有的聊天记录
      */
@@ -19,18 +62,30 @@ var messageService ={
         var selectRows=this.maxRows;
         if(allowWhisper){
             selectRows=50;
-            var vSearchId=userInfo.toUser.userId,searchUserId=userInfo.userId;
-            if(userInfo.userType==constant.roleUserType.member||userInfo.userType==constant.roleUserType.visitor){
-                vSearchId=userInfo.userId;
-                searchUserId=userInfo.toUser.userId;
-            }
-            visitorService.getUserArrByUserId(groupType,groupId,vSearchId,function(userArr){
-                searchObj.$or = [{"userId" : searchUserId,"toUser.talkStyle": 1,"toUser.userId" :{$in:userArr}},
-                    {"userId" :{$in:userArr},"toUser.talkStyle" : 1, "toUser.userId" : searchUserId}];
+            searchObj["toUser.talkStyle"]=1;
+            if(userInfo.userType==constant.roleUserType.member){
+                visitorService.getUserArrByUserId(userInfo.userType,userInfo.clientStoreId,groupType,groupId,userInfo.userId,function(userArr){
+                    searchObj.$or = [{"userId" : userInfo.toUser.userId,"toUser.userId" :{$in:userArr}},
+                        {"userId" :{$in:userArr}, "toUser.userId" : userInfo.toUser.userId}];
+                    messageService.findMessageList(userInfo,searchObj,selectSQL,selectRows,function(result){
+                        callback(result);
+                    });
+                });
+            }else if(userInfo.userType==constant.roleUserType.visitor){
+                searchObj.$or = [{"userId" : userInfo.userId,"toUser.userId" :userInfo.toUser.userId},
+                    {"userId" :userInfo.toUser.userId, "toUser.userId" : userInfo.userId}];
                 messageService.findMessageList(userInfo,searchObj,selectSQL,selectRows,function(result){
                     callback(result);
                 });
-            });
+            }else{
+                visitorService.getUserArrByUserId(userInfo.toUser.userType,null,groupType,groupId,userInfo.toUser.userId,function(userArr){
+                    searchObj.$or = [{"userId" : userInfo.userId,"toUser.talkStyle": 1,"toUser.userId" :{$in:userArr}},
+                        {"userId" :{$in:userArr},"toUser.talkStyle" : 1, "toUser.userId" : userInfo.userId}];
+                    messageService.findMessageList(userInfo,searchObj,selectSQL,selectRows,function(result){
+                        callback(result);
+                    });
+                });
+            }
         }else{
             if(common.isValid(lastPublishTime)){
                 searchObj.publishTime = { "$gt":lastPublishTime};

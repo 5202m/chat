@@ -4,6 +4,7 @@
 var common = require('../util/common');
 var logger=require('../resources/logConf').getLogger('visitorService');//引入log4js
 var chatVisitor = require('../models/chatVisitor');//引入chatVisitor数据模型
+var constant = require('../constant/constant');//引入constant
 var async = require('async');//引入async
 
 /**
@@ -201,7 +202,7 @@ var visitorService = {
     getByClientStoreId:function(groupType,groupId,clientStoreId,callback){
         chatVisitor.findOne({groupType:groupType,roomId:groupId,valid : 1,clientStoreId:clientStoreId}).select("nickname visitorId clientStoreId offlineDate").exec(function(err, data){
             if (err||!data){
-                logger.error('getByClientStoreId fail',err);
+                logger.warn('getByClientStoreId fail',err);
                 callback(null);
             }else{
                 callback(data.offlineDate);
@@ -210,16 +211,27 @@ var visitorService = {
     },
     /**
      * 通过userId或visitorId
+     * @param userType
+     * @param clientStoreId
      * @param groupType
      * @param groupId
      * @param userId
      */
-    getUserArrByUserId:function(groupType,groupId,userId,callback){
-        chatVisitor.findOne({groupType:groupType,roomId:groupId,valid : 1,$or:[{userId:userId},{visitorId:userId}]}).select("userId nickname visitorId clientStoreId offlineDate").sort({'updateDate':'desc'}).exec(function(err, data){
+    getUserArrByUserId:function(userType,clientStoreId,groupType,groupId,userId,callback){
+        var searchObj={groupType:groupType,roomId:groupId,valid : 1};
+        if(common.isValid(clientStoreId)){
+            searchObj.clientStoreId=clientStoreId;
+        }
+        if(userType==constant.roleUserType.visitor){
+            searchObj.visitorId=userId;
+        }else{
+            searchObj.userId=userId;
+        }
+        chatVisitor.findOne(searchObj).select("userId visitorId").sort({'updateDate':'desc'}).exec(function(err, data){
             var userArr=[];
             userArr.push(userId);
             if (err||!data){
-                logger.error('getByClientUserId fail',err);
+                logger.warn('getByClientUserId fail',err);
                 callback(userArr);
             }else{
                 if(common.isValid(data.userId) && userId!=data.userId){

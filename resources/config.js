@@ -7,12 +7,12 @@ var config = {
     sessionConfig:{key:'connect.sid',secret:'pm@chat'},//session 对应key,secret
     redisUrlObj:{ host: '192.168.35.236', port: 6379 },	//链接redis缓存客户端连接
     isAllowCopyHomeUrl:true,//是否允许copy链接（针对微信进入聊天室）
-    pmApiUrl:'http://172.30.5.27:3000/api',//pmApi地址
+    pmApiUrl:'http://192.168.35.91:3000/api',//pmApi地址
     goldApiUrl: 'http://192.168.35.160/goldoffice_api/RESTful',//黄金api地址
     gwfxGTS2ApiUrl:'http://192.168.35.115:8080/Goldoffice_api/RESTful',//外汇GTS2 Api地址
     gwfxMT4ApiUrl:'http://192.168.75.40:8081/GwfxApi/RESTful',//外汇MT4 Api地址
     simulateApiUrl:'http://192.168.35.160/goldoffice_api_demo/RESTful',//模拟账户api地址
-    socketServerUrl:{webSocket:'http://172.30.5.27:3002',socketIO:'http://172.30.5.27:3003'},
+    socketServerUrl:{webSocket:'http://127.0.0.1:3002',socketIO:'http://127.0.0.1:3003'},
     filesDomain: 'http://192.168.35.91:8090',//图片等文件访问域名
     web24kPath:'http://testweb1.24k.hk:8090',//24k信息地址
     //db
