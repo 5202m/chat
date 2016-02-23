@@ -495,7 +495,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .pletter_hint .showbtn:hover{ background:#a77d0f}
 .pletter_hint .pl_close{ position:absolute; top:-29px; right:11px;display: block;width: 14px;height: 14px;background-position: -30px -150px;text-indent: -99999px;line-height: 0;}
 .pletter_hint .cont p span label{color:#B58D53}
-.pletter_win{font: 12px/1.4 'Microsoft YaHei';width:500px; height:360px; background:url(../../images/studio/whbg.jpg) right top no-repeat; border-radius:2px;position:absolute;z-index:10000; overflow:hidden}
+.pletter_win{font: 12px/1.4 'Microsoft YaHei';width:500px; height:370px; background:url(../../images/studio/whbg.jpg) right top repeat; border-radius:2px;position:absolute;z-index:10000; overflow:hidden}
 .pletter_win .qqFace{top: 100px;}
 .pletter_win .tit{border-bottom: 1px solid #C8CCC8;height:30px; line-height:30px; text-indent:15px; font-size:16px; font-weight:bold;color: #1D1B1B;font-family:'Microsoft JhengHei','Microsoft YaHei'; }
 .pletter_win.mult{ width:598px;}
@@ -504,7 +504,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .pletter_win .chat_content .scrollbox2{ padding:0}
 .pletter_win .chat_content{ padding:0 10px; margin-top:10px;border-bottom: 1px solid #C8CCC8;}
 .pletter_win .input_box,.pletter_win .input_area .adiv,.pletter_win .input_area .ctextarea{ background:none; border:0}
-.pletter_win .input_area .sendbtn{width: 60px;height: 35px;background: none;margin-top: -12px;}
+.pletter_win .input_area .sendbtn{width: 60px;height: 35px;background: none;margin-top: 0px;}
 .pletter_win .input_area .sendbtn span {
     display: inline-block;
     color: #131212;
@@ -529,6 +529,10 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
     background: #fff;
     border-radius: 0 5px 5px;
     clear: both;
+    text-align: left;
+}
+.wh-right .input_area .adiv{
+    margin-right:0px;
 }
 .wh-right .dialog .wh-dia-title{
     display: block;
@@ -538,18 +542,22 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 }
 .wh-right .dialog .wh-dia-title .wh-nk{
     margin-right: 10px;
-    color: #0E1CF3;
+    color: #908E8E;
     font-size: 10pt;
 }
 .wh-right .dialog.mine p{text-align: right;float: right;margin-right: 8px;}
-.wh-right .dialog.mine .wh-nk{margin:0px 10px;color: #0E1CF3;}
+.wh-right .dialog.mine .wh-nk{margin:0px 10px;color:#908E8E;}
 .wh-right .dialog.mine p .dcont{
     padding: 5px 5px;
     border-radius: 5px 0px 5px 5px;
-    clear: both;}
+    clear: both;
+}
 .wh-right .dialog .dtime{ padding-left:0;font-size: 9pt;}
 .wh-right .mCSB_inside>.mCSB_container{
     margin-right: 10px;
+}
+.wh-right .mCS_no_scrollbar .mCSB_container{
+    margin-right: 5px;
 }
 .mult_dialog a{border-radius: 3px;display:block; padding:0 10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;height:38px; line-height:38px; color:#fff; font-size:16px; text-align:center; border-radius:2px;margin-top:10px; position:relative;}
 .mult_dialog a.on,.mult_dialog a:hover { background:#69717e; background:rgba(230,230,230,.2); margin-top:10px; text-decoration:none}

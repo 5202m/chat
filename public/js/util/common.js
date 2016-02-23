@@ -558,7 +558,7 @@ if(!window.console){
  */
 $.fn.focusEnd = function() {
     $(this).focus();
-    var tmp = $('<span />').appendTo($(this)),
+    var tmp = $('<span/>').appendTo($(this)),
         node = tmp.get(0),
         range = null,
         sel = null;

@@ -200,6 +200,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 }
 .have{background-position: -60px -27px;}
 .have_op{opacity:0.5;}
+.user_box .have_op img{border:2px solid #FF0000;}
 .num{  font-size:12px; color:#fff; line-height:14px; text-align:center; font-style:normal; background-position:-70px -150px; z-index:1 }
 /*咨询对象*/
 .te_list { padding:0 28px 0 28px; position:relative; margin-bottom:5px; height:53px; overflow:hidden}
@@ -251,7 +252,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .chat_content{ margin-top:5px; }
 .chat_content .scrollbox2{ padding-right:10px;height:480px;overflow-y: scroll;overflow-x: hidden;}
 .chat .newMsgTipBtn{cursor: pointer;float: right;z-index: 100000;margin-right: 10px;color: blue;width: 40px;height: 20px;background-color: #F5F8F9;padding: 5px;border-radius: 3px;font-size: 13px;}
-.wh-left{background-color: #FBFBFB;width: 25%;height: 530px;border: 1px solid #9E9B9B;float: left;border-radius: 2px;margin: 5px 0px 5px 5px;}
+.wh-left{background-color: #FBFBFB;width: 25%;height: 532px;border: 1px solid #9E9B9B;float: left;border-radius: 2px;margin: 5px 0px 5px 5px;}
 .wh-left .searchDiv input{text-indent: 5px;width: 150px;height:22px;border: 1px solid #9E9B9B;}
 .wh-left .searchDiv em{position: absolute;left: 136px;top: 37px;width: 23px;height: 22px;background-image: url("../../images/studio/search.png")}
 .wh-left .searchDiv .searchResult {overflow-y:auto;max-height:350px;display: none;padding: 2px;position: absolute;z-index: 999999;background-color: white;border-left: 1px solid #BDBBBB;border-bottom: 1px solid #BDBBBB;border-right: 1px solid #BDBBBB;  width: 144px;}
@@ -279,21 +280,23 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
     margin: 2px 4px;
     cursor: pointer;
     float: right;
-    width: 18px;
-    height: 18px;
-    text-indent: -99999px;
-    line-height: 18px;
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
     z-index:2;
+    font-style: normal;
+    text-align: center;
 }
 .wh-left .visitorDiv ul li .ym{background-position:-70px -150px;color:#fff;}
 .wh-left .visitorDiv ul li:hover .close{
     background-position: -70px -60px;
+    text-indent: -99999px;
 }
-.wh-box .ctextarea:empty:before{content:attr(data-placeholder);color:#aaa;}
+.wh-box .ctextarea:empty:before{content:attr(data-placeholder);color:#aaa;line-height:42px;}
 .wh-box .ctextarea:focus:before{content:none;}
 
 .searchResult ul .off,.visitorDiv ul .off{opacity: 0.6;}
-.wh-right{float: right;border: 1px solid #9E9B9B;border-radius: 2px;margin: 5px 5px 5px 0px;width: 72%;height: 530px;}
+.wh-right{float: right;border: 1px solid #9E9B9B;border-radius: 2px;margin: 5px 5px 5px 0px;width: 72%;height:532px;}
 .wh-right .wh-tab-msg{height: 430px;}
 .wh-tab-msg .wh-title{border-radius: 2px;border-bottom: 1px solid #BDBBBB;padding: 1px;}
 .wh-tab-msg .wh-title label{font-weight: bolder;font-size: 15px;}
@@ -302,23 +305,34 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .wh-right .dialog{padding: 0px;margin-bottom: 3px;}
 .wh-right .dialog p{
     background:none;
-    padding: 0px;
+    padding: 5px 5px;
     color: #1D1C1C;
     line-height: 15pt;
 }
 .wh-right .dialog .dcont{
-    padding: 5px 9px;
+    padding: 2px;
+    text-align: left;
+
+}
+.wh-right .dialog .wh-dia-title{
+     display: block;
+ }
+.wh-right .dialog.mine .wh-dia-title{
+    text-align: right;
 }
 .wh-right .dialog .wh-dia-title .wh-nk{
     margin-right: 10px;
     color: #0E1CF3;
     font-size: 10px;}
-.wh-right .dialog.mine p{text-align: right;}
-.wh-right .dialog.mine p .wh-nk{ color: #0E1CF3; margin-right:0px;margin-left:10px;}
-.wh-right .dialog.mine p .dcont{padding: 5px 5px;}
+.wh-right .dialog.mine p{text-align: right;float: right;margin-right: 8px;}
+.wh-right .dialog.mine .wh-nk{ color: #0E1CF3;  margin: 0 10px;}
+.wh-right .dialog.mine p .dcont{padding: 2px;}
 .wh-right .dialog .dtime{ padding-left:0;font-size: 10px;}
 .wh-right .mCSB_inside>.mCSB_container{
-    margin-right: 22px;
+    margin-right: 10px;
+}
+.wh-right .mCS_no_scrollbar .mCSB_container{
+    margin-right: 5px;
 }
 
 .wh-tab-msg .wh-txt{height:30px;}
@@ -337,15 +351,15 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .wh-tab-msg .wh-txt .ctextarea {
     border: 1px solid #d6d6d6;
     background: #fff;
-    height: 35px;
+    height: 42px;
     resize: none;
     width: 99%;
     padding: 0;
     margin: 2px;
     color: #4e4e4e;
-    line-height: 35px;
     font-size: 11pt;
-    text-indent: 5px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 .txt_dia {color:#0BA1EC;margin-right:5px;}
 .dialoglist .txt_dia{cursor: pointer;}

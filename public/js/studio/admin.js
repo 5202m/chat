@@ -123,7 +123,6 @@ var studioChat={
         if(isOnline){
             if(userInfoTmp){
                 var targetDom='';
-                console.log("userInfoTmp:"+JSON.stringify(userInfoTmp));
                 if(userInfoTmp.userType=="-1" && common.isValid(userInfoTmp.loginId)){//用户登出转游客
                     targetDom=$('.visitorDiv ul li[uid='+userInfoTmp.loginId+']');
                     if(targetDom.length>0){
@@ -159,11 +158,16 @@ var studioChat={
      * @param userId
      * @param nickname
      * @param isOnline
+     * @param isShowNum
      */
-    setWhVisitors:function(userType,userId,nickname,isOnline){
+    setWhVisitors:function(userType,userId,nickname,isOnline,isShowNum){
         if($(".visitorDiv ul li[uid="+userId+"]").length==0){
-            $(".visitorDiv ul").append('<li uid="'+userId+'"  '+(isOnline?'':'class="off"')+' utype="'+userType+'"><span  class="user-row"><label>'+nickname+'</label><em class="close ym">!</em></span></li>');
+            $(".visitorDiv ul").append('<li uid="'+userId+'"  '+(isOnline?'':'class="off"')+' utype="'+userType+'"><span  class="user-row"><label>'+nickname+'</label><em class="close ym" t="0"></em></span></li>');
             var liDom=$('.visitorDiv ul li[uid='+userId+']');
+            if(isShowNum) {
+                var numDom = liDom.find(".close"), num = parseInt(numDom.attr("t")) + 1;
+                numDom.attr("t", num).text(num).addClass('ym');
+            }
             liDom.find('.close').click(function(){
                 var pt=$(this).parent().parent();
                 pt.remove();
@@ -175,7 +179,7 @@ var studioChat={
             liDom.click(function(){
                 $('.visitorDiv ul li').removeClass('on');
                 $(this).addClass('on');
-                $(this).find(".close").removeClass('ym');
+                $(this).find(".close").attr("t",0).text("").removeClass('ym');
                 var userId=$(this).attr("uid"),whId='wh_msg_'+userId;
                 studioChat.closeWhTipMsg(userId);
                 $(".wh-right").children().hide();
@@ -250,7 +254,7 @@ var studioChat={
         var whBox=this.getWhBox();
         if(whBox.length==0){//私聊框不存在，则初始化私聊框
             studioChat.setWhBox(true);
-            studioChat.setWhVisitors(userType,userId,nickname,true);
+            studioChat.setWhVisitors(userType,userId,nickname,true,isShowNum);
             if(isTip){
                 studioChat.setWhTipInfo(userId);
             }
@@ -258,7 +262,7 @@ var studioChat={
         }else{
             var userTab=$('.visitorDiv ul li[uid='+userId+']');
             if(userTab.length==0){//如果弹框没有对应用户，则先配置该用户tab
-                studioChat.setWhVisitors(userType,userId,nickname,true);
+                studioChat.setWhVisitors(userType,userId,nickname,true,isShowNum);
                 if(whBox.is(':hidden')){
                     if(isTip) {
                         studioChat.setWhTipInfo(userId);
@@ -267,7 +271,10 @@ var studioChat={
                     return false;
                 }
             }else{
-                $(".visitorDiv ul li[class!=on][uid="+userId+"]").find(".close").addClass('ym');
+                if(isShowNum && !userTab.hasClass("on")){
+                    var numDom= userTab.find(".close"),num=parseInt(numDom.attr("t"))+1;
+                    numDom.attr("t",num).text(num).addClass('ym');
+                }
                 if(whBox.is(':hidden')){//如私聊框隐藏，对应的信息框没有加载数据的则返回
                     var whContent=$('#wh_msg_'+userId+' .wh-content');
                     if(whContent.length==0){
@@ -322,8 +329,7 @@ var studioChat={
             console.error("setWhContent->fromUser toWhUserId is null,please check!");
             return;
         }
-        var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header">'+ '<p>'+nkTitle;
-        html += '<span class="dcont">'+content.value+'</span></p></div>';
+        var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"><div>'+nkTitle+ '</div><p><span class="dcont">'+content.value+'</span></p></div>';
         var whContent=$('#wh_msg_'+fromUser.toWhUserId+' .wh-content');
         var scrContent=whContent.find(".mCSB_container");//是否存在滚动
         if(scrContent.length>0){
@@ -358,7 +364,7 @@ var studioChat={
             boxHtml.push('<div class="searchResult"><ul></ul></div></div><div class="visitorDiv">');
             boxHtml.push('<ul></ul></div></div><div class="wh-right"></div></div>');
             $("#newMsgShowBtn").newWindow({
-                windowTitle: "私信",
+                windowTitle: "私聊",
                 content:boxHtml.join(""),
                 windowType: "normal",
                 minimizeButton: true,
@@ -366,7 +372,7 @@ var studioChat={
                 statusBar:false,
                 resizeIcon: '',
                 width: 680,
-                height: 545,
+                height: 550,
                 beforeMinimize:function(bx){
                     bx.hide();
                     return false;
@@ -833,7 +839,7 @@ var studioChat={
                 hasMainDiv=true;
             }
             if(gIdDom.attr("aw")=="true"&& common.containSplitStr(gIdDom.attr("awr"),studioChat.userInfo.userType)){
-                mainDiv+='<a href="javascript:" class="d2" t="1"><span>私信</span></a>';
+                mainDiv+='<a href="javascript:" class="d2" t="1"><span>私聊</span></a>';
                 hasMainDiv=true;
             }
             return hasMainDiv?mainDiv+"</div>":'';
