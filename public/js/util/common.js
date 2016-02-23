@@ -347,7 +347,7 @@ var common = {
      * @returns {XML|string|void}
      */
     clearMsgHtml:function(msg){
-       return msg.replace(/<\/?(?!(img|IMG)\s+src="[^>"]+\/face\/[^>"]+"\s*>)[^>]*>/g,'');
+       return msg.replace(/^((&nbsp;)+)/g,'').replace(/<\/?(?!(img|IMG)\s+src="[^>"]+\/face\/[^>"]+"\s*>)[^>]*>/g,'');
     },
     /**
      * 格式化显示课程安排表

@@ -494,6 +494,14 @@ var studioChat={
                 $("#sendBtn").click();
                 return false;
             }
+            if(e.keyCode==8){//按退格键发送
+                var txtDom=$(this).find(".txt_dia");
+                if($.trim($(this).text())==txtDom.text()){
+                    txtDom.remove();
+                    $(this).html("");
+                    return true;
+                }
+            }
         }).autocomplete({//输入@自动提示
             source: function(request, response ){
                 if (/^@.*$/g.test(request.term)) {
@@ -507,8 +515,7 @@ var studioChat={
                 at: "left top"
             },
             select: function(event,ui) {
-                $("#contentText").html("").append('<span class="txt_dia" contenteditable="false" uid="'+ui.item.value+'" utype="'+ui.item.userType+'">@<label>'+ui.item.label+'</label></span>');
-                $('#contentText').focusEnd();
+                $("#contentText").html("").append('<span class="txt_dia" contenteditable="false" uid="'+ui.item.value+'" utype="'+ui.item.userType+'">@<label>'+ui.item.label+'</label></span>&nbsp;').focusEnd();
                 return false;
             }
         }).autocomplete("instance")._renderItem = function(ul, item ) {
@@ -564,16 +571,14 @@ var studioChat={
      */
     getSendMsg : function(dom){
         var dom=dom?dom:$("#contentText");
-        var msg = dom.html();
         //排除表情,去除其他所有html标签
-        msg = msg.replace(/<\/?(?!(img|IMG)\s+src="[^>"]+\/face\/[^>"]+"\s*>)[^>]*>/g,'');
+        if(dom.find(".txt_dia").length>0){
+            dom.find(".txt_dia").remove();
+        }
+        var msg =common.clearMsgHtml(dom.html());
         if(common.isBlank(msg)){
             dom.html("");
             return false;
-        }
-        if(dom.find(".txt_dia").length>0){
-            dom.find(".txt_dia").remove();
-            msg=dom.html();
         }
         return msg;
     },
@@ -634,8 +639,8 @@ var studioChat={
             $('.visitorDiv ul li[uid='+userId+']').click();
         }else{
             $("#contentText .txt_dia").remove();
-            $("#contentText").prepend('<span class="txt_dia" contenteditable="false" uid="'+userId+'" utype="'+userType+'">@<label>'+nickname+'</label></span>');
-            $('#contentText').focusEnd();
+            $("#contentText").html($("#contentText").html().replace(/^((&nbsp;)+)/g,''));
+            $("#contentText").prepend('<span class="txt_dia" contenteditable="false" uid="'+userId+'" utype="'+userType+'">@<label>'+nickname+'</label></span>&nbsp;').focusEnd();
         }
     },
     /**
@@ -688,8 +693,7 @@ var studioChat={
             diaDom.css('top','30px');
         });
         $('#'+fromUser.publishTime+' .txt_dia').click(function(){
-            $("#contentText .txt_dia").remove();
-            $("#contentText").prepend('<span class="txt_dia" contenteditable="false" uid="'+$(this).attr("uid")+'" utype="'+$(this).attr("utype")+'">@<label>'+$(this).find("label").text()+'</label></span>').focusEnd();
+            studioChat.setDialog($(this).attr("uid"),$(this).find("label").text(),0,$(this).attr("utype"));
         });
         //审核按钮事件
         $('#'+fromUser.publishTime + " .approve button").click(function(){

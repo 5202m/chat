@@ -568,7 +568,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .mult_dialog a:hover .close{ display:block;}
 .mult_dialog a img{width: 32px;height: 32px;}
 .mult_dialog a span{float: left;padding: 3px;margin-left: -10px;}
-.mult_dialog a span label{text-align: left;margin-left:5px; width: 54px; line-height: 28px;height: 25px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display: inline-block;}
+.mult_dialog a span label{text-align: left;margin-left:5px; width: 52px; line-height: 28px;height: 25px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;display: inline-block;}
 .cmtalk{ float:left; font-size:0; text-align:left;}
 .cmtalk .cm_item{ display:inline-block; *display:inline; *zoom:1; height:28px; margin:0 3px 0 15px; }
 .cmtalk .cm_item:first-child{margin-left:5px;}
@@ -580,7 +580,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .cmtalk .cm_prev{ margin-left:10px;}
 .cmtalk .cm_prev i,.cmtalk .cm_next i{ display:block; width:7px; height:13px; background-position:-20px -320px;}
 .cmtalk .cm_prev i{ background-position:-30px -320px;}
-.cmtalk .have_op{opacity:0.5;}
+.cmtalk .have_op{opacity:0.5;filter:alpha(opacity=50);}
 .who_list{ position:absolute; bottom:50px; left:53px; width:95px; background:#fff; box-shadow:0 0 8px rgba(12,3,5,.3); border-radius:2px; overflow:hidden;}
 .who_list a{ display:block; height:30px; text-align:center; color:#4c4c4c; font-size:14px; line-height:30px;}
 .who_list a.on,.who_list a:hover{ background:#ebebeb; text-decoration:none}

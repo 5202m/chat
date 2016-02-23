@@ -1466,7 +1466,7 @@ var studioChat={
                 at: "left top"
             },
             select: function(event,ui) {
-                studioChat.setDialog(ui.item.value,ui.item.label,0,ui.item.userType);
+                $("#contentText").html("").append('&nbsp;<span class="txt_dia" contenteditable="false" uid="'+ui.item.value+'" utype="'+ui.item.userType+'">@<label>'+ui.item.label+'</label></span>&nbsp;').focusEnd();
                 return false;
             }
         }).autocomplete("instance")._renderItem = function(ul, item ) {
@@ -1536,15 +1536,13 @@ var studioChat={
             alert("消息内容超过最大长度限制（140字以内）！");
             return false;
         }
-        var msg = dom.html();
-        msg =common.clearMsgHtml(msg);
+        if(dom.find(".txt_dia").length>0){
+            dom.find(".txt_dia").remove();
+        }
+        var msg =common.clearMsgHtml(dom.html());
         if(common.isBlank(msg)){
             dom.html("");
             return false;
-        }
-        if(dom.find(".txt_dia").length>0){
-            dom.find(".txt_dia").remove();
-            msg=dom.html();
         }
         return msg;
     },
@@ -1733,7 +1731,7 @@ var studioChat={
         }else{
             $("#contentText .txt_dia").remove();
             $("#contentText").html($("#contentText").html().replace(/^((&nbsp;)+)/g,''));
-            $("#contentText").prepend('<span class="txt_dia" contenteditable="false" uid="'+userId+'" utype="'+userType+'">@<label>'+nickname+'</label></span>&nbsp;').focusEnd();
+            $("#contentText").prepend('&nbsp;<span class="txt_dia" contenteditable="false" uid="'+userId+'" utype="'+userType+'">@<label>'+nickname+'</label></span>&nbsp;').focusEnd();
         }
     },
     /**
