@@ -46,7 +46,6 @@ var messageService ={
                  });
                  chatMessageModel.save(function(err){
                      console.log('synchYearMsg success!',i);
-                     row.remove();
                  });
              }
           }
