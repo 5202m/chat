@@ -948,7 +948,7 @@ var studioChat={
         });
         //点击document,关闭dom
         $(document).click(function(e){
-            $('#faceId').hide().remove();
+            $('div[id^=faceId]').hide();
             if(!$(e.target).hasClass("headimg") && !$(e.target).parents().hasClass("headimg") && $(e.target).parent().attr("t")!="header" && !$(e.target).hasClass("uname")&& !$(e.target).parents().hasClass("te_ul")){
                 $('.dialogbtn').hide();
             }

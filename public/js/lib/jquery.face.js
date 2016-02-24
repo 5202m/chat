@@ -49,7 +49,6 @@
             }
 			e.stopPropagation();
 		});
-        $(this).click();
 	};
 
 })(jQuery);
