@@ -22,11 +22,19 @@
 			if($('#'+id).length<=0){
 				strFace = '<div id="'+id+'" style="position:absolute;display:none;z-index:'+option.zIndex+';" class="qqFace">' +
 							  '<table border="0" cellspacing="0" cellpadding="0"><tr>';
-				for(var i=1; i<=75; i++){
-					labFace = path+tip+i+'.gif';
-					strFace += '<td><img src="'+path+i+'.gif" tsg="'+option.assign+'" lf="'+labFace+'"/></td>';
-					if( i % 15 == 0 ) strFace += '</tr><tr>';
-				}
+                if(navigator.userAgent && /(iphone|ipod|ipad|android)/.test(navigator.userAgent.toLowerCase())){
+                    for(var i=1; i<=45; i++){
+                        labFace = path+tip+i+'.gif';
+                        strFace += '<td><img src="'+path+i+'.gif" tsg="'+option.assign+'" lf="'+labFace+'"/></td>';
+                        if( i % 9 == 0 ) strFace += '</tr><tr>';
+                    }
+                }else{
+                    for(var i=1; i<=75; i++){
+                        labFace = path+tip+i+'.gif';
+                        strFace += '<td><img src="'+path+i+'.gif" tsg="'+option.assign+'" lf="'+labFace+'"/></td>';
+                        if( i % 15 == 0 ) strFace += '</tr><tr>';
+                    }
+                }
 				strFace += '</tr></table></div>';
                 $(this).parent().append(strFace);
                 $(this).parent().find("img").click(function(){
