@@ -1441,16 +1441,10 @@ var studioChat={
             if(e.keyCode==8){//按退格键发送
                 var txtDom=$(this).find(".txt_dia");
                 if($.trim($(this).text())==txtDom.text()){
+                    $("#teacherListId li[uid='"+txtDom.attr("uid")+"'] a.te_btn.on").removeClass("on");
                     txtDom.remove();
                     $(this).html("");
                     return true;
-                }
-            }
-        }).keyup(function(e){
-            if(e.keyCode==8){//按回车键发送
-                var txtDom=$(this).find(".txt_dia");
-                if(txtDom.length==0){
-                    $("#teacherListId a.te_btn.on").removeClass("on");
                 }
             }
         }).autocomplete({//输入@自动提示
@@ -1479,6 +1473,9 @@ var studioChat={
                 return;
             }
             var toUser=studioChat.getToUser();
+            if(toUser.userType==2){
+                $("#teacherListId li[uid='"+toUser.userId+"'] a.te_btn.on").removeClass("on");
+            }
             var msg = studioChat.getSendMsg();
             if(msg === false){
                 return;
@@ -1719,15 +1716,20 @@ var studioChat={
      * @param nickname
      * @param talkStyle聊天方式（0对话，1私聊）
      * @param userType 用户类别(0客户；1管理员；2分析师；3客服）
+     * @param avatar
      */
-    setDialog:function(userId,nickname,talkStyle,userType){
+    setDialog:function(userId,nickname,talkStyle,userType,avatar){
         if(userType==2){
             $("#teacherListId li[uid='" + userId + "'] a.te_btn").addClass("on");
         }
         if(talkStyle==1){//私聊,则直接弹私聊框
             studioChat.fillWhBox(userType,userId,nickname,false);
             studioChat.getWhBox().show();
-            $('.mult_dialog a[uid='+userId+']').click();
+            var ms=$('.mult_dialog a[uid='+userId+']');
+            ms.click();
+            if(common.isValid(avatar)){
+                ms.find("img").attr("src",avatar);
+            }
         }else{
             $("#contentText .txt_dia").remove();
             $("#contentText").html($("#contentText").html().replace(/^((&nbsp;)+)/g,''));
@@ -1779,7 +1781,7 @@ var studioChat={
         }
         //对话事件
         $('#'+fromUser.publishTime+' .headimg').click(function(){
-            studioChat.openDiaLog($('#'+fromUser.publishTime+' .dialogbtn'));
+            studioChat.openDiaLog($('#'+fromUser.publishTime+' .dialogbtn').attr("avs",$(this).find("img").attr("src")));
         });
        $('#'+fromUser.publishTime+' .txt_dia').click(function(){
            if(studioChat.userInfo.clientGroup=='visitor'){
@@ -1790,6 +1792,7 @@ var studioChat={
         //昵称点击
         $('#'+fromUser.publishTime+' .uname').click(function(){
             var diaDom=$('#'+fromUser.publishTime+' .dialogbtn');
+            diaDom.attr("avs",$(this).parent().parent().find('.headimg img').attr("src"));
             studioChat.openDiaLog(diaDom);
             diaDom.css('left','62px');
             diaDom.css('top','30px');
@@ -1814,9 +1817,16 @@ var studioChat={
             }
         }
         diaDom.show();
-        diaDom.find("a").click(function(){
+        var am=diaDom.find("a"),dsrc=diaDom.attr("avs");
+        if(common.isValid(dsrc)){
+            am.attr("avs",dsrc);
+            diaDom.attr("avs",'');
+        }else{
+            am.attr("avs",'');
+        }
+        am.click(function(){
              var tp=$(this).parent();
-             studioChat.setDialog(tp.attr("uid"),tp.attr("nk"),$(this).attr("t"),tp.attr("utype"));//设置对话
+             studioChat.setDialog(tp.attr("uid"),tp.attr("nk"),$(this).attr("t"),tp.attr("utype"),$(this).attr("avs"));//设置对话
              tp.hide();
         });
      },
@@ -1975,9 +1985,9 @@ var studioChat={
                 $(".te_dialoglist").append(studioChat.getDialogHtml(row.userId,row.nickname,row.userType));
             }
             loc_teElem.click(function(){
-                var loc_isOn =$(this).find("a").is(".on");
                 if($(".te_dialoglist div").length>0){
                     var mydialog = $('.te_dialoglist .dialogbtn').eq($(this).index());
+                    mydialog.attr("avs",$(this).find(".headimg").attr("src"));
                     studioChat.openDiaLog(mydialog);
                     mydialog.css('left',$(this).offset().left-$('.chat').offset().left+5);
                 }
@@ -2021,7 +2031,9 @@ var studioChat={
                 $("#userListId li[id="+row.userId+"] a[t=header]").click(function(){
                     $('.user_box li').removeClass('zin');
                     $(this).parent().addClass('zin');
-                    studioChat.openDiaLog($(this).prev());
+                    var pv=$(this).prev();
+                    pv.attr("avs",$(this).find(".headimg img").attr("src"));
+                    studioChat.openDiaLog(pv);
                     $('.dialogbtn',$(this).parent()).css('left','7px');
                 });
             }

@@ -74,7 +74,7 @@ var chatService ={
     setClientSequence:function(userInfo){
         if(constant.fromPlatform.studio==userInfo.groupType){
             var userType=userInfo.userType;
-            if(userType && userType!=0){
+            if(userType && userType!=0 && userType!=-1){
                 userInfo.sequence=userType;
             }else{
                 var clientGroup=userInfo.clientGroup;
