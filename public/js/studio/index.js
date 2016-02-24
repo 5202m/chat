@@ -88,7 +88,7 @@ var studioChat={
                 if(data){
                     var csHtml='';
                     for(var i in data){
-                        csHtml='<a href="javascript:" uid="'+data[i].userNo+'" class="cm_item" title="客户经理'+data[i].userName+'"><img src="'+(common.isValid(data[i].avatar)?data[i].avatar:'/images/studio/cm.png')+'"><span>'+data[i].userName+'</span></a>';
+                        csHtml='<a href="javascript:" uid="'+data[i].userNo+'" class="cm_item"><img src="'+(common.isValid(data[i].avatar)?data[i].avatar:'/images/studio/cm.png')+'"><span>'+data[i].userName+'</span></a>';
                         if($("#userListId li[id="+data[i].userNo+"]").length>0){
                             $(".cm_wrap").prepend(csHtml);
                         }else{

@@ -13,17 +13,11 @@
 		var id = option.id;
 		var path = option.path;
 		var tip = option.tip;
-		
 		if(assign.length<=0){
 			alert('缺少表情赋值对象。');
 			return false;
 		}
-		
 		$(this).click(function(e){
-            if($('#'+id +':visible').length){
-                $('#'+id).hide();
-                return false;
-            }
 			var strFace, labFace;
 			if($('#'+id).length<=0){
 				strFace = '<div id="'+id+'" style="position:absolute;display:none;z-index:'+option.zIndex+';" class="qqFace">' +
@@ -45,9 +39,13 @@
                     var top = offset.top + $(this).outerHeight();
                     $('#'+id).css('top',top);
                 }
-                $('#'+id).css('left',offset.left);
+                $('#'+id).css('left',offset.left).show();
 			}else{
-                $('#'+id).show();
+                if($('#'+id +':visible').length>0){
+                    $('#'+id).hide();
+                }else{
+                    $('#'+id).show();
+                }
             }
 			e.stopPropagation();
 		});
