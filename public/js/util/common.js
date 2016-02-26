@@ -508,6 +508,13 @@ var common = {
             return "";
         }
         return loc_html.join("");
+    },
+    /**
+     * 判断客户端是否手机
+     * @param req
+     */
+    isMobile : function(){
+        return /(iphone|ipod|ipad|android)/.test(navigator.userAgent.toLowerCase());
     }
 };
 /**

@@ -71,6 +71,13 @@ var common = {
         return req.headers['x-forwarded-for'] || req.ip;
     },
     /**
+     * 通过房间id提取房间组别类型
+     * @param roomId
+     */
+    getRoomType:function(roomId){
+        return  roomId.replace(/_+.*/g,"");
+    },
+    /**
      * 链接正则
      * @returns {Object}
      */

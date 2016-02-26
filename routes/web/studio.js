@@ -14,9 +14,7 @@ var syllabusService = require('../../service/syllabusService');//引入syllabusS
 var studioService = require('../../service/studioService');//引入studioService
 var chatService = require('../../service/chatService');//引入chatService
 var visitorService = require('../../service/visitorService');//引入visitorService
-var messageService = require('../../service/messageService');//引入messageService
 var logger=require('../../resources/logConf').getLogger('studio');//引入log4js
-
 /**
  * 聊天室页面入口
  */
@@ -72,7 +70,6 @@ router.get('/admin', function(req, res) {
                                 viewDataObj.groupInfo=results.getGroup.toObject();
                                 viewDataObj.groupInfo.allowWhisper=common.containSplitStr(viewDataObj.groupInfo.talkStyle,1);
                             }
-                            var mainKey=chatUser.groupId.replace(/_+.*/g,"");//去掉后缀
                             viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
                             viewDataObj.userInfo=JSON.stringify(chatUser);
                             viewDataObj.nickname=chatUser.nickname;
@@ -150,7 +147,6 @@ router.get('/', function(req, res) {
 function toStudioView(chatUser,groupId,clientGroup,req,res){
     studioService.getIndexLoadData(groupId,function(data){
         var viewDataObj={apiUrl:config.pmApiUrl+'/common',filePath:config.filesDomain,web24kPath:config.web24kPath};//输出参数
-        var mainKey=groupId.replace(/_+.*/g,"");//去掉后缀
         chatUser.groupId=groupId;
         viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
         viewDataObj.userInfo=JSON.stringify({initVisit:chatUser.initVisit,groupType:constant.fromPlatform.studio,isLogin:chatUser.isLogin,groupId:chatUser.groupId,userId:chatUser.userId,clientGroup:chatUser.clientGroup,nickname:chatUser.nickname,userType:chatUser.userType});

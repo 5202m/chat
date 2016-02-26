@@ -38,7 +38,7 @@ var chatService ={
      * 格式命名空间对应的名称
      */
     formatSpaceName:function(spaceName){
-        spaceName=spaceName.replace(/_+.*/g,"");//去掉多余的下划线后缀
+        spaceName=common.getRoomType(spaceName);//去掉多余的下划线后缀
         return "/"+spaceName;
     },
     /**
@@ -152,8 +152,10 @@ var chatService ={
             }
         });
     },
+
     /**
      * 清除缓存数据及强制离线，清除缓存的在线线用户
+     * @param callback
      */
     clearAllData:function(callback){
         //更新缓存在线用户状态改成下线
@@ -167,14 +169,15 @@ var chatService ={
                 if(key.indexOf("onlineUser_")!=-1){
                     var roomId=key.replace("onlineUser_","");
                     visitorService.batchUpdateStatus(roomId);//更新访客记录状态
-                    chatService.getRoomOnlineUser(roomId,function(roomUserArr) {
+                    userService.batchOfflineStatus(roomId);
+                    /*chatService.getRoomOnlineUser(roomId,function(roomUserArr) {
                         if(roomUserArr){
                             for(var k in roomUserArr){
                                 userService.removeOnlineUser(roomUserArr[k],true,function(){});
                             }
                             callbackTmp(null);
                         }
-                    });
+                    });*/
                 }else{
                     callbackTmp(null);
                 }
@@ -234,7 +237,7 @@ var chatService ={
      * @param roomId
      */
     removeCacheRoom:function(roomId){
-        var groupType=roomId.replace(/_+.*/g,"");
+        var groupType=common.getRoomType(roomId);
         global.memored.remove(("onlineNum_"+groupType+"_"+roomId),function(){});//移除统计在线人数的房间
         global.memored.remove(("onlineUser_"+roomId),function(){});//移除在线人的房间
     },
@@ -563,7 +566,7 @@ var chatService ={
                 userSaveInfo.userId=userInfo.userId;
                 userSaveInfo.toUser=userInfo.toUser;
                 //验证规则
-                userService.verifyRule(userInfo.userType,groupId,data.content,function(resultVal){
+                userService.verifyRule(isWh,userInfo.userType,groupId,data.content,function(resultVal){
                     if(!resultVal.isOK){//匹配规则，则按规则逻辑提示
                         logger.info('acceptMsg=>resultVal:'+JSON.stringify(resultVal));
                         //通知自己的客户端
@@ -683,7 +686,7 @@ var chatService ={
         }
         var roomIdArr=roomIds.split(","),groupType='';
         for(var i in roomIdArr){
-            groupType=roomIdArr[i].replace(/_+.*/g,"");
+            groupType=common.getRoomType(roomIdArr[i]);
             chatService.sendMsgToUserArr(true,{groupType:groupType,groupId:roomIdArr[i]},userIds.split(','),null,'notice',{type:chatService.noticeType.leaveRoom,flag:flag});
         }
     },

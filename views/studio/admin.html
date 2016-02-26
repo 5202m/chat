@@ -44,8 +44,8 @@
             </div>
         </div>
     </div>
-    <div class="right_row" style="min-width: 900px">
-        <div style="width:55%;float:left;min-width: 500px;" id="right_chat">
+    <div class="right_row">
+        <div id="right_chat">
             <div class="chat clearfix">
                 <div class="line_bar">
                     <div class="view_select">
@@ -104,10 +104,10 @@
                 <a href="">对话</a>
             </div>
         </div>
-        <div class="right_row_1" style="width:45%;float:right;">
+       <!-- <div class="right_row_1" style="width:45%;float:right;">
             <div class="mod_video dn" style="margin-left:5px;width:100%;" id="yyVideoDiv" yc="<%= groupInfo.chatStudio.yyChannel %>" mc="<%= groupInfo.chatStudio.minChannel %>"></div>
             <div class="mod_bottom_div" style="width:100%;height:auto;margin-left:5px;background-color: rgba(246,246,246,0.9);"></div>
-        </div>
+        </div>-->
     </div>
     <!--提示框-->
     <div class="popup_box dn" id="tipMsgBox" style="width:550px;z-index: 999999;">
@@ -164,10 +164,10 @@
         var hh = $(window).height();
         if($(window).width()<1160){
             $('.right_row_1').hide();
-            $("#right_chat").css({width:"100%"});
+            /*$("#right_chat").css({width:"100%"});*/
         }else{
             $('.right_row_1').show();
-            $("#right_chat").css({width:"55%"});
+            /*$("#right_chat").css({width:"55%"});*/
         }
         $('.user_box').height(hh-125);
         $('.mod_video').height($('.mod_video').width()-65);

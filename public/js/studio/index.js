@@ -1473,7 +1473,7 @@ var studioChat={
                 return;
             }
             var toUser=studioChat.getToUser();
-            if(toUser.userType==2){
+            if(toUser && toUser.userType==2){
                 $("#teacherListId li[uid='"+toUser.userId+"'] a.te_btn.on").removeClass("on");
             }
             var msg = studioChat.getSendMsg();
