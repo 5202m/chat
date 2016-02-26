@@ -102,7 +102,7 @@ var messageService ={
         }else{//前台客户发起，则验证对方是否匹配私聊授权角色
             searchObj.userType={"$in":whUserTypeArr};
         }
-        chatMessage.db().find(searchObj).select('avatar userId nickname userType').exec(function (err,resultList) {
+        chatMessage.db().find(searchObj).select('avatar userId nickname userType clientGroup').exec(function (err,resultList) {
             if(!err && resultList){
                 var userInfoList={},row=null;
                 for(var i in resultList){
@@ -110,7 +110,7 @@ var messageService ={
                     if(userInfoList.hasOwnProperty(row.userId)){
                         userInfoList[row.userId].count+=1;
                     }else{
-                        userInfoList[row.userId]={userType:row.userType,nickname:row.nickname,avatar:row.avatar,count:0};
+                        userInfoList[row.userId]={clientGroup:row.clientGroup,userType:row.userType,nickname:row.nickname,avatar:row.avatar,count:0};
                     }
                 }
                 callback(userInfoList);

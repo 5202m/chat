@@ -61,6 +61,38 @@ var userService = {
             callback(row);
         });
     },
+
+    /**
+     * 批量下线房间用户在线状态
+     * @param roomId
+     */
+    batchOfflineStatus:function(roomId){
+        var groupType=common.getRoomType(roomId);
+        member.find({valid:1,'loginPlatform.chatUserGroup':{$elemMatch:{_id:groupType,"rooms":{$elemMatch:{'_id':roomId,onlineStatus:1}}}}},function(err,rowList){
+            if(err || !rowList){
+              logger.warn('batchOfflineStatus->fail or no offlineStatus row',err);
+            }else{
+                var room=null,mRow=null,group=null,currDate=new Date();
+                for(var k in rowList){
+                    mRow=rowList[k];
+                    group=mRow.loginPlatform.chatUserGroup.id(groupType);
+                    if(group){
+                        room=group.rooms.id(roomId);
+                        if(room && room.onlineStatus==1){
+                            room.onlineStatus=0;
+                            room.offlineDate=currDate;
+                            mRow.save(function(err){
+                                if(err){
+                                    logger.error("batchOfflineStatus->update fail!",err);
+                                }
+                            });
+                        }
+                    }
+                }
+                logger.info("batchOfflineStatus->update rows["+roomId+"]:",rowList.length);
+            }
+        });
+    },
     /**
      * 移除在线用户
      * @param userInfo
@@ -110,11 +142,12 @@ var userService = {
     },
     /**
      * 验证规则
+     * @param isWh 是否私聊
      * @param groupId
      * @param content
      * @param callback
      */
-    verifyRule:function(userType,groupId,content,callback){
+    verifyRule:function(isWh,userType,groupId,content,callback){
         var isImg=content.msgType!='text',contentVal=content.value;
         if(common.isBlank(contentVal)){
             callback({isOK:false,tip:"发送的内容有误，已被拒绝!"});
@@ -131,7 +164,7 @@ var userService = {
         //预定义规则
         chatGroup.findById(groupId,function (err,row) {
             if(err||!row){
-                callback({isOK:false,tip:'系统异常，请检查房间对应房间是否存在！',leaveRoom:true});
+                callback({isOK:false,tip:'系统异常，房间不存在！',leaveRoom:true});
                 return;
             }
             if(constant.roleUserType.member<parseInt(userType)){//后台用户无需使用规则
@@ -151,13 +184,20 @@ var userService = {
                 type=ruleRow.type;
                 tip=ruleRow.afterRuleTips;
                 isPass=common.dateTimeWeekCheck(ruleRow.periodDate, true);
-                if(isPass && type=='speak_not_allowed'){//禁言
-                    callback({isOK:false,tip:tip});
-                    return;
-                }
-                if(!isPass && type=='speak_allowed'){//允许发言
-                    callback({isOK:false,tip:tip});
-                    return;
+                if(isWh){
+                    if(!isPass && type=='whisper_allowed'){//允许私聊
+                        callback({isOK:false,tip:tip});
+                        return;
+                    }
+                }else{
+                    if(isPass && type=='speak_not_allowed'){//禁言
+                        callback({isOK:false,tip:tip});
+                        return;
+                    }
+                    if(!isPass && type=='speak_allowed'){//允许发言
+                        callback({isOK:false,tip:tip});
+                        return;
+                    }
                 }
                 if(isImg && isPass && type=='img_not_allowed'){//禁止发送图片
                     callback({isOK:false,tip:tip});
