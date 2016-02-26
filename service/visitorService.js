@@ -184,7 +184,7 @@ var visitorService = {
      * @param nickname
      */
     getVistiorByName:function(groupType,roomId,nickname,callback){
-        chatVisitor.find({groupType:groupType,roomId:roomId,valid : 1,nickname:eval('/.*?'+nickname+'.*/g')}).select("nickname userId visitorId clientStoreId onlineStatus").sort({'onlineStatus':'desc'}).exec(function(err, data){
+        chatVisitor.find({groupType:groupType,roomId:roomId,valid : 1,nickname:eval('/.*?'+nickname+'.*/g')}).select("clientGroup nickname userId visitorId clientStoreId onlineStatus").sort({'onlineStatus':'desc'}).exec(function(err, data){
             if (err){
                 logger.error('getVistiorByName fail',err);
                 callback(null);
