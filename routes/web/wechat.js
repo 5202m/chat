@@ -336,8 +336,12 @@ router.get('/getSyllabus', function(req, res) {
             };
             //#月#日-#月#日老师课程表安排，以当前时间计算当周的开始结束日期
             loc_day = (loc_day + 6) % 7;
+            //计算课程表最后一天
+            var loc_temp = data.courses ? JSON.parse(data.courses) : {};
+            loc_temp = loc_temp.days instanceof Array ? loc_temp.days.pop()["day"] : 1;
+            loc_temp = typeof loc_temp == "number" ? ((loc_temp + 6) % 7) : 0;
             var loc_startDate = new Date(loc_nowTime.getTime() - loc_day * 86400000);
-            var loc_endDate = new Date(loc_nowTime.getTime() + (6 - loc_day) * 86400000);
+            var loc_endDate = new Date(loc_nowTime.getTime() + (loc_temp - loc_day) * 86400000);
             data.title = (loc_startDate.getMonth() + 1) + '月' + loc_startDate.getDate() + '日-'
                 + (loc_endDate.getMonth() + 1) + '月' + loc_endDate.getDate() + '日老师课程表安排';
         }
