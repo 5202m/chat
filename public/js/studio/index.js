@@ -12,7 +12,7 @@ var studioChat={
     studioDate:'',//直播时间点
     verifyCodeIntervalId:null,
     exStudioIntervalId:null,
-    whTipIntervalId:null,
+    teachIndex:0,
     //信息类型
     msgType:{
         text:'text' ,
@@ -79,9 +79,20 @@ var studioChat={
         });
     },
     /**
+     *
+     * 允许私聊
+     * @returns {boolean}
+     */
+    isAllowWh:function(){
+        return "true"==$("#studioListId a[class~=ing]").attr("aw");
+    },
+    /**
      * 设置客服经理列表
      */
     setCSList:function() {
+        if(!this.isAllowWh()){
+            return;
+        }
         try{
             $.getJSON('/studio/getCS',{groupId:this.userInfo.groupId},function(data){
                 $(".cm_wrap").html("");
@@ -95,7 +106,6 @@ var studioChat={
                             $(".cm_wrap").append(csHtml);
                             $(".cm_wrap a[uid="+data[i].userNo+"] img").addClass("have_op");
                         }
-                        //studioChat.setOnlineUser({userType:3,useId:data[i].userNo,nickname:data[i].userName,avatar:data[i].avatar,sequence:2});
                     }
                     studioChat.showTwoCS();//只显示两个CS
                     $(".cm_wrap a").click(function(){//点击客户经理
@@ -382,11 +392,12 @@ var studioChat={
      * @param curPageNo
      * @param pageSize
      * @param orderByStr
+     * @param authorId
      * @param callback
      */
-    getArticleList:function(code,platform,hasContent,curPageNo,pageSize,orderByStr,callback){
+    getArticleList:function(code,platform,hasContent,curPageNo,pageSize,orderByStr,authorId,callback){
         try{
-            $.getJSON('/studio/getArticleList',{code:code,platform:platform,hasContent:hasContent,pageNo:curPageNo,pageSize:pageSize,orderByStr:orderByStr},function(data){
+            $.getJSON('/studio/getArticleList',{authorId:common.trim(authorId),code:code,platform:platform,hasContent:hasContent,pageNo:curPageNo,pageSize:pageSize,orderByStr:orderByStr},function(data){
                 //console.log("getArticleList->data:"+JSON.stringify(data));
                 callback(data);
             });
@@ -420,7 +431,7 @@ var studioChat={
      */
     setVideoList:function(){
         $(".img-loading[pf=studioTeachId]").show();
-        this.getArticleList("teach_video",this.userInfo.groupId,0,1,100,'{"sequence":"asc"}',function(dataList){
+        this.getArticleList("teach_video",this.userInfo.groupId,0,1,100,'{"sequence":"asc"}',null,function(dataList){
            $("#studioTeachId").html("");
            $(".img-loading[pf=studioTeachId]").hide();
            if(dataList && dataList.result==0){
@@ -447,7 +458,7 @@ var studioChat={
      * 设置视频广告
      */
     setVideoAdvertisement:function(){
-        this.getArticleList("video_advertisement",this.userInfo.groupId,0,1,1,'{"createDate":"desc"}',function(dataList){
+        this.getArticleList("video_advertisement",this.userInfo.groupId,0,1,1,'{"createDate":"desc"}',null,function(dataList){
             var loc_elem = $("#tVideoCtrl a.ad");
             if(dataList && dataList.result==0 && dataList.data && dataList.data.length === 1){
                 var loc_ad=dataList.data[0];
@@ -552,7 +563,6 @@ var studioChat={
         }
         $(".pletter_hint p span").html((userType=="3"?"客户经理":"")+nkLabel+"发来了一条私聊信息");
         $(".pletter_hint").show();
-        studioChat.setWhTipImgPlay(userId);
     },
     /**
      * 发送私聊信息
@@ -660,26 +670,9 @@ var studioChat={
         return $(".window-container[wid=newMsgShowBtn]");
     },
     /**
-     * 设置提示框闪动
-     * @param userId
-     */
-    setWhTipImgPlay:function(userId){
-        /*$('.cm_wrap a[uid='+userId+']').attr("k",1);
-        studioChat.whTipIntervalId=setInterval(function(){
-            $('.cm_wrap a[k=1] img').toggleClass("have_op");
-        },1000);*/
-    },
-    /**
      * 关闭私聊提示
      */
     closeWhTipMsg:function(userId){
-        /*$('.cm_wrap a[uid='+userId+']').attr("k",0).find("img").removeClass("have_op");
-        if($('.cm_wrap a[k=1]').length==0){
-            if(studioChat.whTipIntervalId){
-                clearInterval(studioChat.whTipIntervalId);
-                studioChat.whTipIntervalId=null;
-            }
-        }*/
         $(".pletter_hint").hide();
     },
     /**
@@ -716,16 +709,9 @@ var studioChat={
                     numDom.attr("t",num).text(num).show();
                 }
                 if(whBox.is(':hidden')){//如私聊框隐藏，对应的信息框没有加载数据的则返回
-                    if(isTip){
-                        studioChat.setWhTipImgPlay(userId);
-                    }
                     var whContent=$('#wh_msg_'+userId+' .wh-content');
                     if(whContent.length==0){
                         return false;
-                    }
-                }else{
-                    if(!userTab.hasClass("on") && isTip){
-                        studioChat.setWhTipImgPlay(userId);
                     }
                 }
             }
@@ -812,6 +798,8 @@ var studioChat={
      * 事件设置
      */
     setEvent:function(){
+        //老师列表滚动
+        this.teachSlide();
         /*#################私聊事件#################begin*/
         jqWindowsEngineZIndex=100000;
         $("#newMsgTipBtn").click(function(){
@@ -845,7 +833,10 @@ var studioChat={
              $("."+$(this).attr("t")).hide();
         });
         /*#################私聊事件#################end*/
-
+        $(".point-close").click(function(){
+            $("#teacherListId a").removeClass("on");
+            $(".pointlist").hide();
+        });
         /**
          * 返回直播
          */
@@ -1085,7 +1076,7 @@ var studioChat={
                     studioChat.setListScroll($("#studioPlanTab").parent()[0]);
                 });
             }else if(t=='bulletinTab'){
-                studioChat.getArticleList("bulletin_system",studioChat.userInfo.groupId,1,1,1,'{"sequence":"asc"}',function(dataList){
+                studioChat.getArticleList("bulletin_system",studioChat.userInfo.groupId,1,1,1,'{"sequence":"asc"}',null,function(dataList){
                     $("#bulletinTab").html("");
                     if(dataList && dataList.result==0){
                         var data=dataList.data;
@@ -1096,7 +1087,7 @@ var studioChat={
                     }
                 });
             }else if(t=='downloadTab'){
-                studioChat.getArticleList("download",studioChat.userInfo.groupId,1,1,100,'{"sequence":"asc"}',function(dataList){
+                studioChat.getArticleList("download",studioChat.userInfo.groupId,1,1,100,'{"sequence":"asc"}',null,function(dataList){
                     $("#downloadTab").html("");
                     if(dataList && dataList.result==0){
                         var data=dataList.data,row=null;
@@ -1441,7 +1432,6 @@ var studioChat={
             if(e.keyCode==8){//按退格键发送
                 var txtDom=$(this).find(".txt_dia");
                 if($.trim($(this).text())==txtDom.text()){
-                    $("#teacherListId li[uid='"+txtDom.attr("uid")+"'] a.te_btn.on").removeClass("on");
                     txtDom.remove();
                     $(this).html("");
                     return true;
@@ -1473,9 +1463,6 @@ var studioChat={
                 return;
             }
             var toUser=studioChat.getToUser();
-            if(toUser && toUser.userType==2){
-                $("#teacherListId li[uid='"+toUser.userId+"'] a.te_btn.on").removeClass("on");
-            }
             var msg = studioChat.getSendMsg();
             if(msg === false){
                 return;
@@ -1719,9 +1706,6 @@ var studioChat={
      * @param avatar
      */
     setDialog:function(userId,nickname,talkStyle,userType,avatar){
-        if(userType==2){
-            $("#teacherListId li[uid='" + userId + "'] a.te_btn").addClass("on");
-        }
         if(talkStyle==1){//私聊,则直接弹私聊框
             studioChat.fillWhBox(userType,userId,nickname,false);
             studioChat.getWhBox().show();
@@ -1954,7 +1938,7 @@ var studioChat={
      * @returns {string}
      */
     getDialogHtml:function(userId,nickname,userType){
-        if(studioChat.userInfo.userId!=userId){
+        if(userId && studioChat.userInfo.userId!=userId){
             var hasMainDiv=false,gIdDom=$("#studioListId a[class~=ing]"),mainDiv='<div class="dialogbtn" style="display:none;" nk="'+nickname+'" uid="'+userId+'" utype="'+userType+'">';
             if(studioChat.userInfo.userId.indexOf('visitor_')==-1 && userId.indexOf('visitor_')==-1){
                 mainDiv+='<a href="javascript:" class="d1" t="0"><span>@TA</span></a>';
@@ -1969,7 +1953,31 @@ var studioChat={
             return '';
         }
     },
-
+    /**
+     * 老师列表滚动
+     */
+    teachSlide:function(){
+        studioChat.teachIndex = 0;
+        $("#teacherListId").width(0);
+        $('.te_next').click(function(){
+            var itemW = $('.te_ul li:first').width();
+            if($('.te_ul').width()-studioChat.teachIndex*itemW -$('.te_list .tempwrap').width()>0){
+                $(".pointlist").hide();
+                $("#teacherListId a.on").removeClass("on");
+                studioChat.teachIndex ++;
+                $('.te_ul').animate({left: -studioChat.teachIndex*itemW}, "slow");
+            }
+        });
+        $('.te_prev').click(function(){
+            if(studioChat.teachIndex!=0){
+                $(".pointlist").hide();
+                $("#teacherListId a.on").removeClass("on");
+                studioChat.teachIndex --;
+                var itemW = $('.te_ul li:first').width();
+                $('.te_ul').animate({left: -studioChat.teachIndex*itemW}, "slow");
+            }
+        });
+    },
     /**
      * 设置在线用户
      * @param row
@@ -1978,12 +1986,11 @@ var studioChat={
     setOnlineUser:function(row){
         if(row.userType==2){
             $("#teacherListId li[uid='"+row.userId+"']").remove();//存在则移除旧的记录
-            var loc_teElem = $('<li uid="'+row.userId+'" utype="'+row.userType+'"><a title="' + (row.introduction||"") + '" href="javascript:" class="te_btn"><img class="headimg" src="'+row.avatar+'"><span><strong>'+row.nickname+'</strong><i>'+(row.position||'')+'</i></span><div class="mp"><b></b></div></a></li>');
+            var tSize=$("#teacherListId li").length;
+            var loc_teElem = $('<li uid="'+row.userId+'" utype="'+row.userType+'" t="'+tSize+'"><a title="' + (row.introduction||"") + '" href="javascript:" class="te_btn"><img class="headimg" src="'+row.avatar+'"><span><strong>'+row.nickname+'</strong><i>'+(row.position||'')+'</i></span><div class="mp"><b></b>老师<br>观点</div></a></li>');
             $("#teacherListId").append(loc_teElem);
             $("#teacherListId").width($("#teacherListId").width() + loc_teElem.width());
-            if($("#studioListId a[class~=ing]").attr("aw")=="true"){
-                $(".te_dialoglist").append(studioChat.getDialogHtml(row.userId,row.nickname,row.userType));
-            }
+            $(".te_dialoglist").append(studioChat.getDialogHtml(row.userId,row.nickname,row.userType));
             loc_teElem.click(function(){
                 if($(".te_dialoglist div").length>0){
                     var mydialog = $('.te_dialoglist .dialogbtn').eq($(this).index());
@@ -1991,6 +1998,36 @@ var studioChat={
                     studioChat.openDiaLog(mydialog);
                     mydialog.css('left',$(this).offset().left-$('.chat').offset().left+5);
                 }
+            }).find(".mp").click(function(e){
+                if (window.event){
+                    window.event.cancelBubble=true;
+                }else{
+                    if(e){
+                        e.stopPropagation();
+                    }
+                }
+                var pdom=$(this).parent();
+                if(pdom.hasClass("on")){
+                    return;
+                }
+                $("#teacherListId a").removeClass("on");
+                pdom.addClass("on");
+                var wd=$('.te_ul li:first').width(),pd=pdom.parent();
+                var dt=(parseInt(pd.attr("t"))-Math.abs(studioChat.teachIndex))*wd+38,pw=$(".pointlist").width(),ct=$(".chat").width();
+                if(dt+pw>=ct){
+                    dt=ct-pw;
+                }
+                studioChat.getArticleList("trade_strategy_article",studioChat.userInfo.groupId,1,1,1,'{"createDate":"desc"}',pd.attr("uid"),function(dataList){
+                    if(dataList && dataList.result==0 && dataList.data && dataList.data.length>0) {
+                        var data = dataList.data[0],row = data.detailList[0];
+                        $(".pointlist .tit label").text(row.title);
+                        $(".pointlist .te-txt").html(row.content);
+                    }else{
+                        $(".pointlist .tit label").text("亲，老师还未发布观点哦");
+                        $(".pointlist .te-txt").html("");
+                    }
+                });
+                $(".pointlist").css({left:dt+'px'}).show();
             });
         }else{
             $("#userListId li[id='"+row.userId+"']").remove();//存在则移除旧的记录
@@ -2117,7 +2154,7 @@ var studioChat={
                     var data=result.data,userInfoTmp=data.onlineUserInfo;
                     if(data.online){
                         studioChat.setOnlineUser(userInfoTmp);
-                        if(userInfoTmp.userType==3) {//客户经理上线
+                        if(userInfoTmp.userType==3 && studioChat.isAllowWh()) {//客户经理上线
                             var onlineCs=$(".cm_wrap a[uid=" + userInfoTmp.userId + "]");
                             onlineCs.find("img").removeClass("have_op");
                             $(".cm_wrap").prepend(onlineCs);
@@ -2131,7 +2168,7 @@ var studioChat={
                                 $("#userListId #"+userInfoTmp.userId).remove();
                                 studioChat.setListScroll(".user_box");
                             }
-                            if(userInfoTmp.userType==3) {//客户经理下线
+                            if(userInfoTmp.userType==3 && studioChat.isAllowWh()) {//客户经理下线
                                 var onlineCs=$(".cm_wrap a[uid=" + userInfoTmp.userId + "]");
                                 onlineCs.find("img").addClass("have_op");
                                 $(".cm_wrap").append(onlineCs);

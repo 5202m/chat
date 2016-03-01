@@ -440,7 +440,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .input_area{ padding:0 10px 10px;}
 .input_area .adiv{ margin-right:102px; width:auto;background:#e7e7e7;overflow:hidden}
 .input_area .ctextarea{ border:1px solid #d6d6d6; background:#e7e7e7; height:48px; resize:none; width:100%; padding:0; margin:0;color:#4e4e4e; line-height:25px; font-size:11pt;}
-.input_area .sendbtn{ float:right; width:97px; height:47px; border-bottom:3px solid #937427;border-radius:2px; background:#b59030;margin-top:-50px;*margin-top:-51px display:block; text-align:center;}
+.input_area .sendbtn{ float:right; width:97px; height:60px; border-bottom:3px solid #937427;border-radius:2px; background:#b59030;margin-top:-63px;*margin-top:-64px display:block; text-align:center;}
 .input_area .sendbtn span { vertical-align:top; display:inline-block; *display:inline; *zoom:1;color:#fff; line-height:50px; font-size:12pt; }
 .input_area .sendbtn i { vertical-align:top; display:inline-block; *display:inline; *zoom:1; background-position:-96px -290px; height:47px; width:23px; margin-right:12px}
 

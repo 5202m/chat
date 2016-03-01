@@ -288,19 +288,20 @@ router.get('/getBigImg', function(req, res) {
  * 提取文档信息
  */
 router.get('/getArticleList', function(req, res) {
-    var code=req.query["code"],
-        platform=req.query["platform"],
-        pageNo=req.query["pageNo"],
-        pageSize=req.query["pageSize"],
-        hasContent=req.query["hasContent"],
-        orderByStr=req.query["orderByStr"];
-    pageNo = common.isBlank(pageNo) ? 1 : pageNo;
-    pageSize = common.isBlank(pageSize) ? 15 : pageSize;
-    orderByStr = common.isBlank(orderByStr) ? "" : orderByStr;
-    if(code=='trade_strategy'){
-        code='trade_strategy_article,trade_strategy_video,trade_strategy_audio';
+    var params={};
+    params.code=req.query["code"];
+    params.platform=req.query["platform"];
+    params.pageNo=req.query["pageNo"];
+    params.pageSize=req.query["pageSize"];
+    params.hasContent=req.query["hasContent"];
+    params.orderByStr=req.query["orderByStr"];
+    params.pageNo = common.isBlank(params.pageNo) ? 1 : params.pageNo;
+    params.pageSize = common.isBlank(params.pageSize) ? 15 : params.pageSize;
+    params.orderByStr = common.isBlank(params.orderByStr) ? "" : params.orderByStr;
+    if(params.code=='trade_strategy'){
+        params.code='trade_strategy_article,trade_strategy_video,trade_strategy_audio';
     }
-    pmApiService.getArticleList(code,platform,"zh",hasContent,pageNo,pageSize,orderByStr,function(data){
+    pmApiService.getArticleList(params,function(data){
         res.json(data?JSON.parse(data):null);
     });
 });

@@ -159,7 +159,18 @@ function toStudioView(chatUser,groupId,clientGroup,req,res){
             rowTmp.name=row.name;
             rowTmp.level=row.level;
             rowTmp.allowWhisper=common.containSplitStr(row.talkStyle,1);
-            rowTmp.whisperRoles=row.whisperRoles;
+            if(rowTmp.allowWhisper){
+                rowTmp.whisperRoles=row.whisperRoles;
+                var ruleArr=row.chatRules,isPass=true;
+                for(var i in ruleArr) {
+                    isPass = common.dateTimeWeekCheck(ruleArr[i].periodDate, true);
+                    if (ruleArr[i].type == 'whisper_allowed' && !isPass) {
+                        rowTmp.allowWhisper=false;
+                        rowTmp.whisperRoles=null;
+                        break;
+                    }
+                }
+            }
             rowTmp.disable=(!common.containSplitStr(row.chatStudio.clientGroup,clientGroup));
             rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.chatStudio.clientGroup,constant.clientGroup.visitor);
             rowTmp.chatStudio.yyChannel=common.trim(row.chatStudio.yyChannel);
@@ -416,16 +427,18 @@ router.get('/logout', function(req, res) {
  * 提取文档信息
  */
 router.get('/getArticleList', function(req, res) {
-    var code=req.query["code"],
-        platform=req.query["platform"],
-        pageNo=req.query["pageNo"],
-        pageSize=req.query["pageSize"],
-        hasContent=req.query["hasContent"],
-        orderByStr=req.query["orderByStr"];
-    pageNo = common.isBlank(pageNo) ? 1 : pageNo;
-    pageSize = common.isBlank(pageSize) ? 15 : pageSize;
-    orderByStr = common.isBlank(orderByStr) ? "" : orderByStr;
-    pmApiService.getArticleList(code,platform,"zh",hasContent,pageNo,pageSize,orderByStr,function(data){
+    var params={};
+    params.code=req.query["code"];
+    params.platform=req.query["platform"];
+    params.pageNo=req.query["pageNo"];
+    params.authorId=req.query["authorId"];
+    params.pageSize=req.query["pageSize"];
+    params.hasContent=req.query["hasContent"];
+    params.orderByStr=req.query["orderByStr"];
+    params.pageNo = common.isBlank(params.pageNo) ? 1 : params.pageNo;
+    params.pageSize = common.isBlank(params.pageSize) ? 15 : params.pageSize;
+    params.orderByStr = common.isBlank(params.orderByStr) ? "" : params.orderByStr;
+    pmApiService.getArticleList(params,function(data){
         res.json(data?JSON.parse(data):null);
     });
 });

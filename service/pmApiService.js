@@ -46,17 +46,11 @@ var pmApiService = {
 
     /**
      * 提取文档接口
-     * @param code
-     * @param platform
-     * @param lang
-     * @param curPageNo
-     * @param pageSize
-     * @param orderByStr
-     * @param hasContent
+     * @param params
      * @param callback
      */
-    getArticleList:function(code,platform,lang,hasContent,curPageNo,pageSize,orderByStr,callback){
-        var url=util.format('/article/getArticleList?platform=%s&code=%s&lang=%s&hasContent=%s&pageNo=%d&pageSize=%d&orderByJsonStr=%s',platform,code,lang,hasContent,curPageNo,pageSize,orderByStr);
+    getArticleList:function(params,callback){
+        var url=util.format('/article/getArticleList?authorId=%s&platform=%s&code=%s&lang=%s&hasContent=%s&pageNo=%d&pageSize=%d&orderByJsonStr=%s',params.authorId,params.platform,params.code,'zh',params.hasContent,params.pageNo,params.pageSize,params.orderByStr);
         request(this.formatApiUrl(url),function(err, response, data){
             if (!err && response.statusCode == 200) {
                 callback(data);

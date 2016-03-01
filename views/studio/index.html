@@ -195,6 +195,12 @@
                 <a class="jt_btn te_prev" href="javascript:void(0)"><span></span></a>
                 <a class="jt_btn te_next" href="javascript:void(0)"><span></span></a>
             </div>
+            <div class="pointlist dn">
+                <div class="te-point">
+                    <div class="tit"><label></label><a href="javascript:void(0)" class="point-close"></a></div>
+                    <div class="te-txt"></div>
+                </div>
+            </div>
             <div class="te_dialoglist"></div>
             <div class="line_bar">
             	<div class="te_ctrl">
@@ -690,8 +696,6 @@ studioChat.exStudioStr='<%- exStudioStr %>';
 studioChat.socketUrl=JSON.parse('<%- socketUrl %>');
 $(function(){
 	widthCheck();
-	/*滚动*/
-    teachSlide();
 	heightCalcu();
 });
 $(window).resize(function(e){
@@ -719,27 +723,6 @@ function heightCalcu(){
 	$('#chatMsgContentDiv').height(hh-280-$('.mymsg').height());
 	$('.chat').height(hh-75);
     $('.chat').height(hh-75);
-}
-
-function teachSlide(){
-    var nowIndex = 0;
-    $("#teacherListId").width(0);
-
-    $('.te_next').click(function(){
-        var itemW = $('.te_ul li:first').width();
-        if($('.te_ul').width()-nowIndex*itemW -$('.te_list .tempwrap').width()>0){
-            nowIndex ++;
-            $('.te_ul').animate({left: -nowIndex*itemW}, "slow");
-        }
-    });
-
-    $('.te_prev').click(function(){
-        if(nowIndex!=0){
-            nowIndex --;
-            var itemW = $('.te_ul li:first').width();
-            $('.te_ul').animate({left: -nowIndex*itemW}, "slow");
-        }
-    });
 }
 </script>
 

@@ -32,7 +32,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .jscroll-h,.jscroll-e { border-radius:4px}
 
 /*images*/
-.header-right a i,.pro_notice .pro_btn span,.sro_notice li i,.tab_list li,.te_list .jt_btn span,.te_ctrl a i,.view_select i,.dialog i,.mymsg .closebtn,.toolbar .tbtn,.toolbar .facebtn,.send_select i,.input_area .sendbtn i,.popup_box .pop_close,.resultbar i,.in_line .level i,.in_line .in_rbtn .qu_btn,.video_room a .s2 i ,.hztip i,.videolist_box li i,.tab_list.download li a,.tab_list li a.listmore,.te_list .te_btn b,.dialogbtn a b,.dialog.analyst .headimg b,.upg_cont .btnbar a i,.mod_video .close_ad i,.popup_box.hint .kfbtn i,.fm_ul li,.fmad .pop_close,.pletter_hint .pl_close,.pletter_win .pl_close,.mult_dialog i,.cmtalk .cm_next i,.cmtalk .cm_prev i,.wh_msg_ftip i{ background-image:url(../../images/studio/img_css.png); background-repeat:no-repeat;}
+.header-right a i,.pro_notice .pro_btn span,.sro_notice li i,.tab_list li,.te_list .jt_btn span,.te_ctrl a i,.view_select i,.dialog i,.mymsg .closebtn,.toolbar .tbtn,.toolbar .facebtn,.send_select i,.input_area .sendbtn i,.popup_box .pop_close,.resultbar i,.in_line .level i,.in_line .in_rbtn .qu_btn,.video_room a .s2 i ,.hztip i,.videolist_box li i,.tab_list.download li a,.tab_list li a.listmore,.te_list .te_btn b,.dialogbtn a b,.dialog.analyst .headimg b,.upg_cont .btnbar a i,.mod_video .close_ad i,.popup_box.hint .kfbtn i,.fm_ul li,.fmad .pop_close,.pletter_hint .pl_close,.pletter_win .pl_close,.mult_dialog i,.cmtalk .cm_next i,.cmtalk .cm_prev i,.wh_msg_ftip i,.te-point .point-close{ background-image:url(../../images/studio/img_css.png); background-repeat:no-repeat;}
 .img-loading{position:absolute;bottom:0;display:block;width:25px;height:25px;border-radius:4px;background:url(../../images/loading2.gif) no-repeat center;background-size:40px 40px;z-index:9}
 /*header*/
 .box-header{width:100%;min-width:1024px;background:#fff; height:50px; position:relative;z-index:10000}
@@ -229,16 +229,16 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .te_list .tempwrap{ height:53px; overflow:hidden; position:relative; }
 .te_list .te_ul{ width:auto; position:relative; left:0; height:53px;}
 .te_list li{ /*width:35%;*/ width:160px; float:left; position:relative;}
-.te_list .te_btn{ margin-right:4px; position:relative; overflow:hidden; display:block; background:#f6f6f6; padding-left:41px; text-align:left; height:53px; border-radius:2px;}
+.te_list .te_btn{ margin-right:4px; position:relative; display:block; background:#f6f6f6; padding-left:41px; text-align:left; height:53px; border-radius:2px; border-top-right-radius:5px; border-bottom-right-radius:5px;}
 .te_list .te_btn:hover{ text-decoration:none; cursor:pointer}
 .te_list .te_btn span { display:inline-block; *display:inline; *zoom:1; text-align:left; width:auto; vertical-align:top; height:40px; padding-top:8px; color:#393939; font-size:10pt; line-height:18px;margin-left: 10px;}
 .te_list .te_btn strong {color:#4e4e4e; font-size:10.5pt; line-height:18px;font-family:'Microsoft JhengHei','Microsoft YaHei','SimSun'; display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
-.te_list .te_btn i{ display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:84px; font-style:normal}
+.te_list .te_btn i{ display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; width:67px; font-style:normal}
 .te_list .te_btn .headimg{ display:block; position:absolute; left:5px; top:6px; width:38px; height:42px; vertical-align:bottom; border-radius:3px}
-.te_list .te_btn .mp{ width:26px; border-top-right-radius:2px; border-bottom-right-radius:2px; background:#f6f6f6; border-left:1px solid #e8e8e8; height:53px; position:absolute; right:0; top:0}
-.te_list .te_btn b{ display:block; width:17px; height:27px; background-position:-20px -280px; margin:13px auto 0; }
-.te_list .te_btn:hover .mp,.te_list .te_btn.on .mp{ background:#92c04a; border-color:#92c04a;}
-.te_list .te_btn:hover b,.te_list .te_btn.on b{ background-position:0 -280px; }
+.te_list .te_btn .mp{ width:38px; border-top-right-radius:2px; border-bottom-right-radius:2px; background:#b2b9bd; height:43px; position:absolute; right:0; top:0; color:#fff; line-height:15px; text-align:center; font-size:13px; padding-top:10px;}
+.te_list .te_btn b{ display:block; width:0; height:0; border: 5px solid transparent;  border-right: 6px solid #b2b9bd; position:absolute; right:38px; top:20px; content:'.'}
+.te_list .te_btn.on .mp{ background:#3775aa;}
+.te_list .te_btn.on b{  border-right: 6px solid #3775aa; }
 .te_list .jt_btn{ display:block; height:53px; width:22px; position:absolute; top:0; background:rgba(255,255,255,0.1); border-radius:2px}
 .te_list .jt_btn:hover { background:rgba(255,255,255,0.2)}
 .te_list .jt_btn span { display:block; width:12px; height:19px; margin-left:5px; margin-top:17px;}
@@ -250,6 +250,11 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .te_list .jt_btn.te_next:hover span{ background-position:-50px -90px}
 .te_list .jt_btn.prevStop:hover,.te_list .jt_btn.nextStop:hover {background:rgba(255,255,255,0.1)}
 .chat .dialogbtn{ left:43px; top:52px; z-index:100001}
+.pointlist{ position:absolute; top:63px; left:38px;z-index:100001}
+.pointlist .te-point{ width:330px; height:auto; background:#fff; border-radius:5px; box-shadow:0 0 8px rgba(0,0,0,.5)}
+.te-point .tit{ position:relative; padding:0 10px; height:38px; background:#f8f9f9; border-bottom:1px solid #f0f0f0; font-size:16px; line-height:38px; color:#b59030; border-top-left-radius:5px; border-top-right-radius:5px}
+.te-point .te-txt{ padding:10px 18px;font-size:14px; line-height:21px; color:#4c4c4c; }
+.te-point .point-close{ display:block;width: 14px;height: 14px;background-position: -30px -150px; position:absolute; top:12px; right:10px;}
 
 /*按钮*/
 .line_bar{ height:27px; padding-bottom:5px}
