@@ -267,6 +267,15 @@ var common = {
                 }
             }
         }
+    },
+    /**
+     * 判断客户端是否手机
+     * @param req
+     */
+    isMobile : function(req){
+        var deviceAgent = req.headers["user-agent"].toLowerCase();
+        var isMobile = deviceAgent.match(/(iphone|ipod|ipad|android)/);
+        return !!isMobile;
     }
 };
 //导出类
