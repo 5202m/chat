@@ -53,6 +53,10 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .header-right a:hover i.fm{ background-position:-40px -400px }
 .header-right a.login,.header-right a.username{ color:#af9251}
 .header-right a.logout { color:#479fcc}
+/*ad0301*/
+.header-right a.header-ad{ padding:0 5px; border:0;}
+.header-right a.header-ad:hover { background:#fff}
+.header-right a.header-ad img{ margin-top:3px;}
 
 /*grid*/
 .wrapper{ padding:10px; width:auto; min-width:1024px;}
@@ -67,9 +71,9 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .wid2 .right_row{ margin-left:1080px;}
 .wid3 .left_row{ width:894px;}
 .wid3 .right_row{ margin-left:894px;}
-.wid4 .left_row{ width:795px;}
+/*.wid4 .left_row{ width:795px;}
 .wid4 .right_row{ margin-left:795px;}
-.wid4 .right_row .send_select,.wid4 .right_row .se_cont{width: 135px;}
+.wid4 .right_row .send_select,.wid4 .right_row .se_cont{width: 135px;}*/
 .left_row .mod_tab{ height:200px;}
 .left_row .mod_tab .tabcont,.left_row .mod_tab .tab_box{ height: 170px;}
 .wid5 .left_row{ width:560px;}
@@ -606,4 +610,6 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .wid4 .pro_btn.pro_next {padding-right:4px}
 .wid4 .te_list .te_btn strong { font-size:14px; /*line-height:22px*/}
 .wid4 .te_list .te_btn span{ font-size:12px;}
-.wid4 .header-right a{ padding: 0 15px;}
+.wid4 .header-right a{ padding: 0 10px; font-size:11pt;}
+.wid4 .header-right a.header-ad{ padding:0 4px;}
+.wid4 .header-right a.header-ad img{ margin-top:6px; width:200px; height:auto}
