@@ -409,6 +409,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .dialog.mine.admin i{ background-position:-60px -150px;}
 
 .chat_input{ width:100%;bottom:0; z-index:100001}
+.chat_input .qqFace{margin-top: -175px;top:auto}
 .mymsg{ height:auto; position:relative; padding:5px 0; background:rgba(246,246,246,.5);  }
 .mymsg p{ padding:0 44px 0 80px;color:#4e4e4e; line-height:27px; font-size:11pt;}
 .mymsg .sender{ padding-right:8px}
