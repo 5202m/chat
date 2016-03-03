@@ -829,6 +829,28 @@ var userService = {
             }
             callback(common.dateTimeWeekCheck(row.openDate, true));
         });
+    },
+    /**
+     * 修改昵称
+     * @param mobilePhone
+     * @param groupType
+     * @param callback
+     */
+    modifyNickname:function(mobilePhone,groupType,nickname,callback){
+        member.find({mobilePhone: {$ne : mobilePhone},valid: 1,"loginPlatform.chatUserGroup" : {$elemMatch : {_id :groupType,nickname :nickname,userType : 0}}}).count(function (err,count){
+           if(count>0){
+               callback({isOK:false,msg:"该昵称已被占用，请使用其他昵称！"});
+           }else{
+               member.update({valid:1,'mobilePhone':mobilePhone,'loginPlatform.chatUserGroup._id':groupType},{$set:{ "loginPlatform.chatUserGroup.$.nickname": nickname}},function(err,row){
+                   if(err){
+                       logger.error("modifyNickname->update fail!"+err);
+                       callback({isOK:false,msg:"修改失败，请联系客服！"});
+                   }else{
+                       callback({isOK:true});
+                   }
+               });
+           }
+        });
     }
 };
 

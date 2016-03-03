@@ -12,7 +12,8 @@ var config = {
     gwfxGTS2ApiUrl:'http://192.168.35.115:8080/Goldoffice_api/RESTful',//外汇GTS2 Api地址
     gwfxMT4ApiUrl:'http://192.168.75.40:8081/GwfxApi/RESTful',//外汇MT4 Api地址
     simulateApiUrl:'http://192.168.35.160/goldoffice_api_demo/RESTful',//模拟账户api地址
-    socketServerUrl:{webSocket:'http://127.0.0.1:3002',socketIO:'http://127.0.0.1:3003'},
+    socketServerUrl:{webSocket:'http://172.30.5.27:3002',socketIO:'http://172.30.5.27:3003'},
+    packetAcUrl:'http://testweb1.24k.hk/activity20160105/getActivityUrl',//红包活动连接
     filesDomain: 'http://192.168.35.91:8090',//图片等文件访问域名
     web24kPath:'http://testweb1.24k.hk:8090',//24k信息地址
     //db

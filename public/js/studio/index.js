@@ -10,6 +10,7 @@ var studioChat={
     apiUrl:'',
     exStudioStr:'',//外接直播JSON字符串
     studioDate:'',//直播时间点
+    serverTime:0,//服务器时间
     verifyCodeIntervalId:null,
     exStudioIntervalId:null,
     teachIndex:0,
@@ -23,6 +24,7 @@ var studioChat={
     socketUrl:'',
     userInfo:null,
     init:function(){
+        this.serverTimeUp();
         this.setVisitStore();//设置访客存储
         this.setSocket();//设置socket连接
         this.setVideoList();//设置视频列表
@@ -31,6 +33,127 @@ var studioChat={
         this.setScrollNotice();//设置滚动走马灯
         this.setPrice();//设置行情报价
         this.showLoginOrRegistTip();//设置访客5分钟未登录或注册提示
+    },
+    /**
+     * 服务器时间更新
+     */
+    serverTimeUp:function(){
+        studioChat.setRPacket(true);
+        setInterval(function(){
+            studioChat.serverTime+=1000;
+            studioChat.setRPacket(false);
+        },1000);//每秒一次
+    },
+    /**
+     * 提取时间计算
+     * @param i
+     * @returns {*}
+     */
+    getTimeCal:function(i){
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    },
+    /**
+     * 提取红包连接
+     */
+    getAcLink:function(callback){
+        try{
+            common.getJson("/studio/getAcLink",null,function(result){
+                if(result){
+                    $("body").data("acLink",{url:result.activityUrl,endTime:result.activityEnd,overTime:result.activityOverTime});
+                    if(result.activityOverTime && result.activityOverTime>studioChat.serverTime){
+                        $('.redbag').show();
+                    }else{
+                        $('.redbag').hide();
+                    }
+                    callback(true);
+                }
+            },true,function(err){
+                console.error("getAcLink error,please check it!"+err);
+            });
+        }catch(e){
+            console.error("getAcLink error,please check it!"+e);
+        }
+    },
+    /**
+     * 打开红包
+     * @param hd
+     * @param bm
+     */
+    openPacket:function(hd,bm){
+        $('.redbag').addClass('on');
+        $('.redbag_ad').css({width: '0'});
+        $("#shinebg").rotate({
+            angle:0,
+            duration: 5000,
+            animateTo: 360,
+            easing:0
+        });
+        hd.text("红包");
+        var acLink= $("body").data("acLink");
+        bm.removeClass("time").html('<a href="'+(acLink?acLink.url:'')+'" target="_blank">&nbsp;&nbsp;拆&nbsp;&nbsp;</a>');
+    },
+    /**
+     * 设置红包
+     */
+    setRPacket:function(isInit){
+        if(isInit){
+            //红包事件
+            $('.redbag .redbag_cont').hover(function(){
+                if(!$(".redbag").hasClass("on")){
+                    $('.redbag_ad').animate({width: '199px'},800);
+                }
+            },function(){
+                if(!$(".redbag").hasClass("on")) {
+                    $('.redbag_ad').animate({width: '0'}, 800);
+                }
+            });
+            //红包关闭事件
+            $(".redbag .rb_close").click(function(){
+                $(".redbag").hide();
+            });
+            //提取链接
+            this.getAcLink(function(){
+                studioChat.setRPacket(false);
+            })
+        }else{
+            var hms=common.getHHMMSS(studioChat.serverTime),bm=$(".redbag_box .redbag_cont b"),hd=$(".redbag_box .redbag_cont h4");
+            if((hms>='09:30:00'&& hms<'10:00:00')||(hms>='14:30:00' && hms<'15:00:00')||(hms>='20:30:00' && hms<'21:00:00')||(hms>='21:30:00' && hms<'22:00:00')){
+                hd.text("红包");
+                var sd=new Date(studioChat.serverTime);
+                var ts = new Date(sd.getFullYear(), sd.getMonth(),sd.getDate(), (sd.getHours()+1), 0, 0).getTime() - studioChat.serverTime;//计算剩余毫秒数
+                var mm = this.getTimeCal(parseInt(ts / 1000 / 60 % 60, 10)),ss = this.getTimeCal(parseInt(ts / 1000 % 60, 10));//计算剩余秒数
+                bm.addClass("time").text(mm+":"+ss);
+            }else if((hms>='10:00:00' && hms<'10:01:00')||(hms>='15:00:00'&& hms<'15:01:00')||(hms>='21:00:00' && hms<'21:01:00')||(hms>='22:00:00' && hms<'22:01:00')){
+                var acLink= $("body").data("acLink");
+                if(common.isBlank(acLink.url)||(common.isValid(acLink.endTime) && Number(acLink.endTime)<=studioChat.serverTime)){
+                    studioChat.getAcLink(function(){
+                        studioChat.openPacket(hd,bm);
+                    });
+                }else{
+                    studioChat.openPacket(hd,bm);
+                }
+            }else{
+                $("#shinebg").stopRotate();
+                $("#shinebg").attr("style","");
+                $('.redbag').removeClass('on');
+                bm.removeClass("time");
+                hd.text("下一轮");
+                if(hms>='22:01:00'){
+                    bm.text("10:00");
+                }else if(hms>='21:01:00'){
+                    bm.text("22:00");
+                }else if(hms>='15:01:00'){
+                    bm.text("21:00");
+                }else if(hms>='10:01:00'){
+                    bm.text("15:00");
+                }else{
+                    bm.text("10:00");
+                }
+            }
+        }
     },
     /**
      * 设置访客存储信息
@@ -846,6 +969,45 @@ var studioChat={
                 $(".vopenbtn[t=s]").click();
             }
         });
+
+        /**
+         * 昵称输入事件
+         */
+        $("#mdr_nk").bind("input propertychange", function() {
+            $("#nketip").text("");
+        });
+        /**
+         * 昵称修改
+         */
+        $("#resetNickname").click(function(){
+            var _this=$(this),np=$("#mdr_nk"),val=np.val();
+            if(common.isBlank(val) || !(/^.{2,10}$/.test(val))){
+                $("#nketip").text("昵称有误，请输入2至10位字符！");
+                return;
+            }
+            if("save"==_this.attr("t")){
+                try{
+                    common.getJson("/studio/modifyName",{nickname:val},function(result){
+                        if(!result || !result.isOK){
+                            $("#nketip").text(result.msg?result.msg:"修改失败，请联系客服！");
+                            np.focus();
+                        }else{
+                            _this.attr("t","modify").text("修改昵称");
+                            np.attr("t",val).attr("readonly",true);
+                            $(".username").text(val);
+                        }
+                    },true,function(err){
+                        $("#nketip").text("修改失败，请联系客服！");
+                    });
+                }catch(e){
+                    $("#nketip").text("修改失败，请联系客服！");
+                }
+            }else{
+                _this.attr("t","save").text("保存昵称");
+                np.attr("readonly",false).focus();
+                np.val(val);
+            }
+        });
         /**
          * 设置弹框显示直播
          */
@@ -972,6 +1134,7 @@ var studioChat={
          */
         $(".username").click(function(){
             $(".blackbg").children("div").hide();
+            $("#mdr_nk").val($("#mdr_nk").attr("t"));
             $("#userInfoBox,.blackbg").show();
         });
         $(".upg_btn").click(function(){
@@ -1166,10 +1329,16 @@ var studioChat={
         });
         /*弹出框关闭按钮*/
         $('.popup_box .pop_close,.formbtn[t=close]').click(function(){
-            $(".blackbg form").each(function(){
-                this.reset();
-            });
-            $(".wrong-info").html("").attr("tId","");
+            if("userInfo"==$(this).attr("t")){
+                $("#resetNickname").attr("t","modify").text("修改昵称");
+                $("#mdr_nk").attr("readonly",true);
+                $("#nketip").text("");
+            }else{
+                $(".blackbg form").each(function(){
+                    this.reset();
+                });
+                $(".wrong-info").html("").attr("tId","");
+            }
             var parentDom=$(this).parent().parent(),pId=parentDom.parent().attr("id"),curPId=parentDom.attr("id");
             parentDom.hide();
             if(("loginBox"==pId||"registBox"==pId||parentDom.parent().hasClass("blackbg")) && "modifyPwdBox"!=curPId){

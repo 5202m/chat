@@ -92,6 +92,15 @@ var common = {
         return datetime;
     },
     /**
+     * 提取分秒
+     */
+    getMMSS:function(date){
+        if(!(date instanceof Date)){
+            date=new Date(date);
+        }
+        return (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes())+":"+(date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds());
+    },
+    /**
      * 提取时分秒
      */
     getHHMM:function(date){
@@ -182,24 +191,15 @@ var common = {
             async: async!=undefined?async:false,
             dataType: "json",
             data: params,
-            complete : function(XMLHttpRequest,status){ //请求完成后最终执行参数
-                if(typeof (failCallBack) == "function"){
-                    failCallBack(status);
-                }else{
-                    if(status=='timeout'){					//超时,status还有success,error等值的情况
-                        alert("请求超时,请重试!");
-                    }
-                }
-            },
             success: typeof (callback) == "function" ? callback : function (data) {
                 result = data;
             },
-            error: function (obj) {
+            error: function (obj,textStatus) {
                 if(typeof (failCallBack) == "function"){
-                    failCallBack(obj);
+                    failCallBack(textStatus);
                 }else{
-                    if (common.isValid(obj.responseText)) {
-                        if (obj.statusText != "OK") alert(obj.responseText);
+                    if (common.isValid(obj.responseText) && obj.statusText != "OK") {
+                        alert(obj.responseText);
                     }else{
                         alert("请求超时,请重试!");
                     }

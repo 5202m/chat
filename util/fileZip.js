@@ -71,7 +71,6 @@ fileZip.zipCss(["public\\css\\studio\\index.css"],'public\\css\\studio\\index.mi
 
 //通用js/css压缩
 fileZip.zipJs(["public\\js\\util\\common.js"],'public\\js\\util\\common.min.js');
-fileZip.zipJs(["public\\js\\lib\\jsWindows\\jsWindows.js"],'public\\js\\lib\\jsWindows\\jsWindows.min.js');
-fileZip.zipCss(["public\\js\\lib\\jsWindows\\jsWindows.css"],'public\\js\\lib\\jsWindows\\jsWindows.min.css');
+fileZip.zipJs(["public\\js\\lib\\jQueryRotate.2.2.js"],'public\\js\\lib\\jQueryRotate.min.js');
 //导出类
 module.exports = fileZip;

@@ -12,8 +12,8 @@
 <link href="/js/lib/jsWindows/jsWindows.min.css" rel="stylesheet" type="text/css">
 <link href="/js/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
 <link href="/js/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
-<link href="/css/studio/index.min.css" type="text/css" rel="stylesheet" />
 <link href="/css/face.css" type="text/css" rel="stylesheet" />
+<link href="/css/studio/index.min.css" type="text/css" rel="stylesheet" />
 <!--[if lt IE 9]>
 <link href="/css/studio/studioIE.css" rel="stylesheet" type="text/css">
 <![endif]-->
@@ -265,6 +265,17 @@
                 </div>
             </div>
         </div>
+        <div class="redbag">
+            <div class="redbag_box">
+                <div class="redbag_bg" id="shinebg"></div>
+                <div class="redbag_cont">
+                    <h4>下一轮</h4>
+                    <b class="time"></b>
+                </div>
+                <div class="redbag_ad"></div>
+                <a href="javascript:void(0)" class="rb_close"></a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -445,11 +456,12 @@
     	<div class="tit t1"><b>个人信息</b></div>
         <div class="cont pdb50">
                 <div class="formcont formcont2">
+                    <span id="nketip" style="position: absolute;top: 10px;left: 198px;color: #FF0000;font-size: 10pt;"></span>
                     <div class="in_line clearfix">
                         <span class="item_name">昵称：</span>
-                        <input type="text" placeholder="" readonly="readonly" class="in_value" value="<%= userSession.nickname %>">
+                        <input type="text"  id="mdr_nk" placeholder="" readonly="readonly" class="in_value" t="<%= userSession.nickname %>" value="<%= userSession.nickname %>">
+                        <div class="in_rbtn"><a href="javascript:" id="resetNickname">修改昵称</a></div>
                     </div>
-
                     <div class="in_line clearfix">
                         <span class="item_name">账号：</span>
                         <input type="text" placeholder="" class="in_value"  readonly="readonly" value="<%= userSession.mobilePhone %>">
@@ -536,7 +548,7 @@
                         <i class="img-loading" style="top: 50%;right: 50%;display:none;"  id="up_loading"></i>
                     </div>
                 </div>
-                <a href="javascript:void(0)" class="pop_close">关闭</a>
+                <a href="javascript:void(0)" class="pop_close"  t="userInfo">关闭</a>
         </div>
     </div>
     
@@ -680,6 +692,7 @@
 <script type="text/javascript" src="/js/lib/jquery.superslide.2.1.1.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.xdomainrequest.min.js"></script>
 <script type="text/javascript" src="/js/lib/jsWindows/jsWindows.min.js"></script>
+<script type="text/javascript" src="/js/lib/jQueryRotate.min.js"></script>
 <script type="text/javascript" src="/js/lib/websocket.min.js"></script>
 <script type="text/javascript" src="/js/lib/store.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.face.js"></script>
@@ -694,6 +707,7 @@ studioChat.filePath='<%= filePath %>';
 studioChat.userInfo=JSON.parse('<%- userInfo %>');
 studioChat.studioDate='<%- studioDate %>';
 studioChat.exStudioStr='<%- exStudioStr %>';
+studioChat.serverTime=Number('<%= serverTime %>');
 studioChat.socketUrl=JSON.parse('<%- socketUrl %>');
 $(function(){
 	widthCheck();

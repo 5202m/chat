@@ -4,6 +4,7 @@
  */
 var router =  require('express').Router();
 var async = require('async');//引入async
+var request = require('request');
 var constant = require('../../constant/constant');//引入constant
 var config = require('../../resources/config');//引入config
 var common = require('../../util/common');//引入common
@@ -180,6 +181,7 @@ function toStudioView(chatUser,groupId,clientGroup,req,res){
             if(rowTmp.isCurr) {
                 viewDataObj.studioDate = common.trim(row.chatStudio.studioDate);
                 viewDataObj.exStudioStr= common.trim(row.chatStudio.externalStudio);
+                viewDataObj.serverTime=new Date().getTime();
             }
             newStudioList.push(rowTmp);
         });
@@ -540,6 +542,36 @@ router.get('/getCS', function(req, res) {
     userService.getRoomCsUserList(groupId,function(data){
         res.json(data);
     });
+});
+
+/**
+ * 提取红包连接地址
+ */
+router.post('/getAcLink',function(req, res){
+    request(config.packetAcUrl,function(err, response, data){
+        if (!err && response.statusCode == 200) {
+            res.json(JSON.parse(data));
+        }else{
+            logger.error("getAcLink>>>error:"+err);
+            res.json(null);
+        }
+    });
+});
+
+/**
+ * 修改昵称
+ */
+router.post('/modifyName',function(req, res){
+    var userInfo=req.session.studioUserInfo,nickname=req.body["nickname"];
+    if(!userInfo || common.isBlank(userInfo.mobilePhone)){
+        res.json({isOK:false,msg:'请重新登录后再修改！'});
+    }else if(common.isBlank(nickname)){
+        res.json({isOK:false,msg:'昵称不能为空！'});
+    }else{
+        userService.modifyNickname(userInfo.mobilePhone,constant.fromPlatform.studio,nickname,function(result){
+            res.json(result);
+        });
+    }
 });
 /**
  * 直播测试
