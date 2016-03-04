@@ -997,8 +997,9 @@ var studioChat={
                             np.focus();
                         }else{
                             _this.attr("t","modify").text("修改昵称");
-                            np.attr("t",val).attr("readonly",true);
-                            $(".username").text(val);
+                            np.attr("t",result.nickname).attr("readonly",true);
+                            studioChat.userInfo.nickname=result.nickname;
+                            $(".username").text(result.nickname);
                         }
                     },true,function(err){
                         $("#nketip").text("修改失败，请联系客服！");

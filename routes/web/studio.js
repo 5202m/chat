@@ -569,6 +569,10 @@ router.post('/modifyName',function(req, res){
         res.json({isOK:false,msg:'昵称不能为空！'});
     }else{
         userService.modifyNickname(userInfo.mobilePhone,constant.fromPlatform.studio,nickname,function(result){
+            if(result.isOK){
+                req.session.studioUserInfo.nickname=nickname;
+                result.nickname=nickname;
+            }
             res.json(result);
         });
     }

@@ -888,11 +888,10 @@ var studioChat={
      */
     setOnlineUser:function(row){
         $("#userListId li[id='"+row.userId+"']").remove();//存在则移除旧的记录
-        var dialogHtml=studioChat.getDialogHtml(row.clientGroup,row.userId,row.nickname,row.userType),isMeHtml="",unameCls = "uname",seq=row.sequence;
+        var dialogHtml=studioChat.getDialogHtml(row.clientGroup,row.userId,row.nickname,row.userType),isMeHtml="",seq=row.sequence;
         if(studioChat.userInfo.userId==row.userId){
             isMeHtml = "【我】";
-            unameCls += " ume";
-            seq = "0";
+            seq = 0;
         }
         var lis=$("#userListId li"),
             liDom='<li id="'+row.userId+'" t="'+seq+'" utype="'+row.userType+'">'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+studioChat.getUserAImgCls(row.clientGroup,row.userType,row.avatar)+'</div>'+row.nickname+isMeHtml+'</a></li>';
@@ -972,12 +971,14 @@ var studioChat={
         });
         //进入聊天室加载的在线用户
         this.socket.on('onlineUserList',function(data){
+            $('#userListId').html("");
             var row=null;
             for(var i in data){
                 row=data[i];
                 studioChat.setOnlineUser(row);
             }
             $("#onLineSizeNum").text($("#userListId li").length);
+            studioChat.setListScroll(".user_box");
         });
         //断开连接
         this.socket.on('disconnect',function(e){
@@ -1007,11 +1008,12 @@ var studioChat={
                     }else{
                         if(studioChat.userInfo.userId!=userInfoTmp.userId){
                             $("#userListId #"+userInfoTmp.userId).remove();
+                            studioChat.setListScroll(".user_box");
                         }
                     }
+                    $("#onLineSizeNum").text($("#userListId li").length);
                     //设置私聊在线情况
                     studioChat.setWhOnlineTip(userInfoTmp.userId,data.online,userInfoTmp);
-                    $("#onLineSizeNum").text($("#userListId li").length);
                     break;
                 }
                 case 'removeMsg':
