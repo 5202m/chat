@@ -93,12 +93,16 @@ var studioChat={
         });
         hd.text("红包");
         var acLink= $("body").data("acLink");
-        bm.removeClass("time").html('<a href="'+(acLink?acLink.url:'')+'" target="_blank">&nbsp;&nbsp;拆&nbsp;&nbsp;</a>');
+        bm.removeClass("time").html('<a href="'+(acLink && common.isValid(acLink.url)?acLink.url:'javasrcipt:')+'" target="_blank" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'packet_click\',\'红包点击\']);">&nbsp;&nbsp;拆&nbsp;&nbsp;</a>');
     },
     /**
      * 设置红包
      */
     setRPacket:function(isInit){
+        var currDate=new Date(studioChat.serverTime);
+        if(currDate.getDay()==0||currDate.getDay()==6){
+            return;
+        }
         if(isInit){
             //红包事件
             $('.redbag .redbag_cont').hover(function(){
@@ -2186,7 +2190,9 @@ var studioChat={
                 if(dt+pw>=ct){
                     dt=ct-pw;
                 }
-                studioChat.getArticleList("trade_strategy_article",studioChat.userInfo.groupId,1,1,1,'{"createDate":"desc"}',pd.attr("uid"),function(dataList){
+                var uid=pd.attr("uid");
+                studioChat.getArticleList("trade_strategy_article",studioChat.userInfo.groupId,1,1,1,'{"createDate":"desc"}',uid,function(dataList){
+                    $(".pointlist").attr("uid",uid);
                     if(dataList && dataList.result==0 && dataList.data && dataList.data.length>0) {
                         var data = dataList.data[0],row = data.detailList[0];
                         $(".pointlist .tit label").text(row.title);
@@ -2332,6 +2338,7 @@ var studioChat={
                     }else{
                         if(userInfoTmp.userType==2){
                             $("#teacherListId li[uid='"+userInfoTmp.userId + "']").remove();
+                            $(".pointlist[uid='"+userInfoTmp.userId + "']").hide();
                         }else{
                             if(studioChat.userInfo.userId!=userInfoTmp.userId){
                                 $("#userListId #"+userInfoTmp.userId).remove();
