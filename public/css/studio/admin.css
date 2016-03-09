@@ -343,6 +343,16 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
     margin-right: 5px;
 }
 
+.wh-content .shadow-box{position:absolute;left:2px;top:2px;width:100%;max-width:150px;background:#000;opacity:0.4;z-index:9}
+.wh-content .shadow-conut{position:absolute;left:2px;top:50%;margin-top:-12px;width:100%;max-width:150px;display:block;text-align:center;font:25px arial;color:#fff;text-shadow:0 2px 0 #000;z-index:10;text-decoration:none}
+.wh-content .dialog .img-loading {
+    bottom: 0;
+    width: 23px;
+    height: 23px;
+    z-index: 9;
+    left: -22px;
+    bottom: 10px;
+}
 .wh-tab-msg .wh-txt{height:30px;}
 .window-content{background-color: #EAECEF;}
 .wh-txt .toolbar{height: 22px;padding: 0px 3px 3px;}
@@ -369,6 +379,16 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
     overflow-y: auto;
     overflow-x: hidden;
 }
+.send-wh-img{
+    cursor:pointer;
+    display: inline-block;
+    margin: 3px 20px;
+    background: url(../../images/studio/send_img.jpg) no-repeat center;
+    width: 28px;
+    height: 23px;
+    background-size: 30px 28px;
+}
+
 .txt_dia {color:#0BA1EC;margin-right:5px;}
 .dialoglist .txt_dia{cursor: pointer;}
 .ui-front{z-index:1500000}
@@ -378,7 +398,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
     overflow-y: auto;
     overflow-x: hidden;
 }
-
+#swipebox-overlay{z-index: 999999!important;}
 .dialog{ height:auto; position:relative; padding:0 53px; margin-bottom:8px; /*float:left;*/ width:auto; clear:both;}
 .dialog.mine{ float:right;}
 .dialog p { background:#fff; border-radius:2px; display:inline-block; *display:inline; *zoom:1;padding:5px 9px; color:#777; line-height:18pt; font-size:11pt;}
@@ -407,7 +427,6 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .dialog.mine.analyst i{ background-position:-50px -150px;}
 .dialog.admin i{ background-position:-40px -180px;}
 .dialog.mine.admin i{ background-position:-60px -150px;}
-
 .chat_input{ width:100%;bottom:0; z-index:100001}
 .chat_input .qqFace{margin-top: -175px;top:auto}
 .mymsg{ height:auto; position:relative; padding:5px 0; background:rgba(246,246,246,.5);  }

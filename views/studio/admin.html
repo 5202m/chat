@@ -10,6 +10,7 @@
     <link href="/js/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
     <link href="/js/lib/jsWindows/jsWindows.min.css" rel="stylesheet" type="text/css">
     <link href="/js/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
+    <link href="/css/swipebox.min.css"type="text/css" rel="stylesheet" >
     <link href="/css/face.css" type="text/css" rel="stylesheet" />
     <link href="/css/studio/admin.min.css" type="text/css" rel="stylesheet" />
     <!--[if lt IE 9]>
@@ -35,8 +36,7 @@
             <div class="mod_userlist mod_left1">
                 <div class="title">
                     <h3 class="title" style="float:left;">在线用户【<span id="onLineSizeNum"></span>】</h3>
-                    <a href="javascript:" class="wh_msg_ftip">私聊</a>
-                    <span href="javascript:" class="pletter_hint dn">你有新信息</span>
+                    <a href="javascript:" class="wh_msg_ftip" style="display:none;">私聊</a>
                 </div>
                 <div class="scrollbox user_box">
                     <ul id="userListId"></ul>
@@ -45,7 +45,7 @@
         </div>
     </div>
     <div class="right_row">
-        <div id="right_chat">
+        <div id="right_chat"  <% if (userType!='2') { %> style="width:55%;float:left;"  <% } %>>
             <div class="chat clearfix">
                 <div class="line_bar">
                     <div class="view_select">
@@ -104,10 +104,12 @@
                 <a href="">对话</a>
             </div>
         </div>
-       <!-- <div class="right_row_1" style="width:45%;float:right;">
+       <% if (userType!='2') { %>
+        <div class="right_row_1" style="width:45%;float:right;">
             <div class="mod_video dn" style="margin-left:5px;width:100%;" id="yyVideoDiv" yc="<%= groupInfo.chatStudio.yyChannel %>" mc="<%= groupInfo.chatStudio.minChannel %>"></div>
             <div class="mod_bottom_div" style="width:100%;height:auto;margin-left:5px;background-color: rgba(246,246,246,0.9);"></div>
-        </div>-->
+        </div>
+       <% } %>
     </div>
     <!--提示框-->
     <div class="popup_box dn" id="tipMsgBox" style="width:550px;z-index: 999999;">
@@ -119,6 +121,7 @@
 </div>
 <script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="/js/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript" src="/js/lib/jquery.swipebox.min.js"></script>
 <script type="text/javascript" src="/js/lib/jqueryUI/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/js/lib/jsWindows/jsWindows.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.superslide.2.1.1.js"></script>

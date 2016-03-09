@@ -725,7 +725,7 @@ var userService = {
                 }
                 callback(flagResult);
             });
-        }else if(/^(90|95)[0-9]+$/g.test(accountNo)){//MT4接口 NZ：95开头 UK：90开头
+        }else if(/^(90|92|95)[0-9]+$/g.test(accountNo)){//MT4接口 NZ：92/95开头 UK：90开头
             request.post({url:(config.gwfxMT4ApiUrl+'/ForexCustomerManager/findCustomerInfoByLoginname'), form: {loginname:accountNo}}, function(error,response,tmpData){
                 try{
                     if(!error && common.isValid(tmpData)) {

@@ -9,6 +9,7 @@ var constant = require('../../constant/constant');//引入constant
 var config = require('../../resources/config');//引入config
 var common = require('../../util/common');//引入common
 var errorMessage = require('../../util/errorMessage');
+var messageService = require('../../service/messageService');//引入messageService
 var userService = require('../../service/userService');//引入userService
 var pmApiService = require('../../service/pmApiService');//引入pmApiService
 var syllabusService = require('../../service/syllabusService');//引入syllabusService
@@ -74,6 +75,7 @@ router.get('/admin', function(req, res) {
                             viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
                             viewDataObj.userInfo=JSON.stringify(chatUser);
                             viewDataObj.nickname=chatUser.nickname;
+                            viewDataObj.userType=chatUser.userType;
                             res.render("studio/admin",viewDataObj);
                         }
                     });
@@ -575,6 +577,54 @@ router.post('/modifyName',function(req, res){
             }
             res.json(result);
         });
+    }
+});
+/**
+ * 加载大图数据
+ */
+router.get('/getBigImg', function(req, res) {
+    var publishTime=req.query["publishTime"],userId=req.query["userId"];
+    if(common.isBlank(publishTime)){
+        res.end("");
+    }else {
+        messageService.loadBigImg(userId,publishTime, function (bigImgData) {
+            if(common.isBlank(bigImgData)){
+                res.end("");
+            }else{
+                res.writeHead(200, {"Content-Type": "image/jpeg"});
+                res.end(new Buffer(bigImgData.replace(/^data:image.*base64,/,""),'base64'));
+            }
+        });
+    }
+});
+/**
+ * 上传数据
+ */
+router.post('/uploadData', function(req, res) {
+    var data = req.body;
+    if(data!=null && process.platform.indexOf("win")==-1){
+        var imgUtil=require('../../util/imgUtil');//引入imgUtil
+        var val=data.content.value,needMax=data.content.needMax;
+        if(data.content.msgType=="img" && common.isValid(val)){
+            imgUtil.zipImg(val,100,60,function(minResult){
+                data.content.value=minResult.data;
+                if(needMax==1){
+                    imgUtil.zipImg(val,0,60,function(maxResult){
+                        data.content.maxValue=maxResult.data;
+                        chatService.acceptMsg(data,null);
+                        res.json({success:true});
+                    });
+                }else{
+                    chatService.acceptMsg(data,null);
+                    res.json({success:true});
+                }
+            });
+        }else{
+            res.json({success:false});
+        }
+    }else{
+        logger.warn("warn:please upload img by linux server!");
+        res.json({success:false});
     }
 });
 /**

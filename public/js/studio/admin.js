@@ -99,6 +99,14 @@ var studioChat={
         studioChat.setWhTipImgPlay(userId);
     },
     /**
+     * 提取私聊toUser
+     * @returns {{userId: *, nickname: *, talkStyle: number, userType: *}}
+     */
+    getWhToUser:function(){
+        var liDom=$('.visitorDiv ul li[class~=on]');
+        return {userId:liDom.attr("uid"),nickname:liDom.find("label").text(),talkStyle:1,userType:liDom.attr("utype")};
+    },
+    /**
      * 发送私聊信息
      * @param msg
      */
@@ -108,8 +116,7 @@ var studioChat={
             return;
         }
         var sendObj={uiId:studioChat.getUiId(),fromUser:studioChat.userInfo,content:{msgType:studioChat.msgType.text,value:msg}};
-        var liDom=$('.visitorDiv ul li[class~=on]');
-        sendObj.fromUser.toUser={userId:liDom.attr("uid"),nickname:liDom.find("label").text(),talkStyle:1,userType:liDom.attr("utype")};
+        sendObj.fromUser.toUser=this.getWhToUser();
         studioChat.socket.emit('sendMsg',sendObj);//发送数据
         studioChat.setWhContent(sendObj,true,false);//直接把数据填入内容栏
         txtObj.html("");//清空内容
@@ -213,7 +220,7 @@ var studioChat={
                 $(".wh-right").children().hide();
                 if($("#"+whId).length==0){
                     var msgHtml='<div id="'+whId+'" class="wh-tab-msg"><div class="wh-title"><span><label>'+$(this).find("label").text()+'</label>【<strong></strong>】</span><span class="title-tip"></span></div><div class="wh-content"></div>'+
-                        '<div class="wh-txt"><div class="toolbar"><a href="javascript:" class="facebtn" style="">表情</a></div><div contenteditable="true" class="ctextarea" id="whTxt_'+userId+'" data-placeholder="按回车键发送"></div></div></div>';
+                        '<div class="wh-txt"><div class="toolbar"><a href="javascript:" class="facebtn">表情</a><label for="file_'+whId+'" class="send-wh-img" title="发送图片"></label><input type="file" id="file_'+whId+'" style="position:absolute;clip:rect(0 0 0 0);" class="fileBtn"/></div><div contenteditable="true" class="ctextarea" id="whTxt_'+userId+'" data-placeholder="按回车键发送"></div></div></div>';
                     $(".wh-right").append(msgHtml);
                     //私聊天内容发送事件
                     $("#"+whId).find(".ctextarea").keydown(function(e){
@@ -229,6 +236,33 @@ var studioChat={
                         assign:'whTxt_'+userId, //给控件赋值
                         path:studioChat.filePath+'/face/'//表情存放的路径
                     });
+                    //图片选择事件
+                    $("#"+whId).find(".fileBtn")[0].addEventListener('change',function () {
+                        var _this=this;
+                        var img = _this.files[0];
+                        // 判断是否图片
+                        if(!img){
+                            return false;
+                        }
+                        // 判断图片格式
+                        if(!(img.type.indexOf('image')==0 && img.type && /\.(?:jpg|png|gif)$/.test(img.name.toLowerCase())) ){
+                            alert('目前暂支持jpg,gif,png格式的图片！');
+                            return false;
+                        }
+                        var fileSize=img.size;
+                        if(fileSize>=1024*1024*5){
+                            alert('发送的图片大小不要超过5MB.');
+                            return false ;
+                        }
+                        //加载文件转成URL所需的文件流
+                        var reader = new FileReader();
+                        reader.readAsDataURL(img);
+                        reader.onload = function(e){
+                            studioChat.setUploadImg(e.target.result);//处理并发送图片
+                        };
+                        reader.onprogress=function(e){};
+                        reader.onloadend = function(e){};
+                    }, false);
                     //加载私聊信息
                     studioChat.socket.emit("getWhMsg",{userType:studioChat.userInfo.userType,groupId:studioChat.userInfo.groupId,groupType:studioChat.userInfo.groupType,userId:studioChat.userInfo.userId,toUser:{userId:userId,userType:userType}});
                 }else{
@@ -328,7 +362,7 @@ var studioChat={
      * @param isLoadData
      */
     setWhContent:function(data,isMeSend,isLoadData){
-        var fromUser=data.fromUser,cls='dialog ',content=data.content,nkTitle='';
+        var fromUser=data.fromUser,cls='dialog ',content=data.content,nkTitle='',loadImgHtml='',loadHtml='';
         if(data.rule){
             $('#'+data.uiId+' .dcont').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
             return;
@@ -340,17 +374,31 @@ var studioChat={
             if(isMeSend){//发送，并检查状态
                 fromUser.publishTime=data.uiId;
                 fromUser.toWhUserId=fromUser.toUser.userId;
+                loadHtml='<em class="img-loading"></em>';
+                loadImgHtml='<span class="shadow-box"></span><s class="shadow-conut"></s>';
             }
             if(data.serverSuccess){//发送成功，则去掉加载框，清除原始数据。
                 $('#'+data.uiId+' .dtime').html(studioChat.formatPublishTime(fromUser.publishTime));
                 $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
+                if(data.content.msgType==studioChat.msgType.img){
+                    studioChat.removeLoadDom(fromUser.publishTime);//去掉加载框
+                    var liObj=$('#'+fromUser.publishTime+' p');
+                    var url=data.content.needMax?'/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:liObj.find("a img").attr("src");
+                    liObj.find('a[class=swipebox]').attr("href",url);
+                    //上传成功后可以点击查看
+                    $('.swipebox').swipebox();
+                }
                 return;
             }
             cls+='mine';
             nkTitle='<span class="wh-dia-title"><label class="dtime">'+studioChat.formatPublishTime(fromUser.publishTime,isLoadData,'/')+'</label><label class="wh-nk">我</label></span>';
         }else{
-            if(!isLoadData && !this.fillWhBox(fromUser.userType,fromUser.clientGroup,fromUser.userId,fromUser.nickname,true,true)){//如接收他人私信
-                return false;
+            if(!isLoadData){//如接收他人私信
+                var isFillWh=this.fillWhBox(fromUser.userType,fromUser.clientGroup,fromUser.userId,fromUser.nickname,true,true);
+                $('.visitorDiv ul').prepend($('.visitorDiv ul li[uid='+fromUser.toWhUserId+']'));
+                if(!isFillWh){
+                    return;
+                }
             }
             nkTitle='<span class="wh-dia-title"><label class="wh-nk">'+fromUser.nickname+'</label><label class="dtime">'+studioChat.formatPublishTime(fromUser.publishTime,isLoadData,'/')+'</label></span>';
         }
@@ -358,7 +406,18 @@ var studioChat={
             console.error("setWhContent->fromUser toWhUserId is null,please check!");
             return;
         }
-        var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"><div>'+nkTitle+ '</div><p><span class="dcont">'+content.value+'</span></p></div>';
+        var pHtml='';
+        if(content.msgType==studioChat.msgType.img){
+            if(content.needMax){
+                pHtml='<p><a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" class="swipebox" ><img src="'+content.value+'" alt="图片"/></a>'+loadImgHtml+'</p>';
+            }else{
+                pHtml='<p><a href="'+content.value+'" class="swipebox" ><img src="'+content.value+'" alt="图片" /></a>'+loadImgHtml+'</p>';
+            }
+            pHtml+=loadHtml;
+        }else{
+            pHtml='<p><span class="dcont">'+content.value+'</span></p>';
+        }
+        var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"><div>'+nkTitle+ '</div>'+pHtml+'</div>';
         var whContent=$('#wh_msg_'+fromUser.toWhUserId+' .wh-content');
         var scrContent=whContent.find(".mCSB_container");//是否存在滚动
         if(scrContent.length>0){
@@ -372,11 +431,117 @@ var studioChat={
         }
     },
     /**
+     * 清除黏贴的图片
+     */
+    clearPasteImg:function(){
+        if(!$(".paste-img").is(':hidden')) {//存在图片
+            $(".paste-img").hide().find("img").attr("src",'').attr("h",120).attr("w",100);
+        }
+    },
+    /**
+     * 设置并压缩图片
+     * @param base64Data
+     */
+    setUploadImg:function(base64Data){
+        var uiId=studioChat.getUiId();
+        //先填充内容框
+        var formUser={};
+        common.copyObject(formUser,studioChat.userInfo,true);
+        formUser.toUser=this.getWhToUser();
+        var sendObj={uiId:uiId,fromUser:formUser,content:{msgType:studioChat.msgType.img,value:'',needMax:0,maxValue:''}};
+        studioChat.setWhContent(sendObj,true,false);
+        sendObj.content.value=base64Data;
+        studioChat.zipImg(sendObj,100,60,function(result,value){//压缩缩略图
+            if(result.error){
+                alert(result.error);
+                $('#'+uiId).remove();
+                return false;
+            }
+            var imgObj=$("#"+result.uiId+" img");
+            imgObj.attr("src",value).attr("needMax",result.content.needMax);
+            studioChat.dataUpload(result);
+        });
+    },
+    /**
+     * 图片压缩
+     * @param max
+     * @param data
+     * @param quality 压缩量
+     * @returns {string}
+     */
+    zipImg:function(sendObj,max,quality,callback){
+        var image = new Image();
+        // 绑定 load 事件处理器，加载完成后执行
+        image.onload = function(){
+            var canvas = document.createElement('canvas');
+            if(!canvas){
+                callback({error:'发送图片功能目前只支持Chrome、Firefox、IE10或以上版本的浏览器！'});
+            }
+            var w = image.width;
+            var h = image.height;
+            if(h>=9*w){
+                callback({error:'该图片高度太高，暂不支持发送！'});
+                return false;
+            }
+            if(max>0) {
+                if ((h > max) || (w > max)) {     //计算比例
+                    sendObj.content.needMax=1;
+                    if(h>max && w<=max){
+                        w= (max/h)*w;
+                        h = max;
+                    }else{
+                        h = (max / w) * h;
+                        w = max;
+                    }
+                    image.height = h;
+                    image.width = w;
+                }
+            }
+            var ctx = canvas.getContext("2d");
+            canvas.width = w;
+            canvas.height = h;
+            // canvas清屏
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // 将图像绘制到canvas上
+            ctx.drawImage(image, 0, 0, w, h);
+            callback(sendObj,canvas.toDataURL("image/jpeg",quality/100));
+        };
+        image.src = sendObj.content.value;
+    },
+    /**
+     * 数据上传
+     * @param data
+     */
+    dataUpload:function(data){
+        //上传图片到后端
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/studio/uploadData');
+        xhr.addEventListener("progress", function(e){
+            if (e.lengthComputable) {
+                var ra= ((e.loaded / e.total *100)|0)+"%";
+                $("#"+data.uiId+" .shadow-box").css({height:"'+ra+'"});
+                $("#"+data.uiId+" .shadow-conut").html(ra);
+            }
+        }, false);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log("dataUpload success!");
+            }
+        };
+        data.fromUser.socketId=studioChat.socket.id;
+        xhr.send(JSON.stringify(data)); //发送base64
+    },
+    /**
      * 事件设置
      */
     setEvent:function(){
         $("#header_img_id").attr("src",studioChat.userInfo.avatar);
         /*#################私聊事件#################begin*/
+        var currTab=$("#groupInfoId"),awr=currTab.attr("awr"), aw=currTab.attr("aw");
+        if("true"==aw && common.containSplitStr(awr,studioChat.userInfo.userType)){
+            $(".wh_msg_ftip").show();
+        }
         jqWindowsEngineZIndex=100000;
         $("#newMsgTipBtn").click(function(){
             var uid=$(this).attr("uid");
@@ -911,9 +1076,9 @@ var studioChat={
                     nickTmp=$(this).find("a").text();
                     if(row.nickname<=nickTmp){
                         $(this).before(liDom);
+                        isInsert=true;
+                        return false;
                     }
-                    isInsert=true;
-                    return false;
                 }
             });
             if(!isInsert){
@@ -970,14 +1135,14 @@ var studioChat={
             $(".img-loading[pf=chatMessage]").show();
         });
         //进入聊天室加载的在线用户
-        this.socket.on('onlineUserList',function(data){
+        this.socket.on('onlineUserList',function(data,dataSize){
             $('#userListId').html("");
             var row=null;
             for(var i in data){
                 row=data[i];
                 studioChat.setOnlineUser(row);
             }
-            $("#onLineSizeNum").text($("#userListId li").length);
+            $("#onLineSizeNum").text(dataSize);
             studioChat.setListScroll(".user_box");
         });
         //断开连接
@@ -993,6 +1158,9 @@ var studioChat={
         this.socket.on('sendMsg',function(data){
             if(data.fromUser.toUser && data.fromUser.toUser.talkStyle==1){//如果是私聊则转到私聊框处理
                 studioChat.setWhContent(data,false,false);
+                if(data.content.msgType==studioChat.msgType.img){
+                    $('.swipebox').swipebox();
+                }
             }else{
                 studioChat.setContent(data,false,false);
             }
@@ -1094,11 +1262,17 @@ var studioChat={
                 }
             }else{//私聊框中每个用户tab对应的私聊信息
                 if(data && $.isArray(data)) {
+                    var hasImg= 0,row=null;
                     data.reverse();
                     for (var i in data) {
-                        var row = data[i];
-                        row.content.status=row.status;
+                        row = data[i];
                         studioChat.formatUserToContent(row,true,result.toUserId);
+                        if(row.content.msgType==studioChat.msgType.img){
+                            hasImg++;
+                        }
+                    }
+                    if(hasImg>0){
+                        $('.swipebox').swipebox();
                     }
                     studioChat.setTalkListScroll(true,$('#wh_msg_'+result.toUserId+' .wh-content'),'dark');
                 }

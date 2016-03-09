@@ -688,7 +688,7 @@ var studioChat={
         if(userId){
             $("#newMsgTipBtn").attr("uid",userId);
         }
-        $(".pletter_hint p span").html((userType=="3"?"客户经理":"")+nkLabel+"发来了一条私聊信息");
+        $(".pletter_hint p span").html(nkLabel+"发来了一条私聊信息");
         $(".pletter_hint").show();
     },
     /**
@@ -888,10 +888,12 @@ var studioChat={
             cls+='mine';
             nkTitle='<span class="wh-dia-title"><label class="dtime">'+studioChat.formatPublishTime(fromUser.publishTime,isLoadData,'/')+'</label><label class="wh-nk">我</label></span>';
         }else{
-            var isFillWh=this.fillWhBox(fromUser.userType,fromUser.userId,fromUser.nickname,true,true);
-            studioChat.setWhAvatar(fromUser.userType,fromUser.userId,fromUser.avatar);//设置头像
-            if(!isLoadData && !isFillWh){//如接收他人私信
-                return false;
+            if(!isLoadData){//如接收他人私信
+                var isFillWh=this.fillWhBox(fromUser.userType,fromUser.userId,fromUser.nickname,true,true);
+                studioChat.setWhAvatar(fromUser.userType,fromUser.userId,fromUser.avatar);//设置头像
+                if(!isFillWh){
+                    return;
+                }
             }
             nkTitle='<span class="wh-dia-title"><label class="wh-nk">'+fromUser.nickname+'</label><label class="dtime">'+studioChat.formatPublishTime(fromUser.publishTime,isLoadData,'/')+'</label></span>';
         }
@@ -899,7 +901,17 @@ var studioChat={
             console.error("setWhContent->fromUser toWhUserId is null,please check!");
             return;
         }
-        var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"><div>'+nkTitle+ '</div><p><span class="dcont">'+content.value+'</span></p></div>';
+        var pHtml='';
+        if(content.msgType==studioChat.msgType.img){
+            if(content.needMax){
+                pHtml='<p><a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" class="swipebox" ><img src="'+content.value+'" alt="图片"/></a></p>';
+            }else{
+                pHtml='<p><a href="'+content.value+'" class="swipebox" ><img src="'+content.value+'" alt="图片" /></a></p>';
+            }
+        }else{
+            pHtml='<p><span class="dcont">'+content.value+'</span></p>';
+        }
+        var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"><div>'+nkTitle+ '</div>'+pHtml+'</div>';
         var whContent=$('#wh_msg_'+fromUser.toWhUserId+' .wh-content');
         var scrContent=whContent.find(".mCSB_container");//是否存在滚动
         if(scrContent.length>0){
@@ -2294,7 +2306,7 @@ var studioChat={
                 var randId= 0,size=dataLength<=10?60:(200/dataLength)*3+10;
                 for(var i=0;i<size;i++){
                     randId=common.randomNumber(6);
-                    data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:0});
+                    data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:-1});
                 }
             }
             var row=null;
@@ -2420,11 +2432,17 @@ var studioChat={
                 }
             }else{//私聊框中每个用户tab对应的私聊信息
                 if(data && $.isArray(data)) {
+                    var hasImg= 0,row=null;
                     data.reverse();
                     for (var i in data) {
-                        var row = data[i];
-                        row.content.status=row.status;
+                        row = data[i];
                         studioChat.formatUserToContent(row,true,result.toUserId);
+                        if(row.content.msgType==studioChat.msgType.img){
+                            hasImg++;
+                        }
+                    }
+                    if(hasImg>0){
+                        $('.swipebox').swipebox();
                     }
                     studioChat.setTalkListScroll(true,$('#wh_msg_'+result.toUserId+' .wh-content'),'dark');
                 }

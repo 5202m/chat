@@ -340,7 +340,9 @@ var chatService ={
                         //加载私聊离线信息提示
                         if(allowWhisper && offlineDate && common.isValid(fUserTypeStr)){
                             messageService.getWhUseMsgCount(userInfo.groupType,userInfo.groupId,userInfo.userType,fUserTypeStr.split(","),userInfo.userId,offlineDate, function(whUserData){
-                                socket.emit('loadWhMsg',{type:'offline',data:whUserData});
+                                if(whUserData && Object.getOwnPropertyNames(whUserData).length>0){
+                                    socket.emit('loadWhMsg',{type:'offline',data:whUserData});
+                                }
                             });
                         }
                     }else{
