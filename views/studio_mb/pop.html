@@ -1,0 +1,250 @@
+<!-- 个人信息 -->
+<section class="popupbox pop-person dn" id="personPop">
+    <div class="cont">
+        <div class="titlebar">
+            <span>个人信息</span>
+        </div>
+        <div class="per_info">
+            <ul>
+                <li><span>昵称</span><img id="person_hp" src="/images/studio_mb/user1.png"><b id="person_nn"></b></li>
+                <li><span>账号</span><b id="person_mb"><%= userSession.mobilePhone %></b></li>
+            </ul>
+        </div>
+        <p class="per_p">金道直播间用户分为5级，根据用户注册情况选择升级，情况如下：</p>
+        <table class="level-table" border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+                <th width="17%">级别</th>
+                <th width="20%">说明</th>
+                <th width="43%">权限</th>
+                <th width="20%">操作</th>
+            </tr>
+        </table>
+        <div class="sc_cont">
+            <table id="upg_tbody_id" class="level-table" border="0" cellpadding="0" cellspacing="0" width="100%">
+            </table>
+        </div>
+        <a href="/studio/logout" class="logoutbtn">注销</a>
+        <a href="javascript:void(0)" class="pop-close"></a>
+    </div>
+</section>
+
+<!-- 直播间登录 -->
+<section class="popupbox pop-member dn" id="loginPop">
+    <div class="cont">
+        <div class="mtit t2">
+            <div class="line"><i></i></div>
+            <span>直播间登录</span>
+            <div class="line"><i></i></div>
+        </div>
+        <div class="mform">
+            <form method="post" id="loginForm">
+                <input type="hidden" id="loginForm_csi" name="clientStoreId">
+
+                <div class="inp">
+                    <div class="inp_l">
+                        <i class="phone"></i>
+                        <input id="loginForm_mb" name="mobilePhone" type="tel" placeholder="手机号码">
+                    </div>
+                </div>
+                <div class="inp">
+                    <div class="inp_l">
+                        <i class="pwd"></i>
+                        <input id="loginForm_pwd" name="pwd" type="password" placeholder="密码">
+                    </div>
+                </div>
+                <div class="inp-tip">
+                    <a id="loginForm_prc" href="javascript:void(0);" class="fr">忘记密码？</a>
+                </div>
+                <div class="btnbar">
+                    <input type="button" class="mbtn" id="loginForm_sub" value="登录">
+                </div>
+
+                <div class="inp-tip">
+                    <a id="loginForm_plp" href="javascript:void(0);" class="fl">金道用户免注册</a>
+                    <a id="loginForm_pr" href="javascript:void(0);" class="fr">还没有账户?</a>
+                </div>
+            </form>
+        </div>
+        <a href="javascript:void(0)" class="pop-close"></a>
+    </div>
+</section>
+
+<!-- 金道用户登录 -->
+<section class="popupbox pop-member dn" id="loginPmPop">
+    <div class="cont">
+        <div class="mtit t2">
+            <div class="line"><i></i></div>
+            <span>金道用户登录</span>
+            <div class="line"><i></i></div>
+        </div>
+        <div class="mform">
+            <form method="post" id="loginPmForm">
+                <input type="hidden" name="isPM" value="true"/>
+                <input type="hidden" id="loginPmForm_csi" name="clientStoreId"/>
+                <input type="hidden" id="loginPmForm_gi" name="groupId"/>
+                <div class="inp">
+                    <div class="inp_l">
+                        <i class="phone"></i>
+                        <input id="loginPmForm_mb" name="mobilePhone" type="tel" placeholder="手机号码">
+                    </div>
+                </div>
+                <div class="inp bt clearfix">
+                    <div class="inp_l">
+                        <i class="mail"></i>
+                        <input id="loginPmForm_vc" name="verifyCode" type="text" placeholder="短信验证码">
+                    </div>
+                    <div class="rbtn">
+                        <input id="loginPmForm_vcb" type="button" value="获取验证码">
+                    </div>
+                </div>
+
+                <div class="btnbar">
+                    <input id="loginPmForm_sub" type="button" class="mbtn" value="登录">
+                </div>
+            </form>
+        </div>
+        <a href="javascript:void(0)" class="pop-close"></a>
+    </div>
+</section>
+
+<!-- 直播间注册、直播间设置 -->
+<section class="popupbox pop-member dn" id="regPop">
+    <div class="cont">
+        <div class="mtit t2">
+            <div class="line"><i></i></div>
+            <span>直播间设置</span>
+            <div class="line"><i></i></div>
+        </div>
+        <div class="mform">
+            <form method="post" id="regForm">
+                <input type="hidden" id="regForm_cg" name="clientGroup">
+                <input type="hidden" id="regForm_csi" name="clientStoreId">
+                <div class="inp pm">
+                    <div class="inp_l">
+                        <i class="phone"></i>
+                        <input id="regForm_mb" name="mobilePhone" type="tel" placeholder="手机号码">
+                    </div>
+                </div>
+                <div class="inp bt clearfix pm">
+                    <div class="inp_l">
+                        <i class="mail"></i>
+                        <input id="regForm_vc" name="verifyCode" type="text" placeholder="短信验证码">
+                    </div>
+                    <div class="rbtn">
+                        <input id="regForm_vcb" type="button" value="获取验证码">
+                    </div>
+                </div>
+                <div class="inp">
+                    <div class="inp_l">
+                        <i class="user"></i>
+                        <input id="regForm_nn" name="nickname" type="text" placeholder="直播间昵称">
+                    </div>
+                </div>
+                <div class="inp">
+                    <div class="inp_l">
+                        <i class="pwd"></i>
+                        <input id="regForm_pwd1" name="firstPwd" type="password" placeholder="密码">
+                    </div>
+                </div>
+                <div class="inp">
+                    <div class="inp_l">
+                        <i class="pwd"></i>
+                        <input id="regForm_pwd" name="pwd" type="password" placeholder="再次输入密码">
+                    </div>
+                </div>
+
+                <div class="btnbar">
+                    <input id="regForm_sub" type="button" class="mbtn" value="确认">
+                </div>
+            </form>
+        </div>
+        <a href="javascript:void(0)" class="pop-close"></a>
+    </div>
+</section>
+
+<!-- 重置密码手机验证 -->
+<section class="popupbox pop-member dn" id="resetChkPop">
+    <div class="cont">
+        <div class="mtit t2">
+            <div class="line"><i></i></div>
+            <span>重置密码</span>
+            <div class="line"><i></i></div>
+        </div>
+        <div class="mform">
+            <form method="get" id="resetChkForm">
+                <div class="inp">
+                    <div class="inp_l">
+                        <i class="phone"></i>
+                        <input id="resetChkForm_mb" name="mobilePhone" type="tel" placeholder="手机号码">
+                    </div>
+                </div>
+                <div class="inp bt clearfix">
+                    <div class="inp_l">
+                        <i class="mail"></i>
+                        <input id="resetChkForm_vc" name="verifyCode" type="text" placeholder="短信验证码">
+                    </div>
+                    <div class="rbtn">
+                        <input id="resetChkForm_vcb" type="button" value="获取验证码">
+                    </div>
+                </div>
+                <div class="btnbar">
+                    <input id="resetChkForm_sub" type="button" class="mbtn" value="下一步">
+                </div>
+            </form>
+        </div>
+        <a href="javascript:void(0)" class="pop-close"></a>
+    </div>
+</section>
+
+<!-- 重置密码 -->
+<section class="popupbox pop-member dn" id="resetPop">
+    <div class="cont">
+        <div class="mtit t2">
+            <div class="line"><i></i></div>
+            <span>重置密码</span>
+            <div class="line"><i></i></div>
+        </div>
+        <div class="mform">
+            <form method="get" id="resetForm">
+                <input type="hidden" name="isCheck" value="false"/>
+                <input type="hidden" id="resetForm_mb" name="mobilePhone">
+                <input type="hidden" id="resetForm_vc" name="verifyCode">
+                <div class="inp">
+                    <div class="inp_l">
+                        <i class="pwd"></i>
+                        <input id="resetForm_pwd1" name="firstPwd" type="password" placeholder="密码">
+                    </div>
+                </div>
+                <div class="inp">
+                    <div class="inp_l">
+                        <i class="pwd"></i>
+                        <input id="resetForm_pwd" name="pwd" type="password" placeholder="再次输入密码">
+                    </div>
+                </div>
+                <div class="btnbar">
+                    <input id="resetForm_sub" type="button" class="mbtn" value="确认">
+                </div>
+            </form>
+        </div>
+        <a href="javascript:void(0)" class="pop-close"></a>
+    </div>
+</section>
+
+<!-- 注册成功 -->
+<section class="popupbox pop-member dn" id="resultPop">
+    <div class="cont">
+        <div class="mform">
+            <form method="get" id="resultForm">
+                <div class="resultbox">
+                    <i></i>
+                    <p id="resultForm_msg">恭喜你注册成功！</p>
+                </div>
+                <div class="btnbar">
+                    <input id="resultForm_sub" type="button" class="mbtn" value="确认">
+                </div>
+            </form>
+        </div>
+        <a href="javascript:void(0)" class="pop-close"></a>
+    </div>
+</section>
+<script type="text/javascript" src="/js/studio_mb/pop.min.js"></script>

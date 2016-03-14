@@ -1,0 +1,162 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>手机视频直播</title>
+<meta name="keywords" content="手机视频直播" />
+<meta name="description" content="手机视频直播" />
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<link rel="stylesheet" media="screen" href="/css/studio_mb/index.min.css" />
+<link rel="stylesheet" media="screen" href="/css/swiper3.1.0.min.css" />
+<link rel="stylesheet" media="screen" href="/css/face.css"/>
+</head>
+<body>
+<section class="content_w">
+    <!-- header begin -->
+    <header id="header">
+        <section class="content_w clearfix">
+            <div class="logobar">
+                <a href="http://m.24k.hk" target="_blank">金道贵金属</a>
+                <h1 class="hide-t">视频直播间</h1>
+            </div>
+            <div class="rightbar">
+                <a id="header_hb" href="javascript:void(0);" class="home"><i></i></a>
+                <a href="javascript:openQQChatByCommonjs();" class="qq"><i></i></a>
+                <a id="header_ui" href="javascript:void(0);" class="loginbtn"><%= userSession.isLogin ? userSession.nickname : '登录' %></a>
+            </div>
+        </section>
+    </header>
+    <!-- header end -->
+
+    <!-- video begin -->
+    <section class="videopart">
+        <% if (studioList!='[]') { %>
+        <% studioList.forEach(function(row,index){ %>
+        <% if (row.isCurr) { %>
+        <input type="hidden" yc="<%= row.chatStudio.yyChannel %>" mc="<%= row.chatStudio.minChannel %>">
+        <% } %>
+        <% }); %>
+        <% } %>
+        <div class="main-video" id="tVideoDiv" style="z-index: 1; position: relative;">
+        </div>
+        <div class="ctrlblock dn">
+            <div class="vcenter">
+                <div class="ctrlbtn replay"><a href="javacript:void(0)"></a><span>重播</span></div>
+                <div class="ctrlbtn nextbtn"><a href="javacript:void(0)"></a><span>下一集</span></div>
+            </div>
+        </div>
+    </section>
+    <!-- video end -->
+
+    <!-- 切换tab -->
+    <section class="cen-qhbox swiper-container">
+        <ul class="cen-ulist clearfix">
+            <li class="on" t="talkBoxTab"><span>互动交流</span></li>
+            <li t="videosTab"><span>教学视频</span></li>
+            <li t="TradeArticleTab"><span>老师观点</span></li>
+            <li t="bulletinTab" class="dn"><span>公告</span></li>
+        </ul>
+
+        <article class="cen-qhcon swiper-wrapper">
+            <!-- 互动交流begin -->
+            <section class="cen-pubox swiper-slide" id="talkBoxTab">
+                <div class="float-sel">
+                    <div class="view_select">
+                        <div class="se_cont">
+                            <div class="selected">看所有人</div>
+                            <div class="selectlist">
+                                <a href="javascript:void(0)" class="" t="analyst">只看分析师</a>
+                                <a href="javascript:void(0)" class="on" t="all">看所有人</a>
+                                <a href="javascript:void(0)" class="" t="me">与我相关</a>
+                            </div>
+                        </div>
+                        <i></i>
+                    </div>
+                </div>
+                <div class="boxcont" id="talkPanel">
+                    <article class="talk-infobox">
+                        <section class="ss-tk-info dn" id="top_msg">
+                            <label></label>
+                            <span></span>
+                            <i id="close_top_btn"></i>
+                        </section>
+                        <ul id="dialog_list">
+                        </ul>
+                    </article>
+                </div>
+            </section>
+            <!-- 互动交流end -->
+            <!-- 教学视频begin -->
+            <section class="cen-pubox swiper-slide" id="videosTab">
+                <div class="boxcont">
+                </div>
+            </section>
+            <!-- 教学视频end -->
+            <!-- 老师观点begin -->
+            <section class="cen-pubox swiper-slide" id="TradeArticleTab">
+                <div class="boxcont">
+                </div>
+            </section>
+            <!-- 老师观点end -->
+            <!-- 公告begin -->
+            <section class="cen-pubox swiper-slide" id="bulletinTab">
+                <div class="boxcont">
+                    <div class="notice_cont">
+                    </div>
+                </div>
+            </section>
+            <!-- 公告end -->
+        </article>
+    </section>
+    <!-- 切换 end -->
+
+    <footer class="float-box">
+        <article class="float-con">
+            <button id="msgFaceBtn" class="face-btn hide-t">表情</button>
+            <section class="inp-fon-tix">
+                <div id="contentText" contenteditable="true" class="text-area-box">
+
+                </div>
+            </section>
+            <button id="sendBtn" class="sent-btn">发送</button>
+            <section id="facePanel" class="board swiper-container">
+                <div class="face clearfix swiper-wrapper"></div>
+                <div class="face-nav swiper-pagination"></div>
+            </section>
+        </article>
+    </footer>
+
+    <!-- 返回直播 -->
+    <a href="javascript:void(0)" class="backtolive" id="backToLive"><span>返回<br>直播</span></a>
+
+</section>
+<section class="popupbg dn">
+    <% include pop.html %>
+</section>
+<section class="errorbox dn">
+    <div class="cont"></div>
+</section>
+
+<script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="/js/lib/swiper3.1.0.jquery.min.js"></script>
+<script type="text/javascript" src="/js/lib/store.min.js"></script>
+<script type="text/javascript" src="/js/lib/websocket.min.js"></script>
+<script type="text/javascript" src="/js/lib/socket.io.js"></script>
+<script type="text/javascript" src="/js/lib/toucher.js"></script>
+<script type="text/javascript" src="/js/util/common.min.js"></script>
+<script type="text/javascript" src="/js/studio_mb/room.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        studioChatMb.web24kPath = '<%= web24kPath %>';
+        studioChatMb.apiUrl = '<%= apiUrl %>';
+        studioChatMb.filePath = '<%= filePath %>';
+        studioChatMb.userInfo = JSON.parse('<%- userInfo %>');
+        studioChatMb.studioDate = '<%- studioDate %>';
+        studioChatMb.exStudioStr = '<%- exStudioStr %>';
+        studioChatMb.socketUrl = JSON.parse('<%- socketUrl %>');
+        studioChatMb.liveUrl = '<%- liveUrl %>';
+        studioChatMb.init();
+    });
+</script>
+</body>
+</html>

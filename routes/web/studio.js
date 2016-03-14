@@ -107,9 +107,20 @@ router.get('/', function(req, res) {
             chatUser.initVisit=false;//已经在页面
         }
     }
+    if(req.session.logoutToGroup){
+        chatUser.toGroup = req.session.logoutToGroup;
+        req.session.logoutToGroup = null;
+    }
     chatUser.groupType=constant.fromPlatform.studio;
     chatUser.userType=chatUser.userType||constant.roleUserType.member;//没有userType则默认为会员
     logger.info("chatUser:"+JSON.stringify(chatUser));
+    var isMobile = common.isMobile(req);
+    if(isMobile && !chatUser.toGroup){
+        chatUser.groupId = null;
+        req.session.studioUserInfo.groupId = null;
+        toStudioView(chatUser, null, clientGroup, isMobile, req, res);
+        return;
+    }
     studioService.getDefaultRoom(clientGroup,function(groupId){
         if(common.isBlank(groupId)){
             req.session.studioUserInfo=null;
@@ -123,12 +134,12 @@ router.get('/', function(req, res) {
                             studioService.joinNewGroup(chatUser.groupType,chatUser.mobilePhone,chatUser.userId, targetGroupId, chatUser.isLogin, function (resultTmp) {
                                 req.session.studioUserInfo.toGroup = null;
                                 req.session.studioUserInfo.groupId = targetGroupId;
-                                toStudioView(chatUser, targetGroupId, clientGroup,req,res);
+                                toStudioView(chatUser, targetGroupId, clientGroup, isMobile,req,res);
                             });
                         }else{//目标房间是当前已登录房间==>直接跳转
                             req.session.studioUserInfo.toGroup = null;
                             req.session.studioUserInfo.groupId = targetGroupId;
-                            toStudioView(chatUser, targetGroupId, clientGroup, req,res);
+                            toStudioView(chatUser, targetGroupId, clientGroup, isMobile, req,res);
                         }
                     }else if(targetGroupId == chatUser.toGroup){//目标房间是跳转房间==>清空跳转，重新刷新
                         req.session.studioUserInfo.toGroup = null;
@@ -147,14 +158,15 @@ router.get('/', function(req, res) {
 });
 
 //转到页面
-function toStudioView(chatUser,groupId,clientGroup,req,res){
+function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
     studioService.getIndexLoadData(groupId,function(data){
-        var viewDataObj={apiUrl:config.pmApiUrl+'/common',filePath:config.filesDomain,web24kPath:config.web24kPath};//输出参数
+        var viewDataObj={apiUrl:config.pmApiUrl+'/common',filePath:config.filesDomain,web24kPath:config.web24kPath,mobile24kPath:config.mobile24kPath};//输出参数
         chatUser.groupId=groupId;
         viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
+        viewDataObj.liveUrl=config.liveUrl;
         viewDataObj.userInfo=JSON.stringify({initVisit:chatUser.initVisit,groupType:constant.fromPlatform.studio,isLogin:chatUser.isLogin,groupId:chatUser.groupId,userId:chatUser.userId,clientGroup:chatUser.clientGroup,nickname:chatUser.nickname,userType:chatUser.userType});
         viewDataObj.userSession=chatUser;
-        var newStudioList=[],rowTmp=null;
+        var newStudioList=[],rowTmp=null,exStudio=null,exStudioIdx=null,exStudioTmp=null;
         var isVisitor=(constant.clientGroup.visitor==clientGroup);
         data.studioList.forEach(function(row){
             rowTmp={chatStudio:{}};
@@ -179,7 +191,21 @@ function toStudioView(chatUser,groupId,clientGroup,req,res){
             rowTmp.chatStudio.yyChannel=common.trim(row.chatStudio.yyChannel);
             rowTmp.chatStudio.minChannel=common.trim(row.chatStudio.minChannel);
             rowTmp.chatStudio.remark=common.trim(row.chatStudio.remark);
+            rowTmp.chatStudio.clientGroup=common.trim(row.chatStudio.clientGroup);
             rowTmp.isCurr=(row._id==groupId);
+            rowTmp.isStudio=common.dateTimeWeekCheck(row.chatStudio.studioDate, true);
+            rowTmp.isOpen=common.dateTimeWeekCheck(row.openDate, true);
+            rowTmp.isExStudio = false;
+            if(common.isValid(row.chatStudio.exStudioStr)){
+                exStudio=JSON.parse(row.chatStudio.exStudioStr);
+                for(exStudioIdx in exStudio){
+                    exStudioTmp=exStudio[exStudioIdx];
+                    if(common.dateTimeWeekCheck(exStudioTmp.studioDate, true) &&  common.isValid(exStudioTmp.srcUrl)){
+                        rowTmp.isExStudio=true;
+                        break;
+                    }
+                }
+            }
             if(rowTmp.isCurr) {
                 viewDataObj.studioDate = common.trim(row.chatStudio.studioDate);
                 viewDataObj.exStudioStr= common.trim(row.chatStudio.externalStudio);
@@ -190,12 +216,20 @@ function toStudioView(chatUser,groupId,clientGroup,req,res){
         viewDataObj.studioList= newStudioList;
         //记录访客信息
         var snUser=req.session.studioUserInfo;
-        if(snUser.firstLogin){
+        if(snUser.firstLogin && snUser.groupId){//手机版房间外面不访客记录
             snUser.firstLogin=false;
             var vrRow={userId:snUser.userId,userAgent:req.headers["user-agent"],groupType:constant.fromPlatform.studio,roomId:snUser.groupId,nickname:snUser.nickname,clientGroup:snUser.clientGroup,clientStoreId:snUser.clientStoreId,mobile:snUser.mobilePhone,ip:common.getClientIp(req)};
             visitorService.saveVisitorRecord("login",vrRow);
         }
-        res.render("studio/index",viewDataObj);
+        if(isMobile){
+            if(!groupId){
+                res.render("studio_mb/index",viewDataObj);
+            }else{
+                res.render("studio_mb/chat",viewDataObj);
+            }
+        }else{
+            res.render("studio/index",viewDataObj);
+        }
     });
 }
 
@@ -424,7 +458,13 @@ router.get('/logout', function(req, res) {
     visitorService.saveVisitorRecord("logout",{roomId:snUser.groupId,clientStoreId:snUser.clientStoreId,groupType:constant.fromPlatform.studio,ip:common.getClientIp(req)});
     req.session.studioUserInfo=null;
     req.session.initVisit=false;//表示已经进入页面
-    res.redirect("/studio");
+    //注销之后检查当前房间是否给游客授权，若授权则以游客身份再次进入当前房间
+    studioService.checkGroupAuth(snUser.groupId,constant.clientGroup.visitor,function(isOK){
+        if(isOK){
+            req.session.logoutToGroup=snUser.groupId;
+        }
+        res.redirect("/studio");
+    });
 });
 
 /**

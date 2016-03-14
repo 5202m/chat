@@ -122,6 +122,9 @@ var common = {
         if(!(date instanceof Date)){
             date=new Date(date);
         }
+        if(date == "Invalid Date"){
+            return "";
+        }
         var datetime = date.getFullYear()
             + splitChar// "年"
             + ((date.getMonth() + 1) >=10 ? (date.getMonth() + 1) : "0"
@@ -353,15 +356,17 @@ var common = {
      * 格式化显示课程安排表
      * @param syllabus {{days : [{day: Integer, status : Integer}], timeBuckets : [{startTime : String, endTime : String, course : [{lecturer : String, title : String, status : Integer}]}]}}
      * @param currTime {{day : Integer, time : String}}
-     * @param style 类型 1-直播间 2-微解盘
+     * @param style 类型 1-直播间 2-微解盘 3-直播间手机版
+     * @param [options]
      */
-    formatSyllabus:function(syllabus, currTime, style){
-        var loc_constants = {
+    formatSyllabus:function(syllabus, currTime, style, options){
+        var defConstants = {
             dayCN : ['星期天','星期一','星期二','星期三','星期四','星期五','星期六'],
             indexCN : ['第一节','第二节','第三节','第四节','第五节','第六节','第七节','第八节'],
             courseCls : ['prev', 'ing', 'next'],
             tableCls : "syllabus"
         };
+        var loc_constants = $.extend({}, defConstants, options);
         //计算时间状态,返回对应的样式
         var loc_timeClsFunc = function(day, startTime, endTime, currTime, notCheckTime){
             var loc_index = 0;
@@ -499,6 +504,47 @@ var common = {
                         }
                         loc_html.push('</table>');
                     }
+                    else if(style === 3)
+                    {
+                        var loc_day = null;
+                        var loc_timeBucket = null;
+                        var loc_timeCls = null;
+                        for(var i = 0, lenI = !loc_courses.days ? 0 : loc_courses.days.length; i < lenI; i++)
+                        {
+                            loc_day = loc_courses.days[i];
+                            loc_html.push('<tr>');
+                            loc_html.push('<th>' + loc_constants.dayCN[loc_day.day] + '<i></i></th>');
+                            loc_html.push('<td>');
+                            if(loc_day.status == 0)
+                            {
+                                //全天休市
+                                loc_timeCls = loc_timeClsFunc(loc_day.day, null, null, currTime, true);
+                                loc_html.push('<p class="' + loc_timeCls + '">休市</p>');
+                            }
+                            else
+                            {
+                                for(var j = 0, lenJ = !loc_courses.timeBuckets ? 0 : loc_courses.timeBuckets.length; j < lenJ; j++){
+                                    loc_timeBucket = loc_courses.timeBuckets[j];
+                                    if(!loc_timeBucket.course[i].lecturer){
+                                        continue;
+                                    }
+                                    loc_timeCls = loc_timeClsFunc(loc_day.day, loc_timeBucket.startTime, loc_timeBucket.endTime, currTime, false);
+                                    loc_html.push('<p class="' + loc_timeCls + '">');
+                                    loc_html.push('<span>' + loc_timeBucket.startTime + "-" + loc_timeBucket.endTime + '</span>');
+                                    if(loc_timeBucket.course[i].status == 0){
+                                        loc_html.push('<span>休市</span>');
+                                    }else{
+                                        loc_html.push('<span>' + loc_timeBucket.course[i].lecturer + '</span>');
+                                        loc_html.push('<span class="item">' + loc_timeBucket.course[i].title + '</span>');
+                                    }
+                                    loc_html.push('</p>');
+                                }
+                            }
+                            loc_html.push('</td>');
+                            loc_html.push('</tr>');
+                            loc_html.push('<tr><td colspan="2" class="space"></td></tr>');
+                        }
+                    }
                 }
             }
         }
@@ -558,6 +604,11 @@ function openLive800Chat(type){
 function openQQChatByCommonv3(){
     var url="http://crm2.qq.com/page/portalpage/wpa.php?uin=800018282&cref=&ref=&f=1&ty=1&ap=&as=";
     window.open (url,'QQChatindow','height=544, width=644,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+}
+//QQ窗口客服(手机)
+function openQQChatByCommonjs(){
+    var url="http://wpa.b.qq.com/cgi/wpa.php?ln=2&uin=800018282";
+    window.open (url);
 }
 //如果没有定义console,直接用alert替代
 if(!window.console){
