@@ -58,14 +58,16 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .cen-qhcon{}
 .cen-ulist{font-size:0; width:100%;box-sizing:border-box; height:44px;}
 .cen-ulist li{width:33.333%;height:43px;line-height:43px;text-align:center;font-size:18px; float:left; border-bottom: 1px solid #cecfd8; color: #fff;}
-.cen-ulist li.on{background:none;color:#efc966;height:42px; border-bottom: 2px solid #b88807;}
+.cen-ulist li.on{background:none;color:#efc966;height:42px; border-bottom: 2px solid #efc966;}
 .cen-ulist li span{ display:inline-block; position:relative;}
 .cen-ulist li i{ position:absolute; display:block; height:12px; width:25px;  font-size:0; text-indent:-9999px; text-align:center; background-position:0 -160px; right:-28px; top:7px;}
 .cen-pubox{ display:block; box-sizing:border-box;-moz-box-sizing: border-box; -webkit-box-sizing: border-box;  -o-box-sizing: border-box; -ms-box-sizing: border-box;}
 .cen-pubox .boxcont{padding:0 5px; position:relative; height:270px;overflow:hidden; overflow-y:scroll;-webkit-overflow-scrolling: touch;}
 .home .cen-qhbox{overflow: visible;}
-.home .cen-pubox .boxcont{ height:auto; overflow:hidden; margin-bottom:40px;}
+.home .cen-pubox .boxcont{ height:auto; overflow:hidden; padding-bottom:40px;}
 .moreitem{ display:block; background:rgba(48,61,88,.6); height:30px; line-height:30px; font-size:13px; color:#8695b8; text-align:center; border-radius:5px; margin-bottom:10px;}
+.room.cen-ulist li{ width:27%; font-size:16px;}
+.room.cen-ulist li:last-child{ width:18.9999%}
 
 /* 直播视频 */
 .videoroom-ul{ color:#fff; padding-top:5px;}
@@ -124,6 +126,16 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 
 /*公告*/
 .notice_cont{ padding:10px 10px 0; color:#fff; font-size:14px; line-height:22px;}
+
+/*老师观点*/
+.point_ul { padding-top:5px;}
+.point_ul li{ border-bottom:1px solid #303d58; position:relative; padding:10px 0;}
+.point_ul .himg{ position:absolute; left:5px; top:auto; width:30px; height:auto;}
+.point_ul .himg img{ width:100%; height:auto; border-radius:2px; border:0; vertical-align: bottom;}
+.point_ul .detail{ padding-left:45px; }
+.point_ul .detail h3{ color:#fff; font-size:14px; line-height:14px; padding-bottom:2px; font-weight:normal}
+.point_ul .detail span{ color:#bfbfbf;font-size:12px; line-height:24px; padding-right:8px;}
+.point_ul .detail p{color:#d2d2d2;font-size:12px; line-height:16px; padding-right:10px; text-align:justify;}
 
 /*视频*/
 .videopart{ position:relative}
@@ -325,5 +337,5 @@ body.keyboard:before { /*background:none*/}
 @media(max-width:359px){
 	.logobar{ width:140px;}
 	.rightbar .qq i,.rightbar .home i{ margin:0 10px;}
-	
+    .room.cen-ulist li{font-size:14px;}
 }

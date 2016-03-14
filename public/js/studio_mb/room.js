@@ -743,7 +743,7 @@ var studioChatMb={
     setTradeArticle : function(){
         studioMbPop.loadingBlock($("#TradeArticleTab"));
         studioChatMb.getArticleList("trade_strategy_article",studioChatMb.userInfo.groupId,1,1,5,'{"createDate":"desc"}',null,function(dataList){
-            var loc_panel = $("#TradeArticleTab .boxcont");
+            var loc_panel = $("#TradeArticleTab ul:first");
             var loc_html = [];
             if(dataList && dataList.result==0){
                 var data=dataList.data;
@@ -753,16 +753,16 @@ var studioChatMb={
                     for(var i = 0, lenI = data.length; i < lenI; i++){
                         detail = data[i].detailList[0];
                         tmp = detail.author.split(";");
-                        loc_html.push('<img src="' + tmp[1] + '">');
-                        loc_html.push('<br>');
-                        loc_html.push(detail.title);
-                        loc_html.push('<br>');
-                        loc_html.push(tmp[0]);
-                        loc_html.push('<br>');
-                        loc_html.push(data[i].publishStartDate ? common.longMsTimeToDateTime(data[i].publishStartDate) : "");
-                        loc_html.push('<br>');
-                        loc_html.push(detail.content);
-                        loc_html.push('<hr>');
+                        loc_html.push('<li>');
+                        loc_html.push('<div class="himg"><img src="' + tmp[1] + '"></div>');
+                        loc_html.push('<div class="detail">');
+                        loc_html.push('<h3>' + detail.title + '</h3>');
+                        loc_html.push('<div class="subinfo">');
+                        loc_html.push('<span>' + tmp[0] + '</span>');
+                        loc_html.push('<span>' + (data[i].publishStartDate ? common.longMsTimeToDateTime(data[i].publishStartDate) : "") + '</span>');
+                        loc_html.push('</div>');
+                        loc_html.push('<p>' + detail.content + '</p>');
+                        loc_html.push('</div>');
                     }
                 }
             }
