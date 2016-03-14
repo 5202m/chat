@@ -22,8 +22,8 @@ var studioChatMb={
     init:function(){
         this.setVisitStore();
         this.setSocket();//设置socket连接
-        this.setVideoList();
         this.setEvent();//设置各种事件
+        this.setVideoList();
         studioMbPop.load(this.userInfo, {
             onShow : function(){
                 $("#tVideoDiv video").hide();
@@ -386,24 +386,24 @@ var studioChatMb={
             switch(type){
                 case 0:
                     blocks.header.show();
-                    blocks.backToLive.show();
+                    blocks.backToLive.data("showBoard", true).trigger("show");
                     blocks.floatBox.hide();
                     break;
                 case 1:
                     blocks.header.show();
-                    blocks.backToLive.show();
+                    blocks.backToLive.data("showBoard", true).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
                     break;
                 case 2:
                     blocks.header.hide();
-                    blocks.backToLive.hide();
+                    blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.show();
                     break;
                 case 3:
                     blocks.header.hide();
-                    blocks.backToLive.hide();
+                    blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
                     break;
@@ -458,10 +458,12 @@ var studioChatMb={
          */
         play : function(studioType, videoType, url, title){
             this.studioType = studioType;
+            var backToLive = $("#backToLive");
             if(studioType == "studio"){
-                $(".vbackbtn").show();
+                backToLive.data("showVideo", true).trigger("show");
             }else{
-                $(".vbackbtn").hide();
+                $("#videosTab li a.on").removeClass("on");
+                backToLive.data("showVideo", false).trigger("show");
             }
             if(this.playerType == 'video'){
                 if(this.initPlayer) {
@@ -469,7 +471,7 @@ var studioChatMb={
                     loc_item.attr("src", url);
                     loc_item[0].play();
                 }else {
-                    this.$panel.append('<video src="' + url + '" controls="true" autoplay="true" style="width: 100%; height: 100%; background-color: rgb(0, 0, 0);z-index: 1; position: relative;"></video>')
+                    this.$panel.append('<video src="' + url + '" controls="true" autoplay="true" style="width: 100%; height: 100%; background-color: rgb(0, 0, 0);"></video>')
                     this.initPlayer = true;
                     this.setEventAd();
                 }
@@ -544,6 +546,15 @@ var studioChatMb={
                 },
                 top:function(){
                     return $(window).height() - $('#header').height() - 70;
+                }
+            }).data("showBoard", true)
+              .data("showVideo", true)
+              .bind("show", function(){
+                var thiz = $(this);
+                if(thiz.data("showBoard") && thiz.data("showVideo")){
+                    thiz.show();
+                }else{
+                    thiz.hide();
                 }
             });
 
