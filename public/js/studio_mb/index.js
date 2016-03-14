@@ -145,9 +145,6 @@ var studioChatMbIdx={
             autoplay : false,
             onSlideChangeStart: function(mySwiper){
                 $('.cen-ulist li').eq(mySwiper.activeIndex).trigger("click");
-            },
-            onInit:function(mySwiper){
-                $('.cen-qhcon').height($('.cen-pubox').eq(mySwiper.activeIndex).find('.boxcont').height());
             }
         });
 
@@ -160,8 +157,7 @@ var studioChatMbIdx={
             }else if(type=='commentTab'){
                 studioChatMbIdx.setNewsInfo("#commentTab .boxcont",false,3,3);
             }
-            var loc_index = $(this).index();
-            event.data.slideTo(loc_index, 300, false);
+            event.data.slideTo($(this).index(), 300, false);
         });
 
         $("#tradeInfoTab .moreitem").bind("click", function(){

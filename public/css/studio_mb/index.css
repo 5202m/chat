@@ -63,8 +63,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .cen-ulist li i{ position:absolute; display:block; height:12px; width:25px;  font-size:0; text-indent:-9999px; text-align:center; background-position:0 -160px; right:-28px; top:7px;}
 .cen-pubox{ display:block; box-sizing:border-box;-moz-box-sizing: border-box; -webkit-box-sizing: border-box;  -o-box-sizing: border-box; -ms-box-sizing: border-box;}
 .cen-pubox .boxcont{padding:0 5px; position:relative; height:270px;overflow:hidden; overflow-y:scroll;-webkit-overflow-scrolling: touch;}
-.home .cen-qhbox{overflow: visible;}
-.home .cen-pubox .boxcont{ height:auto; overflow:hidden; padding-bottom:40px;}
+.home .cen-pubox .boxcont{ height:auto; box-sizing: border-box; padding-bottom:40px;}
 .moreitem{ display:block; background:rgba(48,61,88,.6); height:30px; line-height:30px; font-size:13px; color:#8695b8; text-align:center; border-radius:5px; margin-bottom:10px;}
 .room.cen-ulist li{ width:27%; font-size:16px;}
 .room.cen-ulist li:last-child{ width:18.9999%}
