@@ -17,7 +17,7 @@ var config = {
     filesDomain: 'http://113.28.105.65:8090',//图片等文件访问域名
     web24kPath:'http://testweb1.24k.hk:8090',//24k信息地址
     packetAcUrl:'http://testweb1.24k.hk/activity20160105/getActivityUrl',//红包活动连接
-    mobile24kPath:'http://testweb1.24k.hk:8092',//24k信息地址
+    mobile24kPath:'http://testweb1.24k.hk:8092',//24k信息地址 http://m.24k.hk
     //db
     dbURL:'mongodb://192.168.35.236/pm_mis',
     dbUserName:'pmmisuser',

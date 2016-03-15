@@ -309,8 +309,9 @@ body.keyboard:before { /*background:none*/}
 .keyboard .cen-qhbox:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0;left: 0;background: url(../../images/studio_mb/bg.jpg) center 0 no-repeat;background-size: cover; opacity:0.3;}
 .keyboard .cen-pubox .boxcont{ margin-top:0}
 .keyboard .float-box{ z-index:1000; overflow:scroll}*/
-.float-box .board {display: none;}
+.float-box .board {display: none; padding: 10px 5px 5px;}
 .float-box .board .face{margin-bottom: 15px;}
+.float-box .board .face img{width: 24px; height: 24px;}
 .float-box .board .face table{width : 100%; text-align: center; vertical-align: middle;}
 .float-box .board .face table tr{height: 40px;}
 .float-box .board .face-nav{bottom: 3px;}

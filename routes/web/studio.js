@@ -114,7 +114,8 @@ router.get('/', function(req, res) {
     chatUser.groupType=constant.fromPlatform.studio;
     chatUser.userType=chatUser.userType||constant.roleUserType.member;//没有userType则默认为会员
     logger.info("chatUser:"+JSON.stringify(chatUser));
-    var isMobile = common.isMobile(req);
+    //TODO 手机版增加自定义参数，对普通用户不可见
+    var isMobile = common.isMobile(req) && /^\d{13}$/.test(req.query["t"]);
     if(isMobile && !chatUser.toGroup){
         chatUser.groupId = null;
         req.session.studioUserInfo.groupId = null;
@@ -213,7 +214,8 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
             }
             newStudioList.push(rowTmp);
         });
-        viewDataObj.studioList= newStudioList;
+        //TODO 提供测试房间，仅手机版可见
+        viewDataObj.studioList= isMobile ? newStudioList : (newStudioList.length > 0 ? [newStudioList[0]] : []);
         //记录访客信息
         var snUser=req.session.studioUserInfo;
         if(snUser.firstLogin && snUser.groupId){//手机版房间外面不访客记录

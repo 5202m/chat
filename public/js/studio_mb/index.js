@@ -319,7 +319,7 @@ var studioChatMbIdx={
                     loc_html.push('<ul class="trade-ul">');
                     for(var i in list){
                         row=list[i];
-                        loc_html.push('<li><a href="'+studioChatMbIdx.mobile24kPath+'/zh/goldreview/'+row.id+'_'+row.contenttype2+'.html" target="_blank">');
+                        loc_html.push('<li><a href="'+studioChatMbIdx.mobile24kPath+'/comment/'+row.id+'_'+row.contenttype2+'.html" target="_blank">');
                         loc_html.push('<span>'+row.title+'</span>');
                         loc_html.push('<time>'+(row.datestr ? row.datestr.replace(/(^\d{4}-)|(:\d{2}$)/g, "") : "") +'</time>');
                         loc_html.push('</a></li>');
