@@ -136,6 +136,7 @@ var studioMbLogin = {
                 }else{
                     if(studioMbLogin.groupId){
                         common.getJson("/studio/checkGroupAuth",{groupId:studioMbLogin.groupId},function(){
+                            studioMbPop.loadingBlock($("#loginPop"), true);
                             studioMbPop.reload();
                         },true,function(err){
                             studioMbPop.loadingBlock($("#loginPop"), true);
@@ -144,6 +145,7 @@ var studioMbLogin = {
                             }
                         });
                     }else{
+                        studioMbPop.loadingBlock($("#loginPop"), true);
                         studioMbPop.reload();
                     }
                 }
@@ -260,6 +262,7 @@ var studioMbLoginPm = {
                 }else{
                     if(studioMbLoginPm.groupId){
                         common.getJson("/studio/checkGroupAuth",{groupId:studioMbLoginPm.groupId},function(){
+                            studioMbPop.loadingBlock($("#loginPmPop"), true);
                             studioMbPop.reload();
                         },true,function(err){
                             studioMbPop.loadingBlock($("#loginPmPop"), true);
@@ -268,6 +271,7 @@ var studioMbLoginPm = {
                             }
                         });
                     }else{
+                        studioMbPop.loadingBlock($("#loginPmPop"), true);
                         studioMbPop.reload();
                     }
                 }

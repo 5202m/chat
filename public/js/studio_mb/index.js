@@ -201,10 +201,9 @@ var studioChatMbIdx={
             }
             studioMbPop.loadingBlock($("body"));
             var loc_groupId = loc_liDom.attr("gi");
-            common.getJson("/studio/checkGroupAuth",{groupId:loc_groupId},
-                function(result){
+            common.getJson("/studio/checkGroupAuth",{groupId:loc_groupId}, function(result){
+                studioMbPop.loadingBlock($("body"), true);
                 if(!result.isOK){
-                    studioMbPop.loadingBlock($("body"), true);
                     studioMbPop.showMessage("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
                 }else{
                     studioMbPop.reload();
