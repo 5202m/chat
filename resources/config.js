@@ -13,7 +13,6 @@ var config = {
     gwfxMT4ApiUrl:'http://192.168.75.40:8081/GwfxApi/RESTful',//外汇MT4 Api地址
     simulateApiUrl:'http://192.168.35.160/goldoffice_api_demo/RESTful',//模拟账户api地址
     socketServerUrl:{webSocket:'http://113.28.105.65:3002',socketIO:'http://113.28.105.65:3003'},
-    liveUrl:"http://ct.phgsa.cn/live/01/playlist.m3u8",//手机直播地址
     filesDomain: 'http://113.28.105.65:8090',//图片等文件访问域名
     web24kPath:'http://testweb1.24k.hk:8090',//24k信息地址
     packetAcUrl:'http://testweb1.24k.hk/activity20160105/getActivityUrl',//红包活动连接

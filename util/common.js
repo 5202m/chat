@@ -274,7 +274,7 @@ var common = {
      */
     isMobile : function(req){
         var deviceAgent = req.headers["user-agent"].toLowerCase();
-        var isMobile = deviceAgent.match(/(iphone|ipod|ipad|android)/);
+        var isMobile = deviceAgent.match(/(iphone|ipod|ipad|android|mobile|playbook|bb10|meego)/);
         return !!isMobile;
     }
 };

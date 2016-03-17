@@ -17,7 +17,6 @@ var studioChatMb={
     },
     socket:null,
     socketUrl:'',
-    liveUrl:'',
     userInfo:null,
     init:function(){
         this.setVisitStore();
@@ -66,6 +65,7 @@ var studioChatMb={
      * 设置socket
      */
     setSocket:function(){
+        studioMbPop.loadingBlock($("#talkBoxTab"));
         this.socket = common.getSocket(io,this.socketUrl,this.userInfo.groupType);
         //建立连接
         this.socket.on('connect',function(){
@@ -124,7 +124,6 @@ var studioChatMb={
             if(!isAdd) {
                 $("#content_ul").html("");
             }
-            studioMbPop.loadingBlock($("#talkBoxTab"));
             if(msgData && $.isArray(msgData)) {
                 msgData.reverse();
                 for (var i in msgData) {
@@ -358,8 +357,8 @@ var studioChatMb={
          */
         $("#top_msg").click(function(){
             var loc_label = $(this).find("label");
-            studioChatMb.setDialog(loc_label.attr("fuserId"), loc_label.attr("fnickname"), 0, loc_label.attr("fuType"), null, $(this).find("span").text());
             $(this).slideUp();
+            studioChatMb.setDialog(loc_label.attr("fuserId"), loc_label.attr("fnickname"), 0, loc_label.attr("fuType"), null, $(this).find("span").text());
         });
         $("#top_msg i").click(function(){
             $("#top_msg").slideUp();
@@ -419,7 +418,7 @@ var studioChatMb={
         playerType :  '',  //播放器类别: video、sewise
         videoType : '',    //视频类别: mp4、m3u8...
         studioType : '',   //直播类别: studio、yy、oneTV
-        liveUrl : '',        //yy直播URL
+        liveUrl : "http://ct.phgsa.cn:1935/live/01/playlist.m3u8", //yy直播URL
         $panel : null,     //播放器容器
         backToLivePos : {  //返回直播按钮位置
             x : 0,
@@ -435,7 +434,6 @@ var studioChatMb={
                 this.playerType = 'sewise';
             }
             var yyDom=$(".videopart input:first"),yc=yyDom.attr("yc"),mc=yyDom.attr("mc");
-            this.liveUrl = studioChatMb.liveUrl;
             this.$panel = $("#tVideoDiv");
             this.setEvent();
         },
@@ -468,6 +466,7 @@ var studioChatMb={
             if(this.playerType == 'video'){
                 if(this.initPlayer) {
                     var loc_item = this.$panel.find("video");
+                    loc_item[0].pause();
                     loc_item.attr("src", url);
                     loc_item[0].play();
                 }else {

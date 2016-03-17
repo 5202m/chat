@@ -560,7 +560,7 @@ var common = {
      * @param req
      */
     isMobile : function(){
-        return /(iphone|ipod|ipad|android)/.test(navigator.userAgent.toLowerCase());
+        return /(iphone|ipod|ipad|android|mobile|playbook|bb10|meego)/.test(navigator.userAgent.toLowerCase());
     },
     /**
      * 对象copy

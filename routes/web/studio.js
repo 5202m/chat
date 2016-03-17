@@ -164,7 +164,6 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         var viewDataObj={apiUrl:config.pmApiUrl+'/common',filePath:config.filesDomain,web24kPath:config.web24kPath,mobile24kPath:config.mobile24kPath};//输出参数
         chatUser.groupId=groupId;
         viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
-        viewDataObj.liveUrl=config.liveUrl;
         viewDataObj.userInfo=JSON.stringify({initVisit:chatUser.initVisit,groupType:constant.fromPlatform.studio,isLogin:chatUser.isLogin,groupId:chatUser.groupId,userId:chatUser.userId,clientGroup:chatUser.clientGroup,nickname:chatUser.nickname,userType:chatUser.userType});
         viewDataObj.userSession=chatUser;
         var newStudioList=[],rowTmp=null,exStudio=null,exStudioIdx=null,exStudioTmp=null;
@@ -227,7 +226,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
             if(!groupId){
                 res.render("studio_mb/index",viewDataObj);
             }else{
-                res.render("studio_mb/chat",viewDataObj);
+                res.render("studio_mb/room",viewDataObj);
             }
         }else{
             res.render("studio/index",viewDataObj);
@@ -465,7 +464,12 @@ router.get('/logout', function(req, res) {
         if(isOK){
             req.session.logoutToGroup=snUser.groupId;
         }
-        res.redirect("/studio");
+        // TODO 手机版注销，注意pop.html页面的注销链接
+        var tmp = "";
+        if(common.isMobile(req) && req.query["t"]){
+            tmp = "?t=" + req.query["t"];
+        }
+        res.redirect("/studio" + tmp);
     });
 });
 
