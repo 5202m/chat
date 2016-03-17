@@ -215,7 +215,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 
 /* 输入框 */
 .float-box{position:fixed;bottom:0;left:0;width:100%;z-index:10}
-.float-con{padding:5px;background:#fff}
+.float-con{padding:5px;background:#fff;position: relative;}
 .inp-fon-tix{position:relative;margin:0 60px 0 40px; height:29px; }
 .text-area-box{width:100%; border:0;border-bottom:solid #BFBFBF 1px;background:none; padding:0;height:29px;font:12px microsoft yahei; line-height:29px; resize:none; text-indent:5px;-webkit-appearance:none;outline:none; border-radius:0; overflow-y: scroll;}
 .face-btn{position: absolute;left: 10px; top: 5px;display: block;width: 29px;height: 29px;background-position: 0 -60px}

@@ -387,18 +387,21 @@ var studioChatMb={
                     blocks.header.show();
                     blocks.backToLive.data("showBoard", true).trigger("show");
                     blocks.floatBox.hide();
+                    $(window).trigger("resize");
                     break;
                 case 1:
                     blocks.header.show();
                     blocks.backToLive.data("showBoard", true).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
+                    $(window).trigger("resize");
                     break;
                 case 2:
                     blocks.header.hide();
                     blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.show();
+                    $(window).trigger("resize");
                     break;
                 case 3:
                     blocks.header.hide();
@@ -407,7 +410,6 @@ var studioChatMb={
                     blocks.facePanel.hide();
                     break;
             }
-            $(window).trigger("resize");
         }
     },
     /**
