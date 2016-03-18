@@ -116,7 +116,7 @@ router.get('/', function(req, res) {
     logger.info("chatUser:"+JSON.stringify(chatUser));
     //TODO 手机版增加自定义参数，对普通用户不可见
     var isMobile = common.isMobile(req) && /^\d{13}$/.test(req.query["t"]);
-    if(isMobile && !chatUser.toGroup){
+    if(isMobile && !chatUser.toGroup && !chatUser.groupId){
         chatUser.groupId = null;
         req.session.studioUserInfo.groupId = null;
         toStudioView(chatUser, null, clientGroup, isMobile, req, res);
@@ -471,6 +471,19 @@ router.get('/logout', function(req, res) {
         }
         res.redirect("/studio" + tmp);
     });
+});
+
+/**
+ * 跳转直播间主页
+ */
+router.get('/home', function(req, res) {
+    req.session.studioUserInfo.groupId = null;
+    // TODO 手机版注销，注意room.js页面的主页链接：$("#header_hb")
+    var tmp = "";
+    if(common.isMobile(req) && req.query["t"]){
+        tmp = "?t=" + req.query["t"];
+    }
+    res.redirect("/studio" + tmp);
 });
 
 /**

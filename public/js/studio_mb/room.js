@@ -228,7 +228,7 @@ var studioChatMb={
 
         //主页按钮
         $("#header_hb").bind("click", function(){
-            window.location.reload();
+            window.location.href = "/studio/home?t=" + new Date().getTime();
         });
 
         //登录、显示用户信息
