@@ -4,7 +4,7 @@
  * author Alan.wu
  */
 var studioChat={
-    initSewise:false,//是否初始化视频插件
+    blwsPlayer:null,//保利威视
     web24kPath:'',
     filePath:'',
     apiUrl:'',
@@ -124,13 +124,17 @@ var studioChat={
             })
         }else{
             var hms=common.getHHMMSS(studioChat.serverTime),bm=$(".redbag_box .redbag_cont b"),hd=$(".redbag_box .redbag_cont h4");
-            if((hms>='09:30:00'&& hms<'10:00:00')||(hms>='14:30:00' && hms<'15:00:00')||(hms>='20:30:00' && hms<'21:00:00')||(hms>='21:30:00' && hms<'22:00:00')){
+            var difLen= 0,fiften=(hms>='14:45:00' && hms<'15:15:00');
+            if((hms>='09:30:00'&& hms<'10:00:00')||fiften||(hms>='20:30:00' && hms<'21:00:00')||(hms>='21:30:00' && hms<'22:00:00')){
                 hd.text("红包");
                 var sd=new Date(studioChat.serverTime);
-                var ts = new Date(sd.getFullYear(), sd.getMonth(),sd.getDate(), (sd.getHours()+1), 0, 0).getTime() - studioChat.serverTime;//计算剩余毫秒数
+                if(fiften){
+                    difLen=15;
+                }
+                var ts = new Date(sd.getFullYear(), sd.getMonth(),sd.getDate(), (sd.getHours()+1),difLen, 0).getTime() - studioChat.serverTime;//计算剩余毫秒数
                 var mm = this.getTimeCal(parseInt(ts / 1000 / 60 % 60, 10)),ss = this.getTimeCal(parseInt(ts / 1000 % 60, 10));//计算剩余秒数
                 bm.addClass("time").text(mm+":"+ss);
-            }else if((hms>='10:00:00' && hms<'10:01:00')||(hms>='15:00:00'&& hms<'15:01:00')||(hms>='21:00:00' && hms<'21:01:00')||(hms>='22:00:00' && hms<'22:01:00')){
+            }else if((hms>='10:00:00' && hms<'10:01:00')||(hms>='15:15:00'&& hms<'15:16:00')||(hms>='21:00:00' && hms<'21:01:00')||(hms>='22:00:00' && hms<'22:01:00')){
                 var acLink= $("body").data("acLink");
                 if(common.isBlank(acLink.url)||(common.isValid(acLink.endTime) && Number(acLink.endTime)<=studioChat.serverTime)){
                     studioChat.getAcLink(function(){
@@ -149,10 +153,10 @@ var studioChat={
                     bm.text("10:00");
                 }else if(hms>='21:01:00'){
                     bm.text("22:00");
-                }else if(hms>='15:01:00'){
+                }else if(hms>='15:16:00'){
                     bm.text("21:00");
                 }else if(hms>='10:01:00'){
-                    bm.text("15:00");
+                    bm.text("15:15");
                 }else{
                     bm.text("10:00");
                 }
@@ -327,7 +331,12 @@ var studioChat={
               }
               if(!isBackStudio){
                   if($("#studioTeachId a[class=on]").length<=0){
-                      $("#studioTeachId li:first a").click();
+                      var mpDom=$("#studioTeachId li a[t=mp4]");
+                      if(mpDom.length<=0){
+                          $("#studioTeachId li:first a").click();
+                      }else{
+                          $(mpDom.get(parseInt(Math.round(Math.random()*mpDom.length)))).click();
+                      }
                   }
               }else{
                   this.setVideo(true);
@@ -347,7 +356,7 @@ var studioChat={
      * @param url
      */
     setStudioVideoDiv:function(url){
-        if(this.initSewise){//停播放教学视频
+        if(window.SewisePlayer){//停播放教学视频
             SewisePlayer.doStop();
             $("#tvDivId").hide();
             $("#studioTeachId a").removeClass("on");
@@ -374,53 +383,81 @@ var studioChat={
             }
             if(isYy){
                 var aDom=$("#studioListId a[class~=ing]"),yc=aDom.attr("yc"),mc=aDom.attr("mc");
-                studioChat.setStudioVideoDiv('http://yy.com/s/'+yc+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf');
+                studioChat.setStudioVideoDiv('http://yy.com/s'+(common.isValid(yc)?'/'+yc:'')+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf');
             }else{
                     $("#tvDivId").show();
                     $("#stVideoDiv").hide();
                     $("#studioVideoDiv embed").remove();
                     $("#tVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
                     var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
-                    if(!this.initSewise){
-                        var srcPathAr=[];
-                        srcPathAr.push("/js/lib/sewise.player.min.js?server=vod");
-                        srcPathAr.push("type=mp4");
-                        srcPathAr.push("videourl="+vUrl);
-                        srcPathAr.push("autostart=true");
-                        srcPathAr.push("logo=");
-                        srcPathAr.push("title=VodVideo");
-                        srcPathAr.push("buffer=5");
-                        //srcPathAr.push("skin=vodWhite");
-                        var srcPath =srcPathAr.join("&") ;
-                        var script = document.createElement('script');
-                        script.type = "text/javascript";
-                        script.src = srcPath;
-                        $("#tVideoDiv").get(0).appendChild(script);
-                        //this.setSewisePlayerPlay();
-                        this.initSewise=true;
-                        //轮播控制
-                        var checkOverFunc = function(){
-                            if(!window.SewisePlayer){
-                                window.setTimeout(checkOverFunc, 500);
-                                return;
-                            }
-                            SewisePlayer.onPause(function(id){
-                            	window.setTimeout(function(){
-                            		if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
-                            			$("#tVideoCtrl").show();
-                                        $("#tVideoCtrl div.video_ad").show();
-                                        var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
-                                        $("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
-                                    }
-                            	}, 1000);
-                            });
-                            SewisePlayer.onStart(function(){
-                            	$("#tVideoCtrl").hide();
-                            });
-                        };
-                        checkOverFunc();
+                    if(vUrl.indexOf(".html")!=-1){
+                        $("#tVideoDiv").append('<iframe frameborder=0 width="100%" src="'+vUrl+'" allowfullscreen></iframe>');
                     }else{
-                       SewisePlayer.toPlay(vUrl, title, 0, true);
+                        if(vUrl.indexOf("type=blws")!=-1){
+                            var vidParams=vUrl.split("&");
+                            if(vidParams.length>1){
+                                var vid=vidParams[1].replace(/^vid=/g,'');
+                                if(studioChat.blwsPlayer){
+                                    studioChat.blwsPlayer.changeVid(vid);
+                                }else{
+                                    studioChat.blwsPlayer = polyvObject('#tVideoDiv').videoPlayer({
+                                        width:'100%',
+                                        height:'100%',
+                                        'vid' : vid,
+                                        'flashvars' : {"autoplay":"0","setScreen":"fill"},
+                                        onPlayOver:function(id){
+                                            $("#tVideoCtrl").show();
+                                            $("#tVideoCtrl div.video_ad").show();
+                                            var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
+                                            $("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
+                                        },
+                                        onPlayStart:function(){
+                                            $("#tVideoCtrl").hide();
+                                        }
+                                    });
+                                }
+                            }
+                        }else{
+                            if(window.SewisePlayer){
+                                SewisePlayer.toPlay(vUrl, title, 0, true);
+                            }else{
+                                var srcPathAr=[];
+                                srcPathAr.push("/js/lib/sewise.player.min.js?server=vod");
+                                srcPathAr.push("type="+(vUrl.indexOf(".flv")!=-1?'flv':'mp4'));
+                                srcPathAr.push("videourl="+vUrl);
+                                srcPathAr.push("autostart=true");
+                                srcPathAr.push("logo=");
+                                srcPathAr.push("title=VodVideo");
+                                srcPathAr.push("buffer=5");
+                                //srcPathAr.push("skin=vodWhite");
+                                var srcPath =srcPathAr.join("&") ;
+                                var script = document.createElement('script');
+                                script.type = "text/javascript";
+                                script.src = srcPath;
+                                $("#tVideoDiv").get(0).appendChild(script);
+                                //轮播控制
+                                var checkOverFunc = function(){
+                                    if(!window.SewisePlayer){
+                                        window.setTimeout(checkOverFunc, 500);
+                                        return;
+                                    }
+                                    SewisePlayer.onPause(function(id){
+                                        window.setTimeout(function(){
+                                            if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
+                                                $("#tVideoCtrl").show();
+                                                $("#tVideoCtrl div.video_ad").show();
+                                                var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
+                                                $("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
+                                            }
+                                        }, 1000);
+                                    });
+                                    SewisePlayer.onStart(function(){
+                                        $("#tVideoCtrl").hide();
+                                    });
+                                };
+                                checkOverFunc();
+                            }
+                        }
                     }
                 if($(".window-container #studioVideoDiv").length>0){
                     $(".vopenbtn[t=v]").click();
@@ -558,7 +595,7 @@ var studioChat={
      */
     setVideoList:function(){
         $(".img-loading[pf=studioTeachId]").show();
-        this.getArticleList("teach_video",this.userInfo.groupId,0,1,100,'{"sequence":"asc"}',null,function(dataList){
+        this.getArticleList("teach_video",this.userInfo.groupId,0,1,100,'{"sequence":"desc"}',null,function(dataList){
            $("#studioTeachId").html("");
            $(".img-loading[pf=studioTeachId]").hide();
            if(dataList && dataList.result==0){
@@ -566,7 +603,7 @@ var studioChat={
                var row=null;
                for(var i in data){
                    row=data[i].detailList[0];
-                   $("#studioTeachId").append('<li><a title="' + row.title + '" href="javascript:" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',$(this).text()]);"><i></i>'+row.title+'</a></li>');
+                   $("#studioTeachId").append('<li><a title="' + row.title + '" href="javascript:" id="'+data[i]._id+'" t="'+((common.isValid(data[i].mediaUrl) && data[i].mediaUrl.indexOf('.mp4')!=-1)?'mp4':'')+'" vUrl="'+data[i].mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',$(this).text()]);"><i></i>'+row.title+'</a></li>');
                }
                //播放视频
                $("#studioTeachId li a").click(function(){
@@ -664,7 +701,7 @@ var studioChat={
      * 播放教学视频
      */
     doPlayTeachVideo:function(){
-        if(this.initSewise && SewisePlayer.duration()> SewisePlayer.playTime()) {
+        if(window.SewisePlayer && SewisePlayer.duration()> SewisePlayer.playTime()) {
             SewisePlayer.doPlay();
         }
     },
@@ -1037,7 +1074,9 @@ var studioChat={
                 if($(".window-container #tVideoDiv").length>0){
                     $("#tvDivId").get(0).appendChild($("#tVideoDiv").parent().get(0));
                     $(".window-container").remove();
-                    SewisePlayer.doStop();
+                    if(window.SewisePlayer){
+                        SewisePlayer.doStop();
+                    }
                     $("#tvDivId .vopenbtn").show();
                     $("#tvDivId .tipMsg").hide();
                 }
