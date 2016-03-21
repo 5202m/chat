@@ -510,9 +510,9 @@ var studioMbReg = {
         }else if(!(/^[A-Za-z0-9]{6,16}$/.test(pwd))){
             isTrue = false;
             message="密码输入有误，请输入6至16位字母或数字组合！";
-        }else if(!(/^.{2,10}$/.test(nickname))){
+        }else if(!common.isRightName(this.value)){
             isTrue = false;
-            message="昵称输入有误，请输入2至10位字符！";
+            message="昵称为2至10位字符(数字、英文、中文、下划线),不能全是数字";
         }
         studioMbPop.showMessage(message);
         return isTrue;

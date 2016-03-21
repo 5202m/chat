@@ -350,7 +350,11 @@ var common = {
      * @returns {XML|string|void}
      */
     clearMsgHtml:function(msg){
-       return msg.replace(/^((&nbsp;)+)/g,'').replace(/<\/?(?!(img|IMG)\s+src="[^>"]+\/face\/[^>"]+"\s*>)[^>]*>/g,'');
+        var msg=msg.replace(/((^((&nbsp;)+))|\n|\t|\r)/g,'').replace(/<\/?(?!(img|IMG)\s+src="[^>"]+\/face\/[^>"]+"\s*>)[^>]*>/g,'');
+        if(msg){
+           msg= $.trim(msg);
+        }
+        return msg;
     },
     /**
      * 格式化显示课程安排表
@@ -584,6 +588,14 @@ var common = {
                 }
             }
         }
+    },
+    /**
+     * 是否合法的昵称
+     * @param name
+     * @returns {boolean}
+     */
+    isRightName:function(name){
+        return !(/^([0-9]{2,20})$/g.test(name)) && /^([\w\u4e00-\u9fa5]{2,20})$/g.test(name);
     }
 };
 /**

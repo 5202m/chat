@@ -461,7 +461,6 @@
                     <div class="in_line clearfix">
                         <span class="item_name">昵称：</span>
                         <input type="text"  id="mdr_nk" placeholder="" readonly="readonly" class="in_value" t="<%= userSession.nickname %>" value="<%= userSession.nickname %>">
-                        <div class="in_rbtn"><a href="javascript:" id="resetNickname">修改昵称</a></div>
                     </div>
                     <div class="in_line clearfix">
                         <span class="item_name">账号：</span>
@@ -701,7 +700,7 @@
 <script type="text/javascript" src="/js/lib/newquote.js"></script>
 <script type="text/javascript" src="/js/util/common.min.js"></script>
 <script type="text/javascript" src="http://static.polyv.net/file/polyvplayer_v2.0.min.js"></script>
-<script type="text/javascript" src="/js/studio/index.min.js?t=<%=new Date().getTime()%>"></script>
+<script type="text/javascript" src="/js/studio/index.js?t=<%=new Date().getTime()%>"></script>
 <script type="text/javascript">
 studioChat.web24kPath='<%= web24kPath %>';
 studioChat.apiUrl='<%= apiUrl %>';

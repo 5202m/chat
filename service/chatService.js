@@ -50,7 +50,7 @@ var chatService ={
      */
     getRoomSockets:function(spaceName,roomId,isFromRedis){
         spaceName=spaceName||roomId;
-        return this.getSpaceSocket(spaceName,isFromRedis).of(this.formatSpaceName(spaceName)).in(roomId);
+        return this.getSpaceSocket(spaceName,isFromRedis).in(roomId);
     },
     /**
      * 提取命名空间的socket
@@ -112,28 +112,33 @@ var chatService ={
                     }
                 }
                 roomUserArr[userInfo.userId]=userInfo;
-                global.memored.store("onlineUser_"+userInfo.groupId,roomUserArr,function(err){
-                    if(err){
-                        logger.error("getRoomOnlineUser[memored.store]->err:"+err);
-                    }
-                });
+                chatService.setRoomOnlineUserStore(userInfo.groupId,roomUserArr);
                 callback(roomUserArr);
             }else{
                 var isRemove=false;
                 if(roomUserArr){
-                    if(userInfo.socketId && roomUserArr.hasOwnProperty(userInfo.userId) && userInfo.socketId==roomUserArr[userInfo.userId].socketId){
+                    if(roomUserArr.hasOwnProperty(userInfo.userId) && userInfo.socketId && userInfo.socketId==roomUserArr[userInfo.userId].socketId){
                         delete roomUserArr[userInfo.userId];
                         isRemove=true;
+                        chatService.setRoomOnlineUserStore(userInfo.groupId,roomUserArr);
                     }
-                    global.memored.store("onlineUser_"+userInfo.groupId,roomUserArr,function(err){
-                        if(err){
-                            logger.error("getRoomOnlineUser[memored.store]->err:"+err);
-                        }
-                    });
+                    //!chatService.getRoomSockets(userInfo.groupType,userInfo.groupId,false).connected.hasOwnProperty(userInfo.socketId)
                 }else{
                     isRemove=true;
                 }
                 callback(isRemove);
+            }
+        });
+    },
+    /**
+     * 设置房间在线用户存储
+     * @param groupId
+     * @param roomUserArr
+     */
+    setRoomOnlineUserStore:function(groupId,roomUserArr){
+        global.memored.store("onlineUser_"+groupId,roomUserArr,function(err){
+            if(err){
+                logger.error("setRoomOnlineUser[memored.store]->err:"+err);
             }
         });
     },
@@ -170,14 +175,6 @@ var chatService ={
                     var roomId=key.replace("onlineUser_","");
                     visitorService.batchUpdateStatus(roomId);//更新访客记录状态
                     userService.batchOfflineStatus(roomId);
-                    /*chatService.getRoomOnlineUser(roomId,function(roomUserArr) {
-                        if(roomUserArr){
-                            for(var k in roomUserArr){
-                                userService.removeOnlineUser(roomUserArr[k],true,function(){});
-                            }
-                            callbackTmp(null);
-                        }
-                    });*/
                 }else{
                     callbackTmp(null);
                 }
@@ -729,14 +726,26 @@ var chatService ={
         this.getRoomOnlineUser(userInfo.groupId,function(roomUserArr){
             logger.info("sendMsgToUserArr=>userNoStr:"+userNoArr.join(","));
             var userInfoTmp=null,space=chatService.getSpaceSocket(userInfo.groupType,isFromRedis);
+            var isForce=false;
+            var toUserIdArr=[];
             for(var j in userNoArr){
-                for(var i in roomUserArr){
-                    userInfoTmp = roomUserArr[i];
-                    if(userInfoTmp.socketId && userInfoTmp.userId == userNoArr[j] && userInfoTmp.socketId!=excludeSocketId){
+                for(var userId in roomUserArr){
+                    userInfoTmp = roomUserArr[userId];
+                    if(userInfoTmp && userInfoTmp.socketId && userId == userNoArr[j] && userInfoTmp.socketId!=excludeSocketId){
                         space.to(userInfoTmp.socketId).emit(eventKey,data);
+                        if(chatService.leaveRoomFlag.forcedOut==data.flag) {
+                            toUserIdArr.push(userId);
+                            delete roomUserArr[userId];
+                            isForce=true;
+                        }
                         break;
                     }
                 }
+            }
+            if(isForce){
+                data.userIds=toUserIdArr;
+                chatService.sendMsgToRoom(true,null,userInfo.groupId,eventKey,data);
+                chatService.setRoomOnlineUserStore(userInfo.groupId,roomUserArr);
             }
         });
     },

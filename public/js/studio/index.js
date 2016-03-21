@@ -1033,6 +1033,7 @@ var studioChat={
          * 昵称修改
          */
         $("#resetNickname").click(function(){
+            return false;//前台暂屏蔽修改昵称，改为后台支持
             var _this=$(this),np=$("#mdr_nk"),val=np.val();
             if(common.isBlank(val) || !(/^.{2,10}$/.test(val))){
                 $("#nketip").text("昵称有误，请输入2至10位字符！");
@@ -1386,7 +1387,7 @@ var studioChat={
         /*弹出框关闭按钮*/
         $('.popup_box .pop_close,.formbtn[t=close]').click(function(){
             if("userInfo"==$(this).attr("t")){
-                $("#resetNickname").attr("t","modify").text("修改昵称");
+                //$("#resetNickname").attr("t","modify").text("修改昵称");
                 $("#mdr_nk").attr("readonly",true);
                 $("#nketip").text("");
             }else{
@@ -1856,8 +1857,8 @@ var studioChat={
                        return isTrue;
                    }
                }
-               if(this.name=='nickname'&& !(/^.{2,10}$/.test(this.value))) {
-                   errorDom.attr("tId",this.name).html("昵称输入有误，请输入2至10位字符！");
+               if(this.name=='nickname'&& !common.isRightName(this.value)) {
+                   errorDom.attr("tId",this.name).html("昵称为2至10位字符(数字、英文、中文、下划线),不能全是数字");
                    isTrue=false;
                    return isTrue;
                }
@@ -2307,7 +2308,16 @@ var studioChat={
     /**
      * 离开房间提示
      */
-    leaveRoomTip:function(flag){
+    leaveRoomTip:function(flag,userIds){
+        if(flag=="forcedOut"){//强制下线分析师
+            if(userIds){
+                for(var i in userIds){
+                    $("#teacherListId li[uid='"+userIds[i]+ "']").remove();
+                    $(".pointlist[uid='"+userIds[i] + "']").hide();
+                }
+            }
+            return;
+        }
         if("visitor"==studioChat.userInfo.clientGroup){
              return;
         }
@@ -2415,7 +2425,7 @@ var studioChat={
                     studioChat.setTalkListScroll();
                     break;
                 case 'leaveRoom':{
-                    studioChat.leaveRoomTip(result.flag);
+                    studioChat.leaveRoomTip(result.flag,result.userIds);
                     break;
                 }
                 case 'approvalResult':
