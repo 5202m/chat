@@ -103,11 +103,13 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .user_box li{ height:37px; position:relative; z-index:10; margin-bottom:1px;width:100%;}
 .user_box li.zin { z-index:10000}
 .user_box li .uname{ display:block; height:33px;line-height:33px; font-size:11pt; color:#4e4e4e;padding:2px 0 2px 10px;text-decoration:none;}
-.user_box li .headimg{ display:block; width:33px; height:33px; float:left; margin-right:15px; border-radius:3px;}
+.user_box li .headimg{ display:block; width:33px; height:33px; float:left; margin-right:8px; border-radius:3px;}
 .user_box li .uname:hover { background:#cfd1d2}
 .user_box li .uname.ume { background:#cfd1d2}
 .user_box .dialogbtn{ left:7px; top:33px; z-index:100000}
 .user_box li .headimg img{width:33px;height:33px;}
+.user_box li .uname .nk-lb{  width: 150px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;}
+.user_box .mb-cls{color: #E91E63;font-style: normal;font-size: 9pt;display: block;height: 16px;width: 16px;position: absolute;right: 4px;top: 1px;}
 /*left2*/
 .mod_left2{ }
 .mod_video{ background:rgba(246,246,246,0.1);text-align:center; vertical-align:middle; height:504px; margin-bottom:5px; overflow:hidden;}
@@ -247,7 +249,6 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .view_select.dw .selectlist{display:block;}
 .view_select.dw .se_cont a.on{ background:#343b49;color:#fff;  }
 .view_select .se_cont a:hover { background:#343b49; color:#fff; }
-
 /*聊天内容*/
 .chat_content{ margin-top:5px; }
 .chat_content .scrollbox2{ padding-right:10px;height:480px;overflow-y: scroll;overflow-x: hidden;}

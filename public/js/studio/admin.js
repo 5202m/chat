@@ -951,7 +951,7 @@ var studioChat={
             if(fromUser.userType==1){
                 cls+='admin';
             }
-            dialog=studioChat.getDialogHtml(fromUser.clientGroup,fromUser.userId,nickname,fromUser.userType);
+            dialog=studioChat.getDialogHtml(fromUser.clientGroup,fromUser.userId,nickname,fromUser.userType,fromUser.isMobile);
             if(!isLoadData && toUser){
                 if(studioChat.userInfo.userId==toUser.userId){
                     $(".mymsg").show();
@@ -1028,16 +1028,17 @@ var studioChat={
      * @param userId
      * @param nickname
      * @param userType
+     * @param isMb
      * @returns {string}
      */
-    getDialogHtml:function(clientGroup,userId,nickname,userType){
+    getDialogHtml:function(clientGroup,userId,nickname,userType,isMb){
         if(studioChat.userInfo.userId!=userId && studioChat.userInfo.userId.indexOf('visitor_')==-1){
             var hasMainDiv=false,gIdDom=$("#groupInfoId"),mainDiv='<div class="dialogbtn" style="display:none;" cg="'+clientGroup+'" nk="'+nickname+'" uId="'+userId+'" utype="'+userType+'">';
             if(userId.indexOf('visitor_')==-1){
                 mainDiv+='<a href="javascript:" class="d1" t="0"><span>@TA</span></a>';
                 hasMainDiv=true;
             }
-            if(gIdDom.attr("aw")=="true"&& common.containSplitStr(gIdDom.attr("awr"),studioChat.userInfo.userType)){
+            if(!isMb && gIdDom.attr("aw")=="true"&& common.containSplitStr(gIdDom.attr("awr"),studioChat.userInfo.userType)){
                 mainDiv+='<a href="javascript:" class="d2" t="1"><span>私聊</span></a>';
                 hasMainDiv=true;
             }
@@ -1053,13 +1054,15 @@ var studioChat={
      */
     setOnlineUser:function(row){
         $("#userListId li[id='"+row.userId+"']").remove();//存在则移除旧的记录
-        var dialogHtml=studioChat.getDialogHtml(row.clientGroup,row.userId,row.nickname,row.userType),isMeHtml="",seq=row.sequence;
+        var dialogHtml=studioChat.getDialogHtml(row.clientGroup,row.userId,row.nickname,row.userType,row.isMobile),isMeHtml="",seq=row.sequence;
+        var mbEm=row.isMobile?'<em class="mb-cls">(mb)</em>':'';
         if(studioChat.userInfo.userId==row.userId){
             isMeHtml = "【我】";
+            mbEm='';
             seq = 0;
         }
         var lis=$("#userListId li"),
-            liDom='<li id="'+row.userId+'" t="'+seq+'" utype="'+row.userType+'">'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+studioChat.getUserAImgCls(row.clientGroup,row.userType,row.avatar)+'</div>'+row.nickname+isMeHtml+'</a></li>';
+            liDom='<li id="'+row.userId+'" t="'+seq+'" utype="'+row.userType+'"  ismb="'+row.isMobile+'">'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+studioChat.getUserAImgCls(row.clientGroup,row.userType,row.avatar)+'</div><label class="nk-lb">'+row.nickname+isMeHtml+'</label>'+mbEm+'</a></li>';
         if(lis.length==0){
             $("#userListId").append(liDom);
         }else if(isMeHtml!=""){

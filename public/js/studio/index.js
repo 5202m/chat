@@ -10,9 +10,11 @@ var studioChat={
     apiUrl:'',
     exStudioStr:'',//外接直播JSON字符串
     studioDate:'',//直播时间点
+    isNeverLogin:false,//是否首次访问
     serverTime:0,//服务器时间
+    hasAcLink:false,//是否存在最新的红包连接
+    towMinTime:0,//2分钟间隔时间
     verifyCodeIntervalId:null,
-    exStudioIntervalId:null,
     teachIndex:0,
     //信息类型
     msgType:{
@@ -23,25 +25,31 @@ var studioChat={
     socket:null,
     socketUrl:'',
     userInfo:null,
+    initStudio:false,
     init:function(){
         this.serverTimeUp();
         this.setVisitStore();//设置访客存储
         this.setSocket();//设置socket连接
         this.setVideoList();//设置视频列表
-        this.setVideoAdvertisement();//设置视频广告
+        this.setAdvertisement();//设置广告
         this.setEvent();//设置各种事件
         this.setScrollNotice();//设置滚动走马灯
         this.setPrice();//设置行情报价
-        this.showLoginOrRegistTip();//设置访客5分钟未登录或注册提示
     },
     /**
      * 服务器时间更新
      */
     serverTimeUp:function(){
         studioChat.setRPacket(true);
+        studioChat.clientVideoTask();
+        studioChat.towMinTime=studioChat.serverTime;
         setInterval(function(){
             studioChat.serverTime+=1000;
             studioChat.setRPacket(false);
+            if(studioChat.serverTime-studioChat.towMinTime>=2*60*1000){
+                studioChat.towMinTime=studioChat.serverTime;
+                studioChat.clientVideoTask();
+            }
         },1000);//每秒一次
     },
     /**
@@ -121,8 +129,11 @@ var studioChat={
             //提取链接
             this.getAcLink(function(){
                 studioChat.setRPacket(false);
-            })
+            });
         }else{
+            if(!common.dateTimeWeekCheck(studioChat.studioDate, true,studioChat.serverTime)){//非直播时间段不能取红包
+                return;
+            }
             var hms=common.getHHMMSS(studioChat.serverTime),bm=$(".redbag_box .redbag_cont b"),hd=$(".redbag_box .redbag_cont h4");
             var difLen= 0,fiften=(hms>='14:45:00' && hms<'15:15:00');
             if((hms>='09:30:00'&& hms<'10:00:00')||fiften||(hms>='20:30:00' && hms<'21:00:00')||(hms>='21:30:00' && hms<'22:00:00')){
@@ -136,14 +147,19 @@ var studioChat={
                 bm.addClass("time").text(mm+":"+ss);
             }else if((hms>='10:00:00' && hms<'10:01:00')||(hms>='15:15:00'&& hms<'15:16:00')||(hms>='21:00:00' && hms<'21:01:00')||(hms>='22:00:00' && hms<'22:01:00')){
                 var acLink= $("body").data("acLink");
-                if(common.isBlank(acLink.url)||(common.isValid(acLink.endTime) && Number(acLink.endTime)<=studioChat.serverTime)){
-                    studioChat.getAcLink(function(){
-                        studioChat.openPacket(hd,bm);
-                    });
+                if(!acLink ||common.isBlank(acLink.url)||(common.isValid(acLink.endTime) && Number(acLink.endTime)<=studioChat.serverTime)){
+                    if(!studioChat.hasAcLink){//不存在新的红包连接，重新提取
+                        studioChat.getAcLink(function(){
+                            studioChat.openPacket(hd,bm);
+                        });
+                        studioChat.hasAcLink=true;
+                    }
                 }else{
+                    studioChat.hasAcLink=true;
                     studioChat.openPacket(hd,bm);
                 }
             }else{
+                studioChat.hasAcLink=false;
                 $("#shinebg").stopRotate();
                 $("#shinebg").attr("style","");
                 $('.redbag').removeClass('on');
@@ -196,6 +212,7 @@ var studioChat={
             store.set(key,obj);
             $("#contentText").html("").attr("contenteditable",true);
         }
+        this.isNeverLogin=!common.isValid(obj.loginId);
     },
     /**
      * 显示两个cs用户
@@ -274,61 +291,39 @@ var studioChat={
         }
     },
     /**
-     * 显示登陆或注册提示
-     * 备注：停留5分钟则直接提示
-     */
-    showLoginOrRegistTip:function(){
-        if(studioChat.userInfo.clientGroup=='visitor'){
-            window.setTimeout(function(){
-                if($(".blackbg").children("div:visible").length==0){
-                    $(".blackbg").children("div").hide();
-                    $("#loginOrRegistTip,.blackbg").show();
-                }
-            }, 5*60*1000);
-        }
-    },
-    /**
      * 客户端视频任务
      */
     clientVideoTask:function(){
         var exSrc=$("#studioVideoDiv embed").attr("src");
-        if(exSrc && exSrc.indexOf("yy.com")==-1 && $("#studioTeachId a[class=on]").length<=0){//如果非yy直播的其他直播
-            studioChat.exStudioIntervalId=setInterval(function(){
-                if($("#studioTeachId a[class=on]").length>0){//如果用户点击了教学视频，则无需播放直播
-                    return false;
-                }
-                studioChat.playVideoByDate(false,true);
-            },2*60*1000);//每2分钟检查一次
+        if(exSrc && exSrc.indexOf("yy.com")==-1){//如果非yy直播的其他直播
+            studioChat.playVideoByDate(false);
         }
     },
     /**按直播时间播放
      * @param isBackStudio 返回直播
      * 备注：按时间点播放yy视频,不符合时间点直接播放视频
      */
-    playVideoByDate:function(isBackStudio,exStudioPlay){
-      if(common.dateTimeWeekCheck(this.studioDate, true)){
+    playVideoByDate:function(isBackStudio){
+       //如果是在看教学视频则直接返回
+      if($("#studioTeachId a[class=on]").length>0) {
+           return;
+      }
+      if(common.dateTimeWeekCheck(this.studioDate, true,studioChat.serverTime)){//直播时间段，则播放直播
           this.setVideo(true);
-      }else{
+      }else{//非直播时段，检查是否有其他直播，有则播放其他直播，没有则播放教学视频
           var hasExStudio=false;
           if(common.isValid(this.exStudioStr)){
               var exObj=JSON.parse(this.exStudioStr),row=null;
               for(var index in exObj){
                   row=exObj[index];
-                  if(common.dateTimeWeekCheck(row.studioDate, true) &&  common.isValid(row.srcUrl)){
-                      if(!exStudioPlay||isBackStudio) {
-                          studioChat.setStudioVideoDiv(row.srcUrl);
-                          studioChat.clientVideoTask();//开启任务
-                      }
+                  if(common.dateTimeWeekCheck(row.studioDate, true,studioChat.serverTime) &&  common.isValid(row.srcUrl)){
+                      studioChat.setStudioVideoDiv(row.srcUrl);
                       hasExStudio=true;
                       break;
                   }
               }
           }
           if(!hasExStudio){//非返回直播以及不存在外接直播则播放教学视频
-              if(exStudioPlay && studioChat.exStudioIntervalId){//如果其他直播已经结束，要终止该定时任务
-                  clearInterval(studioChat.exStudioIntervalId);
-                  studioChat.exStudioIntervalId='';
-              }
               if(!isBackStudio){
                   if($("#studioTeachId a[class=on]").length<=0){
                       var mpDom=$("#studioTeachId li a[t=mp4]");
@@ -369,6 +364,12 @@ var studioChat={
         $("#studioVideoDiv embed").remove();
         $(studioChat.getEmbedDom(url)).appendTo('#studioVideoDiv');
         $("#stVideoDiv").show();
+        if(!studioChat.initStudio && studioChat.isNeverLogin){
+            $(".guide1").show().find(".gclose").click(function(){
+                $(".guide1").hide();
+            });
+        }
+        studioChat.initStudio=true;
     },
     /**
      * 设置视频
@@ -377,10 +378,6 @@ var studioChat={
      */
     setVideo:function(isYy,thisDom){
         try{
-            if(studioChat.exStudioIntervalId){//如果转到yy直播，则终止其他直播
-                clearInterval(studioChat.exStudioIntervalId);
-                studioChat.exStudioIntervalId='';
-            }
             if(isYy){
                 var aDom=$("#studioListId a[class~=ing]"),yc=aDom.attr("yc"),mc=aDom.attr("mc");
                 studioChat.setStudioVideoDiv('http://yy.com/s'+(common.isValid(yc)?'/'+yc:'')+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf');
@@ -435,6 +432,11 @@ var studioChat={
                                 script.type = "text/javascript";
                                 script.src = srcPath;
                                 $("#tVideoDiv").get(0).appendChild(script);
+                                if(studioChat.isNeverLogin){//游客则弹出注册引导
+                                    $(".guide2").show().find(".gclose").click(function(){
+                                        $(".guide2").hide();
+                                    });
+                                }
                                 //轮播控制
                                 var checkOverFunc = function(){
                                     if(!window.SewisePlayer){
@@ -607,10 +609,8 @@ var studioChat={
                }
                //播放视频
                $("#studioTeachId li a").click(function(){
-                   if(!$(this).is(".on")){
-                       $("#studioTeachId li a.on").removeClass("on");
-                       $(this).addClass("on");
-                   }
+                   $("#studioTeachId li a.on").removeClass("on");
+                   $(this).addClass("on");
                    studioChat.setVideo(false,$(this));
                });
                studioChat.setListScroll(".videolist_box");
@@ -619,9 +619,42 @@ var studioChat={
        });
     },
     /**
-     * 设置视频广告
+     * 随机弹出私聊框
      */
-    setVideoAdvertisement:function(){
+    randCsOpen:function(){
+        return;
+        window.setTimeout(function(){//1秒钟后提示私聊
+            var aDom=$(".cm_wrap a");
+            $(aDom.get(parseInt(Math.round(Math.random()*aDom.length)))).click();
+            var aOn=$(".mult_dialog a[class=on]"),uid=aOn.attr("uid"),ank=aOn.find("label").text();
+            var sendObj={uiId:studioChat.getUiId(),fromUser:{userId:uid,nickname:ank,userType:3},content:{msgType:studioChat.msgType.text,value:""}};
+            studioChat.setWhContent(sendObj,false,false);//直接把数据填入内容栏
+        },1000);
+    },
+    /**
+     * 设置广告
+     */
+    setAdvertisement:function(){
+        //设置弹出广告
+        if(studioChat.isNeverLogin){
+            //设置主页广告
+            $(".blackbg").show();
+            $("#main_ad_box").css({background:"url(/images/studio/ban_new.jpg) 0 0 no-repeat"}).show();
+            $("#main_ad_box .pop_close").click(function(){
+                $("#main_ad_box").hide();
+                $(".blackbg").hide();
+                studioChat.randCsOpen();
+            });
+        }else{
+            $(".blackbg").show();
+            $("#act_ad_box").css({background:"url(/images/studio/ban_act.jpg) 0 0 no-repeat"}).show();
+            $("#act_ad_box .pop_close").click(function(){
+                $("#act_ad_box").hide();
+                $(".blackbg").hide();
+                studioChat.randCsOpen();
+            });
+        }
+        //设置视频广告
         this.getArticleList("video_advertisement",this.userInfo.groupId,0,1,1,'{"createDate":"desc"}',null,function(dataList){
             var loc_elem = $("#tVideoCtrl a.ad");
             if(dataList && dataList.result==0 && dataList.data && dataList.data.length === 1){
@@ -691,6 +724,7 @@ var studioChat={
         });
         //重设返回直播事件
         $(".vbackbtn").click(function(){
+            $("#studioTeachId a[class=on]").removeClass("on");
             studioChat.playVideoByDate(true);
             if($(".window-container #tVideoDiv").length>0){//如果教学视频打开弹框切直播
                 $(".vopenbtn[t=s]").click();
@@ -1325,7 +1359,7 @@ var studioChat={
          * 转到登录页面
          */
         $('#login_a,#login_b,#login_c,#lrtip_l').click(function(){
-            $("#loginOrRegistTip").hide();
+            $("#main_ad_box").hide();
             studioChat.openLoginBox();
             if(common.isValid($(this).attr("tp"))){
                 _gaq.push(['_trackEvent', 'pmchat_studio', 'login', $(this).attr("tp"),1,true]);
@@ -1335,7 +1369,7 @@ var studioChat={
          * 转到注册页面
          */
         $('#register_a,#register_b,#toRegister,#lrtip_r').click(function(){
-            $("#loginOrRegistTip").hide();
+            $("#main_ad_box").hide();
             studioChat.openRegistBox();
             if(common.isValid($(this).attr("tp"))){
                 _gaq.push(['_trackEvent', 'pmchat_studio', 'register', $(this).attr("tp"),1,true]);

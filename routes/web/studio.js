@@ -597,6 +597,9 @@ router.get('/getCS', function(req, res) {
  * 提取红包连接地址
  */
 router.post('/getAcLink',function(req, res){
+    if(!req.session.studioUserInfo){
+        res.end();
+    }
     request(config.packetAcUrl,function(err, response, data){
         if (!err && response.statusCode == 200) {
             res.json(JSON.parse(data));

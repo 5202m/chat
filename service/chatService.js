@@ -108,6 +108,7 @@ var chatService ={
                 if(roomUserArr.hasOwnProperty(userInfo.userId)){
                     var oldUserInfo=roomUserArr[userInfo.userId];
                     if(oldUserInfo.socketId && oldUserInfo.socketId!=userInfo.socketId){//如果存在旧的在线记录，通知旧的socket离开房间或登出
+                        userInfo.prevSocketId=oldUserInfo.socketId;
                         chatService.leaveRoomBySocketId(oldUserInfo.groupType,oldUserInfo.socketId,chatService.leaveRoomFlag.otherLogin);
                     }
                 }
@@ -115,18 +116,24 @@ var chatService ={
                 chatService.setRoomOnlineUserStore(userInfo.groupId,roomUserArr);
                 callback(roomUserArr);
             }else{
-                var isRemove=false;
+                var isRemove=false,noticeClient=true;
                 if(roomUserArr){
-                    if(roomUserArr.hasOwnProperty(userInfo.userId) && userInfo.socketId && userInfo.socketId==roomUserArr[userInfo.userId].socketId){
-                        delete roomUserArr[userInfo.userId];
-                        isRemove=true;
-                        chatService.setRoomOnlineUserStore(userInfo.groupId,roomUserArr);
+                    if(roomUserArr.hasOwnProperty(userInfo.userId) && userInfo.socketId){
+                        var tmpUserInfo=roomUserArr[userInfo.userId];
+                        if(userInfo.socketId==tmpUserInfo.socketId ||!tmpUserInfo.prevSocketId){//socketId一致则直接断线或者不存在旧的socketId(被相同账号挤出的情况)
+                            delete roomUserArr[userInfo.userId];
+                            isRemove=true;
+                            chatService.setRoomOnlineUserStore(userInfo.groupId,roomUserArr);
+                        }
+                        if(tmpUserInfo.prevSocketId){
+                            noticeClient=false;
+                        }
                     }
                     //!chatService.getRoomSockets(userInfo.groupType,userInfo.groupId,false).connected.hasOwnProperty(userInfo.socketId)
                 }else{
                     isRemove=true;
                 }
-                callback(isRemove);
+                callback(isRemove,noticeClient);
             }
         });
     },
@@ -300,7 +307,7 @@ var chatService ={
                 });
             });
             //登录则加入房间,groupId作为唯一的房间号
-            socket.on('login',function(data){
+            socket.on('login',function(data,webUserAgent){
                 var userInfo=data.userInfo,lastPublishTime=data.lastPublishTime, allowWhisper = data.allowWhisper,fUserTypeStr=data.fUserTypeStr;
                 if(common.isBlank(userInfo.groupType)){
                     return false;
@@ -312,7 +319,9 @@ var chatService ={
                 chatService.setClientSequence(userInfo);
                 socket.userInfo=userInfo;//缓存用户信息
                 userService.updateMemberInfo(userInfo,function(sendMsgCount,dbMobile,offlineDate){
+                    var userAgent=webUserAgent?webUserAgent:socket.client.request.headers["user-agent"];
                     socket.userInfo.sendMsgCount=sendMsgCount;
+                    userInfo.isMobile=common.isMobile(userAgent);
                     socket.join(userInfo.groupId);
                     chatService.setRoomOnlineUser(userInfo,true,function(roomUserArr){
                         if(constant.fromPlatform.studio==userInfo.groupType){//如果是直播间网页版聊天室,需要显示在线用户
@@ -324,7 +333,6 @@ var chatService ={
                         //广播自己的在线信息
                         socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:true}});
                         //直播间创建访客记录
-                        var userAgent=socket.client.request.headers["user-agent"];
                         if(parseInt(userInfo.userType)<=constant.roleUserType.member){
                             var vrRow={userAgent:userAgent,visitorId:userInfo.visitorId,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,nickname:userInfo.nickname,clientGroup:userInfo.clientGroup,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address};
                             if(userInfo.clientGroup!=constant.clientGroup.visitor){
@@ -360,7 +368,7 @@ var chatService ={
             socket.on('disconnect',function(data){
                 var userInfo=socket.userInfo;
                 if(userInfo){ //移除在线用户,客户端断线处理逻辑
-                    chatService.setRoomOnlineUser(userInfo,false,function(isRemove){//移除缓存在线用户
+                    chatService.setRoomOnlineUser(userInfo,false,function(isRemove,noticeClient){//移除缓存在线用户
                         userService.removeOnlineUser(userInfo,isRemove,function(){
                             var logRemoveTip="disconnect";
                             if(!isRemove){
@@ -368,7 +376,7 @@ var chatService ={
                             }
                             //通知客户端在线人数
                             if(constant.fromPlatform.studio==userInfo.groupType){//如果是直播间,则移除页面在线用户
-                                if(isRemove){
+                                if(isRemove && noticeClient){
                                     socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:false}});
                                 }
                                 //直播间记录离线数据

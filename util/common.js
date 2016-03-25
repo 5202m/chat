@@ -270,12 +270,16 @@ var common = {
     },
     /**
      * 判断客户端是否手机
-     * @param req
+     * @param userAgent
      */
-    isMobile : function(req){
-        var deviceAgent = req.headers["user-agent"].toLowerCase();
-        var isMobile = deviceAgent.match(/(iphone|ipod|ipad|android|mobile|playbook|bb10|meego)/);
-        return !!isMobile;
+    isMobile : function(userAgent){
+        if(!userAgent){
+            return false;
+        }
+        if(userAgent.headers){
+            userAgent=userAgent.headers["user-agent"];
+        }
+        return /(iphone|ipod|ipad|android|mobile|playbook|bb10|meego)/.test(userAgent.toLowerCase());
     }
 };
 //导出类

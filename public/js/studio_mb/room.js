@@ -71,7 +71,7 @@ var studioChatMb={
         this.socket.on('connect',function(){
             console.log('connected to server!');
             studioChatMb.userInfo.socketId=studioChatMb.socket.id;
-            studioChatMb.socket.emit('login',{userInfo:studioChatMb.userInfo,lastPublishTime:$("#dialog_list>li:last").attr("id")});
+            studioChatMb.socket.emit('login',{userInfo:studioChatMb.userInfo,lastPublishTime:$("#dialog_list>li:last").attr("id")},navigator.userAgent);
         });
         //断开连接
         this.socket.on('disconnect',function(){
@@ -207,25 +207,6 @@ var studioChatMb={
             cenTab.slideTo($(this).index(), 300, false);
         });
 
-        /**
-         * 页面排版控制 resize
-         */
-        $(window).resize(function(){
-            var loc_amount = 0;
-            if(!$(".videopart").is(":hidden")){
-                loc_amount = $(".videopart").width() * 0.47;
-                $(".videopart").height(loc_amount);
-            }
-            loc_amount += $(".float-box").is(":hidden") ? 0 : $(".float-box").height();
-            loc_amount += $(".cen-ulist").is(":hidden") ? 0 : $(".cen-ulist").height();
-            loc_amount += $("#header").is(":hidden") ? 0 : $("#header").height();
-            $('.cen-pubox .boxcont').height($(window).height() - loc_amount);
-            if(!$(".float-box").is(":hidden")){
-                studioChatMb.setTalkListScroll();
-            }
-        });
-        $(window).trigger("resize");
-
         //主页按钮
         $("#header_hb").bind("click", function(){
             window.location.href = "/studio/home";
@@ -314,14 +295,14 @@ var studioChatMb={
                 var txtDom=$(this).find(".txt_dia");
                 if($.trim($(this).text())==txtDom.text() && $(this).find("img").length==0){
                     txtDom.remove();
-                    $(this).html("").trigger("input");
+                    $(this).html("");//.trigger("input");
                     return true;
                 }
             }
         }).focus(function(){
-            studioChatMb.view.boardCtrl(3);
+            //studioChatMb.view.boardCtrl(3);
         }).blur(function(){
-            studioChatMb.view.boardCtrl(1);
+            //studioChatMb.view.boardCtrl(1);
         }).bind("input", function(){
             var isOk = studioChatMb.userInfo.clientGroup!='visitor'
                 && ($.trim($(this).text())!=$(this).find(".txt_dia").text() || $(this).find("img").size() > 0);
@@ -387,21 +368,18 @@ var studioChatMb={
                     blocks.header.show();
                     blocks.backToLive.data("showBoard", true).trigger("show");
                     blocks.floatBox.hide();
-                    $(window).trigger("resize");
                     break;
                 case 1:
                     blocks.header.show();
                     blocks.backToLive.data("showBoard", true).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
-                    $(window).trigger("resize");
                     break;
                 case 2:
                     blocks.header.hide();
                     blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.show();
-                    $(window).trigger("resize");
                     break;
                 case 3:
                     blocks.header.hide();
@@ -437,6 +415,7 @@ var studioChatMb={
             }
             var yyDom=$(".videopart input:first"),yc=yyDom.attr("yc"),mc=yyDom.attr("mc");
             this.$panel = $("#tVideoDiv");
+            this.$panel.css({'z-index':"inherit"}).height($(window).width()*0.55);
             this.setEvent();
         },
         /**
@@ -683,7 +662,7 @@ var studioChatMb={
                 loc_face.push('</table></div>');
             }
             $panel.find("div.face").html(loc_face.join(""));
-            $(window).trigger("resize");
+            //$(window).trigger("resize");
         }
     },
     /**
