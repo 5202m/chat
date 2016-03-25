@@ -114,8 +114,7 @@ router.get('/', function(req, res) {
     chatUser.groupType=constant.fromPlatform.studio;
     chatUser.userType=chatUser.userType||constant.roleUserType.member;//没有userType则默认为会员
     logger.info("chatUser:"+JSON.stringify(chatUser));
-    //TODO 手机版增加自定义参数，对普通用户不可见
-    var isMobile = common.isMobile(req) && /^\d{13}$/.test(req.query["t"]);
+    var isMobile = common.isMobile(req);
     if(isMobile && !chatUser.toGroup && !chatUser.groupId){
         chatUser.groupId = null;
         req.session.studioUserInfo.groupId = null;
@@ -213,8 +212,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
             }
             newStudioList.push(rowTmp);
         });
-        //TODO 提供测试房间，仅手机版可见
-        viewDataObj.studioList= isMobile ? newStudioList : (newStudioList.length > 0 ? [newStudioList[0]] : []);
+        viewDataObj.studioList = newStudioList;
         //记录访客信息
         var snUser=req.session.studioUserInfo;
         if(snUser.firstLogin && snUser.groupId){//手机版房间外面不访客记录
@@ -464,12 +462,7 @@ router.get('/logout', function(req, res) {
         if(isOK){
             req.session.logoutToGroup=snUser.groupId;
         }
-        // TODO 手机版注销，注意pop.html页面的注销链接
-        var tmp = "";
-        if(common.isMobile(req) && req.query["t"]){
-            tmp = "?t=" + req.query["t"];
-        }
-        res.redirect("/studio" + tmp);
+        res.redirect("/studio");
     });
 });
 
@@ -478,12 +471,7 @@ router.get('/logout', function(req, res) {
  */
 router.get('/home', function(req, res) {
     req.session.studioUserInfo.groupId = null;
-    // TODO 手机版注销，注意room.js页面的主页链接：$("#header_hb")
-    var tmp = "";
-    if(common.isMobile(req) && req.query["t"]){
-        tmp = "?t=" + req.query["t"];
-    }
-    res.redirect("/studio" + tmp);
+    res.redirect("/studio");
 });
 
 /**
