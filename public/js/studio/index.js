@@ -131,12 +131,10 @@ var studioChat={
                 studioChat.setRPacket(false);
             });
         }else{
-            if(!common.dateTimeWeekCheck(studioChat.studioDate, true,studioChat.serverTime)){//非直播时间段不能取红包
-                return;
-            }
+            var isStudioTime=common.dateTimeWeekCheck(studioChat.studioDate, true,studioChat.serverTime);//直播时段
             var hms=common.getHHMMSS(studioChat.serverTime),bm=$(".redbag_box .redbag_cont b"),hd=$(".redbag_box .redbag_cont h4");
             var difLen= 0,fiften=(hms>='14:45:00' && hms<'15:15:00');
-            if((hms>='09:30:00'&& hms<'10:00:00')||fiften||(hms>='20:30:00' && hms<'21:00:00')||(hms>='21:30:00' && hms<'22:00:00')){
+            if(isStudioTime && ((hms>='09:30:00'&& hms<'10:00:00')||fiften||(hms>='20:30:00' && hms<'21:00:00')||(hms>='21:30:00' && hms<'22:00:00'))){
                 hd.text("红包");
                 var sd=new Date(studioChat.serverTime);
                 if(fiften){
@@ -145,7 +143,7 @@ var studioChat={
                 var ts = new Date(sd.getFullYear(), sd.getMonth(),sd.getDate(), (sd.getHours()+1),difLen, 0).getTime() - studioChat.serverTime;//计算剩余毫秒数
                 var mm = this.getTimeCal(parseInt(ts / 1000 / 60 % 60, 10)),ss = this.getTimeCal(parseInt(ts / 1000 % 60, 10));//计算剩余秒数
                 bm.addClass("time").text(mm+":"+ss);
-            }else if((hms>='10:00:00' && hms<'10:01:00')||(hms>='15:15:00'&& hms<'15:16:00')||(hms>='21:00:00' && hms<'21:01:00')||(hms>='22:00:00' && hms<'22:01:00')){
+            }else if(isStudioTime && ((hms>='10:00:00' && hms<'10:01:00')||(hms>='15:15:00'&& hms<'15:16:00')||(hms>='21:00:00' && hms<'21:01:00')||(hms>='22:00:00' && hms<'22:01:00'))){
                 var acLink= $("body").data("acLink");
                 if(!acLink ||common.isBlank(acLink.url)||(common.isValid(acLink.endTime) && Number(acLink.endTime)<=studioChat.serverTime)){
                     if(!studioChat.hasAcLink){//不存在新的红包连接，重新提取
@@ -243,8 +241,9 @@ var studioChat={
         }
         try{
             $.getJSON('/studio/getCS',{groupId:this.userInfo.groupId},function(data){
-                $(".cm_wrap").html("");
-                if(data){
+                if(data && data.length>0){
+                    $(".cmtalk").show();
+                    $(".cm_wrap").html("");
                     var csHtml='';
                     for(var i in data){
                         csHtml='<a href="javascript:" uid="'+data[i].userNo+'" class="cm_item"><img src="'+(common.isValid(data[i].avatar)?data[i].avatar:'/images/studio/cm.png')+'"><span>'+data[i].userName+'</span></a>';
@@ -287,6 +286,7 @@ var studioChat={
                 }
             });
         }catch (e){
+            $(".cmtalk").hide();
             console.error("setCSList->"+e);
         }
     },

@@ -733,7 +733,7 @@ var studioChatMb={
      */
     setTradeArticle : function(){
         studioMbPop.loadingBlock($("#TradeArticleTab"));
-        studioChatMb.getArticleList("trade_strategy_article",studioChatMb.userInfo.groupId,1,1,5,'{"createDate":"desc"}',null,function(dataList){
+        studioChatMb.getArticleList("trade_strategy_article",studioChatMb.userInfo.groupId,1,1,1,'{"createDate":"desc"}',null,function(dataList){
             var loc_panel = $("#TradeArticleTab ul:first");
             var loc_html = [];
             if(dataList && dataList.result==0){
@@ -758,6 +758,9 @@ var studioChatMb={
                 }
             }
             loc_panel.html(loc_html.join(""));
+            $("#TradeArticleTab .detail p span").each(function(){
+                 $(this).css({color:"#fff"});
+            });
             studioMbPop.loadingBlock($("#TradeArticleTab"), true);
         });
     },

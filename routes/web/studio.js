@@ -602,7 +602,12 @@ router.post('/getAcLink',function(req, res){
     }
     request(config.packetAcUrl,function(err, response, data){
         if (!err && response.statusCode == 200) {
-            res.json(JSON.parse(data));
+            try{
+                res.json(JSON.parse(data));
+            }catch(e){
+                logger.error("getAcLink>>>error:"+e);
+                res.json(null);
+            }
         }else{
             logger.error("getAcLink>>>error:"+err);
             res.json(null);

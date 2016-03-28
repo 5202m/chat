@@ -586,10 +586,11 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .cm_item img{ vertical-align:bottom; border:0; width:28px; height:28px;}
 .cm_item span{ font-size:15px; color:#475055; line-height:28px; padding-left:5px;}
 .cmtalk .cm_prev,.cmtalk .cm_next{ float:left; display:block; width:7px; height:13px; padding:7px 5px 8px;}
-.cmtalk .cm_prev{ margin-left:10px;}
+.cmtalk .cm_prev{ margin-left:0px;}
 .cmtalk .cm_prev i,.cmtalk .cm_next i{ display:block; width:7px; height:13px; background-position:-20px -320px;}
 .cmtalk .cm_prev i{ background-position:-30px -320px;}
 .cmtalk .have_op{opacity:0.5;filter:alpha(opacity=50);}
+.cmtalk .cmt{display:block;float:left;height:28px;line-height:28px;font-size:14px;color:#444;width:60px;padding:0 0px 0 15px;}
 .who_list{ position:absolute; bottom:50px; left:53px; width:95px; background:#fff; box-shadow:0 0 8px rgba(12,3,5,.3); border-radius:2px; overflow:hidden;}
 .who_list a{ display:block; height:30px; text-align:center; color:#4c4c4c; font-size:14px; line-height:30px;}
 .who_list a.on,.who_list a:hover{ background:#ebebeb; text-decoration:none}
