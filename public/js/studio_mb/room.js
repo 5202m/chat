@@ -758,9 +758,7 @@ var studioChatMb={
                 }
             }
             loc_panel.html(loc_html.join(""));
-            $("#TradeArticleTab .detail p span").each(function(){
-                 $(this).css({color:"#fff"});
-            });
+            $("#TradeArticleTab .detail p span").attr("style","");//去掉后台编辑框样式
             studioMbPop.loadingBlock($("#TradeArticleTab"), true);
         });
     },
