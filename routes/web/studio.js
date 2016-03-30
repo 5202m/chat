@@ -115,6 +115,10 @@ router.get('/', function(req, res) {
     chatUser.userType=chatUser.userType||constant.roleUserType.member;//没有userType则默认为会员
     logger.info("chatUser:"+JSON.stringify(chatUser));
     var isMobile = common.isMobile(req);
+    var fromPlatform=req.query["platform"];
+    if(fromPlatform && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform)){
+        chatUser.groupId=config.studioThirdUsed.roomId;
+    }
     if(isMobile && !chatUser.toGroup && !chatUser.groupId){
         chatUser.groupId = null;
         req.session.studioUserInfo.groupId = null;
@@ -221,10 +225,12 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
             visitorService.saveVisitorRecord("login",vrRow);
         }
         if(isMobile){
-            if(!groupId){
-                res.render("studio_mb/index",viewDataObj);
-            }else{
+            var fromPlatform=req.query["platform"];
+            if(groupId || (fromPlatform && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform))){
+                viewDataObj.fromPlatform=fromPlatform;
                 res.render("studio_mb/room",viewDataObj);
+            }else{
+                res.render("studio_mb/index",viewDataObj);
             }
         }else{
             res.render("studio/index",viewDataObj);
