@@ -759,7 +759,7 @@ var studioChat={
         if(userId){
             $("#newMsgTipBtn").attr("uid",userId);
         }
-        $(".pletter_hint p span").html(nkLabel+"发来了一条私聊信息");
+        $(".pletter_hint p span").html((3==userType?"客户经理":"")+nkLabel+"发来了一条私聊信息");
         $(".pletter_hint").show();
     },
     /**

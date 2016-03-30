@@ -32,7 +32,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .jscroll-h,.jscroll-e { border-radius:4px}
 
 /*images*/
-.header-right a i,.pro_notice .pro_btn span,.sro_notice li i,.tab_list li,.te_list .jt_btn span,.te_ctrl a i,.view_select i,.dialog i,.mymsg .closebtn,.toolbar .tbtn,.toolbar .facebtn,.send_select i,.input_area .sendbtn i,.popup_box .pop_close,.resultbar i,.in_line .level i,.in_line .in_rbtn .qu_btn,.video_room a .s2 i ,.hztip i,.videolist_box li i,.tab_list.download li a,.tab_list li a.listmore,.te_list .te_btn b,.dialogbtn a b,.dialog.analyst .headimg b,.upg_cont .btnbar a i,.mod_video .close_ad i,.popup_box.hint .kfbtn i,.fm_ul li,.fmad .pop_close,.pletter_hint .pl_close,.pletter_win .pl_close,.mult_dialog i,.cmtalk .cm_next i,.cmtalk .cm_prev i,.wh_msg_ftip i,.te-point .point-close,.redbag_cont b,.redbag .rb_close,.gcont .gclose{ background-image:url(../../images/studio/img_css.png); background-repeat:no-repeat;}
+.header-right a i,.pro_notice .pro_btn span,.sro_notice li i,.tab_list li,.te_list .jt_btn span,.te_ctrl a i,.view_select i,.dialog i,.mymsg .closebtn,.toolbar .tbtn,.toolbar .facebtn,.send_select i,.input_area .sendbtn i,.popup_box .pop_close,.resultbar i,.in_line .level i,.in_line .in_rbtn .qu_btn,.video_room a .s2 i ,.hztip i,.videolist_box li i,.tab_list.download li a,.tab_list li a.listmore,.te_list .te_btn b,.dialogbtn a b,.dialog.analyst .headimg b,.upg_cont .btnbar a i,.mod_video .close_ad i,.popup_box.hint .kfbtn i,.fm_ul li,.fmad .pop_close,.pletter_hint .pl_close,.pletter_win .pl_close,.mult_dialog i,.cmtalk .cm_next i,.cmtalk .cm_prev i,.wh_msg_ftip i,.te-point .point-close,.redbag_cont b,.redbag .rb_close,.gcont .gclose,.fm_btn .new{ background-image:url(../../images/studio/img_css.png); background-repeat:no-repeat;}
 .img-loading{position:absolute;bottom:0;display:block;width:25px;height:25px;border-radius:4px;background:url(../../images/loading2.gif) no-repeat center;background-size:40px 40px;z-index:9}
 /*header*/
 .box-header{width:100%;min-width:1024px;background:#fff; height:50px; position:relative;z-index:10000}
@@ -270,7 +270,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .te_ctrl a.show_btn:hover i{ background-position:-90px -30px}
 .te_ctrl a.hide_btn i{ background-position:-90px -60px}
 .te_ctrl a.hide_btn:hover i{ background-position:-90px -90px}
-.view_select{ width:145px;float:right; height:27px; position:relative; z-index:100000}
+.view_select{ width:145px;float:right; height:27px; position:relative; z-index:100}
 .view_select.dw {}
 .view_select i { display:block; position:absolute; right:11px; top:9px; background-position:0 -170px; width:14px; height:9px;}
 .view_select.dw i{background-position:0 -190px; }
@@ -482,10 +482,14 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .fm_ul li.i2{ background-position:-96px -420px;}
 .fm_ul li.i3{ background-position:-96px -450px;}
 .fm_ul li.i4{ background-position:-96px -480px;}
-.fm_qrdiv{ display:none; position:absolute; width:200px; text-align:center; padding:28px 40px 20px; right:-1px; top:50px; border:1px solid #dde2e4; background:#fff; z-index:10}
-.fm_qrdiv img{ vertical-align:bottom; margin-bottom:10px;}
-.fm_qrdiv p{ font-size:16px; color:#475055; line-height:24px;font-family:'Microsoft JhengHei','Microsoft YaHei';}
-.fm_btn b{ display:none; position:absolute; width:159px; height:5px; background:#fff; right:0; bottom:-2px; z-index:11}
+.fm_qrdiv{ display:none; position:absolute; width:258px; height:auto; padding:26px 12px 20px; right:-64px; top:50px; border:1px solid #dde2e4; background:#fff; z-index:100005; text-align:center; font-size:0}
+.fm_qrdiv .qrbox{ display:inline-block; *display:inline; *zoom:1; margin:0 15px; vertical-align:top}
+.fm_qrdiv img{ width:99px; height:auto; border:0; vertical-align:bottom; margin-bottom:10px;}
+.fm_qrdiv p{ font-size:14px; color:#818181; line-height:16px; *line-height:18px}
+.fm_qrdiv p.red{ color:#da4454}
+.header-right a.fm_btn{ padding:0 30px 0 20px}
+.fm_btn .sp{ display:none; position:absolute; width:153px; height:5px; background:#fff; right:0; bottom:-2px; z-index:11}
+.fm_btn .new{ display:block; position:absolute; width:23px; height:10px; right:5px; top:7px; background-position:-50px -300px}
 .header-right a.fm_btn:hover{ background:#fff;}
 .header-right a.fm_btn:hover .fm_qrdiv,.header-right a.fm_btn:hover b{ display:block}
 .fmad{ position:absolute; top:0; left:0; width:100%; height:100%; background:url(../../images/studio/fmadbg.jpg) center center no-repeat; text-align:center; z-index:100; border-radius:2px;}

@@ -29,10 +29,15 @@
        	<a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank"  onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'open_real_account', 'content_top',1,true]);"><i class="real"></i><span>开立真实账户</span></a>
         <a href="http://oa.24k.hk/zh/account_02.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'open_demo_account', 'content_top',1,true]);"><i class="mn"></i><span>开立模拟账户</span></a>
         <a onclick="openLive800Chat();_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_live800', 'content_top',1,true]);" href="javascript:void(0);"><i class="kf"></i><span>在线客服</span></a>
-        <a href="javascript:void(0);" class="fm_btn"><i class="fm"></i><span>手机解盘</span><div class="fm_qrdiv"><img src="/images/studio/firmlive_qr.jpg"><p>微信实盘直播  先机随身而行<br>专家边解盘  边派送美金红包</p></div><b></b></a>
+        <a href="javascript:void(0);" class="fm_btn"><i class="fm"></i><span>手机直播</span>
+          <div class="fm_qrdiv">
+              <div class="qrbox"><img src="/images/studio/firmlive_qr2.png"><p>快来扫<br>手机看直播</p></div>
+              <div class="qrbox"><img src="/images/studio/firmlive_qr.png"><p>扫一扫<br>微信解盘</p></div>
+          </div><b class="sp"></b><b class="new"></b>
+        </a>
         <%if(userSession.isLogin){%>
-          <a href="javascript:" class="username"><%= userSession.nickname %></a>
-          <a href="/studio/logout" class="logout">注销</a>
+        <a href="javascript:" class="username"><%= userSession.nickname %></a>
+        <a href="/studio/logout" class="logout">注销</a>
         <%} else {%>
           <a href="javascript:" class="login" id="login_a" tp="content_top">登录</a>
           <a href="javascript:" class="register" id="register_a" tp="content_top">注册</a>
