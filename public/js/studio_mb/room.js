@@ -453,6 +453,9 @@ var studioChatMb={
                 }else {
                     var bf=$("body").attr("fp"), isOnlyMb=('webui'!=bf && 'app'!=bf);
                     this.$panel.append('<video src="' + url + '" controls="true" autoplay="'+isOnlyMb+'" style="width: 100%; height: 100%; background-color: rgb(0, 0, 0);"></video>')
+                    if(!isOnlyMb){
+                        this.$panel.find("video")[0].pause();
+                    }
                     this.initPlayer = true;
                     this.setEventAd();
                 }
