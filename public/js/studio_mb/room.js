@@ -451,7 +451,8 @@ var studioChatMb={
                     loc_item.attr("src", url);
                     loc_item[0].play();
                 }else {
-                    this.$panel.append('<video src="' + url + '" controls="true" autoplay="true" style="width: 100%; height: 100%; background-color: rgb(0, 0, 0);"></video>')
+                    var bf=$("body").attr("fp"), isOnlyMb=('webui'!=bf && 'app'!=bf);
+                    this.$panel.append('<video src="' + url + '" controls="true" autoplay="'+isOnlyMb+'" style="width: 100%; height: 100%; background-color: rgb(0, 0, 0);"></video>')
                     this.initPlayer = true;
                     this.setEventAd();
                 }
