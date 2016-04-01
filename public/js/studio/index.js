@@ -647,7 +647,7 @@ var studioChat={
             });
         }else{
             $(".blackbg").show();
-            $("#act_ad_box").css({background:"url(/images/studio/ban_act.jpg) 0 0 no-repeat"}).show();
+            $("#act_ad_box").css({background:"url(/images/studio/ban_act.png) 0 0 no-repeat"}).show();
             $("#act_ad_box .pop_close").click(function(){
                 $("#act_ad_box").hide();
                 $(".blackbg").hide();
