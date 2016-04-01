@@ -596,6 +596,18 @@ var common = {
      */
     isRightName:function(name){
         return !(/^([0-9]{2,20})$/g.test(name)) && /^([\w\u4e00-\u9fa5]{2,20})$/g.test(name);
+    },
+    /**
+     * 返回随机索引数
+     * @param length
+     * @returns {Number} 0至length-1
+     */
+    randomIndex:function(length){
+        var lh=parseInt(Math.round(Math.random()*length));
+        if(lh==length){
+            lh=length-1;
+        }
+        return lh;
     }
 };
 /**

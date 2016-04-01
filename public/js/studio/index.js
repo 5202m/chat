@@ -330,7 +330,9 @@ var studioChat={
                       if(mpDom.length<=0){
                           $("#studioTeachId li:first a").click();
                       }else{
-                          $(mpDom.get(parseInt(Math.round(Math.random()*mpDom.length)))).click();
+                          var vdom=$(mpDom.get(common.randomIndex(mpDom.length)));
+                          vdom.click();
+                          $(".videolist_box").mCustomScrollbar("scrollTo", "#"+vdom.attr("id"));
                       }
                   }
               }else{
@@ -619,19 +621,6 @@ var studioChat={
        });
     },
     /**
-     * 随机弹出私聊框
-     */
-    randCsOpen:function(){
-        return;
-        window.setTimeout(function(){//1秒钟后提示私聊
-            var aDom=$(".cm_wrap a");
-            $(aDom.get(parseInt(Math.round(Math.random()*aDom.length)))).click();
-            var aOn=$(".mult_dialog a[class=on]"),uid=aOn.attr("uid"),ank=aOn.find("label").text();
-            var sendObj={uiId:studioChat.getUiId(),fromUser:{userId:uid,nickname:ank,userType:3},content:{msgType:studioChat.msgType.text,value:""}};
-            studioChat.setWhContent(sendObj,false,false);//直接把数据填入内容栏
-        },1000);
-    },
-    /**
      * 设置广告
      */
     setAdvertisement:function(){
@@ -643,7 +632,6 @@ var studioChat={
             $("#main_ad_box .pop_close").click(function(){
                 $("#main_ad_box").hide();
                 $(".blackbg").hide();
-                studioChat.randCsOpen();
             });
         }else{
             $(".blackbg").show();
@@ -651,7 +639,6 @@ var studioChat={
             $("#act_ad_box .pop_close").click(function(){
                 $("#act_ad_box").hide();
                 $(".blackbg").hide();
-                studioChat.randCsOpen();
             });
         }
         //设置视频广告
