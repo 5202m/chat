@@ -2,7 +2,6 @@
  * 路由入口
  * @type {exports}
  */
-var baseRoutes = require('./web/base');//配置同源页面路由
 var wechatRoutes = require('./web/wechat');//配置同源页面路由
 var studioRoutes = require('./web/studio');//配置同源页面路由
 var apiChatRoutes = require('./api/chatAPI');//配置聊天室api路由
@@ -11,7 +10,6 @@ var apiChatRoutes = require('./api/chatAPI');//配置聊天室api路由
  * @param app
  */
 exports.init = function(app){
-    app.use(['/base','/base'], baseRoutes);
     app.use(['/wechat','/fxchat'], wechatRoutes);//贵金属、外汇微解盘共享路由代码
     app.use('/api', apiChatRoutes);
     app.all('/studio/*', function(req, res, next) {//拦截非登录用户使用登录操作

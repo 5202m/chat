@@ -688,10 +688,4 @@ router.post('/uploadData', function(req, res) {
         res.json({success:false});
     }
 });
-/**
- * 直播测试
- */
-router.get('/test', function(req, res) {
-    res.render("test/index");
-});
 module.exports = router;
