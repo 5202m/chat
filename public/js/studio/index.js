@@ -133,17 +133,20 @@ var studioChat={
         }else{
             var isStudioTime=common.dateTimeWeekCheck(studioChat.studioDate, true,studioChat.serverTime);//直播时段
             var hms=common.getHHMMSS(studioChat.serverTime),bm=$(".redbag_box .redbag_cont b"),hd=$(".redbag_box .redbag_cont h4");
-            var difLen= 0,fiften=(hms>='14:45:00' && hms<'15:15:00');
-            if(isStudioTime && ((hms>='09:30:00'&& hms<'10:00:00')||fiften||(hms>='20:30:00' && hms<'21:00:00')||(hms>='21:30:00' && hms<'22:00:00'))){
+            var difLen= 0,fiften=(hms>='14:45:00' && hms<'15:15:00'),threeTen=(hms>='20:00:00' && hms<'20:30:00')||(hms>='21:00:00' && hms<'21:30:00');
+            if(isStudioTime && ((hms>='09:30:00'&& hms<'10:00:00')||fiften||threeTen)){
                 hd.text("红包");
                 var sd=new Date(studioChat.serverTime);
                 if(fiften){
                     difLen=15;
                 }
+                if(threeTen){
+                    difLen=30;
+                }
                 var ts = new Date(sd.getFullYear(), sd.getMonth(),sd.getDate(), (sd.getHours()+1),difLen, 0).getTime() - studioChat.serverTime;//计算剩余毫秒数
                 var mm = this.getTimeCal(parseInt(ts / 1000 / 60 % 60, 10)),ss = this.getTimeCal(parseInt(ts / 1000 % 60, 10));//计算剩余秒数
                 bm.addClass("time").text(mm+":"+ss);
-            }else if(isStudioTime && ((hms>='10:00:00' && hms<'10:01:00')||(hms>='15:15:00'&& hms<'15:16:00')||(hms>='21:00:00' && hms<'21:01:00')||(hms>='22:00:00' && hms<'22:01:00'))){
+            }else if(isStudioTime && ((hms>='10:00:00' && hms<'10:01:00')||(hms>='15:15:00'&& hms<'15:16:00')||(hms>='20:30:00' && hms<'20:31:00')||(hms>='21:30:00' && hms<'21:31:00'))){
                 var acLink= $("body").data("acLink");
                 if(!acLink ||common.isBlank(acLink.url)||(common.isValid(acLink.endTime) && Number(acLink.endTime)<=studioChat.serverTime)){
                     if(!studioChat.hasAcLink){//不存在新的红包连接，重新提取
@@ -163,12 +166,12 @@ var studioChat={
                 $('.redbag').removeClass('on');
                 bm.removeClass("time");
                 hd.text("下一轮");
-                if(hms>='22:01:00'){
+                if(hms>='21:31:00'){
                     bm.text("10:00");
-                }else if(hms>='21:01:00'){
-                    bm.text("22:00");
+                }else if(hms>='20:31:00'){
+                    bm.text("21:30");
                 }else if(hms>='15:16:00'){
-                    bm.text("21:00");
+                    bm.text("20:30");
                 }else if(hms>='10:01:00'){
                     bm.text("15:15");
                 }else{

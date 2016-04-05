@@ -607,7 +607,7 @@ var common = {
         if(lh==length){
             lh=length-1;
         }
-        return lh;
+        return lh<0?0:lh;
     }
 };
 /**
