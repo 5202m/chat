@@ -3,19 +3,12 @@
  * @type {{init: Function, setKindEdit: Function, setSocket: Function}}
  * author Alan.wu
  */
-var studioChat = {
+var StudioChatMini = {
+    apiUrl:'',
     blwsPlayer: null,//保利威视
-    web24kPath: '',
-    filePath: '',
-    apiUrl: '',
     studioInfo: null,
-    exStudioStr: '',//外接直播JSON字符串
     studioDate: '',//直播时间点
     serverTime: 0,//服务器时间
-    hasAcLink: false,//是否存在最新的红包连接
-    towMinTime: 0,//2分钟间隔时间
-    verifyCodeIntervalId: null,
-    teachIndex: 0,
     //信息类型
     msgType: {
         text: 'text',
@@ -27,9 +20,12 @@ var studioChat = {
     userInfo: null,
     initStudio: false,
     video: {
+        type: "mp4",
         list: [],
+        listMp4: [],
         index: -1
     },
+    courses : null, //课程安排
     init: function () {
         this.serverTimeUp();
         this.setVisitStore();//设置访客存储
@@ -41,14 +37,10 @@ var studioChat = {
      * 服务器时间更新
      */
     serverTimeUp: function () {
-        studioChat.clientVideoTask();
-        studioChat.towMinTime = studioChat.serverTime;
+        StudioChatMini.clientVideoTask();
         setInterval(function () {
-            studioChat.serverTime += 1000;
-            if (studioChat.serverTime - studioChat.towMinTime >= 2 * 60 * 1000) {
-                studioChat.towMinTime = studioChat.serverTime;
-                studioChat.clientVideoTask();
-            }
+            StudioChatMini.serverTime += 10000;
+            StudioChatMini.clientVideoTask();
         }, 1000);//每秒一次
     },
     /**
@@ -87,42 +79,30 @@ var studioChat = {
      * 客户端视频任务
      */
     clientVideoTask: function () {
-        var exSrc = $("#studioVideoDiv embed").attr("src");
-        if (exSrc && exSrc.indexOf("yy.com") == -1) {//如果非yy直播的其他直播
-            studioChat.playVideoByDate(false);
+        if($("#studioVideoDiv embed").size() < 1 && common.dateTimeWeekCheck(this.studioDate, true, StudioChatMini.serverTime)){
+            $("#vbackbtn_live").show();
         }
     },
     /**按直播时间播放
-     * @param isBackStudio 返回直播
-     * 备注：按时间点播放yy视频,不符合时间点直接播放视频
+     * @param type 视频类型
+     * 'mp4'-随机播放MP4教学视频
+     * 'video'-随机播放所有教学视频
+     * 'live'-yy直播时间，播放yy视频，否则播放MP4教学视频
      */
-    playVideoByDate: function (isBackStudio) {
+    playVideo: function (type) {
         //如果是在看教学视频则直接返回
-        if (studioChat.video.index > 0) {
-            return;
-        }
-        if (common.dateTimeWeekCheck(this.studioDate, true, studioChat.serverTime)) {//直播时间段，则播放直播
-            this.setVideo(true);
-        } else {//非直播时段，检查是否有其他直播，有则播放其他直播，没有则播放教学视频
-            var hasExStudio = false;
-            if (common.isValid(this.exStudioStr)) {
-                var exObj = JSON.parse(this.exStudioStr), row = null;
-                for (var index in exObj) {
-                    row = exObj[index];
-                    if (common.dateTimeWeekCheck(row.studioDate, true, studioChat.serverTime) && common.isValid(row.srcUrl)) {
-                        studioChat.setStudioVideoDiv(row.srcUrl);
-                        hasExStudio = true;
-                        break;
-                    }
-                }
-            }
-            if (!hasExStudio) {//非返回直播以及不存在外接直播则播放教学视频
-                if (!isBackStudio) {
-                    studioChat.video.index = common.randomIndex(studioChat.video.list.length);
-                    studioChat.setVideo(false,studioChat.video.list[studioChat.video.index]);
-                } else {
-                    this.setVideo(true);
-                }
+        StudioChatMini.video.type = type;
+        if(type == "mp4"){
+            StudioChatMini.video.index = common.randomIndex(StudioChatMini.video.listMp4.length);
+            StudioChatMini.setVideo(false, StudioChatMini.video.listMp4[StudioChatMini.video.index]);
+        }else if(type == "video"){
+            StudioChatMini.video.index = common.randomIndex(StudioChatMini.video.list.length);
+            StudioChatMini.setVideo(false, StudioChatMini.video.list[StudioChatMini.video.index]);
+        }else{
+            if (common.dateTimeWeekCheck(this.studioDate, true, StudioChatMini.serverTime)) {//直播时间段，则播放直播
+                this.setVideo(true);
+            } else {//非直播时段，检查是否有其他直播，有则播放其他直播，没有则播放教学视频
+                StudioChatMini.playVideo('mp4');
             }
         }
     },
@@ -136,22 +116,26 @@ var studioChat = {
     /**
      * 设置直播视频
      * @param url
+     * @param title
      */
-    setStudioVideoDiv: function (url) {
+    setStudioVideoDiv: function (url, title) {
         if (window.SewisePlayer) {//停播放教学视频
             SewisePlayer.doStop();
             $("#tvDivId").hide();
             $("#studioTeachId a").removeClass("on");
         }
+        $("#tVideoDiv iframe").remove();
+
         //已经是直播相同内容无需切换
         if ($("#stVideoDiv:visible").length > 0 && $("#studioVideoDiv embed").attr("src") == url) {
             return;
         }
         $("#stVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
         $("#studioVideoDiv embed").remove();
-        $(studioChat.getEmbedDom(url)).appendTo('#studioVideoDiv');
+        $(StudioChatMini.getEmbedDom(url)).appendTo('#studioVideoDiv');
         $("#stVideoDiv").show();
-        studioChat.initStudio = true;
+        $("#stVideoDiv .vtitle span").text(title);
+        StudioChatMini.initStudio = true;
     },
     /**
      * 设置视频
@@ -161,40 +145,58 @@ var studioChat = {
     setVideo: function (isYy, video) {
         try {
             if (isYy) {
+                //隐藏观看直播
+                $("#vbackbtn_live").hide();
+
                 if(!this.studioInfo.url){
                     var yc = this.studioInfo.yyChannel, mc = this.studioInfo.minChannel;
                     this.studioInfo.url = 'http://yy.com/s' + (common.isValid(yc) ? '/' + yc : '') + (common.isValid(mc) ? '/' + mc : '') + '/yyscene.swf';
                 }
-                studioChat.setStudioVideoDiv(this.studioInfo.url);
+                StudioChatMini.getLiveTitle(function(title){
+                    StudioChatMini.setStudioVideoDiv(StudioChatMini.studioInfo.url, title);
+                });
             } else {
                 $("#tvDivId").show();
                 $("#stVideoDiv").hide();
+
                 $("#studioVideoDiv embed").remove();
                 $("#tVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
                 var vUrl = video.url, title = video.title;
+                $("#tvDivId .vtitle span").text(title);
                 if (vUrl.indexOf(".html") != -1) {
-                    $("#tVideoDiv").append('<iframe frameborder=0 width="100%" src="' + vUrl + '" allowfullscreen></iframe>');
+                    if(window.SewisePlayer){//停播放教学视频
+                        SewisePlayer.doStop();
+                        $("#tVideoDiv div").hide();
+                    }
+                    var iframeDom = $("#tVideoDiv iframe");
+                    var isAppend = true;
+                    if(iframeDom.size() > 0){
+                        if(iframeDom.attr("src") == vUrl){
+                            isAppend = false;
+                        }else{
+                            iframeDom.remove();
+                        }
+                    }
+                    if(isAppend){
+                        $("#tVideoDiv").append('<iframe frameborder=0 width="100%" height="100%" src="'+vUrl+'" allowfullscreen></iframe>');
+                    }
                 } else {
+                    $("#tVideoDiv iframe").remove();
+                    $("#tVideoDiv div").show();
                     if (vUrl.indexOf("type=blws") != -1) {
                         var vidParams = vUrl.split("&");
                         if (vidParams.length > 1) {
                             var vid = vidParams[1].replace(/^vid=/g, '');
-                            if (studioChat.blwsPlayer) {
-                                studioChat.blwsPlayer.changeVid(vid);
+                            if (StudioChatMini.blwsPlayer) {
+                                StudioChatMini.blwsPlayer.changeVid(vid);
                             } else {
-                                studioChat.blwsPlayer = polyvObject('#tVideoDiv').videoPlayer({
+                                StudioChatMini.blwsPlayer = polyvObject('#tVideoDiv').videoPlayer({
                                     width: '100%',
                                     height: '100%',
                                     'vid': vid,
                                     'flashvars': {"autoplay": "0", "setScreen": "fill"},
-                                    onPlayOver: function (id) {
-                                        $("#tVideoCtrl").show();
-                                        $("#tVideoCtrl div.video_ad").show();
-                                        var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
-                                        $("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
-                                    },
-                                    onPlayStart: function () {
-                                        $("#tVideoCtrl").hide();
+                                    onPlayOver:function(id){
+                                        StudioChatMini.playVideo(StudioChatMini.video.type);
                                     }
                                 });
                             }
@@ -218,28 +220,22 @@ var studioChat = {
                             script.src = srcPath;
                             $("#tVideoDiv").get(0).appendChild(script);
                             //轮播控制
-                            var checkOverFunc = function () {
-                                if (!window.SewisePlayer) {
+                            var checkOverFunc = function(){
+                                if(!window.SewisePlayer){
                                     window.setTimeout(checkOverFunc, 500);
                                     return;
                                 }
-                                SewisePlayer.onPause(function (id) {
-                                    window.setTimeout(function () {
-                                        if (SewisePlayer.duration() <= SewisePlayer.playTime()) {
-                                            $("#tVideoCtrl").show();
+                                SewisePlayer.onPause(function(id){
+                                    window.setTimeout(function(){
+                                        if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
+                                            StudioChatMini.playVideo(StudioChatMini.video.type);
                                         }
                                     }, 1000);
-                                });
-                                SewisePlayer.onStart(function () {
-                                    $("#tVideoCtrl").hide();
                                 });
                             };
                             checkOverFunc();
                         }
                     }
-                }
-                if ($(".window-container #studioVideoDiv").length > 0) {
-                    $(".vopenbtn[t=v]").click();
                 }
             }
         } catch (e) {
@@ -284,20 +280,59 @@ var studioChat = {
             if (dataList && dataList.result == 0) {
                 var data = dataList.data;
                 var row = null;
+                var video = null;
                 for (var i in data) {
                     row = data[i];
                     if(row.mediaUrl){
-                        studioChat.video.list.push({
+                        video = {
                             title : row.detailList[0].title,
                             id : row._id,
                             type : ((common.isValid(row.mediaUrl) && row.mediaUrl.indexOf('.mp4') != -1) ? 'mp4' : ''),
                             url : row.mediaUrl
-                        });
+                        };
+                        StudioChatMini.video.list.push(video);
+                        if(video.type === "mp4"){
+                            StudioChatMini.video.listMp4.push(video);
+                        }
                     }
                 }
             }
-            studioChat.playVideoByDate(false);
+            StudioChatMini.playVideo("live");
         });
+    },
+    /**
+     * 获取直播主题
+     */
+    getLiveTitle : function(callback){
+        if(!StudioChatMini.courses){
+            try{
+                $.getJSON(this.apiUrl+'/getCourse',{platform:'pc'},function(data){
+                    if(data && data.result == 0 && data.data){
+                        StudioChatMini.courses = data.data;
+                        StudioChatMini.getLiveTitle(callback);
+                    }else{
+                        callback("YY直播");
+                    }
+                });
+            }catch (e){
+                callback("YY直播");
+                console.error("getCourse->"+e);
+            }
+        }else{
+            var loc_now = new Date();
+            var loc_time = (loc_now.getHours() < 10 ? "0" : "") + loc_now.getHours();
+            loc_time += ":";
+            loc_time += (loc_now.getMinutes() < 10 ? "0" : "") + loc_now.getMinutes();
+            var loc_course = null;
+            for(var i = 0, lenI = StudioChatMini.courses.length; i < lenI; i++){
+                loc_course = StudioChatMini.courses[i];
+                if(loc_course.startTime <= loc_time && loc_course.endTime > loc_time){
+                    callback(loc_course.title);
+                    return;
+                }
+            }
+            callback("YY直播");
+        }
     },
     /**
      * 事件设置
@@ -306,22 +341,21 @@ var studioChat = {
         /**
          * 返回直播
          */
-        $(".vbackbtn").click(function () {
-            studioChat.playVideoByDate(true);
-            if ($(".window-container #tVideoDiv").length > 0) {//如果教学视频打开弹框切直播
-                $(".vopenbtn[t=s]").click();
-            }
+        $("#vbackbtn_live").click(function () {
+            StudioChatMini.playVideo("live");
         });
-    },
-    /**
-     * 设置列表滚动条
-     */
-    setListScroll: function (domClass) {
-        if ($(domClass).hasClass("mCustomScrollbar")) {
-            $(domClass).mCustomScrollbar("update");
-        } else {
-            $(domClass).mCustomScrollbar({theme: "minimal-dark"});
-        }
+        /**
+         * 换一换
+         */
+        $("#vbackbtn_chg").click(function () {
+            StudioChatMini.playVideo("video");
+        });
+        /**
+         * 观看教学视频
+         */
+        $("#vbackbtn_video").click(function () {
+            StudioChatMini.playVideo("mp4");
+        });
     },
     /**
      * 设置聊天列表滚动条
@@ -356,8 +390,6 @@ var studioChat = {
             fromUser.publishTime = data.uiId;
         }
         if (data.isVisitor) {
-            $("#" + data.uiId).remove();
-            studioChat.openLoginBox();
             return;
         }
         if (isLoadData && $("#" + fromUser.publishTime).length > 0) {
@@ -373,17 +405,17 @@ var studioChat = {
             }
             return;
         }
-        if (!isMeSend && studioChat.userInfo.userId == fromUser.userId && data.serverSuccess) {//发送成功，则去掉加载框，清除原始数据。
-            $('#' + data.uiId + ' .dtime').html(studioChat.formatPublishTime(fromUser.publishTime));
+        if (!isMeSend && StudioChatMini.userInfo.userId == fromUser.userId && data.serverSuccess) {//发送成功，则去掉加载框，清除原始数据。
+            $('#' + data.uiId + ' .dtime').html(StudioChatMini.formatPublishTime(fromUser.publishTime));
             $('#' + data.uiId).attr("id", fromUser.publishTime);//发布成功id同步成服务器发布日期
             return;
         }
-        var dialog = studioChat.formatContentHtml(data, isMeSend, isLoadData);
+        var dialog = StudioChatMini.formatContentHtml(data, isMeSend, isLoadData);
         var list = $("#dialog_list");
         list.append(dialog);
         this.formatMsgToLink(fromUser.publishTime);//格式链接
         if (!isLoadData) {
-            studioChat.setTalkListScroll(true);
+            StudioChatMini.setTalkListScroll(true);
         }
     },
     /**
@@ -397,12 +429,12 @@ var studioChat = {
         var toUser = fromUser.toUser, toUserHtml = '';
         if (toUser && common.isValid(toUser.userId)) {
             toUserHtml = '<span class="txt_dia" uid="' + toUser.userId + '" utype="' + toUser.userType + '">@<label>' + toUser.nickname + '</label></span>';
-            if (studioChat.userInfo.userId == toUser.userId) {
+            if (StudioChatMini.userInfo.userId == toUser.userId) {
                 isMe = 'true';
             }
         }
         pHtml = content.value;
-        if (studioChat.userInfo.userId == fromUser.userId) {
+        if (StudioChatMini.userInfo.userId == fromUser.userId) {
             cls += 'mine';
             nickname = '我';
             isMe = 'true';
@@ -413,9 +445,8 @@ var studioChat = {
             if (fromUser.userType == 1) {
                 cls += 'admin';
             }
-            dialog = studioChat.getDialogHtml(fromUser.userId, nickname, fromUser.userType);
             if (!isLoadData && toUser) {
-                if (studioChat.userInfo.userId == toUser.userId) {
+                if (StudioChatMini.userInfo.userId == toUser.userId) {
                     $(".mymsg").show();
                     $(".mymsg em").hide();
                     $(".replybtn").attr("uid", fromUser.userId);
@@ -426,8 +457,8 @@ var studioChat = {
                 }
             }
         }
-        var html = '<div class="' + cls + '" id="' + fromUser.publishTime + '" isMe="' + isMe + '" utype="' + fromUser.userType + '" mType="' + content.msgType + '" t="header"><a href="javascript:" class="headimg" uid="' + fromUser.userId + '">' + studioChat.getUserAImgCls(fromUser.clientGroup, fromUser.userType, fromUser.avatar) + '</a><i></i>' +
-            '<p><a href="javascript:"  class="' + uName + '">' + nickname + '</a><span class="dtime">' + studioChat.formatPublishTime(fromUser.publishTime) + '</span><span class="dcont">' + toUserHtml + pHtml + '</span></p>' + dialog + '</div>';
+        var html = '<div class="' + cls + '" id="' + fromUser.publishTime + '" isMe="' + isMe + '" utype="' + fromUser.userType + '" mType="' + content.msgType + '" t="header"><a href="javascript:" class="headimg" uid="' + fromUser.userId + '">' + StudioChatMini.getUserAImgCls(fromUser.clientGroup, fromUser.userType, fromUser.avatar) + '</a><i></i>' +
+            '<p><a href="javascript:"  class="' + uName + '">' + nickname + '</a><span class="dtime">' + StudioChatMini.formatPublishTime(fromUser.publishTime) + '</span><span class="dcont">' + toUserHtml + pHtml + '</span></p>' + dialog + '</div>';
         return html;
     },
     /**
@@ -479,29 +510,6 @@ var studioChat = {
         return '<img src="images/studio/' + aImgCls + '.png">';
     },
     /**
-     * 提取对话html
-     * @param userId
-     * @param nickname
-     * @param userType
-     * @returns {string}
-     */
-    getDialogHtml: function (userId, nickname, userType) {
-        if (userId && studioChat.userInfo.userId != userId) {
-            var hasMainDiv = false, gIdDom = $("#studioListId a[class~=ing]"), mainDiv = '<div class="dialogbtn" style="display:none;" nk="' + nickname + '" uid="' + userId + '" utype="' + userType + '">';
-            if (studioChat.userInfo.userId.indexOf('visitor_') == -1 && userId.indexOf('visitor_') == -1) {
-                mainDiv += '<a href="javascript:" class="d1" t="0"><span>@TA</span></a>';
-                hasMainDiv = true;
-            }
-            if (gIdDom.attr("aw") == "true" && common.containSplitStr(gIdDom.attr("awr"), userType)) {
-                mainDiv += '<a href="javascript:" class="d2" t="1"><span>私聊</span></a>';
-                hasMainDiv = true;
-            }
-            return hasMainDiv ? mainDiv + "</div>" : '';
-        } else {
-            return '';
-        }
-    },
-    /**
      * 设置socket
      */
     setSocket: function () {
@@ -509,10 +517,10 @@ var studioChat = {
         //建立连接
         this.socket.on('connect', function () {
             console.log('connected to server!');
-            studioChat.userInfo.socketId = studioChat.socket.id;
+            StudioChatMini.userInfo.socketId = StudioChatMini.socket.id;
             var currTab = $("#studioListId a[class~=ing]");
-            studioChat.socket.emit('login', {
-                userInfo: studioChat.userInfo,
+            StudioChatMini.socket.emit('login', {
+                userInfo: StudioChatMini.userInfo,
                 lastPublishTime: $("#dialog_list>div:last").attr("id"),
                 fUserTypeStr: currTab.attr("awr"),
                 allowWhisper: currTab.attr("aw")
@@ -522,7 +530,7 @@ var studioChat = {
         //断开连接
         this.socket.on('disconnect', function (e) {
             console.log('disconnect');
-            //studioChat.socket.emit('login',studioChat.userInfo);//重新链接
+            //StudioChatMini.socket.emit('login',StudioChatMini.userInfo);//重新链接
         });
         //出现异常
         this.socket.on("error", function (e) {
@@ -531,7 +539,7 @@ var studioChat = {
         //信息传输
         this.socket.on('sendMsg', function (data) {
             if (!data.fromUser.toUser || data.fromUser.toUser.talkStyle != 1) {
-                studioChat.setContent(data, false, false);
+                StudioChatMini.setContent(data, false, false);
             }
         });
         //通知信息
@@ -539,7 +547,7 @@ var studioChat = {
             switch (result.type) {
                 case 'removeMsg':
                     $("#" + result.data.replace(/,/g, ",#")).remove();
-                    studioChat.setTalkListScroll(false);
+                    StudioChatMini.setTalkListScroll(false);
                     break;
             }
         });
@@ -553,10 +561,10 @@ var studioChat = {
             if (msgData && $.isArray(msgData)) {
                 msgData.reverse();
                 for (var i in msgData) {
-                    studioChat.formatUserToContent(msgData[i]);
+                    StudioChatMini.formatUserToContent(msgData[i]);
                 }
             }
-            studioChat.setTalkListScroll(true);
+            StudioChatMini.setTalkListScroll(true);
         });
     },
     /**
@@ -576,10 +584,10 @@ var studioChat = {
             avatar: row.avatar,
             position: row.position
         };
-        studioChat.setContent({fromUser: fromUser, content: row.content}, false, true);
+        StudioChatMini.setContent({fromUser: fromUser, content: row.content}, false, true);
     }
 };
 // 初始化
 $(function () {
-    studioChat.init();
+    StudioChatMini.init();
 });

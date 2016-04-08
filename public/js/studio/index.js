@@ -362,6 +362,8 @@ var studioChat={
             $("#tvDivId").hide();
             $("#studioTeachId a").removeClass("on");
         }
+        $("#tVideoDiv iframe").remove();
+
         //已经是直播相同内容无需切换
         if($("#stVideoDiv:visible").length>0 &&  $("#studioVideoDiv embed").attr("src")==url){
              return;
@@ -394,8 +396,26 @@ var studioChat={
                     $("#tVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
                     var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
                     if(vUrl.indexOf(".html")!=-1){
-                        $("#tVideoDiv").append('<iframe frameborder=0 width="100%" src="'+vUrl+'" allowfullscreen></iframe>');
+                        if(window.SewisePlayer){//停播放教学视频
+                            SewisePlayer.doStop();
+                            $("#tVideoDiv div").hide();
+                        }
+                        var iframeDom = $("#tVideoDiv iframe");
+                        var isAppend = true;
+                        if(iframeDom.size() > 0){
+                            if(iframeDom.attr("src") == vUrl){
+                                isAppend = false;
+                            }else{
+                                iframeDom.remove();
+                            }
+                        }
+                        if(isAppend){
+
+                            $("#tVideoDiv").append('<iframe frameborder=0 width="100%" height="100%" src="'+vUrl+'" allowfullscreen></iframe>');
+                        }
                     }else{
+                        $("#tVideoDiv iframe").remove();
+                        $("#tVideoDiv div").show();
                         if(vUrl.indexOf("type=blws")!=-1){
                             var vidParams=vUrl.split("&");
                             if(vidParams.length>1){
