@@ -80,10 +80,13 @@ StudioChatMini.serverTime=Number('<%= serverTime %>');
 StudioChatMini.socketUrl=JSON.parse('<%- socketUrl %>');
 StudioChatMini.studioInfo=JSON.parse('<%- studioInfo %>');
 $(function(){
-    var hh = $(window).height();
-    $('#chatMsgContentDiv').height(hh - 70);
-    $(".wrapper").height(hh);
-    $('.chat').height(hh);
+    $(window).resize(function(){
+        var hh = $(window).height();
+        $('#chatMsgContentDiv').height(hh - 70);
+        $(".wrapper").height(hh);
+        $('.chat').height(hh);
+    });
+    $(window).resize();
 });
 </script>
 </body>

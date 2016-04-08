@@ -137,15 +137,18 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .chat_content{}
 .chat_content .mCSB_inside>.mCSB_container{margin-right: 17px;}
 .chat_content .scrollbox2{ padding-right:10px;height:480px;}
-.dialog{ height:auto; position:relative; padding:0 10px 0 40px; margin-bottom:8px; /*float:left;*/ width:auto; clear:both;}
-.dialog.mine{float:right; padding: 0 40px 0 10px;}
+.dialog{ height:auto; position:relative; padding:31px 0 0 10px; margin-bottom:8px; /*float:left;*/ width:auto; clear:both;}
+.dialog.admin{padding:43px 0 0 10px;}
+.dialog.analyst{padding:43px 0 0 10px;}
+.dialog.mine{float:right; padding:31px 10px 0 0;}
 .dialog p { background:#fff; border-radius:2px; display:inline-block; *display:inline; *zoom:1;padding:5px 9px; color:#777; line-height:18pt; font-size:13px;}
 .dialog.analyst p{ background:#fff7e2;}
-.dialog.admin p{ background:#474b51;color:#d7d7d7}
+.dialog.admin p{ background:#474b51;color:#d7d7d7;}
 .dialog .dtime { color:#afafaf; padding-left:8px;}
-.dialog .uname { color:#3a3a3a;}
+.dialog.mine .dtime {padding-left:0; padding-right: 8px;}
+.dialog .uname { color:#D2DBE2;}
 .dialog.admin .uname { color:#edbb38}
-.dialog.analyst .uname { color:#3181c6}
+.dialog.analyst .uname { color:#77B9FF}
 .dialog .uname:hover{ text-decoration:none}
 .dialog .dcont{  white-space: normal;word-break: break-all; overflow:auto; display:block;}
 .dialog .dcont em.ruleTipStyle{color:#ff0000;font-size:12px;margin-left:5px;}
@@ -157,12 +160,10 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .dialog.analyst .headimg{ height:42px;}
 .dialog.analyst .headimg img{ border-bottom-left-radius:0; border-bottom-right-radius:0}
 .dialog.analyst .headimg b { background-position:-30px -250px; display:block; width:29px; height:13px;}
-.dialog i{ display:block;position:absolute; left:33px; top:12px; width:7px; height:9px; background-position:-30px -170px;}
-.dialog.mine i{ background-position:-40px -170px; left:auto; right:33px;}
-.dialog.analyst i{ background-position:-30px -180px;}
-.dialog.mine.analyst i{ background-position:-50px -150px;}
-.dialog.admin i{ background-position:-40px -180px;}
-.dialog.mine.admin i{ background-position:-60px -150px;}
+.dialog .duser{position: absolute; top:8px; left: 33px;}
+.dialog.admin .duser{top:21px;}
+.dialog.analyst .duser{top:21px;}
+.dialog.mine .duser{left:auto; right: 33px;}
 
 .chat_input{ width:100%; position:absolute; bottom:0; z-index:100001}
 .mymsg{ height:auto; position:relative; padding:5px 0; background:rgba(246,246,246,.5);  }

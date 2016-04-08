@@ -422,7 +422,7 @@ var StudioChatMini = {
      * 格式内容栏
      */
     formatContentHtml: function (data, isMeSend, isLoadData) {
-        var cls = 'dialog ', pHtml = '', dtHtml = '', loadHtml = '', dialog = '', uName = 'uname ', isMe = 'false',
+        var cls = 'dialog ', pHtml = '', dtHtml = '', loadHtml = '', uName = 'uname ', isMe = 'false',
             fromUser = data.fromUser,
             content = data.content,
             nickname = fromUser.nickname;
@@ -457,9 +457,21 @@ var StudioChatMini = {
                 }
             }
         }
-        var html = '<div class="' + cls + '" id="' + fromUser.publishTime + '" isMe="' + isMe + '" utype="' + fromUser.userType + '" mType="' + content.msgType + '" t="header"><a href="javascript:" class="headimg" uid="' + fromUser.userId + '">' + StudioChatMini.getUserAImgCls(fromUser.clientGroup, fromUser.userType, fromUser.avatar) + '</a><i></i>' +
-            '<p><a href="javascript:"  class="' + uName + '">' + nickname + '</a><span class="dtime">' + StudioChatMini.formatPublishTime(fromUser.publishTime) + '</span><span class="dcont">' + toUserHtml + pHtml + '</span></p>' + dialog + '</div>';
-        return html;
+        var html = [];
+        html.push('<div class="' + cls + '" id="' + fromUser.publishTime + '" isMe="' + isMe + '" utype="' + fromUser.userType + '" mType="' + content.msgType + '" t="header">');
+        html.push('<a href="javascript:" class="headimg" uid="' + fromUser.userId + '">' + StudioChatMini.getUserAImgCls(fromUser.clientGroup, fromUser.userType, fromUser.avatar) + '</a>');
+        html.push('<div class="duser">');
+        if(isMe == 'true'){
+            html.push('<span class="dtime">' + StudioChatMini.formatPublishTime(fromUser.publishTime) + '</span>');
+            html.push('<a href="javascript:"  class="' + uName + '">' + nickname + '</a>');
+        }else{
+            html.push('<a href="javascript:"  class="' + uName + '">' + nickname + '</a>');
+            html.push('<span class="dtime">' + StudioChatMini.formatPublishTime(fromUser.publishTime) + '</span>');
+        }
+        html.push('</div>');
+        html.push('<p><span class="dcont">' + toUserHtml + pHtml + '</span></p>');
+        html.push('</div>');
+        return html.join("");
     },
     /**
      * 格式链接
