@@ -600,9 +600,13 @@ router.get('/getVistiorByName', function(req, res) {
  */
 router.get('/getCS', function(req, res) {
     var groupId=req.query["groupId"];
-    userService.getRoomCsUserList(groupId,function(data){
-        res.json(data);
-    });
+    if(!req.session.studioUserInfo || common.isBlank(groupId)){
+        res.json(null);
+    }else{
+        userService.getRoomCsUserList(groupId,function(data){
+            res.json(data);
+        });
+    }
 });
 
 /**
@@ -611,20 +615,21 @@ router.get('/getCS', function(req, res) {
 router.post('/getAcLink',function(req, res){
     if(!req.session.studioUserInfo){
         res.end();
-    }
-    request(config.packetAcUrl,function(err, response, data){
-        if (!err && response.statusCode == 200) {
-            try{
-                res.json(JSON.parse(data));
-            }catch(e){
-                logger.error("getAcLink>>>error:"+e);
+    }else{
+        request(config.packetAcUrl,function(err, response, data){
+            if (!err && response.statusCode == 200) {
+                try{
+                    res.json(JSON.parse(data));
+                }catch(e){
+                    logger.error("getAcLink>>>error:"+e);
+                    res.json(null);
+                }
+            }else{
+                logger.error("getAcLink>>>error:"+err);
                 res.json(null);
             }
-        }else{
-            logger.error("getAcLink>>>error:"+err);
-            res.json(null);
-        }
-    });
+        });
+    }
 });
 
 /**
