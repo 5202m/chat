@@ -212,6 +212,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
             if(rowTmp.isCurr) {
                 viewDataObj.studioDate = common.trim(row.chatStudio.studioDate);
                 viewDataObj.exStudioStr= common.trim(row.chatStudio.externalStudio);
+                viewDataObj.studioInfo= JSON.stringify({yyChannel : row.chatStudio.yyChannel, minChannel : row.chatStudio.yyChannel});
                 viewDataObj.serverTime=new Date().getTime();
             }
             newStudioList.push(rowTmp);
@@ -224,16 +225,21 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
             var vrRow={userId:snUser.userId,userAgent:req.headers["user-agent"],groupType:constant.fromPlatform.studio,roomId:snUser.groupId,nickname:snUser.nickname,clientGroup:snUser.clientGroup,clientStoreId:snUser.clientStoreId,mobile:snUser.mobilePhone,ip:common.getClientIp(req)};
             visitorService.saveVisitorRecord("login",vrRow);
         }
+        var fromPlatform=req.query["platform"];
+        var isThirdUsed = fromPlatform && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform);
         if(isMobile){
-            var fromPlatform=req.query["platform"];
-            if(groupId || (fromPlatform && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform))){
+            if(groupId || isThirdUsed){
                 viewDataObj.fromPlatform=fromPlatform;
                 res.render("studio_mb/room",viewDataObj);
             }else{
                 res.render("studio_mb/index",viewDataObj);
             }
         }else{
-            res.render("studio/index",viewDataObj);
+            if(isThirdUsed){
+                res.render("studio/mini",viewDataObj);
+            }else{
+                res.render("studio/index",viewDataObj);
+            }
         }
     });
 }
