@@ -87,6 +87,15 @@ var messageService ={
         });
     },
     /**
+     * 是否存在符合条件的记录
+     * @param searchObj
+     */
+    existRecord:function(searchObj,callback){
+        chatMessage.db().find(searchObj).count(function (err,rows) {
+            callback(rows&&rows>0);
+        });
+    },
+    /**
      * 从数据库中加载已有的聊天记录
      * @param groupType
      * @param groupId

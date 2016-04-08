@@ -407,6 +407,9 @@ var studioChat={
             return;
         }
         var pHtml='';
+        var whContent=$('#wh_msg_'+fromUser.toWhUserId+' .wh-content');
+        var scrContent=whContent.find(".mCSB_container");//是否存在滚动
+        var html='';
         if(content.msgType==studioChat.msgType.img){
             if(content.needMax){
                 pHtml='<p><a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" class="swipebox" ><img src="'+content.value+'" alt="图片"/></a>'+loadImgHtml+'</p>';
@@ -415,11 +418,17 @@ var studioChat={
             }
             pHtml+=loadHtml;
         }else{
+            if(!isMeSend && common.isValid(fromUser.toUser.question)){
+                html='<div class="dialog mine"><div><span class="wh-dia-title"><label class="dtime">'+studioChat.formatPublishTime(fromUser.toUser.publishTime,isLoadData,'/')+'</label><label class="wh-nk">我</label></span></div><div class="whblt">'+fromUser.toUser.question+'</div></div>';
+                if(scrContent.length>0){
+                    scrContent.append(html);
+                }else{
+                    whContent.append(html);
+                }
+            }
             pHtml='<p><span class="dcont">'+content.value+'</span></p>';
         }
-        var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"><div>'+nkTitle+ '</div>'+pHtml+'</div>';
-        var whContent=$('#wh_msg_'+fromUser.toWhUserId+' .wh-content');
-        var scrContent=whContent.find(".mCSB_container");//是否存在滚动
+        html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"><div>'+nkTitle+ '</div>'+pHtml+'</div>';
         if(scrContent.length>0){
             scrContent.append(html);
         }else{

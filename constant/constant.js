@@ -15,6 +15,10 @@ var constant={
       register:'register',//注册用户
       visitor:'visitor'//游客
     },
+    pushInfoPosition:{//信息推送位置
+        taskbar:0,//任务栏
+        whBox:1//私聊框
+    },
     pwdKey:'pm_chat_pwd',//密码加密key
     systemUserPrefix:'sys_',//微信前台登录，系统用户默认前缀
     roleUserType:{ //角色与聊天室用户类别对应关系

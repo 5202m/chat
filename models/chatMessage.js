@@ -20,12 +20,14 @@ var mongoose = require('mongoose')
       approvalUserArr:[],//需要审核用户编号
       approvalUserNo:String,//审核人编号
       groupId:{type:String,index:true},//组别Id
-      toUser:{ //@用户
+      toUser:{ //@或私聊目标用户
           userType:{type:Number, default:0},//区分系统用户还是会员，0表示会员，1表示系统用户
           userId:String,
           nickname:String,
-          talkStyle:{type:Number, default:0}, //聊天方式
-          question:String
+          talkStyle:{type:Number, default:0}, //聊天方式，0公聊，1私聊
+          question:String,
+          publishTime:String,//发布日期
+          questionId:String//问题id
       },
       content:{//内容
           msgStatus:{type:Number, default:1},//信息状态，0 离线信息 1、在线信息，默认为在线信息

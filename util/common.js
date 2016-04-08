@@ -280,6 +280,18 @@ var common = {
             userAgent=userAgent.headers["user-agent"];
         }
         return /(iphone|ipod|ipad|android|mobile|playbook|bb10|meego)/.test(userAgent.toLowerCase());
+    },
+    /**
+     * 返回随机索引数
+     * @param length
+     * @returns {Number} 0至length-1
+     */
+    randomIndex:function(length){
+        var lh=parseInt(Math.round(Math.random()*length));
+        if(lh==length){
+            lh=length-1;
+        }
+        return lh<0?0:lh;
     }
 };
 //导出类

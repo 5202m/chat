@@ -571,6 +571,25 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .wh-right .mCS_no_scrollbar .mCSB_container{
     margin-right: 5px;
 }
+.whblt{
+    background: #fff;
+    color: #1D1C1C;
+    line-height: 15pt;
+    border-radius: 2px;
+    padding: 5px 9px;
+    font-size: 11pt;
+    display:inline-block;
+    margin-top: 2px;
+    max-width: 430px;
+}
+.whblt p{
+    padding:0px;
+    border:none;
+    display: block;
+    white-space: normal;
+    word-break: break-all;
+    overflow: auto;
+}
 #swipebox-overlay{z-index: 999999!important;}
 .mult_dialog a{border-radius: 3px;display:block; padding:0 10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;height:38px; line-height:38px; color:#fff; font-size:16px; text-align:center; border-radius:2px;margin-top:10px; position:relative;}
 .mult_dialog a.on,.mult_dialog a:hover { background:#69717e; background:rgba(230,230,230,.2); margin-top:10px; text-decoration:none}

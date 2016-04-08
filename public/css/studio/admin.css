@@ -344,6 +344,25 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
     margin-right: 5px;
 }
 
+.whblt{
+    color: #1D1C1C;
+    line-height: 15pt;
+    border-radius: 2px;
+    padding: 5px 9px;
+    font-size: 11pt;
+    display:inline-block;
+    margin-top: 2px;
+}
+
+.wh-right .dialog.mine .whblt p{
+    padding:0px;
+    border:none;
+    display: block;
+    text-align: left;
+    white-space: normal;
+    word-break: break-all;
+    overflow: auto;
+}
 .wh-content .shadow-box{position:absolute;left:2px;top:2px;width:100%;max-width:150px;background:#000;opacity:0.4;z-index:9}
 .wh-content .shadow-conut{position:absolute;left:2px;top:50%;margin-top:-12px;width:100%;max-width:150px;display:block;text-align:center;font:25px arial;color:#fff;text-shadow:0 2px 0 #000;z-index:10;text-decoration:none}
 .wh-content .dialog .img-loading {

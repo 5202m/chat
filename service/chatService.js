@@ -4,6 +4,7 @@ var userService = require('../service/userService');//引入userService服务类
 var messageService = require('../service/messageService');//引入messageService服务类
 var logger=require('../resources/logConf').getLogger('chatService');//引入log4js
 var visitorService=require('../service/visitorService');
+var pushInfoService=require('../service/pushInfoService');
 var config=require('../resources/config');//资源文件
 var async = require('async');//引入async
 /**
@@ -16,6 +17,7 @@ var chatService ={
     socketSpaceArr:["wechat","studio","fxchat"],//组空间,与房间大类groupType保持一致
     socket:null,//socket对象
     noticeType:{ //通知客户端类型
+        pushInfo:'pushInfo',//推送信息
         removeMsg:'removeMsg',//移除信息
         onlineNum:'onlineNum',//在线人数
         approvalResult:'approvalResult',//审核结果
@@ -348,6 +350,23 @@ var chatService ={
                                 if(whUserData && Object.getOwnPropertyNames(whUserData).length>0){
                                     socket.emit('loadWhMsg',{type:'offline',data:whUserData});
                                 }
+                            });
+                        }
+                        //允许私聊,推送私聊信息
+                        if(allowWhisper){
+                            pushInfoService.checkPushInfo(userInfo.groupType,userInfo.groupId,userInfo.clientGroup,constant.pushInfoPosition.whBox,function(pushInfo){
+                                 if(pushInfo){
+                                     var noticeInfo={type:chatService.noticeType.pushInfo,data:{publishTime:((new Date().getTime()+pushInfo.onlineMin*60*1000)+"_"+process.hrtime()[1]),contentId:pushInfo._id,position:pushInfo.position,timeOut:pushInfo.onlineMin,content:pushInfo.content}};
+                                     if(pushInfo.replyRepeat==0){
+                                         messageService.existRecord({"toUser.talkStyle": 1,"toUser.userType":3,"toUser.questionId":pushInfo._id},function(hasRecord){
+                                             if(!hasRecord){
+                                                 socket.emit('notice',noticeInfo);
+                                             }
+                                         });
+                                     }else{
+                                         socket.emit('notice',noticeInfo);
+                                     }
+                                 }
                             });
                         }
                     }else{
