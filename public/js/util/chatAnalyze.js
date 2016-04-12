@@ -79,7 +79,7 @@ var chatAnalyze = {
         //引入GA分析
         if(chatAnalyze.localHref.indexOf("pmchat.24k.hk")!=-1) {
             this.setGA();
-            this.setBaiDu();
+            this.setBaidu();
         }
         //引入utm分析
         //this.setUTM();
@@ -96,11 +96,15 @@ var chatAnalyze = {
             console.log("Set GA fail!"+e);
         }
     },
-    setBaiDu:function(){
-        var hm = document.createElement("script");
-        hm.src = "//hm.baidu.com/hm.js?52a2828b884f1a2ba8a3e25efe98eb65";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
+    setBaidu:function(){
+        try{
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?52a2828b884f1a2ba8a3e25efe98eb65";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        }catch(e){
+            console.log("Set GA fail!"+e);
+        }
     },
     /**
      * 设置utm系统所需行为
