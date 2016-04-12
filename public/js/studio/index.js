@@ -299,7 +299,7 @@ var studioChat={
      */
     clientVideoTask:function(){
         var exSrc=$("#studioVideoDiv embed").attr("src");
-        if(exSrc && exSrc.indexOf("yy.com")==-1){//如果非yy直播的其他直播
+        if((exSrc && exSrc.indexOf("yy.com")==-1)||($("#studioVideoDiv").find("object").length==0)){//如果非主直播的其他直播
             studioChat.playVideoByDate(false);
         }
     },
@@ -357,20 +357,31 @@ var studioChat={
      * @param url
      */
     setStudioVideoDiv:function(url){
+        $("#tvDivId").hide();
         if(window.SewisePlayer){//停播放教学视频
             SewisePlayer.doStop();
-            $("#tvDivId").hide();
             $("#studioTeachId a").removeClass("on");
         }
         $("#tVideoDiv iframe").remove();
-
-        //已经是直播相同内容无需切换
-        if($("#stVideoDiv:visible").length>0 &&  $("#studioVideoDiv embed").attr("src")==url){
-             return;
+        if(url.indexOf("rtmp")!=-1){
+            var sdHtml='<div style="position: relative; width: 100%; height: 100%; left: 0px; top: 0px;">'+
+                '<object type="application/x-shockwave-flash" id="sewise_player" name="sewise_player" data="/js/lib/flash/SewisePlayer.swf" width="100%" height="100%">'+
+                '<param name="allowfullscreen" value="true">'+
+                '<param name="wmode" value="transparent">'+
+                '<param name="allowscriptaccess" value="always">'+
+                '<param name="flashvars" value="autoStart=true&amp;programId=&amp;shiftTime=&amp;buffer=5&amp;lang=zh_CN&amp;type=rtmp&amp;serverApi=ServerApi.execute&amp;skin=/js/lib/flash/skins/liveOrange.swf&amp;title=&amp;draggable=true&amp;published=0&amp;streamUrl='+url+'&amp;duration=3600&amp;poster=&amp;flagDatas=&amp;videosJsonUrl=&amp;adsJsonData=&amp;statistics=&amp;customDatas=&amp;playerName=Sewise Player&amp;clarityButton=enable&amp;timeDisplay=disable&amp;controlBarDisplay=enable&amp;topBarDisplay=disable&amp;customStrings=&amp;volume=0.6&amp;key=&amp;trackCallback=">'+
+                '</object>'+
+                '</div>';
+            $("#studioVideoDiv").html(sdHtml);
+        }else{
+            //已经是直播相同内容无需切换
+            if($("#stVideoDiv:visible").length>0 &&  $("#studioVideoDiv embed").attr("src")==url){
+                return;
+            }
+            $("#stVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
+            $("#studioVideoDiv embed").remove();
+            $(studioChat.getEmbedDom(url)).appendTo('#studioVideoDiv');
         }
-        $("#stVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
-        $("#studioVideoDiv embed").remove();
-        $(studioChat.getEmbedDom(url)).appendTo('#studioVideoDiv');
         $("#stVideoDiv").show();
         if(!studioChat.initStudio && studioChat.isNeverLogin){
             $(".guide1").show().find(".gclose").click(function(){
@@ -388,11 +399,15 @@ var studioChat={
         try{
             if(isYy){
                 var aDom=$("#studioListId a[class~=ing]"),yc=aDom.attr("yc"),mc=aDom.attr("mc");
-                studioChat.setStudioVideoDiv('http://yy.com/s'+(common.isValid(yc)?'/'+yc:'')+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf');
+                if('live'==yc){
+                    studioChat.setStudioVideoDiv('rtmp://ct.phgsa.cn/live/'+common.trim(mc));
+                }else{
+                    studioChat.setStudioVideoDiv('http://yy.com/s'+(common.isValid(yc)?'/'+yc:'')+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf');
+                }
             }else{
                     $("#tvDivId").show();
                     $("#stVideoDiv").hide();
-                    $("#studioVideoDiv embed").remove();
+                    $("#studioVideoDiv").html("");
                     $("#tVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
                     var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
                     if(vUrl.indexOf(".html")!=-1){
@@ -410,7 +425,6 @@ var studioChat={
                             }
                         }
                         if(isAppend){
-
                             $("#tVideoDiv").append('<iframe frameborder=0 width="100%" height="100%" src="'+vUrl+'" allowfullscreen></iframe>');
                         }
                     }else{
@@ -449,10 +463,9 @@ var studioChat={
                                 srcPathAr.push("type="+(vUrl.indexOf(".flv")!=-1?'flv':'mp4'));
                                 srcPathAr.push("videourl="+vUrl);
                                 srcPathAr.push("autostart=true");
-                                srcPathAr.push("logo=");
-                                srcPathAr.push("title=VodVideo");
+                                srcPathAr.push("title="+title);
                                 srcPathAr.push("buffer=5");
-                                //srcPathAr.push("skin=vodWhite");
+                                /*srcPathAr.push("skin=vodWhite");*/
                                 var srcPath =srcPathAr.join("&") ;
                                 var script = document.createElement('script');
                                 script.type = "text/javascript";
@@ -1038,6 +1051,11 @@ var studioChat={
      * 事件设置
      */
     setEvent:function(){
+        $(".mod_video").hover(function() {
+            $(".vopenbtn").show();
+        },function(){
+            $(".vopenbtn").hide();
+        });
         //老师列表滚动
         this.teachSlide();
         /*#################私聊事件#################begin*/
