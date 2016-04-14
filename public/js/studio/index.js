@@ -299,7 +299,7 @@ var studioChat={
      */
     clientVideoTask:function(){
         var exSrc=$("#studioVideoDiv embed").attr("src");
-        if((exSrc && exSrc.indexOf("yy.com")==-1)||($("#studioVideoDiv").find("object").length==0)){//如果非主直播的其他直播
+        if((exSrc && exSrc.indexOf("yy.com")==-1)&&($("#studioVideoDiv").find("object").length==0)){//如果非主直播的其他直播
             studioChat.playVideoByDate(false);
         }
     },
