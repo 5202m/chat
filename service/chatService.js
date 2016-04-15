@@ -369,6 +369,17 @@ var chatService ={
                                  }
                             });
                         }
+                        //公聊框推送
+                        pushInfoService.checkPushInfo(userInfo.groupType,userInfo.groupId,userInfo.clientGroup,constant.pushInfoPosition.talkBox, false,function(pushInfos){
+                            if(pushInfos && pushInfos.length > 0){
+                                var pushInfo = null, noticeInfo = {type:chatService.noticeType.pushInfo, data:{position:constant.pushInfoPosition.talkBox, infos : []}};
+                                for(var i = 0, lenI = pushInfos.length; i < lenI; i++){
+                                    pushInfo = pushInfos[i];
+                                    noticeInfo.data.infos.push({contentId:pushInfo._id, pushDate:pushInfo.pushDate, intervalMin:pushInfo.intervalMin, onlineMin:pushInfo.onlineMin,content:pushInfo.content});
+                                }
+                                socket.emit('notice',noticeInfo);
+                            }
+                        });
                     }else{
                         chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,true,function(roomNum){
                             var noticeData={type:chatService.noticeType.onlineNum,data:{userId:userInfo.userId,hasRegister:userInfo.hasRegister,groupId:userInfo.groupId,onlineUserNum:roomNum}};

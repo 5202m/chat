@@ -32,9 +32,12 @@ var pushInfoService = {
      * 检查推送是否符合条件
      * @param groupType
      * @param roomId
+     * @param clientGroup
+     * @param position
+     * @param onlyOne
      * @param callback
      */
-    checkPushInfo:function(groupType,roomId,clientGroup,position,callback){
+    checkPushInfo:function(groupType,roomId,clientGroup,position,onlyOne,callback){
         var rIds=[];
         rIds.push(roomId);
         var searchObj={position:position,valid:1,status:1,groupType:groupType,roomIds:{$in:rIds}};
@@ -48,17 +51,19 @@ var pushInfoService = {
                 logger.warn("getPushInfo fail:"+err);
                 callback(null);
             }else{
-                var row=null,hasRecord=false;
+                var row=null,result=[];
                 if(rowList){
                     for(var i in rowList){
                         row=rowList[i];
-                        if(common.dateTimeWeekCheck(row.pushDate, true)){
-                            hasRecord=true;
+                        if(onlyOne && common.dateTimeWeekCheck(row.pushDate, true)){
+                            result.push(row);
                             break;
+                        }else{
+                            result.push(row);
                         }
                     }
                 }
-                callback(hasRecord?row:null);
+                callback(onlyOne ? result[0] : result);
             }
         });
     }

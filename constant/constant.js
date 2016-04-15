@@ -17,7 +17,8 @@ var constant={
     },
     pushInfoPosition:{//信息推送位置
         taskbar:0,//任务栏
-        whBox:1//私聊框
+        whBox:1,//私聊框
+        talkBox:3//公聊框
     },
     pwdKey:'pm_chat_pwd',//密码加密key
     systemUserPrefix:'sys_',//微信前台登录，系统用户默认前缀

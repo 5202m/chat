@@ -17,6 +17,7 @@ var mongoose = require('mongoose')
             pushTimes: {type:Number, default:1},//推送次数
             replyRepeat: {type:Number, default:1},//是否延续推送
             onlineMin:{type:Number, default:0},//在线分钟数
+            intervalMin:{type:Number, default:0},//间隔分钟数
             pushDate: String,
             status: {type:Number, default:1}, //状态：0 、禁用 ；1、启动
             isExce:{type:Number, default:0},//是否执行，0否，1是

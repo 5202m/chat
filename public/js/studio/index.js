@@ -15,7 +15,10 @@ var studioChat={
     hasAcLink:false,//是否存在最新的红包连接
     towMinTime:0,//2分钟间隔时间
     verifyCodeIntervalId:null,
-    whPushObj:{},//私聊推送信息
+    pushObj:{
+        talkPush : [], //聊推送消息
+        whPush : {} //私聊推送信息
+    },
     teachIndex:0,
     //信息类型
     msgType:{
@@ -299,7 +302,7 @@ var studioChat={
      */
     clientVideoTask:function(){
         var exSrc=$("#studioVideoDiv embed").attr("src");
-        if((exSrc && exSrc.indexOf("yy.com")==-1)&&($("#studioVideoDiv").find("object").length==0)){//如果非主直播的其他直播
+        if((exSrc && exSrc.indexOf("yy.com")==-1) && ($("#studioVideoDiv").find("object").length==0)){//如果非主直播的其他直播
             studioChat.playVideoByDate(false);
         }
     },
@@ -2513,7 +2516,7 @@ var studioChat={
                 case 'pushInfo':{
                     var data=result.data;
                     if(data.position==1){//私聊框
-                        studioChat.whPushObj={info:data.content,publishTime:data.publishTime,infoId:data.contentId};
+                        studioChat.pushObj.whPush={info:data.content,publishTime:data.publishTime,infoId:data.contentId};
                         window.setTimeout(function(){//按推送结果提示私聊
                             var aDom = $(".cm_wrap a");
                             if(studioChat.getWhBox().length==0 && aDom.length>0){//没有私聊框，则弹出提示
@@ -2526,6 +2529,8 @@ var studioChat={
                                 ckDom.click();
                             }
                         },data.timeOut*60*1000);
+                    }else if(data.position==3){ //公聊框
+                        studioChat.talkBoxPush.initTBP(data.infos);
                     }
                     break;
                 }
@@ -2612,17 +2617,17 @@ var studioChat={
      * @param dom
      */
     setWhPushInfo:function(dom,publishTime){
-        if($.isEmptyObject(studioChat.whPushObj)){
+        if($.isEmptyObject(studioChat.pushObj.whPush)){
             return false;
         }
-        if(publishTime && publishTime<studioChat.whPushObj.publishTime){
+        if(publishTime && publishTime<studioChat.pushObj.whPush.publishTime){
             return false;
         }
         var uid=dom.attr("uid"),nk=dom.find("span").text();
-        if($('#wh_msg_'+uid+' div[id='+studioChat.whPushObj.publishTime+']').length>0){
+        if($('#wh_msg_'+uid+' div[id='+studioChat.pushObj.whPush.publishTime+']').length>0){
             return false;
         }
-        var sendObj={fromUser:{publishTime:studioChat.whPushObj.publishTime,userId:uid,nickname:nk,userType:3},content:{msgType:studioChat.msgType.text,value:studioChat.whPushObj.info,infoId:studioChat.whPushObj.infoId}};
+        var sendObj={fromUser:{publishTime:studioChat.pushObj.whPush.publishTime,userId:uid,nickname:nk,userType:3},content:{msgType:studioChat.msgType.text,value:studioChat.pushObj.whPush.info,infoId:studioChat.pushObj.whPush.infoId}};
         studioChat.setWhContent(sendObj,false,false,true);//直接把数据填入内容栏
         return true;
     },
@@ -2651,7 +2656,96 @@ var studioChat={
         }else{
             studioChat.setContent({fromUser: fromUser,content:row.content},false,true);
         }
-    }
+    },
+
+    /**
+     * 公聊推送
+     */
+    talkBoxPush : {
+        /**
+         * 初始化
+         * @param infos
+         */
+        initTBP : function(infos){
+            studioChat.pushObj.talkPush = infos;
+            this.start();
+        },
+
+        /**
+         * 启动检查定时器
+         */
+        start : function(){
+            var loc_infos = studioChat.pushObj.talkPush;
+            if(loc_infos && loc_infos.length > 0){
+                window.setInterval(function(){
+                    studioChat.talkBoxPush.check();
+                },10000);
+            }
+        },
+
+        /**
+         * 检查所有推送任务
+         */
+        check : function(){
+            var loc_infos = studioChat.pushObj.talkPush;
+            var loc_info = null;
+            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
+                loc_info = loc_infos[i];
+                if(loc_info.startFlag){
+                    continue;
+                }
+                if(common.dateTimeWeekCheck(loc_info.pushDate, false, studioChat.serverTime)){
+                    loc_info.startFlag = true;
+                    window.setTimeout(studioChat.talkBoxPush.delayStartTask(loc_info), (loc_info.onlineMin || 0) * 60 * 1000);
+                }
+            }
+        },
+
+        /**
+         * 延迟启动单个定时任务
+         * @param info
+         * @param delay
+         */
+        delayStartTask : function(info){
+            return function(){
+                studioChat.talkBoxPush.showMsg(info);
+                if(info.intervalMin && info.intervalMin > 0){
+                    info.intervalId = window.setInterval(studioChat.talkBoxPush.startTask(info), info.intervalMin * 60 * 1000);
+                }
+            };
+        },
+
+        /**
+         * 启动单个推送任务
+         * @param info
+         * @returns {Function}
+         */
+        startTask : function(info){
+            return function(){
+                if(common.dateTimeWeekCheck(info.pushDate, false, studioChat.serverTime)){
+                    studioChat.talkBoxPush.showMsg(info);
+                }else{
+                    window.clearInterval(info.intervalId);
+                    info.startFlag = false;
+                }
+            };
+        },
+
+        /**
+         * 将消息显示在公聊框
+         * @param info
+         */
+        showMsg : function(info){
+            var html = [];
+            html.push('<div class="dialog push">');
+            html.push(info.content);
+            html.push('</div>');
+            $("#dialog_list").append(html.join(""));
+            if($(".scrollbtn").hasClass("on")) {
+                studioChat.setTalkListScroll(true);
+            }
+        }
+    },
 };
 // 初始化
 $(function() {
