@@ -55,9 +55,11 @@ var pushInfoService = {
                 if(rowList){
                     for(var i in rowList){
                         row=rowList[i];
-                        if(onlyOne && common.dateTimeWeekCheck(row.pushDate, true)){
-                            result.push(row);
-                            break;
+                        if(onlyOne){
+                            if(common.dateTimeWeekCheck(row.pushDate, true)){
+                                result.push(row);
+                                break;
+                            }
                         }else{
                             result.push(row);
                         }
