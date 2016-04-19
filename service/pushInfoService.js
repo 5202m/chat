@@ -34,10 +34,10 @@ var pushInfoService = {
      * @param roomId
      * @param clientGroup
      * @param position
-     * @param onlyOne
+     * @param filterTime
      * @param callback
      */
-    checkPushInfo:function(groupType,roomId,clientGroup,position,onlyOne,callback){
+    checkPushInfo:function(groupType,roomId,clientGroup,position,filterTime,callback){
         var rIds=[];
         rIds.push(roomId);
         var searchObj={position:position,valid:1,status:1,groupType:groupType,roomIds:{$in:rIds}};
@@ -49,23 +49,24 @@ var pushInfoService = {
         chatPushInfo.find(searchObj).sort({'createDate':'desc'}).exec(function (err,rowList) {
             if(err){
                 logger.warn("getPushInfo fail:"+err);
-                callback(null);
+                callback([]);
             }else{
-                var row=null,result=[];
-                if(rowList){
-                    for(var i in rowList){
-                        row=rowList[i];
-                        if(onlyOne){
+                var result=[];
+                if(filterTime){
+                    var row=null;
+                    if(rowList){
+                        for(var i in rowList){
+                            row=rowList[i];
                             if(common.dateTimeWeekCheck(row.pushDate, true)){
                                 result.push(row);
-                                break;
                             }
-                        }else{
-                            result.push(row);
                         }
                     }
                 }
-                callback(onlyOne ? result[0] : result);
+                else{
+                    result = rowList || [];
+                }
+                callback(result);
             }
         });
     }

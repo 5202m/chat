@@ -16,8 +16,9 @@ var studioChat={
     towMinTime:0,//2分钟间隔时间
     verifyCodeIntervalId:null,
     pushObj:{
+        whPush : {},   //私聊推送信息
         talkPush : [], //聊推送消息
-        whPush : {} //私聊推送信息
+        talkPushInterval : null
     },
     teachIndex:0,
     //信息类型
@@ -2667,8 +2668,30 @@ var studioChat={
          * @param infos
          */
         initTBP : function(infos){
+            this.clear();
             studioChat.pushObj.talkPush = infos;
             this.start();
+        },
+
+        /**
+         * 清空定时器，在服务器重启的时候，会重新触发notice，此时需要清空之前所有的定时器
+         */
+        clear : function(){
+            if(studioChat.pushObj.talkPushInterval){
+                window.clearInterval(studioChat.pushObj.talkPushInterval);
+                studioChat.pushObj.talkPushInterval = null;
+            }
+            var loc_infos = studioChat.pushObj.talkPush;
+            var loc_info = null;
+            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
+                loc_info = loc_infos[i];
+                if(loc_info.timeoutId){
+                    window.clearTimeout(loc_info.timeoutId);
+                }
+                if(loc_info.intervalId){
+                    window.clearInterval(loc_info.intervalId);
+                }
+            }
         },
 
         /**
@@ -2677,9 +2700,9 @@ var studioChat={
         start : function(){
             var loc_infos = studioChat.pushObj.talkPush;
             if(loc_infos && loc_infos.length > 0){
-                window.setInterval(function(){
+                studioChat.pushObj.talkPushInterval = window.setInterval(function(){
                     studioChat.talkBoxPush.check();
-                },10000);
+                }, 10000);
             }
         },
 
@@ -2696,7 +2719,7 @@ var studioChat={
                 }
                 if(common.dateTimeWeekCheck(loc_info.pushDate, false, studioChat.serverTime)){
                     loc_info.startFlag = true;
-                    window.setTimeout(studioChat.talkBoxPush.delayStartTask(loc_info), (loc_info.onlineMin || 0) * 60 * 1000);
+                    loc_info.timeoutId = window.setTimeout(studioChat.talkBoxPush.delayStartTask(loc_info), (loc_info.onlineMin || 0) * 60 * 1000);
                 }
             }
         },
@@ -2704,7 +2727,6 @@ var studioChat={
         /**
          * 延迟启动单个定时任务
          * @param info
-         * @param delay
          */
         delayStartTask : function(info){
             return function(){
@@ -2745,7 +2767,7 @@ var studioChat={
                 studioChat.setTalkListScroll(true);
             }
         }
-    },
+    }
 };
 // 初始化
 $(function() {

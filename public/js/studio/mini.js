@@ -9,6 +9,11 @@ var StudioChatMini = {
     studioInfo: null,
     studioDate: '',//直播时间点
     serverTime: 0,//服务器时间
+    pushObj:{
+        whPush : {},   //私聊推送信息
+        talkPush : [], //聊推送消息
+        talkPushInterval : null
+    },
     //信息类型
     msgType: {
         text: 'text',
@@ -39,7 +44,7 @@ var StudioChatMini = {
     serverTimeUp: function () {
         StudioChatMini.clientVideoTask();
         setInterval(function () {
-            StudioChatMini.serverTime += 10000;
+            StudioChatMini.serverTime += 1000;
             StudioChatMini.clientVideoTask();
         }, 1000);//每秒一次
     },
@@ -561,6 +566,12 @@ var StudioChatMini = {
                     $("#" + result.data.replace(/,/g, ",#")).remove();
                     StudioChatMini.setTalkListScroll(false);
                     break;
+                case 'pushInfo':
+                    var data=result.data;
+                    if(data.position==3){ //公聊框
+                        StudioChatMini.talkBoxPush.initTBP(data.infos);
+                    }
+                    break;
             }
         });
         //信息传输
@@ -597,6 +608,114 @@ var StudioChatMini = {
             position: row.position
         };
         StudioChatMini.setContent({fromUser: fromUser, content: row.content}, false, true);
+    },
+
+    /**
+     * 公聊推送
+     */
+    talkBoxPush : {
+        /**
+         * 初始化
+         * @param infos
+         */
+        initTBP : function(infos){
+            this.clear();
+            StudioChatMini.pushObj.talkPush = infos;
+            this.start();
+        },
+
+        /**
+         * 清空定时器，在服务器重启的时候，会重新触发notice，此时需要清空之前所有的定时器
+         */
+        clear : function(){
+            if(StudioChatMini.pushObj.talkPushInterval){
+                window.clearInterval(StudioChatMini.pushObj.talkPushInterval);
+                StudioChatMini.pushObj.talkPushInterval = null;
+            }
+            var loc_infos = StudioChatMini.pushObj.talkPush;
+            var loc_info = null;
+            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
+                loc_info = loc_infos[i];
+                if(loc_info.timeoutId){
+                    window.clearTimeout(loc_info.timeoutId);
+                }
+                if(loc_info.intervalId){
+                    window.clearInterval(loc_info.intervalId);
+                }
+            }
+        },
+
+        /**
+         * 启动检查定时器
+         */
+        start : function(){
+            var loc_infos = StudioChatMini.pushObj.talkPush;
+            if(loc_infos && loc_infos.length > 0){
+                window.setInterval(function(){
+                    StudioChatMini.talkBoxPush.check();
+                },10000);
+            }
+        },
+
+        /**
+         * 检查所有推送任务
+         */
+        check : function(){
+            var loc_infos = StudioChatMini.pushObj.talkPush;
+            var loc_info = null;
+            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
+                loc_info = loc_infos[i];
+                if(loc_info.startFlag){
+                    continue;
+                }
+                if(common.dateTimeWeekCheck(loc_info.pushDate, false, StudioChatMini.serverTime)){
+                    loc_info.startFlag = true;
+                    window.setTimeout(StudioChatMini.talkBoxPush.delayStartTask(loc_info), (loc_info.onlineMin || 0) * 60 * 1000);
+                }
+            }
+        },
+
+        /**
+         * 延迟启动单个定时任务
+         * @param info
+         */
+        delayStartTask : function(info){
+            return function(){
+                StudioChatMini.talkBoxPush.showMsg(info);
+                if(info.intervalMin && info.intervalMin > 0){
+                    info.intervalId = window.setInterval(StudioChatMini.talkBoxPush.startTask(info), info.intervalMin * 60 * 1000);
+                }
+            };
+        },
+
+        /**
+         * 启动单个推送任务
+         * @param info
+         * @returns {Function}
+         */
+        startTask : function(info){
+            return function(){
+                if(common.dateTimeWeekCheck(info.pushDate, false, StudioChatMini.serverTime)){
+                    StudioChatMini.talkBoxPush.showMsg(info);
+                }else{
+                    window.clearInterval(info.intervalId);
+                    info.startFlag = false;
+                }
+            };
+        },
+
+        /**
+         * 将消息显示在公聊框
+         * @param info
+         */
+        showMsg : function(info){
+            var html = [];
+            html.push('<div class="dialog push">');
+            html.push(info.content);
+            html.push('</div>');
+            $("#dialog_list").append(html.join(""));
+            StudioChatMini.setTalkListScroll(true);
+        }
     }
 };
 // 初始化

@@ -172,6 +172,10 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .talk-infobox .expert-li .dialog::after{border-color:#fff7e2 transparent transparent transparent;}
 .talk-infobox .me-li .dialog{background:#fff; border-top-left-radius:5px; border-top-right-radius:0; float:right; }
 .talk-infobox .me-li .dialog::after{border-color:#fff transparent transparent transparent; left:auto; right:-3px;}
+.talk-infobox .push{background-color: #474b51; padding: 6px 10px;}
+.talk-infobox .push p{color: #FF4C3C; background-color: inherit; font-size: 14px;}
+.talk-infobox .push p a{color: #3181c6; text-decoration: underline;}
+
 .talk-infobox .dialog .to{ color:#666; font-size:10px;}
 .talk-infobox .dialog .question{ color:#777; font-size:12px; border-bottom:1px solid #ddd3ba; padding-bottom:5px; margin-bottom:5px}
 .talk-infobox .dialog .question em{ font-style:normal; font-weight:bold}
