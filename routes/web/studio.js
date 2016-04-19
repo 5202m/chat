@@ -212,7 +212,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
             if(rowTmp.isCurr) {
                 viewDataObj.studioDate = common.trim(row.chatStudio.studioDate);
                 viewDataObj.exStudioStr= common.trim(row.chatStudio.externalStudio);
-                viewDataObj.studioInfo= JSON.stringify({yyChannel : row.chatStudio.yyChannel, minChannel : row.chatStudio.yyChannel});
+                viewDataObj.studioInfo= JSON.stringify({yyChannel : row.chatStudio.yyChannel, minChannel : row.chatStudio.minChannel});
                 viewDataObj.serverTime=new Date().getTime();
             }
             newStudioList.push(rowTmp);

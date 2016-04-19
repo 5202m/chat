@@ -130,14 +130,26 @@ var StudioChatMini = {
             $("#studioTeachId a").removeClass("on");
         }
         $("#tVideoDiv iframe").remove();
-
-        //已经是直播相同内容无需切换
-        if ($("#stVideoDiv:visible").length > 0 && $("#studioVideoDiv embed").attr("src") == url) {
-            return;
+        if(url.indexOf("rtmp")!=-1){
+            var sdHtml='<div style="position: relative; width: 100%; height: 100%; left: 0px; top: 0px;">'+
+                '<object type="application/x-shockwave-flash" id="sewise_player" name="sewise_player" data="/js/lib/flash/SewisePlayer.swf" width="100%" height="100%">'+
+                '<param name="allowfullscreen" value="true">'+
+                '<param name="wmode" value="transparent">'+
+                '<param name="allowscriptaccess" value="always">'+
+                '<param name="flashvars" value="autoStart=true&amp;programId=&amp;shiftTime=&amp;lang=zh_CN&amp;type=rtmp&amp;serverApi=ServerApi.execute&amp;skin=/js/lib/flash/skins/liveOrange.swf&amp;title=&amp;draggable=true&amp;published=0&amp;streamUrl='+url+'&amp;duration=3600&amp;poster=&amp;flagDatas=&amp;videosJsonUrl=&amp;adsJsonData=&amp;statistics=&amp;customDatas=&amp;playerName=Sewise Player&amp;clarityButton=enable&amp;timeDisplay=disable&amp;controlBarDisplay=enable&amp;topBarDisplay=disable&amp;customStrings=&amp;volume=0.6&amp;key=&amp;trackCallback=">'+
+                '</object>'+
+                '</div>';
+            $("#studioVideoDiv").html(sdHtml);
+        }else{
+            //已经是直播相同内容无需切换
+            if ($("#stVideoDiv:visible").length > 0 && $("#studioVideoDiv embed").attr("src") == url) {
+                return;
+            }
+            $("#stVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
+            $("#studioVideoDiv embed").remove();
+            $(StudioChatMini.getEmbedDom(url)).appendTo('#studioVideoDiv');
         }
-        $("#stVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
-        $("#studioVideoDiv embed").remove();
-        $(StudioChatMini.getEmbedDom(url)).appendTo('#studioVideoDiv');
+
         $("#stVideoDiv").show();
         $("#stVideoDiv .vtitle span").text(title);
         StudioChatMini.initStudio = true;
@@ -155,7 +167,13 @@ var StudioChatMini = {
 
                 if(!this.studioInfo.url){
                     var yc = this.studioInfo.yyChannel, mc = this.studioInfo.minChannel;
-                    this.studioInfo.url = 'http://yy.com/s' + (common.isValid(yc) ? '/' + yc : '') + (common.isValid(mc) ? '/' + mc : '') + '/yyscene.swf';
+                    //this.studioInfo.url = 'http://yy.com/s' + (common.isValid(yc) ? '/' + yc : '') + (common.isValid(mc) ? '/' + mc : '') + '/yyscene.swf';
+
+                    if('live'==yc){
+                        this.studioInfo.url = 'rtmp://ct.phgsa.cn/live/'+common.trim(mc);
+                    }else{
+                        this.studioInfo.url = 'http://yy.com/s'+(common.isValid(yc)?'/'+yc:'')+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf';
+                    }
                 }
                 StudioChatMini.getLiveTitle(function(title){
                     StudioChatMini.setStudioVideoDiv(StudioChatMini.studioInfo.url, title);
