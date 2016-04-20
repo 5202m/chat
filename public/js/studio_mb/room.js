@@ -1228,9 +1228,9 @@ var studioChatMb={
             html.push('<li class="clearfix push">');
             html.push(info.content);
             html.push('</div>');
-            $("#dialog_list").append(html.join(""));
             var talkPanel = $("#talkPanel");
             var isScroll = talkPanel.scrollTop() + talkPanel.height() + 30 >= talkPanel.get(0).scrollHeight;
+            $("#dialog_list").append(html.join(""));
             if(isScroll){
                 studioChatMb.setTalkListScroll();
             }
