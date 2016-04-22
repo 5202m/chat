@@ -329,7 +329,7 @@ var StudioChatMini = {
     getLiveTitle : function(callback){
         if(!StudioChatMini.courses){
             try{
-                $.getJSON(this.apiUrl+'/getCourse',{platform:'pc'},function(data){
+                $.getJSON(this.apiUrl+'/getCourse',{platform:'pc'}).done(function(data){
                     if(data && data.result == 0 && data.data){
                         StudioChatMini.courses = data.data;
                         StudioChatMini.getLiveTitle(callback);

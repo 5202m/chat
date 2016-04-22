@@ -546,7 +546,7 @@ var studioChat={
         try{
             var  pageSizeTmp=pageSize||5;
             //备注 contentType->2:即时资讯;3:专业评论
-            $.getJSON(this.apiUrl+'/getNewsInfoList',{pageNo:1,pageSize:pageSizeTmp,lang:'zh',contentType1:type1,contentType2:type2},function(data){
+            $.getJSON(this.apiUrl+'/getNewsInfoList',{pageNo:1,pageSize:pageSizeTmp,lang:'zh',contentType1:type1,contentType2:type2}).done(function(data){
                 //console.log("getNewsInfoList->data:"+JSON.stringify(data));
                 callback(data);
             });
