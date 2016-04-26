@@ -14,7 +14,7 @@
 <link href="/js/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
 <link href="/css/swipebox.min.css"type="text/css" rel="stylesheet" >
 <link href="/css/face.css" type="text/css" rel="stylesheet" />
-<link href="/css/studio/index.css" type="text/css" rel="stylesheet" />
+<link href="/css/studio/index.min.css" type="text/css" rel="stylesheet" />
 <!--[if lt IE 9]>
 <link href="/css/studio/studioIE.css" rel="stylesheet" type="text/css">
 <![endif]-->
@@ -36,28 +36,13 @@
           </div><b class="sp"></b><b class="new"></b>
         </a>
         <%if(userSession.isLogin){%>
-        <a href="javascript:" class="username"><%= userSession.nickname %><em id="AR-iconBox" class="box dn"></em></a>
+        <a href="javascript:" class="username"><%= userSession.nickname %></a>
         <a href="/studio/logout" class="logout">注销</a>
         <%} else {%>
           <a href="javascript:" class="login" id="login_a" tp="content_top">登录</a>
-          <a href="javascript:" class="register" id="register_a" tp="content_top">注册<em id="AR-iconPrize" class="prize dn"></em></a>
+          <a href="javascript:" class="register" id="register_a" tp="content_top">注册</a>
         <%}%>
       </div>
-
-      <!-- 开宝箱 start -->
-      <div class="treasure-tip">
-          <div class="tipbox dn" id="AR-tipBox">
-              <p>你还有未打开的宝箱，<br><a href="javascript:void(0)" id="AR-tipBoxBtn">打开宝箱</a>赢取猴年纪念币！</p>
-              <i></i>
-              <a href="javascript:void(0)" class="tip-close"></a>
-          </div>
-          <div class="tipbox t2 dn" id="AR-tipReg">
-              <p><a href="javascript:void(0)" id="AR-tipRegBtn">注册直播间</a>，老师帮你看单、分析行情，还可开宝箱赢纪念币！</p>
-              <i></i>
-              <a href="javascript:void(0)" class="tip-close"></a>
-          </div>
-      </div>
-      <!-- 开宝箱 end -->
   </div>
 </div>
 
@@ -723,129 +708,6 @@
             <a href="javascript:void(0)" class="pop_close">关闭</a>
         </div>
     </div>
-
-    <!-- 注册有礼start -->
-    <div class="popup_box treasure dn" id="AR-box">
-        <div class="cont">
-            <span class="t-time">活动时间：即日起至<span id="AR-end"></span></span>
-            <div class="boxcont">
-                <ul class="t-box">
-                    <li class="st1"></li>
-                    <li class="st2"></li>
-                    <li class="st3"></li>
-                </ul>
-                <ul class="t-box">
-                    <li class="st1"></li>
-                    <li class="st2"></li>
-                    <li class="st3"></li>
-                </ul>
-                <ul class="t-box">
-                    <li class="st1"></li>
-                    <li class="st2"></li>
-                    <li class="st3 on"></li>
-                </ul>
-            </div>
-            <a href="javascript:void(0)" class="rulebtn">活动规则</a>
-            <a href="javascript:void(0)" class="pop_close">关闭</a>
-        </div>
-    </div>
-
-    <div class="popup_box treasure_p1 dn" id="AR-boxResY">
-        <div class="cont">
-            <div class="i-top">
-                <h4>恭喜您获得一枚猴年纪念币！</h4>
-                <span>赶紧留下你的收货地址，我们将在3个工作日内邮寄</span>
-            </div>
-            <div class="award-form">
-                <form>
-                    <ul>
-                        <li class="i-box">
-                            <span><i>*</i>收货人</span>
-                            <input name="name" type="text" placeholder="请输入真实姓名">
-                        </li>
-                        <li class="i-box">
-                            <span><i>*</i>手机号码</span>
-                            <input name="mobilePhone" type="text" placeholder="请输入手机号码" size="11" value="">
-                        </li>
-                        <li class="i-box">
-                            <span><i>*</i>收货地址</span>
-                            <div class="add_info" id="AR-boxAddr">
-                                <div class="se_box">
-                                    <ul>
-                                    </ul>
-                                    <input name="addr1" type="text" placeholder="省" value="" readonly="readonly">
-                                    <b></b>
-                                </div>
-                                <div class="se_box">
-                                    <ul>
-                                    </ul>
-                                    <input name="addr2" type="text" placeholder="市" value="" readonly="readonly">
-                                    <b></b>
-                                </div>
-                                <div class="se_box s3">
-                                    <ul>
-                                    </ul>
-                                    <input name="addr3" type="text" placeholder="地区" value="" readonly="readonly">
-                                    <b></b>
-                                </div>
-                                <input name="addr4" type="text" placeholder="请输入详细地址：xx街道xx路xx号xx单元xx">
-                            </div>
-
-                        </li>
-                        <li class="i-box">
-                            <span><i>*</i>邮政编码</span>
-                            <input name="postcode" type="text" size="6" placeholder="请输入邮政编码">
-                        </li>
-
-                        <li class="i-box last">
-                            <span></span>
-                            <input type="button" value="确定" class="sbtn">
-                            <div id="AR-boxErrMsg" style="font-size: 14px; text-align: center;color: red; margin-top: 10px;"></div>
-                        </li>
-                    </ul>
-                </form>
-            </div>
-            <a href="javascript:void(0)" class="pop_close">关闭</a>
-        </div>
-    </div>
-
-    <div class="popup_box treasure_result dn" id="AR-boxResN">
-        <div class="cont">
-            <span>很遗憾，你没有抽中奖品！</span>
-            <a href="javascript:void(0)" class="sbtn">确定</a>
-            <a href="javascript:void(0)" class="pop_close">关闭</a>
-        </div>
-    </div>
-
-    <div class="popup_box treasure_rule dn" id="AR-boxRule">
-        <div class="cont">
-            <div class="rule-tit">活动规则</div>
-            <div class="rulecont">
-                <ul>
-                    <li><b>1.</b>活动期间，直播间新客户，首次通过手机号完成直播间注册，即有资格参与抽奖。</li>
-                    <li><b>2.</b>客户获得奖励后，需通过活动页面完成邮寄信息的填写（收货人、手机号码、收货地址、邮政编码）。</li>
-                    <li><b>3.</b>奖励邮寄，活动结束后三个工作日内安排邮寄（如遇节假日则顺延）。</li>
-                </ul>
-                <h4>注意事项</h4>
-                <ul>
-                    <li><b>1.</b>每位客户最多可参与一次抽奖；每位客户最多可获得一次奖励；</li>
-                    <li><b>2.</b>代理客户及金道员工不适用此次优惠活动；</li>
-                    <li><b>3.</b>如用户有下列任一恶意刷奖行为，金道贵金属将取消其参与获奖资格，且不发放奖励；
-                        <ul>
-                            <li><b>(1)</b>不符合参与资格的。</li>
-                            <li><b>(2)</b>提供虚假注册信息或恶意破坏活动。</li>
-                            <li><b>(3)</b>以任何机器人软件、蜘蛛软件、爬虫软件、刷奖软件或其它任何自动方式、不正当手段参与本活动的。</li>
-                            <li><b>(4)</b>其他违反相关法规、本规则行为的。</li>
-                        </ul>
-                    </li>
-                    <li><b>4.</b>金道贵金属保留追究恶意刷奖者的法律责任的权利；</li>
-                    <li><b>5.</b>金道贵金属保留随时修订、暂停、终止本活动及任何相关规则条款之权利及其解释权。</li>
-                </ul>
-            </div>
-            <a href="javascript:void(0)" class="win_close">关闭</a>
-        </div>
-    </div>
-    <!-- 注册有礼end -->
 </div>
 <script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
@@ -859,12 +721,11 @@
 <script type="text/javascript" src="/js/lib/store.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.face.js"></script>
 <script type="text/javascript" src="/js/util/chatAnalyze.js"></script>
-<script type="text/javascript" src="/js/util/address.js"></script>
 <script type="text/javascript" src="/js/lib/newquote.js"></script>
 <script type="text/javascript" src="/js/util/common.min.js"></script>
 <script type="text/javascript" src="http://static.polyv.net/file/polyvplayer_v2.0.min.js"></script>
 <script type="text/javascript" src="/js/lib/jquery.xdomainrequest.min.js"></script>
-<script type="text/javascript" src="/js/studio/index.js"></script>
+<script type="text/javascript" src="/js/studio/index.min.js?t=<%=new Date().getTime()%>"></script>
 <script type="text/javascript">
 studioChat.web24kPath='<%= web24kPath %>';
 studioChat.apiUrl='<%= apiUrl %>';
