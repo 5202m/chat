@@ -19,7 +19,7 @@
 <!-- wrapper begin -->
 <div class="wrapper clearfix">
 	<div class="left_row clearfix">
-        <div class="mod_video" id="stVideoDiv">
+        <div class="mod_video" id="stVideoDiv" style="background-color: #000000;">
             <div class="vcont">
                 <div class="vtitle">当前直播：<span></span></div>
                 <a href="javascript:" class="vbackbtn" id="vbackbtn_video">观看教学视频？</a>
@@ -28,7 +28,7 @@
                 </div>
             </div>
         </div>
-        <div class="mod_video dn" id="tvDivId">
+        <div class="mod_video dn" id="tvDivId" style="background-color: #000000;">
             <div class="vcont">
                 <div class="vtitle">当前视频：<span></span></div>
                 <a href="javascript:" class="vbackbtn" id="vbackbtn_live">直播开始了，赶紧去看</a>
@@ -85,6 +85,7 @@ $(function(){
         var hh = $(window).height();
         $('#chatMsgContentDiv').height(hh - 70);
         $(".wrapper").height(hh);
+        $(".mod_video").height(hh - 29);
         $('.chat').height(hh);
     });
     $(window).resize();
