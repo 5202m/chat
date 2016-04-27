@@ -320,11 +320,6 @@ var StudioChatMini = {
                     }
                 }
             }
-
-            if(navigator.userAgent.indexOf('MSIE') >= 0){
-                $("#tVideoDiv").before('<div style="z-index: 98; position: absolute; top: 0; left: 0; background-color: #000000; width: 100%; height: 29px;"></div>'
-                + '<iframe src="about:blank" frameborder="0" width="100%" height="29px;" style="z-index: 97; position: absolute; top: 0; left: 0;"></iframe>');
-            }
             StudioChatMini.playVideo("live");
         });
     },
