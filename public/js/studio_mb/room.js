@@ -137,6 +137,9 @@ var studioChatMb={
                         studioChatMb.talkBoxPush.initTBP(data.infos);
                     }
                     break;
+                case 'serverTime':
+                    studioChatMb.serverTime = result.data;
+                    break;
             }
         });
         //信息传输
@@ -197,6 +200,7 @@ var studioChatMb={
         this.setEventCen();
         this.video.init();
         this.setEventChat();
+        this.browserState.initBrowserState();
     },
     /**
      * 设置页面tab事件等
@@ -859,18 +863,7 @@ var studioChatMb={
      * @param [txt]
      */
     setDialog:function(userId,nickname,talkStyle,userType,avatar,txt){
-        if(userType==2){
-            $("#teacherListId li[uid='" + userId + "'] a.te_btn").addClass("on");
-        }
-        if(talkStyle==1){//私聊,则直接弹私聊框
-            studioChat.fillWhBox(userType,userId,nickname,false);
-            studioChat.getWhBox().show();
-            var ms=$('.mult_dialog a[uid='+userId+']');
-            ms.click();
-            if(common.isValid(avatar)){
-                ms.find("img").attr("src",avatar);
-            }
-        }else{
+        if(talkStyle!=1){
             if("visitor"==studioChatMb.userInfo.clientGroup){
                 return;
             }
@@ -1234,6 +1227,56 @@ var studioChatMb={
             if(isScroll){
                 studioChatMb.setTalkListScroll();
             }
+        }
+    },
+
+    /**
+     * 浏览器状态
+     */
+    browserState : {
+        /**浏览器属性信息*/
+        hiddenProperty : "hidden",
+        visibilityStateProperty : "visibilityState",
+        visibilityEvent : "visibilitychange",
+
+        /**获取浏览器前缀*/
+        getBrowserPrefix : function() {
+            if ('hidden' in document) {
+                return null;
+            }
+            var browserPrefixes = ['moz', 'ms', 'o', 'webkit'];
+            for (var i = 0; i < browserPrefixes.length; i++) {
+                var prefix = browserPrefixes[i] + 'Hidden';
+                if (prefix in document) {
+                    return browserPrefixes[i];
+                }
+            }
+            return null;
+        },
+
+        /**初始化*/
+        initBrowserState : function(){
+            var prefix = this.getBrowserPrefix();
+            if(prefix){
+                this.hiddenProperty = prefix + "Hidden";
+                this.visibilityStateProperty = prefix + "VisibilityState";
+                this.visibilityEvent = prefix + "visibilitychange";
+            }else{
+                this.hiddenProperty = "hidden";
+                this.visibilityStateProperty = "visibilityState";
+                this.visibilityEvent = "visibilitychange";
+            }
+
+            this.setBrowserStateEvent();
+        },
+
+        /**设置浏览器状态事件*/
+        setBrowserStateEvent : function(){
+            document.addEventListener(this.visibilityEvent, function(){
+                if(document[studioChatMb.browserState.visibilityStateProperty] === "visible"){
+                    studioChatMb.socket.emit('serverTime');
+                }
+            })
         }
     }
 };

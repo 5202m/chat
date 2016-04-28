@@ -21,7 +21,8 @@ var chatService ={
         removeMsg:'removeMsg',//移除信息
         onlineNum:'onlineNum',//在线人数
         approvalResult:'approvalResult',//审核结果
-        leaveRoom:'leaveRoom'//离开房间
+        leaveRoom:'leaveRoom',//离开房间
+        serverTime:'serverTime'//服务器时间
     },
     leaveRoomFlag:{//离开房间标志
         roomClose:'roomClose',//房间关闭或禁用或开放时间结束
@@ -394,6 +395,9 @@ var chatService ={
                     //同步数据到客户端
                     socket.emit('loadMsg', {msgData:msgData,isAdd:common.isValid(lastPublishTime)?true:false});
                 });
+
+                //服务器时间
+                socket.emit('notice',{type:chatService.noticeType.serverTime, data:new Date().getTime()});
             });
             //断开连接
             socket.on('disconnect',function(data){
@@ -472,6 +476,10 @@ var chatService ={
                 messageService.loadMsg(userInfo,null,true, function(result){
                     socket.emit('loadWhMsg',{type:'online',data:result,toUserId:userInfo.toUser.userId});
                 });
+            });
+            //提取服务器时间
+            socket.on('serverTime',function(){
+                socket.emit('notice',{type:chatService.noticeType.serverTime, data:new Date().getTime()});
             });
         });
     },
