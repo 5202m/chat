@@ -66,7 +66,6 @@ router.get('/admin', function(req, res) {
                                 chatUser.nickname=results.checkResult.nickname;
                                 chatUser.accountNo= chatUser.userId;//后台进入的用户，账户与userId保持一致，保存到member表时，userId不保存
                                 chatUser.position=results.checkResult.position;
-                                chatUser.introduction=results.checkResult.introduction;
                             }
                             if(results.getGroup){
                                 viewDataObj.groupInfo=results.getGroup.toObject();
