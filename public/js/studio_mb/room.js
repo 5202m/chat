@@ -301,7 +301,7 @@ var studioChatMb={
          */
         if(studioChatMb.userInfo.clientGroup == "visitor"){
             $("#contentText").attr("contenteditable", "false");
-            $("#contentText").html('<span style="margin:15px 5px;">亲，<a id="contentText_login" href="javascript:void(0);" onclick="studioChatMb.preLogin();" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');
+            $("#contentText").html('<span style="margin:15px 5px;">亲，<a id="contentText_login" href="javascript:void(0);" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');
             $("#contentText_login").click(function(){
                 $("#header_ui").trigger("click");
             });
