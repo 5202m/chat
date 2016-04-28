@@ -96,7 +96,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .mod_video .vcont{width:100%; height: 100%;}
 .mod_video img{ width:100%; height:auto; }
 .vbackbtn{z-index:100;background:rgba(181,144,48,.5); display:block; width:63px; height:22px; padding-top:3px; color:#fff; border-radius:2px; font-size:14px; line-height:14pt; position:absolute; top:2px; right:10px}
-.vtitle{z-index:99;height:22px; padding-top:3px; color:#fff; font-size:14px; line-height:16px; position:absolute; top:2px; left:10px}
+.vtitle{z-index:99;height:22px; padding-top:3px; color:#fff; font-size:14px; line-height:16px; position:absolute; top:2px; left:10px; width: 78%; word-break: keep-all; white-space: nowrap; text-overflow: ellipsis; text-align: left; text-align: left;}
 .mod_video .vopenbtn{z-index:100;background:rgba(181,144,48,.5); display:block; width:43px; height:22px; padding-top:3px; color:#fff; border-radius:2px; font-size:12pt; line-height:14pt; position:absolute; top:10px; left:10px}
 .vbackbtn:hover,.mod_video .vopenbtn:hover  { text-decoration:none}
 #vbackbtn_chg{right: 10px;}
