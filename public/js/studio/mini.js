@@ -423,7 +423,7 @@ var StudioChatMini = {
                 obj.mCustomScrollbar("scrollTo", "bottom");
             }
         } else {
-            obj.mCustomScrollbar({scrollInertia: 1, scrollButtons: {enable: true}, theme: "light-2"});
+            obj.mCustomScrollbar({scrollInertia: 1, scrollButtons: {enable: false}, theme: "light-2"});
             obj.mCustomScrollbar("scrollTo", "bottom");
         }
     },
