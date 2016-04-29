@@ -27,7 +27,7 @@ var StudioChatMini = {
     video: {
         type: "mp4",
         list: [],
-        listMp4: [],
+        listMp4Index: [],
         index: -1
     },
     courses : null, //课程安排
@@ -97,12 +97,10 @@ var StudioChatMini = {
     playVideo: function (type) {
         //如果是在看教学视频则直接返回
         StudioChatMini.video.type = type;
-        if(type == "mp4"){
-            StudioChatMini.video.index = common.randomIndex(StudioChatMini.video.listMp4.length);
-            StudioChatMini.setVideo(false, StudioChatMini.video.listMp4[StudioChatMini.video.index]);
-        }else if(type == "video"){
-            StudioChatMini.video.index = common.randomIndex(StudioChatMini.video.list.length);
-            StudioChatMini.setVideo(false, StudioChatMini.video.list[StudioChatMini.video.index]);
+        if(type == "mp4" || type == "video"){
+            var ii = StudioChatMini.video.index;
+            StudioChatMini.setVideo(false, StudioChatMini.changeVideoIndex(type));
+            console.log(ii + "==>" + StudioChatMini.video.index);
         }else{
             if (common.dateTimeWeekCheck(this.studioDate, true, StudioChatMini.serverTime)) {//直播时间段，则播放直播
                 this.setVideo(true);
@@ -110,6 +108,41 @@ var StudioChatMini = {
                 StudioChatMini.playVideo('mp4');
             }
         }
+    },
+    /**切换视频*/
+    changeVideoIndex : function(type){
+        var loc_index = -1;
+        var len = StudioChatMini.video.listMp4Index.length;
+        if(type != "mp4" || len == 0){
+            //随机播放所有视频
+            len = StudioChatMini.video.list.length;
+            if(len == 0){
+                loc_index = -1;
+            }else if(len == 1){
+                loc_index = 0;
+            }else if(StudioChatMini.video.index == -1){
+                loc_index = common.randomIndex(len);
+            }else{
+                loc_index = common.randomIndex(len - 1);
+                if(loc_index >= StudioChatMini.video.index){
+                    loc_index ++;
+                }
+            }
+        }else if(len == 1){
+            loc_index = StudioChatMini.video.listMp4Index[0];
+        }else{
+            if(StudioChatMini.video.index == -1){
+                loc_index = common.randomIndex(len);
+            }else{
+                loc_index = common.randomIndex(len - 1);
+                if(StudioChatMini.video.listMp4Index[loc_index] >= StudioChatMini.video.index){
+                    loc_index ++;
+                }
+            }
+            loc_index = StudioChatMini.video.listMp4Index[loc_index];
+        }
+        StudioChatMini.video.index = loc_index;
+        return loc_index == -1 ? null : StudioChatMini.video.list[loc_index];
     },
     /**
      * 提取embed对应的dom
@@ -178,7 +211,7 @@ var StudioChatMini = {
                 StudioChatMini.getLiveTitle(function(title){
                     StudioChatMini.setStudioVideoDiv(StudioChatMini.studioInfo.url, title);
                 });
-            } else {
+            } else if(video){
                 $("#tvDivId").show();
                 $("#stVideoDiv").hide();
 
@@ -315,7 +348,7 @@ var StudioChatMini = {
                         };
                         StudioChatMini.video.list.push(video);
                         if(video.type === "mp4"){
-                            StudioChatMini.video.listMp4.push(video);
+                            StudioChatMini.video.listMp4Index.push(i);
                         }
                     }
                 }
