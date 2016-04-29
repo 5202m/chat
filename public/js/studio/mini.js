@@ -98,9 +98,7 @@ var StudioChatMini = {
         //如果是在看教学视频则直接返回
         StudioChatMini.video.type = type;
         if(type == "mp4" || type == "video"){
-            var ii = StudioChatMini.video.index;
             StudioChatMini.setVideo(false, StudioChatMini.changeVideoIndex(type));
-            console.log(ii + "==>" + StudioChatMini.video.index);
         }else{
             if (common.dateTimeWeekCheck(this.studioDate, true, StudioChatMini.serverTime)) {//直播时间段，则播放直播
                 this.setVideo(true);
