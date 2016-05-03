@@ -117,7 +117,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 /*收藏提示*/
 .collect-tip{ background:rgba(0,0,0,.8); position:fixed; bottom:0; left:0; width:100%; padding:8px 0; z-index:100}
 .collect-tip .content_w{ width:240px;}
-.collect-tip b{ display:block; width:40px; height:40px; background-position:0 -100px; float:left; margin-right:15px;}
+.collect-tip b{ display:block; width:40px; height:40px; background-image:url(../../images/studio_mb/logo-icon.png); background-position:0 0; background-size:40px auto; float:left; margin-right:15px;}
 .collect-tip p{ color:#fff; font-size:13px; line-height:20px;}
 .collect-tip i{ position:relative; display:inline-block; margin:-1px 4px 0; width:17px; height:22px; background-position:-80px -10px; vertical-align:bottom}
 .collect-tip i.apple{ background-position:-60px -10px;}
