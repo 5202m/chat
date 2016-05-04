@@ -365,11 +365,11 @@ var StudioChatMini = {
                         StudioChatMini.courses = data.data;
                         StudioChatMini.getLiveTitle(callback);
                     }else{
-                        callback("YY直播");
+                        callback("行情教学");
                     }
                 });
             }catch (e){
-                callback("YY直播");
+                callback("行情教学");
                 console.error("getCourse->"+e);
             }
         }else{
@@ -385,7 +385,7 @@ var StudioChatMini = {
                     return;
                 }
             }
-            callback("YY直播");
+            callback("行情教学");
         }
     },
     /**
