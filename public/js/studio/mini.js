@@ -373,7 +373,7 @@ var StudioChatMini = {
                 console.error("getCourse->"+e);
             }
         }else{
-            var loc_now = new Date();
+            var loc_now = new Date(StudioChatMini.serverTime);
             var loc_time = (loc_now.getHours() < 10 ? "0" : "") + loc_now.getHours();
             loc_time += ":";
             loc_time += (loc_now.getMinutes() < 10 ? "0" : "") + loc_now.getMinutes();
