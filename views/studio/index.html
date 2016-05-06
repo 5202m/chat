@@ -57,7 +57,7 @@
                     <div class="btnarea clearfix" id="studioListId">
                         <% if (studioList!='[]') { %>
                         <% studioList.forEach(function(row,index){ %>
-                           <a href="javascript:" id="<%=row.id %>" title="<%=row.chatStudio.remark %>" class="<%if(row.level==1){%>vip<%}else if(row.level==2){%>r1<%} else if(row.level==3){%>r2<%}else{%>normal<%}%> <%if(row.disable){%>locked<%}else if(row.isCurr){%>ing<%}else{%>normal<%}%>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>" yc="<%= row.chatStudio.yyChannel %>" av="<%= row.allowVisitor %>"  mc="<%= row.chatStudio.minChannel %>">
+                           <a href="javascript:" id="<%=row.id %>" title="<%=row.remark %>" class="<%if(row.level==1){%>vip<%}else if(row.level==2){%>r1<%} else if(row.level==3){%>r2<%}else{%>normal<%}%> <%if(row.disable){%>locked<%}else if(row.isCurr){%>ing<%}else{%>normal<%}%>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>">
                                <span class="s1"><%= row.name %></span><span class="s2"><i></i></span>
                            </a>
                         <% }); %>
@@ -731,8 +731,6 @@ studioChat.web24kPath='<%= web24kPath %>';
 studioChat.apiUrl='<%= apiUrl %>';
 studioChat.filePath='<%= filePath %>';
 studioChat.userInfo=JSON.parse('<%- userInfo %>');
-studioChat.studioDate='<%- studioDate %>';
-studioChat.exStudioStr='<%- exStudioStr %>';
 studioChat.serverTime=Number('<%= serverTime %>');
 studioChat.socketUrl=JSON.parse('<%- socketUrl %>');
 $(function(){

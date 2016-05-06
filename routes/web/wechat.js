@@ -325,16 +325,11 @@ router.get('/getSyllabus', function(req, res) {
     var groupType=req.query["groupType"];
     var groupId=req.query["groupId"];
     syllabusService.getSyllabus(groupType, groupId, function(data){
+        var serverDate=new Date();
+        var loc_nowTime=serverDate.getTime();
+        var title='';
         if(data){
-            var loc_nowTime = new Date();
-            var loc_timeStr = (loc_nowTime.getHours() < 10 ? "0" : "") + loc_nowTime.getHours();
-            loc_timeStr += ":";
-            loc_timeStr += (loc_nowTime.getMinutes() < 10 ? "0" : "") + loc_nowTime.getMinutes();
-            var loc_day = loc_nowTime.getDay();
-            data.currTime = {
-                day : loc_day,
-                time : loc_timeStr
-            };
+            var loc_day = serverDate.getDay();
             //#月#日-#月#日老师课程表安排，以当前时间计算当周的开始结束日期
             loc_day = (loc_day + 6) % 7;
             //计算课程表最后一天
@@ -343,10 +338,9 @@ router.get('/getSyllabus', function(req, res) {
             loc_temp = typeof loc_temp == "number" ? ((loc_temp + 6) % 7) : 0;
             var loc_startDate = new Date(loc_nowTime.getTime() - loc_day * 86400000);
             var loc_endDate = new Date(loc_nowTime.getTime() + (loc_temp - loc_day) * 86400000);
-            data.title = (loc_startDate.getMonth() + 1) + '月' + loc_startDate.getDate() + '日-'
-                + (loc_endDate.getMonth() + 1) + '月' + loc_endDate.getDate() + '日老师课程表安排';
+            title = (loc_startDate.getMonth() + 1) + '月' + loc_startDate.getDate() + '日-'+ (loc_endDate.getMonth() + 1) + '月' + loc_endDate.getDate() + '日老师课程表安排';
         }
-        res.json(data);
+        res.json({courses:data,title:title,serverTime:loc_nowTime});
     });
 });
 

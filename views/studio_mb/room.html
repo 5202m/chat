@@ -32,13 +32,6 @@
 
     <!-- video begin -->
     <section class="videopart">
-        <% if (studioList!='[]') { %>
-        <% studioList.forEach(function(row,index){ %>
-        <% if (row.isCurr) { %>
-        <input type="hidden" yc="<%= row.chatStudio.yyChannel %>" mc="<%= row.chatStudio.minChannel %>">
-        <% } %>
-        <% }); %>
-        <% } %>
         <div class="main-video" id="tVideoDiv">
         </div>
         <div class="ctrlblock dn">
@@ -156,8 +149,6 @@
         studioChatMb.apiUrl = '<%= apiUrl %>';
         studioChatMb.filePath = '<%= filePath %>';
         studioChatMb.userInfo = JSON.parse('<%- userInfo %>');
-        studioChatMb.studioDate = '<%- studioDate %>';
-        studioChatMb.exStudioStr = '<%- exStudioStr %>';
         studioChatMb.socketUrl = JSON.parse('<%- socketUrl %>');
         studioChatMb.serverTime=Number('<%= serverTime %>');
         studioChatMb.init();

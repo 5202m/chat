@@ -101,7 +101,7 @@ var common = {
         return (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes())+":"+(date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds());
     },
     /**
-     * 提取时分秒
+     * 提取时分
      */
     getHHMM:function(date){
         if(!(date instanceof Date)){
@@ -359,23 +359,24 @@ var common = {
     /**
      * 格式化显示课程安排表
      * @param syllabus {{days : [{day: Integer, status : Integer}], timeBuckets : [{startTime : String, endTime : String, course : [{lecturer : String, title : String, status : Integer}]}]}}
-     * @param currTime {{day : Integer, time : String}}
+     * @param serverTime
      * @param style 类型 1-直播间 2-微解盘 3-直播间手机版
      * @param [options]
      */
-    formatSyllabus:function(syllabus, currTime, style, options){
+    formatSyllabus:function(syllabus, serverTime, style, options){
         var defConstants = {
             dayCN : ['星期天','星期一','星期二','星期三','星期四','星期五','星期六'],
             indexCN : ['第一节','第二节','第三节','第四节','第五节','第六节','第七节','第八节'],
             courseCls : ['prev', 'ing', 'next'],
             tableCls : "syllabus"
         };
+        var currDay=new Date(serverTime).getDay(),currTimes=this.getHHMM(serverTime);
         var loc_constants = $.extend({}, defConstants, options);
         //计算时间状态,返回对应的样式
-        var loc_timeClsFunc = function(day, startTime, endTime, currTime, notCheckTime){
+        var loc_timeClsFunc = function(day, startTime, endTime, notCheckTime){
             var loc_index = 0;
             var tempDay = (day + 6) % 7; //将1,2,3,4,5,6,0转化为0,1,2,3,4,5,6
-            var currTempDay = (currTime.day + 6) % 7;
+            var currTempDay = (currDay + 6) % 7;
             if(tempDay > currTempDay){
                 loc_index = 2;
             }else if(tempDay < currTempDay){
@@ -383,9 +384,9 @@ var common = {
             }else{
                 if(notCheckTime){
                     loc_index = 1;
-                }else if(endTime <= currTime.time){
+                }else if(endTime <= currTimes){
                     loc_index = 0;
-                }else if(startTime > currTime.time){
+                }else if(startTime > currTimes){
                     loc_index = 2;
                 }else{
                     loc_index = 1;
@@ -407,19 +408,19 @@ var common = {
                     {
                         loc_html.push('<div class="sy_panel">');
                         //星期（头部）
-                        var loc_startDateTime = currTime.timeLong - 86400000 * ((currTime.day + 6) % 7);
+                        var loc_startDateTime = serverTime - 86400000 * ((currDay + 6) % 7);
                         var loc_date = null;
                         var loc_dateStr = null;
                         var loc_activeCls = null;
                         loc_html.push('<div class="sy_nav">');
-                        var loc_width = ' style="width:' + (100 / loc_dayLen) + '%;"'
+                        var loc_width = ' style="width:' + (100 / loc_dayLen) + '%;"';
                         for(var i = 0; i < loc_dayLen; i++)
                         {
                             loc_date = new Date(loc_startDateTime + ((loc_courses.days[i].day + 6) % 7) * 86400000);
                             loc_dateStr = loc_date.getFullYear() + "-"
                             + (loc_date.getMonth() < 9 ? "0" : "") + (loc_date.getMonth() + 1) + "-"
                             + (loc_date.getDate() < 10 ? "0" : "") + loc_date.getDate();
-                            loc_activeCls = (loc_courses.days[i].day == currTime.day) ? ' class="active"' : "";
+                            loc_activeCls = (loc_courses.days[i].day == currDay) ? ' class="active"' : "";
                             loc_html.push('<a href="javascript:void(0)" d="' + loc_courses.days[i].day + '"' + loc_activeCls + loc_width + '>' + loc_constants.dayCN[loc_courses.days[i].day] + '<br/><span>' + loc_dateStr + '</span><em class="dir">^</em></a>');
                         }
                         loc_html.push('</div>');
@@ -434,7 +435,7 @@ var common = {
                             if(loc_courses.days[i].status == 0)
                             {
                                 //全天休市
-                                loc_timeCls = loc_timeClsFunc(loc_courses.days[i].day, null, null, currTime, true);
+                                loc_timeCls = loc_timeClsFunc(loc_courses.days[i].day, null, null, true);
                                 loc_html.push('<tr class="' + loc_timeCls + '" width="100%"><td>休市</td></tr>');
                             }
                             else
@@ -442,7 +443,7 @@ var common = {
                                 for(var j = 0, lenJ = loc_courses.timeBuckets.length; j < lenJ; j++)
                                 {
                                     loc_timeBucket = loc_courses.timeBuckets[j];
-                                    loc_timeCls = loc_timeClsFunc(loc_courses.days[i].day, loc_timeBucket.startTime, loc_timeBucket.endTime, currTime, false);
+                                    loc_timeCls = loc_timeClsFunc(loc_courses.days[i].day, loc_timeBucket.startTime, loc_timeBucket.endTime, false);
                                     if(loc_timeBucket.course[i].status == 0)
                                     {
                                     	//时间段休市
@@ -493,14 +494,14 @@ var common = {
                             if(loc_day.status == 0)
                             {
                                 //全天休市
-                                loc_timeCls = loc_timeClsFunc(loc_day.day, null, null, currTime, true);
+                                loc_timeCls = loc_timeClsFunc(loc_day.day, null, null, true);
                                 loc_html.push('<td class="' + loc_timeCls + '" colspan="' + lenJ + '">休市</td>');
                             }
                             else
                             {
                                 for(var j = 0; j < lenJ; j++){
                                     loc_timeBucket = loc_courses.timeBuckets[j];
-                                    loc_timeCls = loc_timeClsFunc(loc_day.day, loc_timeBucket.startTime, loc_timeBucket.endTime, currTime, false);
+                                    loc_timeCls = loc_timeClsFunc(loc_day.day, loc_timeBucket.startTime, loc_timeBucket.endTime, false);
                                     loc_html.push('<td class="' + loc_timeCls + '">' + (loc_timeBucket.course[i].status == 0 ? "休市" : loc_timeBucket.course[i].lecturer) + '</td>');
                                 }
                             }

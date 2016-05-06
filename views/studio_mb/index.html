@@ -53,8 +53,8 @@
                         <li class="<%=(!row.disable && row.isOpen ? 'live' : '')%>" ga="<%=!row.disable%>" go="<%=row.isOpen%>" gi="<%= row.id %>">
                             <section class="room-main clearfix">
                                 <div class="tit">
-                                    <b><%= row.name %></b><i class="<%=row.isStudio || row.isExStudio ? 'st' : ''%>"></i><br>
-                                    <span aw="<%= row.chatStudio.clientGroup %>">所有客户均可观看</span>
+                                    <b><%= row.name %></b><i class="st"></i><br>
+                                    <span aw="<%= row.clientGroup %>">所有客户均可观看</span>
                                 </div>
                                 <div class="btns">
                                     <a href="javascript:void(0)" class="timebtn">课程表</a>
@@ -64,8 +64,7 @@
                             <section class="room-info">
                                 <div class="info intro">
                                     <span class="tag"><b>房间介绍</b></span>
-
-                                    <p><%=row.chatStudio.remark %></p>
+                                    <p><%=row.remark %></p>
                                 </div>
                                 <div class="info syllabus">
                                     <span class="tag"><b>课程表</b></span>
@@ -144,7 +143,7 @@
 <script type="text/javascript" src="/js/lib/swiper.min.js"></script>
 <script type="text/javascript" src="/js/lib/store.min.js"></script>
 <script type="text/javascript" src="/js/util/common.min.js"></script>
-<script type="text/javascript" src="/js/studio_mb/index.min.js"></script>
+<script type="text/javascript" src="/js/studio_mb/index.js"></script>
 <script type="text/javascript">
 $(function(){
     studioChatMbIdx.userInfo=JSON.parse('<%- userInfo %>');

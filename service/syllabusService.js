@@ -10,6 +10,7 @@ var syllabusService = {
 
     /**
      * 查询聊天室课程安排
+     * 备注：如果groupId是逗号分隔的多个id,则返回多条记录，否则返回一条记录
      * @param groupType
      * @param groupId
      * @param callback
@@ -17,9 +18,11 @@ var syllabusService = {
     getSyllabus : function(groupType, groupId, callback){
         groupId = groupId || "";
         var loc_dateNow = new Date();
-        chatSyllabus.findOne({
+        console.log("groupId：",groupId);
+        var groupIdArr=groupId.split(",");
+        chatSyllabus.find({
             groupType : groupType,
-            groupId : groupId,
+            groupId : {$in:groupIdArr},
             isDeleted : 0,
             publishStart : {$lte : loc_dateNow},
             publishEnd : {$gt : loc_dateNow}
@@ -29,7 +32,7 @@ var syllabusService = {
                 callback(null);
                 return;
             }
-            callback(!row ? null : row.toObject());
+            callback(row ?(groupIdArr.length>1?row:row[0]): null);
         });
     }
 };

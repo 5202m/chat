@@ -226,31 +226,33 @@ var studioChatMbIdx={
      */
     setEventSyllabus : function(){
         //初始化课表
-        $("#studioListTab .videoroom-ul li").each(function(){
-            var loc_this = $(this);
-            var loc_groupType = studioChatMbIdx.userInfo.groupType;
-            var loc_groupId = loc_this.attr("gi");
-            $.getJSON('/studio/getSyllabus?t=' + new Date().getTime(),{groupType:loc_groupType,groupId:loc_groupId},function(data){
-                var loc_html = null;
-                if(data && data.courses){
-                    loc_html = common.formatSyllabus(data.courses, data.currTime, 3, {
-                        dayCN : ['周日','周一','周二','周三','周四','周五','周六']
-                    });
+        var groupIds= $("#studioListTab .videoroom-ul li").map(function(){ return $(this).attr("gi");}).get().join(",");
+        $.getJSON('/studio/getSyllabus?t=' + new Date().getTime(),{groupType:studioChatMbIdx.userInfo.groupType,groupId:groupIds},function(result){
+            var loc_html = null,data=result.data;
+            if(data){
+                var row=null;
+                console.log("data:",data);
+                for(var i in data){
+                    row=data[i];
+                    if(row.courses){
+                        loc_html = common.formatSyllabus(row.courses, result.serverTime, 3, {
+                            dayCN : ['周日','周一','周二','周三','周四','周五','周六']
+                        });
+                        var loc_panel = $('#studioListTab .videoroom-ul li[gi='+row.groupId+']').find(".timetable");
+                        loc_panel.html(loc_html);
+                        loc_panel.find("th").bind("click", function(){
+                            var loc_this = $(this);
+                            loc_this.siblings(".active").removeClass("active");
+                            loc_this.addClass("active");
+                            var loc_day = loc_this.attr("d");
+                            loc_this.parent().siblings("tr[d]").hide();
+                            loc_this.parent().siblings("tr[d='" + loc_day + "']").show();
+                        });
+                        loc_panel.find("th.active").trigger("click");
+                    }
                 }
-                var loc_panel = loc_this.find(".timetable");
-                loc_panel.html(loc_html);
-                loc_panel.find("th").bind("click", function(){
-                    var loc_this = $(this);
-                    loc_this.siblings(".active").removeClass("active");
-                    loc_this.addClass("active");
-                    var loc_day = loc_this.attr("d");
-                    loc_this.parent().siblings("tr[d]").hide();
-                    loc_this.parent().siblings("tr[d='" + loc_day + "']").show();
-                });
-                loc_panel.find("th.active").trigger("click");
-            });
+            }
         });
-
         //显示课程表
         $('.btns .timebtn').click(function(){
             $(".pop-time .sc_cont").empty().append($(this).parents("li").find(".timetable").clone(true));

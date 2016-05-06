@@ -171,7 +171,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         var newStudioList=[],rowTmp=null,exStudio=null,exStudioIdx=null,exStudioTmp=null;
         var isVisitor=(constant.clientGroup.visitor==clientGroup);
         data.studioList.forEach(function(row){
-            rowTmp={chatStudio:{}};
+            rowTmp={};
             rowTmp.id=row._id;
             rowTmp.name=row.name;
             rowTmp.level=row.level;
@@ -188,30 +188,13 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
                     }
                 }
             }
-            rowTmp.disable=(!common.containSplitStr(row.chatStudio.clientGroup,clientGroup));
-            rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.chatStudio.clientGroup,constant.clientGroup.visitor);
-            rowTmp.chatStudio.yyChannel=common.trim(row.chatStudio.yyChannel);
-            rowTmp.chatStudio.minChannel=common.trim(row.chatStudio.minChannel);
-            rowTmp.chatStudio.remark=common.trim(row.chatStudio.remark);
-            rowTmp.chatStudio.clientGroup=common.trim(row.chatStudio.clientGroup);
+            rowTmp.disable=(!common.containSplitStr(row.clientGroup,clientGroup));
+            rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.clientGroup,constant.clientGroup.visitor);
+            rowTmp.remark=common.trim(row.remark);
+            rowTmp.clientGroup=common.trim(row.clientGroup);
             rowTmp.isCurr=(row._id==groupId);
-            rowTmp.isStudio=common.dateTimeWeekCheck(row.chatStudio.studioDate, true);
             rowTmp.isOpen=common.dateTimeWeekCheck(row.openDate, true);
-            rowTmp.isExStudio = false;
-            if(common.isValid(row.chatStudio.exStudioStr)){
-                exStudio=JSON.parse(row.chatStudio.exStudioStr);
-                for(exStudioIdx in exStudio){
-                    exStudioTmp=exStudio[exStudioIdx];
-                    if(common.dateTimeWeekCheck(exStudioTmp.studioDate, true) &&  common.isValid(exStudioTmp.srcUrl)){
-                        rowTmp.isExStudio=true;
-                        break;
-                    }
-                }
-            }
             if(rowTmp.isCurr) {
-                viewDataObj.studioDate = common.trim(row.chatStudio.studioDate);
-                viewDataObj.exStudioStr= common.trim(row.chatStudio.externalStudio);
-                viewDataObj.studioInfo= JSON.stringify({yyChannel : row.chatStudio.yyChannel, minChannel : row.chatStudio.minChannel});
                 viewDataObj.serverTime=new Date().getTime();
             }
             newStudioList.push(rowTmp);
@@ -226,6 +209,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         }
         var fromPlatform=req.query["platform"];
         var isThirdUsed = fromPlatform && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform);
+        console.log("viewDataObj:",JSON.stringify(viewDataObj));
         if(isMobile){
             if(groupId || isThirdUsed){
                 viewDataObj.fromPlatform=fromPlatform;
@@ -521,18 +505,7 @@ router.get('/getSyllabus', function(req, res) {
     var groupType=req.query["groupType"];
     var groupId=req.query["groupId"];
     syllabusService.getSyllabus(groupType, groupId, function(data){
-        if(data){
-            var loc_time = new Date();
-            var loc_timeStr = (loc_time.getHours() < 10 ? "0" : "") + loc_time.getHours();
-            loc_timeStr += ":";
-            loc_timeStr += (loc_time.getMinutes() < 10 ? "0" : "") + loc_time.getMinutes();
-            data.currTime = {
-                day : loc_time.getDay(),
-                time : loc_timeStr,
-                timeLong : loc_time.getTime()
-            };
-        }
-        res.json(data);
+        res.json({data:data,serverTime:new Date().getTime()});
     });
 });
 

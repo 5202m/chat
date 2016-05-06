@@ -382,7 +382,7 @@ var fxchat={
                 {
                     if(data && data.courses)
                     {
-                        loc_html = common.formatSyllabus(data.courses, data.currTime, 2);
+                        loc_html = common.formatSyllabus(data.courses, data.serverTime, 2);
                     }
                 }
                 catch(e1)
