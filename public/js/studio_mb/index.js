@@ -231,19 +231,29 @@ var studioChatMbIdx={
             var loc_groupType = studioChatMbIdx.userInfo.groupType;
             var loc_groupId = loc_this.attr("gi");
             $.getJSON('/studio/getSyllabus?t=' + new Date().getTime(),{groupType:loc_groupType,groupId:loc_groupId},function(data){
-                var loc_html = "";
+                var loc_html = null;
                 if(data && data.courses){
                     loc_html = common.formatSyllabus(data.courses, data.currTime, 3, {
-                        dayCN : ['周<br>日','周<br>一','周<br>二','周<br>三','周<br>四','周<br>五','周<br>六']
+                        dayCN : ['周日','周一','周二','周三','周四','周五','周六']
                     });
                 }
-                loc_this.find(".timetable").html(loc_html);
+                var loc_panel = loc_this.find(".timetable");
+                loc_panel.html(loc_html);
+                loc_panel.find("th").bind("click", function(){
+                    var loc_this = $(this);
+                    loc_this.siblings(".active").removeClass("active");
+                    loc_this.addClass("active");
+                    var loc_day = loc_this.attr("d");
+                    loc_this.parent().siblings("tr[d]").hide();
+                    loc_this.parent().siblings("tr[d='" + loc_day + "']").show();
+                });
+                loc_panel.find("th.active").trigger("click");
             });
         });
 
         //显示课程表
         $('.btns .timebtn').click(function(){
-            $(".pop-time .timetable").html($(this).parents("li").find(".timetable").html());
+            $(".pop-time .sc_cont").empty().append($(this).parents("li").find(".timetable").clone(true));
             studioMbPop.popShow($('.pop-time'));
             return false;
         });
@@ -266,40 +276,6 @@ var studioChatMbIdx={
         }catch (e){
             console.error("getArticleList->"+e);
             callback(null);
-        }
-    },
-    /**
-     * 查询课程表信息
-     * @param groupType
-     * @param groupId
-     * @param callback (html)
-     */
-    getSyllabus : function(groupType, groupId, callback){
-        try{
-            $.getJSON('/wechat/getSyllabus?t=' + new Date().getTime(),{groupType:groupType,groupId:groupId},function(data){
-                var loc_html = "";
-                try
-                {
-                    if(data && data.courses)
-                    {
-                        loc_html = common.formatSyllabus(data.courses, data.currTime, 2);
-                    }
-                }
-                catch(e1)
-                {
-                    console.error("getSyllabus->"+e1);
-                    loc_html = "";
-                }
-                var loc_result = "";
-                if(loc_html.length > 0)
-                {
-                    loc_result = '<li class="swiper-slide"><span txt="txt" style="display:none;">'+loc_html+'</span><a href="javascript:">'+data.title+'</a><i>'+ common.formatterDate(data.updateDate,'.')+'</i></li>';
-                }
-                callback(loc_result);
-            });
-        }catch (e){
-            console.error("getSyllabus->"+e);
-            callback("");
         }
     },
     /**
