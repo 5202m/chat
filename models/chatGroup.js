@@ -33,13 +33,7 @@ var mongoose = require('mongoose')
               periodDate:{type:String}, //时间段（开始时间）
               afterRuleTips:{type:String} //执行规则后的提示语
           }],
-          chatStudio:{
-              clientGroup:String,//客户组（对应数据字典的客户组,多个逗号分隔）
-              yyChannel:{type:String,default:''},//YY频道号
-              minChannel:{type:String,default:''},//小频道号
-              studioDate:String,//直播时间
-              externalStudio:String,//外接直播
-              remark:{type:String,default:''} //备注
-           }
+          clientGroup:String,//客户组（对应数据字典的客户组,多个逗号分隔）
+          remark:String //备注
         });
 module.exports =mongoose.model('chatGroup',chatGroupSchema,'chatGroup');
