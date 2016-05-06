@@ -623,12 +623,12 @@ var studioChat={
      */
     getSyllabus : function(groupType, groupId, callback){
         try{
-            $.getJSON('/studio/getSyllabus?t=' + new Date().getTime(),{groupType:groupType,groupId:groupId},function(data){
-                if(!data || !data.courses){
+            $.getJSON('/studio/getSyllabus?t=' + new Date().getTime(),{groupType:groupType,groupId:groupId},function(result){
+                if(!result.data || !result.data.courses){
                     callback("");
                     return;
                 }
-                callback(common.formatSyllabus(data.courses, data.currTime, 1));
+                callback(common.formatSyllabus(result.data.courses, result.serverTime, 1));
             });
         }catch (e){
             console.error("getSyllabus->"+e);

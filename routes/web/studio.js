@@ -209,7 +209,6 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         }
         var fromPlatform=req.query["platform"];
         var isThirdUsed = fromPlatform && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform);
-        console.log("viewDataObj:",JSON.stringify(viewDataObj));
         if(isMobile){
             if(groupId || isThirdUsed){
                 viewDataObj.fromPlatform=fromPlatform;
