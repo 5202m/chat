@@ -88,14 +88,16 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .room-info .info .tag b{ background:rgba(112,132,175,.3); display:block; width:100%; height:18px;line-height:18px; font-size:11px; color:#7084af; text-align:center;}
 .room-info .info p{line-height:20px; font-size:14px;}
 .timetable { line-height:20px; font-size:14px; color:#fff;}
-.timetable td{ background:rgba(245,245,245,.1); width:85%; }
+.timetable td{ background:rgba(245,245,245,.1);}
 .timetable td p{ position:relative; padding:1px 0 4px; border-bottom:1px solid #283248; margin:0 5px 0 10px;}
 .timetable td p:last-child{ border:0;}
 .timetable td span{padding-right:10px;display:inline-block; vertical-align:middle; color:#cacaca; line-height:16px; font-size:12px;}
 .timetable td span.item{ position:relative; display:block; color:#fff; line-height:16px; white-space: normal; word-break: break-all;}
-.timetable th{ background:rgba(212,207,195,.1);width:15%; text-align:center; color:#b59030; font-weight:normal; position:relative; }
-.timetable th i{ position:absolute; top:50%; margin-top:-4px; right:-8px; display:block; content:'.'; width:0; height:0; border: 4px solid transparent;  border-left: 4px solid #394456;}
-.timetable td.space{ background:none; padding:0; height:3px; overflow:hidden;}
+.timetable th{ background:rgba(212,207,195,.1);width:15%; height: 30px; text-align:center; color:#b59030; font-weight:normal; position:relative; }
+.timetable th i{ position:absolute; left:50%; margin-left:-4px; bottom:-8px; display:none; content:'.'; width:0; height:0; border: 4px solid transparent;  border-top: 4px solid #595959;}
+.timetable th.active{color: #a19b20; background:rgba(245,245,245,.2);}
+.timetable th.active i{display: block;}
+.timetable td.space{ background:none; padding:0; height:5px; overflow:hidden;}
 
 /* 交易策略 & 专业评论 */
 .trade-ul{border-top:1px solid #303d58; padding:12px 0}
@@ -234,14 +236,12 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .popupbox .pop-close{ display:block; background-position:-50px -40px; width:17px; height:17px; position:absolute; right:10px; top:10px;} 
 .popupbox .titlebar{ width:70%; margin:0 auto; position:relative; height:12px; text-align:center;vertical-align:middle; margin-bottom:12px;}
 .popupbox .titlebar span { display:inline-block;  height:24px; line-height:24px; color:#666; font-size:20px; vertical-align:middle; margin-top:0;}
-.popupbox .timetable{ color:#4a4a4a; font-size:12px;}
-.popupbox .timetable th{ color:#777; background:#d5d4d4; border-bottom-left-radius:3px; border-top-left-radius:3px}
-.popupbox .timetable td{ border:1px solid #e3e3e3; border-left:0;background:#fff; box-sizing:border-box;}
-.popupbox .timetable tr:nth-child(4n-3) th{ background:#e7e6e6}
-.popupbox .timetable th i{ border-left:4px solid #d5d4d4}
-.popupbox .timetable tr:nth-child(4n-3) th i{ border-left:4px solid #e7e6e6}
+.popupbox .timetable{ color:#4a4a4a; font-size:12px; background: #fff;}
+.popupbox .timetable th{ color:#777; background:#e7e6e6; border-top-left-radius:3px; border-top-right-radius:3px}
+.popupbox .timetable td{ border-bottom:1px solid #e3e3e3; background:#fff; box-sizing:border-box; padding-top: 6px;}
+.popupbox .timetable th.active{background:#d5d4d4; color:#2D2D2D;}
+.popupbox .timetable th i{border-top:4px solid #d5d4d4}
 .popupbox .timetable td p{ border-color:#e3e3e3}
-.popupbox .timetable td p:last-child{ border:0}
 .popupbox .timetable td span{ color:#777;}
 .popupbox .timetable td span.item{ color:#333;white-space: normal; word-break: break-all;}
 .popupbox .timetable td.space{ border:0}
