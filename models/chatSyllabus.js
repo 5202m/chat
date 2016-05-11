@@ -18,7 +18,10 @@ var chatSyllabusSchema = new Schema({
     _id : ObjectId,
     groupType : {type:String,index:true}, //聊天室组别
     groupId : {type:String,index:true},   //聊天室编号
-    courses : String,   //课程json字符串：{days : [{day: Integer, status : Integer}], timeBuckets : [startTime : String, endTime : String, course : [{lecturer : String, title : String, status : Integer}]]}；备注： status 0-休市, 1-有效, 2-无效
+    courseType:Number,//课程类型 0 文字直播    1 视频直播   2 oneTv
+    studioLink:String,//直播链接地址,数据格式：[{code:"1",url:''},{code:"2",url:''}]
+    courses : String,   //课程json字符串：{days : [{day: Integer, status : Integer}], timeBuckets : [startTime : String, endTime : String, course : [{lecturer : String, lecturerId : String,title : String, status : Integer}]]}；备注： status 0-休市, 1-有效, 2-无效
+    context:String,//简述
     publishStart : Date, //发布开始时间
     publishEnd : Date, //发布结束时间
     isDelete : Number, //是否删除 1-删除 0-未删除
