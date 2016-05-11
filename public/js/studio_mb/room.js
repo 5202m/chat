@@ -7,8 +7,7 @@ var studioChatMb={
     web24kPath:'',
     filePath:'',
     apiUrl:'',
-    exStudioStr:'',//外接直播JSON字符串
-    studioDate:'',//直播时间点
+    syllabusData:null,//课程数据
     serverTime:0,//服务器时间
     pushObj:{
         whPush : {},   //私聊推送信息
@@ -450,7 +449,7 @@ var studioChatMb={
             var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime);
              if(!course||course.status==0||common.isBlank(course.studioLink)||course.isNext||course.courseType==2||course.courseType==0){
                 if(isBack){
-                    alert("目前没有直播,请留意课程表！");
+                    alert("目前还没有视频直播，详情请留意直播间课程表！");
                 }else{
                     this.playMp4Vd();
                 }

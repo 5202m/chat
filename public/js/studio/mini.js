@@ -6,8 +6,7 @@
 var StudioChatMini = {
     apiUrl:'',
     blwsPlayer: null,//保利威视
-    studioInfo: null,
-    studioDate: '',//直播时间点
+    syllabusData:null,//课程数据
     serverTime: 0,//服务器时间
     pushObj:{
         whPush : {},   //私聊推送信息
@@ -84,7 +83,7 @@ var StudioChatMini = {
      * 客户端视频任务
      */
     clientVideoTask: function () {
-        if($("#studioVideoDiv embed").size() < 1 && common.dateTimeWeekCheck(this.studioDate, true, StudioChatMini.serverTime)){
+        if($("#studioVideoDiv embed").size() < 1){
             $("#vbackbtn_live").show();
         }
     },
@@ -93,17 +92,37 @@ var StudioChatMini = {
      * 'mp4'-随机播放MP4教学视频
      * 'video'-随机播放所有教学视频
      * 'live'-yy直播时间，播放yy视频，否则播放MP4教学视频
+     * @param isBackStudio 返回直播
      */
-    playVideo: function (type) {
+    playVideo: function (type,isBackStudio) {
         //如果是在看教学视频则直接返回
         StudioChatMini.video.type = type;
         if(type == "mp4" || type == "video"){
-            StudioChatMini.setVideo(false, StudioChatMini.changeVideoIndex(type));
+            StudioChatMini.setVideo(StudioChatMini.changeVideoIndex(type));
         }else{
-            if (common.dateTimeWeekCheck(this.studioDate, true, StudioChatMini.serverTime)) {//直播时间段，则播放直播
-                this.setVideo(true);
-            } else {//非直播时段，检查是否有其他直播，有则播放其他直播，没有则播放教学视频
-                StudioChatMini.playVideo('mp4');
+            var course=common.getSyllabusPlan(this.syllabusData,this.serverTime);
+            if(!course||course.status==0||common.isBlank(course.studioLink)||course.isNext){
+                if(isBackStudio){
+                    alert("目前还没有视频直播，详情请留意直播间课程表！");
+                }else{
+                    StudioChatMini.playVideo('mp4');
+                }
+                return;
+            }
+            if(course.courseType==1||course.courseType==2){//直播时间段，则播放直播
+                $("#vbackbtn_live").hide();
+                this.setStudioVideoDiv(course.studioLink,course.title);
+            }else{//非直播时段则播放教学视频
+                if(!isBackStudio){
+                    StudioChatMini.playVideo('mp4');
+                    if(course.courseType==0){
+                        if(window.SewisePlayer){//停播放教学视频
+                            SewisePlayer.doStop();
+                        }
+                    }
+                }else{
+                    this.setStudioVideoDiv(course.studioLink,course.title);
+                }
             }
         }
     },
@@ -190,105 +209,85 @@ var StudioChatMini = {
      * @param isYy
      * @param video
      */
-    setVideo: function (isYy, video) {
+    setVideo: function (video) {
         try {
-            if (isYy) {
-                //隐藏观看直播
-                $("#vbackbtn_live").hide();
-
-                if(!this.studioInfo.url){
-                    var yc = this.studioInfo.yyChannel, mc = this.studioInfo.minChannel;
-                    //this.studioInfo.url = 'http://yy.com/s' + (common.isValid(yc) ? '/' + yc : '') + (common.isValid(mc) ? '/' + mc : '') + '/yyscene.swf';
-
-                    if('live'==yc){
-                        this.studioInfo.url = 'rtmp://ct.phgsa.cn/live/'+common.trim(mc);
+            $("#tvDivId").show();
+            $("#stVideoDiv").hide();
+            $("#studioVideoDiv embed").remove();
+            $("#tVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
+            var vUrl = video.url, title = video.title;
+            $("#tvDivId .vtitle span").text(title);
+            if (vUrl.indexOf(".html") != -1) {
+                if(window.SewisePlayer){//停播放教学视频
+                    SewisePlayer.doStop();
+                    $("#tVideoDiv div").hide();
+                }
+                var iframeDom = $("#tVideoDiv iframe");
+                var isAppend = true;
+                if(iframeDom.size() > 0){
+                    if(iframeDom.attr("src") == vUrl){
+                        isAppend = false;
                     }else{
-                        this.studioInfo.url = 'http://yy.com/s'+(common.isValid(yc)?'/'+yc:'')+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf';
+                        iframeDom.remove();
                     }
                 }
-                StudioChatMini.getLiveTitle(function(title){
-                    StudioChatMini.setStudioVideoDiv(StudioChatMini.studioInfo.url, title);
-                });
-            } else if(video){
-                $("#tvDivId").show();
-                $("#stVideoDiv").hide();
-
-                $("#studioVideoDiv embed").remove();
-                $("#tVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
-                var vUrl = video.url, title = video.title;
-                $("#tvDivId .vtitle span").text(title);
-                if (vUrl.indexOf(".html") != -1) {
-                    if(window.SewisePlayer){//停播放教学视频
-                        SewisePlayer.doStop();
-                        $("#tVideoDiv div").hide();
-                    }
-                    var iframeDom = $("#tVideoDiv iframe");
-                    var isAppend = true;
-                    if(iframeDom.size() > 0){
-                        if(iframeDom.attr("src") == vUrl){
-                            isAppend = false;
-                        }else{
-                            iframeDom.remove();
+                if(isAppend){
+                    $("#tVideoDiv").append('<iframe frameborder=0 width="100%" height="100%" src="'+vUrl+'" allowfullscreen></iframe>');
+                }
+            } else {
+                $("#tVideoDiv iframe").remove();
+                $("#tVideoDiv div").show();
+                if (vUrl.indexOf("type=blws") != -1) {
+                    var vidParams = vUrl.split("&");
+                    if (vidParams.length > 1) {
+                        var vid = vidParams[1].replace(/^vid=/g, '');
+                        if (StudioChatMini.blwsPlayer) {
+                            StudioChatMini.blwsPlayer.changeVid(vid);
+                        } else {
+                            StudioChatMini.blwsPlayer = polyvObject('#tVideoDiv').videoPlayer({
+                                width: '100%',
+                                height: '100%',
+                                'vid': vid,
+                                'flashvars': {"autoplay": "0", "setScreen": "fill"},
+                                onPlayOver:function(id){
+                                    StudioChatMini.playVideo(StudioChatMini.video.type);
+                                }
+                            });
                         }
-                    }
-                    if(isAppend){
-                        $("#tVideoDiv").append('<iframe frameborder=0 width="100%" height="100%" src="'+vUrl+'" allowfullscreen></iframe>');
                     }
                 } else {
-                    $("#tVideoDiv iframe").remove();
-                    $("#tVideoDiv div").show();
-                    if (vUrl.indexOf("type=blws") != -1) {
-                        var vidParams = vUrl.split("&");
-                        if (vidParams.length > 1) {
-                            var vid = vidParams[1].replace(/^vid=/g, '');
-                            if (StudioChatMini.blwsPlayer) {
-                                StudioChatMini.blwsPlayer.changeVid(vid);
-                            } else {
-                                StudioChatMini.blwsPlayer = polyvObject('#tVideoDiv').videoPlayer({
-                                    width: '100%',
-                                    height: '100%',
-                                    'vid': vid,
-                                    'flashvars': {"autoplay": "0", "setScreen": "fill"},
-                                    onPlayOver:function(id){
+                    if (window.SewisePlayer) {
+                        SewisePlayer.toPlay(vUrl, title, 0, true);
+                    } else {
+                        var srcPathAr = [];
+                        srcPathAr.push("/js/lib/sewise.player.min.js?server=vod");
+                        srcPathAr.push("type=" + (vUrl.indexOf(".flv") != -1 ? 'flv' : 'mp4'));
+                        srcPathAr.push("videourl=" + vUrl);
+                        srcPathAr.push("autostart=true");
+                        srcPathAr.push("logo=");
+                        srcPathAr.push("title=VodVideo");
+                        srcPathAr.push("buffer=5");
+                        //srcPathAr.push("skin=vodWhite");
+                        var srcPath = srcPathAr.join("&");
+                        var script = document.createElement('script');
+                        script.type = "text/javascript";
+                        script.src = srcPath;
+                        $("#tVideoDiv").get(0).appendChild(script);
+                        //轮播控制
+                        var checkOverFunc = function(){
+                            if(!window.SewisePlayer){
+                                window.setTimeout(checkOverFunc, 500);
+                                return;
+                            }
+                            SewisePlayer.onPause(function(id){
+                                window.setTimeout(function(){
+                                    if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
                                         StudioChatMini.playVideo(StudioChatMini.video.type);
                                     }
-                                });
-                            }
-                        }
-                    } else {
-                        if (window.SewisePlayer) {
-                            SewisePlayer.toPlay(vUrl, title, 0, true);
-                        } else {
-                            var srcPathAr = [];
-                            srcPathAr.push("/js/lib/sewise.player.min.js?server=vod");
-                            srcPathAr.push("type=" + (vUrl.indexOf(".flv") != -1 ? 'flv' : 'mp4'));
-                            srcPathAr.push("videourl=" + vUrl);
-                            srcPathAr.push("autostart=true");
-                            srcPathAr.push("logo=");
-                            srcPathAr.push("title=VodVideo");
-                            srcPathAr.push("buffer=5");
-                            //srcPathAr.push("skin=vodWhite");
-                            var srcPath = srcPathAr.join("&");
-                            var script = document.createElement('script');
-                            script.type = "text/javascript";
-                            script.src = srcPath;
-                            $("#tVideoDiv").get(0).appendChild(script);
-                            //轮播控制
-                            var checkOverFunc = function(){
-                                if(!window.SewisePlayer){
-                                    window.setTimeout(checkOverFunc, 500);
-                                    return;
-                                }
-                                SewisePlayer.onPause(function(id){
-                                    window.setTimeout(function(){
-                                        if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
-                                            StudioChatMini.playVideo(StudioChatMini.video.type);
-                                        }
-                                    }, 1000);
-                                });
-                            };
-                            checkOverFunc();
-                        }
+                                }, 1000);
+                            });
+                        };
+                        checkOverFunc();
                     }
                 }
             }
@@ -355,40 +354,6 @@ var StudioChatMini = {
         });
     },
     /**
-     * 获取直播主题
-     */
-    getLiveTitle : function(callback){
-        if(!StudioChatMini.courses){
-            try{
-                $.getJSON(this.apiUrl+'/getCourse',{platform:'pc'}).done(function(data){
-                    if(data && data.result == 0 && data.data){
-                        StudioChatMini.courses = data.data;
-                        StudioChatMini.getLiveTitle(callback);
-                    }else{
-                        callback("行情教学");
-                    }
-                });
-            }catch (e){
-                callback("行情教学");
-                console.error("getCourse->"+e);
-            }
-        }else{
-            var loc_now = new Date(StudioChatMini.serverTime);
-            var loc_time = (loc_now.getHours() < 10 ? "0" : "") + loc_now.getHours();
-            loc_time += ":";
-            loc_time += (loc_now.getMinutes() < 10 ? "0" : "") + loc_now.getMinutes();
-            var loc_course = null;
-            for(var i = 0, lenI = StudioChatMini.courses.length; i < lenI; i++){
-                loc_course = StudioChatMini.courses[i];
-                if(loc_course.startTime <= loc_time && loc_course.endTime > loc_time){
-                    callback(loc_course.title);
-                    return;
-                }
-            }
-            callback("行情教学");
-        }
-    },
-    /**
      * 事件设置
      */
     setEvent: function () {
@@ -396,7 +361,7 @@ var StudioChatMini = {
          * 返回直播
          */
         $("#vbackbtn_live").click(function () {
-            StudioChatMini.playVideo("live");
+            StudioChatMini.playVideo("live",true);
         });
         /**
          * 换一换

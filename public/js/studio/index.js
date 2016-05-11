@@ -316,10 +316,9 @@ var studioChat={
            return;
       }
       var course=common.getSyllabusPlan(this.syllabusData,this.serverTime);
-        console.log("lg",course);
       if(!course||course.status==0||common.isBlank(course.studioLink)||course.isNext){
           if(isBackStudio){
-              alert("目前没有直播,请留意课程表！");
+              alert("目前还没有视频直播，详情请留意直播间课程表！");
           }else{
               this.playMp4Vd();
           }
