@@ -27,7 +27,9 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 
 /* header */
 #header{position:fixed;width:100%;left:0;top:0;z-index:11}
-#logo{width:90px;height:17px; margin-top:3px;}
+/*#logo{width:90px;height:17px; margin-top:3px;}
+#logo a{display:block;height:17px}*/
+#logo{width:69px;height:22px}
 #logo a{display:block;height:17px}
 .cop-info{padding:5px 0 5px 10px;background:#31353D}
 .online-count{margin-left:10px;width:35px;color:#878787;font-size:7px; text-align:center; margin-top:2px}

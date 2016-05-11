@@ -27,12 +27,14 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 
 /* header */
 #header{position:fixed;width:100%;left:0;top:0;z-index:11}
-#logo{width:123px;height:25px; margin-top:3px;background-size:180px auto}
+#logo{width:84px;height:25px;margin-top:3px;background-size:150px auto}
 #logo a{display:block;height:17px}
+/*#logo{width:123px;height:25px; margin-top:3px;background-size:180px auto}
+#logo a{display:block;height:17px}*/
 .cop-info{padding:5px 0 5px 10px;background:#fff}
-.online-count{margin-left:10px;width:35px;color:#878787;font-size:8px; text-align:center; margin-top:2px}
+.online-count{margin-left:10px;width:35px;color:#878787;font-size:8px; text-align:center; margin-top:6px}
 .online-count span{display:block;height:10px;line-height:10px;text-align:center;background:#666;color:#bfbfbf;border-radius:5px;font-size:10px}
-.user-intr{position:relative; height:22px;}
+.user-intr{position:relative; height:22px;top:3px;}
 .user-intr span,.user-intr .leavebtn{float:left;display:inline-block;vertical-align:middle}
 .user-intr .user-img{width:22px; position:relative; margin-right:5px; height:22px;}
 .user-intr .user-img img{ border-radius:50%; width:100%; height:auto; display:block; vertical-align:bottom}

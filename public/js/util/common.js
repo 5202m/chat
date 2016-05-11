@@ -373,14 +373,21 @@ var common = {
         //提取链接
         var getSLink=function(studioLinkTmp,studioType){
             if(studioLinkTmp){
+                var isMb=common.isMobile();
                 var linkTmp=null;
                 if(typeof studioLinkTmp !='object'){
                     studioLinkTmp=JSON.parse(studioLinkTmp);
                 }
                 for(var i in studioLinkTmp){
                     linkTmp=studioLinkTmp[i];
-                    if(linkTmp.code==studioType){
-                        return linkTmp.url;
+                    if(isMb){
+                        if(studioType==1  && linkTmp.code==3){
+                            return linkTmp.url;
+                        }
+                    }else{
+                        if(linkTmp.code==studioType){
+                            return linkTmp.url;
+                        }
                     }
                 }
             }

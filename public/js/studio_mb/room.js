@@ -423,7 +423,7 @@ var studioChatMb={
         playerType :  '',  //播放器类别: video、sewise
         videoType : '',    //视频类别: mp4、m3u8...
         studioType : '',   //直播类别: studio、yy、oneTV
-        liveUrl : "http://ct.phgsa.cn:1935/live/01/playlist.m3u8", //yy直播URL
+        liveUrl : "", //yy直播URL
         $panel : null,     //播放器容器
         backToLivePos : {  //返回直播按钮位置
             x : 0,
@@ -447,7 +447,7 @@ var studioChatMb={
          * 启动，只能选择播放
          */
         start : function(isBack){
-            var course=common.getSyllabusPlan(this.syllabusData,this.serverTime);
+            var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime);
              if(!course||course.status==0||common.isBlank(course.studioLink)||course.isNext||course.courseType==2||course.courseType==0){
                 if(isBack){
                     alert("目前没有直播,请留意课程表！");
@@ -457,7 +457,7 @@ var studioChatMb={
                 return;
             }
             if(course.courseType==1){//直播时间段，则播放直播
-                this.play("yy", "", this.liveUrl, "");
+                this.play("yy", "", course.studioLink, "");
             }else{//非直播时段则播放教学视频
                 this.playMp4Vd();
             }
