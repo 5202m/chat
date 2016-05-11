@@ -25,25 +25,35 @@ var studioChat={
      */
     setVideo:function(){
         try{
-            $("#yyVideoDiv").html("");
-            if($("#yyVideoDiv embed").length==0){
-                var aDom=$("#yyVideoDiv"),yc=aDom.attr("yc"),mc=aDom.attr("mc");
-                if('live'==yc) {
-                    var url='rtmp://ct.phgsa.cn/live/'+common.trim(mc);
-                    var sdHtml = '<div style="position: relative; width: 100%; height: 100%; left: 0px; top: 0px;">' +
-                        '<object type="application/x-shockwave-flash" id="sewise_player" name="sewise_player" data="/js/lib/flash/SewisePlayer.swf" width="100%" height="100%">' +
-                        '<param name="allowfullscreen" value="true">' +
-                        '<param name="wmode" value="transparent">' +
-                        '<param name="allowscriptaccess" value="always">' +
-                        '<param name="flashvars" value="autoStart=true&amp;programId=&amp;shiftTime=&amp;lang=zh_CN&amp;type=rtmp&amp;serverApi=ServerApi.execute&amp;skin=/js/lib/flash/skins/liveOrange.swf&amp;title=&amp;draggable=true&amp;published=0&amp;streamUrl=' + url + '&amp;duration=3600&amp;poster=&amp;flagDatas=&amp;videosJsonUrl=&amp;adsJsonData=&amp;statistics=&amp;customDatas=&amp;playerName=Sewise Player&amp;clarityButton=enable&amp;timeDisplay=disable&amp;controlBarDisplay=enable&amp;topBarDisplay=disable&amp;customStrings=&amp;volume=0.6&amp;key=&amp;trackCallback=">' +
-                        '</object>' +
-                        '</div>';
-                    $("#yyVideoDiv").html(sdHtml);
-                }else{
-                    $('<embed src="'+'http://yy.com/s/'+yc+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf" quality="high" width="100%" height="100%" align="middle" allowScriptAccess="never" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>').appendTo('#yyVideoDiv');
+            $.getJSON('/studio/getSyllabus?t=' + new Date().getTime(),{groupType:studioChat.userInfo.groupType,groupId:studioChat.userInfo.groupId},function(result){
+                var loc_html = null,data=result.data;
+                if(data && common.isValid(data.studioLink)){
+                    var studioLinkArr=JSON.parse(data.studioLink),url='';
+                    for(var i in studioLinkArr){
+                        if(studioLinkArr[i].code==1){
+                            url=studioLinkArr[i].url;
+                            break;
+                        }
+                    }
+                    if(common.isValid(url)){
+                        if($("#yyVideoDiv embed").length==0){
+                            if(url.indexOf('rtmp:')!=-1) {
+                                var sdHtml = '<div style="position: relative; width: 100%; height: 100%; left: 0px; top: 0px;">' +
+                                    '<object type="application/x-shockwave-flash" id="sewise_player" name="sewise_player" data="/js/lib/flash/SewisePlayer.swf" width="100%" height="100%">' +
+                                    '<param name="allowfullscreen" value="true">' +
+                                    '<param name="wmode" value="transparent">' +
+                                    '<param name="allowscriptaccess" value="always">' +
+                                    '<param name="flashvars" value="autoStart=true&amp;programId=&amp;shiftTime=&amp;lang=zh_CN&amp;type=rtmp&amp;serverApi=ServerApi.execute&amp;skin=/js/lib/flash/skins/liveOrange.swf&amp;title=&amp;draggable=true&amp;published=0&amp;streamUrl=' + url + '&amp;duration=3600&amp;poster=&amp;flagDatas=&amp;videosJsonUrl=&amp;adsJsonData=&amp;statistics=&amp;customDatas=&amp;playerName=Sewise Player&amp;clarityButton=enable&amp;timeDisplay=disable&amp;controlBarDisplay=enable&amp;topBarDisplay=disable&amp;customStrings=&amp;volume=0.6&amp;key=&amp;trackCallback=">' +
+                                    '</object>' +
+                                    '</div>';
+                                $("#yyVideoDiv").html(sdHtml);
+                            }else{
+                                $('#yyVideoDiv').html('<embed src="'+url+'" quality="high" width="100%" height="100%" align="middle" allowScriptAccess="never" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>');
+                            }
+                        }
+                    }
                 }
-            }
-            $("#yyVideoDiv").show();
+            });
         }catch(e){
             console.error("setVideo has error:"+e);
         }

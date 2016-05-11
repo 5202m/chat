@@ -59,19 +59,19 @@ var studioChatMbIdx={
             var loc_authInfo = [];
             //simulate,register,real,vip,visitor
             if(auths.indexOf(",vip") >= 0){
-                loc_authInfo.push("VIP")
+                loc_authInfo.push("VIP");
             }
             if(auths.indexOf(",real") >= 0){
-                loc_authInfo.push("真实")
+                loc_authInfo.push("真实");
             }
             if(auths.indexOf(",simulate") >= 0){
-                loc_authInfo.push("模拟")
+                loc_authInfo.push("模拟");
             }
             if(auths.indexOf(",register") >= 0){
-                loc_authInfo.push("注册")
+                loc_authInfo.push("注册");
             }
             if(auths.indexOf(",visitor") >= 0){
-                loc_authInfo.push("游客")
+                loc_authInfo.push("游客");
             }
             if(loc_authInfo.length == 5){
                 return "所有客户均可观看";
@@ -230,15 +230,26 @@ var studioChatMbIdx={
         $.getJSON('/studio/getSyllabus?t=' + new Date().getTime(),{groupType:studioChatMbIdx.userInfo.groupType,groupId:groupIds},function(result){
             var loc_html = null,data=result.data;
             if(data){
-                var row=null;
-                console.log("data:",data);
+                var row=null,liDom=null,courseObj=null,syTipDom=null;
+                var dayCn=['周日','周一','周二','周三','周四','周五','周六'];
+                var courseTypeTxt={'0':'文字直播','1':'视频直播','2':'ONE TV'};
                 for(var i in data){
                     row=data[i];
                     if(row.courses){
                         loc_html = common.formatSyllabus(row.courses, result.serverTime, 3, {
-                            dayCN : ['周日','周一','周二','周三','周四','周五','周六']
+                            dayCN :dayCn
                         });
-                        var loc_panel = $('#studioListTab .videoroom-ul li[gi='+row.groupId+']').find(".timetable");
+                        liDom=$('#studioListTab .videoroom-ul li[gi='+row.groupId+']');
+                        courseObj=common.getSyllabusPlan(row,result.serverTime);
+                        if(courseObj){
+                            liDom.find(".syll-tip .syll-time").text(dayCn[courseObj.day+""]+' '+courseObj.startTime+"-"+courseObj.endTime).next().text(courseTypeTxt[courseObj.courseType]).next().text(courseObj.lecturer);
+                            if(!courseObj.isNext){
+                                liDom.find(".tit i").addClass("st");
+                            }else{
+                                liDom.find(".tit i").removeClass("st");
+                            }
+                        }
+                        var loc_panel =liDom.find(".timetable");
                         loc_panel.html(loc_html);
                         loc_panel.find("th").bind("click", function(){
                             var loc_this = $(this);

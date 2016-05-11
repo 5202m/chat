@@ -357,6 +357,84 @@ var common = {
         return msg;
     },
     /**
+     * 格式到json
+     * @param str
+     */
+    formatToJson:function(str){
+        return this.isBlank(str)?null:JSON.parse(str);
+    },
+    /**
+     * 提取课程数据
+     */
+    getSyllabusPlan:function(data,serverTime){
+        if(!data||!data.courses){
+            return null;
+        }
+        //提取链接
+        var getSLink=function(studioLinkTmp,studioType){
+            if(studioLinkTmp){
+                var linkTmp=null;
+                if(typeof studioLinkTmp !='object'){
+                    studioLinkTmp=JSON.parse(studioLinkTmp);
+                }
+                for(var i in studioLinkTmp){
+                    linkTmp=studioLinkTmp[i];
+                    if(linkTmp.code==studioType){
+                        return linkTmp.url;
+                    }
+                }
+            }
+        };
+        //提取课程
+        var getCourses=function(tmBkTmp,i,isNext){
+            var course=null,courseTmp=tmBkTmp.course;
+            if(courseTmp && courseTmp.length>i){
+                course=courseTmp[i];
+                course.studioLink=getSLink(data.studioLink,course.courseType);
+                course.startTime=tmBkTmp.startTime;
+                course.endTime=tmBkTmp.endTime;
+                course.day=days[i].day;
+                course.isNext=isNext;
+                return course;
+            }else{
+                return null;
+            }
+        };
+        var coursesObj=null;
+        if(this.isValid(data.courses) && typeof data.courses !='object') {
+            coursesObj =JSON.parse(data.courses);
+        }else{
+            coursesObj=data.courses;
+        }
+        var days=coursesObj.days,timeBuckets=coursesObj.timeBuckets;
+        var currDay=new Date(serverTime).getDay();
+        var currTime=common.getHHMM(serverTime);
+        var tmBk=null,hasRow=false;
+        var course=null;
+        for(var i=0;i<days.length;i++){
+            if(days[i].day>currDay){
+                return getCourses(timeBuckets[0],i,true);
+            }
+            if(days[i].day==currDay){
+                if(days[i].status==0){
+                    return {status:0};
+                }
+                for(var k in timeBuckets){
+                    tmBk=timeBuckets[k];
+                    if(tmBk.startTime<=currTime && tmBk.endTime>=currTime){
+                        hasRow=true;
+                        return getCourses(tmBk,i,false);
+                    }
+                    if(!hasRow && tmBk.startTime>currTime){
+                        hasRow=true;
+                        return getCourses(tmBk,i,true);
+                    }
+                }
+            }
+        }
+        return null;
+    },
+    /**
      * 格式化显示课程安排表
      * @param syllabus {{days : [{day: Integer, status : Integer}], timeBuckets : [{startTime : String, endTime : String, course : [{lecturer : String, title : String, status : Integer}]}]}}
      * @param serverTime
@@ -400,12 +478,13 @@ var common = {
         {
             if(syllabus)
             {
-                var loc_courses = JSON.parse(syllabus);
+                var loc_courses = $.isPlainObject(syllabus)?syllabus:JSON.parse(syllabus);
                 var loc_dayLen = !loc_courses.days ? 0 : loc_courses.days.length;
                 if(loc_dayLen > 0)
                 {
                     if(style === 1)
                     {
+                        var courseTypeTxt={'0':'文字','1':'视频','2':''};
                         loc_html.push('<div class="sy_panel">');
                         //星期（头部）
                         var loc_startDateTime = serverTime - 86400000 * ((currDay + 6) % 7);
@@ -448,7 +527,7 @@ var common = {
                                     {
                                     	//时间段休市
                                     	loc_html.push('<tr class="' + loc_timeCls + '">');
-                                    	loc_html.push('<td width="25%">' + loc_timeBucket.startTime + '-' + loc_timeBucket.endTime + '</td>');
+                                    	loc_html.push('<td width="25%">' + loc_timeBucket.startTime + '-' + loc_timeBucket.endTime+'</td>');
                                         loc_html.push('<td colspan="2" width="75%">休市</td>');
                                         loc_html.push('</tr>');
                                     }
@@ -456,7 +535,7 @@ var common = {
                                     {
                                     	//讲师内容不为空才会显示对应的时间段
                                     	loc_html.push('<tr class="' + loc_timeCls + '">');
-                                    	loc_html.push('<td width="25%">' + loc_timeBucket.startTime + '-' + loc_timeBucket.endTime + '</td>');
+                                    	loc_html.push('<td width="25%">' + loc_timeBucket.startTime + '-' + loc_timeBucket.endTime + '【'+courseTypeTxt[loc_timeBucket.course[i].courseType]+'】</td>');
                                         loc_html.push('<td width="25%">' + loc_timeBucket.course[i].lecturer + '</td>');
                                         loc_html.push('<td width="50%">' + loc_timeBucket.course[i].title + '</td>');
                                         loc_html.push('</tr>');
@@ -512,7 +591,7 @@ var common = {
                     else if(style === 3)
                     {
                         //星期（头部）
-                        var loc_startDateTime = currTime.timeLong - 86400000 * ((currTime.day + 6) % 7);
+                        var loc_startDateTime = currTimes - 86400000 * ((currDay + 6) % 7);
                         var loc_date = null;
                         var loc_activeCls = null;
                         var loc_day = null;
@@ -522,7 +601,7 @@ var common = {
                         {
                             loc_day = loc_courses.days[i];
                             loc_date = new Date(loc_startDateTime + ((loc_courses.days[i].day + 6) % 7) * 86400000);
-                            loc_activeCls = (loc_courses.days[i].day == currTime.day) ? ' class="active"' : "";
+                            loc_activeCls = (loc_courses.days[i].day == currDay) ? ' class="active"' : "";
                             loc_html.push('<th d="' + loc_courses.days[i].day + '"' + loc_activeCls + loc_width + '>' + loc_constants.dayCN[loc_courses.days[i].day] + '<i></i></th>');
                         }
                         loc_html.push("</tr>");
@@ -537,7 +616,7 @@ var common = {
                             if(loc_day.status == 0)
                             {
                                 //全天休市
-                                loc_timeCls = loc_timeClsFunc(loc_day.day, null, null, currTime, true);
+                                loc_timeCls = loc_timeClsFunc(loc_day.day, null, null, true);
                                 loc_html.push('<p class="' + loc_timeCls + '">休市</p>');
                             }
                             else
@@ -547,7 +626,7 @@ var common = {
                                     if(!loc_timeBucket.course[i].lecturer){
                                         continue;
                                     }
-                                    loc_timeCls = loc_timeClsFunc(loc_day.day, loc_timeBucket.startTime, loc_timeBucket.endTime, currTime, false);
+                                    loc_timeCls = loc_timeClsFunc(loc_day.day, loc_timeBucket.startTime, loc_timeBucket.endTime, false);
                                     loc_html.push('<p class="' + loc_timeCls + '">');
                                     loc_html.push('<span>' + loc_timeBucket.startTime + "-" + loc_timeBucket.endTime + '</span>');
                                     loc_html.push('<span>视频直播</span>');

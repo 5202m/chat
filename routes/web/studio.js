@@ -162,43 +162,55 @@ router.get('/', function(req, res) {
 
 //转到页面
 function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
-    studioService.getIndexLoadData(groupId,function(data){
+    studioService.getIndexLoadData(groupId,(!isMobile || (isMobile && common.isBlank(groupId))),(!isMobile||(isMobile && common.isValid(groupId))),function(data){
+        var newStudioList=[],rowTmp=null;
+        var isVisitor=(constant.clientGroup.visitor==clientGroup);
         var viewDataObj={apiUrl:config.pmApiUrl+'/common',filePath:config.filesDomain,web24kPath:config.web24kPath,mobile24kPath:config.mobile24kPath};//输出参数
         chatUser.groupId=groupId;
         viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
         viewDataObj.userInfo=JSON.stringify({initVisit:chatUser.initVisit,groupType:constant.fromPlatform.studio,isLogin:chatUser.isLogin,groupId:chatUser.groupId,userId:chatUser.userId,clientGroup:chatUser.clientGroup,nickname:chatUser.nickname,userType:chatUser.userType});
         viewDataObj.userSession=chatUser;
-        var newStudioList=[],rowTmp=null,exStudio=null,exStudioIdx=null,exStudioTmp=null;
-        var isVisitor=(constant.clientGroup.visitor==clientGroup);
-        data.studioList.forEach(function(row){
-            rowTmp={};
-            rowTmp.id=row._id;
-            rowTmp.name=row.name;
-            rowTmp.level=row.level;
-            rowTmp.allowWhisper=common.containSplitStr(row.talkStyle,1);
-            if(rowTmp.allowWhisper){
-                rowTmp.whisperRoles=row.whisperRoles;
-                var ruleArr=row.chatRules,isPass=true;
-                for(var i in ruleArr) {
-                    isPass = common.dateTimeWeekCheck(ruleArr[i].periodDate, true);
-                    if (ruleArr[i].type == 'whisper_allowed' && !isPass) {
-                        rowTmp.allowWhisper=false;
-                        rowTmp.whisperRoles=null;
-                        break;
+        viewDataObj.serverTime=new Date().getTime();
+        viewDataObj.syllabusData='';
+        if(!data.studioList){
+            if(data.syllabusResult){
+                var syResult=data.syllabusResult;
+                viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:JSON.parse(syResult.studioLink),courses:JSON.parse(syResult.courses)});
+            }
+        }else{
+            data.studioList.forEach(function(row){
+                rowTmp={};
+                rowTmp.id=row._id;
+                rowTmp.name=row.name;
+                rowTmp.level=row.level;
+                rowTmp.allowWhisper=common.containSplitStr(row.talkStyle,1);
+                if(rowTmp.allowWhisper){
+                    rowTmp.whisperRoles=row.whisperRoles;
+                    var ruleArr=row.chatRules,isPass=true;
+                    for(var i in ruleArr) {
+                        isPass = common.dateTimeWeekCheck(ruleArr[i].periodDate, true);
+                        if (ruleArr[i].type == 'whisper_allowed' && !isPass) {
+                            rowTmp.allowWhisper=false;
+                            rowTmp.whisperRoles=null;
+                            break;
+                        }
                     }
                 }
-            }
-            rowTmp.disable=(!common.containSplitStr(row.clientGroup,clientGroup));
-            rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.clientGroup,constant.clientGroup.visitor);
-            rowTmp.remark=common.trim(row.remark);
-            rowTmp.clientGroup=common.trim(row.clientGroup);
-            rowTmp.isCurr=(row._id==groupId);
-            rowTmp.isOpen=common.dateTimeWeekCheck(row.openDate, true);
-            if(rowTmp.isCurr) {
-                viewDataObj.serverTime=new Date().getTime();
-            }
-            newStudioList.push(rowTmp);
-        });
+                rowTmp.disable=(!common.containSplitStr(row.clientGroup,clientGroup));
+                rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.clientGroup,constant.clientGroup.visitor);
+                rowTmp.remark=common.trim(row.remark);
+                rowTmp.clientGroup=common.trim(row.clientGroup);
+                rowTmp.isCurr=(row._id==groupId);
+                rowTmp.isOpen=common.dateTimeWeekCheck(row.openDate, true);
+                if(rowTmp.isCurr) {
+                    if(data.syllabusResult){
+                        var syResult=data.syllabusResult;
+                        viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:JSON.parse(syResult.studioLink),courses:JSON.parse(syResult.courses)});
+                    }
+                }
+                newStudioList.push(rowTmp);
+            });
+        }
         viewDataObj.studioList = newStudioList;
         //记录访客信息
         var snUser=req.session.studioUserInfo;
@@ -225,7 +237,6 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         }
     });
 }
-
 
 /**
  * 找回密码

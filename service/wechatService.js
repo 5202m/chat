@@ -18,7 +18,7 @@ var wechatService = {
      * 提取组列表
      */
      getRoomList:function(groupType,callback){
-        chatGroup.find({valid:1,status:1,'chatStudio':{ $exists:false},groupType:groupType}).select("name groupType defaultAnalyst openDate sequence status maxCount").sort({'sequence':'asc'}).exec(function (err,rows) {
+        chatGroup.find({valid:1,status:1,groupType:groupType}).select("name groupType defaultAnalyst openDate sequence status maxCount").sort({'sequence':'asc'}).exec(function (err,rows) {
             if(err){
                 logger.error("getGroupList fail:"+err);
             }

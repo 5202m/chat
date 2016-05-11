@@ -446,11 +446,30 @@ var studioChatMb={
         /**
          * 启动，只能选择播放
          */
-        start : function(){
-            if(common.dateTimeWeekCheck(studioChatMb.studioDate, true)){
+        start : function(isBack){
+            var course=common.getSyllabusPlan(this.syllabusData,this.serverTime);
+             if(!course||course.status==0||common.isBlank(course.studioLink)||course.isNext||course.courseType==2||course.courseType==0){
+                if(isBack){
+                    alert("目前没有直播,请留意课程表！");
+                }else{
+                    this.playMp4Vd();
+                }
+                return;
+            }
+            if(course.courseType==1){//直播时间段，则播放直播
                 this.play("yy", "", this.liveUrl, "");
-            }else{
-                $("#videosTab li:first a").click();
+            }else{//非直播时段则播放教学视频
+                this.playMp4Vd();
+            }
+        },
+        /**
+         *随机播放MP4视频
+         */
+        playMp4Vd:function(){
+            if($("#studioTeachId a[class=on]").length<=0){
+                var mpDom=$("#videosTab li a");
+                var vdom=$(mpDom.get(common.randomIndex(mpDom.length)));
+                vdom.click();
             }
         },
         /**
@@ -581,7 +600,7 @@ var studioChatMb={
             util.toucher($("#backToLive")[0])
                 .on('singleTap',function(){
                     //点击返回直播
-                    studioChatMb.video.play("yy", "", studioChatMb.video.liveUrl, "");
+                    studioChatMb.video.start(true);
                 })
                 .on('swipeStart',function(){
                     studioChatMb.video.backToLivePos.x = parseInt(this.style.left) || 0;

@@ -151,6 +151,7 @@
         studioChatMb.userInfo = JSON.parse('<%- userInfo %>');
         studioChatMb.socketUrl = JSON.parse('<%- socketUrl %>');
         studioChatMb.serverTime=Number('<%= serverTime %>');
+        studioChatMb.syllabusData=common.formatToJson('<%- syllabusData%>');
         studioChatMb.init();
     });
 </script>

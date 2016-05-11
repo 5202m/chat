@@ -18,7 +18,6 @@ var syllabusService = {
     getSyllabus : function(groupType, groupId, callback){
         groupId = groupId || "";
         var loc_dateNow = new Date();
-        console.log("groupId：",groupId);
         var groupIdArr=groupId.split(",");
         chatSyllabus.find({
             groupType : groupType,
@@ -26,7 +25,7 @@ var syllabusService = {
             isDeleted : 0,
             publishStart : {$lte : loc_dateNow},
             publishEnd : {$gt : loc_dateNow}
-        }, function(err, row){
+        },"groupType groupId courseType studioLink courses", function(err, row){
             if(err){
                 logger.error("查询聊天室课程安排失败!", err);
                 callback(null);

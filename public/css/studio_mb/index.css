@@ -1,4 +1,4 @@
-﻿﻿body{font:12px/1.4 microsoft yahei;color:#333;-webkit-text-size-adjust:none;-moz-text-size-adjust:none;-ms-text-size-adjust:none;text-size-adjust:none;tap-highlight-color:rgba(0,0,0,0);focus-ring-color:rgba(0,0,0,0);-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-focus-ring-color:rgba(0,0,0,0);-moz-tap-highlight-color:rgba(0,0,0,0);-moz-focus-ring-color:rgba(0,0,0,0);}
+﻿body{font:12px/1.4 microsoft yahei;color:#333;-webkit-text-size-adjust:none;-moz-text-size-adjust:none;-ms-text-size-adjust:none;text-size-adjust:none;tap-highlight-color:rgba(0,0,0,0);focus-ring-color:rgba(0,0,0,0);-webkit-tap-highlight-color:rgba(0,0,0,0);-webkit-focus-ring-color:rgba(0,0,0,0);-moz-tap-highlight-color:rgba(0,0,0,0);-moz-focus-ring-color:rgba(0,0,0,0);}
 body,p,ol,ul,li,h1,h2,h3,h4,h5,h6,dl,dt,dd,pre,input,table,tr,td,button,textarea,figure{margin:0;padding:0}
 ol,ul,li{list-style:none}
 input,button,textarea{border:0 none;-webkit-appearance:none;outline:none;-webkit-tap-highlight-color: rgba(0,0,0,0); -webkit-tap-highlight-color: transparent;}
@@ -78,7 +78,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .room-main .tit b{display:inline-block; font-size:16px; line-height:26px; vertical-align:middle; font-weight:normal;}
 .room-main .tit .st{ display:none; width:14px; height:14px;vertical-align:middle; background-position:-40px 0; margin-left:5px;}
 .videoroom-ul li.live .tit .st{display:inline-block;}
-.room-main .tit span{display:inline-block; height:16px; line-height:16px; font-size:11px; margin-right:10px; color:#4f638f;}
+.room-main .tit span,.room-main .syll-tip span{display:inline-block; height:16px; line-height:16px; font-size:11px; margin-right:10px; color:#7C95CC;}
 .room-main .btns{ width:50%; float:right; padding:6px 0;}
 .room-main .btns a{ display:block; float:left; color:#b59030; text-align:center; font-size:16px; line-height:36px; height:36px; width:48%; margin-right:4%; border:1px solid #b59030; border-radius:3px; box-sizing:border-box;}
 .room-main .btns a:last-child{ margin:0; border:0; background:rgba(114,118,123,.6); color:#96989e; line-height:36px;}
@@ -86,7 +86,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .room-info .info{ display:none; padding-top:10px;}
 .room-info .info .tag{ display:block; height:18px; width:55px; margin-bottom:5px; padding:0 1.5px; border:1px solid rgba(112,132,175,.3); border-bottom:0; border-top:0}
 .room-info .info .tag b{ background:rgba(112,132,175,.3); display:block; width:100%; height:18px;line-height:18px; font-size:11px; color:#7084af; text-align:center;}
-.room-info .info p{line-height:20px; font-size:14px;}
+.room-info .info p{line-height:20px; font-size:14px;color:#7C95CC;}
 .timetable { line-height:20px; font-size:14px; color:#fff;}
 .timetable td{ background:rgba(245,245,245,.1);}
 .timetable td p{ position:relative; padding:1px 0 4px; border-bottom:1px solid #283248; margin:0 5px 0 10px;}
@@ -98,7 +98,6 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .timetable th.active{color: #a19b20; background:rgba(245,245,245,.2);}
 .timetable th.active i{display: block;}
 .timetable td.space{ background:none; padding:0; height:5px; overflow:hidden;}
-
 /* 交易策略 & 专业评论 */
 .trade-ul{border-top:1px solid #303d58; padding:12px 0}
 .boxcont .trade-ul:first-child{border:0; padding-top:15px}

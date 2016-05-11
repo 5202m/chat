@@ -12,25 +12,38 @@ var errorMessage = require('../util/errorMessage');//引入errorMessage类
 var pmApiService = require('../service/pmApiService');//引入pmApiService
 var logger=require('../resources/logConf').getLogger('studioService');//引入log4js
 var userService = require('../service/userService');//引入userService
+var syllabusService = require('../service/syllabusService');//引入syllabusService
 /**
  * 定义直播服务类
  * @type {{}}
  */
 var studioService = {
     /**
-     * 提取主要需要加载的数据
+     * 提取主页需要加载的数据
      * @param groupId
+     * @param isGetRoomList 是否加载房间
+     * @param isGetSyllabus 是否加载课程表数据
      * @param dataCallback
      */
-    getIndexLoadData:function(groupId,dataCallback){
+    getIndexLoadData:function(groupId,isGetRoomList,isGetSyllabus,dataCallback){
         async.parallel({
                 studioList: function(callback){
-                    studioService.getStudioList(function(rows){
-                        callback(null,rows);
-                    });
+                    if(isGetRoomList){
+                        studioService.getStudioList(function(rows){
+                            callback(null,rows);
+                        });
+                    }else{
+                        callback(null,null);
+                    }
                 },
-                otherResult: function(callback){
-                    callback(null,null);
+                syllabusResult: function(callback){
+                    if(isGetSyllabus){
+                        syllabusService.getSyllabus("studio", groupId, function(data){
+                            callback(null,data);
+                        });
+                    }else{
+                        callback(null,null);
+                    }
                 }
             },
             function(err, results) {
@@ -84,7 +97,7 @@ var studioService = {
      * 提取直播间
      */
     getStudioByGroupId:function(groupId,callback){
-        chatGroup.findById(groupId).select({chatStudio:1,name:1,talkStyle:1,whisperRoles:1}).exec(function (err,row) {
+        chatGroup.findById(groupId).select({clientGroup:1,name:1,talkStyle:1,whisperRoles:1}).exec(function (err,row) {
             if(err){
                 logger.error("getStudioList fail:"+err);
             }
@@ -95,7 +108,7 @@ var studioService = {
      * 检查用户组权限
      */
     checkGroupAuth:function(groupId,clientGroup,callback){
-        chatGroup.find({'_id':groupId,valid:1,'chatStudio.clientGroup':common.getSplitMatchReg(clientGroup)}).count(function (err,rowNum) {
+        chatGroup.find({'_id':groupId,valid:1,'clientGroup':common.getSplitMatchReg(clientGroup)}).count(function (err,rowNum) {
             if(err){
                 logger.warn("checkGroupAuth->not auth:"+err);
             }

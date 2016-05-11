@@ -733,6 +733,7 @@ studioChat.filePath='<%= filePath %>';
 studioChat.userInfo=JSON.parse('<%- userInfo %>');
 studioChat.serverTime=Number('<%= serverTime %>');
 studioChat.socketUrl=JSON.parse('<%- socketUrl %>');
+studioChat.syllabusData=common.formatToJson('<%- syllabusData%>');
 $(function(){
 	widthCheck();
 	heightCalcu();

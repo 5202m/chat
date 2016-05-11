@@ -8,8 +8,7 @@ var studioChat={
     web24kPath:'',
     filePath:'',
     apiUrl:'',
-    exStudioStr:'',//外接直播JSON字符串
-    studioDate:'',//直播时间点
+    syllabusData:null,//直播课程对象
     isNeverLogin:false,//是否首次访问
     serverTime:0,//服务器时间
     hasAcLink:false,//是否存在最新的红包连接
@@ -316,38 +315,46 @@ var studioChat={
       if($("#studioTeachId a[class=on]").length>0) {
            return;
       }
-      if(common.dateTimeWeekCheck(this.studioDate, true,studioChat.serverTime)){//直播时间段，则播放直播
-          this.setVideo(true);
-      }else{//非直播时段，检查是否有其他直播，有则播放其他直播，没有则播放教学视频
-          var hasExStudio=false;
-          if(common.isValid(this.exStudioStr)){
-              var exObj=JSON.parse(this.exStudioStr),row=null;
-              for(var index in exObj){
-                  row=exObj[index];
-                  if(common.dateTimeWeekCheck(row.studioDate, true,studioChat.serverTime) &&  common.isValid(row.srcUrl)){
-                      studioChat.setStudioVideoDiv(row.srcUrl);
-                      hasExStudio=true;
-                      break;
-                  }
-              }
+      var course=common.getSyllabusPlan(this.syllabusData,this.serverTime);
+        console.log("lg",course);
+      if(!course||course.status==0||common.isBlank(course.studioLink)||course.isNext){
+          if(isBackStudio){
+              alert("目前没有直播,请留意课程表！");
+          }else{
+              this.playMp4Vd();
           }
-          if(!hasExStudio){//非返回直播以及不存在外接直播则播放教学视频
-              if(!isBackStudio){
-                  if($("#studioTeachId a[class=on]").length<=0){
-                      var mpDom=$("#studioTeachId li a[t=mp4]");
-                      if(mpDom.length<=0){
-                          $("#studioTeachId li:first a").click();
-                      }else{
-                          var vdom=$(mpDom.get(common.randomIndex(mpDom.length)));
-                          vdom.click();
-                          $(".videolist_box").mCustomScrollbar("scrollTo", "#"+vdom.attr("id"));
-                      }
-                  }
-              }else{
-                  this.setVideo(true);
-              }
-          }
+          return;
       }
+      if(course.courseType==1||course.courseType==2){//直播时间段，则播放直播
+            this.setStudioVideoDiv(course.studioLink);
+      }else{//非直播时段则播放教学视频
+            if(!isBackStudio){
+                this.playMp4Vd();
+                if(course.courseType==0){
+                    if(window.SewisePlayer){//停播放教学视频
+                        SewisePlayer.doStop();
+                        $("#studioTeachId a").removeClass("on");
+                    }
+                }
+            }else{
+                this.setStudioVideoDiv(course.studioLink);
+            }
+      }
+    },
+    /**
+     *随机播放MP4视频
+     */
+    playMp4Vd:function(){
+        if($("#studioTeachId a[class=on]").length<=0){
+            var mpDom=$("#studioTeachId li a[t=mp4]");
+            if(mpDom.length<=0){
+                $("#studioTeachId li:first a").click();
+            }else{
+                var vdom=$(mpDom.get(common.randomIndex(mpDom.length)));
+                vdom.click();
+                $(".videolist_box").mCustomScrollbar("scrollTo", "#"+vdom.attr("id"));
+            }
+        }
     },
     /**
      * 提取embed对应的dom
@@ -396,117 +403,109 @@ var studioChat={
     },
     /**
      * 设置视频
-     * @param isYy
+     * @param isStudio 是否直播
      * @param thisDom
+     * @param studioUrl
      */
-    setVideo:function(isYy,thisDom){
+    setVideo:function(thisDom){
         try{
-            if(isYy){
-                var aDom=$("#studioListId a[class~=ing]"),yc=aDom.attr("yc"),mc=aDom.attr("mc");
-                if('live'==yc){
-                    studioChat.setStudioVideoDiv('rtmp://ct.phgsa.cn/live/'+common.trim(mc));
-                }else{
-                    studioChat.setStudioVideoDiv('http://yy.com/s'+(common.isValid(yc)?'/'+yc:'')+(common.isValid(mc)?'/'+mc:'')+'/yyscene.swf');
+            $("#tvDivId").show();
+            $("#stVideoDiv").hide();
+            $("#studioVideoDiv").html("");
+            $("#tVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
+            var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
+            if(vUrl.indexOf(".html")!=-1){
+                if(window.SewisePlayer){//停播放教学视频
+                    SewisePlayer.doStop();
+                    $("#tVideoDiv div").hide();
+                }
+                var iframeDom = $("#tVideoDiv iframe");
+                var isAppend = true;
+                if(iframeDom.size() > 0){
+                    if(iframeDom.attr("src") == vUrl){
+                        isAppend = false;
+                    }else{
+                        iframeDom.remove();
+                    }
+                }
+                if(isAppend){
+                    $("#tVideoDiv").append('<iframe frameborder=0 width="100%" height="100%" src="'+vUrl+'" allowfullscreen></iframe>');
                 }
             }else{
-                    $("#tvDivId").show();
-                    $("#stVideoDiv").hide();
-                    $("#studioVideoDiv").html("");
-                    $("#tVideoDiv .img-loading").fadeIn(0).delay(2000).fadeOut(200);
-                    var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
-                    if(vUrl.indexOf(".html")!=-1){
-                        if(window.SewisePlayer){//停播放教学视频
-                            SewisePlayer.doStop();
-                            $("#tVideoDiv div").hide();
-                        }
-                        var iframeDom = $("#tVideoDiv iframe");
-                        var isAppend = true;
-                        if(iframeDom.size() > 0){
-                            if(iframeDom.attr("src") == vUrl){
-                                isAppend = false;
-                            }else{
-                                iframeDom.remove();
-                            }
-                        }
-                        if(isAppend){
-                            $("#tVideoDiv").append('<iframe frameborder=0 width="100%" height="100%" src="'+vUrl+'" allowfullscreen></iframe>');
-                        }
-                    }else{
-                        $("#tVideoDiv iframe").remove();
-                        $("#tVideoDiv div").show();
-                        if(vUrl.indexOf("type=blws")!=-1){
-                            var vidParams=vUrl.split("&");
-                            if(vidParams.length>1){
-                                var vid=vidParams[1].replace(/^vid=/g,'');
-                                if(studioChat.blwsPlayer){
-                                    studioChat.blwsPlayer.changeVid(vid);
-                                }else{
-                                    studioChat.blwsPlayer = polyvObject('#tVideoDiv').videoPlayer({
-                                        width:'100%',
-                                        height:'100%',
-                                        'vid' : vid,
-                                        'flashvars' : {"autoplay":"0","setScreen":"fill"},
-                                        onPlayOver:function(id){
-                                            $("#tVideoCtrl").show();
-                                            $("#tVideoCtrl div.video_ad").show();
-                                            var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
-                                            $("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
-                                        },
-                                        onPlayStart:function(){
-                                            $("#tVideoCtrl").hide();
-                                        }
-                                    });
-                                }
-                            }
+                $("#tVideoDiv iframe").remove();
+                $("#tVideoDiv div").show();
+                if(vUrl.indexOf("type=blws")!=-1){
+                    var vidParams=vUrl.split("&");
+                    if(vidParams.length>1){
+                        var vid=vidParams[1].replace(/^vid=/g,'');
+                        if(studioChat.blwsPlayer){
+                            studioChat.blwsPlayer.changeVid(vid);
                         }else{
-                            if(window.SewisePlayer){
-                                SewisePlayer.toPlay(vUrl, title, 0, true);
-                            }else{
-                                var srcPathAr=[];
-                                srcPathAr.push("/js/lib/sewise.player.min.js?server=vod");
-                                srcPathAr.push("type="+(vUrl.indexOf(".flv")!=-1?'flv':'mp4'));
-                                srcPathAr.push("videourl="+vUrl);
-                                srcPathAr.push("autostart=true");
-                                srcPathAr.push("title="+title);
-                                srcPathAr.push("buffer=5");
-                                /*srcPathAr.push("skin=vodWhite");*/
-                                var srcPath =srcPathAr.join("&") ;
-                                var script = document.createElement('script');
-                                script.type = "text/javascript";
-                                script.src = srcPath;
-                                $("#tVideoDiv").get(0).appendChild(script);
-                                if(studioChat.isNeverLogin){//游客则弹出注册引导
-                                    $(".guide2").show().find(".gclose").click(function(){
-                                        $(".guide2").hide();
-                                    });
+                            studioChat.blwsPlayer = polyvObject('#tVideoDiv').videoPlayer({
+                                width:'100%',
+                                height:'100%',
+                                'vid' : vid,
+                                'flashvars' : {"autoplay":"0","setScreen":"fill"},
+                                onPlayOver:function(id){
+                                    $("#tVideoCtrl").show();
+                                    $("#tVideoCtrl div.video_ad").show();
+                                    var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
+                                    $("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
+                                },
+                                onPlayStart:function(){
+                                    $("#tVideoCtrl").hide();
                                 }
-                                //轮播控制
-                                var checkOverFunc = function(){
-                                    if(!window.SewisePlayer){
-                                        window.setTimeout(checkOverFunc, 500);
-                                        return;
-                                    }
-                                    SewisePlayer.onPause(function(id){
-                                        window.setTimeout(function(){
-                                            if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
-                                                $("#tVideoCtrl").show();
-                                                $("#tVideoCtrl div.video_ad").show();
-                                                var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
-                                                $("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
-                                            }
-                                        }, 1000);
-                                    });
-                                    SewisePlayer.onStart(function(){
-                                        $("#tVideoCtrl").hide();
-                                    });
-                                };
-                                checkOverFunc();
-                            }
+                            });
                         }
                     }
-                if($(".window-container #studioVideoDiv").length>0){
-                    $(".vopenbtn[t=v]").click();
+                }else{
+                    if(window.SewisePlayer){
+                        SewisePlayer.toPlay(vUrl, title, 0, true);
+                    }else{
+                        var srcPathAr=[];
+                        srcPathAr.push("/js/lib/sewise.player.min.js?server=vod");
+                        srcPathAr.push("type="+(vUrl.indexOf(".flv")!=-1?'flv':'mp4'));
+                        srcPathAr.push("videourl="+vUrl);
+                        srcPathAr.push("autostart=true");
+                        srcPathAr.push("title="+title);
+                        srcPathAr.push("buffer=5");
+                        /*srcPathAr.push("skin=vodWhite");*/
+                        var srcPath =srcPathAr.join("&") ;
+                        var script = document.createElement('script');
+                        script.type = "text/javascript";
+                        script.src = srcPath;
+                        $("#tVideoDiv").get(0).appendChild(script);
+                        if(studioChat.isNeverLogin){//游客则弹出注册引导
+                            $(".guide2").show().find(".gclose").click(function(){
+                                $(".guide2").hide();
+                            });
+                        }
+                        //轮播控制
+                        var checkOverFunc = function(){
+                            if(!window.SewisePlayer){
+                                window.setTimeout(checkOverFunc, 500);
+                                return;
+                            }
+                            SewisePlayer.onPause(function(id){
+                                window.setTimeout(function(){
+                                    if(SewisePlayer.duration() <= SewisePlayer.playTime()) {
+                                        $("#tVideoCtrl").show();
+                                        $("#tVideoCtrl div.video_ad").show();
+                                        var loc_mtop = $("#tVideoCtrl a.ad").is(":hidden") ? "-68px" : "-150px";
+                                        $("#tVideoCtrl div.vcenter").css("margin-top", loc_mtop);
+                                    }
+                                }, 1000);
+                            });
+                            SewisePlayer.onStart(function(){
+                                $("#tVideoCtrl").hide();
+                            });
+                        };
+                        checkOverFunc();
+                    }
                 }
+            }
+            if($(".window-container #studioVideoDiv").length>0){
+                $(".vopenbtn[t=v]").click();
             }
         }catch(e){
             console.error("setVideo has error:"+e);
@@ -616,26 +615,6 @@ var studioChat={
         }
     },
     /**
-     * 查询课程表信息
-     * @param groupType
-     * @param groupId
-     * @param callback (html)
-     */
-    getSyllabus : function(groupType, groupId, callback){
-        try{
-            $.getJSON('/studio/getSyllabus?t=' + new Date().getTime(),{groupType:groupType,groupId:groupId},function(result){
-                if(!result.data || !result.data.courses){
-                    callback("");
-                    return;
-                }
-                callback(common.formatSyllabus(result.data.courses, result.serverTime, 1));
-            });
-        }catch (e){
-            console.error("getSyllabus->"+e);
-            callback("");
-        }
-    },
-    /**
      * 设置视频
      */
     setVideoList:function(){
@@ -654,7 +633,7 @@ var studioChat={
                $("#studioTeachId li a").click(function(){
                    $("#studioTeachId li a.on").removeClass("on");
                    $(this).addClass("on");
-                   studioChat.setVideo(false,$(this));
+                   studioChat.setVideo($(this));
                });
                studioChat.setListScroll(".videolist_box");
            }
@@ -1100,16 +1079,6 @@ var studioChat={
             $(".pointlist").hide();
         });
         /**
-         * 返回直播
-         */
-        $(".vbackbtn").click(function(){
-            studioChat.playVideoByDate(true);
-            if($(".window-container #tVideoDiv").length>0){//如果教学视频打开弹框切直播
-                $(".vopenbtn[t=s]").click();
-            }
-        });
-
-        /**
          * 昵称输入事件
          */
         $("#mdr_nk").bind("input propertychange", function() {
@@ -1364,23 +1333,25 @@ var studioChat={
             }else if(t=='commentTab'){
                 studioChat.setNewsInfo("#commentTab",3,3);
             }else if(t=='studioPlanTab'){
-                studioChat.getSyllabus(studioChat.userInfo.groupType, studioChat.userInfo.groupId, function(syllabusView){
-                    var loc_panel = $("#studioPlanTab");
-                    loc_panel.html(syllabusView);
-                    loc_panel.find(".sy_nav a").bind("click", function(){
-                        var loc_this = $(this);
-                        $(this).parent().find(".dir").hide();
-                        $(this).find(".dir").show();
-                        loc_this.siblings(".active").removeClass("active");
-                        loc_this.addClass("active");
-                        var loc_day = loc_this.attr("d");
-                        var loc_panel = loc_this.parent().next();
-                        loc_panel.find("tbody:visible").hide();
-                        loc_panel.find("tbody[d='" + loc_day + "']").show();
-                    });
-                    loc_panel.find(".sy_nav a.active").trigger("click");
-                    studioChat.setListScroll($("#studioPlanTab").parent()[0]);
+                if(!studioChat.syllabusData){
+                    return;
+                }
+                var syllabusView=common.formatSyllabus(studioChat.syllabusData.courses, studioChat.serverTime, 1);
+                var loc_panel = $("#studioPlanTab");
+                loc_panel.html(syllabusView);
+                loc_panel.find(".sy_nav a").bind("click", function(){
+                    var loc_this = $(this);
+                    $(this).parent().find(".dir").hide();
+                    $(this).find(".dir").show();
+                    loc_this.siblings(".active").removeClass("active");
+                    loc_this.addClass("active");
+                    var loc_day = loc_this.attr("d");
+                    var loc_panel = loc_this.parent().next();
+                    loc_panel.find("tbody:visible").hide();
+                    loc_panel.find("tbody[d='" + loc_day + "']").show();
                 });
+                loc_panel.find(".sy_nav a.active").trigger("click");
+                studioChat.setListScroll($("#studioPlanTab").parent()[0]);
             }else if(t=='bulletinTab'){
                 studioChat.getArticleList("bulletin_system",studioChat.userInfo.groupId,1,1,1,'{"sequence":"asc"}',null,function(dataList){
                     $("#bulletinTab").html("");
