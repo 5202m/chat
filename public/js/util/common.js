@@ -397,6 +397,9 @@ var common = {
             var course=null,courseTmp=tmBkTmp.course;
             if(courseTmp && courseTmp.length>i){
                 course=courseTmp[i];
+                if(course.status==0 || common.isBlank(course.lecturerId)){
+                    return null;
+                }
                 course.studioLink=getSLink(data.studioLink,course.courseType);
                 course.startTime=tmBkTmp.startTime;
                 course.endTime=tmBkTmp.endTime;
@@ -417,7 +420,7 @@ var common = {
         var currDay=new Date(serverTime).getDay();
         var currTime=common.getHHMM(serverTime);
         var tmBk=null,hasRow=false;
-        var validDayTmbk=null;
+        var validDayTmbk=null,courseObj=null;
         for(var i=0;i<days.length;i++){
             if(days[i].status==0){
                 return null;
@@ -425,17 +428,15 @@ var common = {
             if(days[i].day>currDay){
                 for(var k in timeBuckets){
                     tmBk=timeBuckets[k];
-                    if(tmBk.status==0){
+                    courseObj=getCourses(tmBk,i,true);
+                    if(!courseObj){
                         continue;
                     }
-                    return getCourses(tmBk,i,true);
+                    return courseObj;
                 }
             }else if(days[i].day==currDay){
                 for(var k in timeBuckets){
                     tmBk=timeBuckets[k];
-                    if(tmBk.status==0){
-                        continue;
-                    }
                     if(tmBk.startTime<=currTime && tmBk.endTime>=currTime){
                         hasRow=true;
                         return getCourses(tmBk,i,false);
@@ -448,7 +449,8 @@ var common = {
             }else{
                 if(!validDayTmbk){//筛选有效的课程
                     for(var k=0;k<timeBuckets.length;k++) {
-                        if (timeBuckets[k].status == 0) {
+                        courseObj=timeBuckets[k].course;
+                        if (!courseObj || courseObj.status==0 || common.isBlank(courseObj.lecturerId)) {
                             continue;
                         }
                         validDayTmbk ={dayIndex:i,tmIndex:k};

@@ -109,7 +109,7 @@ var StudioChatMini = {
                     alert("目前还没有视频直播，详情请留意直播间的课程安排！");
                 }else{
                     StudioChatMini.playVideo('mp4');
-                    if(!course.isNext && course.courseType==0){
+                    if(course && !course.isNext && course.courseType==0){
                         setTimeout(function(){
                             if(window.SewisePlayer){//停播放教学视频
                                 SewisePlayer.doStop();

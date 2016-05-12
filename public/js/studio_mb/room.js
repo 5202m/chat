@@ -506,7 +506,7 @@ var studioChatMb={
              if(!course||course.isNext||(course.courseType!=0 && common.isBlank(course.studioLink))||course.courseType==2||course.courseType==0){
                 if(isBack){
                 	studioMbPop.showMessage("目前还没有视频直播，详情请留意直播间的课程安排！");
-                }else if(!course.isNext && course.courseType==0){
+                }else if(course && !course.isNext && course.courseType==0){
                 	$(".videopart").hide();
     	            studioChatMb.setHeight();
                 }else{
