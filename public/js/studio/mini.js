@@ -5,6 +5,7 @@
  */
 var StudioChatMini = {
     apiUrl:'',
+    currStudioAuth:false,//当前房间是否授权
     blwsPlayer: null,//保利威视
     syllabusData:null,//课程数据
     serverTime: 0,//服务器时间
@@ -529,7 +530,7 @@ var StudioChatMini = {
             return '<img src="' + avatar + '">';
         } else if ("vip" == clientGroup) {
             aImgCls = "user_v";
-        } else if ("real" == clientGroup) {
+        } else if ("active" == clientGroup || "notActive" == clientGroup) {
             aImgCls = "user_r";
         } else if ("simulate" == clientGroup) {
             aImgCls = "user_d";

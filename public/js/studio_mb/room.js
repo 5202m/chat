@@ -7,7 +7,9 @@ var studioChatMb={
     web24kPath:'',
     filePath:'',
     apiUrl:'',
-    syllabusData:null,//课程数据
+    currStudioAuth:false,//当前房间是否授权
+    exStudioStr:'',//外接直播JSON字符串
+    studioDate:'',//直播时间点
     serverTime:0,//服务器时间
     pushObj:{
         whPush : {},   //私聊推送信息
@@ -37,6 +39,34 @@ var studioChatMb={
                 $("#tVideoDiv video").show();
             }
         });
+        this.initRoom();
+    },
+    /**
+     * 初始化房间
+     */
+    initRoom:function(){
+        //如果没有昵称，自动设置一个昵称
+        if(!this.userInfo.nickname){
+            this.refreshNickname(false, "匿名_" + this.userInfo.userId.substring(8,12));
+        }
+        //当前房间未授权，并且是游客
+        if(!this.currStudioAuth && this.userInfo.clientGroup=='visitor'){
+            studioMbPop.popBox("login", {groupId : studioChatMb.userInfo.groupId, clientStoreId : studioChatMb.userInfo.clientStoreId, closeable:false});
+            $("#login_a").trigger("click", true); //弹出登录框，隐藏关闭按钮
+        }
+    },
+    /**
+     * 刷新昵称
+     * @param isSetName
+     * @param nickname
+     */
+    refreshNickname : function(isSetName, nickname){
+        this.userInfo.isSetName=isSetName;
+        this.userInfo.nickname=nickname;
+        //头部
+        $("#header_ui").text(nickname);
+        //个人信息
+        studioMbPop.Person.refreshNickName(nickname);
     },
     /**
      * 服务器时间更新
@@ -68,12 +98,20 @@ var studioChatMb={
         }else{
             obj=keyVal;
         }
-        this.userInfo.clientStoreId= obj.clientStoreId;
+
+        this.userInfo.clientStoreId=obj.clientStoreId;
         this.userInfo.visitorId=obj.userId;
+        this.userInfo.loginId=obj.loginId;
         if(this.userInfo.clientGroup && this.userInfo.clientGroup=='visitor'){
             this.userInfo.nickname=obj.nickname;
             this.userInfo.userId=obj.userId;
+            $("#contentText").attr("contenteditable",false).append('<span style="margin:15px 5px;">亲，<a href="javascript:;" onclick="studioChat.openLoginBox();" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');//设置登录后发言
+        }else{
+            obj.loginId=this.userInfo.userId;
+            store.set(key,obj);
+            $("#contentText").html("").attr("contenteditable",true);
         }
+        this.isNeverLogin=!common.isValid(obj.loginId);
     },
     /**
      * 设置socket
@@ -199,7 +237,21 @@ var studioChatMb={
         this.setEventCen();
         this.video.init();
         this.setEventChat();
+        this.setHeight();
         this.browserState.initBrowserState();
+    },
+    /**
+     * 设置高度
+     */
+    setHeight : function(){
+        var loc_amount = 0;
+        loc_amount += $(".videopart").is(":hidden") ? 0 : $(".videopart").height();
+        loc_amount += $(".cen-ulist").is(":hidden") ? 0 : $(".cen-ulist").height();
+        loc_amount += $("#header").is(":hidden") ? 0 : $("#header").height();
+        loc_amount = $(window).height() - loc_amount;
+        $('.cen-pubox .boxcont:gt(0)').height(loc_amount);
+        loc_amount -= $(".float-box").height();
+        $('.cen-pubox .boxcont:eq(0)').height(loc_amount);
     },
     /**
      * 设置页面tab事件等
@@ -344,6 +396,10 @@ var studioChatMb={
             if(studioChatMb.userInfo.clientGroup=='visitor'){
                 return;
             }
+            if(studioChatMb.userInfo.isSetName === false){
+                studioMbPop.popBox("set", {studioChatObj : studioChatMb});
+                return;
+            }
             var toUser=studioChatMb.getToUser();
             var msg = studioChatMb.getSendMsg();
             if(msg === false){
@@ -422,7 +478,7 @@ var studioChatMb={
         playerType :  '',  //播放器类别: video、sewise
         videoType : '',    //视频类别: mp4、m3u8...
         studioType : '',   //直播类别: studio、yy、oneTV
-        liveUrl : "", //yy直播URL
+        liveUrl : "http://ct.phgsa.cn:1935/live/01/playlist.m3u8", //yy直播URL
         $panel : null,     //播放器容器
         backToLivePos : {  //返回直播按钮位置
             x : 0,
@@ -447,20 +503,42 @@ var studioChatMb={
          */
         start : function(isBack){
             var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime);
-             if(!course||course.status==0||(course.courseType!=0 && common.isBlank(course.studioLink))||course.isNext||course.courseType==2){
+             if(!course||course.status==0||course.isNext||(course.courseType!=0 && common.isBlank(course.studioLink))||course.courseType==2||course.courseType==0){
                 if(isBack){
-                    alert("目前还没有视频直播，详情请留意直播间课程表！");
+                	studioMbPop.showMessage("目前还没有视频直播，详情请留意直播间课程表！");
+                }else if(course.courseType==0){
+                	$(".videopart").hide();
+    	            studioChatMb.setHeight();
                 }else{
-                    this.playMp4Vd();
+                	this.playMp4Vd();
                 }
                 return;
-            }
-            if(course.courseType==1){//直播时间段，则播放直播
-                this.play("yy", "", course.studioLink, "");
-            }else{//非直播时段则播放教学视频
-                this.playMp4Vd();
+            }else{
+            	this.play("yy", "", course.studioLink, "");
             }
         },
+        /**
+         * 启动，智能选择播放
+         */
+//        start : function(isBack){
+//            var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime);
+//             if(!course||course.status==0||common.isBlank(course.studioLink)||course.isNext||course.courseType==2||course.courseType==0){
+//                if(isBack){
+//                    studioMbPop.showMessage("目前没有直播,请留意课程表！");
+//                }else{
+//                    this.playMp4Vd();
+//                }
+//                return;
+//            }
+//            if(course.courseType==1) {//直播时间段，则播放直播
+//                this.play("yy", "", this.liveUrl, "");
+//            }else if(isBack) {//非YY直播（onetv或者文字直播）时点击返回直播
+//                studioMbPop.showMessage("目前没有直播,请留意课程表！");
+//            }else{//非YY直播（onetv或者文字直播）时隐藏播放器
+//                $(".videopart").hide();
+//                studioChatMb.setHeight();
+//            }
+//        },
         /**
          *随机播放MP4视频
          */
@@ -473,14 +551,18 @@ var studioChatMb={
         },
         /**
          * 播放
-         * @param studioType
-         * @param videoType
+         * @param studioType "studio"-教学视频 "yy"-yy直播
+         * @param videoType "mp4"-MP4视频 ""-未知,yy直播的视频类型
          * @param url
          * @param title
          */
         play : function(studioType, videoType, url, title){
             this.studioType = studioType;
             var backToLive = $("#backToLive");
+            if($(".videopart").is(":hidden")){
+                $(".videopart").show();
+                studioChatMb.setHeight();
+            }
             if(studioType == "studio"){
                 backToLive.data("showVideo", true).trigger("show");
             }else{
@@ -1062,7 +1144,7 @@ var studioChatMb={
             return '<img src="'+avatar+'">';
         }else if("vip"==clientGroup){
             aImgCls="user_v";
-        }else if("real"==clientGroup){
+        }else if("active"==clientGroup || "notActive"==clientGroup){
             aImgCls="user_r";
         }else if("simulate"==clientGroup){
             aImgCls="user_d";

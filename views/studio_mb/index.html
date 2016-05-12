@@ -8,6 +8,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta content="telephone=no" name="format-detection">
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+<script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="/js/lib/store.min.js"></script>
+<!-- 自动登录 begin -->
+<script type="text/javascript" src="/js/studio/loginAuto.js"></script>
+<script>
+    LoginAuto.sessionUser = JSON.parse('<%- userInfo %>');
+    LoginAuto.init();
+</script>
+<!-- 自动登录 end -->
 <link rel="stylesheet" media="screen" href="/css/studio_mb/index.min.css" />
 <link rel="stylesheet" media="screen" href="/css/swiper.min.css" />
 </head>
@@ -142,11 +151,9 @@
 </section>
 <!-- 弹出层end -->
 
-<script type="text/javascript" src="/js/lib/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="/js/lib/swiper.min.js"></script>
-<script type="text/javascript" src="/js/lib/store.min.js"></script>
 <script type="text/javascript" src="/js/util/common.min.js"></script>
-<script type="text/javascript" src="/js/studio_mb/index.min.js"></script>
+<script type="text/javascript" src="/js/studio_mb/index.min.js?t=<%=new Date().getTime()%>"></script>
 <script type="text/javascript">
 $(function(){
     studioChatMbIdx.userInfo=JSON.parse('<%- userInfo %>');

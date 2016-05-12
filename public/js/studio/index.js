@@ -8,6 +8,7 @@ var studioChat={
     web24kPath:'',
     filePath:'',
     apiUrl:'',
+    currStudioAuth:false,//当前房间是否授权
     syllabusData:null,//直播课程对象
     isNeverLogin:false,//是否首次访问
     serverTime:0,//服务器时间
@@ -28,15 +29,15 @@ var studioChat={
     },
     socket:null,
     socketUrl:'',
-    userInfo:null,
+    userInfo:LoginAuto.sessionUser,
     initStudio:false,
     init:function(){
         this.serverTimeUp();
-        this.setVisitStore();//设置访客存储
+        this.setVisitStore(); //设置访客存储
         this.setSocket();//设置socket连接
         this.setVideoList();//设置视频列表
-        this.setAdvertisement();//设置广告
         this.setEvent();//设置各种事件
+        this.initRoom(); //初始化房间
         this.setScrollNotice();//设置滚动走马灯
         this.setPrice();//设置行情报价
     },
@@ -186,7 +187,6 @@ var studioChat={
     },
     /**
      * 设置访客存储信息
-     * @param userInfo
      */
     setVisitStore:function(){
         if (!store.enabled){
@@ -201,11 +201,12 @@ var studioChat={
             obj.userId="visitor_"+randId;
             obj.nickname='游客_'+randId;
             obj.userType=-1;
+            obj.autoLogin=false;
             store.set(key,obj);
         }else{
             obj=keyVal;
         }
-        this.userInfo.clientStoreId= obj.clientStoreId;
+        this.userInfo.clientStoreId=obj.clientStoreId;
         this.userInfo.visitorId=obj.userId;
         this.userInfo.loginId=obj.loginId;
         if(this.userInfo.clientGroup && this.userInfo.clientGroup=='visitor'){
@@ -218,6 +219,35 @@ var studioChat={
             $("#contentText").html("").attr("contenteditable",true);
         }
         this.isNeverLogin=!common.isValid(obj.loginId);
+    },
+    /**
+     * 自动登录
+     */
+    autoLogin:function(){
+        var loginRes = common.getJson("/studio/login",{
+            userId : studioChat.userInfo.loginId,
+            clientStoreId : studioChat.userInfo.clientStoreId
+        });
+        if(loginRes.isOK){//自动登录成功
+            studioChat.toRefreshView();
+            return true;
+        }
+        return false;
+    },
+    /**
+     * 初始化房间
+     */
+    initRoom:function(){
+        //如果没有昵称，自动设置一个昵称
+        if(!this.userInfo.nickname){
+            this.refreshNickname(false, "匿名_" + this.userInfo.userId.substring(8,12));
+        }
+        //当前房间未授权，并且是游客
+        if(!this.currStudioAuth && this.userInfo.clientGroup=='visitor'){
+            $("#login_a").trigger("click", true); //弹出登录框，隐藏关闭按钮
+        }else{
+            this.setAdvertisement();//设置广告
+        }
     },
     /**
      * 显示两个cs用户
@@ -1101,9 +1131,8 @@ var studioChat={
                             np.focus();
                         }else{
                             _this.attr("t","modify").text("修改昵称");
-                            np.attr("t",result.nickname).attr("readonly",true);
-                            studioChat.userInfo.nickname=result.nickname;
-                            $(".username").text(result.nickname);
+                            np.attr("readonly",true);
+                            studioChat.refreshNickname(true, result.nickname);
                         }
                     },true,function(err){
                         $("#nketip").text("修改失败，请联系客服！");
@@ -1285,10 +1314,17 @@ var studioChat={
                             common.getJson("/studio/upgrade",{clientGroup : loc_upLevel},function(result){
                                 _this.attr('disabled',false);
                                 if(result.isOK){
+                                    if(result.clientGroup === "active" && "notActive" === loc_upLevel){
+                                        $("#studioUpgA").show();
+                                    }else{
+                                        $("#studioUpgA").hide();
+                                    }
                                     $(".upg_succ").show();
                                 }else{
                                     var loc_msg = "";
-                                    if("real" === loc_upLevel){
+                                    if("active" === loc_upLevel) {
+                                        loc_msg = "很遗憾，您未激活金道真实交易账户，升级失败！<br>如有疑问请联系客服！";
+                                    }else if("notActive" === loc_upLevel){
                                         loc_msg = "很遗憾，您未开通金道真实交易账户，升级失败！<br>如有疑问请联系客服！";
                                     }else if("simulate" === loc_upLevel){
                                         loc_msg = "很遗憾，您未开通金道模拟交易账户，升级失败！<br>如有疑问请联系客服！";
@@ -1380,38 +1416,32 @@ var studioChat={
         /**
          * 转到登录页面
          */
-        $('#login_a,#login_b,#login_c,#lrtip_l').click(function(){
-            $("#main_ad_box").hide();
-            studioChat.openLoginBox();
+        $('#login_a').bind("click", function(e, hideClose){
+            studioChat.openLoginBox(hideClose);
             if(common.isValid($(this).attr("tp"))){
-                _gaq.push(['_trackEvent', 'pmchat_studio', 'login', $(this).attr("tp"),1,true]);
+                _gaq.push(['_trackEvent', 'pmchat_studio', 'login', $(this).attr("tp"), 1, true]);
             }
         });
         /**
-         * 转到注册页面
+         * 注销
          */
-        $('#register_a,#register_b,#toRegister,#lrtip_r').click(function(){
-            $("#main_ad_box").hide();
-            studioChat.openRegistBox();
-            if(common.isValid($(this).attr("tp"))){
-                _gaq.push(['_trackEvent', 'pmchat_studio', 'register', $(this).attr("tp"),1,true]);
-            }
+        $(".logout").bind("click", function(){
+            LoginAuto.setAutoLogin(false);
+            window.location.href="/studio/logout";
         });
         //手机号码输入控制验证码样式
-        $.each(["#loginPmForm input[name=mobilePhone]","#mobileCheckForm input[name=mobilePhone]","#registFrom input[name=mobilePhone]"],function(i,obj){
-            $(obj).bind("input propertychange", function() {
-                var domBtn=$(this).parents("form").find(".rbtn");
-                if(parseInt(domBtn.attr("t")) < 60 && domBtn.is(".pressed") == false)
-                {
-                    //倒计时状态不修改样式
-                    return;
-                }
-                if(common.isMobilePhone(this.value)){
-                    domBtn.addClass("pressed");
-                }else{
-                    domBtn.removeClass("pressed");
-                }
-            });
+        $("#loginForm input[name=mobilePhone]").bind("input propertychange", function() {
+            var domBtn=$(this).parents("form").find(".rbtn");
+            if(parseInt(domBtn.attr("t")) < 60 && domBtn.is(".pressed") == false)
+            {
+                //倒计时状态不修改样式
+                return;
+            }
+            if(common.isMobilePhone(this.value)){
+                domBtn.addClass("pressed");
+            }else{
+                domBtn.removeClass("pressed");
+            }
         });
         //验证码事件
         $('.rbtn').click(function(){
@@ -1454,7 +1484,7 @@ var studioChat={
             }
             var parentDom=$(this).parent().parent(),pId=parentDom.parent().attr("id"),curPId=parentDom.attr("id");
             parentDom.hide();
-            if(("loginBox"==pId||"registBox"==pId||parentDom.parent().hasClass("blackbg")) && "modifyPwdBox"!=curPId){
+            if(("loginBox"==pId||parentDom.parent().hasClass("blackbg")) && "modifyPwdBox"!=curPId){
                 $(".blackbg").hide().children().hide();
             }
             //$(".blackbg").hide().children().hide();
@@ -1478,18 +1508,9 @@ var studioChat={
         /**
          * 按回车键登录
          */
-        $("#loginComForm input[name='pwd']").keydown(function(e){
+        $("#loginForm input[name='verifyCode']").keydown(function(e){
             if(e.keyCode==13){
-                $("#loginComForm a[tn='loginBtn']").trigger("click");
-                return false;
-            }
-        });
-        /**
-         * 按回车键登录
-         */
-        $("#loginPmForm input[name='verifyCode']").keydown(function(e){
-            if(e.keyCode==13){
-                $("#loginPmForm a[tn='loginBtn']").trigger("click");
+                $("#loginForm a[tn='loginBtn']").trigger("click");
                 return false;
             }
         });
@@ -1497,23 +1518,23 @@ var studioChat={
          * 金道用户验证手机号后，设置昵称等信息
          */
         $("#pmInfoSetBtn").click(function(){
-            $("#pmInfoSetForm input[name=clientStoreId]").val(studioChat.userInfo.clientStoreId);
             if(!studioChat.checkFormInput("#pmInfoSetForm")){
                 return;
             }
-            $(this).attr('disabled',true);
+            $(this).prop('disabled',true);
             var _this=this;
             $('#pmInfoSetLoad').show();
-            common.getJson("/studio/reg",$("#pmInfoSetForm").serialize(),function(result){
+            common.getJson("/studio/modifyName",$("#pmInfoSetForm").serialize(),function(result){
                 $("#pmInfoSetForm .wrong-info").html("");
                 $(_this).attr('disabled',false);
                 $('#pmInfoSetLoad').hide();
                 if(!result.isOK){
-                    $("#pmInfoSetForm .wrong-info").html(result.error.errmsg);
+                    $("#pmInfoSetForm .wrong-info").html(result.msg?result.msg:"修改失败，请联系客服！");
                     return false;
                 }else{
-                    $("#pmInfoSetBox").hide();
-                    studioChat.toRefreshView();
+                    $("#pmInfoSetBox .pop_close").trigger("click");
+                    studioChat.refreshNickname(true, result.nickname);
+                    $("#sendBtn").trigger("click");
                 }
             },true,function(err){
                 $(_this).attr('disabled',false);
@@ -1523,7 +1544,7 @@ var studioChat={
         /**
          * 登录按钮事件
          */
-        $("#loginComForm a[tn=loginBtn],#loginPmForm a[tn=loginBtn]").click(function(){
+        $("#loginForm a[tn=loginBtn]").click(function(){
             var thisFormId=$(this).parents("form").attr("id");
             $("#"+thisFormId+' input[name=clientStoreId]').val(studioChat.userInfo.clientStoreId);
             if(!studioChat.checkFormInput("#"+thisFormId)){
@@ -1537,19 +1558,12 @@ var studioChat={
                 $(_this).attr('disabled',false);
                 $('#formBtnLoad').hide();
                 if(!result.isOK){
-                    if(result.hasPM){//转到注册设计页面
-                        $("#pmInfoSetForm input[name=mobilePhone]").val(result.mobilePhone);
-                        $("#pmInfoSetForm input[name=clientGroup]").val(result.clientGroup);
-                        $("#pmInfoSetForm input[name=verifyCode]").val(result.verifyCode);
-                        $("#loginBox").hide();
-                        $("#pmInfoSetBox").show();
-                        return false;
-                    }
                     $("#"+thisFormId+" input[name=verifyCode],#loginForm input[name=pwd]").val("");
                     $("#"+thisFormId+" .wrong-info").html(result.error.errmsg);
                     return false;
                 }else{
                     $(".blackbg,#loginBox").hide();
+                    LoginAuto.setAutoLogin($("#autoLogin").prop("checked"));
                     studioChat.toRefreshView();
                 }
             },true,function(err){
@@ -1744,6 +1758,10 @@ var studioChat={
                 studioChat.openLoginBox();
                 return;
             }
+            if(studioChat.userInfo.isSetName === false){
+                studioChat.openInfoSetBox();
+                return;
+            }
             var toUser=studioChat.getToUser();
             var msg = studioChat.getSendMsg();
             if(msg === false){
@@ -1761,6 +1779,23 @@ var studioChat={
             $("#contentText").html("");//清空内容
         });
         this.placeholderSupport();//ie下输入框显示文字提示
+    },
+    /**
+     * 刷新昵称
+     * @param isSetName
+     * @param nickname
+     */
+    refreshNickname : function(isSetName, nickname){
+        studioChat.userInfo.isSetName=isSetName;
+        studioChat.userInfo.nickname=nickname;
+        //头部
+        $(".username").text(nickname);
+        //在线列表
+        var me = $("#userListId li a.ume");
+        me.html(me.find("div").clone(true));
+        me.append(nickname + "【我】");
+        //个人信息
+        $("#mdr_nk").attr("t",nickname).val(nickname);
     },
     /**
      * 查询UI在线用户
@@ -1888,19 +1923,16 @@ var studioChat={
         var isTrue=true;
         var errorDom=$(formDom+" .wrong-info");
         errorDom.attr("tId","").html("");
-       $(formDom+" input").each(function(){
+        $(formDom+" input").each(function(){
            if(common.isBlank($(this).val())){
                if(this.name=='mobilePhone'){
                    errorDom.attr("tId",this.name).html("手机号码不能为空！");
                }
-               if(this.name=='pwd'|| this.name=='firstPwd'){
-                   errorDom.attr("tId",this.name).html("密码不能为空！");
-               }
                if(this.name=='verifyCode'){
                    errorDom.attr("tId",this.name).html("验证码不能为空！");
                }
-               if(this.name=='oldPwd'){
-                   errorDom.attr("tId",this.name).html("原密码不能为空！");
+               if(this.name=='nickname'){
+                   errorDom.attr("tId",this.name).html("昵称不能为空！");
                }
                isTrue=false;
                return isTrue;
@@ -1917,21 +1949,6 @@ var studioChat={
                    errorDom.attr("tId",this.name).html("昵称为2至10位字符(数字、英文、中文、下划线),不能全是数字");
                    isTrue=false;
                    return isTrue;
-               }
-               if(this.name=='pwd'){
-                   if(!(/^[A-Za-z0-9]{6,16}$/.test(this.value))) {
-                       errorDom.attr("tId",this.name).html("密码输入有误，请输入6至16位字母或数字组合！");
-                       isTrue=false;
-                       return isTrue;
-                   }
-                   var firstPwdDom=$(formDom).find("input[name=firstPwd]");
-                   if(firstPwdDom.length>0){
-                       if(firstPwdDom.val()!=this.value){
-                           errorDom.attr("tId",this.name).html("两次密码不一致！");
-                           isTrue=false;
-                           return isTrue;
-                       }
-                   }
                }
            }
        });
@@ -1953,25 +1970,25 @@ var studioChat={
     /**
      * 打开登录框
      */
-    openLoginBox:function(){
-        $("#loginBox form").each(function(){//清空数据
-            this.reset();
-        });
-        this.resetVerifyCode("#loginPmBox");
+    openLoginBox:function(hideClose){
+        $("#loginForm")[0].reset();
+        this.resetVerifyCode("#loginForm");
         $(".blackbg").children().hide();
-        $("#loginPmBox").hide();
-        $("#loginBox,#loginComBox,.blackbg").show();
+        if(hideClose){
+            $("#loginBox .pop_close").hide();
+        }else{
+            $("#loginBox .pop_close").show();
+        }
+        $("#loginBox,.blackbg").show();
     },
     /**
-     * 打开注册框
+     * 打开设置框
      */
-    openRegistBox:function(){
-        $("#registFrom")[0].reset();
-        this.resetVerifyCode("#registFrom");
+    openInfoSetBox:function(){
+        $("#pmInfoSetForm")[0].reset();
         $(".blackbg").children().hide();
-        $("#registBox,#registFromBox,.blackbg").show();
+        $("#pmInfoSetBox,.blackbg").show();
     },
-
     /**
      * 格式发布日期
      */
@@ -2177,7 +2194,7 @@ var studioChat={
             return '<img src="'+avatar+'">';
         }else if("vip"==clientGroup){
             aImgCls="user_v";
-        }else if("real"==clientGroup){
+        }else if("active"==clientGroup || "notActive"==clientGroup){
             aImgCls="user_r";
         }else if("simulate"==clientGroup){
             aImgCls="user_d";
@@ -2200,6 +2217,12 @@ var studioChat={
                 break;
             case "real":
                 levelShortName = "[R]";
+                break;
+            case "active":
+                levelShortName = "[A]";
+                break;
+            case "notActive":
+                levelShortName = "[N]";
                 break;
             case "simulate":
                 levelShortName = "[D]";
@@ -2387,10 +2410,10 @@ var studioChat={
         $(".blackbg").show();
         $("#tipMsgBox").fadeIn(0).delay(6000).fadeOut(200).find("span").text("注意："+txt+"正自动登出.....");
         window.setTimeout(function(){//3秒钟后登出
-            window.location.href="/studio/logout";
+            $(".logout").trigger("click");
         },3000);
     },
-     /*
+    /**
      * 设置socket
      */
     setSocket:function(){
@@ -2411,7 +2434,7 @@ var studioChat={
                 var randId= 0,size=dataLength<=10?60:(200/dataLength)*3+10;
                 for(var i=0;i<size;i++){
                     randId=common.randomNumber(6);
-                    data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:-1});
+                    data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:15,userType:-1});
                 }
             }
             var row=null;

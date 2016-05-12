@@ -162,7 +162,7 @@ router.get('/', function(req, res) {
 
 //转到页面
 function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
-    studioService.getIndexLoadData(groupId,(!isMobile || (isMobile && common.isBlank(groupId))),(!isMobile||(isMobile && common.isValid(groupId))),function(data){
+    studioService.getIndexLoadData(groupId, true,(!isMobile||(isMobile && common.isValid(groupId))),function(data){
         var newStudioList=[],rowTmp=null;
         var isVisitor=(constant.clientGroup.visitor==clientGroup);
         var viewDataObj={apiUrl:config.pmApiUrl+'/common',filePath:config.filesDomain,web24kPath:config.web24kPath,mobile24kPath:config.mobile24kPath};//输出参数
@@ -172,6 +172,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         viewDataObj.userSession=chatUser;
         viewDataObj.serverTime=new Date().getTime();
         viewDataObj.syllabusData='';
+        viewDataObj.currStudioAuth=false;
         if(!data.studioList){
             if(data.syllabusResult){
                 var syResult=data.syllabusResult;
@@ -203,6 +204,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
                 rowTmp.isCurr=(row._id==groupId);
                 rowTmp.isOpen=common.dateTimeWeekCheck(row.openDate, true);
                 if(rowTmp.isCurr) {
+                    viewDataObj.currStudioAuth = !rowTmp.disable;
                     if(data.syllabusResult){
                         var syResult=data.syllabusResult;
                         viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:JSON.parse(syResult.studioLink),courses:JSON.parse(syResult.courses)});
@@ -214,7 +216,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         viewDataObj.studioList = newStudioList;
         //记录访客信息
         var snUser=req.session.studioUserInfo;
-        if(snUser.firstLogin && snUser.groupId){//手机版房间外面不访客记录
+        if(snUser.firstLogin && snUser.groupId){//刷新页面不记录访客记录
             snUser.firstLogin=false;
             var vrRow={userId:snUser.userId,userAgent:req.headers["user-agent"],groupType:constant.fromPlatform.studio,roomId:snUser.groupId,nickname:snUser.nickname,clientGroup:snUser.clientGroup,clientStoreId:snUser.clientStoreId,mobile:snUser.mobilePhone,ip:common.getClientIp(req)};
             visitorService.saveVisitorRecord("login",vrRow);
@@ -237,133 +239,6 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         }
     });
 }
-
-/**
- * 找回密码
- */
-router.post('/getPwd',function(req, res){
-    var mobilePhone=req.body["mobilePhone"],
-        verifyCode=req.body["verifyCode"],
-        isCheck=req.body["isCheck"],
-        pwd=req.body["pwd"],
-        result={isOK:false,error:null};
-    if(common.isBlank(mobilePhone)||common.isBlank(verifyCode)){
-        result.error=errorMessage.code_1000;
-    }
-    if(!common.isMobilePhone(mobilePhone)){
-        result.error=errorMessage.code_1003;
-    }
-    if(!result.error){
-        //校验验证码
-    	if(isCheck=="true"){
-    		//验证手机号（手机验证码）
-    		pmApiService.checkMobileVerifyCode(mobilePhone, "studio_resetPWD", verifyCode, function(checkResult){
-    			if(!checkResult || checkResult.result != 0 || !checkResult.data){
-    				//验证码错误
-                    if(checkResult.errcode === "1006" || checkResult.errcode === "1007"){
-                        result.error = {'errcode' : checkResult.errcode, 'errmsg' : checkResult.errmsg};
-                        res.json(result);
-                    }else{
-                        result.error=errorMessage.code_1007;
-                        res.json(result);
-                    }
-                }else{
-                	//验证码正确
-                	result.isOK=true;
-                	req.session.mobileVerifyCode = verifyCode;
-                    res.json(result);
-                }
-    		});
-    	}else{
-            if(common.isBlank(pwd)){
-                result.error=errorMessage.code_1000;
-                res.json(result);
-            }else if(req.session.mobileVerifyCode !== verifyCode){
-                result.error=errorMessage.code_1007;
-                res.json(result);
-            }else{
-                req.session.mobileVerifyCode = null;
-                studioService.resetPwd(mobilePhone,pwd,null,function(resetResult){
-                    res.json(resetResult);
-                });
-            }
-    	}
-    }else{
-        res.json(result);
-    }
-});
-
-
-/**
- * 重置密码
- */
-router.post('/resetPwd',function(req, res){
-    var userInfo=req.session.studioUserInfo,pwd=req.body["pwd"],oldPwd=req.body["oldPwd"],result={isOK:false,error:null};
-    if(common.isBlank(userInfo.mobilePhone)||common.isBlank(pwd)||common.isBlank(oldPwd)){
-        result.error=errorMessage.code_1000;
-    }
-    if(!result.error){
-        studioService.resetPwd(userInfo.mobilePhone,pwd,oldPwd,function(result){
-            res.json(result);
-        });
-    }else{
-        res.json(result);
-    }
-});
-
-/**
- * 直播间注册
- */
-router.post('/reg',function(req, res){
-    var mobilePhone=req.body["mobilePhone"],
-        nickname=req.body["nickname"],
-        verifyCode=req.body["verifyCode"],
-        clientGroup=req.body["clientGroup"],//主要用于金道用户的首次登录转注册
-        clientStoreId=req.body["clientStoreId"],
-        pwd=req.body["pwd"];
-    if(common.isBlank(mobilePhone)||common.isBlank(nickname)||common.isBlank(pwd)||(common.isBlank(clientGroup)&&common.isBlank(verifyCode))){
-        res.json({isOK:false,error:errorMessage.code_1000});
-    }else if(!common.isMobilePhone(mobilePhone)){
-        res.json({isOK:false,error:errorMessage.code_1003});
-    }else{
-        if(clientGroup){
-            //金道用户的首次登录，之前已经校验了手机验证码，并保存在session中。
-            if(verifyCode === req.session.mobileVerifyCode){
-                //验证码正确
-                var userInfo={mobilePhone:mobilePhone,nickname:nickname,pwd:pwd,ip:common.getClientIp(req),groupType:constant.fromPlatform.studio};
-                studioService.studioRegister(userInfo,clientGroup,function(result){
-                    if(result.isOK){
-                        req.session.studioUserInfo={clientStoreId:clientStoreId,firstLogin:true,isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
-                    }
-                    res.json(result);
-                });
-            }else{
-                res.json({isOK:false, error : errorMessage.code_1007});
-            }
-            req.session.mobileVerifyCode = null;
-        }else{
-            pmApiService.checkMobileVerifyCode(mobilePhone, "studio_reg", verifyCode, function(result){
-                if(!result || result.result != 0 || !result.data){
-                    if(result.errcode === "1006" || result.errcode === "1007"){
-                        res.json({isOK:false, error : {'errcode' : result.errcode, 'errmsg' : result.errmsg}});
-                    }else{
-                        res.json({isOK:false, error : errorMessage.code_1007});
-                    }
-                }else{
-                    //验证码正确
-                    var userInfo={mobilePhone:mobilePhone,nickname:nickname,pwd:pwd,ip:common.getClientIp(req),groupType:constant.fromPlatform.studio};
-                    studioService.studioRegister(userInfo,clientGroup,function(result){
-                        if(result.isOK){
-                            req.session.studioUserInfo={clientStoreId:clientStoreId,firstLogin:true,isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
-                        }
-                        res.json(result);
-                    });
-                }
-            });
-        }
-    }
-});
-
 /**
  * 提取手机验证码
  */
@@ -383,72 +258,83 @@ router.get('/getMobileVerifyCode',function(req, res){
 });
 /**
  * 直播间登录
+ * 1）手机号+验证码直接登陆，如果没有从API中检查用户类型并添加一条记录
+ * 2）用户ID登陆
  */
 router.post('/login',function(req, res){
     var mobilePhone=req.body["mobilePhone"],
-        isPM=req.body["isPM"],
         verifyCode=req.body["verifyCode"],
-        clientStoreId=req.body["clientStoreId"],
-        pwd=req.body["pwd"];
+        userId=req.body["userId"],
+        clientStoreId=req.body["clientStoreId"];
     var result={isOK:false,error:null};
-    isPM=(isPM=='true');
-    if(!isPM && (common.isBlank(mobilePhone)||common.isBlank(pwd))){
-        result.error=errorMessage.code_1005;
-    }
-    if(isPM && (common.isBlank(mobilePhone)||common.isBlank(verifyCode))){
-        result.error=errorMessage.code_1006;
-    }
-    if(!common.isMobilePhone(mobilePhone)){
-        result.error=errorMessage.code_1003;
+    var isAutoLogin = !common.isBlank(userId);
+    if(!isAutoLogin){
+        if(common.isBlank(mobilePhone)||common.isBlank(verifyCode)){
+            result.error=errorMessage.code_1006;
+        }else if(!common.isMobilePhone(mobilePhone)){
+            result.error=errorMessage.code_1003;
+        }
     }
     if(result.error){
         res.json(result);
-    }else if(!isPM){
-        //非PM直接登陆
-        studioService.login({mobilePhone:mobilePhone,pwd:pwd,groupType:constant.fromPlatform.studio},isPM,function(newResult){
-            if(newResult.isOK){
-                newResult.userInfo.isLogin=true;
-                req.session.studioUserInfo=newResult.userInfo;
-                req.session.studioUserInfo.clientStoreId=clientStoreId;
-                req.session.studioUserInfo.firstLogin=true;
-                res.json({isOK:true});
-            }else{
-                res.json(newResult);
-            }
-        });
-    }else{
-        pmApiService.checkMobileVerifyCode(mobilePhone, "studio_login", verifyCode, function(result){
-            if(!result || result.result != 0 || !result.data){
-                if(result.errcode === "1006" || result.errcode === "1007"){
-                    result.error = {'errcode' : result.errcode, 'errmsg' : result.errmsg};
+    }else if(!isAutoLogin){
+        //手机号+验证码登陆
+        pmApiService.checkMobileVerifyCode(mobilePhone, "studio_login", verifyCode, function(chkCodeRes){
+            //TODO 屏蔽手机验证码校验，仅用于测试
+            chkCodeRes = {result:0,data:true};
+            if(!chkCodeRes || chkCodeRes.result != 0 || !chkCodeRes.data){
+                if(chkCodeRes.errcode === "1006" || chkCodeRes.errcode === "1007"){
+                    result.error = {'errcode' : chkCodeRes.errcode, 'errmsg' : chkCodeRes.errmsg};
                     res.json(result);
                 }else{
                     result.error=errorMessage.code_1007;
                     res.json(result);
                 }
             }else{
-                //验证码正确
-                studioService.login({mobilePhone:mobilePhone,pwd:pwd,groupType:constant.fromPlatform.studio},isPM,function(newResult){
-                    if(newResult.isOK){
-                        newResult.userInfo.isLogin=true;
-                        req.session.studioUserInfo=newResult.userInfo;
+                studioService.login({mobilePhone:mobilePhone,groupType:constant.fromPlatform.studio}, 1, function(loginRes){
+                    if(loginRes.isOK && constant.clientGroup.real != loginRes.userInfo.clientGroup){
+                        //real 类型客户将拆分成A和N客户
+                        loginRes.userInfo.isLogin=true;
+                        req.session.studioUserInfo=loginRes.userInfo;
                         req.session.studioUserInfo.clientStoreId=clientStoreId;
                         req.session.studioUserInfo.firstLogin=true;
                         res.json({isOK:true});
-                    }else{//金道用户首次登录,如本地库没有记录，则证明是首次登录，直接返回
+                    }else{
                         studioService.checkClientGroup(mobilePhone,null,function(clientGroup){
-                            if(clientGroup!=constant.clientGroup.register){
-                                newResult.hasPM=true;
-                                newResult.mobilePhone=mobilePhone;
-                                newResult.clientGroup=clientGroup;
-                                newResult.verifyCode=verifyCode;
+                            if(loginRes.isOK){
+                                //已经有账户，按类别升级即可
+                                studioService.updateClientGroup(mobilePhone, clientGroup, function (isOk) {
+                                    loginRes.userInfo.isLogin=true;
+                                    req.session.studioUserInfo=loginRes.userInfo;
+                                    req.session.studioUserInfo.clientStoreId=clientStoreId;
+                                    req.session.studioUserInfo.firstLogin=true;
+                                    res.json({isOK:true}); //即使修改账户级别失败也登录成功
+                                });
+                            }else{
+                                var userInfo={mobilePhone:mobilePhone, ip:common.getClientIp(req), groupType:constant.fromPlatform.studio};
+                                studioService.studioRegister(userInfo,clientGroup,function(result){
+                                    if(result.isOK){
+                                        req.session.studioUserInfo={clientStoreId:clientStoreId,firstLogin:true,isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
+                                    }
+                                    res.json(result);
+                                });
                             }
-                            logger.info("studioLogin:pm user first to login！"+JSON.stringify(newResult));
-                            req.session.mobileVerifyCode = verifyCode;
-                            res.json(newResult);
                         });
                     }
                 });
+            }
+        });
+    }else{
+        //userId自动登录
+        studioService.login({userId:userId,groupType:constant.fromPlatform.studio}, 2, function(loginRes){
+            if(loginRes.isOK){
+                loginRes.userInfo.isLogin=true;
+                req.session.studioUserInfo=loginRes.userInfo;
+                req.session.studioUserInfo.clientStoreId=clientStoreId;
+                req.session.studioUserInfo.firstLogin=true;
+                res.json({isOK:true});
+            }else{
+                res.json(loginRes);
             }
         });
     }
@@ -554,9 +440,10 @@ router.post('/upgrade',function(req, res){
         result.error=errorMessage.code_1010;
         res.json(result);
     }else{
-        studioService.upgradeClientGroup(chatUser.mobilePhone,clientGroup,function(isOk){
+        studioService.upgradeClientGroup(chatUser.mobilePhone,clientGroup,function(isOk, clientGroupRes){
             if(isOk){
                 result.isOK = true;
+                result.clientGroup = clientGroupRes;
             }
             res.json(result);
         });

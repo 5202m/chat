@@ -191,8 +191,10 @@ var studioChat={
      */
     getWhUserCGTip:function(userType,clientGroup){
         if(userType==0){
-            if("real"==clientGroup){
-                return '真实';
+            if("active"==clientGroup){
+                return '真实A';
+            }else if("notActive"==clientGroup){
+                return '真实N';
             }else if("simulate"==clientGroup){
                 return "模拟";
             }else if("register"==clientGroup){

@@ -83,14 +83,16 @@ var chatService ={
                 var clientGroup=userInfo.clientGroup;
                 if(constant.clientGroup.vip==clientGroup){
                     userInfo.sequence=10;
-                }else if(constant.clientGroup.real==clientGroup){
+                }else if(constant.clientGroup.active==clientGroup){
                     userInfo.sequence=11;
-                }else if(constant.clientGroup.simulate==clientGroup){
+                }else if(constant.clientGroup.notActive==clientGroup){
                     userInfo.sequence=12;
-                }else if(constant.clientGroup.register==clientGroup){
+                }else if(constant.clientGroup.simulate==clientGroup){
                     userInfo.sequence=13;
-                }else{
+                }else if(constant.clientGroup.register==clientGroup){
                     userInfo.sequence=14;
+                }else{
+                    userInfo.sequence=15;
                 }
             }
         }else{

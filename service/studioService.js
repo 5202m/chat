@@ -131,7 +131,66 @@ var studioService = {
      */
      studioRegister:function(userInfo,clientGroup,callback){
         var result={isOK:false,error:errorMessage.code_10};
-        //判断昵称唯一
+        if(userInfo.nickname){
+            //判断昵称唯一
+            studioService.checkNickName(userInfo, function(err, isValid){
+                if(err){
+                    callback(result);
+                }else if(isValid){
+                    studioService.studioRegisterSave(userInfo, clientGroup, callback);
+                }else{ //重复
+                    result.error=errorMessage.code_1012;
+                    callback(result);
+                }
+            });
+        }else{
+            studioService.studioRegisterSave(userInfo, clientGroup, callback);
+        }
+    },
+    /**
+     * 直播间注册保存
+     */
+    studioRegisterSave : function(userInfo, clientGroup, callback){
+        var result={isOK:false,error:errorMessage.code_10};
+        member.findOne({mobilePhone:userInfo.mobilePhone,valid:1},"loginPlatform.chatUserGroup",function (err,row) {
+            if(err){
+                logger.error("studioRegister fail:"+err);
+                callback(result);
+                return;
+            }
+            if(row){
+                if(row.loginPlatform && common.checkArrExist(row.loginPlatform.chatUserGroup)){
+                    var userGroup=row.loginPlatform.chatUserGroup;
+                    for(var i in userGroup){
+                        if(userGroup[i]._id==userInfo.groupType){
+                            result.error=errorMessage.code_1004;
+                            callback(result);
+                            return;
+                        }
+                    }
+                }
+            }
+            if(common.isBlank(clientGroup)){//如果检测的clientGroup为空则再次检查
+                studioService.checkClientGroup(userInfo.mobilePhone,null,function(val){
+                    userInfo.clientGroup=val;
+                    studioService.setClientInfo(row,userInfo,function(resultTmp){
+                        callback(resultTmp);
+                    });
+                })
+            }else{
+                userInfo.clientGroup=clientGroup;
+                studioService.setClientInfo(row,userInfo,function(resultTmp){
+                    callback(resultTmp);
+                });
+            }
+        });
+    },
+    /**
+     * 判断昵称唯一
+     * @param userInfo {{mobilePhone:String, groupType:String, nickname:String}}
+     * @param callback (err, boolean)，true-唯一，false-不唯一
+     */
+    checkNickName : function(userInfo, callback){
         member.findOne({
             mobilePhone: {$ne : userInfo.mobilePhone},
             valid: 1,
@@ -143,48 +202,15 @@ var studioService = {
         }, "loginPlatform.chatUserGroup", function(err, sameNicknameRow){
             if(err){
                 logger.error("studioRegister fail:"+err);
-                callback(result);
+                callback(err, false);
                 return;
             }
             //存在记录，昵称重复
             if(sameNicknameRow){
-                result.error=errorMessage.code_1012;
-                callback(result);
-                return;
+                callback(null, false);
+            }else{
+                callback(null, true);
             }
-
-            member.findOne({mobilePhone:userInfo.mobilePhone,valid:1},"loginPlatform.chatUserGroup",function (err,row) {
-                if(err){
-                    logger.error("studioRegister fail:"+err);
-                    callback(result);
-                    return;
-                }
-                if(row){
-                    if(row.loginPlatform && common.checkArrExist(row.loginPlatform.chatUserGroup)){
-                        var userGroup=row.loginPlatform.chatUserGroup;
-                        for(var i in userGroup){
-                            if(userGroup[i]._id==userInfo.groupType){
-                                result.error=errorMessage.code_1004;
-                                callback(result);
-                                return;
-                            }
-                        }
-                    }
-                }
-                if(common.isBlank(clientGroup)){//如果检测的clientGroup为空则再次检查
-                    studioService.checkClientGroup(userInfo.mobilePhone,null,function(val){
-                        userInfo.clientGroup=val;
-                        studioService.setClientInfo(row,userInfo,function(resultTmp){
-                            callback(resultTmp);
-                        });
-                    })
-                }else{
-                    userInfo.clientGroup=clientGroup;
-                    studioService.setClientInfo(row,userInfo,function(resultTmp){
-                        callback(resultTmp);
-                    });
-                }
-            });
         });
     },
     /**
@@ -262,8 +288,11 @@ var studioService = {
         var clientGroup=constant.clientGroup.register;
         userService.checkAClient(false,mobilePhone,accountNo,'',function(result){
             console.log("checkAClient->flagResult:"+JSON.stringify(result));
-            if(result.flag!=0){
-                clientGroup=constant.clientGroup.real;
+            if(result.flag==2){
+                clientGroup=constant.clientGroup.notActive;
+                callback(clientGroup);
+            }else if(result.flag==3){
+                clientGroup=constant.clientGroup.active;
                 callback(clientGroup);
             }else{
                 //检查用户是否模拟用户
@@ -279,15 +308,34 @@ var studioService = {
     /**
      * 客户登陆
      * @param userInfo
+     * @param type
+     *          1-手机登录,匹配手机号
+     *          2-自动登录,匹配userId
      * @param callback
      */
-    login:function(userInfo,isPM,callback){
+    login:function(userInfo,type,callback){
         var result={isOK:false,error:''},searchObj=null;
-        if(isPM){//金道用户匹配
-            searchObj={mobilePhone:userInfo.mobilePhone,valid:1,'loginPlatform.chatUserGroup._id':userInfo.groupType,'loginPlatform.chatUserGroup.clientGroup':{ '$in':[constant.clientGroup.real,constant.clientGroup.simulate]}};
-        }else{//普通通话匹配
-            var pwd=common.getMD5(constant.pwdKey+userInfo.pwd);
-            searchObj={mobilePhone:userInfo.mobilePhone,valid:1,'loginPlatform.chatUserGroup._id':userInfo.groupType,'loginPlatform.chatUserGroup.pwd':pwd};
+        switch(type){
+            case 1: //手机号登录
+                searchObj={
+                    mobilePhone : userInfo.mobilePhone,
+                    valid : 1,
+                    'loginPlatform.chatUserGroup._id':userInfo.groupType
+                };
+                break;
+            case 2: //userId登录
+                searchObj={
+                    valid : 1,
+                    "loginPlatform.chatUserGroup" : {$elemMatch : {
+                        "_id" : userInfo.groupType,
+                        "userId" : userInfo.userId
+                    }}
+                };
+                break;
+            default :
+                result.error=errorMessage.code_1000;
+                callback(result);
+                return;
         }
         member.findOne(searchObj,'mobilePhone loginPlatform.chatUserGroup.$',function(err,row){
             if(row && common.checkArrExist(row.loginPlatform.chatUserGroup)){
@@ -309,20 +357,21 @@ var studioService = {
      * @param callback
      */
     upgradeClientGroup:function(mobilePhone,clientGroup,callback){
-        if(clientGroup === constant.clientGroup.real) {
+        if(clientGroup === constant.clientGroup.active || clientGroup === constant.clientGroup.notActive ) {
             //升级到真实
             userService.checkAClient(false,mobilePhone,null,'', function (result) {
                 console.log("checkAClient->flagResult:" + JSON.stringify(result));
-                if (result.flag != 0) {
-                    studioService.updateClientGroup(mobilePhone, constant.clientGroup.real, function (isOk) {
+                if(result.flag == 2 || result.flag == 3){
+                    var clientGroupTmp = result.flag == 2 ? constant.clientGroup.notActive : constant.clientGroup.active;
+                    studioService.updateClientGroup(mobilePhone, clientGroupTmp, function (isOk) {
                         if (isOk) {
-                            callback(true);
+                            callback(true, clientGroupTmp);
                         }else{
-                            callback(false);
+                            callback(false, null);
                         }
                     });
                 }else{
-                    callback(false);
+                    callback(false, null);
                 }
             });
         }else if(clientGroup === constant.clientGroup.simulate){
@@ -331,17 +380,17 @@ var studioService = {
                 if(hasRow){
                     studioService.updateClientGroup(mobilePhone, constant.clientGroup.simulate, function(isOk){
                         if(isOk){
-                            callback(true);
+                            callback(true, constant.clientGroup.simulate);
                         }else{
-                            callback(false);
+                            callback(false, null);
                         }
                     });
                 }else{
-                    callback(false);
+                    callback(false, null);
                 }
             });
         }else{
-            callback(false);
+            callback(false, null);
         }
     },
     /**

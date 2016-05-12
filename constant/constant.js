@@ -10,6 +10,8 @@ var constant={
     },
     clientGroup:{//客户类别
       vip:'vip',
+      active : 'active', //真实客户-激活
+      notActive : 'notActive', //真实客户-未激活
       real:'real',//真实用户
       simulate:'simulate',//模拟用户
       register:'register',//注册用户

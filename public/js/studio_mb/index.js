@@ -19,6 +19,29 @@ var studioChatMbIdx={
                 $('.boxcont').height('auto');
             }
         });
+        this.initRoom();
+    },
+    /**
+     * 初始化房间
+     */
+    initRoom:function(){
+        //如果没有昵称，自动设置一个昵称
+        if(!this.userInfo.nickname){
+            this.refreshNickname(false, "匿名_" + this.userInfo.userId.substring(8,12));
+        }
+    },
+    /**
+     * 刷新昵称
+     * @param isSetName
+     * @param nickname
+     */
+    refreshNickname : function(isSetName, nickname){
+        this.userInfo.isSetName=isSetName;
+        this.userInfo.nickname=nickname;
+        //头部
+        $("#header_ui").text(nickname);
+        //个人信息
+        studioMbPop.Person.refreshNickName(nickname);
     },
     /**
      * 设置访客存储信息
@@ -42,12 +65,20 @@ var studioChatMbIdx={
         }else{
             obj=keyVal;
         }
-        this.userInfo.clientStoreId= obj.clientStoreId;
+
+        this.userInfo.clientStoreId=obj.clientStoreId;
         this.userInfo.visitorId=obj.userId;
+        this.userInfo.loginId=obj.loginId;
         if(this.userInfo.clientGroup && this.userInfo.clientGroup=='visitor'){
             this.userInfo.nickname=obj.nickname;
             this.userInfo.userId=obj.userId;
+            $("#contentText").attr("contenteditable",false).append('<span style="margin:15px 5px;">亲，<a href="javascript:;" onclick="studioChat.openLoginBox();" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');//设置登录后发言
+        }else{
+            obj.loginId=this.userInfo.userId;
+            store.set(key,obj);
+            $("#contentText").html("").attr("contenteditable",true);
         }
+        this.isNeverLogin=!common.isValid(obj.loginId);
     },
     /**
      * 设置房间客户组授权信息提示
@@ -56,24 +87,35 @@ var studioChatMbIdx={
         var getAuthTitle = function(auths){
             auths = auths || "";
             auths = "," + auths;
-            var loc_authInfo = [];
-            //simulate,register,real,vip,visitor
+            var loc_authInfo = [], cnt = 0;
+            //simulate,register,active,notActive,vip,visitor
             if(auths.indexOf(",vip") >= 0){
                 loc_authInfo.push("VIP");
+                cnt ++;
             }
-            if(auths.indexOf(",real") >= 0){
+            if(auths.indexOf(",active") >= 0 && auths.indexOf(",notActive") >= 0){
                 loc_authInfo.push("真实");
+                cnt += 2;
+            }else if(auths.indexOf(",active") >= 0){
+                loc_authInfo.push("真实A");
+                cnt ++;
+            }else if(auths.indexOf(",notActive") >= 0){
+                loc_authInfo.push("真实N");
+                cnt ++;
             }
             if(auths.indexOf(",simulate") >= 0){
                 loc_authInfo.push("模拟");
+                cnt ++;
             }
             if(auths.indexOf(",register") >= 0){
                 loc_authInfo.push("注册");
+                cnt ++;
             }
             if(auths.indexOf(",visitor") >= 0){
                 loc_authInfo.push("游客");
+                cnt ++;
             }
-            if(loc_authInfo.length == 5){
+            if(cnt == 6){
                 return "所有客户均可观看";
             }else{
                 return loc_authInfo.join(",") + "用户可观看";
@@ -191,8 +233,13 @@ var studioChatMbIdx={
          */
         $(".btns .enter").click(function(){
             var loc_liDom = $(this).parents("li");
+            var loc_groupId = loc_liDom.attr("gi");
             if(loc_liDom.attr("ga") != 'true'){
-                studioMbPop.showMessage("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
+                if(studioChatMbIdx.userInfo.clientGroup == "visitor"){
+                    studioMbPop.popBox("login", {groupId : loc_groupId, clientStoreId : studioChatMbIdx.userInfo.clientStoreId});
+                }else{
+                    studioMbPop.showMessage("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
+                }
                 return false;
             }
             if(loc_liDom.attr("go") != 'true'){
@@ -200,7 +247,6 @@ var studioChatMbIdx={
                 return false;
             }
             studioMbPop.loadingBlock($("body"));
-            var loc_groupId = loc_liDom.attr("gi");
             common.getJson("/studio/checkGroupAuth",{groupId:loc_groupId}, function(result){
                 studioMbPop.loadingBlock($("body"), true);
                 if(!result.isOK){

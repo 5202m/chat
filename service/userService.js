@@ -508,7 +508,9 @@ var userService = {
                     var group=row.loginPlatform.chatUserGroup.id(userInfo.groupType);
                     if(group){
                         var room=group.rooms.id(userInfo.groupId);
-                        group.nickname=userInfo.nickname;
+                        if(userInfo.isSetName !== false){
+                            group.nickname=userInfo.nickname;
+                        }
                         group.avatar=userInfo.avatar;
                         room.onlineDate=userInfo.onlineDate;
                         room.onlineStatus=userInfo.onlineStatus;
@@ -633,21 +635,35 @@ var userService = {
        }
     },
 
-    /**黄金接口
+    /**
+     * 黄金接口
      * 通过账号与手机号检查用户是否A客户
      * 备注：目前只是微信组聊天室客户发言时需检测，只针对goldApi
-     * @param userInfo
+     * @param mobile
+     * @param accountNo
+     * @param callback
      */
     checkGoldAClient:function(mobile,accountNo,callback){
         var flagResult={flag:0};//客户记录标志:0（记录不存在）、1（未绑定微信）、2（未入金激活）、3（绑定微信并且已经入金激活）
         if(common.isBlank(accountNo)){
-            request.post({url:(config.goldApiUrl+'/account/checkContactInfo'), form: {args:'["","","","'+mobile+'"]'}}, function(error,response,tmpData){
-                logger.info("checkContactInfo->error:"+error+";tmpData:"+tmpData);
+            request.post({url:(config.goldApiUrl+'/account/getCustomerInfoByMobileNo'), form: {mobileNo: '86-' + mobile}}, function(error,response,tmpData){
+                //logger.info("checkContactInfo->error:"+error+";tmpData:"+tmpData);
+                if(error){
+                    logger.error("getCustomerInfoByMobileNo->error" + error);
+                }
                 if(!error && common.isValid(tmpData)) {
                     var allData = JSON.parse(tmpData);
                     var result = allData.result;
-                    if (allData.code == 'SUCCESS'&& result!=null && result.code=='1066') {
-                        flagResult.flag =1;//存在记录
+                    if (allData.code == 'SUCCESS' && result && result.length > 0) {
+                        flagResult.flag = 2;//未入金激活
+                        var acc = null;
+                        for(var i = 0, lenI = result ? result.length : 0; i < lenI; i++){
+                            acc = result[i];
+                            if(acc.accountStatus == "A"){
+                                flagResult.flag = 3;
+                                break;
+                            }
+                        }
                     }
                 }
                 callback(flagResult);

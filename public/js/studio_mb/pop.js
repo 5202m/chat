@@ -7,7 +7,7 @@ var studioMbPerson = {
      */
     load : function(userInfo){
         if(userInfo && userInfo.isLogin){
-            $("#person_nn").html(userInfo.nickname);
+            this.refreshNickname(userInfo.nickname);
             $("#person_hp").attr("src", studioMbPerson.getUserLevelIco(userInfo.clientGroup));
             $("#upg_tbody_id").html("");
             studioMbPop.loadingBlock($("#upg_tbody_id"));
@@ -47,12 +47,18 @@ var studioMbPerson = {
                         common.getJson("/studio/upgrade",{clientGroup : loc_upLevel},function(result){
                             studioMbPop.loadingBlock($("#personPop"), true);
                             if(result.isOK){
+                                var msg = "升级成功！重新登录后，您可享用更多直播间权限。";
+                                if(result.clientGroup === "active" && "notActive" === loc_upLevel){
+                                    msg += "<br/>注：你已经激活真实交易账户，直接为你升级到A级别。"
+                                }
                                 studioMbPop.popBox("msg", {
-                                    msg : "升级成功！重新登录后，您可享用更多直播间权限。",
+                                    msg : msg,
                                     type : "upg"
                                 });
                             }else{
                                 if("real" === loc_upLevel){
+                                    studioMbPop.showMessage("很遗憾，您未激活金道真实交易账户，升级失败！如有疑问请联系客服！");
+                                }else if("real" === loc_upLevel){
                                     studioMbPop.showMessage("很遗憾，您未开通金道真实交易账户，升级失败！如有疑问请联系客服！");
                                 }else if("simulate" === loc_upLevel){
                                     studioMbPop.showMessage("很遗憾，您未开通金道模拟交易账户，升级失败！如有疑问请联系客服！");
@@ -63,6 +69,14 @@ var studioMbPerson = {
                         });
                     });
                 }
+            });
+
+            /**
+             * 注销事件
+             */
+            $(".logoutbtn").bind("click", function(){
+                LoginAuto.setAutoLogin(false);
+                window.location.href="/studio/logout";
             });
         }
     },
@@ -82,7 +96,10 @@ var studioMbPerson = {
             case "vip" :
                 userLevelIco = "/images/studio_mb/user2.png";
                 break;
-            case "real" :
+            case "active" :
+                userLevelIco = "/images/studio_mb/user3.png";
+                break;
+            case "notActive" :
                 userLevelIco = "/images/studio_mb/user3.png";
                 break;
             case "simulate" :
@@ -93,15 +110,25 @@ var studioMbPerson = {
                 break;
         }
         return userLevelIco;
+    },
+
+    /**
+     * 刷新昵称
+     * @param nickname
+     */
+    refreshNickname : function(nickname){
+        $("#person_nn").html(nickname);
     }
 };
 
 /**
- * 注册用户登录
+ * 直播间登录
  */
 var studioMbLogin = {
+    verifyCodeIntervalId : 0,
     groupId : null,
     clientStoreId : null,
+
     /**
      * 初始化（页面加载）
      */
@@ -111,11 +138,16 @@ var studioMbLogin = {
     /**
      * 初始化（页面初始化）
      */
-    init : function(groupId, clientStoreId){
+    init : function(groupId, clientStoreId, closeable){
         this.groupId = groupId;
         this.clientStoreId = clientStoreId;
         this.resetFormInput();
         $("#loginForm_csi").val(clientStoreId);
+        if(closeable){
+            $("#loginPop .pop-close").show();
+        }else{
+            $("#loginPop .pop-close").hide();
+        }
     },
     /**
      * 绑定事件
@@ -131,12 +163,14 @@ var studioMbLogin = {
                 if(!result.isOK){
                     studioMbPop.loadingBlock($("#loginPop"), true);
                     studioMbPop.showMessage(result.error.errmsg);
-                    studioMbLogin.resetFormInput();
                     return false;
                 }else{
                     if(studioMbLogin.groupId){
-                        common.getJson("/studio/checkGroupAuth",{groupId:studioMbLogin.groupId},function(){
+                        common.getJson("/studio/checkGroupAuth",{groupId:studioMbLogin.groupId},function(result){
                             studioMbPop.loadingBlock($("#loginPop"), true);
+                            if(!result.isOK){
+                                studioMbPop.showMessage("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
+                            }
                             studioMbPop.reload();
                         },true,function(err){
                             studioMbPop.loadingBlock($("#loginPop"), true);
@@ -146,6 +180,7 @@ var studioMbLogin = {
                         });
                     }else{
                         studioMbPop.loadingBlock($("#loginPop"), true);
+                        LoginAuto.setAutoLogin($("#loginForm_al").prop("checked"));
                         studioMbPop.reload();
                     }
                 }
@@ -155,135 +190,9 @@ var studioMbLogin = {
             });
         });
 
-        //忘记密码
-        $("#loginForm_prc").bind("click", function(){
-            studioMbPop.popBox("resetChk");
-        });
-
-        //金道用户免注册
-        $("#loginForm_plp").bind("click", function(){
-            studioMbPop.popBox("loginPM", {
-                groupId: studioMbLogin.groupId,
-                clientStoreId: studioMbLogin.clientStoreId
-            });
-        });
-
-        //还没有注册？
-        $("#loginForm_pr").bind("click", function(){
-            studioMbPop.popBox("reg", {
-                clientStoreId: studioMbLogin.clientStoreId,
-                clientGroup: "",
-                mobilePhone: "",
-                verifyCode: "",
-                isPM: false,
-                groupId : studioMbLogin.groupId
-            });
-        });
-    },
-    /**
-     * 重置页面
-     */
-    resetFormInput:function(){
-        $("#loginForm").trigger("reset");
-    },
-    /**
-     * 检查页面输入
-     */
-    checkFormInput:function(){
-        var isTrue=true,message="";
-        var mobilePhone,pwd;
-        mobilePhone = $("#loginForm_mb").val();
-        pwd = $("#loginForm_pwd").val();
-        if(common.isBlank(mobilePhone)){
-            isTrue = false;
-            message="手机号码不能为空！";
-        }else if(common.isBlank(pwd)){
-            isTrue = false;
-            message="密码不能为空！";
-        }else if(!common.isMobilePhone(mobilePhone)){
-            isTrue = false;
-            message="手机号码输入有误！";
-        }
-        studioMbPop.showMessage(message);
-        return isTrue;
-    }
-};
-
-/**
- * 金道用户登录
- */
-var studioMbLoginPm = {
-    verifyCodeIntervalId : 0,
-    groupId : null,
-    clientStoreId : null,
-
-    /**
-     * 初始化（页面加载）
-     */
-    load : function(){
-        this.setEvent();
-    },
-    /**
-     * 初始化（页面初始化）
-     */
-    init : function(groupId, clientStoreId){
-        this.groupId = groupId;
-        this.clientStoreId = clientStoreId;
-        this.resetFormInput();
-        $("#loginPmForm_csi").val(clientStoreId);
-    },
-    /**
-     * 绑定事件
-     */
-    setEvent : function(){
-        //登录
-        $("#loginPmForm_sub").bind("click", function(){
-            if(!studioMbLoginPm.checkFormInput()){
-                return;
-            }
-            studioMbPop.loadingBlock($("#loginPmPop"));
-            common.getJson("/studio/login",$("#loginPmForm").serialize(),function(result){
-                if(!result.isOK){
-                    studioMbPop.loadingBlock($("#loginPmPop"), true);
-                    if(result.hasPM){
-                        studioMbPop.popBox("reg", {
-                            clientStoreId: studioMbLoginPm.clientStoreId,
-                            clientGroup: result.clientGroup,
-                            mobilePhone: result.mobilePhone,
-                            verifyCode: result.verifyCode,
-                            isPM: true,
-                            groupId : studioMbLoginPm.groupId
-                        });
-                        return false;
-                    }else{
-                        studioMbPop.showMessage(result.error.errmsg);
-                        return false;
-                    }
-                }else{
-                    if(studioMbLoginPm.groupId){
-                        common.getJson("/studio/checkGroupAuth",{groupId:studioMbLoginPm.groupId},function(){
-                            studioMbPop.loadingBlock($("#loginPmPop"), true);
-                            studioMbPop.reload();
-                        },true,function(err){
-                            studioMbPop.loadingBlock($("#loginPmPop"), true);
-                            if("success"!=err) {
-                                studioMbPop.showMessage("操作失败，请联系客服！");
-                            }
-                        });
-                    }else{
-                        studioMbPop.loadingBlock($("#loginPmPop"), true);
-                        studioMbPop.reload();
-                    }
-                }
-            },true,function(){
-                studioMbLoginPm.resetFormInput();
-                studioMbPop.loadingBlock($("#loginPmPop"), true);
-            });
-        });
-
         //手机校验
-        $("#loginPmForm_mb").bind("input propertychange", function(){
-            var domBtn=$("#loginPmForm_vcb");
+        $("#loginForm_mb").bind("input propertychange", function(){
+            var domBtn=$("#loginForm_vcb");
             if(parseInt(domBtn.attr("t")) < 60 && domBtn.is(".pressed") == false)
             {
                 //倒计时状态不修改样式
@@ -297,13 +206,13 @@ var studioMbLoginPm = {
         });
 
         //获取验证码
-        $("#loginPmForm_vcb").bind("click", function(){
-            $("#loginPmForm_vc").blur();
+        $("#loginForm_vcb").bind("click", function(){
+            $("#loginForm_vc").blur();
             if(!$(this).hasClass("pressed")){
                 return;
             }
             $(this).removeClass("pressed").val("发送中...");
-            var mobile=$("#loginPmForm_mb").val();
+            var mobile=$("#loginForm_mb").val();
             try{
                 $.getJSON('/studio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:"studio_login"},function(data){
                     if(!data || data.result != 0){
@@ -312,13 +221,13 @@ var studioMbLoginPm = {
                         }else{
                             console.error("提取数据有误！");
                         }
-                        studioMbLoginPm.resetVerifyCode();
+                        studioMbLogin.resetVerifyCode();
                     }else{
-                        studioMbLoginPm.setVerifyCodeTime();
+                        studioMbLogin.setVerifyCodeTime();
                     }
                 });
             }catch (e){
-                studioMbLoginPm.resetVerifyCode();
+                studioMbLogin.resetVerifyCode();
                 console.error("getMobileVerifyCode->"+e);
             }
         });
@@ -327,8 +236,8 @@ var studioMbLoginPm = {
      * 重置页面
      */
     resetFormInput:function(){
-        $("#loginPmForm_mb").val("").trigger("input");
-        $("#loginPmForm_vc").val("");
+        $("#loginForm_mb").val("").trigger("input");
+        $("#loginForm_vc").val("");
     },
     /**
      * 检查页面输入
@@ -336,8 +245,8 @@ var studioMbLoginPm = {
     checkFormInput:function(){
         var isTrue=true,message="";
         var mobilePhone,verifyCode;
-        mobilePhone = $("#loginPmForm_mb").val();
-        verifyCode = $("#loginPmForm_vc").val();
+        mobilePhone = $("#loginForm_mb").val();
+        verifyCode = $("#loginForm_vc").val();
         if(common.isBlank(mobilePhone)){
             isTrue = false;
             message="手机号码不能为空！";
@@ -355,440 +264,122 @@ var studioMbLoginPm = {
      * 重置验证码
      */
     resetVerifyCode:function(){
-        if(studioMbLoginPm.verifyCodeIntervalId) {
-            clearInterval(studioMbLoginPm.verifyCodeIntervalId);
-            studioMbLoginPm.verifyCodeIntervalId=null;
+        if(studioMbLogin.verifyCodeIntervalId) {
+            clearInterval(studioMbLogin.verifyCodeIntervalId);
+            studioMbLogin.verifyCodeIntervalId=null;
         }
-        $("#loginPmForm_vcb").attr("t",60).val("获取验证码");
-        $("#loginPmForm_mb").trigger("input");
+        $("#loginForm_vcb").attr("t",60).val("获取验证码");
+        $("#loginForm_mb").trigger("input");
     },
     /**
      * 验证码倒计时
      */
     setVerifyCodeTime:function(){
-        var item = $("#loginPmForm_vcb");
+        var item = $("#loginForm_vcb");
         var t=parseInt(item.attr("t"))||60;
-        if(!studioMbLoginPm.verifyCodeIntervalId){
-            studioMbLoginPm.verifyCodeIntervalId=window.setInterval(studioMbLoginPm.setVerifyCodeTime,1000);
+        if(!studioMbLogin.verifyCodeIntervalId){
+            studioMbLogin.verifyCodeIntervalId=window.setInterval(studioMbLogin.setVerifyCodeTime,1000);
         }
         if(t>1){
             item.attr("t",t-1).val((t-1)+"秒后重新获取");
         }else{
-            studioMbLoginPm.resetVerifyCode();
+            studioMbLogin.resetVerifyCode();
         }
     }
 };
 
-/**
- * 用户注册
- */
-var studioMbReg = {
-    verifyCodeIntervalId : 0,
-    groupId : null,
-
-    /**
-     * 初始化（页面加载）
-     */
-    load : function(){
-        this.setEvent();
-    },
-    /**
-     * 初始化（页面初始化）
-     */
-    init : function(clientStoreId, clientGroup, mobilePhone, verifyCode, isPM, groupId){
-        this.groupId = groupId;
-        $("#regForm").trigger("reset");
-        $("#regForm_csi").val(clientStoreId);
-        $("#regForm_cg").val(clientGroup);
-        $("#regForm_mb").val(mobilePhone).trigger("input");
-        $("#regForm_vc").val(verifyCode);
-        var titleDom = $("#regPop").find(".mtit span");
-        var pmField = $("#regForm").find(".pm");
-        if(isPM){
-            titleDom.html("直播间设置");
-            pmField.hide();
-        }else{
-            titleDom.html("直播间注册");
-            pmField.show();
-        }
-    },
-    /**
-     * 绑定事件
-     */
-    setEvent : function(){
-        //确认
-        $("#regForm_sub").bind("click", function(){
-            if(!studioMbReg.checkFormInput()){
-                return;
-            }
-            studioMbPop.loadingBlock($("#regPop"));
-            common.getJson("/studio/reg",$("#regForm").serialize(),function(result){
-                studioMbPop.loadingBlock($("#regPop"), true);
-                if(!result.isOK){
-                    studioMbPop.showMessage(result.error.errmsg);
-                    return false;
-                }else{
-                    studioMbPop.popBox("msg",{
-                        msg : "恭喜你注册成功！",
-                        type : "reg",
-                        groupId : studioMbReg.groupId
-                    });
-                }
-            },true,function(){
-                studioMbPop.loadingBlock($("#regPop"), true);
-            });
-        });
-
-        //手机校验
-        $("#regForm_mb").bind("input propertychange", function(){
-            var domBtn=$("#regForm_vcb");
-            if(parseInt(domBtn.attr("t")) < 60 && domBtn.is(".pressed") == false)
-            {
-                //倒计时状态不修改样式
-                return;
-            }
-            if(common.isMobilePhone(this.value)){
-                domBtn.addClass("pressed");
-            }else{
-                domBtn.removeClass("pressed");
-            }
-        });
-
-        //获取验证码
-        $("#regForm_vcb").bind("click", function(){
-            $("#regForm_vc").blur();
-            if(!$(this).hasClass("pressed")){
-                return;
-            }
-            $(this).removeClass("pressed").val("发送中...");
-            var mobile=$("#regForm_mb").val();
-            try{
-                $.getJSON('/studio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:"studio_reg"},function(data){
-                    if(!data || data.result != 0){
-                        if(data.errcode == "1005"){
-                            studioMbPop.showMessage(data.errmsg);
-                        }else{
-                            console.error("提取数据有误！");
-                        }
-                        studioMbReg.resetVerifyCode();
-                    }else{
-                        studioMbReg.setVerifyCodeTime();
-                    }
-                });
-            }catch (e){
-                studioMbReg.resetVerifyCode();
-                console.error("getMobileVerifyCode->"+e);
-            }
-        });
-    },
-    /**
-     * 检查页面输入
-     */
-    checkFormInput:function(){
-        var isTrue=true,message="";
-        var mobilePhone,verifyCode,nickname,firstPwd,pwd;
-        mobilePhone = $("#regForm_mb").val();
-        verifyCode = $("#regForm_vc").val();
-        nickname = $("#regForm_nn").val();
-        firstPwd = $("#regForm_pwd1").val();
-        pwd = $("#regForm_pwd").val();
-        if(common.isBlank(mobilePhone)){
-            isTrue = false;
-            message="手机号码不能为空！";
-        }else if(!common.isMobilePhone(mobilePhone)){
-            isTrue = false;
-            message="手机号码输入有误！";
-        }else if(common.isBlank(verifyCode)){
-            isTrue = false;
-            message="手机验证码不能为空！";
-        }else if(common.isBlank(firstPwd) || common.isBlank(pwd)){
-            isTrue = false;
-            message="密码不能为空！";
-        }else if(firstPwd != pwd){
-            isTrue = false;
-            message="两次密码不一致！";
-        }else if(!(/^[A-Za-z0-9]{6,16}$/.test(pwd))){
-            isTrue = false;
-            message="密码输入有误，请输入6至16位字母或数字组合！";
-        }else if(!common.isRightName(this.value)){
-            isTrue = false;
-            message="昵称为2至10位字符(数字、英文、中文、下划线),不能全是数字";
-        }
-        studioMbPop.showMessage(message);
-        return isTrue;
-    },
-    /**
-     * 重置验证码
-     */
-    resetVerifyCode:function(){
-        if(studioMbReg.verifyCodeIntervalId) {
-            clearInterval(studioMbReg.verifyCodeIntervalId);
-            studioMbReg.verifyCodeIntervalId=null;
-        }
-        $("#regForm_vcb").attr("t",60).val("获取验证码");
-        $("#regForm_mb").trigger("input");
-    },
-    /**
-     * 验证码倒计时
-     */
-    setVerifyCodeTime:function(){
-        var item = $("#regForm_vcb");
-        var t=parseInt(item.attr("t"))||60;
-        if(!studioMbReg.verifyCodeIntervalId){
-            studioMbReg.verifyCodeIntervalId=window.setInterval(studioMbReg.setVerifyCodeTime,1000);
-        }
-        if(t>1){
-            item.attr("t",t-1).val((t-1)+"秒后重新获取");
-        }else{
-            studioMbReg.resetVerifyCode();
-        }
-    }
-};
-/**
- * 重置密码验证手机
- */
-var studioMbResetChk = {
-    verifyCodeIntervalId : 0,
-    /**
-     * 初始化（页面加载）
-     */
-    load : function(){
-        this.setEvent();
-    },
-    /**
-     * 初始化（页面初始化）
-     */
-    init : function(){
-        $("#resetChkForm_mb").val("").trigger("input");
-        $("#resetChkForm_vc").val("");
-    },
-    /**
-     * 绑定事件
-     */
-    setEvent : function(){
-        //下一步
-        $("#resetChkForm_sub").bind("click", function(){
-            if(!studioMbResetChk.checkFormInput()){
-                return;
-            }
-            var loc_data = {
-                mobilePhone : $("#resetChkForm_mb").val(),
-                verifyCode : $("#resetChkForm_vc").val(),
-                isCheck : 'true'
-            };
-            studioMbPop.loadingBlock($("#resetChkPop"));
-            common.getJson("/studio/getPwd", loc_data, function(result){
-                studioMbPop.loadingBlock($("#resetChkPop"), true);
-                if(!result.isOK){
-                    studioMbPop.showMessage(result.error.errmsg);
-                    return false;
-                }else{
-                    studioMbPop.popBox("reset", loc_data);
-                }
-            },true,function(){
-                studioMbPop.loadingBlock($("#resetChkPop"), true);
-            });
-        });
-
-        //手机校验
-        $("#resetChkForm_mb").bind("input propertychange", function(){
-            var domBtn=$("#resetChkForm_vcb");
-            if(parseInt(domBtn.attr("t")) < 60 && domBtn.is(".pressed") == false)
-            {
-                //倒计时状态不修改样式
-                return;
-            }
-            if(common.isMobilePhone(this.value)){
-                domBtn.addClass("pressed");
-            }else{
-                domBtn.removeClass("pressed");
-            }
-        });
-
-        //获取验证码
-        $("#resetChkForm_vcb").bind("click", function(){
-            $("#resetChkForm_vc").blur();
-            if(!$(this).hasClass("pressed")){
-                return;
-            }
-            $(this).removeClass("pressed").val("发送中...");
-            var mobile=$("#resetChkForm_mb").val();
-            try{
-                $.getJSON('/studio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:"studio_resetPWD"},function(data){
-                    if(!data || data.result != 0){
-                        if(data.errcode == "1005"){
-                            studioMbPop.showMessage(data.errmsg);
-                        }else{
-                            console.error("提取数据有误！");
-                        }
-                        studioMbResetChk.resetVerifyCode();
-                    }else{
-                        studioMbResetChk.setVerifyCodeTime();
-                    }
-                });
-            }catch (e){
-                studioMbResetChk.resetVerifyCode();
-                console.error("getMobileVerifyCode->"+e);
-            }
-        });
-    },
-    /**
-     * 检查页面输入
-     */
-    checkFormInput:function(){
-        var isTrue=true,message="";
-        var mobilePhone,verifyCode;
-        mobilePhone = $("#resetChkForm_mb").val();
-        verifyCode = $("#resetChkForm_vc").val();
-        if(common.isBlank(mobilePhone)){
-            isTrue = false;
-            message="手机号码不能为空！";
-        }else if(common.isBlank(verifyCode)){
-            isTrue = false;
-            message="手机验证码不能为空！";
-        }else if(!common.isMobilePhone(mobilePhone)){
-            isTrue = false;
-            message="手机号码输入有误！";
-        }
-        studioMbPop.showMessage(message);
-        return isTrue;
-    },
-    /**
-     * 重置验证码
-     */
-    resetVerifyCode:function(){
-        if(studioMbResetChk.verifyCodeIntervalId) {
-            clearInterval(studioMbResetChk.verifyCodeIntervalId);
-            studioMbResetChk.verifyCodeIntervalId=null;
-        }
-        $("#resetChkForm_vcb").attr("t",60).val("获取验证码");
-        $("#resetChkForm_mb").trigger("input");
-    },
-    /**
-     * 验证码倒计时
-     */
-    setVerifyCodeTime:function(){
-        var item = $("#resetChkForm_vcb");
-        var t=parseInt(item.attr("t"))||60;
-        if(!studioMbResetChk.verifyCodeIntervalId){
-            studioMbResetChk.verifyCodeIntervalId=window.setInterval(studioMbResetChk.setVerifyCodeTime,1000);
-        }
-        if(t>1){
-            item.attr("t",t-1).val((t-1)+"秒后重新获取");
-        }else{
-            studioMbResetChk.resetVerifyCode();
-        }
-    }
-};
-/**
- * 重置密码
- */
-var studioMbReset = {
-    /**
-     * 初始化（页面加载）
-     */
-    load : function(){
-        this.setEvent();
-    },
-    /**
-     * 初始化（页面初始化）
-     */
-    init : function(mobilePhone, verifyCode){
-        $("#resetForm_mb").val(mobilePhone);
-        $("#resetForm_vc").val(verifyCode);
-    },
-    /**
-     * 绑定事件
-     */
-    setEvent : function(){
-        //确认
-        $("#resetForm_sub").bind("click", function(){
-            if(!studioMbReset.checkFormInput()){
-                return;
-            }
-            studioMbPop.loadingBlock($("#resetPop"));
-            common.getJson("/studio/getPwd",$("#resetForm").serialize(),function(result){
-                studioMbPop.loadingBlock($("#resetPop"), true);
-                if(!result.isOK){
-                    studioMbPop.showMessage(result.error.errmsg);
-                }else{
-                    studioMbPop.reload();
-                }
-            },true,function(){
-                studioMbPop.loadingBlock($("#resetPop"), true);
-            });
-        });
-    },
-    /**
-     * 检查页面输入
-     */
-    checkFormInput:function(){
-        var isTrue=true,message="";
-        var firstPwd,pwd;
-        firstPwd = $("#resetForm_pwd1").val();
-        pwd = $("#resetForm_pwd").val();
-        if(common.isBlank(firstPwd) || common.isBlank(pwd)){
-            isTrue = false;
-            message="密码不能为空！";
-        }else if(firstPwd != pwd){
-            isTrue = false;
-            message="两次密码不一致！";
-        }else if(!(/^[A-Za-z0-9]{6,16}$/.test(pwd))){
-            isTrue = false;
-            message="密码输入有误，请输入6至16位字母或数字组合！";
-        }
-        studioMbPop.showMessage(message);
-        return isTrue;
-    }
-};
 /**
  * 错误消息显示
  */
 var studioMbMsg = {
-    type : null, //reg-注册成功 upg-升级成功
-    groupId : null,
+    type : null, //upg-升级成功
 
     /**
      * 初始化（页面加载）
      */
     load : function(){
         $("#resultForm_sub").bind("click", function(){
-            if(studioMbMsg.type === "reg"){
-                if(!studioMbMsg.groupId){
-                    studioMbPop.reload();
-                }else{
-                    common.getJson("/studio/checkGroupAuth",{groupId:studioMbMsg.groupId},function(){
-                        studioMbPop.reload();
-                    },true,function(err){
-                        if("success"!=err) {
-                            studioMbPop.reload();
-                        }
-                    });
-                }
-            }else{
-                studioMbPop.popHide();
-            }
+            studioMbPop.popHide();
         });
     },
     /**
      * 初始化（页面初始化）
      */
-    init : function(type, msg, groupId){
+    init : function(type, msg){
         this.type = type;
-        this.groupId = groupId;
         $("#resultForm_msg").html(msg);
     }
 };
+
+/**
+ * 直播间设置
+ */
+var studioMbSet = {
+    studioChatObj : null,
+
+    /**
+     * 初始化（页面加载）
+     */
+    load : function(){
+        this.setEvent();
+    },
+    /**
+     * 初始化（页面初始化）
+     */
+    init : function(studioChatObj){
+        this.studioChatObj = studioChatObj;
+        $("#setForm").trigger("reset");
+    },
+
+    /**
+     * 绑定事件
+     */
+    setEvent : function(){
+        $("#setForm_sub").bind("click", function(){
+            if(!studioMbSet.checkFormInput()){
+                return;
+            }
+            studioMbPop.loadingBlock($("#setPop"));
+            common.getJson("/studio/modifyName",$("#setForm").serialize(),function(result){
+                studioMbPop.loadingBlock($("#setPop"), true);
+                if(!result.isOK){
+                    studioMbPop.showMessage(result.msg?result.msg:"修改失败，请联系客服！");
+                    return false;
+                }else{
+                    $("#pmInfoSetBox .pop_close").trigger("click");
+                    studioMbSet.studioChatObj.refreshNickname(true, result.nickname);
+                    $("#sendBtn").trigger("click");
+                }
+            },true,function(){
+                studioMbPop.loadingBlock($("#setPop"), true);
+            });
+        });
+    },
+    /**
+     * 检查页面输入
+     */
+    checkFormInput:function(){
+        var isTrue=true,message="";
+        var nickname = $("#setForm_nn").val();
+        if(common.isBlank(nickname)){
+            isTrue = false;
+            message="昵称不能为空！";
+        }else if(!common.isRightName(nickname)){
+            isTrue = false;
+            message="昵称为2至10位字符(数字、英文、中文、下划线),不能全是数字";
+        }
+        studioMbPop.showMessage(message);
+        return isTrue;
+    }
+};
+
 /**
  * 直播间弹出层控制类
  */
 var studioMbPop = {
     Person : studioMbPerson,
     Login : studioMbLogin,
-    LoginPM : studioMbLoginPm,
-    Reg : studioMbReg,
-    ResetChk : studioMbResetChk,
-    Reset : studioMbReset,
+    Set : studioMbSet,
     Msg : studioMbMsg,
     onShow : null,
     onHide : null,
@@ -842,7 +433,15 @@ var studioMbPop = {
      * 刷新页面
      */
     reload : function(){
-        window.location.href = "/studio?t=" + new Date().getTime();
+        var url = window.location.href;
+        if(url.indexOf("?") == -1){
+            url = url + "?t=" + new Date().getTime();
+        }else if(url.indexOf("t=") == -1){
+            url = url + "&t=" + new Date().getTime();
+        }else{
+            url = url.replace(/t=\d*/, "t=" + new Date().getTime());
+        }
+        window.location.href = url;
     },
     /**
      * 初始化（页面加载）
@@ -854,10 +453,7 @@ var studioMbPop = {
         }
         this.Person.load(userInfo);
         this.Login.load();
-        this.LoginPM.load();
-        this.Reg.load();
-        this.ResetChk.load();
-        this.Reset.load();
+        this.Set.load();
         this.Msg.load();
 
         /*弹出框关闭*/
@@ -879,27 +475,12 @@ var studioMbPop = {
 
             case "login" :
                 this.popShow($("#loginPop"));
-                this.Login.init(ops.groupId, ops.clientStoreId);
+                this.Login.init(ops.groupId, ops.clientStoreId, ops.closeable !== false);
                 break;
 
-            case "loginPM" :
-                this.popShow($("#loginPmPop"));
-                this.LoginPM.init(ops.groupId, ops.clientStoreId);
-                break;
-
-            case "reg" :
-                this.popShow($("#regPop"));
-                this.Reg.init(ops.clientStoreId, ops.clientGroup, ops.mobilePhone, ops.verifyCode, ops.isPM, ops.groupId);
-                break;
-
-            case "resetChk" :
-                this.popShow($("#resetChkPop"));
-                this.ResetChk.init();
-                break;
-
-            case "reset" :
-                this.popShow($("#resetPop"));
-                this.Reset.init(ops.mobilePhone, ops.verifyCode);
+            case "set" :
+                this.popShow($("#setPop"));
+                this.Set.init(ops.studioChatObj);
                 break;
 
             case "msg" :

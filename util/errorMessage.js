@@ -4,7 +4,7 @@
  * date:2015/4/8
  */
 var errorMessage = {
-    "code_10" : {'errcode' : '10','errmsg' : '操作失败，请联系客户!'},
+    "code_10" : {'errcode' : '10','errmsg' : '操作失败，请联系客服!'},
     "code_11" : {'errcode' : '11','errmsg' : '没有登录系统，请登录后再操作!'},
     "code_1000" : {'errcode' : '1000','errmsg' : '没有指定参数!'},
     "code_1001" : {'errcode' : '1001','errmsg' : '请输入交易账号、手机号码、验证码!'},
