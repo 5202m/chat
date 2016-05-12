@@ -417,17 +417,25 @@ var common = {
         var currDay=new Date(serverTime).getDay();
         var currTime=common.getHHMM(serverTime);
         var tmBk=null,hasRow=false;
-        var course=null;
+        var validDayTmbk=null;
         for(var i=0;i<days.length;i++){
-            if(days[i].day>currDay){
-                return getCourses(timeBuckets[0],i,true);
+            if(days[i].status==0){
+                return null;
             }
-            if(days[i].day==currDay){
-                if(days[i].status==0){
-                    return {status:0};
-                }
+            if(days[i].day>currDay){
                 for(var k in timeBuckets){
                     tmBk=timeBuckets[k];
+                    if(tmBk.status==0){
+                        continue;
+                    }
+                    return getCourses(tmBk,i,true);
+                }
+            }else if(days[i].day==currDay){
+                for(var k in timeBuckets){
+                    tmBk=timeBuckets[k];
+                    if(tmBk.status==0){
+                        continue;
+                    }
                     if(tmBk.startTime<=currTime && tmBk.endTime>=currTime){
                         hasRow=true;
                         return getCourses(tmBk,i,false);
@@ -437,7 +445,19 @@ var common = {
                         return getCourses(tmBk,i,true);
                     }
                 }
+            }else{
+                if(!validDayTmbk){//筛选有效的课程
+                    for(var k=0;k<timeBuckets.length;k++) {
+                        if (timeBuckets[k].status == 0) {
+                            continue;
+                        }
+                        validDayTmbk ={dayIndex:i,tmIndex:k};
+                    }
+                }
             }
+        }
+        if(!hasRow && validDayTmbk){//如课程安排中设置的日期小于当前日期，则返回有效的课程
+            return getCourses(timeBuckets[validDayTmbk.tmIndex],validDayTmbk.dayIndex,true);
         }
         return null;
     },

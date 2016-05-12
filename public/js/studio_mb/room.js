@@ -503,7 +503,7 @@ var studioChatMb={
          */
         start : function(isBack){
             var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime);
-             if(!course||course.status==0||course.isNext||(course.courseType!=0 && common.isBlank(course.studioLink))||course.courseType==2||course.courseType==0){
+             if(!course||course.isNext||(course.courseType!=0 && common.isBlank(course.studioLink))||course.courseType==2||course.courseType==0){
                 if(isBack){
                 	studioMbPop.showMessage("目前还没有视频直播，详情请留意直播间课程表！");
                 }else if(course.courseType==0){
@@ -512,33 +512,10 @@ var studioChatMb={
                 }else{
                 	this.playMp4Vd();
                 }
-                return;
             }else{
             	this.play("yy", "", course.studioLink, "");
             }
         },
-        /**
-         * 启动，智能选择播放
-         */
-//        start : function(isBack){
-//            var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime);
-//             if(!course||course.status==0||common.isBlank(course.studioLink)||course.isNext||course.courseType==2||course.courseType==0){
-//                if(isBack){
-//                    studioMbPop.showMessage("目前没有直播,请留意课程表！");
-//                }else{
-//                    this.playMp4Vd();
-//                }
-//                return;
-//            }
-//            if(course.courseType==1) {//直播时间段，则播放直播
-//                this.play("yy", "", this.liveUrl, "");
-//            }else if(isBack) {//非YY直播（onetv或者文字直播）时点击返回直播
-//                studioMbPop.showMessage("目前没有直播,请留意课程表！");
-//            }else{//非YY直播（onetv或者文字直播）时隐藏播放器
-//                $(".videopart").hide();
-//                studioChatMb.setHeight();
-//            }
-//        },
         /**
          *随机播放MP4视频
          */

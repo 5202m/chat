@@ -346,28 +346,21 @@ var studioChat={
            return;
       }
       var course=common.getSyllabusPlan(this.syllabusData,this.serverTime);
-      if(!course||course.status==0||common.isBlank(course.studioLink)||course.isNext){
+      if(!course||(course.courseType!=0 && common.isBlank(course.studioLink))||course.isNext|| course.courseType==0){
           if(isBackStudio){
               alert("目前还没有视频直播，详情请留意直播间课程表！");
           }else{
               this.playMp4Vd();
+              if(course.courseType==0){
+                  setTimeout(function(){
+                      if(window.SewisePlayer){//停播放教学视频
+                          SewisePlayer.doStop();
+                      }
+                  },1500);
+              }
           }
-          return;
-      }
-      if(course.courseType==1||course.courseType==2){//直播时间段，则播放直播
-            this.setStudioVideoDiv(course.studioLink);
-      }else{//非直播时段则播放教学视频
-            if(!isBackStudio){
-                this.playMp4Vd();
-                if(course.courseType==0){
-                    if(window.SewisePlayer){//停播放教学视频
-                        SewisePlayer.doStop();
-                        $("#studioTeachId a").removeClass("on");
-                    }
-                }
-            }else{
-                this.setStudioVideoDiv(course.studioLink);
-            }
+      }else{//直播时间段，则播放直播
+          this.setStudioVideoDiv(course.studioLink);
       }
     },
     /**

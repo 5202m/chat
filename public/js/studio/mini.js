@@ -84,7 +84,9 @@ var StudioChatMini = {
      * 客户端视频任务
      */
     clientVideoTask: function () {
-        if($("#studioVideoDiv embed").size() < 1){
+        var course=common.getSyllabusPlan(this.syllabusData,this.serverTime);
+        var hasLive=course && course.status!=0 && common.isValid(course.studioLink) && course.courseType==1 && !course.isNext;
+        if($("#studioVideoDiv embed").size() < 1 && hasLive){
             $("#vbackbtn_live").show();
         }
     },
@@ -102,28 +104,22 @@ var StudioChatMini = {
             StudioChatMini.setVideo(StudioChatMini.changeVideoIndex(type));
         }else{
             var course=common.getSyllabusPlan(this.syllabusData,this.serverTime);
-            if(!course||course.status==0||common.isBlank(course.studioLink)||course.isNext){
+            if(!course||(course.courseType!=0 && common.isBlank(course.studioLink))||course.isNext||course.courseType==0||course.courseType==2){
                 if(isBackStudio){
                     alert("目前还没有视频直播，详情请留意直播间课程表！");
                 }else{
+                    if(course.courseType==0){
+                        setTimeout(function(){
+                            if(window.SewisePlayer){//停播放教学视频
+                                SewisePlayer.doStop();
+                            }
+                        },1500);
+                    }
                     StudioChatMini.playVideo('mp4');
                 }
-                return;
-            }
-            if(course.courseType==1||course.courseType==2){//直播时间段，则播放直播
+            }else{//直播时间段，则播放直播
                 $("#vbackbtn_live").hide();
                 this.setStudioVideoDiv(course.studioLink,course.title);
-            }else{//非直播时段则播放教学视频
-                if(!isBackStudio){
-                    StudioChatMini.playVideo('mp4');
-                    if(course.courseType==0){
-                        if(window.SewisePlayer){//停播放教学视频
-                            SewisePlayer.doStop();
-                        }
-                    }
-                }else{
-                    this.setStudioVideoDiv(course.studioLink,course.title);
-                }
             }
         }
     },

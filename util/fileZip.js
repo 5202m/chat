@@ -69,7 +69,7 @@ fileZip.zipJs(["public\\js\\studio\\index.js"],'public\\js\\studio\\index.min.js
 fileZip.zipJs(["public\\js\\studio\\mini.js"],'public\\js\\studio\\mini.min.js');
 fileZip.zipCss(["public\\css\\studio\\admin.css"],'public\\css\\studio\\admin.min.css');
 fileZip.zipCss(["public\\css\\studio\\index.css"],'public\\css\\studio\\index.min.css');
-fileZip.zipCss(["public\\css\\studio\\mini.css"],'public\\js\\studio\\mini.min.css');
+fileZip.zipCss(["public\\css\\studio\\mini.css"],'public\\css\\studio\\mini.min.css');
 
 //直播间前端（手机版）js/css压缩
 fileZip.zipJs(["public\\js\\studio_mb\\index.js"],'public\\js\\studio_mb\\index.min.js');
