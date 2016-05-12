@@ -447,7 +447,7 @@ var studioChatMb={
          */
         start : function(isBack){
             var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime);
-             if(!course||course.status==0||common.isBlank(course.studioLink)||course.isNext||course.courseType==2||course.courseType==0){
+             if(!course||course.status==0||(course.courseType!=0 && common.isBlank(course.studioLink))||course.isNext||course.courseType==2){
                 if(isBack){
                     alert("目前还没有视频直播，详情请留意直播间课程表！");
                 }else{
