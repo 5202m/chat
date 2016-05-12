@@ -298,10 +298,10 @@ router.post('/login',function(req, res){
                         req.session.studioUserInfo.firstLogin=true;
                         res.json({isOK:true});
                     }else{
-                        studioService.checkClientGroup(mobilePhone,null,function(clientGroup){
+                        studioService.checkClientGroup(mobilePhone,null,function(clientGroup, accountNo){
                             if(loginRes.isOK){
                                 //已经有账户，按类别升级即可
-                                studioService.updateClientGroup(mobilePhone, clientGroup, function (isOk) {
+                                studioService.updateClientGroup(mobilePhone, clientGroup, accountNo, function (isOk) {
                                     loginRes.userInfo.isLogin=true;
                                     req.session.studioUserInfo=loginRes.userInfo;
                                     req.session.studioUserInfo.clientStoreId=clientStoreId;
@@ -309,7 +309,7 @@ router.post('/login',function(req, res){
                                     res.json({isOK:true}); //即使修改账户级别失败也登录成功
                                 });
                             }else{
-                                var userInfo={mobilePhone:mobilePhone, ip:common.getClientIp(req), groupType:constant.fromPlatform.studio};
+                                var userInfo={mobilePhone:mobilePhone, ip:common.getClientIp(req), groupType:constant.fromPlatform.studio, accountNo: accountNo};
                                 studioService.studioRegister(userInfo,clientGroup,function(result){
                                     if(result.isOK){
                                         req.session.studioUserInfo={clientStoreId:clientStoreId,firstLogin:true,isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};

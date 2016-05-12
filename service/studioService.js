@@ -290,10 +290,10 @@ var studioService = {
             console.log("checkAClient->flagResult:"+JSON.stringify(result));
             if(result.flag==2){
                 clientGroup=constant.clientGroup.notActive;
-                callback(clientGroup);
+                callback(clientGroup, result.accountNo);
             }else if(result.flag==3){
                 clientGroup=constant.clientGroup.active;
-                callback(clientGroup);
+                callback(clientGroup, result.accountNo);
             }else{
                 //检查用户是否模拟用户
                 userService.checkSimulateClient(mobilePhone,function(hasRow){
@@ -397,9 +397,10 @@ var studioService = {
      * 更新客户组别
      * @param mobilePhone
      * @param newClientGroup
+     * @param accountNo
      * @param callback
      */
-    updateClientGroup : function(mobilePhone, newClientGroup, callback){
+    updateClientGroup : function(mobilePhone, newClientGroup, accountNo, callback){
         member.findOneAndUpdate(
             {
                 mobilePhone : mobilePhone,
@@ -409,7 +410,8 @@ var studioService = {
             },
             {
                 $set : {
-                    "loginPlatform.chatUserGroup.$.clientGroup" : newClientGroup
+                    "loginPlatform.chatUserGroup.$.clientGroup" : newClientGroup,
+                    "loginPlatform.chatUserGroup.$.accountNo" : accountNo
                 }
             },
             {'new' : true}, function(err){

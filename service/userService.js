@@ -659,6 +659,7 @@ var userService = {
                         var acc = null;
                         for(var i = 0, lenI = result ? result.length : 0; i < lenI; i++){
                             acc = result[i];
+                            flagResult.accountNo = acc.accountNo;
                             if(acc.accountStatus == "A"){
                                 flagResult.flag = 3;
                                 break;
