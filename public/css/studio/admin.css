@@ -236,7 +236,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .te_ctrl a.show_btn:hover i{ background-position:-90px -30px}
 .te_ctrl a.hide_btn i{ background-position:-90px -60px}
 .te_ctrl a.hide_btn:hover i{ background-position:-90px -90px}
-.view_select{ width:145px;float:right; height:27px; position:relative; z-index:100000}
+.view_select{ width:145px;float:right; height:27px; position:relative; z-index:100}
 .view_select.dw {}
 .view_select i { display:block; position:absolute; right:11px; top:9px; background-position:0 -170px; width:14px; height:9px;}
 .view_select.dw i{background-position:0 -190px; }
@@ -447,7 +447,8 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .dialog.mine.analyst i{ background-position:-50px -150px;}
 .dialog.admin i{ background-position:-40px -180px;}
 .dialog.mine.admin i{ background-position:-60px -150px;}
-.chat_input{ width:100%;bottom:0; z-index:100001}
+/*.chat_input{ width:100%;bottom:0; z-index:100001}*/
+.chat_input{ width:100%; position:absolute; z-index:100001;bottom:0;}
 .chat_input .qqFace{margin-top: -175px;top:auto}
 .mymsg{ height:auto; position:relative; padding:5px 0; background:rgba(246,246,246,.5);  }
 .mymsg p{ padding:0 44px 0 80px;color:#4e4e4e; line-height:27px; font-size:11pt;}
@@ -587,3 +588,63 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .wid4 .te_list .te_btn { padding-left:18px;}
 .wid4 .te_list .te_btn strong { font-size:14px; line-height:22px}
 .wid4 .te_list .te_btn span{ font-size:12px; padding-top:3px}
+.top-box {
+    right: 48%;
+    position: absolute;
+    top: 36px;
+    width: 500px;
+    border-style: solid;
+    background: #FFF;
+    border-color: #BFA766;
+    text-align: left;
+    z-index: 10000;
+}
+.top-box label {
+    float: left;
+}
+.top-box .ss-tk-info {
+    margin: 4px;
+    height: auto;
+}
+.ss-tk-info {
+    position: relative;
+    height: 25px;
+    line-height: 25px;
+    color: #191B1D;
+    font-size: 10pt;
+    background: #F3F3E1;
+    padding: 0 10px;
+}
+.top-box i {
+    background: url(../../images/mainbg.png) no-repeat;
+    background-size: 90px 130px;
+}
+.top-box i {
+    cursor: pointer;
+}
+.ss-tk-info i, .top-box i {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    display: block;
+    width: 25px;
+    height: 25px;
+    background-position: -25px -20px;
+}
+.top-box .ss-tk-info button {
+    float: right;
+    margin-right: 10px;
+    margin-top: 3px;
+    cursor: pointer;
+}
+.top-box span {
+    margin-left: 5px;
+    display: block;
+    width: 300px;
+    float: left;
+    white-space: normal;
+    word-break: break-all;
+}
+.top-box .reply-st{
+    color: #0BA1EC;
+}

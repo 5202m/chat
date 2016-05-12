@@ -351,7 +351,7 @@ var studioChat={
               alert("目前还没有视频直播，详情请留意直播间课程表！");
           }else{
               this.playMp4Vd();
-              if(course.courseType==0){
+              if(!course.isNext && course.courseType==0){
                   setTimeout(function(){
                       if(window.SewisePlayer){//停播放教学视频
                           SewisePlayer.doStop();

@@ -44,11 +44,12 @@
             </div>
         </div>
     </div>
-    <div class="right_row">
+    <div class="right_row clearfix">
         <div id="right_chat"  <% if (userType!='2') { %> style="width:55%;float:left;"  <% } %>>
             <div class="chat clearfix">
                 <div class="line_bar">
                     <div class="view_select">
+                        <div style="position: absolute;right: 120px;top: 2px;"><span id="show_top_btn" style="width: 57px;font-size: 14px;color: #d9d9d9;white-space: nowrap;text-overflow: ellipsis;cursor: pointer;margin-right:50px;">@记录<strong>【0】</strong><label></label></span></div>
                         <div class="se_cont">
                             <div class="selected">看所有人</div>
                             <div class="selectlist" style="background-color: #101010;">
@@ -60,7 +61,10 @@
                         <i></i>
                     </div>
                 </div>
-
+                <div class="top-box dn">
+                    <div style="height: 20px;"><h3 style="float:left;">等待回复的@记录<strong id="top_num">【0】</strong>：</h3><i id="close-top-box"></i></div>
+                    <div class="cont" id="talk_top_id" style="overflow-y: auto;height:220px;"></div>
+                </div>
                 <div class="chat_content">
                     <div id="chatMsgContentDiv">
                         <div class="dialoglist clearfix" id="dialog_list"></div>
@@ -71,7 +75,7 @@
                 <span  id="newMsgTipBtn" style="display:none;">新信息</span>
             </div>
             <!-- chat_input begin -->
-            <div class="chat_input">
+            <div class="chat_input" style="width:<% if(userType!='2'){ %>55%<% } %>">
                 <div class="mymsg dn">
                     <p><span class="sender"></span>对&nbsp;你说<label></label>：<span class="xcont"></span></p>
                     <a href="javascript:" class="replybtn" uId="">回复</a><em style="position: absolute;top: 10px;right: 40px;font-size: 12px;display:none;">正在输入...</em>

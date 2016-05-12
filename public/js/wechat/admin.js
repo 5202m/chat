@@ -121,7 +121,7 @@ var adminChat={
             $(".top-box").hide();
         });
         $("#show_top_btn").click(function(){
-            $(".top-box").show();
+            $(".top-box").toggle();
         });
         //审核操作类事件
         $(".operator-tool .btn").click(function(){
