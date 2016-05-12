@@ -108,6 +108,7 @@ var StudioChatMini = {
                 if(isBackStudio){
                     alert("目前还没有视频直播，详情请留意直播间课程表！");
                 }else{
+                    StudioChatMini.playVideo('mp4');
                     if(course.courseType==0){
                         setTimeout(function(){
                             if(window.SewisePlayer){//停播放教学视频
@@ -115,7 +116,6 @@ var StudioChatMini = {
                             }
                         },1500);
                     }
-                    StudioChatMini.playVideo('mp4');
                 }
             }else{//直播时间段，则播放直播
                 $("#vbackbtn_live").hide();
