@@ -6,6 +6,7 @@
 var StudioChatMini = {
     apiUrl:'',
     currStudioAuth:false,//当前房间是否授权
+    fromPlatform:null,//来源平台
     blwsPlayer: null,//保利威视
     syllabusData:null,//课程数据
     serverTime: 0,//服务器时间
@@ -549,6 +550,7 @@ var StudioChatMini = {
             var currTab = $("#studioListId a[class~=ing]");
             StudioChatMini.socket.emit('login', {
                 userInfo: StudioChatMini.userInfo,
+                fromPlatform : StudioChatMini.fromPlatform,
                 lastPublishTime: $("#dialog_list>div:last").attr("id"),
                 fUserTypeStr: currTab.attr("awr"),
                 allowWhisper: currTab.attr("aw")

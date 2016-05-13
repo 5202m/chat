@@ -222,10 +222,10 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
             var vrRow={userId:snUser.userId,platform:fromPlatform || "",userAgent:req.headers["user-agent"],groupType:constant.fromPlatform.studio,roomId:snUser.groupId,nickname:snUser.nickname,clientGroup:snUser.clientGroup,clientStoreId:snUser.clientStoreId,mobile:snUser.mobilePhone,ip:common.getClientIp(req)};
             visitorService.saveVisitorRecord("login",vrRow);
         }
+        viewDataObj.fromPlatform=fromPlatform;
         var isThirdUsed = fromPlatform && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform);
         if(isMobile){
             if(groupId || isThirdUsed){
-                viewDataObj.fromPlatform=fromPlatform;
                 res.render("studio_mb/room",viewDataObj);
             }else{
                 res.render("studio_mb/index",viewDataObj);

@@ -8,6 +8,7 @@ var studioChatMb={
     filePath:'',
     apiUrl:'',
     currStudioAuth:false,//当前房间是否授权
+    fromPlatform:null,//来源平台
     exStudioStr:'',//外接直播JSON字符串
     studioDate:'',//直播时间点
     serverTime:0,//服务器时间
@@ -123,7 +124,12 @@ var studioChatMb={
         this.socket.on('connect',function(){
             console.log('connected to server!');
             studioChatMb.userInfo.socketId=studioChatMb.socket.id;
-            studioChatMb.socket.emit('login',{userInfo:studioChatMb.userInfo,lastPublishTime:$("#dialog_list>li:last").attr("id")},navigator.userAgent);
+            studioChatMb.socket.emit('login',{
+                    userInfo:studioChatMb.userInfo,
+                    lastPublishTime:$("#dialog_list>li:last").attr("id"),
+                    fromPlatform : studioChatMb.fromPlatform
+                },
+                navigator.userAgent);
         });
         //断开连接
         this.socket.on('disconnect',function(){

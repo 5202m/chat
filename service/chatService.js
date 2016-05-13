@@ -314,6 +314,7 @@ var chatService ={
             //登录则加入房间,groupId作为唯一的房间号
             socket.on('login',function(data,webUserAgent){
                 var userInfo=data.userInfo,lastPublishTime=data.lastPublishTime, allowWhisper = data.allowWhisper,fUserTypeStr=data.fUserTypeStr;
+                var fromPlatform = data.fromPlatform;
                 if(common.isBlank(userInfo.groupType)){
                     return false;
                 }
@@ -339,7 +340,7 @@ var chatService ={
                         socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:true}});
                         //直播间创建访客记录
                         if(parseInt(userInfo.userType)<=constant.roleUserType.member){
-                            var vrRow={userAgent:userAgent,visitorId:userInfo.visitorId,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,nickname:userInfo.nickname,clientGroup:userInfo.clientGroup,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address};
+                            var vrRow={userAgent:userAgent,platform:fromPlatform,visitorId:userInfo.visitorId,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,nickname:userInfo.nickname,clientGroup:userInfo.clientGroup,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address};
                             if(userInfo.clientGroup!=constant.clientGroup.visitor){
                                 vrRow.mobile=dbMobile;
                                 vrRow.userId=userInfo.userId;
