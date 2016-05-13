@@ -387,8 +387,9 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .formcont.formcont2{ width:300px;font-family:'Microsoft YaHei','Microsoft JhengHei','SimSun';background:#fff; border:1px solid #dde2e4; padding:0 30px;}
 .formcont .in_line { margin-bottom:10px; height:34px; position:relative}
 .formcont .in_line .placeholder{ position: absolute;padding-left: 39px;font-size: 130%;line-height: 34px;color: #A9A9A9;left: 0;top: 0}
-.formcont .in_line .vc_tip {float: right; font-size: 14px; color: #777; margin-top: 8px;}
-.formcont .in_line .vc_tip a{color: #3181c6; text-decoration: underline;}
+.formcont .in_line .vc_tip {float: right; font-size: 12px; color: #999; margin-top: 8px;}
+.formcont .in_line .vc_tip a{color: #009dcc; text-decoration: none; font-weight: bolder;}
+.formcont .in_line .vc_tip a:hover{color: #b79330;}
 .formcont .in_line.auto_login {margin: 0; height: 17px; color: #777; font-size: 12px;}
 .formcont .in_line.auto_login input{width: 15px; height: 15px; vertical-align: bottom;}
 .formcont.formcont2 .in_line{ border-bottom:1px solid #dde2e4;height:42px; line-height:42px; background:#fff; margin-bottom:0}
