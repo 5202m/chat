@@ -294,6 +294,7 @@ var studioChatMbIdx={
                             }else{
                                 liDom.find(".tit i").removeClass("st");
                             }
+                            liDom.find(".syll-tip").show();
                         }
                         var loc_panel =liDom.find(".timetable");
                         loc_panel.html(loc_html);

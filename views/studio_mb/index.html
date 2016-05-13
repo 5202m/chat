@@ -59,7 +59,7 @@
                     <ul class="videoroom-ul">
                         <% if (studioList!='[]') { %>
                         <% studioList.forEach(function(row,index){ %>
-                        <li class="<%=(!row.disable && row.isOpen ? 'live' : '')%>" ga="<%=!row.disable%>" go="<%=row.isOpen%>" gi="<%= row.id %>">
+                        <li class="<%=((!row.disable || !userSession.isLogin) && row.isOpen ? 'live' : '')%>" ga="<%=!row.disable%>" go="<%=row.isOpen%>" gi="<%= row.id %>">
                             <section class="room-main clearfix">
                                 <div class="tit">
                                     <b><%= row.name %></b><i></i><br>
@@ -69,7 +69,7 @@
                                     <a href="javascript:void(0)" class="timebtn">课程表</a>
                                     <a href="javascript:void(0)" class="enter">进入</a>
                                 </div>
-                                <div class="syll-tip">
+                                <div class="syll-tip dn">
                                     <span><label>直播时间：</label><label class="syll-time"></label><label style="margin-left:12px;"></label><label style="margin-left:12px;"></label></span>
                                 </div>
                             </section>

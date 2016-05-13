@@ -215,13 +215,13 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         }
         viewDataObj.studioList = newStudioList;
         //记录访客信息
+        var fromPlatform=req.query["platform"];
         var snUser=req.session.studioUserInfo;
         if(snUser.firstLogin && snUser.groupId){//刷新页面不记录访客记录
             snUser.firstLogin=false;
-            var vrRow={userId:snUser.userId,userAgent:req.headers["user-agent"],groupType:constant.fromPlatform.studio,roomId:snUser.groupId,nickname:snUser.nickname,clientGroup:snUser.clientGroup,clientStoreId:snUser.clientStoreId,mobile:snUser.mobilePhone,ip:common.getClientIp(req)};
+            var vrRow={userId:snUser.userId,platform:fromPlatform || "",userAgent:req.headers["user-agent"],groupType:constant.fromPlatform.studio,roomId:snUser.groupId,nickname:snUser.nickname,clientGroup:snUser.clientGroup,clientStoreId:snUser.clientStoreId,mobile:snUser.mobilePhone,ip:common.getClientIp(req)};
             visitorService.saveVisitorRecord("login",vrRow);
         }
-        var fromPlatform=req.query["platform"];
         var isThirdUsed = fromPlatform && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform);
         if(isMobile){
             if(groupId || isThirdUsed){

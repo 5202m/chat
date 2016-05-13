@@ -168,7 +168,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .tab_list.download li span{ display:block; width:41%; float:left;}
 
 /*chat*/
-.chat{  background:rgba(240,240,240,0.3);  border-radius:2px; padding:5px 10px 0;}
+.chat{  background:rgba(240,240,240,0.3);  border-radius:2px; padding:5px 10px 0; position: relative;}
 .pletter_hint{
     position: absolute;
     width: 70px;
@@ -589,7 +589,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .wid4 .te_list .te_btn strong { font-size:14px; line-height:22px}
 .wid4 .te_list .te_btn span{ font-size:12px; padding-top:3px}
 .top-box {
-    right: 48%;
+    right: 50px;
     position: absolute;
     top: 36px;
     width: 500px;

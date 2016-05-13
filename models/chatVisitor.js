@@ -37,6 +37,7 @@ var chatVisitorSchema = new Schema({
     mobile: String,//手机号
     accountNo: String,//账号
     clientGroup: String,//客户组，详请见constant.clientGroup
+    platform: String,//来源平台
     userAgent: String,//用户客户端信息
     updateDate: Date,//更新时间
     valid: {type:Number, default:1} //是否删除：0 、删除；1、正常
