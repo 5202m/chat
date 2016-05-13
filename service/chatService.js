@@ -586,7 +586,7 @@ var chatService ={
         var toUser=userInfo.toUser,isWh=toUser && common.isValid(toUser.userId) && "1"==toUser.talkStyle;//私聊
         //如果是私聊游客或水军发言直接保存数据
         var isWhVisitor=(isWh && constant.clientGroup.visitor==userInfo.clientGroup);
-        var isAllowPass=isWhVisitor||userInfo.userType==constant.roleUserType.navy;
+        var isAllowPass=isWhVisitor||userInfo.userType==constant.roleUserType.navy||(userInfo.groupType==constant.fromPlatform.studio && constant.clientGroup.visitor==userInfo.clientGroup);
         userService.checkUserLogin(userInfo,isAllowPass,function(row){
             if(row){
                 var userSaveInfo={};

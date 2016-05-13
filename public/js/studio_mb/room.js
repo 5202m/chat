@@ -106,11 +106,11 @@ var studioChatMb={
         if(this.userInfo.clientGroup && this.userInfo.clientGroup=='visitor'){
             this.userInfo.nickname=obj.nickname;
             this.userInfo.userId=obj.userId;
-            $("#contentText").attr("contenteditable",false).append('<span style="margin:15px 5px;">亲，<a href="javascript:;" onclick="studioChat.openLoginBox();" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');//设置登录后发言
+            //$("#contentText").attr("contenteditable",false).append('<span style="margin:15px 5px;">亲，<a href="javascript:;" onclick="studioChat.openLoginBox();" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');//设置登录后发言
         }else{
             obj.loginId=this.userInfo.userId;
             store.set(key,obj);
-            $("#contentText").html("").attr("contenteditable",true);
+            //$("#contentText").html("").attr("contenteditable",true);
         }
         this.isNeverLogin=!common.isValid(obj.loginId);
     },
@@ -399,9 +399,9 @@ var studioChatMb={
         $("#sendBtn").click(function(){
             $(this).blur();
             studioChatMb.view.boardCtrl(1);
-            if(studioChatMb.userInfo.clientGroup=='visitor'){
+           /* if(studioChatMb.userInfo.clientGroup=='visitor'){
                 return;
-            }
+            }*/
             if(studioChatMb.userInfo.isSetName === false){
                 studioMbPop.popBox("set", {studioChatObj : studioChatMb});
                 return;
@@ -1168,10 +1168,12 @@ var studioChatMb={
         if(studioChatMb.userInfo.userId!=userId){
             var hasMainDiv=false,gIdDom=$("#studioListId a[class~=ing]"),mainDiv='<div class="c-menu" style="display:none;" nk="'+nickname+'" uid="'+userId+'" utype="'+userType+'">';
             mainDiv += "<ul>";
-            if(studioChatMb.userInfo.userId.indexOf('visitor_')==-1 && userId.indexOf('visitor_')==-1){
+            /*if(studioChatMb.userInfo.userId.indexOf('visitor_')==-1 && userId.indexOf('visitor_')==-1){
                 mainDiv+='<li><a href="javascript:void(0)" t="0"><i></i>@TA</a></li>';
                 hasMainDiv=true;
-            }
+            }*/
+            mainDiv+='<li><a href="javascript:void(0)" t="0"><i></i>@TA</a></li>';
+            hasMainDiv=true;
             if(gIdDom.attr("aw")=="true"&& common.containSplitStr(gIdDom.attr("awr"),userType)){
                 mainDiv+='<li><a href="javascript:void(0)" t="1"><i></i>私信</a></li>';
                 hasMainDiv=true;

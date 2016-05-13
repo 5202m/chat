@@ -212,11 +212,11 @@ var studioChat={
         if(this.userInfo.clientGroup && this.userInfo.clientGroup=='visitor'){
             this.userInfo.nickname=obj.nickname;
             this.userInfo.userId=obj.userId;
-            $("#contentText").attr("contenteditable",false).append('<span style="margin:15px 5px;">亲，<a href="javascript:;" onclick="studioChat.openLoginBox();" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');//设置登录后发言
+            //$("#contentText").attr("contenteditable",false).append('<span style="margin:15px 5px;">亲，<a href="javascript:;" onclick="studioChat.openLoginBox();" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');//设置登录后发言
         }else{
             obj.loginId=this.userInfo.userId;
             store.set(key,obj);
-            $("#contentText").html("").attr("contenteditable",true);
+            //$("#contentText").html("").attr("contenteditable",true);
         }
         this.isNeverLogin=!common.isValid(obj.loginId);
     },
@@ -1747,10 +1747,10 @@ var studioChat={
         };
         //聊天内容发送事件
         $("#sendBtn").click(function(){
-            if(studioChat.userInfo.clientGroup=='visitor'){
+            /*if(studioChat.userInfo.clientGroup=='visitor'){
                 studioChat.openLoginBox();
                 return;
-            }
+            }*/
             if(studioChat.userInfo.isSetName === false){
                 studioChat.openInfoSetBox();
                 return;
@@ -2060,9 +2060,9 @@ var studioChat={
             studioChat.openDiaLog($('#'+fromUser.publishTime+' .dialogbtn').attr("avs",$(this).find("img").attr("src")));
         });
        $('#'+fromUser.publishTime+' .txt_dia').click(function(){
-           if(studioChat.userInfo.clientGroup=='visitor'){
+           /*if(studioChat.userInfo.clientGroup=='visitor'){
                return;
-           }
+           }*/
            studioChat.setDialog($(this).attr("uid"),$(this).find("label").text(),0,$(this).attr("utype"));
         });
         //昵称点击
@@ -2238,10 +2238,12 @@ var studioChat={
     getDialogHtml:function(userId,nickname,userType){
         if(userId && studioChat.userInfo.userId!=userId){
             var hasMainDiv=false,gIdDom=$("#studioListId a[class~=ing]"),mainDiv='<div class="dialogbtn" style="display:none;" nk="'+nickname+'" uid="'+userId+'" utype="'+userType+'">';
-            if(studioChat.userInfo.userId.indexOf('visitor_')==-1 && userId.indexOf('visitor_')==-1){
+            /*if(studioChat.userInfo.userId.indexOf('visitor_')==-1 && userId.indexOf('visitor_')==-1){
                 mainDiv+='<a href="javascript:" class="d1" t="0"><span>@TA</span></a>';
                 hasMainDiv=true;
-            }
+            }*/
+            mainDiv+='<a href="javascript:" class="d1" t="0"><span>@TA</span></a>';
+            hasMainDiv=true;
             if(gIdDom.attr("aw")=="true"&& common.containSplitStr(gIdDom.attr("awr"),userType)){
                 mainDiv+='<a href="javascript:" class="d2" t="1"><span>私聊</span></a>';
                 hasMainDiv=true;
