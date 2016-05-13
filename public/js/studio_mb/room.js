@@ -32,7 +32,7 @@ var studioChatMb={
         this.setSocket();//设置socket连接
         this.setEvent();//设置各种事件
         this.setVideoList();
-        studioMbPop.load(this.userInfo, {
+        studioMbPop.load(this.userInfo, this.fromPlatform,{
             onShow : function(){
                 $("#tVideoDiv video").hide();
             },
@@ -1154,7 +1154,7 @@ var studioChatMb={
         }
         studioMbPop.showMessage("注意："+txt+"正自动登出.....");
         window.setTimeout(function(){//3秒钟后登出
-            window.location.href="/studio/logout";
+            window.location.href="/studio/logout?platform="+studioChatMb.fromPlatform;
         },3000);
     },
     /**

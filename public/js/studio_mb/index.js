@@ -3,6 +3,7 @@
  * author Dick.guo
  */
 var studioChatMbIdx={
+    fromPlatform:null,//来源平台
     userInfo:null,
     mobile24kPath:'',
     apiUrl:'',
@@ -11,7 +12,7 @@ var studioChatMbIdx={
         this.setClientGroupAuth();
         this.setAdvertisement();
         this.setEvent();
-        studioMbPop.load(this.userInfo, {
+        studioMbPop.load(this.userInfo, this.fromPlatform, {
             onShow : function(){
                 $('.boxcont').height($(window).height()-$('.sroll-box').height()-$('#header').height()-$('.cen-ulist').height()-$('.fob_open').height());
             },

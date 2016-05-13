@@ -115,9 +115,11 @@ router.get('/', function(req, res) {
     logger.info("chatUser:"+JSON.stringify(chatUser));
     var isMobile = common.isMobile(req);
     var fromPlatform=req.query["platform"];
-    if(fromPlatform && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform)){
+    if(fromPlatform && !chatUser.toGroup && !chatUser.groupId && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform)){
         chatUser.groupId=config.studioThirdUsed.roomId;
     }
+    var redirctUrl = fromPlatform ? ("?fromPlatform=" + fromPlatform) : "";
+
     if(isMobile && !chatUser.toGroup && !chatUser.groupId){
         chatUser.groupId = null;
         req.session.studioUserInfo.groupId = null;
@@ -146,10 +148,10 @@ router.get('/', function(req, res) {
                         }
                     }else if(targetGroupId == chatUser.toGroup){//目标房间是跳转房间==>清空跳转，重新刷新
                         req.session.studioUserInfo.toGroup = null;
-                        res.redirect("/studio");
+                        res.redirect("/studio" + redirctUrl);
                     }else if(targetGroupId == chatUser.groupId){//目标房间是当前房间==>登出重新跳转
                         req.session.studioUserInfo=null;
-                        res.redirect("/studio");
+                        res.redirect("/studio" + redirctUrl);
                     }else{//目标房间是默认房间(此时肯定未登录状态，否则会满足“目标房间是当前房间”)==>直接报错
                         req.session.studioUserInfo=null;
                         res.render("error",{error: '非常抱歉，你进入的默认房间已限制访问！'});
@@ -343,6 +345,7 @@ router.post('/login',function(req, res){
  */
 router.get('/logout', function(req, res) {
     var snUser=req.session.studioUserInfo;
+    var platform = req.query["platform"];
     visitorService.saveVisitorRecord("logout",{roomId:snUser.groupId,clientStoreId:snUser.clientStoreId,groupType:constant.fromPlatform.studio,ip:common.getClientIp(req)});
     req.session.studioUserInfo=null;
     req.session.initVisit=false;//表示已经进入页面
@@ -351,7 +354,7 @@ router.get('/logout', function(req, res) {
         if(isOK){
             req.session.logoutToGroup=snUser.groupId;
         }
-        res.redirect("/studio");
+        res.redirect(platform ? ("/studio?platform=" + platform) : "/studio");
     });
 });
 
@@ -408,6 +411,7 @@ router.get('/getSyllabus', function(req, res) {
  */
 router.post('/checkGroupAuth',function(req, res){
     var groupId=req.body["groupId"],result={isOK:false,error:null},chatUser=req.session.studioUserInfo;
+    var isRedirectDef = req.body["redirectDef"] == "1";
     if(common.isBlank(groupId)||!chatUser){
         result.error=errorMessage.code_1000;
     }
@@ -416,6 +420,19 @@ router.post('/checkGroupAuth',function(req, res){
             if(isOK){
                 req.session.studioUserInfo.toGroup=groupId;
                 result.groupId=groupId;
+            }else if(isRedirectDef){
+                var clientGroup = chatUser && chatUser.isLogin ? chatUser.clientGroup : constant.clientGroup.visitor;
+                studioService.getDefaultRoom(clientGroup,function(groupId) {
+                    if (common.isBlank(groupId)) {
+                        result.isOK=false;
+                    }else{
+                        req.session.studioUserInfo.toGroup=groupId;
+                        result.groupId=groupId;
+                        result.isOK=true;
+                    }
+                    res.json(result);
+                });
+                return;
             }
             result.isOK=isOK;
             res.json(result);

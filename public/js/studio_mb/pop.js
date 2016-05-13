@@ -5,7 +5,7 @@ var studioMbPerson = {
     /**
      * 初始化（页面加载）
      */
-    load : function(userInfo){
+    load : function(userInfo, platform){
         if(userInfo && userInfo.isLogin){
             this.refreshNickname(userInfo.nickname);
             $("#person_hp").attr("src", studioMbPerson.getUserLevelIco(userInfo.clientGroup));
@@ -74,9 +74,9 @@ var studioMbPerson = {
             /**
              * 注销事件
              */
-            $(".logoutbtn").bind("click", function(){
+            $(".logoutbtn").bind("click", platform, function(e){
                 LoginAuto.setAutoLogin(false);
-                window.location.href="/studio/logout";
+                window.location.href="/studio/logout?platform=" + e.data;
             });
         }
     },
@@ -166,12 +166,14 @@ var studioMbLogin = {
                     return false;
                 }else{
                     if(studioMbLogin.groupId){
-                        common.getJson("/studio/checkGroupAuth",{groupId:studioMbLogin.groupId},function(result){
-                            studioMbPop.loadingBlock($("#loginPop"), true);
+                        common.getJson("/studio/checkGroupAuth",{groupId:studioMbLogin.groupId, redirectDef:1},function(result){
                             if(!result.isOK){
+                                //默认房间配置错误
                                 studioMbPop.showMessage("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
+                            }else{
+                                studioMbPop.loadingBlock($("#loginPop"), true);
+                                studioMbPop.reload();
                             }
-                            studioMbPop.reload();
                         },true,function(err){
                             studioMbPop.loadingBlock($("#loginPop"), true);
                             if("success"!=err) {
@@ -446,12 +448,12 @@ var studioMbPop = {
     /**
      * 初始化（页面加载）
      */
-    load : function(userInfo, events){
+    load : function(userInfo, platform, events){
         if(events){
             this.onShow = typeof events.onShow == "function" ? events.onShow : null;
             this.onHide = typeof events.onHide == "function" ? events.onHide : null;
         }
-        this.Person.load(userInfo);
+        this.Person.load(userInfo, platform);
         this.Login.load();
         this.Set.load();
         this.Msg.load();
