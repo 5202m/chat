@@ -418,8 +418,9 @@ var studioService = {
                 if(err){
                     logger.error("updateClientGroup fail:" + err);
                     callback(false);
+                }else{
+                    callback(true);
                 }
-                callback(true);
             });
     }
 };
