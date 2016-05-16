@@ -30,7 +30,7 @@ var syllabusService = {
             groupIdArr=groupId.split(",");
             searchObj.groupId={$in:groupIdArr};
         }
-        chatSyllabus.find(searchObj,"groupType groupId courseType studioLink courses", function(err, row){
+        chatSyllabus.find(searchObj,"groupType groupId courseType studioLink courses updateDate", function(err, row){
             if(err){
                 logger.error("查询聊天室课程安排失败!", err);
                 callback(null);

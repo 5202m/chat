@@ -339,7 +339,7 @@ router.get('/getSyllabus', function(req, res) {
             var loc_startDate = new Date(loc_nowTime - loc_day * 86400000);
             var loc_endDate = new Date(loc_nowTime+ (loc_temp - loc_day) * 86400000);
             title = (loc_startDate.getMonth() + 1) + '月' + loc_startDate.getDate() + '日-'+ (loc_endDate.getMonth() + 1) + '月' + loc_endDate.getDate() + '日老师课程表安排';
-            res.json({courses:data.courses,title:title,serverTime:loc_nowTime});
+            res.json({courses:data.courses,updateDate:data.updateDate,title:title,serverTime:loc_nowTime});
         }else{
             res.json({courses:null,title:'',serverTime:loc_nowTime});
         }
