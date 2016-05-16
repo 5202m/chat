@@ -1089,7 +1089,7 @@ var studioChat={
             return '<img src="'+avatar+'">';
         }else if("vip"==clientGroup){
             aImgCls="user_v";
-        }else if("real"==clientGroup){
+        }else if("active"==clientGroup || "notActive"==clientGroup){
             aImgCls="user_r";
         }else if("simulate"==clientGroup){
             aImgCls="user_d";
