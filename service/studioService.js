@@ -363,7 +363,7 @@ var studioService = {
                 console.log("checkAClient->flagResult:" + JSON.stringify(result));
                 if(result.flag == 2 || result.flag == 3){
                     var clientGroupTmp = result.flag == 2 ? constant.clientGroup.notActive : constant.clientGroup.active;
-                    studioService.updateClientGroup(mobilePhone, clientGroupTmp, function (isOk) {
+                    studioService.updateClientGroup(mobilePhone, clientGroupTmp, result.accountNo, function (isOk) {
                         if (isOk) {
                             callback(true, clientGroupTmp);
                         }else{
@@ -378,7 +378,7 @@ var studioService = {
             //升级到模拟
             userService.checkSimulateClient(mobilePhone,function(hasRow){
                 if(hasRow){
-                    studioService.updateClientGroup(mobilePhone, constant.clientGroup.simulate, function(isOk){
+                    studioService.updateClientGroup(mobilePhone, constant.clientGroup.simulate, null, function(isOk){
                         if(isOk){
                             callback(true, constant.clientGroup.simulate);
                         }else{
