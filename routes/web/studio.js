@@ -178,7 +178,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         if(!data.studioList){
             if(data.syllabusResult){
                 var syResult=data.syllabusResult;
-                viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:JSON.parse(syResult.studioLink),courses:JSON.parse(syResult.courses)});
+                viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:(common.isBlank(syResult.studioLink)?"":JSON.parse(syResult.studioLink)),courses:(common.isBlank(syResult.courses)?"":JSON.parse(syResult.courses))});
             }
         }else{
             data.studioList.forEach(function(row){
@@ -209,7 +209,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
                     viewDataObj.currStudioAuth = !rowTmp.disable;
                     if(data.syllabusResult){
                         var syResult=data.syllabusResult;
-                        viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:JSON.parse(syResult.studioLink),courses:JSON.parse(syResult.courses)});
+                        viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:(common.isBlank(syResult.studioLink)?"":JSON.parse(syResult.studioLink)),courses:(common.isBlank(syResult.courses)?"":JSON.parse(syResult.courses))});
                     }
                 }
                 newStudioList.push(rowTmp);

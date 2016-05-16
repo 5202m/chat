@@ -1,5 +1,6 @@
 var chatSyllabus = require('../models/chatSyllabus');//引入chatSyllabus数据模型
 var logger=require('../resources/logConf').getLogger('syllabusService');//引入log4js
+var common = require('../util/common');//引入common类
 
 /**
  * 课程安排服务类
@@ -18,20 +19,24 @@ var syllabusService = {
     getSyllabus : function(groupType, groupId, callback){
         groupId = groupId || "";
         var loc_dateNow = new Date();
-        var groupIdArr=groupId.split(",");
-        chatSyllabus.find({
+        var searchObj={
             groupType : groupType,
-            groupId : {$in:groupIdArr},
             isDeleted : 0,
             publishStart : {$lte : loc_dateNow},
             publishEnd : {$gt : loc_dateNow}
-        },"groupType groupId courseType studioLink courses", function(err, row){
+        };
+        var groupIdArr=null;
+        if(common.isValid(groupId)){
+            groupIdArr=groupId.split(",");
+            searchObj.groupId={$in:groupIdArr};
+        }
+        chatSyllabus.find(searchObj,"groupType groupId courseType studioLink courses", function(err, row){
             if(err){
                 logger.error("查询聊天室课程安排失败!", err);
                 callback(null);
                 return;
             }
-            callback(row ?(groupIdArr.length>1?row:row[0]): null);
+            callback(row?((groupIdArr && groupIdArr.length>1)?row:row[0]):null);
         });
     }
 };

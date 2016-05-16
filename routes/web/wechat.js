@@ -336,8 +336,8 @@ router.get('/getSyllabus', function(req, res) {
             var loc_temp = data.courses ? JSON.parse(data.courses) : {};
             loc_temp = loc_temp.days instanceof Array ? loc_temp.days.pop()["day"] : 1;
             loc_temp = typeof loc_temp == "number" ? ((loc_temp + 6) % 7) : 0;
-            var loc_startDate = new Date(loc_nowTime.getTime() - loc_day * 86400000);
-            var loc_endDate = new Date(loc_nowTime.getTime() + (loc_temp - loc_day) * 86400000);
+            var loc_startDate = new Date(loc_nowTime - loc_day * 86400000);
+            var loc_endDate = new Date(loc_nowTime+ (loc_temp - loc_day) * 86400000);
             title = (loc_startDate.getMonth() + 1) + '月' + loc_startDate.getDate() + '日-'+ (loc_endDate.getMonth() + 1) + '月' + loc_endDate.getDate() + '日老师课程表安排';
         }
         res.json({courses:data,title:title,serverTime:loc_nowTime});
