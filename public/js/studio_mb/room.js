@@ -106,7 +106,10 @@ var studioChatMb={
         if(this.userInfo.clientGroup && this.userInfo.clientGroup=='visitor'){
             this.userInfo.nickname=obj.nickname;
             this.userInfo.userId=obj.userId;
-            //$("#contentText").attr("contenteditable",false).append('<span style="margin:15px 5px;">亲，<a href="javascript:;" onclick="studioChat.openLoginBox();" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');//设置登录后发言
+            /*$("#contentText").attr("contenteditable",false).append('<span style="margin:15px 5px;">亲，<a id="contentText_login" href="javascript:void(0);" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');
+            $("#contentText_login").click(function(){
+                studioMbPop.popBox("login", {groupId : studioChatMb.userInfo.groupId, clientStoreId : studioChatMb.userInfo.clientStoreId});
+            });*/
         }else{
             obj.loginId=this.userInfo.userId;
             store.set(key,obj);
@@ -356,13 +359,6 @@ var studioChatMb={
         /**
          * contentText键盘事件
          */
-        if(studioChatMb.userInfo.clientGroup == "visitor"){
-            $("#contentText").attr("contenteditable", "false");
-            $("#contentText").html('<span style="margin:15px 5px;">亲，<a id="contentText_login" href="javascript:void(0);" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');
-            $("#contentText_login").click(function(){
-                studioMbPop.popBox("login", {groupId : studioChatMb.userInfo.groupId, clientStoreId : studioChatMb.userInfo.clientStoreId});
-            });
-        }
         $("#contentText").keydown(function(e){
             var val=$(this).html();
             if(e.keyCode==13){//按回车键发送
