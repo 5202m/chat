@@ -1409,7 +1409,7 @@ var studioChat={
         /**
          * 转到登录页面
          */
-        $('#login_a').bind("click", function(e, hideClose){
+        $('#login_a,#lrtip_l').bind("click", function(e, hideClose){
             studioChat.openLoginBox(hideClose);
             if(common.isValid($(this).attr("tp"))){
                 _gaq.push(['_trackEvent', 'pmchat_studio', 'login', $(this).attr("tp"), 1, true]);
