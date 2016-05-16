@@ -513,7 +513,7 @@ var common = {
                 {
                     if(style === 1)
                     {
-                        var courseTypeTxt={'0':'文字','1':'视频','2':''};
+                        var courseTypeTxt={'0':'文字','1':'视频','2':'oneTV'};
                         loc_html.push('<div class="sy_panel">');
                         //星期（头部）
                         var loc_startDateTime = serverTime - 86400000 * ((currDay + 6) % 7);

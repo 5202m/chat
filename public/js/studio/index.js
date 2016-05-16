@@ -45,12 +45,12 @@ var studioChat={
      * 服务器时间更新
      */
     serverTimeUp:function(){
-        studioChat.setRPacket(true);
+        //studioChat.setRPacket(true);
         studioChat.clientVideoTask();
         studioChat.towMinTime=studioChat.serverTime;
         setInterval(function(){
             studioChat.serverTime+=1000;
-            studioChat.setRPacket(false);
+            //studioChat.setRPacket(false);
             if(studioChat.serverTime-studioChat.towMinTime>=2*60*1000){
                 studioChat.towMinTime=studioChat.serverTime;
                 studioChat.clientVideoTask();
