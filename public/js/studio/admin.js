@@ -1112,10 +1112,12 @@ var studioChat={
     getDialogHtml:function(clientGroup,userId,nickname,userType,isMb){
         if(studioChat.userInfo.userId!=userId && studioChat.userInfo.userId.indexOf('visitor_')==-1){
             var hasMainDiv=false,gIdDom=$("#groupInfoId"),mainDiv='<div class="dialogbtn" style="display:none;" cg="'+clientGroup+'" nk="'+nickname+'" uId="'+userId+'" utype="'+userType+'">';
-            if(userId.indexOf('visitor_')==-1){
+            /*if(userId.indexOf('visitor_')==-1){
                 mainDiv+='<a href="javascript:" class="d1" t="0"><span>@TA</span></a>';
                 hasMainDiv=true;
-            }
+            }*/
+            mainDiv+='<a href="javascript:" class="d1" t="0"><span>@TA</span></a>';
+            hasMainDiv=true;
             if(!isMb && gIdDom.attr("aw")=="true"&& common.containSplitStr(gIdDom.attr("awr"),studioChat.userInfo.userType)){
                 mainDiv+='<a href="javascript:" class="d2" t="1"><span>私聊</span></a>';
                 hasMainDiv=true;

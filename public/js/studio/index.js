@@ -348,7 +348,7 @@ var studioChat={
       var course=common.getSyllabusPlan(this.syllabusData,this.serverTime);
       if(!course||(course.courseType!=0 && common.isBlank(course.studioLink))||course.isNext|| course.courseType==0){
           if(isBackStudio){
-              alert("目前还没有视频直播，详情请留意直播间课程表！");
+              alert("目前还没有视频直播，详情请留意直播间的课程安排！");
           }else{
               this.playMp4Vd();
               if(course && !course.isNext && course.courseType==0){
