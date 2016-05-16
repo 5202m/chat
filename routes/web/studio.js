@@ -304,6 +304,9 @@ router.post('/login',function(req, res){
                             if(loginRes.isOK){
                                 //已经有账户，按类别升级即可
                                 studioService.updateClientGroup(mobilePhone, clientGroup, accountNo, function (isOk) {
+                                    if(isOk){
+                                        loginRes.userInfo.clientGroup = clientGroup;
+                                    }
                                     loginRes.userInfo.isLogin=true;
                                     req.session.studioUserInfo=loginRes.userInfo;
                                     req.session.studioUserInfo.clientStoreId=clientStoreId;
