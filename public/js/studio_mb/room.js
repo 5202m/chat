@@ -382,8 +382,8 @@ var studioChatMb={
         }).blur(function(){
             //studioChatMb.view.boardCtrl(1);
         }).bind("input", function(){
-            var isOk = studioChatMb.userInfo.clientGroup!='visitor'
-                && ($.trim($(this).text())!=$(this).find(".txt_dia").text() || $(this).find("img").size() > 0);
+            //studioChatMb.userInfo.clientGroup!='visitor' &&  游客可以发言
+            var isOk = ($.trim($(this).text())!=$(this).find(".txt_dia").text() || $(this).find("img").size() > 0);
             if(isOk){
                 $("#sendBtn").addClass("pressed");
             }else{
