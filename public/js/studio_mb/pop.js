@@ -128,6 +128,7 @@ var studioMbLogin = {
     verifyCodeIntervalId : 0,
     groupId : null,
     clientStoreId : null,
+    clientGroup : null,
 
     /**
      * 初始化（页面加载）
@@ -138,9 +139,10 @@ var studioMbLogin = {
     /**
      * 初始化（页面初始化）
      */
-    init : function(groupId, clientStoreId, closeable){
+    init : function(groupId, clientStoreId, clientGroup, closeable){
         this.groupId = groupId;
         this.clientStoreId = clientStoreId;
+        this.clientGroup = clientGroup;
         this.resetFormInput();
         $("#loginForm_csi").val(clientStoreId);
         if(closeable){
@@ -165,14 +167,27 @@ var studioMbLogin = {
                     studioMbPop.showMessage(result.error.errmsg);
                     return false;
                 }else{
+                    studioMbLogin.clientGroup = result.userInfo.clientGroup;
                     if(studioMbLogin.groupId){
                         common.getJson("/studio/checkGroupAuth",{groupId:studioMbLogin.groupId, redirectDef:1},function(result){
                             if(!result.isOK){
-                                //默认房间配置错误
-                                studioMbPop.showMessage("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
+                                if(result.error && result.error.errcode === "1000"){
+                                    studioMbPop.showMessage("您长时间未操作，请刷新页面后重试！");
+                                }else if(studioMbLogin.checkClientGroup("vip")){
+                                    studioMbPop.showMessage("该房间仅对新客户开放，如有疑问，请联系客户经理。");
+                                }else{
+                                    studioMbPop.showMessage("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系客户经理。");
+                                }
                             }else{
                                 studioMbPop.loadingBlock($("#loginPop"), true);
-                                studioMbPop.reload();
+                                if(studioMbLogin.checkClientGroup("vip")){
+                                    studioMbPop.showMessage("您已具备进入Vip专场的条件，我们将为您自动进入VIP专场。");
+                                    window.setTimeout(function(){
+                                        studioMbPop.reload();
+                                    }, 1200);
+                                }else{
+                                    studioMbPop.reload();
+                                }
                             }
                         },true,function(err){
                             studioMbPop.loadingBlock($("#loginPop"), true);
@@ -287,6 +302,28 @@ var studioMbLogin = {
         }else{
             studioMbLogin.resetVerifyCode();
         }
+    },
+    /**
+     * 检查客户组别
+     * @param type
+     *  visitor-visitor
+     *  vip-vip || active
+     *  new-非vip && 非active
+     */
+    checkClientGroup : function(type){
+        var chkResult = false;
+        switch(type){
+            case "visitor":
+                chkResult = (this.clientGroup == "visitor");
+                break;
+            case "vip":
+                chkResult = (this.clientGroup == "vip" || this.clientGroup == "active");
+                break;
+            case "new":
+                chkResult = (this.clientGroup != "vip" && this.clientGroup != "active");
+                break;
+        }
+        return chkResult;
     }
 };
 
@@ -477,7 +514,7 @@ var studioMbPop = {
 
             case "login" :
                 this.popShow($("#loginPop"));
-                this.Login.init(ops.groupId, ops.clientStoreId, ops.closeable !== false);
+                this.Login.init(ops.groupId, ops.clientStoreId, ops.clientGroup, ops.closeable !== false);
                 break;
 
             case "set" :

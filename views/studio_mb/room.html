@@ -22,21 +22,19 @@
 <body fp="<%= fromPlatform %>">
 <section class="content_w">
     <!-- header begin -->
-    <% if ('app'!=fromPlatform) { %>
-        <header id="header">
-            <section class="content_w clearfix">
-                <div class="logobar">
-                    <a href="http://m.24k.hk" target="_blank">金道贵金属</a>
-                    <h1 class="hide-t">视频直播间</h1>
-                </div>
-                <div class="rightbar">
-                    <a id="header_hb" href="javascript:void(0);" class="home"><i></i></a>
-                    <a href="javascript:openQQChatByCommonjs();" class="qq"><i></i></a>
-                    <a id="header_ui" href="javascript:void(0);" class="loginbtn"><%= userSession.isLogin ? userSession.nickname : '登录' %></a>
-                </div>
-            </section>
-        </header>
-    <% } %>
+    <header id="header">
+        <section class="content_w clearfix">
+            <div class="logobar">
+                <a href="http://m.24k.hk" target="_blank">金道贵金属</a>
+                <h1 class="hide-t">视频直播间</h1>
+            </div>
+            <div class="rightbar">
+                <a id="header_hb" href="javascript:void(0);" class="home"><i></i></a>
+                <a href="javascript:openQQChatByCommonjs();" class="qq"><i></i></a>
+                <a id="header_ui" href="javascript:void(0);" class="loginbtn"><%= userSession.isLogin ? userSession.nickname : '登录' %></a>
+            </div>
+        </section>
+    </header>
     <!-- header end -->
 
     <!-- video begin -->

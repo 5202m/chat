@@ -32,6 +32,29 @@ var studioChatMbIdx={
         }
     },
     /**
+     * 检查客户组别
+     * @param type
+     *  visitor-visitor
+     *  vip-vip || active
+     *  new-非vip && 非active
+     */
+    checkClientGroup : function(type){
+        var currClientGroup = studioChatMbIdx.userInfo.clientGroup;
+        var chkResult = false;
+        switch(type){
+            case "visitor":
+                chkResult = (currClientGroup == "visitor");
+                break;
+            case "vip":
+                chkResult = (currClientGroup == "vip" || currClientGroup == "active");
+                break;
+            case "new":
+                chkResult = (currClientGroup != "vip" && currClientGroup != "active");
+                break;
+        }
+        return chkResult;
+    },
+    /**
      * 刷新昵称
      * @param isSetName
      * @param nickname
@@ -174,7 +197,7 @@ var studioChatMbIdx={
                 studioMbPop.popBox("person");
             }else{
                 //未登录，弹出登录框
-                studioMbPop.popBox("login", {groupId : "", clientStoreId : studioChatMbIdx.userInfo.clientStoreId});
+                studioMbPop.popBox("login", {groupId : "", clientGroup : studioChatMbIdx.userInfo.clientGroup, clientStoreId : studioChatMbIdx.userInfo.clientStoreId});
             }
         });
     },
@@ -237,9 +260,11 @@ var studioChatMbIdx={
             var loc_groupId = loc_liDom.attr("gi");
             if(loc_liDom.attr("ga") != 'true'){
                 if(studioChatMbIdx.userInfo.clientGroup == "visitor"){
-                    studioMbPop.popBox("login", {groupId : loc_groupId, clientStoreId : studioChatMbIdx.userInfo.clientStoreId});
+                    studioMbPop.popBox("login", {groupId : loc_groupId, clientGroup : studioChatMbIdx.userInfo.clientGroup, clientStoreId : studioChatMbIdx.userInfo.clientStoreId});
+                }else if(studioChatMbIdx.checkClientGroup("vip")){
+                    studioMbPop.showMessage("该房间仅对新客户开放，如有疑问，请联系客户经理。");
                 }else{
-                    studioMbPop.showMessage("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
+                    studioMbPop.showMessage("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系客户经理。");
                 }
                 return false;
             }
@@ -253,8 +278,10 @@ var studioChatMbIdx={
                 if(!result.isOK){
                     if(result.error && result.error.errcode === "1000"){
                         studioMbPop.showMessage("您长时间未操作，请刷新页面后重试！");
+                    }else if(studioChat.checkClientGroup("vip")){
+                        studioMbPop.showMessage("该房间仅对新客户开放，如有疑问，请联系客户经理。");
                     }else{
-                        studioMbPop.showMessage("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
+                        studioMbPop.showMessage("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系客户经理。");
                     }
                 }else{
                     studioMbPop.reload();

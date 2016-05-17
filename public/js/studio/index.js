@@ -1243,16 +1243,29 @@ var studioChat={
          * 切换房间
          */
         $("#studioListId a").click(function(){
-            if($(this).hasClass("ing")){
+            var thiz = $(this);
+            if(thiz.hasClass("ing")){
+                //当前房间
+                return false;
+            }else if(thiz.attr("av") == "false" && studioChat.checkClientGroup('visitor')){
+                //不允许游客进入，但当前是游客，直接要求登录
+                $("#login_a").trigger("click");
+                return false;
+            }else if(thiz.hasClass("locked")){
+                if(studioChat.checkClientGroup("vip")){
+                    alert("该房间仅对新客户开放，如有疑问，请联系客户经理。");
+                }else{
+                    alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系客户经理。");
+                }
                 return false;
             }
-            if($(this).hasClass("locked")){
-                alert("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
-                return false;
-            }
-            common.getJson("/studio/checkGroupAuth",{groupId:this.id},function(result){
+            common.getJson("/studio/checkGroupAuth",{groupId:thiz.attr("id")},function(result){
                 if(!result.isOK){
-                    alert("您没有访问该直播间的权限，如需进入请升级直播间等级或联系客服！");
+                    if(studioChat.checkClientGroup("vip")){
+                        alert("该房间仅对新客户开放，如有疑问，请联系客户经理。");
+                    }else{
+                        alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系客户经理。");
+                    }
                 }else{
                     studioChat.toRefreshView();
                 }
@@ -1551,12 +1564,16 @@ var studioChat={
                 $(_this).attr('disabled',false);
                 $('#formBtnLoad').hide();
                 if(!result.isOK){
-                    $("#"+thisFormId+" input[name=verifyCode],#loginForm input[name=pwd]").val("");
+                    $("#"+thisFormId+" input[name=verifyCode]").val("");
                     $("#"+thisFormId+" .wrong-info").html(result.error.errmsg);
                     return false;
                 }else{
                     $(".blackbg,#loginBox").hide();
                     LoginAuto.setAutoLogin($("#autoLogin").prop("checked"));
+                    studioChat.userInfo.clientGroup = result.userInfo.clientGroup;
+                    if(studioChat.checkClientGroup("vip")){
+                        alert("您已具备进入Vip专场的条件，我们将为您自动进入VIP专场。");
+                    }
                     studioChat.toRefreshView();
                 }
             },true,function(err){
@@ -1772,6 +1789,29 @@ var studioChat={
             $("#contentText").html("");//清空内容
         });
         this.placeholderSupport();//ie下输入框显示文字提示
+    },
+    /**
+     * 检查客户组别
+     * @param type
+     *  visitor-visitor
+     *  vip-vip || active
+     *  new-非vip && 非active
+     */
+    checkClientGroup : function(type){
+        var currClientGroup = studioChat.userInfo.clientGroup;
+        var chkResult = false;
+        switch(type){
+            case "visitor":
+                chkResult = (currClientGroup == "visitor");
+                break;
+            case "vip":
+                chkResult = (currClientGroup == "vip" || currClientGroup == "active");
+                break;
+            case "new":
+                chkResult = (currClientGroup != "vip" && currClientGroup != "active");
+                break;
+        }
+        return chkResult;
     },
     /**
      * 刷新昵称

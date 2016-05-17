@@ -52,7 +52,7 @@ var studioChatMb={
         }
         //当前房间未授权，并且是游客
         if(!this.currStudioAuth && this.userInfo.clientGroup=='visitor'){
-            studioMbPop.popBox("login", {groupId : studioChatMb.userInfo.groupId, clientStoreId : studioChatMb.userInfo.clientStoreId, closeable:false});
+            studioMbPop.popBox("login", {groupId : studioChatMb.userInfo.groupId, clientGroup : studioChatMb.userInfo.clientGroup, clientStoreId : studioChatMb.userInfo.clientStoreId, closeable:false});
             $("#login_a").trigger("click", true); //弹出登录框，隐藏关闭按钮
         }
     },
@@ -304,7 +304,7 @@ var studioChatMb={
                 studioMbPop.popBox("person");
             }else{
                 //未登录，弹出登录框
-                studioMbPop.popBox("login", {groupId : studioChatMb.userInfo.groupId, clientStoreId : studioChatMb.userInfo.clientStoreId});
+                studioMbPop.popBox("login", {groupId : studioChatMb.userInfo.groupId, clientGroup : studioChatMb.userInfo.clientGroup, clientStoreId : studioChatMb.userInfo.clientStoreId});
             }
         });
     },

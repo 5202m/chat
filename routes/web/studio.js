@@ -298,7 +298,7 @@ router.post('/login',function(req, res){
                         req.session.studioUserInfo=loginRes.userInfo;
                         req.session.studioUserInfo.clientStoreId=clientStoreId;
                         req.session.studioUserInfo.firstLogin=true;
-                        res.json({isOK:true});
+                        res.json({isOK:true, userInfo : {clientGroup : loginRes.userInfo.clientGroup}});
                     }else{
                         studioService.checkClientGroup(mobilePhone,null,function(clientGroup, accountNo){
                             if(loginRes.isOK){
@@ -311,13 +311,14 @@ router.post('/login',function(req, res){
                                     req.session.studioUserInfo=loginRes.userInfo;
                                     req.session.studioUserInfo.clientStoreId=clientStoreId;
                                     req.session.studioUserInfo.firstLogin=true;
-                                    res.json({isOK:true}); //即使修改账户级别失败也登录成功
+                                    res.json({isOK:true, userInfo : {clientGroup : loginRes.userInfo.clientGroup}}); //即使修改账户级别失败也登录成功
                                 });
                             }else{
                                 var userInfo={mobilePhone:mobilePhone, ip:common.getClientIp(req), groupType:constant.fromPlatform.studio, accountNo: accountNo};
                                 studioService.studioRegister(userInfo,clientGroup,function(result){
                                     if(result.isOK){
                                         req.session.studioUserInfo={clientStoreId:clientStoreId,firstLogin:true,isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
+                                        result.userInfo = {clientGroup : userInfo.clientGroup};
                                     }
                                     res.json(result);
                                 });
@@ -335,7 +336,7 @@ router.post('/login',function(req, res){
                 req.session.studioUserInfo=loginRes.userInfo;
                 req.session.studioUserInfo.clientStoreId=clientStoreId;
                 req.session.studioUserInfo.firstLogin=true;
-                res.json({isOK:true});
+                res.json({isOK:true, clientGroup : loginRes.userInfo.clientGroup});
             }else{
                 res.json(loginRes);
             }
