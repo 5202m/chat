@@ -292,7 +292,7 @@ var studioChat={
                         }
                     }
                     studioChat.showTwoCS();//只显示两个CS
-                    $(".cm_wrap a").click(function(){//点击客户经理
+                    $(".cm_wrap a").click(function(){//点击老师助理
                         var userId=$(this).attr("uid");
                         studioChat.closeWhTipMsg(userId);
                         studioChat.fillWhBox(3,userId,$(this).find("span").text(),false);
@@ -788,7 +788,7 @@ var studioChat={
         if(userId){
             $("#newMsgTipBtn").attr("uid",userId);
         }
-        $(".pletter_hint p span").html((3==userType?"客户经理":"")+nkLabel+"发来了一条私聊信息");
+        $(".pletter_hint p span").html((3==userType?"老师助理":"")+nkLabel+"发来了一条私聊信息");
         $(".pletter_hint").show();
     },
     /**
@@ -1253,18 +1253,18 @@ var studioChat={
                 return false;
             }else if(thiz.hasClass("locked")){
                 if(studioChat.checkClientGroup("vip")){
-                    alert("该房间仅对新客户开放，如有疑问，请联系客户经理。");
+                    alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
                 }else{
-                    alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系客户经理。");
+                    alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
                 }
                 return false;
             }
             common.getJson("/studio/checkGroupAuth",{groupId:thiz.attr("id")},function(result){
                 if(!result.isOK){
                     if(studioChat.checkClientGroup("vip")){
-                        alert("该房间仅对新客户开放，如有疑问，请联系客户经理。");
+                        alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
                     }else{
-                        alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系客户经理。");
+                        alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
                     }
                 }else{
                     studioChat.toRefreshView();
@@ -2477,7 +2477,7 @@ var studioChat={
                 row=data[i];
                 studioChat.setOnlineUser(row);
             }
-            studioChat.setCSList();//设置客户经理列表
+            studioChat.setCSList();//设置老师助理列表
             studioChat.setListScroll(".user_box");
         });
         //断开连接
@@ -2505,7 +2505,7 @@ var studioChat={
                     var data=result.data,userInfoTmp=data.onlineUserInfo;
                     if(data.online){
                         studioChat.setOnlineUser(userInfoTmp);
-                        if(userInfoTmp.userType==3 && studioChat.isAllowWh()) {//客户经理上线
+                        if(userInfoTmp.userType==3 && studioChat.isAllowWh()) {//老师助理上线
                             var onlineCs=$(".cm_wrap a[uid=" + userInfoTmp.userId + "]");
                             onlineCs.find("img").removeClass("have_op");
                             $(".cm_wrap").prepend(onlineCs);
@@ -2520,7 +2520,7 @@ var studioChat={
                                 $("#userListId #"+userInfoTmp.userId).remove();
                                 studioChat.setListScroll(".user_box");
                             }
-                            if(userInfoTmp.userType==3 && studioChat.isAllowWh()) {//客户经理下线
+                            if(userInfoTmp.userType==3 && studioChat.isAllowWh()) {//老师助理下线
                                 var onlineCs=$(".cm_wrap a[uid=" + userInfoTmp.userId + "]");
                                 onlineCs.find("img").addClass("have_op");
                                 $(".cm_wrap").append(onlineCs);
