@@ -244,7 +244,7 @@ var studioChat={
         }
         //当前房间未授权，并且是游客
         if(!this.currStudioAuth && this.userInfo.clientGroup=='visitor'){
-            $("#login_a").trigger("click", true); //弹出登录框，隐藏关闭按钮
+            $("#login_a").trigger("click", {hideClose : true}); //弹出登录框，隐藏关闭按钮
         }else{
             this.setAdvertisement();//设置广告
         }
@@ -1249,7 +1249,7 @@ var studioChat={
                 return false;
             }else if(thiz.attr("av") == "false" && studioChat.checkClientGroup('visitor')){
                 //不允许游客进入，但当前是游客，直接要求登录
-                $("#login_a").trigger("click");
+                $("#login_a").trigger("click", {groupId : thiz.attr("id")});
                 return false;
             }else if(thiz.hasClass("locked")){
                 if(studioChat.checkClientGroup("vip")){
@@ -1422,8 +1422,10 @@ var studioChat={
         /**
          * 转到登录页面
          */
-        $('#login_a,#lrtip_l').bind("click", function(e, hideClose){
-            studioChat.openLoginBox(hideClose);
+        $('#login_a,#lrtip_l').bind("click", function(e, ops){
+            ops = ops || {};
+            studioChat.preGroupId = ops.groupId;
+            studioChat.openLoginBox(ops.hideClose);
             if(common.isValid($(this).attr("tp"))){
                 _gaq.push(['_trackEvent', 'pmchat_studio', 'login', $(this).attr("tp"), 1, true]);
             }
@@ -1571,10 +1573,27 @@ var studioChat={
                     $(".blackbg,#loginBox").hide();
                     LoginAuto.setAutoLogin($("#autoLogin").prop("checked"));
                     studioChat.userInfo.clientGroup = result.userInfo.clientGroup;
-                    if(studioChat.checkClientGroup("vip")){
-                        alert("您已具备进入Vip专场的条件，我们将为您自动进入VIP专场。");
+                    if(studioChat.preGroupId){
+                        common.getJson("/studio/checkGroupAuth",{groupId:studioChat.preGroupId},function(checkGroupRes){
+                            if(!checkGroupRes.isOK){
+                                if(studioChat.checkClientGroup("vip")){
+                                    alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
+                                }else{
+                                    alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
+                                }
+                            }
+                            studioChat.toRefreshView();
+                        },true,function(err){
+                            if("success"!=err) {
+                                alert("操作失败，请联系客服！" );
+                            }
+                        });
+                    }else{
+                        if(studioChat.checkClientGroup("vip")){
+                            alert("您已具备进入Vip专场的条件，我们将为您自动进入VIP专场。");
+                        }
+                        studioChat.toRefreshView();
                     }
-                    studioChat.toRefreshView();
                 }
             },true,function(err){
                 $("#"+thisFormId+" input[name=pwd]").val("");

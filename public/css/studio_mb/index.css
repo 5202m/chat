@@ -73,7 +73,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .videoroom-ul li{ padding:10px 10px 15px; border-bottom:1px solid #303d58; margin-bottom:5px;}
 .videoroom-ul li:last-child{ border:0}
 .videoroom-ul li.on { padding:10px 10px 13px;}
-.videoroom-ul li.on .intro{ display:block;}
+.videoroom-ul li .intro{ display:block;}
 .room-main .tit{ width:49.5%; float:left;}
 .room-main .tit b{display:inline-block; font-size:16px; line-height:26px; vertical-align:middle; font-weight:normal;}
 .room-main .tit .st{ display:none; width:14px; height:14px;vertical-align:middle; background-position:-40px 0; margin-left:5px;}

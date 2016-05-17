@@ -121,10 +121,10 @@ var studioChatMbIdx={
                 loc_authInfo.push("真实");
                 cnt += 2;
             }else if(auths.indexOf(",active") >= 0){
-                loc_authInfo.push("真实A");
+                loc_authInfo.push("已激活");
                 cnt ++;
             }else if(auths.indexOf(",notActive") >= 0){
-                loc_authInfo.push("真实N");
+                loc_authInfo.push("未激活");
                 cnt ++;
             }
             if(auths.indexOf(",simulate") >= 0){
