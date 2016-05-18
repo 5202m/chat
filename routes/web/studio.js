@@ -233,7 +233,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
                 res.render("studio_mb/index",viewDataObj);
             }
         }else{
-            if(isThirdUsed){
+            if(isThirdUsed && fromPlatform != config.studioThirdUsed.webui){
                 res.render("studio/mini",viewDataObj);
             }else{
                 res.render("studio/index",viewDataObj);
