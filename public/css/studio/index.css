@@ -133,8 +133,8 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .mod_video img{ width:100%; height:auto; }
 .ctrlblock{position:absolute; left:0; top:18px; width:100%; height:100%; text-align:center; background:rgba(0,0,0,.7); filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#B2000000,endColorstr=#B2000000); }
 .vbackbtn{z-index:100;background:rgba(181,144,48,.5); display:block; width:63px; height:22px; padding-top:3px; color:#fff; border-radius:2px; font-size:12pt; line-height:14pt; position:absolute; top:10px; right:10px}
-.mod_video .vopenbtn{z-index:100;background:rgba(181,144,48,.5); display:block; width:43px; height:22px; padding-top:3px; color:#fff; border-radius:2px; font-size:12pt; line-height:14pt; position:absolute; top:10px; left:10px}
-.vbackbtn:hover,.mod_video .vopenbtn:hover  { text-decoration:none}
+.mod_video .vopenbtn,.mod_video .vrefreshbtn{z-index:100;background:rgba(181,144,48,.5); display:block; width:43px; height:22px; padding-top:3px; color:#fff; border-radius:2px; font-size:12pt; line-height:14pt; position:absolute; top:10px; left:10px}
+.vbackbtn:hover,.mod_video .vopenbtn:hover,.mod_video .vrefreshbtn:hover  { text-decoration:none}
 .window-content .vbackbtn{top: 26px;padding: 4px 2px 4px 8px;width: 52px;line-height: 16pt;}
 .window-container{
     padding: 1px 1px 1px 1px;

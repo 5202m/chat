@@ -62,7 +62,7 @@
                         <li class="<%=((!row.disable || !userSession.isLogin) && row.isOpen ? 'live' : '')%>" ga="<%=!row.disable%>" go="<%=row.isOpen%>" gi="<%= row.id %>">
                             <section class="room-main clearfix">
                                 <div class="tit">
-                                    <b><%= row.name %></b><i></i><br>
+                                    <b><%= row.name %></b><div><i></i>火热直播中</div><br>
                                     <span aw="<%= row.clientGroup %>">所有客户均可观看</span>
                                 </div>
                                 <div class="btns">

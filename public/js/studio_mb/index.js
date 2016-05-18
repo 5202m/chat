@@ -146,7 +146,7 @@ var studioChatMbIdx={
             }
         };
 
-        $("#studioListTab .tit span").each(function(){
+        $("#studioListTab .tit span[aw]").each(function(){
             $(this).html(getAuthTitle($(this).attr("aw")));
         });
     },
@@ -318,9 +318,9 @@ var studioChatMbIdx={
                         if(courseObj){
                             liDom.find(".syll-tip .syll-time").text(dayCn[courseObj.day+""]+' '+courseObj.startTime+"-"+courseObj.endTime).next().text(courseTypeTxt[courseObj.courseType]).next().text(courseObj.lecturer);
                             if(!courseObj.isNext){
-                                liDom.find(".tit i").addClass("st");
+                                liDom.find(".tit div").addClass("st");
                             }else{
-                                liDom.find(".tit i").removeClass("st");
+                                liDom.find(".tit div").removeClass("st");
                             }
                             liDom.find(".syll-tip").show();
                         }

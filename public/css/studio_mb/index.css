@@ -23,7 +23,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .p0-non{font-size:0;height:0;overflow:hidden}
 
 /* img */
-.rightbar .qq i,.rightbar .home i,.room-main .tit .st,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i{background:url(../../images/studio_mb/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
+.rightbar .qq i,.rightbar .home i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i{background:url(../../images/studio_mb/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
 
 /* header */
 body{font-family:'microsoft yahei','Arial'; background:#000}
@@ -76,8 +76,9 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .videoroom-ul li .intro{ display:block;}
 .room-main .tit{ width:49.5%; float:left;}
 .room-main .tit b{display:inline-block; font-size:16px; line-height:26px; vertical-align:middle; font-weight:normal;}
-.room-main .tit .st{ display:none; width:14px; height:14px;vertical-align:middle; background-position:-40px 0; margin-left:5px;}
-.videoroom-ul li.live .tit .st{display:inline-block;}
+.room-main .tit div{display: none;}
+.room-main .tit div.st{display: inline-block; font-size: 12px; font-style: italic; font-weight: normal; color: #b59030;}
+.room-main .tit div.st i{display: inline-block;width:14px; height:14px;vertical-align:middle; background-position:-40px 0; margin:-1px 2px 0 5px;}
 .room-main .tit span,.room-main .syll-tip span{display:inline-block; height:16px; line-height:16px; font-size:11px; margin-right:10px; color:#7C95CC;}
 .room-main .btns{ width:50%; float:right; padding:6px 0;}
 .room-main .btns a{ display:block; float:left; color:#b59030; text-align:center; font-size:16px; line-height:36px; height:36px; width:48%; margin-right:4%; border:1px solid #b59030; border-radius:3px; box-sizing:border-box;}

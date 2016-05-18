@@ -755,9 +755,6 @@ var studioChat={
         $(".vbackbtn").click(function(){
             $("#studioTeachId a[class=on]").removeClass("on");
             studioChat.playVideoByDate(true);
-            if($(".window-container #tVideoDiv").length>0){//如果教学视频打开弹框切直播
-                $(".vopenbtn[t=s]").click();
-            }
         });
     },
     /**
@@ -1057,9 +1054,9 @@ var studioChat={
      */
     setEvent:function(){
         $(".mod_video").hover(function() {
-            $(".vopenbtn").show();
+            $(".vopenbtn,.vrefreshbtn").show();
         },function(){
-            $(".vopenbtn").hide();
+            $(".vopenbtn,.vrefreshbtn").hide();
         });
         //老师列表滚动
         this.teachSlide();
@@ -1145,68 +1142,43 @@ var studioChat={
         $(".vopenbtn").click(function(){
             //设置弹框显示直播
             jqWindowsEngineZIndex=100000;
-            var type=$(this).attr("t");
             var windowContainerStyle={};
-            if(type=="s") {
-                if($(".window-container #tVideoDiv").length>0){
-                    $("#tvDivId").get(0).appendChild($("#tVideoDiv").parent().get(0));
-                    $(".window-container").remove();
-                    if(window.SewisePlayer){
-                        SewisePlayer.doStop();
-                    }
-                    $("#tvDivId .vopenbtn").show();
-                    $("#tvDivId .tipMsg").hide();
-                }
-                $("#showOutSV").newWindow({
-                    windowTitle: "视频直播",
-                    content:$("#stVideoDiv .tv-div")[0],
-                    windowType: "video",
-                    minimizeButton: false,
-                    resizeIcon: '<= =>',
-                    width: 640,
-                    height: 540,
-                    afterClose: function (content) {
-                        $("#stVideoDiv .tipMsg").hide();
-                        $("#stVideoDiv").get(0).appendChild(content);
-                        $("#stVideoDiv .vopenbtn").show();
-                    }
-                });
-                $("#showOutSV").click();
-                $("#stVideoDiv .vopenbtn").hide();
-                window.setTimeout(function(){//1秒钟后提示信息
-                    $("#stVideoDiv .tipMsg").show();
-                },500);
-            }else{
-                if($(".window-container #studioVideoDiv").length>0){
-                    $("#stVideoDiv").get(0).appendChild($("#studioVideoDiv").parent().get(0));
-                    $("#studioVideoDiv embed,.window-container").remove();
-                    $("#stVideoDiv .vopenbtn").show();
-                    $("#stVideoDiv .tipMsg").hide();
-                }
-                $("#showOutTV").newWindow({
-                    windowTitle: "教学视频",
-                    content: $("#tvDivId .tv-div")[0],
-                    windowType: "video",
-                    minimizeButton: false,
-                    resizeIcon: '<= =>',
-                    width: 640,
-                    height: 540,
-                    afterClose: function (content) {
-                        $("#tvDivId .tipMsg").hide();
-                        $("#tvDivId .vopenbtn").show();
-                        $("#tvDivId").get(0).appendChild(content);
-                        studioChat.doPlayTeachVideo();
-                        //重设视频广告事件
-                        studioChat.setVdEvent();
-                    }
-                });
-                $("#showOutTV").click();
-                $("#tvDivId .vopenbtn").hide();
-                window.setTimeout(function(){//1秒钟后提示信息
-                    $("#tvDivId .tipMsg").show();
-                    studioChat.doPlayTeachVideo();
-                },500);
+            if($(".window-container #studioVideoDiv").length>0){
+                $("#stVideoDiv").get(0).appendChild($("#studioVideoDiv").parent().get(0));
+                $("#studioVideoDiv embed,.window-container").remove();
+                $("#stVideoDiv .vopenbtn").show();
+                $("#stVideoDiv .tipMsg").hide();
             }
+            $("#showOutTV").newWindow({
+                windowTitle: "教学视频",
+                content: $("#tvDivId .tv-div")[0],
+                windowType: "video",
+                minimizeButton: false,
+                resizeIcon: '<= =>',
+                width: 640,
+                height: 540,
+                afterClose: function (content) {
+                    $("#tvDivId .tipMsg").hide();
+                    $("#tvDivId .vopenbtn").show();
+                    $("#tvDivId").get(0).appendChild(content);
+                    studioChat.doPlayTeachVideo();
+                    //重设视频广告事件
+                    studioChat.setVdEvent();
+                }
+            });
+            $("#showOutTV").click();
+            $("#tvDivId .vopenbtn").hide();
+            window.setTimeout(function(){//1秒钟后提示信息
+                $("#tvDivId .tipMsg").show();
+                studioChat.doPlayTeachVideo();
+            },500);
+        });
+        /**
+         * 刷新
+         */
+        $(".vrefreshbtn").click(function(){
+            $("#studioVideoDiv embed").remove();
+            studioChat.playVideoByDate(true);
         });
         //设置视频广告事件
         this.setVdEvent();
