@@ -674,7 +674,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .popup_box.popbanner .cont{ padding:0}
 .popup_box.popbanner .pop_close{ top:12px; right:12px; width:25px; height:25px; background-position:0 -480px}
 .popup_box.popbanner .pop_close:hover{ top:12px; right:12px; width:25px; height:25px; background-position:-30px -480px}
-.btn-part { font-size:0; text-align:center; padding:215px 0 0 36px}
-.btn-part a{ display:inline-block; *display:inline; *zoom:1; border:1px solid #e1806d; height:28px; line-height:28px; font-size:18px; color:#d94528; padding:0 21px; font-family:'Microsoft YaHei'; margin:0 6px; border-radius:2px; vertical-align:middle}
-.btn-part a:hover{ color:#fff; background:#e1806d; text-decoration:none; }
+.btn-part { font-size:0; text-align:left; padding:275px 0 0 30px}
+.btn-part a{ display:inline-block; *display:inline; border:1px solid #59B1D5; *zoom:1; height:31px; width:158px; line-height:31px; font-size:18px; font-family:'Microsoft YaHei'; margin:0 0 0 39px; border-radius:3px; vertical-align:middle}
+.btn-part a:hover{border:1px solid #75DBF4; background-color: rgba(164,255,255,0.2);  text-decoration:none; filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33a4ffff,endColorstr=#33a4ffff);}
 .popbanner.ban_act .act_link{ display:block; width:100%; height:400px;}

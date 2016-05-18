@@ -65,7 +65,7 @@
                     <div class="btnarea clearfix" id="studioListId">
                         <% if (studioList!='[]') { %>
                         <% studioList.forEach(function(row,index){ %>
-                           <a href="javascript:" id="<%=row.id %>" title="<%=row.remark %>" class="<%if(row.level==1){%>vip<%}else if(row.level==2){%>r1<%} else if(row.level==3){%>r2<%}else{%>normal<%}%> <%if(row.disable){%>locked<%}else if(row.isCurr){%>ing<%}else{%>normal<%}%>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>">
+                           <a href="javascript:" id="<%=row.id %>" title="<%=row.remark %>" class="<%if(row.level==1){%>vip<%}else if(row.level==2){%>r1<%} else if(row.level==3){%>r2<%}else{%>normal<%}%> <%if(row.disable){%>locked<%}else if(row.isCurr){%>ing<%}else{%>normal<%}%>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>" curr="<%= row.isCurr %>">
                                <span class="s1"><%= row.name %></span><span class="s2"><i></i></span>
                            </a>
                         <% }); %>
@@ -490,7 +490,8 @@
     <div class="popup_box popbanner ban_new dn" id="main_ad_box">
         <div class="cont">
             <div class="btn-part">
-                <a href="javascript:" id="lrtip_l" tp="content_tc">登 录</a>
+                <a href="javascript:" id="lrtip_l"></a>
+                <a href="javascript:" id="lrtip_r"></a>
             </div>
             <a href="javascript:void(0)" class="pop_close">关闭</a>
         </div>

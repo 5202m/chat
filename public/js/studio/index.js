@@ -667,20 +667,37 @@ var studioChat={
      */
     setAdvertisement:function(){
         //设置弹出广告
-        if(studioChat.isNeverLogin){
-            //设置主页广告
-            $(".blackbg").show();
-            $("#main_ad_box").css({background:"url(/images/studio/ban_new.jpg) 0 0 no-repeat"}).show();
-            $("#main_ad_box .pop_close").click(function(){
-                $("#main_ad_box").hide();
-                $(".blackbg").hide();
-            });
-        }else{
+        if(studioChat.userInfo.isLogin){
             $(".blackbg").show();
             $("#act_ad_box").css({background:"url(/images/studio/ban_act.png) 0 0 no-repeat"}).show();
             $("#act_ad_box .pop_close").click(function(){
                 $("#act_ad_box").hide();
                 $(".blackbg").hide();
+            });
+        }else{
+            //设置主页广告
+            $(".blackbg").show();
+            $("#main_ad_box").css({background:"url(/images/studio/ban_act2.jpg) 0 0 no-repeat"}).show();
+            $("#main_ad_box .pop_close").click(function(){
+                $("#main_ad_box").hide();
+                $(".blackbg").hide();
+            });
+            window.setTimeout(function(){
+                if($(".blackbg").is(":hidden")){
+                    $(".blackbg,#main_ad_box").show();
+                }
+            }, 3000);
+            /**
+             * 进入VIP专场
+             */
+            $('#lrtip_l').click(function(){
+                $("#studioListId a[curr='false']:first").trigger("click");
+            });
+            /**
+             * 进入新手专场
+             */
+            $('#lrtip_r').click(function(){
+                $("#login_a").trigger("click");
             });
         }
         //设置视频广告
@@ -1394,7 +1411,7 @@ var studioChat={
         /**
          * 转到登录页面
          */
-        $('#login_a,#lrtip_l').bind("click", function(e, ops){
+        $('#login_a').bind("click", function(e, ops){
             ops = ops || {};
             studioChat.preGroupId = ops.groupId;
             studioChat.openLoginBox(ops.hideClose);
