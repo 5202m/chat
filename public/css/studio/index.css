@@ -676,5 +676,5 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .popup_box.popbanner .pop_close:hover{ top:12px; right:12px; width:25px; height:25px; background-position:-30px -480px}
 .btn-part { font-size:0; text-align:left; padding:275px 0 0 30px}
 .btn-part a{ display:inline-block; *display:inline; border:1px solid #59B1D5; *zoom:1; height:31px; width:158px; line-height:31px; font-size:18px; font-family:'Microsoft YaHei'; margin:0 0 0 39px; border-radius:3px; vertical-align:middle}
-.btn-part a:hover{border:1px solid #75DBF4; background-color: rgba(164,255,255,0.2);  text-decoration:none; filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#33a4ffff,endColorstr=#33a4ffff);}
+.btn-part a:hover{border:1px solid #75DBF4; text-decoration:none; background:#a4ffff; filter:alpha(opacity=20);-moz-opacity:0.2; -khtml-opacity: 0.2;opacity: 0.2;}
 .popbanner.ban_act .act_link{ display:block; width:100%; height:400px;}
