@@ -4,7 +4,7 @@
  */
 var config = {
     studioThirdUsed:{//第三方引用直播间默认房间
-        platfrom:'webui,app,pc',
+        platfrom:'webui,app,pc,web24k',
         roomId:'studio_teach'
     },
     clusterWorkCount:2,//开启多线程个数，如果该参数大于系统内核个数，默认是开启(cpu核数-1)个线程
