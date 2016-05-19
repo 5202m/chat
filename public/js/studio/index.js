@@ -686,7 +686,7 @@ var studioChat={
                 if($(".blackbg").is(":hidden")){
                     $(".blackbg,#main_ad_box").show();
                 }
-            }, 3000);
+            }, 300000);
             /**
              * 进入VIP专场
              */
