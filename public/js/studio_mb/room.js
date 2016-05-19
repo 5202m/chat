@@ -1072,7 +1072,7 @@ var studioChatMb={
         var loc_html = [];
         loc_html.push('<li class="'+cls+'" id="'+fromUser.publishTime+'" isMe="'+isMe+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header">');
         loc_html.push('<div class="headimg" uid="'+fromUser.userId+'">');
-        loc_html.push(studioChatMb.getUserAImgCls(fromUser.clientGroup,fromUser.userType,fromUser.avatar));
+        loc_html.push(studioChatMb.getUserAImgCls(fromUser.userId, fromUser.clientGroup,fromUser.userType,fromUser.avatar));
         loc_html.push('</div>');
         loc_html.push('<div class="detail">');
         loc_html.push('<span class="uname">');
@@ -1112,12 +1112,13 @@ var studioChatMb={
     },
     /**
      * 提取头像样式
+     * @param userId
      * @param clientGroup
      * @param userType
      * @param avatar
      * @returns {string}
      */
-    getUserAImgCls:function(clientGroup,userType,avatar){
+    getUserAImgCls:function(userId, clientGroup,userType,avatar){
         var aImgCls='';
         if(userType && userType!=0 && common.isValid(avatar)){
             return '<img src="'+avatar+'">';
@@ -1129,6 +1130,14 @@ var studioChatMb={
             aImgCls="user_d";
         }else if("register"==clientGroup){
             aImgCls="user_m";
+        }else if("visitor"==clientGroup || userType == -1){
+            userId = userId || "";
+            var idTmp = parseInt(userId.substring(userId.length - 2), 10);
+            if(isNaN(idTmp)){
+                idTmp = 100;
+            }
+            idTmp = (idTmp + 17) % 39;
+            return '<img src="' + studioChatMb.filePath + '/upload/pic/header/chat/visitor/' + idTmp + '.png">';
         }else{
             aImgCls="user_c";
         }

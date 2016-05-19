@@ -5,6 +5,7 @@
  */
 var StudioChatMini = {
     apiUrl:'',
+    filePath:'',
     currStudioAuth:false,//当前房间是否授权
     fromPlatform:null,//来源平台
     blwsPlayer: null,//保利威视
@@ -476,7 +477,7 @@ var StudioChatMini = {
         }
         var html = [];
         html.push('<div class="' + cls + '" id="' + fromUser.publishTime + '" isMe="' + isMe + '" utype="' + fromUser.userType + '" mType="' + content.msgType + '" t="header">');
-        html.push('<a href="javascript:" class="headimg" uid="' + fromUser.userId + '">' + StudioChatMini.getUserAImgCls(fromUser.clientGroup, fromUser.userType, fromUser.avatar) + '</a>');
+        html.push('<a href="javascript:" class="headimg" uid="' + fromUser.userId + '">' + StudioChatMini.getUserAImgCls(fromUser.userId, fromUser.clientGroup, fromUser.userType, fromUser.avatar) + '</a>');
         html.push('<div class="duser">');
         if(isMe == 'true'){
             html.push('<span class="dtime">' + StudioChatMini.formatPublishTime(fromUser.publishTime) + '</span>');
@@ -519,9 +520,10 @@ var StudioChatMini = {
     },
     /**
      * 提取头像样式
+     * @param userId
      * @param clientGroup
      */
-    getUserAImgCls: function (clientGroup, userType, avatar) {
+    getUserAImgCls: function (userId, clientGroup, userType, avatar) {
         var aImgCls = '';
         if (userType && userType != 0 && common.isValid(avatar)) {
             return '<img src="' + avatar + '">';
@@ -533,6 +535,14 @@ var StudioChatMini = {
             aImgCls = "user_d";
         } else if ("register" == clientGroup) {
             aImgCls = "user_m";
+        } else if ("visitor"==clientGroup || userType == -1) {
+            userId = userId || "";
+            var idTmp = parseInt(userId.substring(userId.length - 2), 10);
+            if(isNaN(idTmp)){
+                idTmp = 100;
+            }
+            idTmp = (idTmp + 17) % 39;
+            return '<img src="' + StudioChatMini.filePath + '/upload/pic/header/chat/visitor/' + idTmp + '.png">';
         } else {
             aImgCls = "user_c";
         }

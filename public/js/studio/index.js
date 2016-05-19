@@ -2194,7 +2194,7 @@ var studioChat={
                 }
             }
         }
-        var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" isMe="'+isMe+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"><a href="javascript:" class="headimg" uid="'+fromUser.userId+'">'+studioChat.getUserAImgCls(fromUser.clientGroup,fromUser.userType,fromUser.avatar)+'</a><i></i>'+
+        var html='<div class="'+cls+'" id="'+fromUser.publishTime+'" isMe="'+isMe+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"><a href="javascript:" class="headimg" uid="'+fromUser.userId+'">'+studioChat.getUserAImgCls(fromUser.userId, fromUser.clientGroup,fromUser.userType,fromUser.avatar)+'</a><i></i>'+
         '<p><a href="javascript:"  class="'+uName+'">'+nickname+'</a><span class="dtime">'+studioChat.formatPublishTime(fromUser.publishTime)+'</span><span class="dcont">'+toUserHtml+pHtml+'</span></p>' +dialog+'</div>';
         return html;
     },
@@ -2227,9 +2227,10 @@ var studioChat={
     },
     /**
      * 提取头像样式
+     * @param userId
      * @param clientGroup
      */
-    getUserAImgCls:function(clientGroup,userType,avatar){
+    getUserAImgCls:function(userId, clientGroup,userType,avatar){
         var aImgCls='';
         if(userType && userType!=0 && common.isValid(avatar)){
             return '<img src="'+avatar+'">';
@@ -2241,6 +2242,14 @@ var studioChat={
             aImgCls="user_d";
         }else if("register"==clientGroup){
             aImgCls="user_m";
+        }else if("visitor"==clientGroup || userType == -1){
+            userId = userId || "";
+            var idTmp = parseInt(userId.substring(userId.length - 2), 10);
+            if(isNaN(idTmp)){
+                idTmp = 100;
+            }
+            idTmp = (idTmp + 17) % 39;
+            return '<img src="' + studioChat.filePath + '/upload/pic/header/chat/visitor/' + idTmp + '.png">';
         }else{
             aImgCls="user_c";
         }
@@ -2388,7 +2397,7 @@ var studioChat={
                 seq = "0";
             }
             var lis=$("#userListId li"),
-                liDom='<li id="'+row.userId+'" t="'+seq+'" utype="'+row.userType+'">'+dialogHtml+'<a href="javascript:" t="header" class="' + unameCls + '"><div class="headimg">'+studioChat.getUserAImgCls(row.clientGroup,row.userType,row.avatar)+'</div>'+row.nickname+isMeHtml+'</a></li>';
+                liDom='<li id="'+row.userId+'" t="'+seq+'" utype="'+row.userType+'">'+dialogHtml+'<a href="javascript:" t="header" class="' + unameCls + '"><div class="headimg">'+studioChat.getUserAImgCls(row.userId, row.clientGroup,row.userType,row.avatar)+'</div>'+row.nickname+isMeHtml+'</a></li>';
             if(lis.length==0){
                 $("#userListId").append(liDom);
             }else if(isMeHtml!=""){
