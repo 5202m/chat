@@ -204,6 +204,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .dialogbtn a.d1:hover span { border:0}
 .dialogbtn a:hover b{background-position:-70px -325px; }
 .dialogbtn a.d2:hover b{background-position:-70px -355px; }
+.txt_dia {color:#0BA1EC;margin-right:5px;}
 
 /*响应式*/
 .wid1 .te_list .te_btn i{ /*left:12px;*/}

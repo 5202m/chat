@@ -2175,10 +2175,11 @@ var studioChat={
             nickname='我';
             isMe='true';
         }else{
-            if(fromUser.userType==2){
+            if(fromUser.userType==3){
+                nickname += "&nbsp;（助理）";
+            }else if(fromUser.userType==2){
                 cls+='analyst';
-            }
-            if(fromUser.userType==1){
+            }else if(fromUser.userType==1){
                 cls+='admin';
             }
             dialog=studioChat.getDialogHtml(fromUser.userId,nickname,fromUser.userType);

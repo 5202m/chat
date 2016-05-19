@@ -943,9 +943,9 @@ var studioChatMb={
      */
     setDialog:function(userId,nickname,talkStyle,userType,avatar,txt){
         if(talkStyle!=1){
-            if("visitor"==studioChatMb.userInfo.clientGroup){
-                return;
-            }
+            //if("visitor"==studioChatMb.userInfo.clientGroup){
+            //    return;
+            //}
             $("#contentText .txt_dia").remove();
             $("#contentText").html($("#contentText").html().replace(/^((&nbsp;)+)/g,''));
             var loc_txt = txt ? ('<input type="hidden" value="' + txt + '">') : '';
@@ -1050,11 +1050,12 @@ var studioChatMb={
             nickname='我';
             isMe='true';
         }else{
-            if(fromUser.userType==2){
-                cls+='expert-li';
-            }
-            if(fromUser.userType==1){
-                cls+='visitor-li';
+            if(fromUser.userType==3){
+                nickname += "&nbsp;（助理）";
+            }else if(fromUser.userType==2){
+                cls+='analyst';
+            }else if(fromUser.userType==1){
+                cls+='admin';
             }
             dialog=studioChatMb.getDialogHtml(fromUser.userId,nickname,fromUser.userType);
             if(!isLoadData && toUser){

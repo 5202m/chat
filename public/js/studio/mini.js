@@ -457,11 +457,12 @@ var StudioChatMini = {
             nickname = '我';
             isMe = 'true';
         } else {
-            if (fromUser.userType == 2) {
-                cls += 'analyst';
-            }
-            if (fromUser.userType == 1) {
-                cls += 'admin';
+            if(fromUser.userType==3){
+                nickname += "&nbsp;（助理）";
+            }else if(fromUser.userType==2){
+                cls+='analyst';
+            }else if(fromUser.userType==1){
+                cls+='admin';
             }
             if (!isLoadData && toUser) {
                 if (StudioChatMini.userInfo.userId == toUser.userId) {
