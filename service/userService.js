@@ -729,7 +729,7 @@ var userService = {
                     var allData = JSON.parse(tmpData);
                     var result = allData.result,row=null;
                     if (allData && allData.code == 'SUCCESS'&& result!=null && result.code=='OK' && (row=result.result)!=null) {
-                        if (row.mobilePhone && (row.mobilePhone.indexOf(mobile)!=-1||mobile.indexOf(row.mobilePhone)!=-1)) {
+                        if (row.mobilePhone && (row.mobilePhone.indexOf(mobile)!=-1||mobile.indexOf(common.rmMobilePrefix(row.mobilePhone))!=-1)) {
                             flagResult.flag = 1;//存在记录
                         }else {
                             flagResult.flag =0;//没有对应记录
@@ -749,7 +749,7 @@ var userService = {
                         var allData = JSON.parse(tmpData);
                         if (allData && allData.code == 'SUCCESS'&& allData.result!=null) {
                             var dbPhone=allData.result.mobilePhone;
-                            if (dbPhone &&(dbPhone.indexOf(mobile)!=-1||mobile.indexOf(dbPhone)!=-1)) {
+                            if (dbPhone &&(dbPhone.indexOf(mobile)!=-1||mobile.indexOf(common.rmMobilePrefix(dbPhone))!=-1)) {
                                 flagResult.flag = 1;//存在记录
                             }else {
                                 flagResult.flag = 0;//没有对应记录

@@ -292,6 +292,14 @@ var common = {
             lh=length-1;
         }
         return lh<0?0:lh;
+    },
+    /**
+     * 移除手机号码前缀（国号，区号等）
+     * @param mobile
+     * @returns {XML|string|void}
+     */
+    rmMobilePrefix:function(mobile){
+       return  mobile.replace(/^[0-9]+(-+)/g,'');
     }
 };
 //导出类
