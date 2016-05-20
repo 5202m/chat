@@ -85,7 +85,9 @@ var studioChatMbIdx={
             obj.userType=-1;
             store.set(key,obj);
             //首次显示收藏提示
-            $(".collect-tip").fadeIn().delay(60000).fadeOut();
+            if(this.fromPlatform != "wechat"){
+                $(".collect-tip").fadeIn().delay(60000).fadeOut();
+            }
         }else{
             obj=keyVal;
         }
@@ -197,7 +199,12 @@ var studioChatMbIdx={
                 studioMbPop.popBox("person");
             }else{
                 //未登录，弹出登录框
-                studioMbPop.popBox("login", {groupId : "", clientGroup : studioChatMbIdx.userInfo.clientGroup, clientStoreId : studioChatMbIdx.userInfo.clientStoreId});
+                studioMbPop.popBox("login", {
+                    groupId : "",
+                    clientGroup : studioChatMbIdx.userInfo.clientGroup,
+                    clientStoreId : studioChatMbIdx.userInfo.clientStoreId,
+                    platform : studioChatMbIdx.fromPlatform
+                });
             }
         });
     },
@@ -260,7 +267,12 @@ var studioChatMbIdx={
             var loc_groupId = loc_liDom.attr("gi");
             if(loc_liDom.attr("ga") != 'true'){
                 if(studioChatMbIdx.userInfo.clientGroup == "visitor"){
-                    studioMbPop.popBox("login", {groupId : loc_groupId, clientGroup : studioChatMbIdx.userInfo.clientGroup, clientStoreId : studioChatMbIdx.userInfo.clientStoreId});
+                    studioMbPop.popBox("login", {
+                        groupId : loc_groupId,
+                        clientGroup : studioChatMbIdx.userInfo.clientGroup,
+                        clientStoreId : studioChatMbIdx.userInfo.clientStoreId,
+                        platform : studioChatMbIdx.fromPlatform
+                    });
                 }else if(studioChatMbIdx.checkClientGroup("vip")){
                     studioMbPop.showMessage("该房间仅对新客户开放，如有疑问，请联系老师助理。");
                 }else{

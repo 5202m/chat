@@ -139,7 +139,7 @@ var studioMbLogin = {
     /**
      * 初始化（页面初始化）
      */
-    init : function(groupId, clientStoreId, clientGroup, closeable){
+    init : function(platform, groupId, clientStoreId, clientGroup, closeable){
         this.groupId = groupId;
         this.clientStoreId = clientStoreId;
         this.clientGroup = clientGroup;
@@ -149,6 +149,9 @@ var studioMbLogin = {
             $("#loginPop .pop-close").show();
         }else{
             $("#loginPop .pop-close").hide();
+        }
+        if(platform == "wechat"){
+            $("#loginForm .auto_login").hide();
         }
     },
     /**
@@ -429,7 +432,7 @@ var studioMbPop = {
         if(msg){
             var loc_item = $(".errorbox");
             loc_item.hide().find("div").html(msg);
-            loc_item.fadeIn().delay(1000).fadeOut(200);
+            loc_item.fadeIn().delay(1800).fadeOut(200);
         }
     },
     /**
@@ -514,7 +517,7 @@ var studioMbPop = {
 
             case "login" :
                 this.popShow($("#loginPop"));
-                this.Login.init(ops.groupId, ops.clientStoreId, ops.clientGroup, ops.closeable !== false);
+                this.Login.init(ops.platform, ops.groupId, ops.clientStoreId, ops.clientGroup, ops.closeable !== false);
                 break;
 
             case "set" :

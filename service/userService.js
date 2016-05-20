@@ -142,12 +142,13 @@ var userService = {
     },
     /**
      * 验证规则
+     * @param userId
      * @param isWh 是否私聊
      * @param groupId
      * @param content
      * @param callback
      */
-    verifyRule:function(isWh,userType,groupId,content,callback){
+    verifyRule:function(userId, isWh,userType,groupId,content,callback){
         var isImg=content.msgType!='text',contentVal=content.value;
         if(common.isBlank(contentVal)){
             callback({isOK:false,tip:"发送的内容有误，已被拒绝!"});
@@ -178,6 +179,7 @@ var userService = {
             var ruleArr=row.chatRules,resultTip=[],beforeVal='',type='',tip='';
             var urlArr=[],urlTipArr=[],ruleRow=null,needApproval=false,needApprovalTip=null,isPass=false;
             //先检查禁止发言的规则
+            var isVisitor = (constant.roleUserType.visitor == userType);
             for(var i in ruleArr){
                 ruleRow=ruleArr[i];
                 beforeVal=ruleRow.beforeRuleVal;
@@ -193,10 +195,14 @@ var userService = {
                     if(isPass && type=='speak_not_allowed'){//禁言
                         callback({isOK:false,tip:tip});
                         return;
-                    }
-                    if(!isPass && type=='speak_allowed'){//允许发言
+                    }else if(!isPass && type=='speak_allowed'){//允许发言
                         callback({isOK:false,tip:tip});
                         return;
+                    }else if(isVisitor && type=='visitor_filter'){//允许游客发言
+                        if(!isPass || common.containSplitStr(beforeVal, userId)){
+                            callback({isOK:false, tip:tip});
+                            return;
+                        }
                     }
                 }
                 if(isImg && isPass && type=='img_not_allowed'){//禁止发送图片
@@ -383,6 +389,7 @@ var userService = {
                 chatUserGroup:[{
                         _id:userInfo.groupType,//组的大类别，区分是微信组、直播间
                         userId:userInfo.userId,//第三方用户id，对于微信，userId为微信的openId;
+                        thirdId : userInfo.thirdId,
                         avatar:userInfo.avatar,//头像
                         nickname:userInfo.nickname,//昵称
                         accountNo:userInfo.accountNo, //账号
@@ -461,6 +468,7 @@ var userService = {
         }else{
             var jsonStr={
                 _id:userInfo.groupType,userId:userInfo.userId,avatar:userInfo.avatar,nickname:userInfo.nickname,pwd:userInfo.pwd,
+                thirdId : userInfo.thirdId,
                 clientGroup:userInfo.clientGroup,accountNo:userInfo.accountNo,userType:(userInfo.userType||constant.roleUserType.member), roleNo:userInfo.roleNo,
                 createDate:new Date(),
                 rooms:[{

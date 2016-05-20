@@ -8,6 +8,7 @@ var studioChatMb={
     filePath:'',
     apiUrl:'',
     currStudioAuth:false,//当前房间是否授权
+    visitorSpeak:false,//游客是否允许发言
     fromPlatform:null,//来源平台
     exStudioStr:'',//外接直播JSON字符串
     studioDate:'',//直播时间点
@@ -52,8 +53,13 @@ var studioChatMb={
         }
         //当前房间未授权，并且是游客
         if(!this.currStudioAuth && this.userInfo.clientGroup=='visitor'){
-            studioMbPop.popBox("login", {groupId : studioChatMb.userInfo.groupId, clientGroup : studioChatMb.userInfo.clientGroup, clientStoreId : studioChatMb.userInfo.clientStoreId, closeable:false});
-            $("#login_a").trigger("click", true); //弹出登录框，隐藏关闭按钮
+            studioMbPop.popBox("login", {
+                groupId : studioChatMb.userInfo.groupId,
+                clientGroup : studioChatMb.userInfo.clientGroup,
+                clientStoreId : studioChatMb.userInfo.clientStoreId,
+                platform : studioChatMb.fromPlatform,
+                closeable:false
+            });
         }
     },
     /**
@@ -67,7 +73,7 @@ var studioChatMb={
         //头部
         $("#header_ui").text(nickname);
         //个人信息
-        studioMbPop.Person.refreshNickName(nickname);
+        studioMbPop.Person.refreshNickname(nickname);
     },
     /**
      * 服务器时间更新
@@ -106,14 +112,19 @@ var studioChatMb={
         if(this.userInfo.clientGroup && this.userInfo.clientGroup=='visitor'){
             this.userInfo.nickname=obj.nickname;
             this.userInfo.userId=obj.userId;
-            /*$("#contentText").attr("contenteditable",false).append('<span style="margin:15px 5px;">亲，<a id="contentText_login" href="javascript:void(0);" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');
-            $("#contentText_login").click(function(){
-                studioMbPop.popBox("login", {groupId : studioChatMb.userInfo.groupId, clientStoreId : studioChatMb.userInfo.clientStoreId});
-            });*/
+            if(!this.visitorSpeak){
+                $("#contentText").attr("contenteditable",false).append('<span style="margin:15px 5px;">亲，<a id="contentText_login" href="javascript:void(0);" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">登录</a>&nbsp;&nbsp;后可以发言哦~</span>');
+                $("#contentText_login").click(function () {
+                    studioMbPop.popBox("login", {
+                        groupId: studioChatMb.userInfo.groupId,
+                        clientStoreId: studioChatMb.userInfo.clientStoreId,
+                        platform : studioChatMb.fromPlatform
+                    });
+                });
+            }
         }else{
             obj.loginId=this.userInfo.userId;
             store.set(key,obj);
-            //$("#contentText").html("").attr("contenteditable",true);
         }
         this.isNeverLogin=!common.isValid(obj.loginId);
     },
@@ -304,7 +315,12 @@ var studioChatMb={
                 studioMbPop.popBox("person");
             }else{
                 //未登录，弹出登录框
-                studioMbPop.popBox("login", {groupId : studioChatMb.userInfo.groupId, clientGroup : studioChatMb.userInfo.clientGroup, clientStoreId : studioChatMb.userInfo.clientStoreId});
+                studioMbPop.popBox("login", {
+                    groupId : studioChatMb.userInfo.groupId,
+                    clientGroup : studioChatMb.userInfo.clientGroup,
+                    clientStoreId : studioChatMb.userInfo.clientStoreId,
+                    platform : studioChatMb.fromPlatform
+                });
             }
         });
     },
@@ -382,8 +398,8 @@ var studioChatMb={
         }).blur(function(){
             //studioChatMb.view.boardCtrl(1);
         }).bind("input", function(){
-            //studioChatMb.userInfo.clientGroup!='visitor' &&  游客可以发言
-            var isOk = ($.trim($(this).text())!=$(this).find(".txt_dia").text() || $(this).find("img").size() > 0);
+            var isOk =  (studioChatMb.visitorSpeak || studioChatMb.userInfo.clientGroup!='visitor')
+                && ($.trim($(this).text())!=$(this).find(".txt_dia").text() || $(this).find("img").size() > 0);
             if(isOk){
                 $("#sendBtn").addClass("pressed");
             }else{
@@ -395,9 +411,9 @@ var studioChatMb={
         $("#sendBtn").click(function(){
             $(this).blur();
             studioChatMb.view.boardCtrl(1);
-           /* if(studioChatMb.userInfo.clientGroup=='visitor'){
+            if(!studioChatMb.visitorSpeak && studioChatMb.userInfo.clientGroup=='visitor'){
                 return;
-            }*/
+            }
             if(studioChatMb.userInfo.isSetName === false){
                 studioMbPop.popBox("set", {studioChatObj : studioChatMb});
                 return;
@@ -943,9 +959,9 @@ var studioChatMb={
      */
     setDialog:function(userId,nickname,talkStyle,userType,avatar,txt){
         if(talkStyle!=1){
-            //if("visitor"==studioChatMb.userInfo.clientGroup){
-            //    return;
-            //}
+            if(!studioChatMb.visitorSpeak && "visitor"==studioChatMb.userInfo.clientGroup){
+                return;
+            }
             $("#contentText .txt_dia").remove();
             $("#contentText").html($("#contentText").html().replace(/^((&nbsp;)+)/g,''));
             var loc_txt = txt ? ('<input type="hidden" value="' + txt + '">') : '';
@@ -1174,12 +1190,10 @@ var studioChatMb={
         if(studioChatMb.userInfo.userId!=userId){
             var hasMainDiv=false,gIdDom=$("#studioListId a[class~=ing]"),mainDiv='<div class="c-menu" style="display:none;" nk="'+nickname+'" uid="'+userId+'" utype="'+userType+'">';
             mainDiv += "<ul>";
-            /*if(studioChatMb.userInfo.userId.indexOf('visitor_')==-1 && userId.indexOf('visitor_')==-1){
+            if(studioChatMb.visitorSpeak || (studioChatMb.userInfo.userId.indexOf('visitor_')==-1 && userId && userId.indexOf('visitor_')==-1)){
                 mainDiv+='<li><a href="javascript:void(0)" t="0"><i></i>@TA</a></li>';
                 hasMainDiv=true;
-            }*/
-            mainDiv+='<li><a href="javascript:void(0)" t="0"><i></i>@TA</a></li>';
-            hasMainDiv=true;
+            }
             if(gIdDom.attr("aw")=="true"&& common.containSplitStr(gIdDom.attr("awr"),userType)){
                 mainDiv+='<li><a href="javascript:void(0)" t="1"><i></i>私信</a></li>';
                 hasMainDiv=true;

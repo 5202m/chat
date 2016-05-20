@@ -311,6 +311,7 @@ var studioService = {
      * @param type
      *          1-手机登录,匹配手机号
      *          2-自动登录,匹配userId
+     *          3-第三方平台自动登录,匹配thirdId
      * @param callback
      */
     login:function(userInfo,type,callback){
@@ -332,6 +333,15 @@ var studioService = {
                     }}
                 };
                 break;
+            case 3: //thirdId登录
+                searchObj={
+                    valid : 1,
+                    "loginPlatform.chatUserGroup" : {$elemMatch : {
+                        "_id" : userInfo.groupType,
+                        "thirdId" : userInfo.thirdId
+                    }}
+                };
+                break;
             default :
                 result.error=errorMessage.code_1000;
                 callback(result);
@@ -343,6 +353,15 @@ var studioService = {
                 var info=row.loginPlatform.chatUserGroup[0];
                 result.userInfo={mobilePhone:row.mobilePhone,userId:info.userId,nickname:info.nickname};
                 result.userInfo.clientGroup=info.vipUser?constant.clientGroup.vip:info.clientGroup;
+                if(type == 1 && userInfo.thirdId && !info.thirdId){ //微信直播间登录，如果有openId,则
+                    member.update(searchObj, {
+                        $set : {"loginPlatform.chatUserGroup.$.thirdId" : userInfo.thirdId}
+                    },function(err){
+                        if(err){
+                            logger.error("login << save thirdId fail:"+err);
+                        }
+                    });
+                }
                 callback(result);
             }else{
                 result.error=errorMessage.code_1008;

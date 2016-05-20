@@ -91,7 +91,28 @@ router.get('/admin', function(req, res) {
 router.get('/', function(req, res) {
     var chatUser=req.session.studioUserInfo,clientGroup=constant.clientGroup.visitor;
     var initVisit=req.session.initVisit;
-    if(chatUser && chatUser.isLogin){
+    var openId = req.query["userId"];
+    if(openId) {
+        studioService.login({thirdId:openId,groupType:constant.fromPlatform.studio}, 3, function(loginRes){
+            if(loginRes.isOK){
+                loginRes.userInfo.isLogin=true;
+                req.session.studioUserInfo=loginRes.userInfo;
+                req.session.studioUserInfo.firstLogin=true;
+            }else{
+                req.session.studioUserInfo = {
+                    isLogin : false,
+                    clientGroup : constant.clientGroup.visitor,
+                    userType : constant.roleUserType.visitor,
+                    initVisit : (initVisit!=null||initVisit!=undefined)?initVisit:true,
+                    mobilePhone : null,
+                    thirdId : openId
+                };
+                req.session.initVisit=null;//清空对应值
+            }
+            res.redirect("/studio?platform=wechat");
+        });
+        return;
+    }else if(chatUser && chatUser.isLogin){
         clientGroup=chatUser.clientGroup;
     }else{
         if(!chatUser){
@@ -118,7 +139,7 @@ router.get('/', function(req, res) {
     if(fromPlatform && !chatUser.toGroup && !chatUser.groupId && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform)){
         chatUser.groupId=config.studioThirdUsed.roomId;
     }
-    var redirctUrl = fromPlatform ? ("?fromPlatform=" + fromPlatform) : "";
+    var redirctUrl = fromPlatform ? ("?platform=" + fromPlatform) : "";
 
     if(isMobile && !chatUser.toGroup && !chatUser.groupId){
         chatUser.groupId = null;
@@ -175,6 +196,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         viewDataObj.serverTime=new Date().getTime();
         viewDataObj.syllabusData='';
         viewDataObj.currStudioAuth=false;
+        viewDataObj.visitorSpeak=false;
         if(!data.studioList){
             if(data.syllabusResult){
                 var syResult=data.syllabusResult;
@@ -186,24 +208,28 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
                 rowTmp.id=row._id;
                 rowTmp.name=row.name;
                 rowTmp.level=row.level;
+                rowTmp.isCurr=(row._id==groupId);
+                //聊天室规则
                 rowTmp.allowWhisper=common.containSplitStr(row.talkStyle,1);
-                if(rowTmp.allowWhisper){
-                    rowTmp.whisperRoles=row.whisperRoles;
-                    var ruleArr=row.chatRules,isPass=true;
-                    for(var i in ruleArr) {
-                        isPass = common.dateTimeWeekCheck(ruleArr[i].periodDate, true);
-                        if (ruleArr[i].type == 'whisper_allowed' && !isPass) {
+                rowTmp.whisperRoles=row.whisperRoles;
+                rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.clientGroup,constant.clientGroup.visitor);
+                var ruleArr=row.chatRules,isPass=true;
+                for(var i in ruleArr) {
+                    isPass = common.dateTimeWeekCheck(ruleArr[i].periodDate, true);
+                    if (ruleArr[i].type == 'whisper_allowed') {
+                        if(rowTmp.allowWhisper && !isPass){
                             rowTmp.allowWhisper=false;
                             rowTmp.whisperRoles=null;
-                            break;
+                        }
+                    }else if(ruleArr[i].type == 'visitor_filter'){
+                        if(rowTmp.isCurr && rowTmp.allowVisitor && isPass){
+                            viewDataObj.visitorSpeak = true;
                         }
                     }
                 }
                 rowTmp.disable=(!common.containSplitStr(row.clientGroup,clientGroup));
-                rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.clientGroup,constant.clientGroup.visitor);
                 rowTmp.remark=common.trim(row.remark);
                 rowTmp.clientGroup=common.trim(row.clientGroup);
-                rowTmp.isCurr=(row._id==groupId);
                 rowTmp.isOpen=common.dateTimeWeekCheck(row.openDate, true);
                 if(rowTmp.isCurr) {
                     viewDataObj.currStudioAuth = !rowTmp.disable;
@@ -291,7 +317,8 @@ router.post('/login',function(req, res){
                     res.json(result);
                 }
             }else{
-                studioService.login({mobilePhone:mobilePhone,groupType:constant.fromPlatform.studio}, 1, function(loginRes){
+                var thirdId = req.session.studioUserInfo.thirdId || null;
+                studioService.login({mobilePhone:mobilePhone, thirdId:thirdId, groupType:constant.fromPlatform.studio}, 1, function(loginRes){
                     if(loginRes.isOK && constant.clientGroup.real != loginRes.userInfo.clientGroup){
                         //real 类型客户将拆分成A和N客户
                         loginRes.userInfo.isLogin=true;
@@ -314,7 +341,7 @@ router.post('/login',function(req, res){
                                     res.json({isOK:true, userInfo : {clientGroup : loginRes.userInfo.clientGroup}}); //即使修改账户级别失败也登录成功
                                 });
                             }else{
-                                var userInfo={mobilePhone:mobilePhone, ip:common.getClientIp(req), groupType:constant.fromPlatform.studio, accountNo: accountNo};
+                                var userInfo={mobilePhone:mobilePhone, ip:common.getClientIp(req), groupType:constant.fromPlatform.studio, accountNo: accountNo, thirdId:thirdId};
                                 studioService.studioRegister(userInfo,clientGroup,function(result){
                                     if(result.isOK){
                                         req.session.studioUserInfo={clientStoreId:clientStoreId,firstLogin:true,isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
