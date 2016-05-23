@@ -615,7 +615,7 @@ var chatService ={
                 userSaveInfo.userId=userInfo.userId;
                 userSaveInfo.toUser=userInfo.toUser;
                 //验证规则
-                userService.verifyRule(userInfo.userId, isWh,userInfo.userType,groupId,data.content,function(resultVal){
+                userService.verifyRule(userInfo.nickname, isWh,userInfo.userType,groupId,data.content,function(resultVal){
                     if(!resultVal.isOK){//匹配规则，则按规则逻辑提示
                         logger.info('acceptMsg=>resultVal:'+JSON.stringify(resultVal));
                         //通知自己的客户端

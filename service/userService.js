@@ -142,13 +142,13 @@ var userService = {
     },
     /**
      * 验证规则
-     * @param userId
+     * @param nickname
      * @param isWh 是否私聊
      * @param groupId
      * @param content
      * @param callback
      */
-    verifyRule:function(userId, isWh,userType,groupId,content,callback){
+    verifyRule:function(nickname, isWh,userType,groupId,content,callback){
         var isImg=content.msgType!='text',contentVal=content.value;
         if(common.isBlank(contentVal)){
             callback({isOK:false,tip:"发送的内容有误，已被拒绝!"});
@@ -199,7 +199,7 @@ var userService = {
                         callback({isOK:false,tip:tip});
                         return;
                     }else if(isVisitor && type=='visitor_filter'){//允许游客发言
-                        if(!isPass || common.containSplitStr(beforeVal, userId)){
+                        if(!isPass || (beforeVal && beforeVal.indexOf(nickname) != -1)){
                             callback({isOK:false, tip:tip});
                             return;
                         }
