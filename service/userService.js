@@ -198,11 +198,9 @@ var userService = {
                     }else if(!isPass && type=='speak_allowed'){//允许发言
                         callback({isOK:false,tip:tip});
                         return;
-                    }else if(isVisitor && type=='visitor_filter'){//允许游客发言
-                        if(!isPass || (beforeVal && beforeVal.indexOf(nickname) != -1)){
-                            callback({isOK:false, tip:tip});
-                            return;
-                        }
+                    }else if(!isPass && isVisitor && type=='visitor_filter'){//允许游客发言（默认游客不允许发言）
+                        callback({isOK:false, tip:tip});
+                        return;
                     }
                 }
                 if(isImg && isPass && type=='img_not_allowed'){//禁止发送图片
@@ -212,6 +210,12 @@ var userService = {
                 if(!isImg && isPass && type!='speak_not_allowed' && common.isValid(beforeVal)){
                     beforeVal=beforeVal.replace(/(,|，)$/,'');//去掉结尾的逗号
                     beforeVal=beforeVal.replace(/,|，/g,'|');//逗号替换成|，便于统一使用正则表达式
+                    if(type=='visitor_filter'){
+                        if(isVisitor && eval('/'+beforeVal+'/').test(nickname)){
+                            callback({isOK:false,tip:tip});
+                            return;
+                        }
+                    }
                     if(type=='keyword_filter'){//过滤关键字或过滤链接
                         if(eval('/'+beforeVal+'/').test(contentVal)){
                             callback({isOK:false,tip:tip});
