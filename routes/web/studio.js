@@ -138,6 +138,8 @@ router.get('/', function(req, res) {
     var fromPlatform=req.query["platform"];
     if(fromPlatform && !chatUser.toGroup && !chatUser.groupId && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform)){
         chatUser.groupId=config.studioThirdUsed.roomId;
+    }else if(fromPlatform == "wechat"){
+        chatUser.groupId = null; //微信每次请求直接跳转到首页
     }
     var redirctUrl = fromPlatform ? ("?platform=" + fromPlatform) : "";
 
