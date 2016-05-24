@@ -319,7 +319,7 @@ router.post('/login',function(req, res){
                     res.json(result);
                 }
             }else{
-                var thirdId = req.session.studioUserInfo.thirdId || null;
+                var thirdId = (req.session.studioUserInfo && req.session.studioUserInfo.thirdId) || null;
                 studioService.login({mobilePhone:mobilePhone, thirdId:thirdId, groupType:constant.fromPlatform.studio}, 1, function(loginRes){
                     if(loginRes.isOK && constant.clientGroup.real != loginRes.userInfo.clientGroup){
                         //real 类型客户将拆分成A和N客户
