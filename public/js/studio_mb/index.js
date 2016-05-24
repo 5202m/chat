@@ -278,9 +278,9 @@ var studioChatMbIdx={
                         platform : studioChatMbIdx.fromPlatform
                     });
                 }else if(studioChatMbIdx.checkClientGroup("vip")){
-                    studioMbPop.showMessage("该房间仅对新客户开放，如有疑问，请联系老师助理。");
+                    studioMbPop.showMessage("该房间仅对新客户开放。");
                 }else{
-                    studioMbPop.showMessage("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
+                    studioMbPop.showMessage("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。");
                 }
                 return false;
             }
@@ -295,9 +295,9 @@ var studioChatMbIdx={
                     if(result.error && result.error.errcode === "1000"){
                         studioMbPop.showMessage("您长时间未操作，请刷新页面后重试！");
                     }else if(studioChat.checkClientGroup("vip")){
-                        studioMbPop.showMessage("该房间仅对新客户开放，如有疑问，请联系老师助理。");
+                        studioMbPop.showMessage("该房间仅对新客户开放。");
                     }else{
-                        studioMbPop.showMessage("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
+                        studioMbPop.showMessage("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。");
                     }
                 }else{
                     studioMbPop.reload();
@@ -400,12 +400,17 @@ var studioChatMbIdx={
             if(data && (info=data.informations).result==0){
                 var list=info.informationList,row=null;
                 var loc_html = [];
-                var gaKey = (type2 == 5) ? "tradstrategy_" : "comment_";
+                var gaKey = (type2 == 5) ? "tradstrategy_" : "comment_", gaStr;
                 if(list && list.length > 0){
                     loc_html.push('<ul class="trade-ul">');
                     for(var i in list){
                         row=list[i];
-                        loc_html.push('<li><a onclick="_gaq.push([\'_trackEvent\', \'m_24k_studio\', \'' + gaKey + row.id + '\', \'content_middle\',1,true]);" href="'+studioChatMbIdx.mobile24kPath+'/comment/'+row.id+'_'+row.contenttype2+'.html" target="_blank">');
+                        if(!isAppend){
+                            gaStr = ' onclick="_gaq.push([\'_trackEvent\', \'m_24k_studio\', \'' + gaKey + i + '\', \'content_middle\',1,true]);"'
+                        }else{
+                            gaStr = '';
+                        }
+                        loc_html.push('<li><a' + gaStr + ' href="'+studioChatMbIdx.mobile24kPath+'/comment/'+row.id+'_'+row.contenttype2+'.html" target="_blank">');
                         loc_html.push('<span>'+row.title+'</span>');
                         loc_html.push('<time>'+(row.datestr ? row.datestr.replace(/(^\d{4}-)|(:\d{2}$)/g, "") : "") +'</time>');
                         loc_html.push('</a></li>');
