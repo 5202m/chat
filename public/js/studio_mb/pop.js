@@ -193,7 +193,7 @@ var studioMbLogin = {
                                     }
                                     window.setTimeout(function(){
                                         studioMbPop.reload();
-                                    }, 1200);
+                                    }, 2200);
                                 }
                             }
                         },true,function(err){
@@ -436,7 +436,7 @@ var studioMbPop = {
         if(msg){
             var loc_item = $(".errorbox");
             loc_item.hide().find("div").html(msg);
-            loc_item.fadeIn().delay(1800).fadeOut(200);
+            loc_item.fadeIn().delay(2000).fadeOut(200);
         }
     },
     /**
