@@ -214,6 +214,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
                 //聊天室规则
                 rowTmp.allowWhisper=common.containSplitStr(row.talkStyle,1);
                 rowTmp.whisperRoles=row.whisperRoles;
+                rowTmp.disable=(!common.containSplitStr(row.clientGroup,clientGroup));
                 rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.clientGroup,constant.clientGroup.visitor);
                 var ruleArr=row.chatRules,isPass=true;
                 for(var i in ruleArr) {
@@ -229,7 +230,6 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
                         }
                     }
                 }
-                rowTmp.disable=(!common.containSplitStr(row.clientGroup,clientGroup));
                 rowTmp.remark=common.trim(row.remark);
                 rowTmp.clientGroup=common.trim(row.clientGroup);
                 rowTmp.isOpen=common.dateTimeWeekCheck(row.openDate, true);
