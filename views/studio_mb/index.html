@@ -122,9 +122,9 @@
 <!-- 底部悬浮菜单begin-->
 <div class="fob_open">
     <div>
-        <a target="_blank" onclick="javascript:void(0)" class="fb_open_real" href="http://m.24k.hk/realaccount_open.html">开真实账户</a>
-        <a target="_blank" onclick="javascript:void(0)" class="fb_open_analog" href="http://m.24k.hk/demoaccount_open.html">无风险模拟</a>
-        <a onclick="openLive800Chat();" class="fb_consult" style="background-image:none"><i class="qq-fon"><s></s></i>立即咨询</a>
+        <a target="_blank" onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'open_real_account', 'content_bottom',1,true]);" class="fb_open_real" href="http://m.24k.hk/realaccount_open.html">开真实账户</a>
+        <a target="_blank" onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'open_demo_account', 'content_bottom',1,true]);" class="fb_open_analog" href="http://m.24k.hk/demoaccount_open.html">无风险模拟</a>
+        <a onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'chat_qq', 'content_bottom',1,true]);openLive800Chat();" class="fb_consult" style="background-image:none"><i class="qq-fon"><s></s></i>立即咨询</a>
     </div>
 </div>
 <!-- 底部悬浮菜单end-->
@@ -153,6 +153,7 @@
 
 <script type="text/javascript" src="/js/lib/swiper.min.js"></script>
 <script type="text/javascript" src="/js/util/common.min.js"></script>
+<script type="text/javascript" src="/js/util/chatAnalyze.js"></script>
 <script type="text/javascript" src="/js/studio_mb/index.min.js?t=<%=new Date().getTime()%>"></script>
 <script type="text/javascript">
 $(function(){

@@ -10,8 +10,6 @@ var studioChatMb={
     currStudioAuth:false,//当前房间是否授权
     visitorSpeak:false,//游客是否允许发言
     fromPlatform:null,//来源平台
-    exStudioStr:'',//外接直播JSON字符串
-    studioDate:'',//直播时间点
     serverTime:0,//服务器时间
     pushObj:{
         whPush : {},   //私聊推送信息
@@ -231,7 +229,7 @@ var studioChatMb={
                         loc_html.push('<ul class="teach-ul">');
                     }
                     row=data[i].detailList[0];
-                    loc_html.push('<li><a title="' + row.title + '" href="javascript:void(0)" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'"><i></i><span>'+row.title+'</span></a></li>');
+                    loc_html.push('<li><a title="' + row.title + '" href="javascript:_gaq.push([\'_trackEvent\', \'m_24k_studio\', \'teachvideo_'+data[i]._id+'\', \'content_middle\',1,true]);" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'"><i></i><span>'+row.title+'</span></a></li>');
                     if(i % 5 == 4 || i == lenI - 1){
                         loc_html.push('</ul>');
                     }
@@ -297,7 +295,10 @@ var studioChatMb={
                 if(type=='bulletinTab'){
                     studioChatMb.setBulletin();
                 }else if(type=='TradeArticleTab'){
+                    _gaq.push(['_trackEvent', 'm_24k_studio', 'suggest_tab', 'content_middle',1,true]);
                     studioChatMb.setTradeArticle();
+                }else if(type == 'videosTab'){
+                    _gaq.push(['_trackEvent', 'm_24k_studio', 'teachvideo_tab', 'content_middle',1,true]);
                 }
             }
             cenTab.slideTo($(this).index(), 300, false);
@@ -355,7 +356,9 @@ var studioChatMb={
                 $('.view_select .selectlist a').removeClass("on");
                 $('.view_select .selected').text($(this).text());
                 $(this).addClass("on");
-                studioChatMb.showViewSelect($(this).attr("t"));
+                var type = $(this).attr("t");
+                _gaq.push(['_trackEvent', 'm_24k_studio', 'filter_' + type, 'content_left',1,true]);
+                studioChatMb.showViewSelect(type);
             }
         });
 
@@ -675,8 +678,9 @@ var studioChatMb={
              */
             util.toucher($("#backToLive")[0])
                 .on('singleTap',function(){
-                    //点击返回直播，重新更新服务器时间后返回直播，手机锁屏对定时器有一定影响
+                	//点击返回直播
                     studioChatMb.socket.emit('serverTime');
+                    //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
                     window.setTimeout(function(){
                         studioChatMb.video.start(true);
                     }, 1000);

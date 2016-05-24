@@ -226,18 +226,22 @@ var studioChatMbIdx={
             $(this).addClass('on');
             var type = $(this).attr("t");
             if(type=='tradeInfoTab'){
+                _gaq.push(['_trackEvent', 'm_24k_studio', 'tradstrategy_tab', 'content_middle',1,true]);
                 studioChatMbIdx.setNewsInfo("#tradeInfoTab .boxcont",false,3,5);
             }else if(type=='commentTab'){
+                _gaq.push(['_trackEvent', 'm_24k_studio', 'comment_tab', 'content_middle',1,true]);
                 studioChatMbIdx.setNewsInfo("#commentTab .boxcont",false,3,3);
             }
             event.data.slideTo($(this).index(), 300, false);
         });
 
         $("#tradeInfoTab .moreitem").bind("click", function(){
+            _gaq.push(['_trackEvent', 'm_24k_studio', 'tradstrategy_more', 'content_middle',1,true]);
             studioChatMbIdx.setNewsInfo("#tradeInfoTab .boxcont",true,3,5);
         });
 
         $("#commentTab .moreitem").bind("click", function(){
+            _gaq.push(['_trackEvent', 'm_24k_studio', 'comment_more', 'content_middle',1,true]);
             studioChatMbIdx.setNewsInfo("#commentTab .boxcont",true,3,3);
         });
     },
@@ -353,6 +357,8 @@ var studioChatMbIdx={
         });
         //显示课程表
         $('.btns .timebtn').click(function(){
+            var groupId = $(this).parents("li:first").attr("gi");
+            _gaq.push(['_trackEvent', 'm_24k_studio', 'schedule_' + groupId, 'content_middle', 1, true]);
             $(".pop-time .sc_cont").empty().append($(this).parents("li").find(".timetable").clone(true));
             studioMbPop.popShow($('.pop-time'));
             return false;
@@ -394,11 +400,12 @@ var studioChatMbIdx={
             if(data && (info=data.informations).result==0){
                 var list=info.informationList,row=null;
                 var loc_html = [];
+                var gaKey = (type2 == 5) ? "tradstrategy_" : "comment_";
                 if(list && list.length > 0){
                     loc_html.push('<ul class="trade-ul">');
                     for(var i in list){
                         row=list[i];
-                        loc_html.push('<li><a href="'+studioChatMbIdx.mobile24kPath+'/comment/'+row.id+'_'+row.contenttype2+'.html" target="_blank">');
+                        loc_html.push('<li><a onclick="_gaq.push([\'_trackEvent\', \'m_24k_studio\', \'' + gaKey + row.id + '\', \'content_middle\',1,true]);" href="'+studioChatMbIdx.mobile24kPath+'/comment/'+row.id+'_'+row.contenttype2+'.html" target="_blank">');
                         loc_html.push('<span>'+row.title+'</span>');
                         loc_html.push('<time>'+(row.datestr ? row.datestr.replace(/(^\d{4}-)|(:\d{2}$)/g, "") : "") +'</time>');
                         loc_html.push('</a></li>');

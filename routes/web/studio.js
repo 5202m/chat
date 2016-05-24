@@ -310,7 +310,7 @@ router.post('/login',function(req, res){
     }else if(!isAutoLogin){
         //手机号+验证码登陆
         pmApiService.checkMobileVerifyCode(mobilePhone, "studio_login", verifyCode, function(chkCodeRes){
-            if(!chkCodeRes || chkCodeRes.result != 0 || !chkCodeRes.data){
+        	if(!chkCodeRes || chkCodeRes.result != 0 || !chkCodeRes.data){
                 if(chkCodeRes.errcode === "1006" || chkCodeRes.errcode === "1007"){
                     result.error = {'errcode' : chkCodeRes.errcode, 'errmsg' : chkCodeRes.errmsg};
                     res.json(result);
@@ -445,31 +445,32 @@ router.get('/getSyllabus', function(req, res) {
 router.post('/checkGroupAuth',function(req, res){
     var groupId=req.body["groupId"],result={isOK:false,error:null},chatUser=req.session.studioUserInfo;
     var isRedirectDef = req.body["redirectDef"] == "1";
-    if(common.isBlank(groupId)||!chatUser){
+    if((common.isBlank(groupId) && !isRedirectDef)||!chatUser){
         result.error=errorMessage.code_1000;
     }
     if(!result.error){
-        studioService.checkGroupAuth(groupId,chatUser.clientGroup,function(isOK){
-            if(isOK){
-                req.session.studioUserInfo.toGroup=groupId;
-                result.groupId=groupId;
-            }else if(isRedirectDef){
-                var clientGroup = chatUser && chatUser.isLogin ? chatUser.clientGroup : constant.clientGroup.visitor;
-                studioService.getDefaultRoom(clientGroup,function(groupId) {
-                    if (common.isBlank(groupId)) {
-                        result.isOK=false;
-                    }else{
-                        req.session.studioUserInfo.toGroup=groupId;
-                        result.groupId=groupId;
-                        result.isOK=true;
-                    }
-                    res.json(result);
-                });
-                return;
-            }
-            result.isOK=isOK;
-            res.json(result);
-        });
+        var clientGroup = chatUser && chatUser.isLogin ? chatUser.clientGroup : constant.clientGroup.visitor;
+        if(isRedirectDef){
+            studioService.getDefaultRoom(clientGroup,function(groupId) {
+                if (common.isBlank(groupId)) {
+                    result.isOK=false;
+                }else{
+                    req.session.studioUserInfo.toGroup=groupId;
+                    result.groupId=groupId;
+                    result.isOK=true;
+                }
+                res.json(result);
+            });
+        }else{
+            studioService.checkGroupAuth(groupId,chatUser.clientGroup,function(isOK){
+                if(isOK){
+                    req.session.studioUserInfo.toGroup=groupId;
+                    result.groupId=groupId;
+                }
+                result.isOK=isOK;
+                res.json(result);
+            });
+        }
     }else{
         res.json(result);
     }

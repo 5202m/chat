@@ -172,7 +172,7 @@ var studioMbLogin = {
                 }else{
                     studioMbLogin.clientGroup = result.userInfo.clientGroup;
                     if(studioMbLogin.groupId){
-                        common.getJson("/studio/checkGroupAuth",{groupId:studioMbLogin.groupId, redirectDef:1},function(result){
+                        common.getJson("/studio/checkGroupAuth",{redirectDef:1},function(result){
                             if(!result.isOK){
                                 if(result.error && result.error.errcode === "1000"){
                                     studioMbPop.showMessage("您长时间未操作，请刷新页面后重试！");
@@ -183,13 +183,17 @@ var studioMbLogin = {
                                 }
                             }else{
                                 studioMbPop.loadingBlock($("#loginPop"), true);
-                                if(studioMbLogin.checkClientGroup("vip")){
-                                    studioMbPop.showMessage("您已具备进入Vip专场的条件，我们将为您自动进入VIP专场。");
+                                if(studioMbLogin.groupId == result.groupId){//默认房间就是要进入的房间
+                                    studioMbPop.reload();
+                                }else{
+                                    if(studioMbLogin.checkClientGroup("vip")){
+                                        studioMbPop.showMessage("您已具备进入Vip专场的条件，我们将为您自动进入VIP专场。");
+                                    }else{
+                                        studioMbPop.showMessage("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。我们将为您自动进入新手专场。");
+                                    }
                                     window.setTimeout(function(){
                                         studioMbPop.reload();
                                     }, 1200);
-                                }else{
-                                    studioMbPop.reload();
                                 }
                             }
                         },true,function(err){
