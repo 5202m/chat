@@ -675,8 +675,11 @@ var studioChatMb={
              */
             util.toucher($("#backToLive")[0])
                 .on('singleTap',function(){
-                    //点击返回直播
-                    studioChatMb.video.start(true);
+                    //点击返回直播，重新更新服务器时间后返回直播，手机锁屏对定时器有一定影响
+                    studioChatMb.socket.emit('serverTime');
+                    window.setTimeout(function(){
+                        studioChatMb.video.start(true);
+                    }, 1000);
                 })
                 .on('swipeStart',function(){
                     studioChatMb.video.backToLivePos.x = parseInt(this.style.left) || 0;
