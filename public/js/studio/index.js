@@ -2233,13 +2233,20 @@ var studioChat={
      * @param userId
      * @param clientGroup
      */
-    getUserAImgCls:function(userId, clientGroup,userType,avatar){
+    getUserAImgCls:function(userId,clientGroup,userType,avatar){
         var aImgCls='';
         if(userType && userType!=0 && common.isValid(avatar)){
             return '<img src="'+avatar+'">';
         }else if("vip"==clientGroup){
             aImgCls="user_v";
-        }else if("active"==clientGroup || "notActive"==clientGroup){
+        }else if("active"==clientGroup){
+            var idTmp = 0;
+            if(userId && userId.length > 0){
+                idTmp += (userId.charCodeAt(0) + userId.charCodeAt(userId.length - 1));
+            }
+            idTmp = (idTmp + 15) % 39;
+            return '<img src="' + studioChat.filePath + '/upload/pic/header/chat/visitor/' + idTmp + '.png">';
+        }else if("notActive"==clientGroup){
             aImgCls="user_r";
         }else if("simulate"==clientGroup){
             aImgCls="user_d";
