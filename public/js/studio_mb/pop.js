@@ -338,14 +338,18 @@ var studioMbLogin = {
  * 错误消息显示
  */
 var studioMbMsg = {
-    type : null, //upg-升级成功
+    type : null, //upg-升级成功、logout-异地登录，强制登出
 
     /**
      * 初始化（页面加载）
      */
     load : function(){
         $("#resultForm_sub").bind("click", function(){
-            studioMbPop.popHide();
+            if(studioMbMsg.type == "logout"){
+                studioMbPop.reload();
+            }else{
+                studioMbPop.popHide();
+            }
         });
     },
     /**
@@ -354,6 +358,13 @@ var studioMbMsg = {
     init : function(type, msg){
         this.type = type;
         $("#resultForm_msg").html(msg);
+        if(studioMbMsg.type == "logout"){
+            $("#resultPop .pop-close, #resultForm i").hide();
+            $("#resultForm_sub").val("重新登录");
+        }else{
+            $("#resultPop .pop-close, #resultForm i").show();
+            $("#resultForm_sub").val("确认");
+        }
     }
 };
 
@@ -531,7 +542,7 @@ var studioMbPop = {
 
             case "msg" :
                 this.popShow($("#resultPop"));
-                this.Msg.init(ops.type, ops.msg, ops.groupId);
+                this.Msg.init(ops.type, ops.msg);
                 break;
         }
     }

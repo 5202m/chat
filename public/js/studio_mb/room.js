@@ -1179,20 +1179,22 @@ var studioChatMb={
      */
     leaveRoomTip:function(flag){
         if("visitor"==studioChatMb.userInfo.clientGroup){
-             return;
-        }
-        var txt='';
-        if(flag=="roomClose"){
-            txt='房间已停用，';
-        }
-        if(flag=="otherLogin"){
-            txt='您的账号已在其他地方登陆，';
-        }
-        studioMbPop.showMessage("注意："+txt+"正自动登出.....");
-        window.setTimeout(function(){//3秒钟后登出
-            window.location.href="/studio/logout?platform="+studioChatMb.fromPlatform;
-        },3000);
-    },
+            return;
+       }
+       if(flag=="roomClose"){
+           studioMbPop.showMessage("注意：房间已停用，正自动登出...");
+           window.setTimeout(function(){//3秒钟后登出
+               LoginAuto.setAutoLogin(false);
+               window.location.href="/studio/logout?platform="+studioChatMb.fromPlatform;
+           },3000);
+       }else if(flag=="otherLogin"){
+           studioChatMb.socket.disconnect();
+           studioMbPop.popBox("msg", {
+               msg : "注意：您的账号已在其他地方登陆，被踢出！",
+               type : "logout"
+           });
+       }
+   },
     /**
      * 提取对话html
      * @param userId

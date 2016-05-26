@@ -1428,6 +1428,12 @@ var studioChat={
             LoginAuto.setAutoLogin(false);
             window.location.href="/studio/logout";
         });
+        /**
+         * 重新登录
+         */
+        $("#reloginBtn").bind("click", function(){
+            studioChat.toRefreshView();
+        });
         //手机号码输入控制验证码样式
         $("#loginForm input[name=mobilePhone]").bind("input propertychange", function() {
             var domBtn=$(this).parents("form").find(".rbtn");
@@ -2460,18 +2466,20 @@ var studioChat={
         if("visitor"==studioChat.userInfo.clientGroup){
              return;
         }
-        var txt='';
         if(flag=="roomClose"){
-            txt='房间已停用，';
+            $(".blackbg").children().hide();
+            $(".blackbg").show();
+            $("#tipMsgBox").fadeIn(0).delay(6000).fadeOut(200).find(".in_line").text('注意：房间已停用，正自动登出...');
+            $("#tipMsgBox .btnbar").hide();
+            window.setTimeout(function(){//3秒钟后登出
+                $(".logout").trigger("click");
+            },3000);
+        }else if(flag=="otherLogin"){
+            studioChat.socket.disconnect();
+            $(".blackbg").children().hide();
+            $(".blackbg,#tipMsgBox .btnbar").show();
+            $("#tipMsgBox").show().find(".in_line").text('注意：您的账号已在其他地方登陆，被踢出！');
         }
-        if(flag=="otherLogin"){
-            txt='您的账号已在其他地方登陆，';
-        }
-        $(".blackbg").show();
-        $("#tipMsgBox").fadeIn(0).delay(6000).fadeOut(200).find("span").text("注意："+txt+"正自动登出.....");
-        window.setTimeout(function(){//3秒钟后登出
-            $(".logout").trigger("click");
-        },3000);
     },
     /**
      * 设置socket
