@@ -178,6 +178,23 @@ var studioChatMbIdx={
         });
     },
     /**
+     * 设置公告
+     */
+    setBulletin : function(){
+        studioMbPop.loadingBlock($("#bulletinTab"));
+        studioChatMbIdx.getArticleList("bulletin_system","studio_home",1,1,1,'{"sequence":"asc"}',function(dataList){
+            var loc_panel = $("#bulletinTab .notice_cont");
+            loc_panel.html("");
+            if(dataList && dataList.result==0){
+                var data=dataList.data;
+                if(data && data.length > 0){
+                    loc_panel.html(data[0].detailList[0].content);
+                }
+            }
+            studioMbPop.loadingBlock($("#bulletinTab"), true);
+        });
+    },
+    /**
      * 绑定页面各类事件
      */
     setEvent : function(){
@@ -225,7 +242,9 @@ var studioChatMbIdx={
             $('.cen-ulist li.on').removeClass('on');
             $(this).addClass('on');
             var type = $(this).attr("t");
-            if(type=='tradeInfoTab'){
+            if(type=='bulletinTab'){
+                studioChatMbIdx.setBulletin();
+            }else if(type=='tradeInfoTab'){
                 _gaq.push(['_trackEvent', 'm_24k_studio', 'tradstrategy_tab', 'content_middle',1,true]);
                 studioChatMbIdx.setNewsInfo("#tradeInfoTab .boxcont",false,3,5);
             }else if(type=='commentTab'){
@@ -376,7 +395,14 @@ var studioChatMbIdx={
      */
     getArticleList:function(code,platform,hasContent,curPageNo,pageSize,orderByStr,callback){
         try{
-            $.getJSON('/wechat/getArticleList',{code:code,platform:platform,hasContent:hasContent,pageNo:curPageNo,pageSize:pageSize,orderByStr:orderByStr},function(data){
+            $.getJSON('/wechat/getArticleList',{
+                code:code,
+                platform:platform,
+                hasContent:hasContent,
+                pageNo:curPageNo,
+                pageSize:pageSize,
+                orderByStr:orderByStr
+            },function(data){
                 callback(data);
             });
         }catch (e){

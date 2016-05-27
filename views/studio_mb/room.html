@@ -15,11 +15,19 @@
     LoginAuto.init();
 </script>
 <!-- 自动登录 end -->
-<link rel="stylesheet" media="screen" href="/css/studio_mb/index.min.css" />
+<link rel="stylesheet" media="screen" href="/css/studio_mb/index.css" />
 <link rel="stylesheet" media="screen" href="/css/swiper.min.css" />
 <link rel="stylesheet" media="screen" href="/css/face.css"/>
+<link href="/css/swipebox.min.css"type="text/css" rel="stylesheet" >
 </head>
 <body fp="<%= fromPlatform %>">
+<% if (studioList!='[]') { %>
+<% studioList.forEach(function(row,index){ %>
+<% if (row.isCurr) { %>
+	<input id="currStudioInfo" type="hidden" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>">
+<% } %>
+<% }); %>
+<% } %>
 <section class="content_w">
     <!-- header begin -->
     <header id="header">
@@ -54,9 +62,9 @@
     <section class="cen-qhbox swiper-container">
         <ul class="cen-ulist clearfix room">
             <li class="on" t="talkBoxTab"><span>互动交流</span></li>
+            <li t="whTalkBoxTab"><span>老师助理</span><i class="wh_tips" style="display: none;"></i></li>
             <li t="TradeArticleTab"><span>老师观点</span></li>
             <li t="videosTab"><span>教学视频</span></li>
-            <li t="bulletinTab"><span>公告</span></li>
         </ul>
 
         <article class="cen-qhcon swiper-wrapper">
@@ -88,6 +96,17 @@
                 </div>
             </section>
             <!-- 互动交流end -->
+            <!-- 老师助理begin -->
+            <section class="cen-pubox swiper-slide" id="whTalkBoxTab">
+                <div class="boxcont" id="whTalkPanel">
+                    <article class="talk-infobox">
+                        <ul id="whDialog_list">
+
+                        </ul>
+                    </article>
+                </div>
+            </section>
+            <!-- 老师助理end -->
             <!-- 老师观点begin -->
             <section class="cen-pubox swiper-slide" id="TradeArticleTab">
                 <div class="boxcont">
@@ -104,14 +123,6 @@
                 </div>
             </section>
             <!-- 教学视频end -->
-            <!-- 公告begin -->
-            <section class="cen-pubox swiper-slide" id="bulletinTab">
-                <div class="boxcont">
-                    <div class="notice_cont">
-                    </div>
-                </div>
-            </section>
-            <!-- 公告end -->
         </article>
     </section>
     <!-- 切换 end -->
@@ -144,6 +155,7 @@
 </section>
 
 <script type="text/javascript" src="/js/lib/swiper.min.js"></script>
+<script type="text/javascript" src="/js/lib/jquery.swipebox.min.js"></script>
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
 <script type="text/javascript" src="/js/lib/toucher.js"></script>
 <script type="text/javascript" src="/js/util/common.min.js"></script>

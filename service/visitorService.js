@@ -189,13 +189,7 @@ var visitorService = {
                 logger.error('getVistiorByName fail',err);
                 callback(null);
             }else{
-                var resultArr=[];
-                for(var i in data){
-                    if(!common.isMobile(data[i].userAgent)){
-                        resultArr.push(data[i]);
-                    }
-                }
-                callback(resultArr);
+                callback(data);
             }
         });
     },

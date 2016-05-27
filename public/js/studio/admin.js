@@ -1118,7 +1118,7 @@ var studioChat={
             }*/
             mainDiv+='<a href="javascript:" class="d1" t="0"><span>@TA</span></a>';
             hasMainDiv=true;
-            if(!isMb && gIdDom.attr("aw")=="true"&& common.containSplitStr(gIdDom.attr("awr"),studioChat.userInfo.userType)){
+            if(gIdDom.attr("aw")=="true"&& common.containSplitStr(gIdDom.attr("awr"),studioChat.userInfo.userType)){
                 mainDiv+='<a href="javascript:" class="d2" t="1"><span>私聊</span></a>';
                 hasMainDiv=true;
             }
