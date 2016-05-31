@@ -201,7 +201,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .me-li .talk-content{margin-right:10px}
 .me-li .talk-content p{width:100%}
 .me-li .arrow-outer{left:auto;right:-13px}
-.float-sel{ position:fixed; right:10px; top:10px;z-index:100000}
+.float-sel{ position:absolute; right:10px; top:10px;z-index:100000}
 .view_select{ width:120px;height:27px; float:right; position:relative; }
 .view_select.dw {}
 .view_select i { display:block; position:absolute; right:11px; top:9px; background-position:-60px 0; width:14px; height:9px; opacity:0.2}
