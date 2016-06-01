@@ -670,12 +670,12 @@ var studioChat={
     setAdvertisement:function(){
         //设置弹出广告
         if(studioChat.userInfo.isLogin){
-            $(".blackbg").show();
-            $("#act_ad_box").css({background:"url(/images/studio/ban_act.png) 0 0 no-repeat"}).show();
-            $("#act_ad_box .pop_close").click(function(){
-                $("#act_ad_box").hide();
-                $(".blackbg").hide();
-            });
+            //$(".blackbg").show();
+            //$("#act_ad_box").css({background:"url(/images/studio/ban_act.png) 0 0 no-repeat"}).show();
+            //$("#act_ad_box .pop_close").click(function(){
+            //    $("#act_ad_box").hide();
+            //    $(".blackbg").hide();
+            //});
         }else{
             //设置主页广告
             $(".blackbg").show();
