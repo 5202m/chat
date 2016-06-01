@@ -310,7 +310,7 @@ router.post('/login',function(req, res){
     }else if(!isAutoLogin){
         //手机号+验证码登陆
         pmApiService.checkMobileVerifyCode(mobilePhone, "studio_login", verifyCode, function(chkCodeRes){
-        	if(!chkCodeRes || chkCodeRes.result != 0 || !chkCodeRes.data){
+            if(!chkCodeRes || chkCodeRes.result != 0 || !chkCodeRes.data){
                 if(chkCodeRes.errcode === "1006" || chkCodeRes.errcode === "1007"){
                     result.error = {'errcode' : chkCodeRes.errcode, 'errmsg' : chkCodeRes.errmsg};
                     res.json(result);

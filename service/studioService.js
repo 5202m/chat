@@ -353,7 +353,7 @@ var studioService = {
                 var info=row.loginPlatform.chatUserGroup[0];
                 result.userInfo={mobilePhone:row.mobilePhone,userId:info.userId,nickname:info.nickname};
                 result.userInfo.clientGroup=info.vipUser?constant.clientGroup.vip:info.clientGroup;
-                if(type == 1 && userInfo.thirdId && !info.thirdId){ //微信直播间登录，如果有openId,则
+                if(type == 1 && userInfo.thirdId && !info.thirdId){ //微信直播间登录，绑定openId
                     member.update(searchObj, {
                         $set : {"loginPlatform.chatUserGroup.$.thirdId" : userInfo.thirdId}
                     },function(err){
