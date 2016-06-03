@@ -523,6 +523,9 @@ var userService = {
                         if(userInfo.isSetName !== false){
                             group.nickname=userInfo.nickname;
                         }
+                        if(userInfo.fromPlatform == constant.fromPlatform.pm_mis){//后台用户更新用户类型
+                            group.userType = userInfo.userType;
+                        }
                         group.avatar=userInfo.avatar;
                         room.onlineDate=userInfo.onlineDate;
                         room.onlineStatus=userInfo.onlineStatus;
