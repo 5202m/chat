@@ -164,7 +164,7 @@
 <!-- 直播间登录 -->
 <div class="popup_box login dn" id="loginBox">
 	<div class="cont">
-    	<div class="pop_tit">直播间登录</div>   
+    	<div class="pop_tit">直播间登录</div>
     	<form method="post" action="" id="loginForm">
             <input type="hidden" name="clientStoreId"/>
             <!--<div class="login_nav">
@@ -194,11 +194,13 @@
                         <input type="text"  name="verifyCode" placeholder="短信验证码" class="in1 in2"/>
                         <a href="javascript:" class="rbtn" ut="studio_login" t="60">获取验证码</a>
                     </div>
-                </div>    
+                </div>
             </div>
             <div class="in_line" style="color: #999;line-height: 18px;font-size: 14px;">
-                <input type="checkbox" id="autoLogin" checked="checked">
-                <label for="autoLogin">下次自动登录</label>
+                <div class="fl<%if(fromPlatform == 'wechat'){%> dn<%}%>">
+                    <input type="checkbox" id="autoLogin" checked="checked">
+                    <label for="autoLogin">下次自动登录</label>
+                </div>
                 <span class="fr">如未收到验证码，请咨询<a onclick="openLive800Chat();_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_live800', 'content_login', 1, true]);" href="javascript:void(0);" style="color:#2980d1;">在线客服</a></span>
             </div>
             <div class="error"></div>
