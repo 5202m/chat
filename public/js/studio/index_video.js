@@ -258,6 +258,10 @@ var videos={
             $("#nextCourse").find(".time").text(common.daysCN[course.day]+' '+course.startTime+' - '+course.endTime);
         }else{
             $("#nextCourse").find(".ntext").text("当前暂无直播");
+            $("#nextCourse").find("img").hide();
+            $("#nextCourse").find(".t_name").hide();
+            $("#nextCourse").find(".live_name").hide();
+            $("#nextCourse").find(".time").hide();
         }
         $("#lvVideoId").hide();
         $("#nextCourse").show();
