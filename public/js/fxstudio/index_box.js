@@ -124,7 +124,7 @@ var box={
             box.toRoomId = ops.groupId;
             box.openLgBox(ops.closeable);
             if(common.isValid($(this).attr("tp"))){
-                _gaq.push(['_trackEvent', 'pmchat_studio', 'login', $(this).attr("tp"), 1, true]);
+                _gaq.push(['_trackEvent', 'fx_studio', 'login', $(this).attr("tp"), 1, true]);
             }
         });
         //当前房间未授权，并且是游客

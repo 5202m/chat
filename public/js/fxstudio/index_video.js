@@ -29,7 +29,7 @@ var videos={
                 var row=null;
                 for(var i in data){
                     row=data[i].detailList[0];
-                    cateDiv.append('<li title="'+row.title+'"><a href="javascript:" ct="'+data[i].categoryId+'" id="'+data[i]._id+'" t="'+((common.isValid(data[i].mediaUrl) && data[i].mediaUrl.indexOf('.mp4')!=-1)?'mp4':'')+'" vUrl="'+data[i].mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',$(this).text()]);"><i></i>'+row.title+'</a></li>');
+                    cateDiv.append('<li title="'+row.title+'"><a href="javascript:" ct="'+data[i].categoryId+'" id="'+data[i]._id+'" t="'+((common.isValid(data[i].mediaUrl) && data[i].mediaUrl.indexOf('.mp4')!=-1)?'mp4':'')+'" vUrl="'+data[i].mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'fx_studio\', \'video_play\',$(this).text()]);"><i></i>'+row.title+'</a></li>');
                 }
                 indexJS.setListScroll(cateDiv,{isCustom:false,theme:"minimal-dark"});
                 //播放视频

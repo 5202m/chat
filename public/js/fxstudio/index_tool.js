@@ -396,7 +396,7 @@ var tool={
                 formatHtmlArr.push('   <div class="detail">');
                 formatHtmlArr.push('       <strong>{1}</strong>');
                 formatHtmlArr.push('       <span>{2}<b>{3}</b></span>');
-                formatHtmlArr.push('       <a href="{4}" target="download" download="{5}" class="downbtn" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'file_download\',$(this).prev().prev().text()]);"><i></i><span>下载<b>{6}</b></span></a>');
+                formatHtmlArr.push('       <a href="{4}" target="download" download="{5}" class="downbtn" onclick="_gaq.push([\'_trackEvent\', \'fx_studio\', \'file_download\',$(this).prev().prev().text()]);"><i></i><span>下载<b>{6}</b></span></a>');
                 formatHtmlArr.push('   </div>');
                 formatHtmlArr.push('</li>');
                 break;
