@@ -262,6 +262,7 @@
 <script type="text/javascript" src="/js/studio/index.min.js"></script>
 <% }%>
 <script type="text/javascript">
+    indexJS.fromPlatform='<%- fromPlatform%>';
     indexJS.apiUrl='<%= apiUrl %>';
     indexJS.userInfo=JSON.parse('<%- userInfo %>');
     indexJS.serverTime=Number('<%= serverTime %>');

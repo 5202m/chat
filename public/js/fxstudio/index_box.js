@@ -138,7 +138,7 @@ var box={
          */
         $(".logout").bind("click", function(){
             LoginAuto.setAutoLogin(false);
-            window.location.href="/fxstudio/logout";
+            window.location.href="/fxstudio/logout?platform=" + indexJS.fromPlatform;
         });
         //手机号码输入控制
         $("#loginForm input[name=mobilePhone],#loginForm input[name=verifyCode],#setNkForm input[name=nickname]").bind("input propertychange", function() {
