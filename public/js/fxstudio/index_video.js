@@ -256,6 +256,8 @@ var videos={
             $("#nextCourse").find(".t_name").text(data.name);
             $("#nextCourse").find(".live_name").text(course.title);
             $("#nextCourse").find(".time").text(common.daysCN[course.day]+' '+course.startTime+' - '+course.endTime);
+        }else{
+            $("#nextCourse").find(".ntext").text("当前暂无直播");
         }
         $("#lvVideoId").hide();
         $("#nextCourse").show();
