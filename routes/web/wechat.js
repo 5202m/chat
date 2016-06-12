@@ -313,7 +313,7 @@ router.get('/getArticleList', function(req, res) {
  */
 router.get('/getArticleInfo', function(req, res) {
     var id=req.query["id"];
-    pmApiService.getArticleInfo(id,function(data){
+    pmApiService.getArticleInfo({id:id},function(data){
         res.json(data?JSON.parse(data):null);
     });
 });
@@ -398,7 +398,7 @@ router.get('/getUserPraiseNum', function(req, res) {
     if(common.isBlank(praiseId)){
         res.json({num:0});
     }else{
-        chatPraiseService.getPraiseNum(praiseId,constant.chatPraiseType.user,function(data){
+        chatPraiseService.getPraiseNum(praiseId,constant.chatPraiseType.user,getGroupType(req),function(data){
             res.json(data);
         });
     }

@@ -20,8 +20,8 @@
 		$(this).click(function(e){
 			var strFace, labFace;
 			if($('#'+id).length<=0){
-				strFace = '<div id="'+id+'" style="position:absolute;display:none;z-index:'+option.zIndex+';" class="qqFace">' +
-							  '<table border="0" cellspacing="0" cellpadding="0"><tr>';
+                strFace = '<div id="'+id+'" class="facebox"><i class="arr"></i><div class="facecont">'
+				strFace += '<table border="0" cellspacing="0" cellpadding="0"><tr>';
                 if(navigator.userAgent && /(iphone|ipod|ipad|android)/.test(navigator.userAgent.toLowerCase())){
                     for(var i=1; i<=45; i++){
                         labFace = path+tip+i+'.gif';
@@ -35,19 +35,12 @@
                         if( i % 15 == 0 ) strFace += '</tr><tr>';
                     }
                 }
-				strFace += '</tr></table></div>';
+				strFace += '</tr></table></div></div>';
                 $(this).parent().append(strFace);
                 $(this).parent().find("img").click(function(){
                     $('#'+$(this).attr("tsg")).insertAtCaret($(this).attr("lf"));
-                    $(this).parents("table").parent().hide();
+                    $(this).parents(".facebox").hide();
                 });
-                var offset = $(this).position();
-                var cssTop=$('#'+id).css("top");
-                if(cssTop.indexOf('px')==-1){
-                    var top = offset.top + $(this).outerHeight();
-                    $('#'+id).css('top',top);
-                }
-                $('#'+id).css('left',offset.left).show();
 			}else{
                 if($('#'+id +':visible').length>0){
                     $('#'+id).hide();

@@ -10,9 +10,9 @@ var chatPraiseService ={
     /**
      * 提取点赞内容
      */
-    getPraiseNum:function(praiseId,type,callback){
+    getPraiseNum:function(praiseId,type,platfrom,callback){
         var praiseId=praiseId.split(",");
-        chatPraise.find({praiseId:{$in:praiseId},praiseType:type},function(err,rows){
+        chatPraise.find({praiseId:{$in:praiseId},praiseType:type,fromPlatform:platfrom},function(err,rows){
             callback(rows);
         });
     },

@@ -14,7 +14,7 @@ var async = require('async');//引入async
  */
 var chatService ={
     oRoomId:'oRoomId',//自定义房间外的房间，用于房间外的socket通讯，目前只用于微解盘
-    socketSpaceArr:["wechat","studio","fxchat"],//组空间,与房间大类groupType保持一致
+    socketSpaceArr:["studio","fxstudio","fxchat"],//组空间,与房间大类groupType保持一致
     socket:null,//socket对象
     noticeType:{ //通知客户端类型
         pushInfo:'pushInfo',//推送信息
@@ -75,7 +75,7 @@ var chatService ={
      * @param userInfo
      */
     setClientSequence:function(userInfo){
-        if(constant.fromPlatform.studio==userInfo.groupType){
+        if(common.isStudio(userInfo.groupType)){
             var userType=userInfo.userType;
             if(userType && userType!=0 && userType!=-1){
                 userInfo.sequence=userType;
@@ -330,17 +330,17 @@ var chatService ={
                     userInfo.isMobile=common.isMobile(userAgent);
                     socket.join(userInfo.groupId);
                     chatService.setRoomOnlineUser(userInfo,true,function(roomUserArr){
-                        if(constant.fromPlatform.studio==userInfo.groupType){//如果是直播间网页版聊天室,需要显示在线用户
+                        if(common.isStudio(userInfo.groupType)){//如果是直播间网页版聊天室,需要显示在线用户
                             socket.emit('onlineUserList',roomUserArr,Object.getOwnPropertyNames(roomUserArr).length);//给自己加载所有在线用户
                         }
                     });
                     //通知客户端在线人数
-                    if(constant.fromPlatform.studio==userInfo.groupType){//如果是直播间网页版聊天室,则追加在线用户的输出
+                    if(common.isStudio(userInfo.groupType)){//如果是直播间网页版聊天室,则追加在线用户的输出
                         //广播自己的在线信息
                         socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:true}});
                         //直播间创建访客记录
                         if(parseInt(userInfo.userType)<=constant.roleUserType.member){
-                            var vrRow={userAgent:userAgent,platform:fromPlatform,visitorId:userInfo.visitorId,initVisit:userInfo.initVisit,groupType:userInfo.groupType,roomId:userInfo.groupId,nickname:userInfo.nickname,clientGroup:userInfo.clientGroup,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address};
+                            var vrRow={userAgent:userAgent,platform:fromPlatform,visitorId:userInfo.visitorId,groupType:userInfo.groupType,roomId:userInfo.groupId,nickname:userInfo.nickname,clientGroup:userInfo.clientGroup,clientStoreId:userInfo.clientStoreId,ip:socket.handshake.address};
                             if(userInfo.clientGroup!=constant.clientGroup.visitor){
                                 vrRow.mobile=dbMobile;
                                 vrRow.userId=userInfo.userId;
@@ -385,13 +385,15 @@ var chatService ={
                                 socket.emit('notice',noticeInfo);
                             }
                         });
-                    }else{
-                        chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,true,function(roomNum){
-                            var noticeData={type:chatService.noticeType.onlineNum,data:{userId:userInfo.userId,hasRegister:userInfo.hasRegister,groupId:userInfo.groupId,onlineUserNum:roomNum}};
-                            socket.emit('notice',noticeData);
-                            socket.broadcast.to(userInfo.groupId).to(chatService.getOutRoomId(userInfo.groupType)).emit('notice',noticeData);
-                        });
                     }
+                    chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,true,function(roomNum){
+                        if(common.isStudio(userInfo.groupType)){
+                            return;
+                        }
+                        var noticeData={type:chatService.noticeType.onlineNum,data:{userId:userInfo.userId,hasRegister:userInfo.hasRegister,groupId:userInfo.groupId,onlineUserNum:roomNum}};
+                        socket.emit('notice',noticeData);
+                        socket.broadcast.to(userInfo.groupId).to(chatService.getOutRoomId(userInfo.groupType)).emit('notice',noticeData);
+                    });
                 });
                 //加载已有内容
                 messageService.loadMsg(userInfo,lastPublishTime,false,function(msgData){
@@ -413,7 +415,7 @@ var chatService ={
                                 logRemoveTip="otherLogin";
                             }
                             //通知客户端在线人数
-                            if(constant.fromPlatform.studio==userInfo.groupType){//如果是直播间,则移除页面在线用户
+                            if(common.isStudio(userInfo.groupType)){//如果是直播间,则移除页面在线用户
                                 if(isRemove && noticeClient){
                                     socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:false}});
                                 }
@@ -424,19 +426,21 @@ var chatService ={
                                     delete socket;
                                 }
                                 logger.info('setSocket['+logRemoveTip+']=>client['+(userInfo.accountNo||userInfo.userId)+'] disconnect!');
-                            }else{
-                                //计算房间人数
-                                chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,false,function(roomNum){
-                                    //通知客户端在线人数
-                                    socket.broadcast.to(userInfo.groupId).to(chatService.getOutRoomId(userInfo.groupType)).emit('notice',{type:chatService.noticeType.onlineNum,data:{groupId:userInfo.groupId,onlineUserNum:roomNum}});
-                                    //通知非房间的socket
-                                    socket.leave(userInfo.groupId);//离开房间
-                                    if(socket){
-                                        delete socket;
-                                    }
-                                    logger.info('setSocket['+logRemoveTip+']=>client['+(userInfo.accountNo||userInfo.userId)+'] disconnect!');
-                                });
                             }
+                            //计算房间人数
+                            chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,false,function(roomNum){
+                                if(common.isStudio(userInfo.groupType)){
+                                    return;
+                                }
+                                //通知客户端在线人数
+                                socket.broadcast.to(userInfo.groupId).to(chatService.getOutRoomId(userInfo.groupType)).emit('notice',{type:chatService.noticeType.onlineNum,data:{groupId:userInfo.groupId,onlineUserNum:roomNum}});
+                                //通知非房间的socket
+                                socket.leave(userInfo.groupId);//离开房间
+                                if(socket){
+                                    delete socket;
+                                }
+                                logger.info('setSocket['+logRemoveTip+']=>client['+(userInfo.accountNo||userInfo.userId)+'] disconnect!');
+                            });
                         });
                     });
                 }else{//房间外socket的客户端断开对应的处理逻辑
@@ -586,7 +590,7 @@ var chatService ={
         var toUser=userInfo.toUser,isWh=toUser && common.isValid(toUser.userId) && "1"==toUser.talkStyle;//私聊
         //如果是私聊游客或水军发言直接保存数据
         var isWhVisitor=(isWh && constant.clientGroup.visitor==userInfo.clientGroup);
-        var isAllowPass=isWhVisitor||userInfo.userType==constant.roleUserType.navy||(userInfo.groupType==constant.fromPlatform.studio && constant.clientGroup.visitor==userInfo.clientGroup);
+        var isAllowPass=isWhVisitor||userInfo.userType==constant.roleUserType.navy||(common.isStudio(userInfo.groupType) && constant.clientGroup.visitor==userInfo.clientGroup);
         userService.checkUserLogin(userInfo,isAllowPass,function(row){
             if(row){
                 var userSaveInfo={};
@@ -648,8 +652,13 @@ var chatService ={
                             return false;
                         }
                         //发送给自己
-                        chatService.sendMsgToSelf(socket,userInfo,{uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}});
-                        var isToCSUser=constant.fromPlatform.studio!=userInfo.groupType && toUser && common.isValid(toUser.userId) && (constant.roleUserType.cs==userInfo.toUser.userType || constant.roleUserType.cs==userInfo.toUser.userId);//判断是否客服
+                        var myMsg = {uiId:data.uiId,fromUser:userInfo,serverSuccess:true,content:{msgType:data.content.msgType,needMax:data.content.needMax}};
+                        if(resultVal.tip){
+                            myMsg.rule = true;
+                            myMsg.value = resultVal;
+                        }
+                        chatService.sendMsgToSelf(socket,userInfo,myMsg);
+                        var isToCSUser=!common.isStudio(userInfo.groupType) && toUser && common.isValid(toUser.userId) && (constant.roleUserType.cs==userInfo.toUser.userType || constant.roleUserType.cs==userInfo.toUser.userId);//判断是否客服
                         var imgMaxValue=data.content.maxValue;
                         //发送给除自己之外的用户
                         if(isToCSUser && socket){//判断是否发送信息给客服

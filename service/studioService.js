@@ -25,11 +25,11 @@ var studioService = {
      * @param isGetSyllabus 是否加载课程表数据
      * @param dataCallback
      */
-    getIndexLoadData:function(groupId,isGetRoomList,isGetSyllabus,dataCallback){
+    getIndexLoadData:function(groupType,groupId,isGetRoomList,isGetSyllabus,dataCallback){
         async.parallel({
                 studioList: function(callback){
                     if(isGetRoomList){
-                        studioService.getStudioList(function(rows){
+                        studioService.getRoomList(groupType,function(rows){
                             callback(null,rows);
                         });
                     }else{
@@ -38,7 +38,7 @@ var studioService = {
                 },
                 syllabusResult: function(callback){
                     if(isGetSyllabus){
-                        syllabusService.getSyllabus("studio", groupId, function(data){
+                        syllabusService.getSyllabus(groupType, groupId, function(data){
                             callback(null,data);
                         });
                     }else{
@@ -51,22 +51,23 @@ var studioService = {
             });
     },
     /**
-     * 提取直播间列表
+     * 提取房间列表
+     * @param callback
      */
-     getStudioList:function(callback){
-        chatGroup.find({valid:1,status:1,groupType:constant.fromPlatform.studio}).select({clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
+    getRoomList:function(groupType,callback){
+        chatGroup.find({valid:1,status:1,groupType:groupType}).select({clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
             if(err){
                 logger.error("getStudioList fail:"+err);
             }
             callback(rows);
         });
-     },
+    },
     /**
      * 提取客户组列表
      * @param callback
      */
-    getClientGroupList:function(callback){
-        chatClientGroup.find({valid:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
+    getClientGroupList:function(groupType,callback){
+        chatClientGroup.find({valid:1,groupType:groupType}).sort({'sequence':'asc'}).exec(function (err,rows) {
             if(err){
                 logger.error("getClientGroupList fail:"+err);
             }
@@ -76,12 +77,12 @@ var studioService = {
     /**
      * 重置密码
      */
-    resetPwd:function(mobilePhone,newPwd,oldPwd,callback){
+    resetPwd:function(groupType,mobilePhone,newPwd,oldPwd,callback){
         var searchObj=null;
         if(common.isValid(oldPwd)){
-            searchObj={valid:1,'mobilePhone':mobilePhone,'loginPlatform.chatUserGroup':{$elemMatch:{_id:constant.fromPlatform.studio,pwd:common.getMD5(constant.pwdKey+oldPwd)}}};
+            searchObj={valid:1,'mobilePhone':mobilePhone,'loginPlatform.chatUserGroup':{$elemMatch:{_id:groupType,pwd:common.getMD5(constant.pwdKey+oldPwd)}}};
         }else{
-            searchObj={valid:1,'mobilePhone':mobilePhone,'loginPlatform.chatUserGroup._id':constant.fromPlatform.studio};
+            searchObj={valid:1,'mobilePhone':mobilePhone,'loginPlatform.chatUserGroup._id':groupType};
         }
         member.findOneAndUpdate(searchObj,{'$set':{'loginPlatform.chatUserGroup.$.pwd':common.getMD5(constant.pwdKey+newPwd)}},function(err,row){
             if(err || !row){
@@ -120,8 +121,8 @@ var studioService = {
      * 通过客户组提取默认房间
      * @param clientGroup
      */
-     getDefaultRoom:function(clientGroup,callback){
-        chatClientGroup.findById(clientGroup,function(err,row){
+     getDefaultRoom:function(groupType,clientGroup,callback){
+        chatClientGroup.findOne({groupType:groupType,clientGroupId:clientGroup},function(err,row){
             callback(row?row.defChatGroupId:'');
         });
      },
@@ -171,12 +172,12 @@ var studioService = {
                 }
             }
             if(common.isBlank(clientGroup)){//如果检测的clientGroup为空则再次检查
-                studioService.checkClientGroup(userInfo.mobilePhone,null,function(val){
+                studioService.checkClientGroup(userInfo.mobilePhone,null,userInfo.groupType.indexOf("fx")!=-1,function(val){
                     userInfo.clientGroup=val;
                     studioService.setClientInfo(row,userInfo,function(resultTmp){
                         callback(resultTmp);
                     });
-                })
+                });
             }else{
                 userInfo.clientGroup=clientGroup;
                 studioService.setClientInfo(row,userInfo,function(resultTmp){
@@ -234,7 +235,7 @@ var studioService = {
      */
     setClientInfo:function(memberRow,userInfo,callback){
         var result={isOK:false,error:errorMessage.code_10,defGroupId:''};
-        studioService.getDefaultRoom(userInfo.clientGroup,function(defId){
+        studioService.getDefaultRoom(userInfo.groupType,userInfo.clientGroup,function(defId){
             if(common.isBlank(defId)){
                 callback(result);
             }else{
@@ -284,9 +285,9 @@ var studioService = {
      * 通过手机号码检测客户组
      * @param mobilePhone
      */
-    checkClientGroup:function(mobilePhone,accountNo,callback){
+    checkClientGroup:function(mobilePhone,accountNo,isfx,callback){
         var clientGroup=constant.clientGroup.register;
-        userService.checkAClient(false,mobilePhone,accountNo,'',function(result){
+        userService.checkAClient(isfx,mobilePhone,accountNo,'',true,function(result){
             console.log("checkAClient->flagResult:"+JSON.stringify(result));
             if(result.flag==2){
                 clientGroup=constant.clientGroup.notActive;
@@ -296,7 +297,7 @@ var studioService = {
                 callback(clientGroup, result.accountNo);
             }else{
                 //检查用户是否模拟用户
-                userService.checkSimulateClient(mobilePhone,function(hasRow){
+                userService.checkSimulateClient(isfx,mobilePhone,function(hasRow){
                     if(hasRow){
                         clientGroup=constant.clientGroup.simulate;
                     }
@@ -351,7 +352,7 @@ var studioService = {
             if(row && common.checkArrExist(row.loginPlatform.chatUserGroup)){
                 result.isOK=true;
                 var info=row.loginPlatform.chatUserGroup[0];
-                result.userInfo={mobilePhone:row.mobilePhone,userId:info.userId,nickname:info.nickname};
+                result.userInfo={mobilePhone:row.mobilePhone,userId:info.userId,nickname:info.nickname,avatar:info.avatar,groupType:info._id};
                 result.userInfo.clientGroup=info.vipUser?constant.clientGroup.vip:info.clientGroup;
                 if(type == 1 && userInfo.thirdId && !info.thirdId){ //微信直播间登录，绑定openId
                     member.update(searchObj, {
@@ -375,14 +376,15 @@ var studioService = {
      * @param clientGroup
      * @param callback
      */
-    upgradeClientGroup:function(mobilePhone,clientGroup,callback){
+    upgradeClientGroup:function(groupType,mobilePhone,clientGroup,callback){
+        var isFX=(groupType.indexOf("fx")!=-1);
         if(clientGroup === constant.clientGroup.active || clientGroup === constant.clientGroup.notActive ) {
             //升级到真实
-            userService.checkAClient(false,mobilePhone,null,'', function (result) {
+            userService.checkAClient(isFX,mobilePhone,null,'',true, function (result) {
                 console.log("checkAClient->flagResult:" + JSON.stringify(result));
                 if(result.flag == 2 || result.flag == 3){
                     var clientGroupTmp = result.flag == 2 ? constant.clientGroup.notActive : constant.clientGroup.active;
-                    studioService.updateClientGroup(mobilePhone, clientGroupTmp, result.accountNo, function (isOk) {
+                    studioService.updateClientGroup(groupType,mobilePhone, clientGroupTmp, result.accountNo, function (isOk) {
                         if (isOk) {
                             callback(true, clientGroupTmp);
                         }else{
@@ -395,9 +397,9 @@ var studioService = {
             });
         }else if(clientGroup === constant.clientGroup.simulate){
             //升级到模拟
-            userService.checkSimulateClient(mobilePhone,function(hasRow){
+            userService.checkSimulateClient(isFX,mobilePhone,function(hasRow){
                 if(hasRow){
-                    studioService.updateClientGroup(mobilePhone, constant.clientGroup.simulate, null, function(isOk){
+                    studioService.updateClientGroup(groupType,mobilePhone, constant.clientGroup.simulate, null, function(isOk){
                         if(isOk){
                             callback(true, constant.clientGroup.simulate);
                         }else{
@@ -419,11 +421,11 @@ var studioService = {
      * @param accountNo
      * @param callback
      */
-    updateClientGroup : function(mobilePhone, newClientGroup, accountNo, callback){
+    updateClientGroup : function(groupType,mobilePhone, newClientGroup, accountNo, callback){
         member.findOneAndUpdate(
             {
                 mobilePhone : mobilePhone,
-                "loginPlatform.chatUserGroup._id" : "studio",
+                "loginPlatform.chatUserGroup._id" : groupType,
                 valid : 1,
                 status : 1
             },
@@ -441,6 +443,82 @@ var studioService = {
                     callback(true);
                 }
             });
+    },
+    /**
+     * 伦敦金/伦敦银看涨看跌投票
+      * @param symbol 伦敦金或伦敦银标识 Gold/Silver
+     * @param highsorlows 涨或跌 highs/lows
+     * @param callback
+     */
+    highsLowsVote: function(symbol, highsorlows, callback){
+        var cacheClient = require('../cache/cacheClient');
+        var key = 'highsLowsVote_' + symbol;
+        var map = {};
+        cacheClient.hgetall(key, function(err, result){
+            if(err){
+                logger.error("get highs or lows vote fail:" + err);
+                result.highs = 0;
+                result.lows = 0;
+                callback({isOK:false, data:result});
+            }
+            else if(!err && result){
+                if(highsorlows == 'highs'){
+                    result.highs = parseInt(result.highs) + 1;
+                    cacheClient.hmset(key, result);
+                }
+                else if(highsorlows == 'lows'){
+                    result.lows = parseInt(result.lows) + 1;
+                    cacheClient.hmset(key, result);
+                }
+                //cacheClient.expire(key, 24*7*3600);//再次投票时不再设置有效时间
+                map.isOK = true;
+                map.data = result;
+                callback(map);
+            }else{
+                result = {"highs": 0, "lows": 0};
+                if(highsorlows == 'highs') {
+                    result.highs = 1;
+                    cacheClient.hmset(key, result);
+                }
+                else if(highsorlows == 'lows'){
+                    result.lows = 1;
+                    cacheClient.hmset(key, result);
+                }
+                cacheClient.expire(key, 24*7*3600);//首次投票时设置有效时间
+                map.isOK = true;
+                map.data = result;
+                callback(map);
+            }
+        });
+    },
+    /**
+     * 伦敦金/伦敦银看涨看跌投票
+     * @param symbol 伦敦金或伦敦银标识 Gold/Silver
+     * @param highsorlows 涨或跌 highs/lows
+     * @param callback
+     */
+    getHighsLowsVote: function(symbol, highsorlows, callback){
+        var cacheClient = require('../cache/cacheClient');
+        var key = 'highsLowsVote_' + symbol;
+        var map = {};
+        cacheClient.hgetall(key, function(err, result){
+            if(err){
+                logger.error("get highs or lows vote fail:" + err);
+                result.highs = 0;
+                result.lows = 0;
+                callback({isOK:false, data:result});
+            }
+            else if(!err && result){
+                map.isOK = true;
+                map.data = result;
+                callback(map);
+            }else{
+                result = {"highs": 0, "lows": 0};
+                map.isOK = true;
+                map.data = result;
+                callback(map);
+            }
+        });
     }
 };
 

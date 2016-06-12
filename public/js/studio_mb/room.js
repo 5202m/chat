@@ -258,7 +258,7 @@ var studioChatMb={
      */
     setVideoList:function(){
         studioMbPop.loadingBlock($("#videosTab"));
-        this.getArticleList("teach_video",this.userInfo.groupId,0,1,100,'{"sequence":"asc"}',null,function(dataList){
+        this.getArticleList("teach_video_base,teach_video_gw,teach_video_expert",this.userInfo.groupId,0,1,100,'{"sequence":"asc"}',null,function(dataList){
             var loc_panel = $("#videosTab .boxcont");
             loc_panel.html("");
             if(dataList && dataList.result==0){
@@ -909,16 +909,16 @@ var studioChatMb={
                 var data=dataList.data;
                 if(data && data.length > 0){
                     var detail = null;
-                    var tmp = null;
+                    var author = null;
                     for(var i = 0, lenI = data.length; i < lenI; i++){
                         detail = data[i].detailList[0];
-                        tmp = detail.author.split(";");
+                        author = detail.authorInfo || {};
                         loc_html.push('<li>');
-                        loc_html.push('<div class="himg"><img src="' + tmp[1] + '"></div>');
+                        loc_html.push('<div class="himg"><img src="' + (author.avatar || "") + '"></div>');
                         loc_html.push('<div class="detail">');
                         loc_html.push('<h3>' + detail.title + '</h3>');
                         loc_html.push('<div class="subinfo">');
-                        loc_html.push('<span>' + tmp[0] + '</span>');
+                        loc_html.push('<span>' + (author.name || "") + '</span>');
                         loc_html.push('<span>' + (data[i].publishStartDate ? common.longMsTimeToDateTime(data[i].publishStartDate) : "") + '</span>');
                         loc_html.push('</div>');
                         loc_html.push('<p>' + detail.content + '</p>');
@@ -1198,7 +1198,7 @@ var studioChatMb={
      */
     getUserAImgCls:function(userId, clientGroup,userType,avatar){
         var aImgCls='';
-        if(userType && userType!=0 && common.isValid(avatar)){
+        if(common.isValid(avatar)){
             return '<img src="'+avatar+'">';
         }else if("vip"==clientGroup){
             aImgCls="user_v";
@@ -1226,22 +1226,28 @@ var studioChatMb={
         }else{
             aImgCls="user_c";
         }
-        return '<img src="images/studio/'+aImgCls+'.png">';
+        return '<img src="images/studio_mb/'+aImgCls+'.png">';
     },
     /**
      * 离开房间提示
      */
     leaveRoomTip:function(flag){
-        if("visitor"==studioChatMb.userInfo.clientGroup){
-             return;
-        }
         if(flag=="roomClose"){
             studioMbPop.showMessage("注意：房间已停用，正自动登出...");
-            window.setTimeout(function(){//3秒钟后登出
-                LoginAuto.setAutoLogin(false);
-                window.location.href="/studio/logout?platform="+studioChatMb.fromPlatform;
-            },3000);
+            if("visitor"==studioChatMb.userInfo.clientGroup){
+                window.setTimeout(function(){//3秒钟后登出
+                    studioMbPop.reload();
+                },2000);
+            }else{
+                window.setTimeout(function(){//3秒钟后登出
+                    LoginAuto.setAutoLogin(false);
+                    window.location.href="/studio/logout?platform="+studioChatMb.fromPlatform;
+                },2000);
+            }
         }else if(flag=="otherLogin"){
+            if("visitor"==studioChatMb.userInfo.clientGroup){
+                return;
+            }
             studioChatMb.socket.disconnect();
             studioMbPop.popBox("msg", {
                 msg : "注意：您的账号已在其他地方登陆，被踢出！",
@@ -1536,7 +1542,7 @@ var studioChatMb={
         },
 
         /**
-         * 设置当前客户经理
+         * 设置当前老师助理
          * @param userInfo
          */
         setCurrCS : function(userInfo) {
@@ -1556,7 +1562,7 @@ var studioChatMb={
                     this.CSMap[userInfo.userId] = result;
                 }
             }else{
-                //随机选择一个，在线客户经理的优先
+                //随机选择一个，在线老师助理的优先
                 var csTmp = null;
                 for (var csId in this.CSMap) {
                     csTmp = this.CSMap[csId];
@@ -1567,6 +1573,9 @@ var studioChatMb={
                         result = csTmp;
                     }
                 }
+            }
+            if(!result){
+                return null;
             }
             if(!result.load){
                 this.loadMsg(result.userNo);
@@ -1599,7 +1608,7 @@ var studioChatMb={
         },
 
         /**
-         * 获取客户经理列表
+         * 获取老师助理列表
          */
         getCSList : function(){
             try{

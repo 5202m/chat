@@ -1,0 +1,287 @@
+<!-- mod_menu begin -->
+<div class="mod_menu">
+    <ul>
+        <li class="dropitem">
+            <a href="https://ui.24k.hk" class="item_icon" target="_blank"><i class="i1"></i><span>云端交易</span></a>
+        </li>
+        <li class="dropitem dr2">
+            <a href="javascript:" class="item_icon"><i class="i2"></i><span>行情</span></a>
+            <div class="dropcont">
+                <div class="cont">
+                    <div class="hqbox">
+                        <ul>
+                            <li class="up">
+                                <div class="hq_top">
+                                    <span class="hq">伦敦金</span>
+                                    <b id="deltaPercent_XAUUSD"></b>
+                                </div>
+                                <div class="main" id="price_XAUUSD"></div>
+                                <i></i>
+                            </li>
+                            <li class="up">
+                                <div class="hq_top">
+                                    <span class="hq">伦敦银</span>
+                                    <b id="deltaPercent_XAGUSD"></b>
+                                </div>
+                                <div class="main" id="price_XAGUSD"></div>
+                                <i></i>
+                            </li>
+                            <li>
+                                <div class="hq_top">
+                                    <span class="hq">美元指数</span>
+                                    <b id="deltaPercent_USDX"></b>
+                                </div>
+                                <div class="main" id="price_USDX"></div>
+                                <i></i>
+                            </li>
+                            <li>
+                                <div class="hq_top">
+                                    <span class="hq">纽约原油</span>
+                                    <b id="deltaPercent_CLWTI"></b>
+                                </div>
+                                <div class="main" id="price_CLWTI"></div>
+                                <i></i>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="hqchart">
+                        <div class="hqtabnav">
+                            <a href="javascript:" class="on a1" symbol="Gold">伦敦金<i></i></a>
+                            <a href="javascript:" class="a2" symbol="Silver">伦敦银<i></i></a>
+                        </div>
+                        <div class="hqtab_cont">
+                            <div class="hqtab on">
+
+                                <div class="chartbox">
+                                    <div class="datashow">
+                                        <span class="fl">看跌<br></span>
+                                        <span class="fr">看涨<br></span>
+                                    </div>
+                                    <div class="percentage easyPieChart" id="data_percent_1" data-percent="0">
+                                    </div>
+                                </div>
+                                <div class="votebox">
+                                    <a href="javascript:" class="on" highslows="lows">看跌</a>
+                                    <a href="javascript:" class="" highslows="highs">看涨</a>
+                                    <input type="button" class="votebtn" value="投票">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <i class="arr"></i>
+            </div>
+        </li>
+        <li class="dropitem dr3">
+            <a href="javascript:" class="item_icon"><i class="i3"></i><span>财经日历</span></a>
+            <div class="dropcont">
+                <div class="cont">
+                    <!--a href="javascript:void(0);" class="on notebtn"><i></i>桌面通知</a-->
+                    <div class="clearfix"></div>
+                    <div class="date_select">
+                        <input id="calendarFinance" type="text" value="" class="date_inp">
+                        <a href="javascript:void(0);">选择日期</a>
+                        <div id="calendarContainer"></div>
+                    </div>
+                    <div class="calendar_ul scrollbox2">
+                        <ul></ul>
+                    </div>
+                </div>
+                <i class="arr"></i>
+            </div>
+        </li>
+        <li class="dropitem dr4">
+            <a href="javascript:" class="item_icon"><i class="i4"></i><span class="line2">CFTC<br>持仓比例</span></a>
+            <div class="dropcont">
+                <div class="cont">
+                    <div class="percent_list">
+                        <div class="labeltip">
+                            <span><i></i>多头</span>
+                            <span class="c2"><i></i>空头</span>
+                        </div>
+
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%" class="perc_table">
+                        </table>
+
+                    </div>
+                    <div class="perc_data">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%" class="data_table">
+                            <thead>
+                                <tr>
+                                    <td width="60"></td>
+                                    <td width="60" align="right">净多头</td>
+                                    <td width="68" align="right">净空头</td>
+                                    <td></td>
+                                    <td width="70" align="center">日期</td>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <span class="bottip">* 以上为非商业持仓数据</span>
+                    </div>
+                </div>
+                <i class="arr"></i>
+            </div>
+        </li>
+        <li class="dropitem dr5">
+            <a href="javascript:" class="item_icon"><i class="i5"></i><span class="line2">支点<br>计算器</span></a>
+            <div class="dropcont">
+                <div class="cont">
+                    <div class="calc_box">
+                        <div class="calc_tabnav">
+                            <a href="javascript:" class="on a1 clicked" symbol="LLG">伦敦金<i></i></a>
+                            <a href="javascript:" class="a2" symbol="LLS">伦敦银<i></i></a>
+                        </div>
+                        <div class="calc_cont">
+                            <div class="calc_tab on">
+                                <table cellpadding="0" cellspacing="0" border="0" width="100%" class="calc_table">
+                                    <tr>
+                                        <th width="102">每日</th>
+                                        <th></th>
+                                        <th width="102">每周</th>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r3_LLG_d"></span></td>
+                                        <td>阻力位3</td>
+                                        <td><span id="r3_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r2_LLG_d"></span></td>
+                                        <td>阻力位2</td>
+                                        <td><span id="r2_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r1_LLG_d"></span></td>
+                                        <td>阻力位1</td>
+                                        <td><span id="r1_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="p_LLG_d"></span></td>
+                                        <td>支点</td>
+                                        <td><span id="p_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s1_LLG_d"></span></td>
+                                        <td>支持位1</td>
+                                        <td><span id="s1_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s2_LLG_d"></span></td>
+                                        <td>支持位2</td>
+                                        <td><span id="s2_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s3_LLG_d"></span></td>
+                                        <td>支持位3</td>
+                                        <td><span id="s3_LLG_w"></span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="calc_tab">
+                                <table cellpadding="0" cellspacing="0" border="0" width="100%" class="calc_table">
+                                    <tr>
+                                        <th width="102">每日</th>
+                                        <th></th>
+                                        <th width="102">每周</th>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r3_LLS_d"></span></td>
+                                        <td>阻力位3</td>
+                                        <td><span id="r3_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r2_LLS_d"></span></td>
+                                        <td>阻力位2</td>
+                                        <td><span id="r2_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r1_LLS_d"></span></td>
+                                        <td>阻力位1</td>
+                                        <td><span id="r1_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="p_LLS_d"></span></td>
+                                        <td>支点</td>
+                                        <td><span id="p_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s1_LLS_d"></span></td>
+                                        <td>支持位1</td>
+                                        <td><span id="s1_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s2_LLS_d"></span></td>
+                                        <td>支持位2</td>
+                                        <td><span id="s2_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s3_LLS_d"></span></td>
+                                        <td>支持位3</td>
+                                        <td><span id="s3_LLS_w"></span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <i class="arr"></i>
+            </div>
+        </li>
+        <li class="dropitem dr6">
+            <a href="javascript:" class="item_icon"><i class="i6"></i><span>课件下载</span></a>
+            <div class="dropcont">
+                <div class="cont">
+                    <div class="ppt_list">
+                        <ul></ul>
+                    </div>
+                </div>
+                <i class="arr"></i>
+            </div>
+        </li>
+        <li class="dropitem dr7">
+            <a href="javascript:" class="item_icon"><i class="i7"></i><span>平台下载</span></a>
+            <div class="dropcont">
+                <div class="cont">
+                    <div class="plate_box p1">
+                        <h4><b>GTS</b>桌面版</h4>
+                        <span>自主研发 大中华至爱</span>
+                        <p>GTS是由金道贵金属自主研发，针对华人投资者独家推出的交易平台，GTS平台提供完善的交易功能，最完整的市场情况信息和最准确的订单执行。</p>
+                        <a href="http://www.24k.hk/downloads/GoldenwaySetup_20160512.exe" target="gts_download" class="downbtn"><i></i><span>下载GTS桌面版</span></a>
+                    </div>
+                    <div class="plate_box p2">
+                        <h4><b>GTS</b>移动版</h4>
+                        <span>扫一扫下载GTS开启掌上交易</span>
+
+                        <img src="/images/studio/plate_2.jpg">
+                    </div>
+                </div>
+                <i class="arr"></i>
+            </div>
+        </li>
+        <li class="dropitem dr8">
+            <a href="javascript:" class="item_icon"><i class="i8"></i><span class="line2">扫一扫<br>移动直播</span></a>
+            <div class="dropcont" style="height:300px;">
+                <div class="cont">
+                    <div class="qr_box">
+                        <img src="/images/studio/firmlive_qr.png" alt="">
+                        <span>扫一扫<br>手机看直播</span>
+                    </div>
+                    <!--<div class="qr_box">
+                        <img src="/images/studio/firmlive_qr2.png" alt="">
+                        <span>微信解盘<br>快来扫</span>
+                    </div>-->
+                </div>
+                <i class="arr"></i>
+            </div>
+        </li>
+
+    </ul>
+    <div class="radius_tool">
+        <i class="topl"></i>
+        <i class="topr"></i>
+        <i class="botl"></i>
+        <i class="botr"></i>
+    </div>
+</div>
+<!-- mod_menu end -->

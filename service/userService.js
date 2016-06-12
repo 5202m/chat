@@ -61,7 +61,15 @@ var userService = {
             callback(row);
         });
     },
-
+    /**
+     * 通过用户id提取信息
+     * @param ids
+     */
+    getUserList:function(ids,callback){
+        boUser.find({userNo:{$in:ids.split(",")}},"userNo userName position avatar",function(err,rows) {
+            callback(rows);
+        });
+    },
     /**
      * 批量下线房间用户在线状态
      * @param roomId
@@ -180,6 +188,7 @@ var userService = {
             var urlArr=[],urlTipArr=[],ruleRow=null,needApproval=false,needApprovalTip=null,isPass=false;
             //先检查禁止发言的规则
             var isVisitor = (constant.roleUserType.visitor == userType);
+            var visitorSpeak = {allowed : false, tip : "请登录后发言"};
             for(var i in ruleArr){
                 ruleRow=ruleArr[i];
                 beforeVal=ruleRow.beforeRuleVal;
@@ -198,9 +207,9 @@ var userService = {
                     }else if(!isPass && type=='speak_allowed'){//允许发言
                         callback({isOK:false,tip:tip});
                         return;
-                    }else if(!isPass && isVisitor && type=='visitor_filter'){//允许游客发言（默认游客不允许发言）
-                        callback({isOK:false, tip:tip});
-                        return;
+                    }else if(!visitorSpeak.allowed && isVisitor && type=='visitor_filter'){//允许游客发言（默认游客不允许发言）
+                        visitorSpeak.allowed = isPass;
+                        visitorSpeak.tip = tip;
                     }
                 }
                 if(isImg && isPass && type=='img_not_allowed'){//禁止发送图片
@@ -210,8 +219,8 @@ var userService = {
                 if(!isImg && isPass && type!='speak_not_allowed' && common.isValid(beforeVal)){
                     beforeVal=beforeVal.replace(/(,|，)$/,'');//去掉结尾的逗号
                     beforeVal=beforeVal.replace(/,|，/g,'|');//逗号替换成|，便于统一使用正则表达式
-                    if(type=='visitor_filter'){
-                        if(isVisitor && eval('/'+beforeVal+'/').test(nickname)){
+                    if(type=='visitor_filter' && !isWh){
+                        if(visitorSpeak.allowed && isVisitor && eval('/'+beforeVal+'/').test(nickname)){
                             callback({isOK:false,tip:tip});
                             return;
                         }
@@ -244,6 +253,10 @@ var userService = {
                     needApproval=true;
                     needApprovalTip=tip;
                 }
+            }
+            if(!isWh && isVisitor && !visitorSpeak.allowed){
+                callback({isOK:false,tip:visitorSpeak.tip});
+                return;
             }
             if(!isImg && urlArr.length>0 && common.urlReg().test(contentVal)){
                 var val=urlArr.join("|").replace(/\//g,'\\\/').replace(/\./g,'\\.');
@@ -523,10 +536,12 @@ var userService = {
                         if(userInfo.isSetName !== false){
                             group.nickname=userInfo.nickname;
                         }
+                        if(common.isValid(userInfo.avatar)){
+                            group.avatar=userInfo.avatar;
+                        }
                         if(userInfo.fromPlatform == constant.fromPlatform.pm_mis){//后台用户更新用户类型
                             group.userType = userInfo.userType;
                         }
-                        group.avatar=userInfo.avatar;
                         room.onlineDate=userInfo.onlineDate;
                         room.onlineStatus=userInfo.onlineStatus;
                         userInfo.hasRegister=true;
@@ -545,7 +560,6 @@ var userService = {
             });
         }
     },
-
     /**
      *下线更新会员状态及发送记录条数
      */
@@ -618,7 +632,7 @@ var userService = {
                     callback({flag:4});//账号已被绑定
                 }else{
                     userInfo.userType=0;//默认为0
-                    userService.checkAClient(isfx,userInfo.mobilePhone,userInfo.accountNo,userInfo.ip,function(result){
+                    userService.checkAClient(isfx,userInfo.mobilePhone,userInfo.accountNo,userInfo.ip,false,function(result){
                         if(result.flag==1||result.flag==3){
                             //验证通过，成为聊天室会员，记录信息
                             userService.createUser(userInfo,function(isOk){
@@ -635,12 +649,15 @@ var userService = {
     /**
      * 通过账号与手机号检查用户是否A客户
      * @param isfx 是否外汇
-     * @param userInfo
+     * @param mobile
+     * @param accountNo
+     * @param ip
+     * @param isCheckByMobile 是否通过手机号检查
      * @param callback
      */
-    checkAClient:function(isfx,mobile,accountNo,ip,callback){
+    checkAClient:function(isfx,mobile,accountNo,ip,isCheckByMobile,callback){
        if(isfx){//外汇
-           this.checkFxAClient(mobile,accountNo,ip,function(flagResult){
+           this.checkFxAClient(mobile,accountNo,ip,isCheckByMobile,function(flagResult){
                callback(flagResult);
            });
        }else{//黄金
@@ -715,93 +732,242 @@ var userService = {
      * @param accountNo
      * @param ip
      * @param callback
-     * @returns {{flag: number}}
+     * @returns
      */
-    checkFxAClient:function(mobile,accountNo,ip,callback){
+    checkFxAClient:function(mobile,accountNo,ip,isCheckByMobile,callback){
         var flagResult={flag:0};
-        if(common.isBlank(accountNo)||common.isBlank(mobile)){//检查输入参数是否为空
+        if((!isCheckByMobile && common.isBlank(accountNo))||common.isBlank(mobile)){//检查输入参数是否为空
             callback(flagResult);
-            return flagResult;
+            return;
         }
         mobile=common.trim(mobile);
-        accountNo=common.trim(accountNo);
-        if(/^8[0-9]+$/g.test(accountNo)){//GTS2接口
+        if(isCheckByMobile){//通过手机号码传入检查数据(GTS2)
             var submitInfo={
-                customerNumber:accountNo,
+                prefix:86,
+                mobileNo:mobile,
                 args:'[]',
-                _principal_:{loginName:accountNo, remoteIpAddress:ip, invoker:constant.goldOrfxApiInvoker.fx_website.key, companyId:2}
+                _principal_:{loginName:mobile, remoteIpAddress:ip, invoker:constant.goldOrfxApiInvoker.fx_website.key, companyId:2}
             };
             var sg=this.getApiSignature(submitInfo);
             if(!sg){
                 callback(flagResult);
-                return flagResult;
+                return;
             }
             submitInfo["_signature_"]=sg;
             submitInfo['_principal_']=JSON.stringify(submitInfo['_principal_']);
-            request.post({url:(config.gwfxGTS2ApiUrl+'/account/getCustomerByCustomerNumber'), form: submitInfo}, function(error,response,tmpData){
-                /* logger.info("tmpData:"+tmpData);*/
+            request.post({url:(config.gwfxGTS2ApiUrl+'/account/getCustomerByMobileNo'), form: submitInfo}, function(error,response,tmpData){
+                /*logger.info("tmpDataGTS2:"+tmpData);*/
                 if(!error && common.isValid(tmpData)) {
-                    var allData = JSON.parse(tmpData);
-                    var result = allData.result,row=null;
-                    if (allData && allData.code == 'SUCCESS'&& result!=null && result.code=='OK' && (row=result.result)!=null) {
-                        if (row.mobilePhone && (row.mobilePhone.indexOf(mobile)!=-1||mobile.indexOf(common.rmMobilePrefix(row.mobilePhone))!=-1)) {
-                            flagResult.flag = 1;//存在记录
-                        }else {
-                            flagResult.flag =0;//没有对应记录
+                    try{
+                        var allData = JSON.parse(tmpData);
+                        var result = allData.result;
+                        if (allData.code == 'SUCCESS' && result && result.length > 0) {
+                            flagResult.flag = 2;//未入金激活
+                            var accList = null,acc=null;
+                            for(var i = 0, lenI = result.length; i < lenI; i++){
+                                accList = result[i].accountInfoList;
+                                if(accList && accList.length>0){
+                                    for(var k in accList){
+                                        acc=accList[k];
+                                        flagResult.accountNo = acc.accountNo;
+                                        if(acc.activateTime){
+                                            flagResult.flag = 3;
+                                            break;
+                                        }
+                                    }
+                                    if(flagResult.flag ==3){
+                                        break;
+                                    }
+                                }
+                            }
                         }
-                    } else {
-                        flagResult.flag = 0;//没有对应记录
+                    }catch(e){
+                        logger.error("checkFxAClient by GTS2Api["+mobile+"]->error:"+e);
+                        flagResult.flag=0;
                     }
                 }else{
-                    logger.error("checkFxAClient by GTS2Api["+mobile+","+accountNo+"]->error:"+error);
+                    logger.error("checkFxAClient by GTS2Api["+mobile+"]->error:"+error);
                 }
-                callback(flagResult);
+                if(flagResult.flag==0){ //如果没有GTS2账号，则检查MT4，通过手机号码传入检查数据(MT4)
+                    request.post({url:(config.gwfxMT4ApiUrl+'/ForexCustomerManager/findCustomerInfoByPhone'), form: {mobilephone:'86--'+mobile}}, function(error,response,mt4TmpData){
+                        /*logger.info("tmpDataMT4:"+mt4TmpData);*/
+                        if(!error && common.isValid(mt4TmpData)) {
+                            try{
+                                var mt4Data = JSON.parse(mt4TmpData);
+                                var mt4Result = mt4Data.result;
+                                if (mt4Data.code == 'SUCCESS' && mt4Result && mt4Result.length > 0) {
+                                    flagResult.flag = 2;//未入金激活
+                                    var acc=null;
+                                    for(var i = 0, lenI = mt4Result.length; i < lenI; i++){
+                                        acc = mt4Result[i];
+                                        flagResult.accountNo = acc.mt4Ploginname;
+                                        if(acc.isActive=="1"){
+                                            flagResult.flag = 3;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }catch(e){
+                                logger.error("checkFxAClient by MT4Api["+mobile+"]->error:"+e);
+                            }
+                        }else{
+                            logger.error("checkFxAClient by MT4Api["+mobile+"]->error:"+error);
+                        }
+                        callback(flagResult);
+                    });
+                }else{
+                    callback(flagResult);
+                }
             });
-        }else if(/^(90|92|95)[0-9]+$/g.test(accountNo)){//MT4接口 NZ：92/95开头 UK：90开头
-            request.post({url:(config.gwfxMT4ApiUrl+'/ForexCustomerManager/findCustomerInfoByLoginname'), form: {loginname:accountNo}}, function(error,response,tmpData){
-                try{
+        }else{//通过账号传入检查数据
+            accountNo=common.trim(accountNo);
+            if(/^8[0-9]+$/g.test(accountNo)){//GTS2接口
+                var submitInfo={
+                    customerNumber:accountNo,
+                    args:'[]',
+                    _principal_:{loginName:accountNo, remoteIpAddress:ip, invoker:constant.goldOrfxApiInvoker.fx_website.key, companyId:2}
+                };
+                var sg=this.getApiSignature(submitInfo);
+                if(!sg){
+                    callback(flagResult);
+                    return;
+                }
+                submitInfo["_signature_"]=sg;
+                submitInfo['_principal_']=JSON.stringify(submitInfo['_principal_']);
+                request.post({url:(config.gwfxGTS2ApiUrl+'/account/getCustomerByCustomerNumber'), form: submitInfo}, function(error,response,tmpData){
+                    /* logger.info("tmpData:"+tmpData);*/
                     if(!error && common.isValid(tmpData)) {
-                        var allData = JSON.parse(tmpData);
-                        if (allData && allData.code == 'SUCCESS'&& allData.result!=null) {
-                            var dbPhone=allData.result.mobilePhone;
-                            if (dbPhone &&(dbPhone.indexOf(mobile)!=-1||mobile.indexOf(common.rmMobilePrefix(dbPhone))!=-1)) {
+                        var allData = null;
+                        try{
+                            allData = JSON.parse(tmpData);
+                        }catch(e){
+                            logger.error("checkFxAClient by GTS2Api["+mobile+"]->error:"+e);
+                            callback(flagResult);
+                            return;
+                        }
+                        var result = allData.result,row=null;
+                        if (allData && allData.code == 'SUCCESS'&& result!=null && result.code=='OK' && (row=result.result)!=null) {
+                            if (row.mobilePhone && (row.mobilePhone.indexOf(mobile)!=-1||mobile.indexOf(common.rmMobilePrefix(row.mobilePhone))!=-1)) {
                                 flagResult.flag = 1;//存在记录
                             }else {
-                                flagResult.flag = 0;//没有对应记录
+                                flagResult.flag =0;//没有对应记录
                             }
                         } else {
                             flagResult.flag = 0;//没有对应记录
                         }
                     }else{
-                        logger.error("checkFxAClient by MT4Api["+mobile+","+accountNo+"]->error:"+error);
+                        logger.error("checkFxAClient by GTS2Api["+mobile+","+accountNo+"]->error:"+error);
                     }
                     callback(flagResult);
-                }catch(e){
-                    logger.info("MT4Api->tmpData:"+tmpData);
-                    logger.error("checkFxAClient by MT4Api["+mobile+","+accountNo+"]->e:"+e);
-                    flagResult.flag=0;
-                    callback(flagResult);
-                }
-            });
-        }else{
-            callback(flagResult);
+                });
+            }else if(/^(90|92|95)[0-9]+$/g.test(accountNo)){//MT4接口 NZ：92/95开头 UK：90开头
+                request.post({url:(config.gwfxMT4ApiUrl+'/ForexCustomerManager/findCustomerInfoByLoginname'), form: {loginname:accountNo}}, function(error,response,tmpData){
+                    try{
+                        if(!error && common.isValid(tmpData)) {
+                            var allData = null;
+                            try{
+                                allData = JSON.parse(tmpData);
+                            }catch(e){
+                                logger.error("checkFxAClient by MT4Api["+mobile+"]->error:"+error);
+                                callback(flagResult);
+                                return;
+                            }
+                            if (allData && allData.code == 'SUCCESS'&& allData.result!=null) {
+                                var dbPhone=allData.result.mobilePhone;
+                                if (dbPhone &&(dbPhone.indexOf(mobile)!=-1||mobile.indexOf(common.rmMobilePrefix(dbPhone))!=-1)) {
+                                    flagResult.flag = 1;//存在记录
+                                }else {
+                                    flagResult.flag = 0;//没有对应记录
+                                }
+                            } else {
+                                flagResult.flag = 0;//没有对应记录
+                            }
+                        }else{
+                            logger.error("checkFxAClient by MT4Api["+mobile+","+accountNo+"]->error:"+error);
+                        }
+                        callback(flagResult);
+                    }catch(e){
+                        logger.info("MT4Api->tmpData:"+tmpData);
+                        logger.error("checkFxAClient by MT4Api["+mobile+","+accountNo+"]->e:"+e);
+                        flagResult.flag=0;
+                        callback(flagResult);
+                    }
+                });
+            }else{
+                callback(flagResult);
+            }
         }
     },
     /**
      * 通过手机号检查模拟账户
+     * @param isfx 是否外汇
      * @param mobilePhone
      * @param callback
      */
-    checkSimulateClient:function(mobilePhone,callback){
-        request.post({url:(config.simulateApiUrl+'/account/demo/checkEmailMobile'), form: {args:'["","86-'+mobilePhone+'"]'}}, function(error,response,data){
-            var hasRow=false;
-            logger.info("checkEmailMobile["+mobilePhone+"]->error:"+error+";tmpData:"+data);
-            if(!error && common.isValid(data)) {
-                var allData = JSON.parse(data),result = allData.result;
-                hasRow=(allData.code == 'SUCCESS'&& result!=null && result.code=='1044');
+    checkSimulateClient:function(isfx,mobilePhone,callback){
+        var isTrue=false;
+        if(isfx){
+            var submitInfo={
+                countryCode:86,
+                mobilePhone:mobilePhone,
+                args:'[]',
+                _principal_:{loginName:mobilePhone, remoteIpAddress:'', invoker:constant.goldOrfxApiInvoker.fx_website.key, companyId:2}
+            };
+            var sg=this.getApiSignature(submitInfo);
+            if(!sg){
+                callback(isTrue);
+                return;
             }
-            callback(hasRow);
-        });
+            submitInfo["_signature_"]=sg;
+            submitInfo['_principal_']=JSON.stringify(submitInfo['_principal_']);
+            request.post({url:(config.gwfxGTS2SmApiUrl+'/checkDemoContainActivateMobilePhone'), form: submitInfo}, function(error,response,tmpData) {
+                /*logger.info("tmpDataGTS2:" + tmpData);*/
+                try{
+                    if (!error && common.isValid(tmpData)) {
+                        var allData = JSON.parse(tmpData);
+                        isTrue=(allData.code == 'SUCCESS'&& allData.result);
+                    } else {
+                        logger.warn("checkSimulateClient by GTS2Api[" + mobilePhone + "]->error:" + error);
+                    }
+                }catch(e){
+                    isTrue = false;
+                    logger.error("checkSimulateClient by GTS2Api[" + mobilePhone + "]->error:" + e);
+                }
+                if (!isTrue) { //如果没有GTS2账号，则检查MT4，通过手机号码传入检查数据(MT4)
+                    request.post({url: (config.gwfxMT4SmApiUrl + '/ForexCustomerManager/isPhoneExistDemoAcc'),form: {mobilephone: '86--' + mobilePhone}}, function (error, response, mt4TmpData) {
+                        /*logger.info("tmpDataMT4:" + mt4TmpData);*/
+                        try{
+                            if (!error && common.isValid(mt4TmpData)) {
+                                var mt4Data = JSON.parse(mt4TmpData);
+                                isTrue=(mt4Data.code == 'SUCCESS'&& mt4Data.result);
+                            } else {
+                                logger.warn("checkSimulateClient by MT4Api[" + mobilePhone + "]->error:" + error);
+                            }
+                        }catch(e){
+                            isTrue = false;
+                            logger.error("checkSimulateClient by MT4Api[" + mobilePhone + "]->error:" + e);
+                        }
+                        callback(isTrue);
+                    });
+                } else {
+                    callback(isTrue);
+                }
+            });
+        }else{
+            request.post({url:(config.simulateApiUrl+'/account/demo/checkEmailMobile'), form: {args:'["","86-'+mobilePhone+'"]'}}, function(error,response,data){
+                logger.info("checkEmailMobile["+mobilePhone+"]->error:"+error+";tmpData:"+data);
+                if(!error && common.isValid(data)) {
+                    try{
+                        var allData = JSON.parse(data),result = allData.result;
+                        isTrue=(allData.code == 'SUCCESS'&& result!=null && result.code=='1044');
+                    }catch(e){
+                        isTrue = false;
+                        logger.error("checkSimulateClient by GTSApi[" + mobilePhone + "]->error:" + e);
+                    }
+                }
+                callback(isTrue);
+            });
+        }
     },
     /**
      * 通过手机号查找对应信息
@@ -884,9 +1050,24 @@ var userService = {
                });
            }
         });
+    },
+    /**
+     * 修改头像
+     * @param mobilePhone
+     * @param groupType
+     * @param callback
+     */
+    modifyAvatar:function(mobilePhone,groupType,avatar,callback){
+        member.update({valid:1,'mobilePhone':mobilePhone,'loginPlatform.chatUserGroup._id':groupType},{$set:{ "loginPlatform.chatUserGroup.$.avatar": avatar}},function(err,row){
+            if(err){
+                logger.error("modifyAvatar->update fail!"+err);
+                callback({isOK:false,msg:"修改失败，请联系客服！"});
+            }else{
+                callback({isOK:true});
+            }
+        });
     }
 };
-
 //导出服务类
 module.exports =userService;
 

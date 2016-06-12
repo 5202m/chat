@@ -37,8 +37,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .rightbar .qq i{ display:block; width:18px; height:18px; background-position:0 0; background-size:120px auto; margin:0 12px;}
 .rightbar .home{ border:0}
 .rightbar .home i{ display:block; width:18px; height:18px; background-position:0 -24px; background-size:120px auto; margin:0 12px;}
-.rightbar .loginbtn{ font-size:14px; line-height:18px; color:#cda746; padding-left:8px; padding-right:8px; }
-.rightbar .loginbtn span{display:inline-block; color:#4e4e4e;max-width:75px; overflow:hidden; text-overflow:ellipsis; text-align:left; white-space:nowrap }
+.rightbar .loginbtn{ font-size:14px; line-height:18px; color:#cda746; padding-left:8px; padding-right:8px; display:inline-block; max-width:75px; overflow:hidden; text-overflow:ellipsis; text-align:left; white-space:nowrap}
 
 
 /* === center === */

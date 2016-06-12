@@ -62,10 +62,11 @@ var pmApiService = {
     },
     /**
      * 提取文档详情接口
+     * @param params
      * @param callback
      */
-    getArticleInfo:function(id,callback){
-        request(this.formatApiUrl("/article/getArticleInfo?id="+id),function(err, response, data){
+    getArticleInfo:function(params,callback){
+        request(this.formatApiUrl("/article/getArticleInfo?id="+params.id),function(err, response, data){
             if (!err && response.statusCode == 200) {
                 callback(data);
             }else{
@@ -147,7 +148,64 @@ var pmApiService = {
                 }
             }
         });
+    },
+
+    /**
+     * 获取CFTC持仓比例数据
+     */
+    get24kCftc: function(callback){
+        request(this.formatApiUrl('/common/get24kCftc'),function(err, response, data){
+            if (err){
+                callback(false);
+            }else{
+                try{
+                    callback(JSON.parse(data));
+                }catch(e){
+                    logger.error("get24kCftc fail:"+e);
+                    callback(false);
+                }
+            }
+        });
+    },
+    /**
+     * 获取财经日历列表数据
+     * @param callback
+     */
+    getZxFinanceDataList: function(releaseTime, dataTypeCon, callback){
+        request(this.formatApiUrl('/zxFinanceData/list?releaseTime=' + releaseTime + '&dataTypeCon=' + dataTypeCon),function(err, response, data){
+            if (err){
+                callback(false);
+            }else{
+                try{
+                    callback(JSON.parse(data));
+                }catch(e){
+                    logger.error("getZxFinanceDataList fail:"+e);
+                    callback(false);
+                }
+            }
+        });
+    },
+    /**
+     * 发送邮件
+     * @param key
+     * @param data
+     * @param callback
+     */
+    sendEmail: function(key, data, callback){
+        request.post({url:this.formatApiUrl('/common/email'), form:{key:key,data:JSON.stringify(data)}},function(err, response, data){
+            if (err){
+                callback(false);
+            }else{
+                try{
+                    callback(JSON.parse(data));
+                }catch(e){
+                    logger.error("sendEmail fail:"+e);
+                    callback(false);
+                }
+            }
+        });
     }
+
 };
 
 //导出服务类

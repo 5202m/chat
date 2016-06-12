@@ -547,7 +547,7 @@ var StudioChatMini = {
         } else {
             aImgCls = "user_c";
         }
-        return '<img src="images/studio/' + aImgCls + '.png">';
+        return '<img src="images/studio_mini/' + aImgCls + '.png">';
     },
     /**
      * 设置socket

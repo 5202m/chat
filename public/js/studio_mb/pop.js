@@ -8,7 +8,7 @@ var studioMbPerson = {
     load : function(userInfo, platform){
         if(userInfo && userInfo.isLogin){
             this.refreshNickname(userInfo.nickname);
-            $("#person_hp").attr("src", studioMbPerson.getUserLevelIco(userInfo.clientGroup));
+            $("#person_hp").attr("src", studioMbPerson.getUserLevelIco(userInfo.clientGroup, userInfo.avatar));
             $("#upg_tbody_id").html("");
             studioMbPop.loadingBlock($("#upg_tbody_id"));
             $.getJSON('/studio/getClientGroupList',null,function(data){
@@ -16,7 +16,7 @@ var studioMbPerson = {
                 if(data){
                     var currLevel='',seq=0,rowTmp=null;
                     for(var t in data){//找出对应排序号，按排序号分等级
-                        if(data[t]._id==userInfo.clientGroup){
+                        if(data[t].clientGroupId==userInfo.clientGroup){
                             seq=data[t].sequence;
                         }
                     }
@@ -25,15 +25,15 @@ var studioMbPerson = {
                     for(var i in data){
                         rowTmp=data[i];
                         trCls = '';
-                        if(rowTmp._id==userInfo.clientGroup){
+                        if(rowTmp.clientGroupId==userInfo.clientGroup){
                             trCls = ' class="on"';
                             currLevel="当前级别";
-                        }else if(rowTmp._id!="visitor" && seq<rowTmp.sequence){
-                            currLevel=rowTmp._id=='vip'?'联系客服升级':'<a href="javascript:void(0)" t="' + rowTmp._id + '">升级</a>';
+                        }else if(rowTmp.clientGroupId!="visitor" && seq<rowTmp.sequence){
+                            currLevel=rowTmp.clientGroupId=='vip'?'联系客服升级':'<a href="javascript:void(0)" t="' + rowTmp.clientGroupId + '">升级</a>';
                         }else{
                             currLevel='---';
                         }
-                        trDomArr.push('<tr' + trCls + '><td width="17%"><img src="'+studioMbPerson.getUserLevelIco(rowTmp._id)+'"></td>');
+                        trDomArr.push('<tr' + trCls + '><td width="17%"><img src="'+studioMbPerson.getUserLevelIco(rowTmp.clientGroupId)+'"></td>');
                         trDomArr.push('<td width="20%"><b>'+common.trim(rowTmp.remark)+'</b></td>');
                         trDomArr.push('<td width="43%">'+common.trim(rowTmp.authorityDes)+'</td>');
                         trDomArr.push('<td width="20%">'+currLevel+'</td></tr>');
@@ -88,25 +88,29 @@ var studioMbPerson = {
     /**
      * 获取用户头像
      * @param clientGroup
+     * @param [avatar]
      * @returns {string}
      */
-    getUserLevelIco : function(clientGroup){
-        var userLevelIco = "/images/studio_mb/user1.png";
+    getUserLevelIco : function(clientGroup, avatar){
+        if(common.isValid(avatar)){
+            return avatar;
+        }
+        var userLevelIco = "/images/studio_mb/user_c.png";
         switch(clientGroup) {
             case "vip" :
-                userLevelIco = "/images/studio_mb/user2.png";
+                userLevelIco = "/images/studio_mb/user_v.png";
                 break;
             case "active" :
-                userLevelIco = "/images/studio_mb/user3.png";
+                userLevelIco = "/images/studio_mb/user_r.png";
                 break;
             case "notActive" :
-                userLevelIco = "/images/studio_mb/user3.png";
+                userLevelIco = "/images/studio_mb/user_r.png";
                 break;
             case "simulate" :
-                userLevelIco = "/images/studio_mb/user4.png";
+                userLevelIco = "/images/studio_mb/user_d.png";
                 break;
             case "register" :
-                userLevelIco = "/images/studio_mb/user5.png";
+                userLevelIco = "/images/studio_mb/user_m.png";
                 break;
         }
         return userLevelIco;

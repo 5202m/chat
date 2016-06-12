@@ -463,12 +463,17 @@ var fxchat={
         if(!row){
             return;
         }
+        var authorObj=row.authorInfo,author='',avatar='images/fxchat/cate1.jpg';
+        if(authorObj){
+            author=authorObj.name;
+            avatar=authorObj.avatar||avatar;
+        }
         if(code.indexOf('video')!=-1){
             domArr.push('<li id="'+id+'"><a href="javascript:" class="ali video-li"><dl class="trade-cl clearfix">');
             domArr.push('<dt class="dt-fon fl"><img src="images/fxchat/cate2.jpg" width="100%" alt="" /></dt>');
             domArr.push('<dd><p class="trade-time"><i>'+row.tag+'</i>'+common.formatterDateTime(createDate)+'</p>');
             //domArr.push('<h3>'+row.title+'</h3>');
-            domArr.push('<h3>'+(common.isValid(row.author)?'<span>【'+row.author+'】</span>':'')+row.title+'</h3>');
+            domArr.push('<h3>'+(common.isValid(author)?'<span>【'+author+'】</span>':'')+row.title+'</h3>');
             domArr.push('<div class="thumb"><img src="'+data.mediaImgUrl+'"><div class="iplay"><i></i></div></div>');
             domArr.push('<span class="morelink">详情 &gt;</span>');
             domArr.push('</dd></dl></a></li>');
@@ -476,21 +481,11 @@ var fxchat={
             domArr.push('<li id="'+id+'"><dl class="trade-cl clearfix voice-li"><dt class="dt-fon fl"><img src="images/fxchat/cate3.jpg" width="100%" alt="" /></dt><dd>');
             domArr.push('<p class="trade-time"><i>'+row.tag+'</i>'+common.formatterDateTime(createDate)+'</p>');
             //domArr.push('<h3>'+row.title+'</h3>');
-            domArr.push('<h3>'+(common.isValid(row.author)?'<span>【'+row.author+'】</span>':'')+row.title+'</h3>');
+            domArr.push('<h3>'+(common.isValid(author)?'<span>【'+author+'】</span>':'')+row.title+'</h3>');
             domArr.push('<a class="voicebar"><i></i><span>00:00</span><audio style="display:none;" src="'+data.mediaUrl+'"></audio></a>');
             //domArr.push('<a><audio src="'+data.mediaUrl+'" controls="controls" style="width:250px;"></audio><i></i><span></span></a>');
             domArr.push('</dd></dl></li>');
         }else{
-            var author=row.author,avatar='images/fxchat/cate1.jpg';
-            if(common.isValid(row.author)){
-                if(row.author.indexOf(";")!=-1){
-                    var authorAvatarArr=row.author.split(";");
-                    author=authorAvatarArr[0];
-                    if(common.isValid(authorAvatarArr[1])){
-                        avatar=authorAvatarArr[1];
-                    }
-                }
-            }
             domArr.push('<li id="'+id+'"><a href="javascript:" class="ali text-li"><dl class="trade-cl clearfix">');
             domArr.push('<dt class="dt-fon fxs-img fl"><img src="'+avatar+'" width="100%" alt="" /></dt>');
             domArr.push('<dd><p class="trade-time"><i>'+row.tag+'</i>'+common.formatterDateTime(createDate)+'</p>');

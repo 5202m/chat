@@ -64,22 +64,45 @@ fileZip.zipJs(["public\\js\\fxchat\\room.js"],'public\\js\\fxchat\\room.min.js')
 fileZip.zipCss(["public\\css\\fxchat\\index.css"],'public\\css\\fxchat\\index.min.css');
 
 //直播间前端js/css压缩
-fileZip.zipJs(["public\\js\\studio\\admin.js"],'public\\js\\studio\\admin.min.js');
-fileZip.zipJs(["public\\js\\studio\\index.js"],'public\\js\\studio\\index.min.js');
-fileZip.zipJs(["public\\js\\studio\\mini.js"],'public\\js\\studio\\mini.min.js');
+
+//pm studio
+console.log("zip studio,plase wait....");
 fileZip.zipCss(["public\\css\\studio\\admin.css"],'public\\css\\studio\\admin.min.css');
 fileZip.zipCss(["public\\css\\studio\\index.css"],'public\\css\\studio\\index.min.css');
 fileZip.zipCss(["public\\css\\studio\\mini.css"],'public\\css\\studio\\mini.min.css');
+fileZip.zipJs(["public\\js\\studio\\admin.js"],'public\\js\\studio\\admin.min.js');
+fileZip.zipJs(["public\\js\\studio\\mini.js"],'public\\js\\studio\\mini.min.js');
+fileZip.zipJs(["public\\js\\util\\common.js","public\\js\\util\\chatAnalyze.js",
+                "public\\js\\lib\\newquote.js","public\\js\\lib\\jquery.face.js",
+                "public\\js\\studio\\index.js","public\\js\\studio\\index_video.js",
+                "public\\js\\studio\\index_chat.js","public\\js\\studio\\index_box.js",
+                "public\\js\\studio\\index_tool.js"],'public\\js\\studio\\index.min.js');
+//fx studio
+console.log("zip fxstudio,plase wait....");
+fileZip.zipCss(["public\\css\\fxstudio\\index.css"],'public\\css\\fxstudio\\index.min.css');
+fileZip.zipJs(["public\\js\\fxstudio\\admin.js"],'public\\js\\fxstudio\\admin.min.js');
+fileZip.zipJs(["public\\js\\util\\common.js","public\\js\\util\\chatAnalyze.js",
+                "public\\js\\lib\\newquote.js","public\\js\\lib\\jquery.face.js",
+                "public\\js\\fxstudio\\index.js","public\\js\\fxstudio\\index_video.js",
+                "public\\js\\fxstudio\\index_chat.js","public\\js\\fxstudio\\index_box.js",
+                "public\\js\\fxstudio\\index_tool.js"],'public\\js\\fxstudio\\index.min.js');
 
 //直播间前端（手机版）js/css压缩
+console.log("zip studio_mb,plase wait....");
 fileZip.zipJs(["public\\js\\studio_mb\\index.js"],'public\\js\\studio_mb\\index.min.js');
 fileZip.zipJs(["public\\js\\studio_mb\\room.js"],'public\\js\\studio_mb\\room.min.js');
 fileZip.zipJs(["public\\js\\studio_mb\\pop.js"],'public\\js\\studio_mb\\pop.min.js');
 fileZip.zipCss(["public\\css\\studio_mb\\index.css"],'public\\css\\studio_mb\\index.min.css');
 
+//fx直播间前端（手机版）js/css压缩
+console.log("zip fxstudio_mb,plase wait....");
+fileZip.zipJs(["public\\js\\fxstudio_mb\\index.js"],'public\\js\\fxstudio_mb\\index.min.js');
+fileZip.zipJs(["public\\js\\fxstudio_mb\\room.js"],'public\\js\\fxstudio_mb\\room.min.js');
+fileZip.zipJs(["public\\js\\fxstudio_mb\\pop.js"],'public\\js\\fxstudio_mb\\pop.min.js');
+fileZip.zipCss(["public\\css\\fxstudio_mb\\index.css"],'public\\css\\fxstudio_mb\\index.min.css');
+
+
 //通用js/css压缩
 fileZip.zipJs(["public\\js\\util\\common.js"],'public\\js\\util\\common.min.js');
-fileZip.zipJs(["public\\js\\lib\\jsWindows\\jsWindows.js"],'public\\js\\lib\\jsWindows\\jsWindows.min.js');
-fileZip.zipCss(["public\\js\\lib\\jsWindows\\jsWindows.css"],'public\\js\\lib\\jsWindows\\jsWindows.min.css');
 //导出类
 module.exports = fileZip;

@@ -21,7 +21,7 @@ require('./routes/index').init(app);//配置同源页面路由
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
-    res.render('error',{error: '请求错误:'+err.status});
+    res.render('error',{error: '请求错误:'+err.status,reqPath:req.path.replace(/\/(.*studio)(\/.*)?/g,"$1")});
     //next(err);
 });
 // error handlers
@@ -30,7 +30,7 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
-        error: {}
+        error: '500错误，请联系客服！'
     });
 });
 /*＃＃＃＃＃＃＃＃＃＃定义app配置信息＃＃＃＃＃＃＃＃end */

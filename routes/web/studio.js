@@ -17,6 +17,16 @@ var studioService = require('../../service/studioService');//引入studioService
 var chatService = require('../../service/chatService');//引入chatService
 var visitorService = require('../../service/visitorService');//引入visitorService
 var logger=require('../../resources/logConf').getLogger('studio');//引入log4js
+var chatPraiseService = require('../../service/chatPraiseService');//引入chatPraiseService
+
+/**
+ * 从基本路径提取groupType
+ * 备注：route的基本路径配置的字符基本是与groupType保持一致的，所以可以直接从baseUrl中提取
+ * @param baseUrl
+ */
+function getGroupType(req,isBase){
+    return isBase?req.baseUrl:req.baseUrl.replace(/\//g,"");
+}
 /**
  * 聊天室页面入口
  */
@@ -33,7 +43,7 @@ router.get('/admin', function(req, res) {
         logger.warn('chat->非法访问,ip:'+ common.getClientIp(req));
         res.render('error',{error: '输入参数有误，请检查链接的输入参数！'});
     }else{
-        chatUser.groupType=constant.fromPlatform.studio;
+        chatUser.groupType=getGroupType(req);
         var viewDataObj={apiUrl:config.pmApiUrl+'/common',filePath:config.filesDomain};//输出参数
         if(common.isBlank(chatUser.nickname)){
             chatUser.nickname=chatUser.userId;
@@ -90,10 +100,10 @@ router.get('/admin', function(req, res) {
  */
 router.get('/', function(req, res) {
     var chatUser=req.session.studioUserInfo,clientGroup=constant.clientGroup.visitor;
-    var initVisit=req.session.initVisit;
+    var targetGType=getGroupType(req);
     var openId = req.query["userId"];
     if(openId) {
-        studioService.login({thirdId:openId,groupType:constant.fromPlatform.studio}, 3, function(loginRes){
+        studioService.login({thirdId:openId,groupType:getGroupType(req)}, 3, function(loginRes){
             if(loginRes.isOK){
                 loginRes.userInfo.isLogin=true;
                 req.session.studioUserInfo=loginRes.userInfo;
@@ -103,13 +113,11 @@ router.get('/', function(req, res) {
                     isLogin : false,
                     clientGroup : constant.clientGroup.visitor,
                     userType : constant.roleUserType.visitor,
-                    initVisit : (initVisit!=null||initVisit!=undefined)?initVisit:true,
                     mobilePhone : null,
                     thirdId : openId
                 };
-                req.session.initVisit=null;//清空对应值
             }
-            res.redirect("/studio?platform=wechat");
+            res.redirect(getGroupType(req,true)+"?platform=wechat");
         });
         return;
     }else if(chatUser && chatUser.isLogin){
@@ -120,18 +128,14 @@ router.get('/', function(req, res) {
             chatUser.isLogin=false;
             chatUser.clientGroup=clientGroup;
             chatUser.userType=constant.roleUserType.visitor;
-            chatUser.initVisit=(initVisit!=null||initVisit!=undefined)?initVisit:true;//首次访问
             req.session.studioUserInfo=chatUser;
-            req.session.initVisit=null;//清空对应值
-        }else{
-            chatUser.initVisit=false;//已经在页面
         }
     }
     if(req.session.logoutToGroup){
         chatUser.toGroup = req.session.logoutToGroup;
         req.session.logoutToGroup = null;
     }
-    chatUser.groupType=constant.fromPlatform.studio;
+    chatUser.groupType=targetGType;
     chatUser.userType=chatUser.userType||constant.roleUserType.member;//没有userType则默认为会员
     logger.info("chatUser:"+JSON.stringify(chatUser));
     var isMobile = common.isMobile(req);
@@ -149,13 +153,13 @@ router.get('/', function(req, res) {
         toStudioView(chatUser, null, clientGroup, isMobile, req, res);
         return;
     }
-    studioService.getDefaultRoom(clientGroup,function(groupId){
+    studioService.getDefaultRoom(chatUser.groupType,clientGroup,function(groupId){
         if(common.isBlank(groupId)){
             req.session.studioUserInfo=null;
             res.render('error',{error: '默认房间设置有误，请检查！'});
         }else{
             var targetGroupId = chatUser.toGroup || chatUser.groupId || groupId;
-            chatService.getRoomOnlineNum(constant.fromPlatform.studio, targetGroupId,function(onlineNum){
+            chatService.getRoomOnlineNum(targetGType, targetGroupId,function(onlineNum){
                 userService.checkRoomStatus(targetGroupId,onlineNum,function(isOK) {
                     if(isOK){
                         if(targetGroupId != chatUser.groupId){//目标房间不是当前已登录房间==>追加到目标房间，后跳转
@@ -171,10 +175,10 @@ router.get('/', function(req, res) {
                         }
                     }else if(targetGroupId == chatUser.toGroup){//目标房间是跳转房间==>清空跳转，重新刷新
                         req.session.studioUserInfo.toGroup = null;
-                        res.redirect("/studio" + redirctUrl);
+                        res.redirect(getGroupType(req,true) + redirctUrl);
                     }else if(targetGroupId == chatUser.groupId){//目标房间是当前房间==>登出重新跳转
                         req.session.studioUserInfo=null;
-                        res.redirect("/studio" + redirctUrl);
+                        res.redirect(getGroupType(req,true) + redirctUrl);
                     }else{//目标房间是默认房间(此时肯定未登录状态，否则会满足“目标房间是当前房间”)==>直接报错
                         req.session.studioUserInfo=null;
                         res.render("error",{error: '非常抱歉，你进入的默认房间已限制访问！'});
@@ -187,13 +191,13 @@ router.get('/', function(req, res) {
 
 //转到页面
 function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
-    studioService.getIndexLoadData(groupId, true,(!isMobile||(isMobile && common.isValid(groupId))),function(data){
+    studioService.getIndexLoadData(chatUser.groupType,groupId, true,(!isMobile||(isMobile && common.isValid(groupId))),function(data){
         var newStudioList=[],rowTmp=null;
         var isVisitor=(constant.clientGroup.visitor==clientGroup);
-        var viewDataObj={apiUrl:config.pmApiUrl+'/common',filePath:config.filesDomain,web24kPath:config.web24kPath,mobile24kPath:config.mobile24kPath};//输出参数
+        var viewDataObj={apiUrl:config.pmApiUrl,filePath:config.filesDomain,web24kPath:config.web24kPath,mobile24kPath:config.mobile24kPath};//输出参数
         chatUser.groupId=groupId;
         viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
-        viewDataObj.userInfo=JSON.stringify({initVisit:chatUser.initVisit,groupType:constant.fromPlatform.studio,isLogin:chatUser.isLogin,groupId:chatUser.groupId,userId:chatUser.userId,clientGroup:chatUser.clientGroup,nickname:chatUser.nickname,userType:chatUser.userType});
+        viewDataObj.userInfo=JSON.stringify({avatar:chatUser.avatar,groupType:chatUser.groupType,isLogin:chatUser.isLogin,groupId:chatUser.groupId,userId:chatUser.userId,clientGroup:chatUser.clientGroup,nickname:chatUser.nickname,userType:chatUser.userType});
         viewDataObj.userSession=chatUser;
         viewDataObj.serverTime=new Date().getTime();
         viewDataObj.syllabusData='';
@@ -202,7 +206,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         if(!data.studioList){
             if(data.syllabusResult){
                 var syResult=data.syllabusResult;
-                viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:(common.isBlank(syResult.studioLink)?"":JSON.parse(syResult.studioLink)),courses:(common.isBlank(syResult.courses)?"":JSON.parse(syResult.courses))});
+                viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:(common.isBlank(syResult.studioLink)?"":JSON.parse(syResult.studioLink)),courses:(common.isBlank(syResult.courses)?"":syllabusService.removeContext(JSON.parse(syResult.courses)))});
             }
         }else{
             data.studioList.forEach(function(row){
@@ -237,34 +241,35 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
                     viewDataObj.currStudioAuth = !rowTmp.disable;
                     if(data.syllabusResult){
                         var syResult=data.syllabusResult;
-                        viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:(common.isBlank(syResult.studioLink)?"":JSON.parse(syResult.studioLink)),courses:(common.isBlank(syResult.courses)?"":JSON.parse(syResult.courses))});
+                        viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:(common.isBlank(syResult.studioLink)?"":JSON.parse(syResult.studioLink)),courses:(common.isBlank(syResult.courses)?"":syllabusService.removeContext(JSON.parse(syResult.courses)))});
                     }
                 }
                 newStudioList.push(rowTmp);
             });
         }
         viewDataObj.studioList = newStudioList;
+        viewDataObj.isDevTest=config.isDevTest;
         //记录访客信息
         var fromPlatform=req.query["platform"];
         var snUser=req.session.studioUserInfo;
         if(snUser.firstLogin && snUser.groupId){//刷新页面不记录访客记录
             snUser.firstLogin=false;
-            var vrRow={userId:snUser.userId,platform:fromPlatform || "",userAgent:req.headers["user-agent"],groupType:constant.fromPlatform.studio,roomId:snUser.groupId,nickname:snUser.nickname,clientGroup:snUser.clientGroup,clientStoreId:snUser.clientStoreId,mobile:snUser.mobilePhone,ip:common.getClientIp(req)};
+            var vrRow={userId:snUser.userId,platform:fromPlatform || "",userAgent:req.headers["user-agent"],groupType:getGroupType(req),roomId:snUser.groupId,nickname:snUser.nickname,clientGroup:snUser.clientGroup,clientStoreId:snUser.clientStoreId,mobile:snUser.mobilePhone,ip:common.getClientIp(req)};
             visitorService.saveVisitorRecord("login",vrRow);
         }
         viewDataObj.fromPlatform=fromPlatform;
         var isThirdUsed = fromPlatform && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform);
         if(isMobile){
             if(groupId || isThirdUsed){
-                res.render("studio_mb/room",viewDataObj);
+                res.render(chatUser.groupType+"_mb/room",viewDataObj);
             }else{
-                res.render("studio_mb/index",viewDataObj);
+                res.render(chatUser.groupType+"_mb/index",viewDataObj);
             }
         }else{
             if(isThirdUsed && fromPlatform != config.studioThirdUsed.webui){
                 res.render("studio/mini",viewDataObj);
             }else{
-                res.render("studio/index",viewDataObj);
+                res.render(chatUser.groupType+"/index",viewDataObj);
             }
         }
     });
@@ -298,6 +303,11 @@ router.post('/login',function(req, res){
         clientStoreId=req.body["clientStoreId"];
     var result={isOK:false,error:null};
     var isAutoLogin = !common.isBlank(userId);
+    var userSession=req.session.studioUserInfo;
+    if(!userSession){
+        res.json(result);
+        return;
+    }
     if(!isAutoLogin){
         if(common.isBlank(mobilePhone)||common.isBlank(verifyCode)){
             result.error=errorMessage.code_1006;
@@ -319,8 +329,8 @@ router.post('/login',function(req, res){
                     res.json(result);
                 }
             }else{
-                var thirdId = (req.session.studioUserInfo && req.session.studioUserInfo.thirdId) || null;
-                studioService.login({mobilePhone:mobilePhone, thirdId:thirdId, groupType:constant.fromPlatform.studio}, 1, function(loginRes){
+                var thirdId = (userSession && userSession.thirdId) || null;
+                studioService.login({mobilePhone:mobilePhone, thirdId:thirdId, groupType:userSession.groupType}, 1, function(loginRes){
                     if(loginRes.isOK && constant.clientGroup.real != loginRes.userInfo.clientGroup){
                         //real 类型客户将拆分成A和N客户
                         loginRes.userInfo.isLogin=true;
@@ -329,10 +339,10 @@ router.post('/login',function(req, res){
                         req.session.studioUserInfo.firstLogin=true;
                         res.json({isOK:true, userInfo : {clientGroup : loginRes.userInfo.clientGroup}});
                     }else{
-                        studioService.checkClientGroup(mobilePhone,null,function(clientGroup, accountNo){
+                        studioService.checkClientGroup(mobilePhone,null,userSession.groupType.indexOf("fx")!=-1,function(clientGroup, accountNo){
                             if(loginRes.isOK){
                                 //已经有账户，按类别升级即可
-                                studioService.updateClientGroup(mobilePhone, clientGroup, accountNo, function (isOk) {
+                                studioService.updateClientGroup(userSession.groupType,mobilePhone, clientGroup, accountNo, function (isOk) {
                                     if(isOk){
                                         loginRes.userInfo.clientGroup = clientGroup;
                                     }
@@ -343,10 +353,10 @@ router.post('/login',function(req, res){
                                     res.json({isOK:true, userInfo : {clientGroup : loginRes.userInfo.clientGroup}}); //即使修改账户级别失败也登录成功
                                 });
                             }else{
-                                var userInfo={mobilePhone:mobilePhone, ip:common.getClientIp(req), groupType:constant.fromPlatform.studio, accountNo: accountNo, thirdId:thirdId};
+                                var userInfo={mobilePhone:mobilePhone, ip:common.getClientIp(req), groupType:userSession.groupType, accountNo: accountNo, thirdId:thirdId};
                                 studioService.studioRegister(userInfo,clientGroup,function(result){
                                     if(result.isOK){
-                                        req.session.studioUserInfo={clientStoreId:clientStoreId,firstLogin:true,isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
+                                        req.session.studioUserInfo={groupType:userSession.groupType,clientStoreId:clientStoreId,firstLogin:true,isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
                                         result.userInfo = {clientGroup : userInfo.clientGroup};
                                     }
                                     res.json(result);
@@ -359,7 +369,7 @@ router.post('/login',function(req, res){
         });
     }else{
         //userId自动登录
-        studioService.login({userId:userId,groupType:constant.fromPlatform.studio}, 2, function(loginRes){
+        studioService.login({userId:userId,groupType:userSession.groupType}, 2, function(loginRes){
             if(loginRes.isOK){
                 loginRes.userInfo.isLogin=true;
                 req.session.studioUserInfo=loginRes.userInfo;
@@ -379,15 +389,15 @@ router.post('/login',function(req, res){
 router.get('/logout', function(req, res) {
     var snUser=req.session.studioUserInfo;
     var platform = req.query["platform"];
-    visitorService.saveVisitorRecord("logout",{roomId:snUser.groupId,clientStoreId:snUser.clientStoreId,groupType:constant.fromPlatform.studio,ip:common.getClientIp(req)});
+    visitorService.saveVisitorRecord("logout",{roomId:snUser.groupId,clientStoreId:snUser.clientStoreId,groupType:snUser.groupType,ip:common.getClientIp(req)});
     req.session.studioUserInfo=null;
-    req.session.initVisit=false;//表示已经进入页面
     //注销之后检查当前房间是否给游客授权，若授权则以游客身份再次进入当前房间
     studioService.checkGroupAuth(snUser.groupId,constant.clientGroup.visitor,function(isOK){
         if(isOK){
             req.session.logoutToGroup=snUser.groupId;
         }
-        res.redirect(platform ? ("/studio?platform=" + platform) : "/studio");
+        var target=getGroupType(req,true);
+        res.redirect(platform ? (target+"?platform=" + platform) : target);
     });
 });
 
@@ -396,7 +406,7 @@ router.get('/logout', function(req, res) {
  */
 router.get('/home', function(req, res) {
     req.session.studioUserInfo.groupId = null;
-    res.redirect("/studio");
+    res.redirect(getGroupType(req,true));
 });
 
 /**
@@ -422,8 +432,20 @@ router.get('/getArticleList', function(req, res) {
 /**
  * 提取文档信息
  */
+router.get('/getArticleInfo', function(req, res) {
+    var params={};
+    params.id=req.query["id"];
+    pmApiService.getArticleInfo(params,function(data){
+        res.json(data?JSON.parse(data):null);
+    });
+});
+
+
+/**
+ * 提取客户组信息
+ */
 router.get('/getClientGroupList', function(req, res) {
-    studioService.getClientGroupList(function(data){
+    studioService.getClientGroupList(getGroupType(req),function(data){
         res.json(data);
     });
 });
@@ -451,7 +473,7 @@ router.post('/checkGroupAuth',function(req, res){
     if(!result.error){
         var clientGroup = chatUser && chatUser.isLogin ? chatUser.clientGroup : constant.clientGroup.visitor;
         if(isRedirectDef){
-            studioService.getDefaultRoom(clientGroup,function(groupId) {
+            studioService.getDefaultRoom(getGroupType(req),clientGroup,function(groupId) {
                 if (common.isBlank(groupId)) {
                     result.isOK=false;
                 }else{
@@ -489,7 +511,7 @@ router.post('/upgrade',function(req, res){
         result.error=errorMessage.code_1010;
         res.json(result);
     }else{
-        studioService.upgradeClientGroup(chatUser.mobilePhone,clientGroup,function(isOk, clientGroupRes){
+        studioService.upgradeClientGroup(chatUser.groupType,chatUser.mobilePhone,clientGroup,function(isOk, clientGroupRes){
             if(isOk){
                 result.isOK = true;
                 result.clientGroup = clientGroupRes;
@@ -560,7 +582,7 @@ router.post('/modifyName',function(req, res){
     }else if(common.isBlank(nickname)){
         res.json({isOK:false,msg:'昵称不能为空！'});
     }else{
-        userService.modifyNickname(userInfo.mobilePhone,constant.fromPlatform.studio,nickname,function(result){
+        userService.modifyNickname(userInfo.mobilePhone,getGroupType(req),nickname,function(result){
             if(result.isOK){
                 req.session.studioUserInfo.nickname=nickname;
                 result.nickname=nickname;
@@ -617,4 +639,205 @@ router.post('/uploadData', function(req, res) {
         res.json({success:false});
     }
 });
+
+/**
+ * 提取课程数据
+ */
+router.get('/getCourseInfo', function(req, res) {
+    var userInfo=req.session.studioUserInfo;
+    var day=req.query["day"],startTime=req.query["startTime"],endTime=req.query["endTime"],authorId=req.query["authorId"];
+    if(!userInfo || common.isBlank(day)){
+        res.json({remark:'',authors:[]});
+    }else {
+        syllabusService.getCourseInfo({groupType:userInfo.groupType,groupId:userInfo.groupId,day:day,startTime:startTime,endTime:endTime,authorId:authorId},function(data){
+            res.json(data);
+        });
+    }
+});
+
+/**
+ * 设置点赞
+ */
+router.post('/setUserPraise', function(req, res) {
+    var clientId=req.body.clientId,praiseId=req.body.praiseId;
+    if(common.isBlank(clientId)||common.isBlank(praiseId)){
+        res.json({isOK:false});
+    }else{
+        var fromPlatform=getGroupType(req);
+        pmApiService.checkChatPraise(clientId,praiseId,fromPlatform,function(isOK){
+            if(isOK){
+                chatPraiseService.setPraise(praiseId,constant.chatPraiseType.user,fromPlatform);
+            }
+            res.json({isOK:isOK});
+        });
+    }
+});
+
+/**
+ * 房间对应的课程数据包括房间对应的在线人数
+ */
+router.get('/getRmCourseList', function(req, res) {
+    var roomIds=req.query["roomIds"];
+    var userInfo=req.session.studioUserInfo;
+    var result={isOK:false,data:{}};
+    if(!userInfo || common.isBlank(roomIds)){
+        res.json(result);
+    }else {
+        syllabusService.getSyllabus(userInfo.groupType,roomIds,function(data){
+            if(!data || data.length==0){
+                res.json(result);
+            }else{
+                var row=null,course=null;
+                var currTime=new Date().getTime();
+                result.isOK=true;
+                var newData=[];
+                if(data instanceof Array){
+                    newData=data;
+                }else{
+                    newData.push(data);
+                }
+                var backObj={};
+                for(var i in newData){
+                    row=newData[i];
+                    course=common.getSyllabusPlan(row,currTime);
+                    if(course){
+                        backObj={day:course.day,name:course.lecturer,startTime:course.startTime,endTime:course.endTime,isNext:course.isNext};
+                    }else{
+                        backObj={day:'',name:'',startTime:'',endTime:'',isNext:false};
+                    }
+                    result.data[row.groupId]=backObj;
+                }
+                async.eachSeries(roomIds.split(","), function (rid, callbackTmp) {
+                    chatService.getRoomOnlineNum(getGroupType(req),rid,function(onlineNum){
+                        result.data[rid].onlineNum=onlineNum;
+                        callbackTmp(null);
+                    });
+                }, function (err) {
+                    res.json(result);
+                });
+            }
+        });
+    }
+});
+
+/**
+ * 伦敦金/伦敦银 看涨看跌投票
+ */
+router.post('/highsLowsVote', function(req, res){
+    var params = {};//extend(extend({}, req.query), req.body);
+    params.symbol = req.body['symbol'];//产品名
+    params.highslows = req.body['highslows'];//看涨或看跌
+    if(common.isBlank(params.symbol)){
+        res.json({isOK:false,msg:'产品不能为空！'});
+    }
+    else if(common.isBlank(params.highslows)){
+        res.json({isOK:false,msg:'看跌或看涨不能为空！'});
+    }
+    else {
+        studioService.highsLowsVote(params.symbol, params.highslows, function (result) {
+            res.json(result);
+        });
+    }
+});
+
+/**
+ * 获取伦敦金/伦敦银 看涨看跌投票数据
+ */
+router.get('/getHighsLowsVote', function(req, res){
+    var params = {};//extend(extend({}, req.query), req.body);
+    params.symbol = req.query['symbol'];//产品名
+    params.highslows = req.query['highslows'];//看涨或看跌
+    studioService.getHighsLowsVote(params.symbol, params.highslows, function (result) {
+        res.json(result);
+    });
+});
+
+/**
+ * CFTC持仓比例数据
+ */
+router.get('/get24kCftc', function(req, res){
+    pmApiService.get24kCftc(function(result){
+        res.json(result);
+    });
+});
+
+/**
+ * 获取财经日历数据
+ */
+router.post('/getFinancData', function(req, res){
+    var releaseTime = req.body['releaseTime'];
+    var dataTypeCon = req.body['dataTypeCon'] ? req.body['dataTypeCon'] : 1;
+    if(common.isBlank(releaseTime)){
+        res.json({"result":1,"msg":'日期不能为空！'});
+    }
+    else if(common.isBlank(dataTypeCon)){
+        res.json({"result":1,"msg":'数据类型不能为空！'});
+    }
+    else{
+        pmApiService.getZxFinanceDataList(releaseTime, dataTypeCon, function(result){
+            res.json(result);
+        });
+    }
+});
+
+/**
+ * 更新用户头像
+ */
+router.post('/modifyAvatar',function(req, res){
+    var userInfo=req.session.studioUserInfo,avatar=req.body["avatar"];
+    if(!userInfo || common.isBlank(userInfo.mobilePhone)){
+        res.json({isOK:false,msg:'请重新登录后再修改！'});
+    }else if(common.isBlank(avatar)){
+        res.json({isOK:false,msg:'头像不能为空！'});
+    }else{
+        userService.modifyAvatar(userInfo.mobilePhone,getGroupType(req),avatar,function(result){
+            if(result.isOK){
+                req.session.studioUserInfo.avatar=avatar;
+                result.avatar=avatar;
+            }
+            res.json(result);
+        });
+    }
+});
+
+/**
+ * 保存到桌面
+ */
+router.get('/getShortCut', function(req, res) {
+    var type = getGroupType(req);
+    var cbFn = function(err){
+        if(err){
+            logger.warn('getShortCut << download link error:'+ err);
+        }
+    };
+    if(/^fx.*/.test(type)){
+        res.download(__dirname + "../../../public/link/fxstudio.url", "视频直播间-环球投资.url", cbFn);
+    }else{
+        res.download(__dirname + "../../../public/link/studio.url", "视频直播间-金道贵金属.url", cbFn);
+    }
+});
+
+/**
+ * 专家邮箱发送邮件
+ */
+router.post('/email', function(req, res){
+    var key = req.body['key'];
+    var data = req.body['data'];
+    data = JSON.parse(data);
+    if(common.isBlank(data.email)){
+        res.json({isOK:false,msg:'请输入发件人！'});
+    }else if(common.isBlank(data.content)){
+        res.json({isOK:false,msg:'请输入邮件内容！'});
+    }else{
+        pmApiService.sendEmail(key, data, function(result){
+            if(result.result==0){
+                res.json({isOK:true, msg: '邮件发送成功！'});
+            }
+            else{
+                res.json({isOK:false,msg:result.msg});
+            }
+        });
+    }
+});
+
 module.exports = router;

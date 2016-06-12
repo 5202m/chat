@@ -8,7 +8,7 @@ var visitorService=require('../service/visitorService');
  * author Alan.wu
  */
 var messageService ={
-    maxRows:100,
+    maxRows:50,
     /**
      * 从数据库中加载已有的聊天记录
      */
@@ -18,7 +18,7 @@ var messageService ={
         var searchObj={groupType:groupType,groupId:groupId,status:1,valid:1};
         var selectRows=this.maxRows;
         if(allowWhisper){
-            selectRows=50;
+            selectRows=30;
             searchObj["toUser.talkStyle"]=1;
             if(userInfo.userType==constant.roleUserType.member){
                 visitorService.getUserArrByUserId(userInfo.userType,userInfo.clientStoreId,groupType,groupId,userInfo.userId,function(userArr){
@@ -48,7 +48,7 @@ var messageService ={
                 searchObj.publishTime = { "$gt":lastPublishTime};
             }
             //非直播间(微解盘)信息提示
-            if(constant.fromPlatform.studio!=groupType) {
+            if(!common.isStudio(groupType)) {
                 if(constant.roleUserType.cs==userInfo.userType){
                     //客服
                     searchObj.userType={$in:[0,3]};
@@ -58,7 +58,12 @@ var messageService ={
                     searchObj["toUser.talkStyle"] = 0;
                 }
             }else{
-                searchObj["toUser.talkStyle"] = 0;
+                if(userInfo.userType<=0){
+                    searchObj.userType={$in:[1,2,3]};
+                    searchObj["toUser.talkStyle"] = 0;
+                }else{
+                    searchObj["toUser.talkStyle"] = 0;
+                }
             }
             this.findMessageList(userInfo,searchObj,selectSQL,selectRows,function(result){
                 callback(result);

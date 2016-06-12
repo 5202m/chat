@@ -5,6 +5,10 @@
  */
 var common = {
     /**
+     * 日期变量
+     */
+    daysCN:{"0":"星期天","1":"星期一","2":"星期二","3":"星期三","4":"星期四","5":"星期五","6":"星期六"},
+    /**
      * 功能：删除数组中某个下标的元素
      */
     remove:function (arr,index) {
@@ -60,7 +64,7 @@ var common = {
         return this.isBlank(str)?'':str.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
     },
     /**
-     * 格式化去日期（含时间）
+     * 格式化去日期（不含时间）
      */
     formatterDate : function(date,splitChar) {
         if(!splitChar){
@@ -423,7 +427,7 @@ var common = {
         var validDayTmbk=null,courseObj=null;
         for(var i=0;i<days.length;i++){
             if(days[i].status==0){
-                return null;
+                continue;
             }
             if(days[i].day>currDay){
                 for(var k in timeBuckets){
@@ -450,10 +454,11 @@ var common = {
                 if(!validDayTmbk){//筛选有效的课程
                     for(var k=0;k<timeBuckets.length;k++) {
                         courseObj=timeBuckets[k].course;
-                        if (!courseObj || courseObj.status==0 || common.isBlank(courseObj.lecturerId)) {
+                        if (!courseObj || courseObj[i].status==0 || common.isBlank(courseObj[i].lecturerId)) {
                             continue;
                         }
                         validDayTmbk ={dayIndex:i,tmIndex:k};
+                        break;
                     }
                 }
             }
@@ -475,7 +480,8 @@ var common = {
             dayCN : ['星期天','星期一','星期二','星期三','星期四','星期五','星期六'],
             indexCN : ['第一节','第二节','第三节','第四节','第五节','第六节','第七节','第八节'],
             courseCls : ['prev', 'ing', 'next'],
-            tableCls : "syllabus"
+            tableCls : "syllabus",
+            courseType : {'0':'文字直播','1':'视频直播','2':'ONE TV'}
         };
         var currDay=new Date(serverTime).getDay(),currTimes=this.getHHMM(serverTime);
         var loc_constants = $.extend({}, defConstants, options);
@@ -658,10 +664,10 @@ var common = {
                                     loc_timeCls = loc_timeClsFunc(loc_day.day, loc_timeBucket.startTime, loc_timeBucket.endTime, false);
                                     loc_html.push('<p class="' + loc_timeCls + '">');
                                     loc_html.push('<span>' + loc_timeBucket.startTime + "-" + loc_timeBucket.endTime + '</span>');
-                                    loc_html.push('<span>视频直播</span>');
                                     if(loc_timeBucket.course[i].status == 0){
                                         loc_html.push('<span>休市</span>');
                                     }else{
+                                        loc_html.push('<span>' + loc_constants.courseType[loc_timeBucket.course[i].courseType] + '</span>');
                                         loc_html.push('<span>' + loc_timeBucket.course[i].lecturer + '</span>');
                                         loc_html.push('<span class="item">' + loc_timeBucket.course[i].title + '</span>');
                                     }
@@ -730,6 +736,31 @@ var common = {
             lh=length-1;
         }
         return lh<0?0:lh;
+    },
+    /**
+     * 设置滚动条样式
+     * @param dom
+     */
+    setScrollStyle:function(dom){
+        dom.find(".mCSB_dragger_bar").css({background: "url(/images/studio/scroll.png) -10px 50% repeat-y",width: "6px"});
+    },
+    /**
+     * 保存到桌面
+     * @param sUrl
+     * @param sName
+     */
+    saveToDesktop : function (sUrl, sName){
+        try {
+            var WshShell = new ActiveXObject("WScript.Shell");
+            var oUrlLink = WshShell.CreateShortcut(WshShell.SpecialFolders("Desktop") + "\\" + sName + ".url");
+            oUrlLink.TargetPath = sUrl;
+            oUrlLink.Save();
+        }
+        catch (e) {
+            //alert("当前浏览器不支持保存到桌面！");
+            return false;
+        }
+        return true;
     }
 };
 /**
@@ -803,3 +834,53 @@ $.fn.focusEnd = function() {
     tmp.remove();
     return this;
 };
+
+/*替换字符串中占位符 扩展方法 begin*/
+String.prototype.formatStr=function() {
+    if(arguments.length==0) return this;
+    for(var s=this, i=0; i<arguments.length; i++)
+        s=s.replace(new RegExp("\\{"+i+"\\}","g"), arguments[i]);
+    return s;
+};
+/*替换字符串中占位符 扩展方法 end*/
+
+/*FX在线客服 begin*/
+function live800Prompt(type) {
+    window.onbeforeunload = null;
+    var qqPrompt = "http://wpa.b.qq.com/cgi/wpa.php?ln=2&uin=800018886";
+    var live800Prompt = "http://onlinecustomer-service.gwghk.com/live800/chatClient/chatbox.jsp?companyID=283&enterurl=http%3A%2F%2Fwww%2Egwfx%2Ecom%2F&tm=1355377642406";
+    if (type == 2) {
+        try {
+            var myuuids = UUID.prototype.createUUID();
+            //getGacookiesTrack(myuuids,"2","1");
+            window.open(qqPrompt,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+        } catch (e) {
+            window.open(qqPrompt,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+        }
+    } else {
+        try {
+            var myuuids = UUID.prototype.createUUID();
+            //getGacookiesTrack(myuuids,"2","2");
+            window.open(live800Prompt,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+        } catch (e) {
+            window.open(live800Prompt)
+        }
+    }
+}
+
+function qqPrompt(type){
+    //注意：下面的注释不能删除
+//dynamic content: contact info edm content
+    var qqPrompt = "http://wpa.b.qq.com/cgi/wpa.php?ln=2&uin=800018886";
+    var live800Prompt = "http://onlinecustomer-service.gwghk.com/live800/chatClient/chatbox.jsp?companyID=283&enterurl=http%3A%2F%2Fwww%2Egwfx%2Ecom%2F&tm=1355377642406";
+    window.onbeforeunload = null;
+    try {
+        //追踪代码录入数据库
+        var myuuids=UUID.prototype.createUUID();
+        getGacookiesTrack(myuuids,"2","1");
+        window.open(qqPrompt,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+    } catch (e) {
+        window.open(qqPrompt,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+    }
+}
+/*FX在线客服 end*/

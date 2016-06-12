@@ -65,7 +65,7 @@ var studioChatMbIdx={
         //头部
         $("#header_ui").text(nickname);
         //个人信息
-        studioMbPop.Person.refreshNickName(nickname);
+        studioMbPop.Person.refreshNickname(nickname);
     },
     /**
      * 设置访客存储信息
@@ -339,6 +339,9 @@ var studioChatMbIdx={
         $.getJSON('/studio/getSyllabus?t=' + new Date().getTime(),{groupType:studioChatMbIdx.userInfo.groupType,groupId:groupIds},function(result){
             var loc_html = null,data=result.data;
             if(data){
+                if(!(data instanceof Array)){
+                    data = [data];
+                }
                 var row=null,liDom=null,courseObj=null,syTipDom=null;
                 var dayCn=['周日','周一','周二','周三','周四','周五','周六'];
                 var courseTypeTxt={'0':'文字直播','1':'视频直播','2':'ONE TV'};
@@ -346,7 +349,8 @@ var studioChatMbIdx={
                     row=data[i];
                     if(row.courses){
                         loc_html = common.formatSyllabus(row.courses, result.serverTime, 3, {
-                            dayCN :dayCn
+                            dayCN :dayCn,
+                            courseType : courseTypeTxt
                         });
                         liDom=$('#studioListTab .videoroom-ul li[gi='+row.groupId+']');
                         courseObj=common.getSyllabusPlan(row,result.serverTime);
@@ -471,7 +475,7 @@ var studioChatMbIdx={
             var  pageNoTmp=pageNo||1;
             var  pageSizeTmp=pageSize||5;
             //备注 contentType->2:即时资讯;3:专业评论
-            $.getJSON(this.apiUrl+'/getNewsInfoList',{pageNo:pageNoTmp,pageSize:pageSizeTmp,lang:'zh',contentType1:type1,contentType2:type2},function(data){
+            $.getJSON(this.apiUrl+'/common/getNewsInfoList',{pageNo:pageNoTmp,pageSize:pageSizeTmp,lang:'zh',contentType1:type1,contentType2:type2},function(data){
                 //console.log("getNewsInfoList->data:"+JSON.stringify(data));
                 callback(data);
             });

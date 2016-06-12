@@ -409,9 +409,9 @@ function parseMarketpriceIndex(data,selfOptions) {
         percentDom.text((deltaPercent * 100).toFixed(2) + "%");
         if(!selfOptions){
             if (deltaPrice > 0) {
-                $("#price_" +symbol).parent().removeClass("date-down").addClass("date-up");
+                $("#price_" +symbol).parent().addClass("up");
             } else {
-                $("#price_" + symbol).parent().removeClass("date-up").addClass("date-down");
+                $("#price_" + symbol).parent().removeClass("up");
             }
             $("#deltaPrice_" +symbol).html(parseFloat(deltaPrice).toFixed(_index_price_type));
         }else{

@@ -300,6 +300,105 @@ var common = {
      */
     rmMobilePrefix:function(mobile){
        return  mobile.replace(/^[0-9]+(-+)/g,'');
+    },
+    /**
+     * 提取时分
+     */
+    getHHMM:function(date){
+        if(!(date instanceof Date)){
+            date=new Date(date);
+        }
+        var datetime = (date.getHours() < 10 ? "0" + date.getHours() : date.getHours())
+            + ":"
+            + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+        return datetime;
+    },
+    /**
+     * 提取课程
+     * @param data
+     * @param serverTime
+     */
+    getSyllabusPlan:function(data,serverTime){
+        if(!data||!data.courses){
+            return null;
+        }
+        //提取课程
+        var getCourses=function(tmBkTmp,i,isNext){
+            var course=null,courseTmp=tmBkTmp.course;
+            if(courseTmp && courseTmp.length>i){
+                course=courseTmp[i];
+                if(course.status==0 || common.isBlank(course.lecturerId)){
+                    return null;
+                }
+                course.startTime=tmBkTmp.startTime;
+                course.endTime=tmBkTmp.endTime;
+                course.day=days[i].day;
+                course.isNext=isNext;
+                return course;
+            }else{
+                return null;
+            }
+        };
+        var coursesObj=null;
+        if(this.isValid(data.courses) && typeof data.courses !='object') {
+            coursesObj =JSON.parse(data.courses);
+        }else{
+            coursesObj=data.courses;
+        }
+        var days=coursesObj.days,timeBuckets=coursesObj.timeBuckets;
+        var currDay=new Date(serverTime).getDay();
+        var currTime=common.getHHMM(serverTime);
+        var tmBk=null,hasRow=false;
+        var validDayTmbk=null,courseObj=null;
+        for(var i=0;i<days.length;i++){
+            if(days[i].status==0){
+                continue;
+            }
+            if(days[i].day>currDay){
+                for(var k in timeBuckets){
+                    tmBk=timeBuckets[k];
+                    courseObj=getCourses(tmBk,i,true);
+                    if(!courseObj){
+                        continue;
+                    }
+                    return courseObj;
+                }
+            }else if(days[i].day==currDay){
+                for(var k in timeBuckets){
+                    tmBk=timeBuckets[k];
+                    if(tmBk.startTime<=currTime && tmBk.endTime>=currTime){
+                        hasRow=true;
+                        return getCourses(tmBk,i,false);
+                    }
+                    if(!hasRow && tmBk.startTime>currTime){
+                        hasRow=true;
+                        return getCourses(tmBk,i,true);
+                    }
+                }
+            }else{
+                if(!validDayTmbk){//筛选有效的课程
+                    for(var k=0;k<timeBuckets.length;k++) {
+                        courseObj=timeBuckets[k].course;
+                        if (!courseObj || courseObj[i].status==0 || common.isBlank(courseObj[i].lecturerId)) {
+                            continue;
+                        }
+                        validDayTmbk ={dayIndex:i,tmIndex:k};
+                        break;
+                    }
+                }
+            }
+        }
+        if(!hasRow && validDayTmbk){//如课程安排中设置的日期小于当前日期，则返回有效的课程
+            return getCourses(timeBuckets[validDayTmbk.tmIndex],validDayTmbk.dayIndex,true);
+        }
+        return null;
+    },
+    /**
+     * 是否直播间
+     * @param type
+     */
+    isStudio:function(groupType){
+        return groupType && groupType.indexOf("studio")!=-1;
     }
 };
 //导出类

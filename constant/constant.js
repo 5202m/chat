@@ -6,7 +6,8 @@ var constant={
         pm_mis:'pm_mis',//后台
         wechat:'wechat',//黄金微解盘
         fxchat:'fxchat',//外汇微解盘
-        studio:'studio'//直播间
+        studio:'studio',//pm直播间
+        fxstudio:'fxstudio'//fx直播间
     },
     clientGroup:{//客户类别
       vip:'vip',
