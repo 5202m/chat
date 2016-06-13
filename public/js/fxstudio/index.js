@@ -190,7 +190,7 @@ var indexJS ={
         /**添加到桌面*/
         $("#saveToDesktop").click(function(){
             if(common.saveToDesktop(window.location.href, "视频直播间-金道贵金属")){
-                box.showMsg("添加成功");
+                box.showMsg("直播间快捷方式已成功添加到桌面");
             }else{
                 window.location.href = "/fxstudio/getShortCut?t=" + new Date().getTime();
             }
