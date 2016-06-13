@@ -185,7 +185,7 @@ var indexJS ={
         });
         /*QQ客服按钮事件*/
         $('#qqcs').click(function(){
-            live800Prompt(2);
+            live800Prompt(2, "&utm_source=studio&utm_medium=yy&utm_content=TOP&utm_campaign=qqzx_fx");
         });
         /**添加到桌面*/
         $("#saveToDesktop").click(function(){

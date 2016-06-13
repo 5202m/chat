@@ -767,25 +767,25 @@ var common = {
  * 打开客户界面
  * @param type
  */
-function openLive800Chat(type){
+function openLive800Chat(type, utmParam){
     var url="https://www.onlineservice-hk.com/k800/chatClient/chatbox.jsp?companyID=209&s=1";
     if(type){
-        location.href=url;
+        location.href=url + utmParam;
     }else{
-        window.open (url,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+        window.open (url + utmParam,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
     }
 }
 /**
  * 打开客服QQ
  */
-function openQQChatByCommonv3(){
+function openQQChatByCommonv3(utmParam){
     var url="http://crm2.qq.com/page/portalpage/wpa.php?uin=800018282&cref=&ref=&f=1&ty=1&ap=&as=";
-    window.open (url,'QQChatindow','height=544, width=644,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+    window.open (url + (utmParam || ""),'QQChatindow','height=544, width=644,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
 }
 //QQ窗口客服(手机)
-function openQQChatByCommonjs(){
+function openQQChatByCommonjs(utmParam){
     var url="http://wpa.b.qq.com/cgi/wpa.php?ln=2&uin=800018282";
-    window.open (url);
+    window.open (url + (utmParam || ""));
 }
 //如果没有定义console,直接用alert替代
 if(!window.console){
@@ -845,25 +845,26 @@ String.prototype.formatStr=function() {
 /*替换字符串中占位符 扩展方法 end*/
 
 /*FX在线客服 begin*/
-function live800Prompt(type) {
+function live800Prompt(type, utmParam) {
     window.onbeforeunload = null;
     var qqPrompt = "http://wpa.b.qq.com/cgi/wpa.php?ln=2&uin=800018886";
     var live800Prompt = "http://onlinecustomer-service.gwghk.com/live800/chatClient/chatbox.jsp?companyID=283&enterurl=http%3A%2F%2Fwww%2Egwfx%2Ecom%2F&tm=1355377642406";
+    utmParam = utmParam || "";
     if (type == 2) {
         try {
             var myuuids = UUID.prototype.createUUID();
             //getGacookiesTrack(myuuids,"2","1");
-            window.open(qqPrompt,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+            window.open(qqPrompt + utmParam,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
         } catch (e) {
-            window.open(qqPrompt,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+            window.open(qqPrompt + utmParam,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
         }
     } else {
         try {
             var myuuids = UUID.prototype.createUUID();
             //getGacookiesTrack(myuuids,"2","2");
-            window.open(live800Prompt,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+            window.open(live800Prompt + utmParam,'Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
         } catch (e) {
-            window.open(live800Prompt)
+            window.open(live800Prompt + utmParam)
         }
     }
 }

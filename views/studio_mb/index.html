@@ -30,7 +30,7 @@
                 <h1 class="hide-t">视频直播间</h1>
             </div>
             <div class="rightbar">
-                <a href="javascript:openQQChatByCommonjs();" class="qq"><i></i></a>
+                <a href="javascript:openQQChatByCommonjs('&utm_source=studio&utm_medium=yy&utm_content=wap&utm_campaign=qq_pm');" class="qq"><i></i></a>
                 <a id="header_ui" href="javascript:void(0)" class="loginbtn"><%= userSession.isLogin ? userSession.nickname : '登录' %></a>
             </div>
         </section>
@@ -131,9 +131,9 @@
 <!-- 底部悬浮菜单begin-->
 <div class="fob_open">
     <div>
-        <a target="_blank" onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'open_real_account', 'content_bottom',1,true]);" class="fb_open_real" href="http://m.24k.hk/realaccount_open.html">开真实账户</a>
-        <a target="_blank" onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'open_demo_account', 'content_bottom',1,true]);" class="fb_open_analog" href="http://m.24k.hk/demoaccount_open.html">无风险模拟</a>
-        <a onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'chat_qq', 'content_bottom',1,true]);openLive800Chat();" class="fb_consult" style="background-image:none"><i class="qq-fon"><s></s></i>立即咨询</a>
+        <a target="_blank" onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'open_real_account', 'content_bottom',1,true]);" class="fb_open_real" href="http://m.24k.hk/realaccount_open.html?utm_source=m_studio&utm_medium=yy&utm_content=bottom&utm_campaign=realaccount_open">开真实账户</a>
+        <a target="_blank" onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'open_demo_account', 'content_bottom',1,true]);" class="fb_open_analog" href="http://m.24k.hk/demoaccount_open.html?utm_source=m_studio&utm_medium=yy&utm_content=bottom&utm_campaign=demoaccount_open">无风险模拟</a>
+        <a onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'chat_qq', 'content_bottom',1,true]);openLive800Chat(null, '&utm_source=m_studio&utm_medium=yy&utm_content=bottom&utm_campaign=onlineservice-hk');" class="fb_consult" style="background-image:none"><i class="qq-fon"><s></s></i>立即咨询</a>
     </div>
 </div>
 <!-- 底部悬浮菜单end-->
