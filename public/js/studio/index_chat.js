@@ -21,11 +21,6 @@ var chat={
      * 设置各种事件
      */
     setEvent:function(){
-        $(document).mouseup(function()
-        {
-            $(".pletter_win .wh_drag").css("cursor","default");
-            $(this).unbind("mousemove");
-        });
         //初始化表情事件
         $('#msgFaceBtn').qqFace({
             id:'faceId',

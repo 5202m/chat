@@ -252,16 +252,14 @@ var videos={
                 txt='当前正在文字直播';
             }
             $("#nextCourse").find(".ntext").text(txt);
+            $("#nextCourse .nextbox").show();
             $("#nextCourse").find("img").attr("src",data.avatar);
             $("#nextCourse").find(".t_name").text(data.name);
             $("#nextCourse").find(".live_name").text(course.title);
             $("#nextCourse").find(".time").text(common.daysCN[course.day]+' '+course.startTime+' - '+course.endTime);
         }else{
             $("#nextCourse").find(".ntext").text("当前暂无直播");
-            $("#nextCourse").find("img").hide();
-            $("#nextCourse").find(".t_name").hide();
-            $("#nextCourse").find(".live_name").hide();
-            $("#nextCourse").find(".time").hide();
+            $("#nextCourse .nextbox").hide();
         }
         $("#lvVideoId").hide();
         $("#nextCourse").show();
