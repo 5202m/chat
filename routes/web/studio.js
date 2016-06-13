@@ -708,6 +708,9 @@ router.get('/getRmCourseList', function(req, res) {
                     result.data[row.groupId]=backObj;
                 }
                 async.eachSeries(roomIds.split(","), function (rid, callbackTmp) {
+                    if(!result.data.hasOwnProperty(rid)){
+                        result.data[rid] = {day:'',name:'',startTime:'',endTime:'',isNext:false};
+                    }
                     chatService.getRoomOnlineNum(getGroupType(req),rid,function(onlineNum){
                         result.data[rid].onlineNum=onlineNum;
                         callbackTmp(null);
