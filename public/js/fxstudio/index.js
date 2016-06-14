@@ -273,6 +273,7 @@ var indexJS ={
             var nva=$(".course_nav").html("");
             var als='',ons='',curDay=new Date(indexJS.serverTime).getDay();
             var startDateTime = indexJS.serverTime - 86400000 * ((curDay + 6) % 7),dateStr;
+            var awidth = 100 / days.length; //默认宽度20%
             for(var i= 0,len=days.length;i<len;i++){
                 if(i==0){
                     als='fir';
@@ -286,8 +287,8 @@ var indexJS ={
                 }else{
                     ons='';
                 }
-                dateStr = common.formatterDate(new Date(startDateTime + ((days[i].day + 6) % 7) * 86400000));
-                nva.append('<a href="javascript:" class="'+als+ons+'" t="'+i+'"><span>'+common.daysCN[days[i].day+""]+'<b>' + dateStr + '</b></span><i></i></a>');
+                dateStr = common.formatterDate(new Date(startDateTime + ((days[i].day + 6) % 7) * 86400000)).substring(5);
+                nva.append('<a href="javascript:" class="'+als+ons+'" t="'+i+'" style="width:'+awidth+'%;"><span>'+common.daysCN[days[i].day+""]+'<b>' + dateStr + '</b></span><i></i></a>');
                 $(".cursor .dropcont .cont").append('<div class="course_tab'+ons+'" t="'+i+'" d="'+days[i].day+'"><ul></ul></div>');
                 als='';
                 var lsTab=$(".cursor .course_tab:last ul"),courseObj=null;
