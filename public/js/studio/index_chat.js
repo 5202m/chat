@@ -1015,7 +1015,7 @@ var chat={
                 obj.mCustomScrollbar("scrollTo", "bottom");
             }
         }else{
-            obj.mCustomScrollbar({scrollInertia:1,scrollButtons:{enable:false},theme:(theme?theme:"light-2")});
+            obj.mCustomScrollbar({scrollButtons:{enable:false},theme:(theme?theme:"light-2")});
             common.setScrollStyle(obj);
             obj.mCustomScrollbar("scrollTo", "bottom");
         }

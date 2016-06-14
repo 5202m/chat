@@ -143,7 +143,7 @@ var box={
         //手机号码输入控制
         $("#loginForm input[name=mobilePhone],#loginForm input[name=verifyCode],#setNkForm input[name=nickname]").bind("input propertychange", function() {
             if(common.isValid(this.value)){
-                $(".popup_box .error").html("");
+                $(".popup_box .error").hide();
             }
         });
         //验证码事件
@@ -153,7 +153,7 @@ var box={
             }
             var mobile=$("#loginForm input[name=mobilePhone]").val();
             if(!common.isMobilePhone(mobile)){
-                $("#loginForm .error").html("手机号码有误，请重新输入！");
+                $("#loginForm .error").html("手机号码有误，请重新输入！").show();
                 return;
             }
             $(this).removeClass("pressed").html("发送中...");
@@ -161,13 +161,13 @@ var box={
                 $.getJSON('/fxstudio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:$(this).attr("ut")},function(data){
                     if(!data || data.result != 0){
                         if(data.errcode == "1005"){
-                            $("#loginForm .error").html("<i></i>"+data.errmsg);
+                            $("#loginForm .error").html("<i></i>"+data.errmsg).show();
                         }else{
                             console.error("提取数据有误！");
                         }
                         box.resetVerifyCode();
                     }else{
-                        $("#loginForm .error").html("");
+                        $("#loginForm .error").hide();
                         box.setVerifyCodeTime('#loginForm .rbtn');
                     }
                 });
@@ -198,11 +198,11 @@ var box={
             $('#formBtnLoad').show();
             common.getJson("/fxstudio/login",$("#loginForm").serialize(),function(result){
                 console.log("lgresult",result);
-                $("#loginForm .error").html("");
+                $("#loginForm .error").hide();
                 $(_this).attr('disabled',false);
                 $('#formBtnLoad').hide();
                 if(!result.isOK){
-                    $("#loginForm .error").html("<i></i>"+result.error.errmsg);
+                    $("#loginForm .error").html("<i></i>"+result.error.errmsg).show();
                     return false;
                 }else{
                     $(".blackbg,#loginBox").hide();
@@ -226,11 +226,11 @@ var box={
             var _this=this;
             $('#setNkLoad').show();
             common.getJson("/fxstudio/modifyName",$("#setNkForm").serialize(),function(result){
-                $("#setNkForm .error").html("");
+                $("#setNkForm .error").hide("");
                 $(_this).attr('disabled',false);
                 $('#setNkLoad').hide();
                 if(!result.isOK){
-                    $("#setNkForm .error").html('<i></i>'+(result.msg?result.msg:"修改失败，请联系客服！"));
+                    $("#setNkForm .error").html('<i></i>'+(result.msg?result.msg:"修改失败，请联系客服！")).show();
                     return false;
                 }else{
                     $("#setNkForm").parent().find(".pop_close").click();
@@ -281,17 +281,17 @@ var box={
         if(!$error){
             $error=$(formDom+" .error");
         }
-        $error.attr("tId","").html("");
+        $error.attr("tId","").hide();
         $(formDom+" input").each(function(){
             if(common.isBlank($(this).val())){
                 if(this.name=='mobilePhone'){
-                    $error.attr("tId",this.name).html("<i></i>手机号码不能为空！");
+                    $error.attr("tId",this.name).html("<i></i>手机号码不能为空！").show();
                 }
                 if(this.name=='verifyCode'){
-                    $error.attr("tId",this.name).html("<i></i>验证码不能为空！");
+                    $error.attr("tId",this.name).html("<i></i>验证码不能为空！").show();
                 }
                 if(this.name=='nickname'){
-                    $error.attr("tId",this.name).html("<i></i>昵称不能为空！");
+                    $error.attr("tId",this.name).html("<i></i>昵称不能为空！").show();
                 }
                 isTrue=false;
                 return isTrue;
@@ -299,13 +299,13 @@ var box={
                 if(this.name=='mobilePhone') {
                     $(this).val($.trim($(this).val()));
                     if(!common.isMobilePhone(this.value)){
-                        $error.attr("tId",this.name).html("<i></i>手机号码输入有误！");
+                        $error.attr("tId",this.name).html("<i></i>手机号码输入有误！").show();
                         isTrue=false;
                         return isTrue;
                     }
                 }
                 if(this.name=='nickname'&& !common.isRightName(this.value)) {
-                    $error.attr("tId",this.name).html("<i></i>昵称为2至10位字符(数字/英文/中文/下划线)，不能全数字!");
+                    $error.attr("tId",this.name).html("<i></i>昵称为2至10位字符(数字/英文/中文/下划线)，不能全数字!").show();
                     isTrue=false;
                     return isTrue;
                 }
@@ -370,12 +370,10 @@ var box={
          */
         $('#btnSendMail').click(function(){
             if($.trim($('#mailFrom').val())==''){
-                $('.expert_box .error').html('<i></i>发件人不能为空！');
-                $('.expert_box .error').show();
+                $('.expert_box .error').html('<i></i>发件人不能为空！').show();
             }
             else if($.trim($('#mailContent').val())==''){
-                $('.expert_box .error').html('<i></i>输入内容有误，请重新输入！');
-                $('.expert_box .error').show();
+                $('.expert_box .error').html('<i></i>输入内容有误，请重新输入！').show();
             }
             else{
                 $('.expert_box .error').hide();

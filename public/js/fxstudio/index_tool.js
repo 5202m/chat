@@ -325,7 +325,7 @@ var tool={
                     pptHtml += pptFormat.formatStr(fileSuffix[suffix],row.title,(row.authorInfo?row.authorInfo.name:''),publishDate,data[i].mediaUrl,name, '');
                 }
                 $('.dr6 .ppt_list ul').html(pptHtml);
-                indexJS.setListScroll('.ppt_list ul',{isCustom:false,theme:"rounded-dots",scrollbarPosition:"outside"});/*设置滚动条*/
+                indexJS.setListScroll('.ppt_list',{isCustom:false,theme:"rounded-dots",scrollbarPosition:"outside"});/*设置滚动条*/
             }
             else{
                 $('.dr6 .ppt_list ul').html('');

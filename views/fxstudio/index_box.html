@@ -187,7 +187,7 @@
                 <div class="formcont">
                     <div class="in_line">
                         <i class="ic_phone"></i>
-                        <input type="text" name="mobilePhone" placeholder="手机号码" class="in1">
+                        <input type="text" name="mobilePhone" placeholder="手机号码" class="in1" maxlength="11">
                     </div>
                     <div class="in_line clearfix">
                         <i class="ic_msg"></i>
@@ -196,7 +196,7 @@
                     </div>
                 </div>
             </div>
-            <div class="in_line" style="color: #999;line-height: 18px;font-size: 14px;">
+            <div class="in_line clearfix" style="color: #999;line-height: 18px;font-size: 14px; margin-bottom: 10px;">
                 <div class="fl<%if(fromPlatform == 'wechat'){%> dn<%}%>">
                     <input type="checkbox" id="autoLogin" checked="checked">
                     <label for="autoLogin">下次自动登录</label>

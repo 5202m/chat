@@ -296,7 +296,9 @@ var indexJS ={
                 }else{
                     for(var k= 0,tklen=tmk.length;k<tklen;k++){
                         if(k==0){
-                            als='fir ';
+                            als='fir';
+                        }else{
+                            als='';
                         }
                         courseObj=tmk[k].course[i];
                         lsTab.append('<li class="'+als+'"><a href="javascript:" st="'+tmk[k].startTime+'" et="'+tmk[k].endTime+'"><i></i><span><lable>'+tmk[k].startTime+'- '+tmk[k].endTime+'　</lable><lable>'+courseType[courseObj.courseType]+'　</lable><lable>'+courseObj.lecturer+'</lable></span><p>'+courseObj.title+'</p></a></li>');
@@ -423,7 +425,7 @@ var indexJS ={
         if(dom.hasClass("mCustomScrollbar")){
             dom.mCustomScrollbar("update");
         }else{
-            options = $.extend({scrollButtons:{enable:false},theme:"thick",scrollbarPosition:"inside",isCustom:true}, options);
+            options = $.extend({scrollButtons:{enable:false},theme:"light-2",isCustom:true}, options);
             dom.mCustomScrollbar(options);
             if(options.isCustom){
                 common.setScrollStyle(dom);
