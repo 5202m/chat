@@ -248,7 +248,7 @@ var tool={
                                                         );
                 });
                 $('.dr3 .calendar_ul ul').html(financeHtml);
-                indexJS.setListScroll('.calendar_ul.scrollbox2',{isCustom:false,theme:"rounded-dots",scrollbarPosition:"outside"});/*设置滚动条*/
+                indexJS.setListScroll('.calendar_ul.scrollbox2',{isCustom:false,scrollbarPosition:"outside"});/*设置滚动条*/
             }
         });
     },
@@ -325,15 +325,17 @@ var tool={
                 var data=dataList.data,row=null;
                 var pptHtml = '';
                 var pptFormat = tool.formatHtml('download');
+                var cls;
                 for(var i in data){
+                    cls = (i == 0) ? ' class="fir"' : '';
                     row=data[i].detailList[0];
                     var suffix = data[i].mediaUrl.substring(data[i].mediaUrl.lastIndexOf('.')+1).toLowerCase();
                     var name = row.title+'.'+suffix;
                     var publishDate = common.formatterDate(data[i].publishStartDate, '-').replace('-','/').replace('-','/');
-                    pptHtml += pptFormat.formatStr(fileSuffix[suffix],row.title,(row.authorInfo?row.authorInfo.name:''),publishDate,data[i].mediaUrl,name, '');
+                    pptHtml += pptFormat.formatStr(cls,fileSuffix[suffix],row.title,(row.authorInfo?row.authorInfo.name:''),publishDate,data[i].mediaUrl,name, '');
                 }
                 $('.dr6 .ppt_list ul').html(pptHtml);
-                indexJS.setListScroll('.ppt_list',{isCustom:false,theme:"rounded-dots",scrollbarPosition:"outside"});/*设置滚动条*/
+                indexJS.setListScroll('.ppt_list',{isCustom:false,scrollbarPosition:"outside"});/*设置滚动条*/
             }
             else{
                 $('.dr6 .ppt_list ul').html('');
@@ -399,12 +401,12 @@ var tool={
                 formatHtmlArr.push('</tr>');
                 break;
             case 'download':
-                formatHtmlArr.push('<li class="fir">');
-                formatHtmlArr.push('   <i{0}></i>');
+                formatHtmlArr.push('<li{0}>');
+                formatHtmlArr.push('   <i{1}></i>');
                 formatHtmlArr.push('   <div class="detail">');
-                formatHtmlArr.push('       <strong>{1}</strong>');
-                formatHtmlArr.push('       <span>{2}<b>{3}</b></span>');
-                formatHtmlArr.push('       <a href="{4}" target="download" download="{5}" class="downbtn" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'file_download\',$(this).prev().prev().text()]);"><i></i><span>下载<b>{6}</b></span></a>');
+                formatHtmlArr.push('       <strong>{2}</strong>');
+                formatHtmlArr.push('       <span>{3}<b>{4}</b></span>');
+                formatHtmlArr.push('       <a href="{5}" target="download" download="{6}" class="downbtn" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'file_download\',$(this).prev().prev().text()]);"><i></i><span>下载<b>{7}</b></span></a>');
                 formatHtmlArr.push('   </div>');
                 formatHtmlArr.push('</li>');
                 break;
