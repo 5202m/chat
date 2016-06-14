@@ -793,7 +793,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .nextbox .tec_head{ background:url(../../images/studio/k-bg.png) center center no-repeat }
 .nextbox .tec_head img { width:100px; height:100px; display:block; margin:0 auto; box-shadow:0 0 18px rgba(0,0,0,.22)}
 .nextbox .t_name{ font-size:20px; line-height:34px; color:#fff; display:block;}
-.nextbox .live_name{ font-size:45px; line-height:60px; padding:10px 0 20px ; color:#fff; display:block; font-weight:bold}
+.nextbox .live_name{ font-size:30px; line-height:48px; padding:10px 0 20px ; color:#fff; display:block;}
 .nextbox .live_time{ font-size:20px; line-height:30px; padding:0 10px; color:#edbb38; display:inline-block; *display:inline; *zoom:1;background:#284681; background:rgba(0,0,0,.1); border-radius:4px }
 .nextbox .live_time i{display:inline-block; *display:inline; *zoom:1; vertical-align:top; width:18px; height:18px; background-position:-170px -250px; margin:6px 6px 0 0 }
 .nextbox .live_time span{ display:inline-block; *display:inline; *zoom:1; vertical-align:top}

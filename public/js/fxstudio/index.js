@@ -296,13 +296,11 @@ var indexJS ={
                     lsTab.append('<li class="fir"><a href="javascript:"><span><lable>休市</lable></span></a></li>');
                 }else{
                     for(var k= 0,tklen=tmk.length;k<tklen;k++){
-                        if(k==0){
-                            als='fir';
-                        }else{
-                            als='';
-                        }
+                        als=(k==0) ? 'fir' : "";
                         courseObj=tmk[k].course[i];
-                        lsTab.append('<li class="'+als+'"><a href="javascript:" st="'+tmk[k].startTime+'" et="'+tmk[k].endTime+'"><i></i><span><lable>'+tmk[k].startTime+'- '+tmk[k].endTime+'　</lable><lable>'+courseType[courseObj.courseType]+'　</lable><lable>'+courseObj.lecturer+'</lable></span><p>'+courseObj.title+'</p></a></li>');
+                        if(courseObj.status != 0 && courseObj.lecturer){
+                            lsTab.append('<li class="'+als+'"><a href="javascript:" st="'+tmk[k].startTime+'" et="'+tmk[k].endTime+'"><i></i><span><lable>'+tmk[k].startTime+'- '+tmk[k].endTime+'　</lable><lable>'+courseType[courseObj.courseType]+'　</lable><lable>'+courseObj.lecturer+'</lable></span><p>'+courseObj.title+'</p></a></li>');
+                        }
                     }
                 }
             }

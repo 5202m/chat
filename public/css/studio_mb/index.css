@@ -23,7 +23,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .p0-non{font-size:0;height:0;overflow:hidden}
 
 /* img */
-.rightbar .qq i,.rightbar .home i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i{background:url(../../images/studio_mb/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
+.rightbar .qq i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i{background:url(../../images/studio_mb/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
 
 /* header */
 body{font-family:'microsoft yahei','Arial'; background:#000}
@@ -35,9 +35,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .rightbar{ text-align:right; font-size:0; float:right;}
 .rightbar a{ display:inline-block; height:18px; padding:11px 0; border-left:1px solid #dde2e4; vertical-align:top}
 .rightbar .qq i{ display:block; width:18px; height:18px; background-position:0 0; background-size:120px auto; margin:0 12px;}
-.rightbar .home{ border:0}
-.rightbar .home i{ display:block; width:18px; height:18px; background-position:0 -24px; background-size:120px auto; margin:0 12px;}
-.rightbar .loginbtn{ font-size:14px; line-height:18px; color:#cda746; padding-left:8px; padding-right:8px; display:inline-block; max-width:75px; overflow:hidden; text-overflow:ellipsis; text-align:left; white-space:nowrap}
+.rightbar .loginbtn,.rightbar .home{ font-size:14px; line-height:18px; color:#cda746; padding-left:8px; padding-right:8px; display:inline-block; max-width:75px; overflow:hidden; text-overflow:ellipsis; text-align:left; white-space:nowrap}
 
 
 /* === center === */
@@ -346,6 +344,6 @@ body.keyboard:before { /*background:none*/}
 /*Responsive*/
 @media(max-width:359px){
 	.logobar{ width:140px;}
-	.rightbar .qq i,.rightbar .home i{ margin:0 10px;}
+	.rightbar .qq i{ margin:0 10px;}
     .room.cen-ulist li{font-size:14px;}
 }
