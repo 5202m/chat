@@ -283,7 +283,7 @@ router.get('/getMobileVerifyCode',function(req, res){
     var ip = common.getClientIp(req);
     if(common.isBlank(mobilePhone)||!common.isMobilePhone(mobilePhone)){
         res.json(errorMessage.code_1003);
-    }else if(useType !== "studio_reg" && useType !== "studio_login" && useType !== "studio_resetPWD"){
+    }else if(useType !== "studio_login" && useType !== "fxstudio_login"){
         res.json(errorMessage.code_1000);
     }else{
         pmApiService.getMobileVerifyCode(mobilePhone,useType,ip,function(result){
@@ -319,7 +319,8 @@ router.post('/login',function(req, res){
         res.json(result);
     }else if(!isAutoLogin){
         //手机号+验证码登陆
-        pmApiService.checkMobileVerifyCode(mobilePhone, "studio_login", verifyCode, function(chkCodeRes){
+        var useType = (getGroupType(req) == "fxstudio") ? "fxstudio_login" : "studio_login";
+        pmApiService.checkMobileVerifyCode(mobilePhone, useType, verifyCode, function(chkCodeRes){
             if(!chkCodeRes || chkCodeRes.result != 0 || !chkCodeRes.data){
                 if(chkCodeRes.errcode === "1006" || chkCodeRes.errcode === "1007"){
                     result.error = {'errcode' : chkCodeRes.errcode, 'errmsg' : chkCodeRes.errmsg};

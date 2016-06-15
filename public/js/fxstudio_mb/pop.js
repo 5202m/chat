@@ -242,7 +242,7 @@ var studioMbLogin = {
             $(this).removeClass("pressed").val("发送中...");
             var mobile=$("#loginForm_mb").val();
             try{
-                $.getJSON('/fxstudio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:"studio_login"},function(data){
+                $.getJSON('/fxstudio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:"fxstudio_login"},function(data){
                     if(!data || data.result != 0){
                         if(data.errcode == "1005"){
                             studioMbPop.showMessage(data.errmsg);
