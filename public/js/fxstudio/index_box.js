@@ -156,7 +156,7 @@ var box={
                 $("#loginForm .error").html("手机号码有误，请重新输入！").show();
                 return;
             }
-            $(this).removeClass("pressed").html("发送中...");
+            $(this).addClass("pressed").html("发送中...");
             try{
                 $.getJSON('/fxstudio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:$(this).attr("ut")},function(data){
                     if(!data || data.result != 0){
@@ -327,7 +327,7 @@ var box={
         }else{
             clearInterval(this.verifyCodeIntId);
             this.verifyCodeIntId="";
-            $(tId).attr("t",60).html("获取验证码").addClass("pressed");
+            $(tId).attr("t",60).html("获取验证码").removeClass("pressed");
         }
     },
     /**
