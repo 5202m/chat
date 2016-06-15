@@ -120,8 +120,8 @@ var videos={
         if($(".max_box").is(':hidden')){
            return;
         }
-        $(".max_box").fadeOut(5000,function(e){
-            $(".min_box").show();
+        $(".max_box").slideUp(1000,function(e){
+            $(".min_box").fadeIn("fast");
         });
     },
     /**
