@@ -118,8 +118,13 @@ var tool={
      */
     initEasyPieChart:function(callback){
         if(!$('.dr2').hasClass('initEasyPieChart')) {/*避免多次初始化*/
+            var jsFileArr=[];
+            if($.browser.msie){
+                jsFileArr.push('/js/lib/excanvas.compiled.js');
+            }
+            jsFileArr.push('/js/lib/jquery.easy-pie-chart.min.js');
             /*行情投票环形饼图初始化*/
-            LazyLoad.js(['/js/lib/jquery.easy-pie-chart.js'], function () {
+            LazyLoad.js(jsFileArr, function () {
                 $('.percentage').easyPieChart({
                     barColor: '#66ab4a',
                     trackColor: '#f15f5f',
