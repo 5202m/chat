@@ -59,6 +59,18 @@ var studioChatMb={
                 closeable:false
             });
         }
+        //3分钟后强制要求登录
+        window.setTimeout(function(){
+            if(studioChatMb.userInfo.clientGroup=='visitor'){
+                studioMbPop.popBox("login", {
+                    groupId : studioChatMb.userInfo.groupId,
+                    clientGroup : studioChatMb.userInfo.clientGroup,
+                    clientStoreId : studioChatMb.userInfo.clientStoreId,
+                    platform : studioChatMb.fromPlatform,
+                    closeable:false
+                });
+            }
+        }, 180000);
     },
     /**
      * 刷新昵称

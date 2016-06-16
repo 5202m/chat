@@ -349,6 +349,7 @@ var box={
         }else{
             $("#loginBox .pop_close").show();
         }
+        $(".popup_box").hide();
         $("#loginBox,.blackbg").show();
     },
     /**

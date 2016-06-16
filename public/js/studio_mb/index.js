@@ -30,6 +30,18 @@ var studioChatMbIdx={
         if(!this.userInfo.nickname){
             this.refreshNickname(false, "匿名_" + this.userInfo.userId.substring(8,12));
         }
+        //3分钟后强制要求登录
+        window.setTimeout(function(){
+            if(studioChatMbIdx.userInfo.clientGroup=='visitor'){
+                studioMbPop.popBox("login", {
+                    groupId : "",
+                    clientGroup : studioChatMbIdx.userInfo.clientGroup,
+                    clientStoreId : studioChatMbIdx.userInfo.clientStoreId,
+                    platform : studioChatMbIdx.fromPlatform,
+                    closeable:false
+                });
+            }
+        }, 180000);
     },
     /**
      * 检查客户组别

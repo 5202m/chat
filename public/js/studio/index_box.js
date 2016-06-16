@@ -127,6 +127,12 @@ var box={
                 _gaq.push(['_trackEvent', 'pmchat_studio', 'login', $(this).attr("tp"), 1, true]);
             }
         });
+        //3分钟后强制要求登录
+        window.setTimeout(function(){
+            if(indexJS.userInfo.clientGroup=='visitor'){
+                $("#login_a").trigger("click", {closeable : false}); //弹出登录框，不允许关闭
+            }
+        }, 180000);
         //当前房间未授权，并且是游客
         if(!indexJS.currStudioAuth && indexJS.userInfo.clientGroup=='visitor'){
             $("#login_a").trigger("click", {closeable : false}); //弹出登录框，隐藏关闭按钮
@@ -388,6 +394,7 @@ var box={
         }else{
             $("#loginBox .pop_close").show();
         }
+        $(".popup_box").hide();
         $("#loginBox,.blackbg").show();
     },
     /**
