@@ -1,4 +1,4 @@
-body{font:12px/1.4 'Microsoft YaHei';color:#333;background:#fff;-webkit-text-size-adjust:none;-moz-text-size-adjust:none;-ms-text-size-adjust:none;text-size-adjust:none}
+﻿body{font:12px/1.4 'Microsoft YaHei';color:#333;background:#fff;-webkit-text-size-adjust:none;-moz-text-size-adjust:none;-ms-text-size-adjust:none;text-size-adjust:none}
 body,p,ol,ul,li,h1,h2,h3,h4,h5,h6,dl,dt,dd,pre,input,table,tr,td,form{margin:0;padding:0}
 ol,ul,li{list-style:none}
 input{border:0 none}
@@ -343,6 +343,7 @@ body{ background:url(../../images/studio_admin/bg.jpg) center 0 no-repeat;font-f
 .wh-right .mCS_no_scrollbar .mCSB_container{
     margin-right: 5px;
 }
+.mCSB_container{padding-bottom:28px;}
 
 .whblt{
     color: #1D1C1C;
