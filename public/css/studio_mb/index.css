@@ -290,6 +290,7 @@ input:-ms-input-placeholder,textarea:-ms-input-placeholder{color:#b4b4b4}
 
 .popupbox.pop-person .sc_cont{ height:174px; margin-top:0}
 .pop-person .cont{ padding: 15px 0; }
+#login_tip{color: #444; font-size: 12px; display: block; text-align: center; padding-top: 11px;}
 .per_info{ text-align:center; font-size:0; padding:15px 0 10px;}
 .per_info li{width:100%; padding:0 15px; box-sizing:border-box;border-top:1px solid #efefef; height:34px; background:#fff;}
 .per_info li:after{clear:both;content:"";display:block;height:0;visibility:hidden}

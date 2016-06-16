@@ -30,18 +30,34 @@ var studioChatMbIdx={
         if(!this.userInfo.nickname){
             this.refreshNickname(false, "匿名_" + this.userInfo.userId.substring(8,12));
         }
-        //3分钟后强制要求登录
-        window.setTimeout(function(){
-            if(studioChatMbIdx.userInfo.clientGroup=='visitor'){
+        if(this.userInfo.clientGroup=='visitor'){
+            if(studioMbPop.Login.forceLogin()){
+                //之前已经看过3分钟了。
                 studioMbPop.popBox("login", {
                     groupId : "",
                     clientGroup : studioChatMbIdx.userInfo.clientGroup,
                     clientStoreId : studioChatMbIdx.userInfo.clientStoreId,
                     platform : studioChatMbIdx.fromPlatform,
-                    closeable:false
+                    closeable:false,
+                    showTip:true
                 });
+            }else{
+                //3分钟后强制要求登录
+                window.setTimeout(function(){
+                    if(studioChatMbIdx.userInfo.clientGroup=='visitor'){
+                        studioMbPop.Login.forceLogin(true);
+                        studioMbPop.popBox("login", {
+                            groupId : "",
+                            clientGroup : studioChatMbIdx.userInfo.clientGroup,
+                            clientStoreId : studioChatMbIdx.userInfo.clientStoreId,
+                            platform : studioChatMbIdx.fromPlatform,
+                            closeable:false,
+                            showTip:true
+                        });
+                    }
+                }, 18000);
             }
-        }, 180000);
+        }
     },
     /**
      * 检查客户组别

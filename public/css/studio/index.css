@@ -656,7 +656,8 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .login_nav a:hover{ text-decoration:none}
 .login_nav a.on i{ display:block; position:absolute; width:0; height:0; right:50%; margin-right:-5px; top:35px; border-width:5px; border-color:#97b6d9 transparent transparent transparent ; border-style:solid;}
 .login_tab{ display:none}
-.login_tab.on{ display:block}
+.login_tab.on{display:block}
+#login_tip{font-size: 15px; text-align: center; display: block; color: #c49351; margin-top: -5px; position: relative; margin-bottom: 5px;}
 
 .btnbar { padding-top:10px;}
 .btnbar .formbtn{ display:inline-block; *display:inline; *zoom:1; width:205px;height:40px; background:#b59030; text-align:center;border-radius:2px; text-decoration:none; font-size:14pt;  color:#fff; line-height:40px; margin:0 7px;letter-spacing:normal;word-spacing:normal;}

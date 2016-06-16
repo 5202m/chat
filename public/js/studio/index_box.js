@@ -115,6 +115,23 @@ var box={
         });
     },
     /**
+     * 设置或获取强制登录标志
+     * @param [isForceLogin]
+     * @returns {*}
+     */
+    forceLogin : function(isForceLogin){
+        var storeObj = LoginAuto.get();
+        if(typeof isForceLogin == "boolean"){
+            if(storeObj){
+                storeObj.forceLogin = isForceLogin;
+                return LoginAuto.set(storeObj) && isForceLogin;
+            }
+        }else{
+            return storeObj && (storeObj.forceLogin == true);
+        }
+        return false;
+    },
+    /**
      * 登录相关事件
      */
     loginEvent:function(){
@@ -122,41 +139,48 @@ var box={
         $('#login_a').bind("click", function(e, ops){
             ops = ops || {};
             box.toRoomId = ops.groupId;
-            box.openLgBox(ops.closeable);
+            box.openLgBox(ops.closeable, ops.showTip);
             if(common.isValid($(this).attr("tp"))){
                 _gaq.push(['_trackEvent', 'pmchat_studio', 'login', $(this).attr("tp"), 1, true]);
             }
         });
-        //3分钟后强制要求登录
-        window.setTimeout(function(){
-            if(indexJS.userInfo.clientGroup=='visitor'){
-                $("#login_a").trigger("click", {closeable : false}); //弹出登录框，不允许关闭
-            }
-        }, 180000);
-        //当前房间未授权，并且是游客
-        if(!indexJS.currStudioAuth && indexJS.userInfo.clientGroup=='visitor'){
-            $("#login_a").trigger("click", {closeable : false}); //弹出登录框，隐藏关闭按钮
-        }else if(!indexJS.userInfo.isLogin){
-            $(".blackbg,#main_ad_box").show();
-            window.setTimeout(function(){
-                if($(".blackbg").is(":hidden")){
+        if(indexJS.userInfo.clientGroup=='visitor'){
+            if(!indexJS.currStudioAuth){
+                $("#login_a").trigger("click", {closeable : false}); //弹出登录框，隐藏关闭按钮
+            }else if(this.forceLogin()){
+                $("#login_a").trigger("click", {closeable : false, showTip:true}); //弹出登录框，不允许关闭
+            }else{
+                //3分钟后强制要求登录
+                window.setTimeout(function(){
+                    if(indexJS.userInfo.clientGroup=='visitor'){
+                        box.forceLogin(true);
+                        $("#login_a").trigger("click", {closeable : false}); //弹出登录框，不允许关闭
+                    }
+                }, 18000);
+
+                if(!indexJS.userInfo.isLogin){
                     $(".blackbg,#main_ad_box").show();
+                    window.setTimeout(function(){
+                        if($(".blackbg").is(":hidden")){
+                            $(".blackbg,#main_ad_box").show();
+                        }
+                    }, 300000);
+                    /**
+                     * 进入VIP专场
+                     */
+                    $('#mainAdBtn1').click(function(){
+                        $("#main_ad_box .pop_close").trigger("click");
+                        $(".rooms .enterbtn:first").trigger("click");
+                    });
+                    /**
+                     * 进入新手专场
+                     */
+                    $('#mainAdBtn2').click(function(){
+                        $("#main_ad_box .pop_close").trigger("click");
+                        $("#login_a").trigger("click");
+                    });
                 }
-            }, 300000);
-            /**
-             * 进入VIP专场
-             */
-            $('#mainAdBtn1').click(function(){
-                $("#main_ad_box .pop_close").trigger("click");
-                $(".rooms .enterbtn:first").trigger("click");
-            });
-            /**
-             * 进入新手专场
-             */
-            $('#mainAdBtn2').click(function(){
-                $("#main_ad_box .pop_close").trigger("click");
-                $("#login_a").trigger("click");
-            });
+            }
         }
         /**
          * 注销
@@ -388,11 +412,16 @@ var box={
     /**
      * 弹出登录框
      */
-    openLgBox:function(closeable){
+    openLgBox:function(closeable, showTip){
         if(closeable === false){
             $("#loginBox .pop_close").hide();
         }else{
             $("#loginBox .pop_close").show();
+        }
+        if(showTip){
+            $("#login_tip").show();
+        }else{
+            $("#login_tip").hide();
         }
         $(".popup_box").hide();
         $("#loginBox,.blackbg").show();

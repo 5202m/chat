@@ -49,19 +49,9 @@ var studioChatMb={
         if(!this.userInfo.nickname){
             this.refreshNickname(false, "匿名_" + this.userInfo.userId.substring(8,12));
         }
-        //当前房间未授权，并且是游客
-        if(!this.currStudioAuth && this.userInfo.clientGroup=='visitor'){
-            studioMbPop.popBox("login", {
-                groupId : studioChatMb.userInfo.groupId,
-                clientGroup : studioChatMb.userInfo.clientGroup,
-                clientStoreId : studioChatMb.userInfo.clientStoreId,
-                platform : studioChatMb.fromPlatform,
-                closeable:false
-            });
-        }
-        //3分钟后强制要求登录
-        window.setTimeout(function(){
-            if(studioChatMb.userInfo.clientGroup=='visitor'){
+        if(this.userInfo.clientGroup=='visitor'){
+            //当前房间未授权，并且是游客
+            if(!this.currStudioAuth){
                 studioMbPop.popBox("login", {
                     groupId : studioChatMb.userInfo.groupId,
                     clientGroup : studioChatMb.userInfo.clientGroup,
@@ -69,8 +59,33 @@ var studioChatMb={
                     platform : studioChatMb.fromPlatform,
                     closeable:false
                 });
+            }else if(studioMbPop.Login.forceLogin()){
+                //之前已经看过3分钟了。
+                studioMbPop.popBox("login", {
+                    groupId : studioChatMb.userInfo.groupId,
+                    clientGroup : studioChatMb.userInfo.clientGroup,
+                    clientStoreId : studioChatMb.userInfo.clientStoreId,
+                    platform : studioChatMb.fromPlatform,
+                    closeable:false,
+                    showTip:true
+                });
+            }else{
+                //3分钟后强制要求登录
+                window.setTimeout(function(){
+                    if(studioChatMb.userInfo.clientGroup=='visitor'){
+                        studioMbPop.Login.forceLogin(true);
+                        studioMbPop.popBox("login", {
+                            groupId : studioChatMb.userInfo.groupId,
+                            clientGroup : studioChatMb.userInfo.clientGroup,
+                            clientStoreId : studioChatMb.userInfo.clientStoreId,
+                            platform : studioChatMb.fromPlatform,
+                            closeable:false,
+                            showTip:true
+                        });
+                    }
+                }, 18000);
             }
-        }, 180000);
+        }
     },
     /**
      * 刷新昵称

@@ -143,7 +143,7 @@ var studioMbLogin = {
     /**
      * 初始化（页面初始化）
      */
-    init : function(platform, groupId, clientStoreId, clientGroup, closeable){
+    init : function(platform, groupId, clientStoreId, clientGroup, closeable, showTip){
         this.groupId = groupId;
         this.clientStoreId = clientStoreId;
         this.clientGroup = clientGroup;
@@ -153,6 +153,11 @@ var studioMbLogin = {
             $("#loginPop .pop-close").show();
         }else{
             $("#loginPop .pop-close").hide();
+        }
+        if(showTip){
+            $("#login_tip").show();
+        }else{
+            $("#login_tip").hide();
         }
         if(platform == "wechat"){
             $("#loginForm .auto_login").hide();
@@ -335,6 +340,24 @@ var studioMbLogin = {
                 break;
         }
         return chkResult;
+    },
+
+    /**
+     * 设置或获取强制登录标志
+     * @param [isForceLogin]
+     * @returns {*}
+     */
+    forceLogin : function(isForceLogin){
+        var storeObj = LoginAuto.get();
+        if(typeof isForceLogin == "boolean"){
+            if(storeObj){
+                storeObj.forceLogin = isForceLogin;
+                return LoginAuto.set(storeObj) && isForceLogin;
+            }
+        }else{
+            return storeObj && (storeObj.forceLogin == true);
+        }
+        return false;
     }
 };
 
@@ -536,7 +559,7 @@ var studioMbPop = {
 
             case "login" :
                 this.popShow($("#loginPop"));
-                this.Login.init(ops.platform, ops.groupId, ops.clientStoreId, ops.clientGroup, ops.closeable !== false);
+                this.Login.init(ops.platform, ops.groupId, ops.clientStoreId, ops.clientGroup, ops.closeable !== false, ops.showTip);
                 break;
 
             case "set" :
