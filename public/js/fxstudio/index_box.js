@@ -338,7 +338,7 @@ var box={
             clearInterval(this.verifyCodeIntId);
             this.verifyCodeIntId='';
         }
-        $("#loginForm .rbtn").attr("t",60).html("获取验证码");
+        $("#loginForm .rbtn").attr("t",60).html("获取验证码").removeClass("pressed");
     },
     /**
      * 弹出登录框
