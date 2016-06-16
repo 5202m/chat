@@ -156,7 +156,7 @@ var box={
                         box.forceLogin(true);
                         $("#login_a").trigger("click", {closeable : false}); //弹出登录框，不允许关闭
                     }
-                }, 18000);
+                }, 180000);
 
                 if(!indexJS.userInfo.isLogin){
                     $(".blackbg,#main_ad_box").show();

@@ -83,7 +83,7 @@ var studioChatMb={
                             showTip:true
                         });
                     }
-                }, 18000);
+                }, 180000);
             }
         }
     },

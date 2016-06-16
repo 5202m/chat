@@ -55,7 +55,7 @@ var studioChatMbIdx={
                             showTip:true
                         });
                     }
-                }, 18000);
+                }, 180000);
             }
         }
     },
