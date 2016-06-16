@@ -953,8 +953,8 @@ var studioChatMb={
             loc_panel.children("[utype!=2]").hide();
             loc_panel.children("[utype=2]").show();
         }else if(t=='me'){
-            loc_panel.children("[isMe=false]").hide();
-            loc_panel.children("[isMe=true]").show();
+            loc_panel.children("[isme='false']").hide();
+            loc_panel.children("[isme='true']").show();
         }else{
             loc_panel.children().show();
         }
@@ -1160,7 +1160,7 @@ var studioChatMb={
             }
         }
         var loc_html = [];
-        loc_html.push('<li class="'+cls+'" id="'+fromUser.publishTime+'" isMe="'+isMe+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"' + csId + '>');
+        loc_html.push('<li class="'+cls+'" id="'+fromUser.publishTime+'" isme="'+isMe+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"' + csId + '>');
         loc_html.push('<div class="headimg" uid="'+fromUser.userId+'">');
         loc_html.push(studioChatMb.getUserAImgCls(fromUser.userId, fromUser.clientGroup,fromUser.userType,fromUser.avatar));
         loc_html.push('</div>');

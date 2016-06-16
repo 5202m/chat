@@ -212,8 +212,8 @@ var chat={
             $("#dialog_list").children("[utype!=2]").hide();
             $("#dialog_list").children("[utype=2]").show();
         }else if(t=='me'){
-            $("#dialog_list").children(".mine").show();
-            $("#dialog_list").children(":not(.mine)").hide();
+            $("#dialog_list").children("[isme='true']").show();
+            $("#dialog_list").children("[isme='false']").hide();
         }else if(t=='admin'){
             $("#dialog_list").children("[utype!=1]").hide();
         }else{
@@ -333,17 +333,21 @@ var chat={
      * 格式内容栏
      */
     formatContentHtml:function(data,isMeSend,isLoadData){
-        var cls='dialog ',pHtml='',dialog='',nkTmHtml='',
+        var cls='dialog ',pHtml='',dialog='',isMe='false',nkTmHtml='',
             fromUser=data.fromUser,
             content=data.content,
             nickname=fromUser.nickname;
         var toUser=fromUser.toUser,toUserHtml='';
         if(toUser && common.isValid(toUser.userId)){
             toUserHtml='<span class="txt_dia" uid="'+toUser.userId+'" utype="'+toUser.userType+'">@<label>'+toUser.nickname+'</label></span>';
+            if(indexJS.userInfo.userId==toUser.userId){
+                isMe='true';
+            }
         }
         pHtml=content.value;
         if(indexJS.userInfo.userId==fromUser.userId){
             cls+='mine ';
+            isMe='true';
             nkTmHtml='<span class="dtime">'+chat.formatPublishTime(fromUser.publishTime)+'</span><a href="javascript:" class="uname">我</a>';
         }else{
             if(fromUser.userType==3){
@@ -365,7 +369,7 @@ var chat={
         }
         var aImgObj=chat.getAImgOrLevel(fromUser.userId,fromUser.clientGroup,fromUser.userType,fromUser.avatar);
         var  dvArr=[];
-        dvArr.push('<div class="'+cls+aImgObj.level+'" id="'+fromUser.publishTime+'"  utype="'+fromUser.userType+'" mtype="'+content.msgType+'">');
+        dvArr.push('<div class="'+cls+aImgObj.level+'" id="'+fromUser.publishTime+'"  utype="'+fromUser.userType+'" mtype="'+content.msgType+'" isme="' + isMe + '">');
         dvArr.push('<a href="javascript:" class="headimg">'+aImgObj.aImg+'<b></b></a>');
         dvArr.push('<div class="dialog_top">'+nkTmHtml+'</div>');
         dvArr.push('<p><i></i><span class="dcont">'+toUserHtml+pHtml+'</span></p>');
