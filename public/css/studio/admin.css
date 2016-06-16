@@ -99,7 +99,7 @@ body{ background:url(../../images/studio_admin/bg.jpg) center 0 no-repeat;font-f
 
 .mod_userlist {}
 .user_box{ margin-top:5px;height:445px; overflow-y:auto;}
-.user_box ul{ padding-right:10px;}
+.user_box ul{ padding-right:10px;padding-bottom:28px;}
 .user_box li{ height:37px; position:relative; z-index:10; margin-bottom:1px;width:100%;}
 .user_box li.zin { z-index:10000}
 .user_box li .uname{ display:block; height:33px;line-height:33px; font-size:11pt; color:#4e4e4e;padding:2px 0 2px 10px;text-decoration:none;}
