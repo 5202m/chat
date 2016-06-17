@@ -257,9 +257,6 @@ var videos={
             $("#nextCourse").find(".t_name").text(data.name);
             $("#nextCourse").find(".live_name").text(course.title);
             $("#nextCourse").find(".time").text(common.daysCN[course.day]+' '+course.startTime+' - '+course.endTime);
-        }else if(course != false){
-            $("#nextCourse").find(".ntext").text("当前暂无直播");
-            $("#nextCourse .nextbox").hide();
         }
         $("#lvVideoId").hide();
         $("#nextCourse").show();
@@ -317,12 +314,14 @@ var videos={
      */
     setStudioInfo:function(course){
         if(!course){
+            $("#nextCourse").find(".ntext").text("当前暂无直播");
+            $("#nextCourse .nextbox").hide();
             return;
         }
         var dy=$("#lvInfoId").attr("dy"),startTime=$("#lvInfoId").attr("st"),endTime=$("#lvInfoId").attr("et");
         if(dy==course.day && startTime==course.startTime && endTime==course.endTime){
             if(course.isNext||course.courseType==0){
-                videos.setNextCourse(false);
+                videos.setNextCourse(null);
             }
             return;
         }
