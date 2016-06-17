@@ -533,14 +533,12 @@ var userService = {
                     var group=row.loginPlatform.chatUserGroup.id(userInfo.groupType);
                     if(group){
                         var room=group.rooms.id(userInfo.groupId);
-                        if(userInfo.isSetName !== false){
-                            group.nickname=userInfo.nickname;
-                        }
                         if(common.isValid(userInfo.avatar)){
                             group.avatar=userInfo.avatar;
                         }
                         if(userInfo.fromPlatform == constant.fromPlatform.pm_mis){//后台用户更新用户类型
                             group.userType = userInfo.userType;
+                            group.nickname=userInfo.nickname;
                         }
                         room.onlineDate=userInfo.onlineDate;
                         room.onlineStatus=userInfo.onlineStatus;
