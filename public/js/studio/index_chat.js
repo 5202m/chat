@@ -843,13 +843,9 @@ var chat={
     searchUserList:function(val){
         var userArr=$("#userListId li[t!=14][t!=0]").map(function () {
             var name = $(this).find(".uname span").text();
-            return name.indexOf(val)!=-1?{value:name,label:name,userType: $(this).attr("utype")}:null;
+            return name.indexOf(val)!=-1?{value:$(this).attr("id"),label:name,userType: $(this).attr("utype")}:null;
         }).get();
-        var teacherArr=$("#teacherListId li").map(function () {
-            var name = $(this).find("strong").text();
-            return name.indexOf(val)!=-1?{value:name,label:name,userType: $(this).attr("utype")}:null;
-        }).get();
-        return userArr.concat(teacherArr);
+        return userArr;
     },
     /**
      * 设置socket
