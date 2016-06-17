@@ -279,7 +279,26 @@ var videos={
         $("#nextCourse").hide();
         $("#lvVideoId").show().html("");
         if(url.indexOf("rtmp")!=-1){
-            var sdHtml='<div style="position: relative; width: 100%; height: 100%; left: 0px; top: 0px;">'+
+            var urlGroupArr=/(.*)\/([0-9]+)$/g.exec(url);
+            if(!urlGroupArr || urlGroupArr.length<3){
+                return;
+            }
+            flowplayer("lvVideoId", "/js/lib/flowplayer/flowplayer.swf",{
+                clip: {
+                    url: urlGroupArr[2],
+                    provider: 'rtmp',
+                    live: true
+                },
+                plugins: {
+                    rtmp: {
+                        url: '/js/lib/flowplayer/flowplayer.rtmp.swf',
+                        netConnectionUrl: urlGroupArr[1]
+                    }
+                },
+                onError:function(e){
+                }
+            });
+            /*var sdHtml='<div style="position: relative; width: 100%; height: 100%; left: 0px; top: 0px;">'+
                 '<object type="application/x-shockwave-flash" id="sewise_player" name="sewise_player" data="/js/lib/flash/SewisePlayer.swf" width="100%" height="100%">'+
                 '<param name="allowfullscreen" value="true">'+
                 '<param name="wmode" value="transparent">'+
@@ -287,7 +306,7 @@ var videos={
                 '<param name="flashvars" value="autoStart=true&amp;programId=&amp;shiftTime=&amp;lang=zh_CN&amp;type=rtmp&amp;serverApi=ServerApi.execute&amp;skin=/js/lib/flash/skins/liveOrange.swf&amp;title=&amp;draggable=true&amp;published=0&amp;streamUrl='+url+'&amp;duration=3600&amp;poster=&amp;flagDatas=&amp;videosJsonUrl=&amp;adsJsonData=&amp;statistics=&amp;customDatas=&amp;playerName=Sewise Player&amp;clarityButton=enable&amp;timeDisplay=disable&amp;controlBarDisplay=enable&amp;topBarDisplay=disable&amp;customStrings=&amp;volume=0.6&amp;key=&amp;trackCallback=">'+
                 '</object>'+
                 '</div>';
-            $("#lvVideoId").html(sdHtml);
+            $("#lvVideoId").html(sdHtml);*/
         }else{
             $("#lvVideoId .img-loading").fadeIn(0).delay(2000).fadeOut(200);
             $(videos.getEmbedDom(url)).appendTo('#lvVideoId');
