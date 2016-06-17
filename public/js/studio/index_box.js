@@ -154,7 +154,7 @@ var box={
                 window.setTimeout(function(){
                     if(indexJS.userInfo.clientGroup=='visitor'){
                         box.forceLogin(true);
-                        $("#login_a").trigger("click", {closeable : false}); //弹出登录框，不允许关闭
+                        $("#login_a").trigger("click", {closeable : false, showTip:true}); //弹出登录框，不允许关闭
                     }
                 }, 180000);
 
