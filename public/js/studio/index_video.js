@@ -330,7 +330,6 @@ var videos={
         $.getJSON('/studio/getCourseInfo',{day:course.day,startTime:course.startTime,endTime:course.endTime,authorId:course.lecturerId},function(data){
             $("#lvInfoId").attr("dy",course.day).attr("st",course.startTime).attr("et",course.endTime);
             $("#lvInfoId .intro p").text(data.remark);
-            $("#lvInfoId .teacher-view p").text('');
             indexJS.setListScroll('#lvInfoId .intro p');//设置滚动
             var pd=$("#lvInfoId .te_list").html("");
             var authorArr=data.authors;
