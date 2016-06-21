@@ -258,6 +258,10 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
             visitorService.saveVisitorRecord("login",vrRow);
         }
         viewDataObj.fromPlatform=fromPlatform;
+        if(!isMobile && fromPlatform == config.studioThirdUsed.webui){
+            res.render(chatUser.groupType+"_webui/room", viewDataObj);
+            return;
+        }
         var isThirdUsed = fromPlatform && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform);
         if(isMobile){
             if(groupId || isThirdUsed){
