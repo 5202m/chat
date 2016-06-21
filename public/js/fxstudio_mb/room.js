@@ -495,7 +495,7 @@ var studioChatMb={
         $("#top_msg").click(function(){
             var loc_label = $(this).find("label");
             $(this).slideUp();
-            studioChatMb.setDialog(loc_label.attr("fuserId"), loc_label.attr("fnickname"), 0, loc_label.attr("fuType"), null, $(this).find("span").text());
+            studioChatMb.setDialog(loc_label.attr("fuserId"), loc_label.attr("fnickname"), 0, loc_label.attr("fuType"), null);
         });
         $("#top_msg i").click(function(){
             $("#top_msg").slideUp();
@@ -639,21 +639,8 @@ var studioChatMb={
                 }
             }else{
                 if(this.initPlayer){
-                    if(videoType == this.videoType){
-                        SewisePlayer.toPlay(url, title, 0, true);
-                    }else{
-                        SewisePlayer.doStop();
-                        SewisePlayer.setup({
-                            server : "vod",
-                            type : videoType,
-                            videourl : url,
-                            autostart : true,
-                            logo : "",
-                            title : title,
-                            buffer : 5
-                        }, this.$panel);
-                        this.videoType = videoType;
-                    }
+                    SewisePlayer.toPlay(url, title, 0, true);
+                    this.videoType = videoType;
                 }else{
                     var srcPathAr=[];
                     srcPathAr.push("/js/lib/sewise.player.min.js?server=vod");
@@ -669,7 +656,7 @@ var studioChatMb={
                     script.src = srcPath;
                     this.initPlayer = true;
                     this.videoType = videoType;
-                    this.$panel.append(script);
+                    this.$panel.get(0).appendChild(script);
                     this.setEventAd();
                 }
             }
@@ -979,12 +966,7 @@ var studioChatMb={
     getToUser:function(){
       var curDom=$('#contentText .txt_dia');
       if(curDom.length>0){
-          var obj = {userId:curDom.attr("uid"),nickname:curDom.find("label").text(),talkStyle:0,userType:curDom.attr("utype"),avatar:curDom.attr("avatar")};
-          var sp = curDom.find("input");
-          if(sp.length>0){
-              obj.question=sp.val();
-          }
-          return obj;
+          return {userId:curDom.attr("uid"),nickname:curDom.find("label").text(),talkStyle:0,userType:curDom.attr("utype"),avatar:curDom.attr("avatar")};
       }
       return null;
     },
@@ -1001,16 +983,14 @@ var studioChatMb={
      * @param talkStyle 聊天方式（0对话，1私聊）
      * @param userType 用户类别(0客户；1管理员；2分析师；3客服）
      * @param [avatar]
-     * @param [txt]
      */
-    setDialog:function(userId,nickname,talkStyle,userType,avatar,txt){
+    setDialog:function(userId,nickname,talkStyle,userType,avatar){
         if(!studioChatMb.visitorSpeak && "visitor"==studioChatMb.userInfo.clientGroup){
             return;
         }
         $("#contentText .txt_dia").remove();
         $("#contentText").html($("#contentText").html().replace(/^((&nbsp;)+)/g,''));
-        var loc_txt = txt ? ('<input type="hidden" value="' + txt + '">') : '';
-        $("#contentText").prepend('&nbsp;<span class="txt_dia" contenteditable="false" uid="'+userId+'" utype="'+userType+'" avatar="'+avatar+'">' + loc_txt + '@<label>'+nickname+'</label></span>&nbsp;').focusEnd();
+        $("#contentText").prepend('&nbsp;<span class="txt_dia" contenteditable="false" uid="'+userId+'" utype="'+userType+'" avatar="'+avatar+'">@<label>'+nickname+'</label></span>&nbsp;').focusEnd();
     },
     /**
      * 填充内容
