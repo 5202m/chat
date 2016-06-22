@@ -308,7 +308,7 @@ router.post('/login',function(req, res){
     var result={isOK:false,error:null};
     var isAutoLogin = !common.isBlank(userId);
     var userSession=req.session.studioUserInfo;
-    if(!userSession){
+    if(!userSession || !userSession.groupType){
         res.json(result);
         return;
     }
