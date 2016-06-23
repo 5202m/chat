@@ -36,7 +36,8 @@ var chat={
         });
         //回复对话
         $(".replybtn").click(function(){
-            chat.setDialog($(this).attr("uId"),$(".sender").html(),$(this).attr("ts"),$(this).attr("futype"));//设置对话
+            var $this = $(this);
+            chat.setDialog($this.attr("uId"),$(".sender").html(),$this.attr("ts"),$this.attr("futype"));//设置对话
             $(".mymsg em").show();
         });
         //关闭对话
@@ -372,8 +373,17 @@ var chat={
         dvArr.push('<div class="'+cls+aImgObj.level+'" id="'+fromUser.publishTime+'"  utype="'+fromUser.userType+'" mtype="'+content.msgType+'" isme="' + isMe + '">');
         dvArr.push('<a href="javascript:" class="headimg">'+aImgObj.aImg+'<b></b></a>');
         dvArr.push('<div class="dialog_top">'+nkTmHtml+'</div>');
-        dvArr.push('<p><i></i><span class="dcont">'+toUserHtml+pHtml+'</span></p>');
-        dvArr.push(dialog+'</div>');
+        dvArr.push('<p><i></i>');
+        if(toUser && common.isValid(toUser.question)){
+            dvArr.push('<span class="dcont">');
+            dvArr.push('<span uid="'+toUser.userId+'" utype="'+toUser.userType+'">'+toUser.nickname+'</span>提问：');
+            dvArr.push('<span contt="q">' + toUser.question + '</span>');
+            dvArr.push('<span class="dialog_reply">回复：<span contt="a">' + pHtml + '</span></span>');
+            dvArr.push('</span>');
+        }else{
+            dvArr.push('<span class="dcont" contt="a">' + toUserHtml + pHtml + '</span>');
+        }
+        dvArr.push('</p>' + dialog + '</div>');
         return dvArr.join("");
     },
     /**
@@ -411,7 +421,7 @@ var chat={
     getAImgOrLevel:function(userId, clientGroup,userType,avatar){
         var retObj={aImg:common.isValid(avatar)?'<img src="'+avatar+'">':'<img src="/images/studio/user.png">',level:''};
         if(common.isValid(userType) && userType>0){
-            retObj.level='admin';
+            retObj.level=userType == 2 ? 'analyst' : 'admin';
         }else if("vip"==clientGroup){
             retObj.level='level4';
         }else if("active"==clientGroup || "notActive"==clientGroup){
@@ -807,9 +817,9 @@ var chat={
         var html='';
         if(content.msgType==chat.msgType.img){
             if(content.needMax){
-                pHtml='<p><i></i><a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" class="swipebox" ><img src="'+content.value+'" alt="图片"/></a></p>';
+                pHtml='<p><i></i><a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="whImg-' + fromUser.toWhUserId + '"><img src="'+content.value+'" alt="图片"/></a></p>';
             }else{
-                pHtml='<p><i></i><a href="'+content.value+'" class="swipebox" ><img src="'+content.value+'" alt="图片" /></a></p>';
+                pHtml='<p><i></i><a href="'+content.value+'" data-lightbox="whImg-' + fromUser.toWhUserId + '"><img src="'+content.value+'" alt="图片" /></a></p>';
             }
         }else if(isOnlyFill){
             pHtml='<div class="whcls"><i></i><div class="whblt" rid="'+content.infoId+'">'+content.value+'</div></div>';
@@ -994,9 +1004,6 @@ var chat={
                     }
                     if(hasPushInfo==0){
                         chat.setWhPushInfo(targetDom,null);
-                    }
-                    if(hasImg>0){
-                        $('.swipebox').swipebox();
                     }
                     chat.setTalkListScroll(true,$('#wh_msg_'+result.toUserId+' .wh-content'),'dark');
                 }

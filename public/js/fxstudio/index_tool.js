@@ -240,7 +240,7 @@ var tool={
                                                         );
                 });
                 $('.dr3 .calendar_ul ul').html(financeHtml);
-                indexJS.setListScroll('.calendar_ul.scrollbox2',{isCustom:false,scrollbarPosition:"outside"});/*设置滚动条*/
+                indexJS.setListScroll('.calendar_ul.scrollbox2',{isCustom:false,scrollbarPosition:"outside",theme:"dark-2"});/*设置滚动条*/
             }
         });
     },
@@ -327,7 +327,7 @@ var tool={
                     pptHtml += pptFormat.formatStr(cls,fileSuffix[suffix],row.title,(row.authorInfo?row.authorInfo.name:''),publishDate,data[i].mediaUrl,name, '');
                 }
                 $('.dr6 .ppt_list ul').html(pptHtml);
-                indexJS.setListScroll('.ppt_list',{isCustom:false,scrollbarPosition:"outside"});/*设置滚动条*/
+                indexJS.setListScroll('.ppt_list',{isCustom:false,scrollbarPosition:"outside",theme:"dark-2"});/*设置滚动条*/
             }
             else{
                 $('.dr6 .ppt_list ul').html('');

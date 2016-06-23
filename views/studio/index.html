@@ -12,7 +12,7 @@
     <meta content="金道贵金属打造在线贵金属实盘直播室，金道研究院名家观点即时播报，让您的掘金之旅在此起航！携手金道，生金有道！" name="description">
     <link href="/js/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
     <link href="/js/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
-    <link href="/css/swipebox.min.css"type="text/css" rel="stylesheet"/>
+    <link href="/js/lib/lightbox/lightbox.css"type="text/css" rel="stylesheet"/>
     <link href="/css/swiper.min.css"  type="text/css" rel="stylesheet" />
     <link href="/css/face.css" type="text/css" rel="stylesheet" />
     <link href="/css/studio/index.min.css" type="text/css" rel="stylesheet" />
@@ -42,24 +42,22 @@
       <div class="header-right fr clearfix">
        	<ul>
         <li class="cursor">
-        <a href="javascript:" class="toplink"><span>课程安排</span></a>
+        <a href="javascript:" class="toplink"><span>课程安排</span><b class="arr"></b></a>
         	<div class="dropcont">
             	<div class="cont">
                 	<!--<a href="javascript:" class="on noticebtn"><i></i><span>上课通知</span>--></a>
                     <div class="clearfix"></div>
                 	<div class="course_nav"></div>
                 </div>
-                <i class="arr"></i>
-            </div>  
+            </div>
         </li>
         <li class="notice">
-    	    <a href="javascript:" class="toplink"><span>公告</span></a>
+    	    <a href="javascript:" class="toplink"><span>公告</span><b class="arr"></b></a>
 	        <div class="dropcont">
             	<div class="cont" id="bulletinTab">
                 	<strong></strong>
                     <p></p>
                 </div>
-                <i class="arr"></i>
             </div>
         </li>
         <li id="saveToDesktop">
@@ -69,7 +67,7 @@
         <li id="qqcs">
         <a href="javascript:" class="toplink"><span>QQ客服</span></a></li>
         <%if(userSession.isLogin){%>
-            <li class="user"><a href="javascript:" class="toplink"><span><strong class="username"><%= userSession.nickname || "匿名_xxx" %></strong></span></a>
+            <li class="user"><a href="javascript:" class="toplink"><span><strong class="username"><%= userSession.nickname || "匿名_xxx" %></strong></span><b class="arr"></b></a>
                 <div class="dropcont">
                     <div class="cont">
                         <div class="per_info">
@@ -107,7 +105,6 @@
                             </div>
                         </div>
                     </div>
-                    <i class="arr"></i>
                 </div>
             </li>
             <li><a href="javascript:" class="toplink last logout"><span>注销</span></a></li>
@@ -242,7 +239,7 @@
 <% include index_box.html %>
 <script type="text/javascript" src="/js/lib/socket.io.js"></script>
 <script type="text/javascript" src="/js/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
-<script type="text/javascript" src="/js/lib/jquery.swipebox.min.js"></script>
+<script type="text/javascript" src="/js/lib/lightbox/lightbox.min.js"></script>
 <script type="text/javascript" src="/js/lib/jqueryUI/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/js/lib/swiper.min.js"></script>
 <script type="text/javascript" src="/js/lib/websocket.min.js"></script>
@@ -296,7 +293,11 @@
             var hh = $(window).height(), hh_banner = $('.mod_banner').height();
             var hh_room = $('.mod_room').height();
             $('.mod_main .tabcont').height(hh - hh_banner - 115);
-            $('.mod_video').height(hh - 393);
+            $('.mod_video').height(hh - $(".mod_videolist").height() - 70);
+            var hTmp = $(".mod_videolist .listcont").height();
+            $('.mod_videolist .remark').height(hTmp - 58);
+            $('.mod_videolist .content').height(hTmp - 140);
+            $('.mod_videolist .sd_show').height(hTmp - 40);
             $('.mod_userlist .scrollbox').height(hh - hh_room - 115);
             $('.mod_menu').height(hh - 70);
             $('.calendar_ul.scrollbox2').height(hh - 165);
@@ -305,6 +306,13 @@
             $('.main_tab .chat_content').height(hh - hh_banner - 115 - 170);
             $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
         }
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'disableScrolling':true,
+            'positionFromTop':50,
+            'albumLabel':"%1 of %2"
+        });
     });
 </script>
 </body>

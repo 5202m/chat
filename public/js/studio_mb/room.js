@@ -1133,6 +1133,7 @@ var studioChatMb={
         }else{
             if(fromUser.userType==3){
                 nickname += "&nbsp;（助理）";
+                cls+='admin';
             }else if(fromUser.userType==2){
                 cls+='analyst';
             }else if(fromUser.userType==1){

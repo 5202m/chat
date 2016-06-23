@@ -32,7 +32,7 @@ body{ background:url(../../images/studio_mini/bg.jpg) center 0 no-repeat;font-fa
 .jscroll-h,.jscroll-e { border-radius:4px}
 
 /*images*/
-.header-right a i,.pro_notice .pro_btn span,.sro_notice li i,.tab_list li,.te_list .jt_btn span,.te_ctrl a i,.view_select i,.dialog i,.mymsg .closebtn,.toolbar .tbtn,.toolbar .facebtn,.send_select i,.input_area .sendbtn i,.popup_box .pop_close,.resultbar i,.in_line .level i,.in_line .in_rbtn .qu_btn,.video_room a .s2 i ,.hztip i,.videolist_box li i,.tab_list.download li a,.tab_list li a.listmore,.te_list .te_btn b,.dialogbtn a b,.dialog.analyst .headimg b,.upg_cont .btnbar a i,.mod_video .close_ad i,.popup_box.hint .kfbtn i,.fm_ul li,.fmad .pop_close,.pletter_hint .pl_close,.pletter_win .pl_close,.mult_dialog i,.cmtalk .cm_next i,.cmtalk .cm_prev i,.wh_msg_ftip i,.te-point .point-close,.redbag_cont b,.redbag .rb_close,.gcont .gclose,.fm_btn .new{ background-image:url(../../images/studio_mini/img_css.png); background-repeat:no-repeat;}
+.header-right a i,.pro_notice .pro_btn span,.sro_notice li i,.tab_list li,.te_list .jt_btn span,.te_ctrl a i,.view_select i,.dialog i,.mymsg .closebtn,.toolbar .tbtn,.toolbar .facebtn,.send_select i,.input_area .sendbtn i,.popup_box .pop_close,.resultbar i,.in_line .level i,.in_line .in_rbtn .qu_btn,.video_room a .s2 i ,.hztip i,.videolist_box li i,.tab_list.download li a,.tab_list li a.listmore,.te_list .te_btn b,.dialogbtn a b,.dialog.admin .headimg b,.upg_cont .btnbar a i,.mod_video .close_ad i,.popup_box.hint .kfbtn i,.fm_ul li,.fmad .pop_close,.pletter_hint .pl_close,.pletter_win .pl_close,.mult_dialog i,.cmtalk .cm_next i,.cmtalk .cm_prev i,.wh_msg_ftip i,.te-point .point-close,.redbag_cont b,.redbag .rb_close,.gcont .gclose,.fm_btn .new{ background-image:url(../../images/studio_mini/img_css.png); background-repeat:no-repeat;}
 .img-loading{top: 50%;right: 50%;display:none;position:absolute;bottom:0;display:block;width:25px;height:25px;border-radius:4px;background:url(../../images/loading2.gif) no-repeat center;background-size:40px 40px;z-index:9}
 
 /*grid*/
@@ -137,18 +137,16 @@ body{ background:url(../../images/studio_mini/bg.jpg) center 0 no-repeat;font-fa
 .chat_content{}
 .chat_content .mCSB_inside>.mCSB_container{margin-right: 17px;}
 .chat_content .scrollbox2{ padding-right:10px;height:480px;}
-.dialog{ height:auto; position:relative; padding:31px 0 0 10px; margin-bottom:8px; /*float:left;*/ width:auto; clear:both;}
-.dialog.admin{padding:43px 0 0 10px;}
-.dialog.analyst{padding:43px 0 0 10px;}
+.dialog{ height:auto; position:relative; padding: 0 0 0 37px; margin-bottom: 10px; float:left; width:auto; clear:both;}
 .dialog.mine{float:right; padding:31px 10px 0 0;}
 .dialog p { background:#fff; border-radius:2px; display:inline-block; *display:inline; *zoom:1;padding:5px 9px; color:#777; line-height:18pt; font-size:13px;}
-.dialog.analyst p{ background:#fff7e2;}
-.dialog.admin p{ background:#474b51;color:#d7d7d7;}
+.dialog.admin p{ background:#fff7e2;}
+.dialog.analyst p{ background:#474b51;color:#d7d7d7;}
 .dialog .dtime { color:#afafaf; padding-left:8px;}
 .dialog.mine .dtime {padding-left:0; padding-right: 8px;}
 .dialog .uname { color:#D2DBE2;}
-.dialog.admin .uname { color:#edbb38}
-.dialog.analyst .uname { color:#77B9FF}
+.dialog.analyst .uname { color:#edbb38}
+.dialog.admin .uname { color:#77B9FF}
 .dialog .uname:hover{ text-decoration:none}
 .dialog .dcont{  white-space: normal;word-break: break-all; overflow:auto; display:block;}
 .dialog .dcont em.ruleTipStyle{color:#ff0000;font-size:12px;margin-left:5px;}
@@ -157,17 +155,18 @@ body{ background:url(../../images/studio_mini/bg.jpg) center 0 no-repeat;font-fa
 .dialog .headimg{ display:block; width:29px; height:auto; position:absolute; left:0; top:0; }
 .dialog .headimg img{ display:block; width:29px; height:auto; border-radius:3px; vertical-align:bottom}
 .dialog.mine .headimg{ left:auto; right:0}
-.dialog.analyst .headimg{ height:42px;}
-.dialog.analyst .headimg img{ border-bottom-left-radius:0; border-bottom-right-radius:0}
-.dialog.analyst .headimg b { background-position:-30px -250px; display:block; width:29px; height:13px;}
-.dialog .duser{position: absolute; top:8px; left: 33px;}
+.dialog.admin .headimg{ height:42px;}
+.dialog.admin .headimg img{ border-bottom-left-radius:0; border-bottom-right-radius:0}
+.dialog.admin .headimg b { background-position:-30px -250px; display:block; width:29px; height:13px;}
+.dialog .duser{line-height: 22px;}
 .dialog.admin .duser{top:21px;}
-.dialog.analyst .duser{top:21px;}
 .dialog.mine .duser{left:auto; right: 33px;}
 .dialog.push{background-color: #474b51; padding: 0; margin-left: 10px;}
 .dialog.push p{color: #FF4C3C; background-color: inherit;}
 .dialog.push p a{color: #3181c6;}
-
+.dialog_reply { display: block; border-top: 1px solid #CDCDCD; color: #a27639; font-size: 14px; margin-top: 4px; }
+.dialog_reply span{ font-size: 15px;}
+.analyst .dialog_reply{ border-color: #5a5a5a; color: #ecc288 }
 .chat_input{ width:100%; position:absolute; bottom:0; z-index:100001}
 .mymsg{ height:auto; position:relative; padding:5px 0; background:rgba(246,246,246,.5);  }
 .mymsg p{ padding:0 44px 0 80px;color:#4e4e4e; line-height:27px; font-size:11pt;}

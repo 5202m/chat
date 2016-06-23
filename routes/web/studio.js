@@ -13,6 +13,7 @@ var messageService = require('../../service/messageService');//引入messageServ
 var userService = require('../../service/userService');//引入userService
 var pmApiService = require('../../service/pmApiService');//引入pmApiService
 var syllabusService = require('../../service/syllabusService');//引入syllabusService
+var showTradeService = require('../../service/showTradeService');//引入showTradeService
 var studioService = require('../../service/studioService');//引入studioService
 var chatService = require('../../service/chatService');//引入chatService
 var visitorService = require('../../service/visitorService');//引入visitorService
@@ -655,6 +656,21 @@ router.get('/getCourseInfo', function(req, res) {
         res.json({remark:'',authors:[]});
     }else {
         syllabusService.getCourseInfo({groupType:userInfo.groupType,groupId:userInfo.groupId,day:day,startTime:startTime,endTime:endTime,authorId:authorId},function(data){
+            res.json(data);
+        });
+    }
+});
+
+/**
+ * 提取课程数据
+ */
+router.get('/getShowTradeInfo', function(req, res) {
+    var userInfo=req.session.studioUserInfo;
+    var userNo = req.query["userNo"];
+    if(!userInfo || common.isBlank(userNo)){
+        res.json(null);
+    }else {
+        showTradeService.getShowTrade(userInfo.groupType, userNo, function(data){
             res.json(data);
         });
     }

@@ -165,7 +165,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .talk-infobox .uname{ height:24px; line-height:20px; font-size:12px; color:#aeaeae; float:left;}
 .talk-infobox .uname strong{ font-size:14px; color:#cbcbcb; font-weight:normal; line-height:12px; padding-right:5px;}
 .talk-infobox .me-li .uname strong{padding-right: 0px; padding-left: 5px;}
-.talk-infobox .expert-li .uname strong{ color:#3181c6}
+.talk-infobox .admin .uname strong{ color:#3181c6}
 .talk-infobox .me-li .detail{ text-align:right}
 .talk-infobox .me-li .uname{ clear:both; float:right}
 .talk-infobox .dialog{ clear:both; background:#fff; line-height:20px; border-radius:5px; border-top-left-radius:0; padding:6px 10px; position:relative; color:#333; font-size:14px;text-align:left; float:left; white-space: normal; word-break: break-all;}
@@ -173,19 +173,23 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .talk-infobox .dialog::after{ display:block; content:''; height:0; width:0; border-style:solid; border-width:3px; border-color:#fff transparent transparent transparent; left:-3px; top:0; position:absolute; }
 .talk-infobox .visitor-li .dialog{background:#fff;}
 .talk-infobox .visitor-li .dialog::after{border-color:#fff transparent transparent transparent;}
-.talk-infobox .expert-li .dialog{background:#fff7e2; color:#8f7d50;}
-.talk-infobox .expert-li .dialog::after{border-color:#fff7e2 transparent transparent transparent;}
+.talk-infobox .admin .dialog{background:#fff7e2; color:#8f7d50;}
+.talk-infobox .admin .dialog::after{border-color:#fff7e2 transparent transparent transparent;}
+.talk-infobox .analyst .dialog{background: #474b51;color: #d7d7d7;}
+.talk-infobox .analyst .dialog::after{border-color:#474b51 transparent transparent transparent;}
 .talk-infobox .me-li .dialog{background:#fff; border-top-left-radius:5px; border-top-right-radius:0; float:right; }
 .talk-infobox .me-li .dialog::after{border-color:#fff transparent transparent transparent; left:auto; right:-3px;}
 .talk-infobox .push{background-color: #474b51; padding: 6px 10px;}
-.talk-infobox .push p{color: #FF4C3C; background-color: inherit; font-size: 14px;}
+.talk-infobox .push p{color: #FF4C3C; background-color: inherit; font-size: 14px; word-break: break-all;}
 .talk-infobox .push p a{color: #3181c6; text-decoration: underline;}
-
+.talk-infobox .dialog img{ vertical-align:bottom;}
 .talk-infobox .dialog .to{ color:#666; font-size:10px;}
 .talk-infobox .dialog .question{ color:#777; font-size:12px; border-bottom:1px solid #ddd3ba; padding-bottom:5px; margin-bottom:5px}
 .talk-infobox .dialog .question em{ font-style:normal; font-weight:bold}
 .talk-infobox .dialog .reply span{ font-weight:bold}
-.ss-tk-info{position:fixed;height:25px;line-height:25px;color:#e93030;font-size:12px;background:#F2F181; z-index: 100001;width: 100%; left: 0; top: 0;}
+.talk-infobox .analyst .dialog .question{ color:#d7d7d7;border-bottom-color:#5a5a5a}
+.talk-infobox .analyst .dialog .reply{ color:#ecc288}
+.ss-tk-info{position:fixed;height:25px;line-height:25px;color:#e93030;font-size:12px;background:#F2F181; z-index: 100001;width: 100%; left: 0; top: 0; overflow: hidden;}
 .ss-tk-info label{margin-left: 10px}
 .ss-tk-info span{margin-left:5px;text-align:justify;}
 .ss-tk-info i{position:absolute;right:5px;top:4px;display:block;width:17px;height:17px;background-position:-50px -40px}
@@ -196,7 +200,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .arrow-outer{position:absolute;height:7px;width:30px;overflow:hidden;top:-6px;left:7px;z-index:6}
 .arrow-shadow{-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);background:#fff;height:20px;position:absolute;top:7px;width:20px;border:solid #bdbdbd 1px}
 .talk-content p{width:80%;border:solid #BDBDBD 1px;border-radius:4px;padding:5px;font-size:12px;text-align:justify;background:#fff}
-.expert-li .talk-content p,.expert-li .arrow-shadow{border-color:#DE5555;background:#DE5555;color:#fff}
+.analyst .talk-content p,.analyst .arrow-shadow{border-color:#DE5555;background:#DE5555;color:#fff}
 .me-li .talk-dlbox,.me-li .talk-content{float:right}
 .me-li .talk-dlbox dt{float:right;margin-right:0}
 .me-li .talk-dlbox dd{position:relative;bottom:-4px;right:5px;float:right}

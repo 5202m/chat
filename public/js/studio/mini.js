@@ -487,9 +487,17 @@ var StudioChatMini = {
             html.push('<a href="javascript:"  class="' + uName + '">' + nickname + '</a>');
             html.push('<span class="dtime">' + StudioChatMini.formatPublishTime(fromUser.publishTime) + '</span>');
         }
-        html.push('</div>');
-        html.push('<p><span class="dcont">' + toUserHtml + pHtml + '</span></p>');
-        html.push('</div>');
+        html.push('</div><p>');
+        if(toUser && common.isValid(toUser.question)){
+            html.push('<span class="dcont">');
+            html.push('<span uid="'+toUser.userId+'" utype="'+toUser.userType+'">'+toUser.nickname+'</span>提问：');
+            html.push('<span contt="q">' + toUser.question + '</span>');
+            html.push('<span class="dialog_reply">回复：<span contt="a">' + pHtml + '</span></span>');
+            html.push('</span>');
+        }else{
+            html.push('<span class="dcont" contt="a">' + toUserHtml + pHtml + '</span>');
+        }
+        html.push('</p></div>');
         return html.join("");
     },
     /**
