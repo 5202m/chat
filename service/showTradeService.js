@@ -21,7 +21,7 @@ var showTradeService = {
             "boUser.userNo" : userNo,
             "groupType" : groupType,
             "valid" : 1
-        }).limit(20).sort({"showDate":-1}).exec("find", function(err, data){
+        }).sort({"showDate":-1}).exec("find", function(err, data){
             if(err){
                 logger.error("查询晒单数据失败!", err);
                 callback(null);

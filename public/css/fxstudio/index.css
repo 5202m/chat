@@ -162,7 +162,8 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .sd_pages .arr i{ width: 7px; display: block; height:13px; margin: 4px auto 0; background-position: -170px -120px; }
 .sd_pages .arr.next i{ background-position: -190px -120px }
 .sd_pages a.curr{ color: #fff }
-.nosd_tip{ color: #c4c4c4; font-size: 13px; text-align: center; padding: 10px 0 }
+.nosd_tip{ text-align: center; padding-top: 20px;  }
+.nosd_tip p{display: inline-block;*display: inline;*zoom: 1;  color: #83b0e4; font-size: 16px; text-align: center; line-height: 24px; padding:0 5px; border:1px solid #426eaf}
 .te_detail span i.suc{ color: #eaeaea; font-size: 14px; }
 .te_detail span i.suc b{ color: #92c04a }
 .te_detail.sd span{  padding-top: 4px; }
