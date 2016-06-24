@@ -160,7 +160,7 @@ router.get('/', function(req, res) {
             res.render('error',{error: '默认房间设置有误，请检查！'});
         }else{
             var targetGroupId = chatUser.toGroup || chatUser.groupId || groupId;
-            chatService.getRoomOnlineNum(targetGType, targetGroupId,function(onlineNum){
+            chatService.getRoomOnlineTotalNum(targetGroupId,function(onlineNum){
                 userService.checkRoomStatus(targetGroupId,onlineNum,function(isOK) {
                     if(isOK){
                         if(targetGroupId != chatUser.groupId){//目标房间不是当前已登录房间==>追加到目标房间，后跳转
@@ -732,7 +732,7 @@ router.get('/getRmCourseList', function(req, res) {
                     if(!result.data.hasOwnProperty(rid)){
                         result.data[rid] = {day:'',name:'',startTime:'',endTime:'',isNext:false};
                     }
-                    chatService.getRoomOnlineNum(getGroupType(req),rid,function(onlineNum){
+                    chatService.getRoomOnlineTotalNum(rid,function(onlineNum){
                         result.data[rid].onlineNum=onlineNum;
                         callbackTmp(null);
                     });

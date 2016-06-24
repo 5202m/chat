@@ -240,6 +240,17 @@ var chatService ={
             }
         });
     },
+    /**
+     * 提取房间在线总人数
+     * @param groupId
+     * @param callback
+     */
+    getRoomOnlineTotalNum:function(groupId,callback){
+        this.getRoomOnlineUser(groupId,function(roomUserArr){
+            callback(roomUserArr?Object.getOwnPropertyNames(roomUserArr).length:0);
+        });
+    }
+    ,
     /***
      * 移除缓存的房间
      * 备注：房间被禁用
@@ -386,14 +397,6 @@ var chatService ={
                             }
                         });
                     }
-                    chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,true,function(roomNum){
-                        if(common.isStudio(userInfo.groupType)){
-                            return;
-                        }
-                        var noticeData={type:chatService.noticeType.onlineNum,data:{userId:userInfo.userId,hasRegister:userInfo.hasRegister,groupId:userInfo.groupId,onlineUserNum:roomNum}};
-                        socket.emit('notice',noticeData);
-                        socket.broadcast.to(userInfo.groupId).to(chatService.getOutRoomId(userInfo.groupType)).emit('notice',noticeData);
-                    });
                 });
                 //加载已有内容
                 messageService.loadMsg(userInfo,lastPublishTime,false,function(msgData){
@@ -415,32 +418,16 @@ var chatService ={
                                 logRemoveTip="otherLogin";
                             }
                             //通知客户端在线人数
-                            if(common.isStudio(userInfo.groupType)){//如果是直播间,则移除页面在线用户
-                                if(isRemove && noticeClient){
-                                    socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:false}});
-                                }
-                                //直播间记录离线数据
-                                visitorService.saveVisitorRecord('offline',{roomId:userInfo.groupId,groupType:userInfo.groupType,clientStoreId:userInfo.clientStoreId});
-                                socket.leave(userInfo.groupId);
-                                if(socket){
-                                    delete socket;
-                                }
-                                logger.info('setSocket['+logRemoveTip+']=>client['+(userInfo.accountNo||userInfo.userId)+'] disconnect!');
+                            if(isRemove && noticeClient){
+                                socket.broadcast.to(userInfo.groupId).emit('notice',{type:chatService.noticeType.onlineNum,data:{onlineUserInfo:userInfo,online:false}});
                             }
-                            //计算房间人数
-                            chatService.setRoomOnlineNum(userInfo.groupType,userInfo.groupId,false,function(roomNum){
-                                if(common.isStudio(userInfo.groupType)){
-                                    return;
-                                }
-                                //通知客户端在线人数
-                                socket.broadcast.to(userInfo.groupId).to(chatService.getOutRoomId(userInfo.groupType)).emit('notice',{type:chatService.noticeType.onlineNum,data:{groupId:userInfo.groupId,onlineUserNum:roomNum}});
-                                //通知非房间的socket
-                                socket.leave(userInfo.groupId);//离开房间
-                                if(socket){
-                                    delete socket;
-                                }
-                                logger.info('setSocket['+logRemoveTip+']=>client['+(userInfo.accountNo||userInfo.userId)+'] disconnect!');
-                            });
+                            //直播间记录离线数据
+                            visitorService.saveVisitorRecord('offline',{roomId:userInfo.groupId,groupType:userInfo.groupType,clientStoreId:userInfo.clientStoreId});
+                            socket.leave(userInfo.groupId);
+                            if(socket){
+                                delete socket;
+                            }
+                            logger.info('setSocket['+logRemoveTip+']=>client['+(userInfo.accountNo||userInfo.userId)+'] disconnect!');
                         });
                     });
                 }else{//房间外socket的客户端断开对应的处理逻辑
