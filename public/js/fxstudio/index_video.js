@@ -498,7 +498,7 @@ var videos={
         initSD : function(){
             var course=common.getSyllabusPlan(indexJS.syllabusData,indexJS.serverTime);
             if(course && course.lecturerId && (!videos.sd.analyst || course.lecturerId.indexOf(videos.sd.analyst.userNo) == -1)){
-                $.getJSON('/studio/getShowTradeInfo',{userNo: course.lecturerId},function(data){
+                $.getJSON('/fxstudio/getShowTradeInfo',{userNo: course.lecturerId},function(data){
                     if(data && data.analyst){
                         videos.sd.analyst = data.analyst;
                         videos.sd.tradeList = data.tradeList || [];
@@ -518,7 +518,7 @@ var videos={
             $("#sdInfoId .te_detail .support").click(function(){
                 var _this=$(this);
                 try{
-                    common.getJson("/studio/setUserPraise",{clientId:indexJS.userInfo.userId,praiseId:_this.attr("uid")},function(result){
+                    common.getJson("/fxstudio/setUserPraise",{clientId:indexJS.userInfo.userId,praiseId:_this.attr("uid")},function(result){
                         if(result.isOK) {
                             _this.find('i').fadeIn().delay(400).fadeOut();
                             var lb= _this.find("label");
