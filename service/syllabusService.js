@@ -37,9 +37,9 @@ var syllabusService = {
             if(err){
                 logger.error("查询聊天室课程安排失败!", err);
                 callback(null);
-                return;
+            }else{
+                callback(row?((groupIdArr && groupIdArr.length>1)?row:row[0]):null);
             }
-            callback(row?((groupIdArr && groupIdArr.length>1)?row:row[0]):null);
         });
     },
     /**

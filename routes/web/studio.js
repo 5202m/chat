@@ -705,12 +705,10 @@ router.get('/getRmCourseList', function(req, res) {
         res.json(result);
     }else {
         syllabusService.getSyllabus(userInfo.groupType,roomIds,function(data){
-            if(!data || data.length==0){
-                res.json(result);
-            }else{
+            result.isOK=true;
+            if(data && data.length>0){
                 var row=null,course=null;
                 var currTime=new Date().getTime();
-                result.isOK=true;
                 var newData=[];
                 if(data instanceof Array){
                     newData=data;
@@ -728,18 +726,18 @@ router.get('/getRmCourseList', function(req, res) {
                     }
                     result.data[row.groupId]=backObj;
                 }
-                async.eachSeries(roomIds.split(","), function (rid, callbackTmp) {
-                    if(!result.data.hasOwnProperty(rid)){
-                        result.data[rid] = {day:'',name:'',startTime:'',endTime:'',isNext:false};
-                    }
-                    chatService.getRoomOnlineTotalNum(rid,function(onlineNum){
-                        result.data[rid].onlineNum=onlineNum;
-                        callbackTmp(null);
-                    });
-                }, function (err) {
-                    res.json(result);
-                });
             }
+            async.each(roomIds.split(","), function (rid, callbackTmp) {
+                if(!result.data.hasOwnProperty(rid)){
+                    result.data[rid] = {day:'',name:'',startTime:'',endTime:'',isNext:false};
+                }
+                chatService.getRoomOnlineTotalNum(rid,function(onlineNum){
+                    result.data[rid].onlineNum=onlineNum;
+                    callbackTmp(null);
+                });
+            }, function (err) {
+                res.json(result);
+            });
         });
     }
 });

@@ -87,12 +87,14 @@ var indexJS ={
                                         size=Math.round(size);
                                     }
                                     $(this).find(".peo_num label").text(rda.onlineNum + size);
-                                    $(this).find(".info .nk").text(rda.name);
-                                    if(!rda.isNext){
-                                        $(this).addClass("on");
-                                    }
-                                    if(rda.day){
-                                        $(this).find(".info .st").text(common.daysCN[rda.day]+' '+rda.startTime+' - '+rda.endTime);
+                                    if(common.isValid(rda.name)){
+                                        $(this).find(".info .nk").text(rda.name);
+                                        if(!rda.isNext){
+                                            $(this).addClass("on");
+                                        }
+                                        if(rda.day){
+                                            $(this).find(".info .st").text(common.daysCN[rda.day]+' '+rda.startTime+' - '+rda.endTime);
+                                        }
                                     }
                                 }
                             });
