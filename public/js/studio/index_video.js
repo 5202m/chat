@@ -187,6 +187,14 @@ var videos={
 
         /**绑定晒单相关事件*/
         videos.sd.setSDEvent();
+
+        /**广告--你投资我出钱*/
+        if($("#roomInfoId").attr("av") == "true"){
+            $('.video_ad').show();
+            $('.video_ad .ad_closebtn').click(function() {
+                $('.video_ad').hide();
+            })
+        }
     },
     /**
      * 客户端视频任务

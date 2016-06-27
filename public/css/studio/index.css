@@ -935,3 +935,9 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .popbanner.ban_act .act_link{ display:block; width:100%; height:400px;}
 .tipsbox{ position:fixed; top:50%; width:100%; left:0; margin-top:-19px; height:38px; font-size:0; text-align:center; z-index:100}
 .tipsbox .cont{ display:inline-block; padding:0 10px; height:38px;background: #fff; color: #333; line-height:38px; font-size:14px; border-radius:2px;}
+
+/* ad 20160624 */
+.video_ad{ width: 100px; height: 60px; position: absolute; right: 0; bottom: 2px; z-index: 100 }
+.video_ad .ad_cont{ position: relative; }
+.video_ad img{ border: 0; vertical-align: bottom; }
+.video_ad .ad_closebtn{ display: block; position: absolute; right: 0;top: 0; width: 15px;height: 15px; z-index: 10 }
