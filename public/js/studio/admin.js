@@ -78,7 +78,7 @@ var studioChat={
                 var tm=tp.attr("tm");
                 if(common.isValid(fuId)){
                     var $this = $(this);
-                    studioChat.setDialog(null,fuId,tp.find("strong").addClass("reply-st").html(),$this.attr("ts"),$this.attr("utype"),tm, $this.siblings("span").text());//设置对话
+                    studioChat.setDialog(null,fuId,tp.find("strong").addClass("reply-st").html(),$this.attr("ts"),$this.attr("utype"),tm, $this.siblings("span").html());//设置对话
                 }else{
                     tp.remove();
                     $("#show_top_btn strong,#top_num").text("【"+$("#talk_top_id .ss-tk-info").length+"】");
@@ -428,7 +428,7 @@ var studioChat={
     setWhContent:function(data,isMeSend,isLoadData){
         var fromUser=data.fromUser,cls='dialog ',content=data.content,nkTitle='',loadImgHtml='',loadHtml='';
         if(data.rule){
-            $('#'+data.uiId+' .dcont').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
+            $('#'+data.uiId+' span[contt="a"]').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
             return;
         }
         if(!isLoadData){
@@ -490,7 +490,7 @@ var studioChat={
                     whContent.append(html);
                 }
             }
-            pHtml='<p><span class="dcont">'+content.value+'</span></p>';
+            pHtml='<p><span class="dcont" contt="a">'+content.value+'</span></p>';
         }
         html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'" t="header"><div>'+nkTitle+ '</div>'+pHtml+'</div>';
         if(scrContent.length>0){
@@ -725,7 +725,7 @@ var studioChat={
         //回复对话
         $(".replybtn").click(function(){
             var $this = $(this);
-            studioChat.setDialog(null,$this.attr("uid"),$(".sender").html(),$this.attr("ts"),$this.attr("utype"),$this.attr("tm"), $this.parent().find(".xcont").text());//设置对话
+            studioChat.setDialog(null,$this.attr("uid"),$(".sender").html(),$this.attr("ts"),$this.attr("utype"),$this.attr("tm"), $this.parent().find(".xcont").html());//设置对话
             $(".mymsg em").show();
         });
         //关闭对话
@@ -920,7 +920,13 @@ var studioChat={
         }else{
             $("#contentText .txt_dia").remove();
             $("#contentText").html($("#contentText").html().replace(/^((&nbsp;)+)/g,''));
-            var loc_txt = txt ? ('<input type="hidden" value="">') : '';
+            var loc_txt = '';
+            if(txt){
+                loc_txt = '<input type="hidden" value="">';
+                var txtDom = $('<div>' + txt + '</div>');
+                txtDom.find(".txt_dia").remove();
+                txt = txtDom.html();
+            }
             var htmlDom = $('<span class="txt_dia" contenteditable="false" uid="'+userId+'" tm="'+ptm+'" utype="'+userType+'">' + loc_txt + '@<label>'+nickname+'</label></span>&nbsp;');
             htmlDom.find("input").val(txt);
             $("#contentText").prepend(htmlDom).focusEnd();
@@ -937,7 +943,7 @@ var studioChat={
             fromUser.publishTime=data.uiId;
         }
         if(isLoadData && $("#"+fromUser.publishTime).length>0){
-            $("#"+fromUser.publishTime+" .dcont em[class=ruleTipStyle]").remove();
+            $("#"+fromUser.publishTime+" span[contt] em[class=ruleTipStyle]").remove();
             $("#"+fromUser.publishTime+" .approve").remove();
             return;
         }
@@ -945,7 +951,7 @@ var studioChat={
             if(data.value && data.value.needApproval){
                 $('#'+data.uiId).attr("id",fromUser.publishTime);
             }else{
-                $('#'+data.uiId+' .dcont').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
+                $('#'+data.uiId+' span[contt="a"]').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
             }
             return;
         }
@@ -967,7 +973,7 @@ var studioChat={
         }
         //对话事件
         $('#'+fromUser.publishTime+' .headimg,#'+fromUser.publishTime+' .uname').click(function(){
-            var dp=$(this).parent();
+            var dp=$(this).parents(".dialog");
             var diaDom=dp.find('.dialogbtn');
             diaDom.attr("tm",dp.attr("id"));
             studioChat.openDiaLog(diaDom, true);
@@ -1074,7 +1080,7 @@ var studioChat={
      * @param ptime
      */
     formatMsgToLink:function(ptime){
-        $('#'+ptime+' .dcont:contains("http:"),#'+ptime+' .dcont:contains("https:")').each(function (index,el){
+        $('#'+ptime+' span[contt]:contains("http:"),#'+ptime+' span[contt]:contains("https:")').each(function (index,el){
             var elHtml=$(el).html(),elArr=elHtml.split(/<img src="\S+">/g);
             var linkTxt='';
             for(var i in elArr){

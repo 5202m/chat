@@ -236,7 +236,7 @@ var chat={
             return;
         }
         if(isLoadData && $("#"+fromUser.publishTime).length>0){
-            $("#"+fromUser.publishTime+" .dcont em[class=ruleTipStyle]").remove();
+            $("#"+fromUser.publishTime+" span[contt] em[class=ruleTipStyle]").remove();
             $("#"+fromUser.publishTime+" input").remove();
             return;
         }
@@ -244,7 +244,7 @@ var chat={
             if(data.value && data.value.needApproval){
                 $('#'+data.uiId).attr("id",fromUser.publishTime);
             }else{
-                $('#'+data.uiId+' .dcont').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
+                $('#'+data.uiId+' span[contt="a"]').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
             }
             return;
         }
@@ -391,7 +391,7 @@ var chat={
      * @param ptime
      */
     formatMsgToLink:function(ptime){
-        $('#'+ptime+' .dcont:contains("http:"),#'+ptime+' .dcont:contains("https:")').each(function (index,el){
+        $('#'+ptime+' span[contt]:contains("http:"),#'+ptime+' span[contt]:contains("https:")').each(function (index,el){
             var elHtml=$(el).html(),elArr=elHtml.split(/<img src="\S+">/g);
             var linkTxt='';
             for(var i in elArr){
@@ -780,7 +780,7 @@ var chat={
     setWhContent:function(data,isMeSend,isLoadData,isOnlyFill){
         var fromUser=data.fromUser,cls='dialog ',content=data.content,nkTitle='';
         if(data.rule){
-            $('#'+data.uiId+' .dcont').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
+            $('#'+data.uiId+' span[contt="a"]').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
             return;
         }
         if(!isLoadData){
@@ -829,7 +829,7 @@ var chat={
                 html='<div class="dialog" id="'+fromUser.publishTime+'"><div class="dialog_top">'+nkTitTmp+'</div><div class="whcls"><i></i><div class="whblt">' + fromUser.toUser.question + '</div></div></div>';
                 whContent.append(html);
             }
-            pHtml='<p><i></i><span class="dcont">'+content.value+'</span></p>';
+            pHtml='<p><i></i><span class="dcont" contt="a">'+content.value+'</span></p>';
         }
         html='<div class="'+cls+'" id="'+fromUser.publishTime+'" utype="'+fromUser.userType+'" mType="'+content.msgType+'"><div class="dialog_top">'+nkTitle+'</div>'+pHtml+'</div>';
         whContent.append(html);
@@ -953,7 +953,7 @@ var chat={
                     if(data.refuseMsg){
                         var publishTimeArr=data.publishTimeArr;
                         for(var i in publishTimeArr){
-                            $("#"+publishTimeArr[i]+" .dcont em[class=ruleTipStyle]").html("已拒绝");
+                            $("#"+publishTimeArr[i]+" span[contt] em[class=ruleTipStyle]").html("已拒绝");
                         }
                     }else{
                         for (var i in data) {

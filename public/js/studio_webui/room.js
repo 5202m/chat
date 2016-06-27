@@ -49,15 +49,42 @@ var studioChatMb={
         if(!this.userInfo.nickname){
             this.refreshNickname(false, "匿名_" + this.userInfo.userId.substring(8,12));
         }
-        //当前房间未授权，并且是游客
-        if(!this.currStudioAuth && this.userInfo.clientGroup=='visitor'){
-            studioMbPop.popBox("login", {
-                groupId : studioChatMb.userInfo.groupId,
-                clientGroup : studioChatMb.userInfo.clientGroup,
-                clientStoreId : studioChatMb.userInfo.clientStoreId,
-                platform : studioChatMb.fromPlatform,
-                closeable:false
-            });
+        if(this.userInfo.clientGroup=='visitor'){
+            //当前房间未授权，并且是游客
+            if(!this.currStudioAuth){
+                studioMbPop.popBox("login", {
+                    groupId : studioChatMb.userInfo.groupId,
+                    clientGroup : studioChatMb.userInfo.clientGroup,
+                    clientStoreId : studioChatMb.userInfo.clientStoreId,
+                    platform : studioChatMb.fromPlatform,
+                    closeable:false
+                });
+            }else if(studioMbPop.Login.forceLogin()){
+                //之前已经看过3分钟了。
+                studioMbPop.popBox("login", {
+                    groupId : studioChatMb.userInfo.groupId,
+                    clientGroup : studioChatMb.userInfo.clientGroup,
+                    clientStoreId : studioChatMb.userInfo.clientStoreId,
+                    platform : studioChatMb.fromPlatform,
+                    closeable:false,
+                    showTip:true
+                });
+            }else{
+                //3分钟后强制要求登录
+                window.setTimeout(function(){
+                    if(studioChatMb.userInfo.clientGroup=='visitor'){
+                        studioMbPop.Login.forceLogin(true);
+                        studioMbPop.popBox("login", {
+                            groupId : studioChatMb.userInfo.groupId,
+                            clientGroup : studioChatMb.userInfo.clientGroup,
+                            clientStoreId : studioChatMb.userInfo.clientStoreId,
+                            platform : studioChatMb.fromPlatform,
+                            closeable:false,
+                            showTip:true
+                        });
+                    }
+                }, 180000);
+            }
         }
     },
     /**
@@ -183,7 +210,7 @@ var studioChatMb={
                     break;
                 case 'removeMsg':
                     $("#"+result.data.replace(/,/g,",#")).remove();
-                    studioChatMb.setTalkListScroll();
+                    studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
                     break;
                 case 'leaveRoom':{
                     studioChatMb.leaveRoomTip(result.flag);
@@ -202,7 +229,7 @@ var studioChatMb={
                         for (i in data) {
                             studioChatMb.formatUserToContent(data[i]);
                         }
-                        studioChatMb.setTalkListScroll();
+                        studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
                     }
                     break;
                 }
@@ -234,10 +261,7 @@ var studioChatMb={
                     studioChatMb.formatUserToContent(msgData[i]);
                 }
                 studioMbPop.loadingBlock($("#talkBoxTab"), true);
-                studioChatMb.setTalkListScroll();
-                window.setTimeout(function(){
-                    studioChatMb.setTalkListScroll();
-                }, 500);
+                studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
             }
         });
         //加载私聊信息
@@ -270,7 +294,7 @@ var studioChatMb={
                         loc_html.push('<ul class="teach-ul">');
                     }
                     row=data[i].detailList[0];
-                    loc_html.push('<li><a title="' + row.title + '" href="javascript:_gaq.push([\'_trackEvent\', \'m_fx_studio\', \'teachvideo_'+i+'\', \'content_middle\',1,true]);" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'"><i></i><span>'+row.title+'</span></a></li>');
+                    loc_html.push('<li><a title="' + row.title + '" href="javascript:_gaq.push([\'_trackEvent\', \'m_24k_studio\', \'teachvideo_'+i+'\', \'content_middle\',1,true]);" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'"><i></i><span>'+row.title+'</span></a></li>');
                     if(i % 5 == 4 || i == lenI - 1){
                         loc_html.push('</ul>');
                     }
@@ -340,10 +364,10 @@ var studioChatMb={
                 studioChatMb.whTalk.whSwitch(false);
                 studioChatMb.view.boardCtrl(0);
                 if(type=='TradeArticleTab'){
-                    _gaq.push(['_trackEvent', 'm_fx_studio', 'suggest_tab', 'content_middle',1,true]);
+                    _gaq.push(['_trackEvent', 'm_24k_studio', 'suggest_tab', 'content_middle',1,true]);
                     studioChatMb.setTradeArticle();
                 }else if(type == 'videosTab'){
-                    _gaq.push(['_trackEvent', 'm_fx_studio', 'teachvideo_tab', 'content_middle',1,true]);
+                    _gaq.push(['_trackEvent', 'm_24k_studio', 'teachvideo_tab', 'content_middle',1,true]);
                 }
             }
             cenTab.slideTo($(this).index(), 300, false);
@@ -351,7 +375,7 @@ var studioChatMb={
 
         //主页按钮
         $("#header_hb").bind("click", function(){
-            window.location.href = "/fxstudio/home";
+            window.location.href = "/studio/home";
         });
 
         //登录、显示用户信息
@@ -402,7 +426,7 @@ var studioChatMb={
                 $('#talkBoxTab .view_select .selected').text($(this).text());
                 $(this).addClass("on");
                 var type = $(this).attr("t");
-                _gaq.push(['_trackEvent', 'm_fx_studio', 'filter_' + type, 'content_left',1,true]);
+                _gaq.push(['_trackEvent', 'm_24k_studio', 'filter_' + type, 'content_left',1,true]);
                 studioChatMb.showViewSelect(type);
             }
         });
@@ -556,10 +580,6 @@ var studioChatMb={
         studioType : '',   //直播类别: studio、yy、oneTV
         liveUrl : "http://ct.phgsa.cn:1935/live/01/playlist.m3u8", //yy直播URL
         $panel : null,     //播放器容器
-        backToLivePos : {  //返回直播按钮位置
-            x : 0,
-            y : 0
-        },
         /**
          * 初始化
          */
@@ -571,7 +591,7 @@ var studioChatMb={
             }
             var yyDom=$(".videopart input:first"),yc=yyDom.attr("yc"),mc=yyDom.attr("mc");
             this.$panel = $("#tVideoDiv");
-            this.$panel.css({'z-index':"inherit"}).height($(window).width()*0.55);
+            this.$panel.css({'z-index':"inherit"}).height(this.$panel.width()*0.55);
             this.setEvent();
         },
         /**
@@ -718,28 +738,22 @@ var studioChatMb={
             /**
              * 返回直播
              */
-            util.toucher($("#backToLive")[0])
-                .on('singleTap',function(){
-                    //点击返回直播
-                    studioChatMb.socket.emit('serverTime');
-                    //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
-                    window.setTimeout(function(){
-                        studioChatMb.video.start(true);
-                    }, 1000);
-                })
-                .on('swipeStart',function(){
-                    studioChatMb.video.backToLivePos.x = parseInt(this.style.left) || 0;
-                    studioChatMb.video.backToLivePos.y = parseInt(this.style.top) || 0;
-                    this.style.transition = 'none';
-                    this.style.background = ' rgba(181,144,48,0.8)';
-                }).on('swipe',function(e){
-                    this.style.left = rangeControl(studioChatMb.video.backToLivePos.x + e.moveX, $(window).width() - this.clientWidth) + 'px';
-                    this.style.top = rangeControl(studioChatMb.video.backToLivePos.y + e.moveY, $(window).height() - this.clientHeight) + 'px';
-                    return false;
-                }).on('swipeEnd',function(){
-                    this.style.background = ' rgba(181,144,48,.6)';
-                    return false;
-                });
+            $("#backToLive").draggable({
+            	start : function(){
+                    $(this).css("background", 'rgba(181,144,48,0.8)');
+            	},
+            	stop : function(){
+            		$(this).css("background", 'rgba(181,144,48,0.6)');
+            	}
+            });
+            $("#backToLive").bind("click", function(){
+            	//点击返回直播
+                studioChatMb.socket.emit('serverTime');
+                //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
+                window.setTimeout(function(){
+                	studioChatMb.video.start(true);
+                }, 1000);
+            });
         },
         /**
          * 设置视频控制块事件
@@ -844,6 +858,27 @@ var studioChatMb={
     setTalkListScroll:function(){
         $("#talkPanel").scrollTop($('#talkPanel')[0].scrollHeight);
     },
+
+    /**
+     * 设置列表滚动条
+     * @param domClass
+     * @param options
+     */
+    setListScroll:function(domClass,options){
+        var dom=(typeof domClass=='object')?domClass:$(domClass);
+        options = $.extend({scrollButtons:{enable:false},theme:"light-2",toButtom:false}, options);
+        if(dom.hasClass("mCustomScrollbar")){
+            dom.mCustomScrollbar("update");
+            if(options.toButtom){
+            	obj.mCustomScrollbar("scrollTo", "bottom");
+            }
+        }else{
+            dom.mCustomScrollbar(options);
+            if(options.toButtom){
+            	obj.mCustomScrollbar("scrollTo", "bottom");
+            }
+        }
+    },
     /**
      * 提取uiId,用于标记记录的id，信息发送成功后取发布日期代替
      */
@@ -875,7 +910,7 @@ var studioChatMb={
             if(authorId){
                 query.authorId = common.trim(authorId);
             }
-            $.getJSON('/fxstudio/getArticleList',query,function(data){
+            $.getJSON('/studio/getArticleList',query,function(data){
                 //console.log("getArticleList->data:"+JSON.stringify(data));
                 callback(data);
             });
@@ -933,7 +968,7 @@ var studioChatMb={
         }else{
             loc_panel.children().show();
         }
-        studioChatMb.setTalkListScroll();
+        studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
     },
     /**
      * 过滤发送消息：过滤一些特殊字符等。
@@ -1027,10 +1062,9 @@ var studioChatMb={
         var list=$("#dialog_list");
         var talkPanel = $("#talkPanel");
         //如果本身就在最底端显示，则自动滚动，否则不滚动
-        var isScroll = talkPanel.scrollTop() + talkPanel.height() + 30 >= talkPanel.get(0).scrollHeight;
         list.append(dialog);
-        if(isScroll && !isLoadData){
-            studioChatMb.setTalkListScroll();
+        if(!isLoadData){
+        	studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
         }
         this.formatMsgToLink(fromUser.publishTime);//格式链接
         var vst=$('#talkBoxTab .view_select .selectlist a[class=on]').attr("t");//按右上角下拉框过滤内容
@@ -1065,7 +1099,7 @@ var studioChatMb={
         var toUser=fromUser.toUser,pHtml=[],msgVal;
         if(content.msgType==studioChatMb.msgType.img){
             if(content.needMax){
-                msgVal='<p><a href="/fxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" class="swipebox" ><img src="'+content.value+'" alt="图片"/></a></p>';
+                msgVal='<p><a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" class="swipebox" ><img src="'+content.value+'" alt="图片"/></a></p>';
             }else{
                 msgVal='<p><a href="'+content.value+'" class="swipebox" ><img src="'+content.value+'" alt="图片" /></a></p>';
             }
@@ -1207,7 +1241,7 @@ var studioChatMb={
         }else{
             aImgCls="user_c";
         }
-        return '<img src="images/fxstudio_mb/'+aImgCls+'.png">';
+        return '<img src="images/studio_mb/'+aImgCls+'.png">';
     },
     /**
      * 离开房间提示
@@ -1222,7 +1256,7 @@ var studioChatMb={
             }else{
                 window.setTimeout(function(){//3秒钟后登出
                     LoginAuto.setAutoLogin(false);
-                    window.location.href="/fxstudio/logout?platform="+studioChatMb.fromPlatform;
+                    window.location.href="/studio/logout?platform="+studioChatMb.fromPlatform;
                 },2000);
             }
         }else if(flag=="otherLogin"){
@@ -1389,11 +1423,8 @@ var studioChatMb={
             html.push(info.content);
             html.push('</div>');
             var talkPanel = $("#talkPanel");
-            var isScroll = talkPanel.scrollTop() + talkPanel.height() + 30 >= talkPanel.get(0).scrollHeight;
             $("#dialog_list").append(html.join(""));
-            if(isScroll){
-                studioChatMb.setTalkListScroll();
-            }
+        	studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
         }
     },
 
@@ -1593,7 +1624,7 @@ var studioChatMb={
          */
         getCSList : function(){
             try{
-                $.getJSON('/fxstudio/getCS',{groupId:studioChatMb.userInfo.groupId},function(data){
+                $.getJSON('/studio/getCS',{groupId:studioChatMb.userInfo.groupId},function(data){
                     if(data && data.length>0) {
                         var cs, csTmp;
                         for(var i = 0, lenI = data.length; i < lenI; i++){
@@ -1607,7 +1638,7 @@ var studioChatMb={
                             csTmp.userNo = cs.userNo;
                             csTmp.userName = cs.userName;
                             csTmp.userType = 3;
-                            csTmp.avatar = common.isValid(cs.avatar)?cs.avatar:'/images/fxstudio/cm.png';
+                            csTmp.avatar = common.isValid(cs.avatar)?cs.avatar:'/images/studio/cm.png';
                             csTmp.load = false;
                         }
                     }
@@ -1682,13 +1713,12 @@ var studioChatMb={
             var dialog=studioChatMb.formatContentHtml(data,isMeSend,isLoadData, true);
             var talkPanel = $("#whTalkPanel");
             //如果本身就在最底端显示，则自动滚动，否则不滚动
-            var isScroll = talkPanel.scrollTop() + talkPanel.height() + 30 >= talkPanel.get(0).scrollHeight;
             if(isLoadData){
                 $("#whDialog_list").prepend(dialog);
             }else{
                 $("#whDialog_list").append(dialog);
             }
-            if(isScroll && this.tabCheck){
+            if(this.tabCheck){
                 studioChatMb.whTalk.setWHTalkListScroll();
             }
             studioChatMb.formatMsgToLink(fromUser.publishTime);//格式链接

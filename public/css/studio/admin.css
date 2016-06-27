@@ -48,7 +48,7 @@ body{ background:url(../../images/studio_admin/bg.jpg) center 0 no-repeat;font-f
 /*header*/
 .box-header{width:100%;min-width:1024px;background:#fff; height:50px;}
 .box-header-in{width:auto;min-width:1024px;margin:0 auto;overflow:hidden;height:50px}
-.box-header h1{margin-top:11px; padding-left:23px; background:url(../../images/studio_admin/logotit.png) 23px 0 no-repeat; height:29px;width:376px}
+.box-header h1{margin-top:5px; padding-left:23px; background:url(../../images/studio_admin/logotit.png) 23px 0 no-repeat; height:40px;width:160px}
 .header-logo{display:block;float:left;width:187px;height:29px}
 .header-right a{ display:block; padding:0 20px; border-left:1px solid #dde2e4; float:left; height:50px; line-height:50px; color:#4e4e4e; font-size:12pt; text-align:center;}
 .header-right a.on{ background:#b59030; color:#fff; text-decoration:none}

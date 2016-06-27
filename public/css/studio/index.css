@@ -38,7 +38,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 /*header*/
 .box-header{width:100%;min-width:1200px;background:url(../../images/studio/headerbg.png) repeat; height:60px; position:relative;z-index:19999}
 .box-header-in{width:auto;min-width:1200px;margin:0 auto;/*overflow:hidden;*/height:60px}
-.box-header h1{margin-top:10px; padding-left:20px; background:url(../../images/studio/logotit.png) 20px 0 no-repeat; height:40px;width:310px}
+.box-header h1{margin-top:7px; padding-left:20px; background:url(../../images/studio/logotit.png) 20px 0 no-repeat; height:48px;width:190px; margin-right: 10px;}
 .header-logo{display:block;float:left;width:130px;height:40px}
 .header-btn a{ display:block; width:150px; background:#c49351; float:left; height:35px; line-height:35px; color:#fff; font-size:16px; text-align:center; position:relative; margin-left:20px; border-radius:3px; box-shadow:0 1px 1px rgba(21,78,136,.4); margin-top:15px}
 .header-btn a:hover{ text-decoration:none}

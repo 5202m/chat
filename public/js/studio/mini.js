@@ -411,7 +411,7 @@ var StudioChatMini = {
             return;
         }
         if (isLoadData && $("#" + fromUser.publishTime).length > 0) {
-            $("#" + fromUser.publishTime + " .dcont em[class=ruleTipStyle]").remove();
+            $("#" + fromUser.publishTime + " span[contt] em[class=ruleTipStyle]").remove();
             $("#" + fromUser.publishTime + " input").remove();
             return;
         }
@@ -419,7 +419,7 @@ var StudioChatMini = {
             if (data.value && data.value.needApproval) {
                 $('#' + data.uiId).attr("id", fromUser.publishTime);
             } else {
-                $('#' + data.uiId + ' .dcont').append('<em class="ruleTipStyle">' + (data.value.tip) + '</em>');
+                $('#' + data.uiId + ' span[contt="a"]').append('<em class="ruleTipStyle">' + (data.value.tip) + '</em>');
             }
             return;
         }
@@ -505,7 +505,7 @@ var StudioChatMini = {
      * @param ptime
      */
     formatMsgToLink: function (ptime) {
-        $('#' + ptime + ' .dcont:contains("http:"),#' + ptime + ' .dcont:contains("https:")').each(function (index, el) {
+        $('#' + ptime + ' span[contt]:contains("http:"),#' + ptime + ' span[contt]:contains("https:")').each(function (index, el) {
             var elHtml = $(el).html(), elArr = elHtml.split(/<img src="\S+">/g);
             var linkTxt = '';
             for (var i in elArr) {

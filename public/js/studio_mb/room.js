@@ -1097,7 +1097,7 @@ var studioChatMb={
                 msgVal='<p><a href="'+content.value+'" class="swipebox" ><img src="'+content.value+'" alt="图片" /></a></p>';
             }
         }else{
-            msgVal = content.value;
+            msgVal = '<span contt="a">' + content.value + '</span>';
         }
         if(toUser && common.isValid(toUser.userId)){
             if(isWh){
@@ -1106,7 +1106,7 @@ var studioChatMb={
                 pHtml.push('<p class="question"><em>');
                 pHtml.push('<strong class="asker" uid="'+toUser.userId+'" utype="'+toUser.userType+'">'+toUser.nickname+'</strong>');
                 pHtml.push('提问：</em>');
-                pHtml.push('<span>' + toUser.question + '</span>');
+                pHtml.push('<span contt="q">' + toUser.question + '</span>');
                 pHtml.push('</p>');
                 pHtml.push('<p class="reply"><span>回复：</span>');
                 pHtml.push(msgVal);
@@ -1181,7 +1181,7 @@ var studioChatMb={
      * @param ptime
      */
     formatMsgToLink:function(ptime){
-        $('#'+ptime+' .dcont:contains("http:"),#'+ptime+' .dcont:contains("https:")').each(function (index,el){
+        $('#'+ptime+' span[contt]:contains("http:"),#'+ptime+' span[contt]:contains("https:")').each(function (index,el){
             var elHtml=$(el).html(),elArr=elHtml.split(/<img src="\S+">/g);
             var linkTxt;
             for(var i in elArr){
