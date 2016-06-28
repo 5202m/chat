@@ -4,21 +4,7 @@
  * 2015-10-21
  */
 var _gaq = _gaq || [];
- _gaq.push(['_setAccount', 'UA-31478987-1']);
- _gaq.push(['_setDomainName', '24k.hk']);
- _gaq.push(['_addIgnoredRef', '24k.hk']);
- _gaq.push(['_setAllowLinker', true]);
- _gaq.push(['_addOrganic', 'soso', 'w']);
- _gaq.push(['_addOrganic', 'sogou', 'query']);
- _gaq.push(['_addOrganic', 'youdao', 'q']);
- _gaq.push(['_addOrganic', 'baidu', 'word']);
- _gaq.push(['_addOrganic', 'baidu', 'q1']);
- _gaq.push(['_addOrganic', 'ucweb', 'keyword']);
- _gaq.push(['_addOrganic', 'ucweb', 'word']);
- _gaq.push(['_addOrganic', '114so', 'kw']);
- _gaq.push(['_addOrganic', '360', 'q']);
- _gaq.push(['_addOrganic', 'so', 'q']);
- _gaq.push(['_trackPageview']);
+
 /**百度统计*/
 var _hmt = _hmt || [];
 function UUID() {
@@ -77,12 +63,43 @@ var chatAnalyze = {
      */
     init:function(){
         //引入GA分析
-        if(chatAnalyze.localHref.indexOf("pmchat.24k.hk")!=-1) {
+        var type = "";
+        if(chatAnalyze.localHref.indexOf("pmchat.24k.hk")!=-1){
+            type = "studio";
+        }else if(chatAnalyze.localHref.indexOf("chat.gwfx.com")!=-1){
+            type = "fxstudio"
+        }
+        if(type) {
+            this.initGA(type);
             this.setGA();
             this.setBaidu();
         }
         //引入utm分析
         //this.setUTM();
+    },
+    //初始化GA
+    initGA : function(type){
+        if(type == "fxstudio"){
+            _gaq.push([ '_setAccount', 'UA-49389835-1' ]);
+            _gaq.push([ '_setDomainName', 'gwfx.com' ]);
+            _gaq.push([ '_addIgnoredRef', 'gwfx.com' ]);
+        }else{
+            _gaq.push(['_setAccount', 'UA-31478987-1']);
+            _gaq.push(['_setDomainName', '24k.hk']);
+            _gaq.push(['_addIgnoredRef', '24k.hk']);
+        }
+        _gaq.push(['_setAllowLinker', true]);
+        _gaq.push(['_addOrganic', 'soso', 'w']);
+        _gaq.push(['_addOrganic', 'sogou', 'query']);
+        _gaq.push(['_addOrganic', 'youdao', 'q']);
+        _gaq.push(['_addOrganic', 'baidu', 'word']);
+        _gaq.push(['_addOrganic', 'baidu', 'q1']);
+        _gaq.push(['_addOrganic', 'ucweb', 'keyword']);
+        _gaq.push(['_addOrganic', 'ucweb', 'word']);
+        _gaq.push(['_addOrganic', '114so', 'kw']);
+        _gaq.push(['_addOrganic', '360', 'q']);
+        _gaq.push(['_addOrganic', 'so', 'q']);
+        _gaq.push(['_trackPageview']);
     },
     /**
      * 设置GA
