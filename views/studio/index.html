@@ -302,7 +302,7 @@
             $('.calendar_ul.scrollbox2').height(hh - 165);
             $('.ppt_list').height(hh - 101);
             $('.main_tab .scrollbox').height(hh - hh_banner - 115);
-            $('.main_tab .chat_content').height(hh - hh_banner - 115 - 170);
+            $('.main_tab .chat_content').height(hh - hh_banner - 115 - $(".chat_input").height());
             $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
         }
         lightbox.option({
