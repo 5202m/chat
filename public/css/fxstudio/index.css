@@ -207,6 +207,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .dialog.showchat{ z-index:2}
 .dialog.mine{ float:right; text-align:right}
 .dialog > p { background:#eef2f8; border-radius:11px; display:inline-block; *display:inline; *zoom:1;padding:5px 9px; color:#222; line-height:18pt; font-size:11pt;word-break: break-all;}
+.dialog > p a {color:#3181c6;}
 .dialog.admin > p{ background:#fff2d1;}
 .dialog.analyst > p{ background:#192649; color: #dfdfdf}
 .dialog_top{ padding-bottom:3px}
