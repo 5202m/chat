@@ -837,12 +837,12 @@ var studioChatMb={
         if(dom.hasClass("mCustomScrollbar")){
             dom.mCustomScrollbar("update");
             if(options.toButtom){
-            	obj.mCustomScrollbar("scrollTo", "bottom");
+            	dom.mCustomScrollbar("scrollTo", "bottom");
             }
         }else{
             dom.mCustomScrollbar(options);
             if(options.toButtom){
-            	obj.mCustomScrollbar("scrollTo", "bottom");
+            	dom.mCustomScrollbar("scrollTo", "bottom");
             }
         }
     },
