@@ -190,7 +190,7 @@ var videos={
 
         /**广告--你投资我出钱*/
         if($("#roomInfoId").attr("av") == "true"){
-            $('.video_ad').show();
+            $('.video_ad,.menu_ad').show();
             $('.video_ad .ad_closebtn').click(function() {
                 $('.video_ad').hide();
             })
