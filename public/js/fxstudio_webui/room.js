@@ -183,7 +183,7 @@ var studioChatMb={
                     break;
                 case 'removeMsg':
                     $("#"+result.data.replace(/,/g,",#")).remove();
-                    studioChatMb.setTalkListScroll();
+                    studioChatMb.setListScroll($("#talkPanel"));
                     break;
                 case 'leaveRoom':{
                     studioChatMb.leaveRoomTip(result.flag);
@@ -202,7 +202,7 @@ var studioChatMb={
                         for (i in data) {
                             studioChatMb.formatUserToContent(data[i]);
                         }
-                        studioChatMb.setTalkListScroll();
+                        studioChatMb.setListScroll($("#talkPanel"));
                     }
                     break;
                 }
@@ -234,10 +234,7 @@ var studioChatMb={
                     studioChatMb.formatUserToContent(msgData[i]);
                 }
                 studioMbPop.loadingBlock($("#talkBoxTab"), true);
-                studioChatMb.setTalkListScroll();
-                window.setTimeout(function(){
-                    studioChatMb.setTalkListScroll();
-                }, 500);
+                studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
             }
         });
         //加载私聊信息
@@ -556,10 +553,6 @@ var studioChatMb={
         studioType : '',   //直播类别: studio、yy、oneTV
         liveUrl : "http://ct.phgsa.cn:1935/live/01/playlist.m3u8", //yy直播URL
         $panel : null,     //播放器容器
-        backToLivePos : {  //返回直播按钮位置
-            x : 0,
-            y : 0
-        },
         /**
          * 初始化
          */
@@ -571,7 +564,7 @@ var studioChatMb={
             }
             var yyDom=$(".videopart input:first"),yc=yyDom.attr("yc"),mc=yyDom.attr("mc");
             this.$panel = $("#tVideoDiv");
-            this.$panel.css({'z-index':"inherit"}).height($(window).width()*0.55);
+            this.$panel.css({'z-index':"inherit"}).height(this.$panel.width()*0.55);
             this.setEvent();
         },
         /**
@@ -714,32 +707,26 @@ var studioChatMb={
                 num = Math.max(num,10);//10代表可拖放范围的边距
                 return Math.min(num,max-10);
             };
-
+            
             /**
              * 返回直播
              */
-            util.toucher($("#backToLive")[0])
-                .on('singleTap',function(){
-                    //点击返回直播
-                    studioChatMb.socket.emit('serverTime');
-                    //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
-                    window.setTimeout(function(){
-                        studioChatMb.video.start(true);
-                    }, 1000);
-                })
-                .on('swipeStart',function(){
-                    studioChatMb.video.backToLivePos.x = parseInt(this.style.left) || 0;
-                    studioChatMb.video.backToLivePos.y = parseInt(this.style.top) || 0;
-                    this.style.transition = 'none';
-                    this.style.background = ' rgba(181,144,48,0.8)';
-                }).on('swipe',function(e){
-                    this.style.left = rangeControl(studioChatMb.video.backToLivePos.x + e.moveX, $(window).width() - this.clientWidth) + 'px';
-                    this.style.top = rangeControl(studioChatMb.video.backToLivePos.y + e.moveY, $(window).height() - this.clientHeight) + 'px';
-                    return false;
-                }).on('swipeEnd',function(){
-                    this.style.background = ' rgba(181,144,48,.6)';
-                    return false;
-                });
+            $("#backToLive").draggable({
+            	start : function(){
+                    $(this).css("background", 'rgba(181,144,48,0.8)');
+            	},
+            	stop : function(){
+            		$(this).css("background", 'rgba(181,144,48,0.6)');
+            	}
+            });
+            $("#backToLive").bind("click", function(){
+            	//点击返回直播
+                studioChatMb.socket.emit('serverTime');
+                //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
+                window.setTimeout(function(){
+                	studioChatMb.video.start(true);
+                }, 1000);
+            });
         },
         /**
          * 设置视频控制块事件
@@ -838,11 +825,26 @@ var studioChatMb={
             //$(window).trigger("resize");
         }
     },
+
     /**
-     * 设置聊天列表滚动条
+     * 设置列表滚动条
+     * @param domClass
+     * @param options
      */
-    setTalkListScroll:function(){
-        $("#talkPanel").scrollTop($('#talkPanel')[0].scrollHeight);
+    setListScroll:function(domClass,options){
+        var dom=(typeof domClass=='object')?domClass:$(domClass);
+        options = $.extend({scrollButtons:{enable:false},theme:"light-2",toButtom:false}, options);
+        if(dom.hasClass("mCustomScrollbar")){
+            dom.mCustomScrollbar("update");
+            if(options.toButtom){
+            	obj.mCustomScrollbar("scrollTo", "bottom");
+            }
+        }else{
+            dom.mCustomScrollbar(options);
+            if(options.toButtom){
+            	obj.mCustomScrollbar("scrollTo", "bottom");
+            }
+        }
     },
     /**
      * 提取uiId,用于标记记录的id，信息发送成功后取发布日期代替
@@ -933,7 +935,7 @@ var studioChatMb={
         }else{
             loc_panel.children().show();
         }
-        studioChatMb.setTalkListScroll();
+        studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
     },
     /**
      * 过滤发送消息：过滤一些特殊字符等。
@@ -1027,10 +1029,9 @@ var studioChatMb={
         var list=$("#dialog_list");
         var talkPanel = $("#talkPanel");
         //如果本身就在最底端显示，则自动滚动，否则不滚动
-        var isScroll = talkPanel.scrollTop() + talkPanel.height() + 30 >= talkPanel.get(0).scrollHeight;
         list.append(dialog);
-        if(isScroll && !isLoadData){
-            studioChatMb.setTalkListScroll();
+        if(!isLoadData){
+        	studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
         }
         this.formatMsgToLink(fromUser.publishTime);//格式链接
         var vst=$('#talkBoxTab .view_select .selectlist a[class=on]').attr("t");//按右上角下拉框过滤内容
@@ -1389,11 +1390,8 @@ var studioChatMb={
             html.push(info.content);
             html.push('</div>');
             var talkPanel = $("#talkPanel");
-            var isScroll = talkPanel.scrollTop() + talkPanel.height() + 30 >= talkPanel.get(0).scrollHeight;
             $("#dialog_list").append(html.join(""));
-            if(isScroll){
-                studioChatMb.setTalkListScroll();
-            }
+        	studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
         }
     },
 
@@ -1646,7 +1644,7 @@ var studioChatMb={
          * 设置聊天列表滚动条
          */
         setWHTalkListScroll:function(){
-            $("#whTalkPanel").scrollTop($('#whTalkPanel')[0].scrollHeight);
+        	studioChatMb.setListScroll($("#whTalkPanel"), {toButtom:true});
         },
 
         /**
@@ -1682,13 +1680,12 @@ var studioChatMb={
             var dialog=studioChatMb.formatContentHtml(data,isMeSend,isLoadData, true);
             var talkPanel = $("#whTalkPanel");
             //如果本身就在最底端显示，则自动滚动，否则不滚动
-            var isScroll = talkPanel.scrollTop() + talkPanel.height() + 30 >= talkPanel.get(0).scrollHeight;
             if(isLoadData){
                 $("#whDialog_list").prepend(dialog);
             }else{
                 $("#whDialog_list").append(dialog);
             }
-            if(isScroll && this.tabCheck){
+            if(this.tabCheck){
                 studioChatMb.whTalk.setWHTalkListScroll();
             }
             studioChatMb.formatMsgToLink(fromUser.publishTime);//格式链接

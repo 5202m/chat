@@ -598,7 +598,7 @@ var studioChatMb={
             }
             var yyDom=$(".videopart input:first"),yc=yyDom.attr("yc"),mc=yyDom.attr("mc");
             this.$panel = $("#tVideoDiv");
-            this.$panel.css({'z-index':"inherit"}).height($(window).width()*0.55);
+            this.$panel.css({'z-index':"inherit"}).height(this.$panel.width()*0.55);
             this.setEvent();
         },
         /**

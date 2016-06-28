@@ -210,7 +210,7 @@ var studioChatMb={
                     break;
                 case 'removeMsg':
                     $("#"+result.data.replace(/,/g,",#")).remove();
-                    studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
+                    studioChatMb.setListScroll($("#talkPanel"));
                     break;
                 case 'leaveRoom':{
                     studioChatMb.leaveRoomTip(result.flag);
@@ -229,7 +229,7 @@ var studioChatMb={
                         for (i in data) {
                             studioChatMb.formatUserToContent(data[i]);
                         }
-                        studioChatMb.setListScroll($("#talkPanel"), {toButtom:true});
+                        studioChatMb.setListScroll($("#talkPanel"));
                     }
                     break;
                 }
@@ -851,12 +851,6 @@ var studioChatMb={
             $panel.find("div.face").html(loc_face.join(""));
             //$(window).trigger("resize");
         }
-    },
-    /**
-     * 设置聊天列表滚动条
-     */
-    setTalkListScroll:function(){
-        $("#talkPanel").scrollTop($('#talkPanel')[0].scrollHeight);
     },
 
     /**
@@ -1677,7 +1671,7 @@ var studioChatMb={
          * 设置聊天列表滚动条
          */
         setWHTalkListScroll:function(){
-            $("#whTalkPanel").scrollTop($('#whTalkPanel')[0].scrollHeight);
+        	studioChatMb.setListScroll($("#whTalkPanel"), {toButtom:true});
         },
 
         /**
