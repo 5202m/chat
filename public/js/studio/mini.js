@@ -328,7 +328,7 @@ var StudioChatMini = {
      * 设置视频
      */
     setVideoList: function () {
-        this.getArticleList("teach_video", this.userInfo.groupId, 0, 1, 100, '{"sequence":"desc"}', null, function (dataList) {
+        this.getArticleList("teach_video", this.userInfo.groupId, 0, 1, 100, '{"sequence":"desc","createDate":"desc"}', null, function (dataList) {
             if (dataList && dataList.result == 0) {
                 var data = dataList.data;
                 var row = null;

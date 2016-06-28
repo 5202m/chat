@@ -156,7 +156,7 @@ var studioChatMbIdx={
      * 设置广告
      */
     setAdvertisement:function(){
-        this.getArticleList("advertisement","fxstudio_home","0",1,3,'{"sequence":"asc"}',function(dataList){
+        this.getArticleList("advertisement","fxstudio_home","0",1,3,'{"sequence":"asc","createDate":"desc"}',function(dataList){
             if(dataList.result==0){
                 var data=dataList.data;
                 for(var i in data){
@@ -182,7 +182,7 @@ var studioChatMbIdx={
      */
     setBulletin : function(){
         studioMbPop.loadingBlock($("#bulletinTab"));
-        studioChatMbIdx.getArticleList("bulletin_system","fxstudio_home",1,1,1,'{"sequence":"asc"}',function(dataList){
+        studioChatMbIdx.getArticleList("bulletin_system","fxstudio_home",1,1,1,'{"sequence":"asc","createDate":"desc"}',function(dataList){
             var loc_panel = $("#bulletinTab .notice_cont");
             loc_panel.html("");
             if(dataList && dataList.result==0){
