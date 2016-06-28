@@ -1771,11 +1771,11 @@ var studioChatMb={
          * 推送消息
          */
         pushMsg : function(){
-            if(!this.pushObj){
-                return;
-            }
             if(!this.currCS){
                 this.setCurrCS();
+            }
+            if(!this.pushObj){
+                return;
             }
             if(this.currCS){
                 this.receiveMsg({
