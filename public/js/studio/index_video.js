@@ -301,6 +301,7 @@ var videos={
                 },
                 plugins: {
                     rtmp: {
+                        proxyType: 'best',
                         url: '/js/lib/flowplayer/flowplayer.rtmp.swf',
                         netConnectionUrl: urlGroupArr[1]
                     }
