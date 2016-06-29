@@ -589,7 +589,10 @@ var chatService ={
                     }
                     userSaveInfo=row.loginPlatform.chatUserGroup[0].toObject();//用于信息保存
                     userSaveInfo.mobilePhone=row.mobilePhone;
-                    userInfo.nickname=userSaveInfo.nickname;
+                    if(userSaveInfo.nickname){
+                        userInfo.nickname=userSaveInfo.nickname;//如果后台设置了昵称则更新为后台
+                    }
+
                     userSaveInfo.userType=userInfo.userType=userSaveInfo.userType||userInfo.userType;
                 }else{
                     userSaveInfo.userType=isWhVisitor?constant.roleUserType.visitor:userInfo.userType;
