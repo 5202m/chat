@@ -944,6 +944,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .wid3 .mod_room .cont{height: 39px;}
 .wid3 .view_select .se_cont a,.wid3 .view_select .selected{ font-size: 12px; }
 .wid3 .view_select .se_cont,.wid3 .view_select{ width: 100px; }
+.wid3 .message_list li{padding: 37px 0 13px 5px;}
 
 /*无直播状态*/
 .live-notice{ position:absolute; height:100%; width:100%; left:0; top:0; background:url(../../images/fxstudio/nolive-bg.jpg) center center no-repeat}
