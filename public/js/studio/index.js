@@ -36,9 +36,6 @@ var indexJS ={
             }
             //公告显示
             if($(this).is(".notice")){
-                if($('.header-right ul li.user').length==0) {
-                    $('.notice .dropcont').css('width', '450px');
-                }
                 indexJS.getArticleList("bulletin_system",indexJS.userInfo.groupId,1,1,1,'{"sequence":"asc","createDate":"desc"}',null,function(dataList){
                     if(dataList && dataList.result==0){
                         var data=dataList.data;
@@ -297,11 +294,12 @@ var indexJS ={
                 if(days[i].status != 1){
                     lsTab.append('<li class="fir"><a href="javascript:"><span><lable>休市</lable></span></a></li>');
                 }else{
+                    als = 'fir';
                     for(var k= 0,tklen=tmk.length;k<tklen;k++){
-                        als=(k==0) ? 'fir' : "";
                         courseObj=tmk[k].course[i];
                         if(courseObj.status != 0 && courseObj.lecturer){
                             lsTab.append('<li class="'+als+'"><a href="javascript:" st="'+tmk[k].startTime+'" et="'+tmk[k].endTime+'"><i></i><span><lable>'+tmk[k].startTime+'- '+tmk[k].endTime+'　</lable><lable>'+courseType[courseObj.courseType]+'　</lable><lable>'+courseObj.lecturer+'</lable></span><p>'+courseObj.title+'</p></a></li>');
+                            als = '';
                         }
                     }
                 }
@@ -402,7 +400,7 @@ var indexJS ={
             this.userInfo.nickname=obj.nickname;
             this.userInfo.userId=obj.userId;
             if(!this.visitorSpeak){
-                $("#contentText").attr("contenteditable",false).append('<div class="lgtip d n">亲，<a href="javascript:box.openLgBox();">登录</a> 后可以发言哦~</div>');//设置登录后发言
+                $("#contentText").attr("contenteditable",false).append('<div class="lgtip">亲，<a href="javascript:box.openLgBox();">登录</a> 后可以发言哦~</div>');//设置登录后发言
             }
         }else{
             obj.loginId=this.userInfo.userId;

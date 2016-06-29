@@ -742,7 +742,7 @@ var common = {
      * @param dom
      */
     setScrollStyle:function(dom){
-        dom.find(".mCSB_dragger_bar").css({background: "url(/images/studio/scroll.png) -10px 50% repeat-y",width: "6px"});
+        dom.find(".mCSB_dragger_bar").css({background: "url(/images/studio/scroll.png) -10px 50% repeat-y",width: "6px","-webkit-border-radius": "3px", "-moz-border-radius": "3px", "border-radius": "3px"});
     },
     /**
      * 保存到桌面

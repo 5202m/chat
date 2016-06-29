@@ -22,11 +22,13 @@ var chat={
      */
     setEvent:function(){
         //初始化表情事件
-        $('#msgFaceBtn').qqFace({
-            id:'faceId',
-            assign:'contentText', //给控件赋值
-            path:indexJS.filePath+'/face/'//表情存放的路径
-        });
+        if(indexJS.visitorSpeak || !indexJS.checkClientGroup("visitor")){
+            $('#msgFaceBtn').qqFace({
+                id:'faceId',
+                assign:'contentText', //给控件赋值
+                path:indexJS.filePath+'/face/'//表情存放的路径
+            });
+        }
         //点击document,关闭dom
         $(document).click(function(e){
             $('div[id^=faceId]').hide();

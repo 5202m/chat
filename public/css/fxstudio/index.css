@@ -36,8 +36,8 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .img-loading{position:absolute;bottom:0;display:block;width:25px;height:25px;border-radius:4px;background:url(../../images/loading2.gif) no-repeat center;background-size:40px 40px;z-index:9}
 
 /*header*/
-.box-header{width:100%;min-width:1200px;background:url(../../images/fxstudio/headerbg.png) repeat; height:60px; position:relative;z-index:19999}
-.box-header-in{width:auto;min-width:1200px;margin:0 auto;/*overflow:hidden;*/height:60px}
+.box-header{width:100%;background:url(../../images/fxstudio/headerbg.png) repeat; height:60px; position:relative;z-index:19999}
+.box-header-in{width:auto;margin:0 auto;height:60px}
 .box-header h1{margin-top:10px; padding-left:20px; background:url(../../images/fxstudio/logotit.png) 20px 0 no-repeat; height:40px;width:310px}
 .header-logo{display:block;float:left;width:130px;height:40px}
 .header-btn a{ display:block; width:150px; background:#c49351; float:left; height:35px; line-height:35px; color:#fff; font-size:16px; text-align:center; position:relative; margin-left:20px; border-radius:3px; box-shadow:0 1px 1px rgba(21,78,136,.4); margin-top:15px}
@@ -50,12 +50,12 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .header-right .toplink.on{ background:#b59030; color:#fff; text-decoration:none;}
 .header-right .toplink.last span,.header-right .toplink.on span,.header-right li:hover .toplink span{ border-color:#315999}
 .header-right li:hover .toplink{ background:#315999;text-decoration:none; color:#ffe39c}
-.header-right .user .toplink strong{ display:inline-block; *display:inline; *zoom:1; width:65px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; font-weight:normal; color:#ffe39c }
+.header-right .user .toplink strong{ display:inline-block; *display:inline; *zoom:1; max-width:65px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; font-weight:normal; color:#ffe39c }
 .header-right .toplink .arr{display:none; position:absolute; width:0; height:0; left:50%; bottom:0; margin-left: -8px; border-width:8px; border-color: transparent transparent #fff transparent ; border-style:solid;}
 .header-right li:hover .toplink .arr{ display: block; }
 
 /*grid*/
-.wrapper{border:5px solid #1e2d58;border:5px solid rgba(5,15,36,.6); width:auto; min-width:1116px; /*position:fixed; right:79px;*/ padding-right:84px; border-right:0}
+.wrapper{border:5px solid #1e2d58;border:5px solid rgba(5,15,36,.6); width:auto;  padding-right:84px; border-right:0}
 .left_row{ /*width:58%;*/ float:left; width:100%; background:none;}
 .left_cont{ margin-right:268px;}/*right_row+5*/
 .right_row{width:263px;margin-left:-268px; float:right;position:relative; border-left:5px solid #1e2d58;border-left:5px solid rgba(5,15,36,.6); }
@@ -117,15 +117,16 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .listcont .list_tab{ display:none; padding-top:30px;}
 .listcont .list_tab.on{ display:block}
 .list_tab .tit{ display:block; width:70px; height:20px; line-height:20px;background:#2a508d; background:rgba(58,103,166,.5); border-radius:2px; font-size:14px; color:#fff; text-align:center }
-.list_tab .intro{ float:left; width:43%; margin:0 3% 0 3%;}
-.list_tab .intro p{font-size:14px; color:#d3d3d3; line-height:22px; padding-top:8px;text-align:justify; text-justify:distribute;}
-.list_tab .teacher-view{ float:right; width:50.9%}
+.list_tab .cont{ padding: 0 3% }
+.list_tab .info2{ float:right; width:46%; }
+.list_tab .info2 p,.list_tab .intro p{font-size:14px; color:#d3d3d3; line-height:22px; padding-top:8px;text-align:justify; text-justify:distribute;}
+.list_tab .teacher-view{ float:left; width:51.9%;margin:0 2% 0 0;}
 .list_tab .te_list{ padding:10px 0 0; font-size:0; text-align:left; width:100%}
 .list_tab .te_detail{ background:#2a508d; background:rgba(58,103,166,.5);border-radius:4px; display:inline-block; *zoom:1; *display:inline; width:45%; margin-right:3%; height:70px; position:relative; vertical-align:top; *padding-right:10px; min-width:192px; margin-bottom:10px}
 .te_detail img{ display:block; border:0; vertical-align:bottom; width:62px; height:62px; border-radius:4px; position:absolute; left:4px; top:4px;}
-.te_detail .rcont{ padding-left:84px; }
+.te_detail .rcont{ padding-left:78px; }
 .te_detail span { display:block;padding:6px 0 3px;}
-.te_detail span strong{ color:#e2e2e2; font-size:16px; line-height:18px; display:block; font-weight:normal; padding-bottom: 2px}
+.te_detail span strong{ color:#e2e2e2; font-size:16px; line-height:18px; display:block; font-weight:normal; padding-bottom: 2px; white-space: nowrap;}
 .te_detail span i{ color:#bbb; font-size:12px; line-height:18px; font-style:normal}
 .te_detail .support{color:#eaeaea; font-size:13px; line-height:20px;height:20px; display:inline-block; *display:inline; *zoom:1; background-position:-180px -30px; padding-left:23px; position: relative;}
 .te_detail .support.supported{ cursor: default; background-position: -180px -270px; color: #78b5f9; text-decoration: none}
@@ -184,7 +185,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .mod_banner{ height:150px;border-bottom:5px solid #1e2d58;border-bottom:5px solid rgba(5,15,36,.6); position: relative; overflow: hidden;}
 .mod_banner img{ border:0; width:100%; vertical-align:bottom}
 .mod_banner .num{ position:relative; text-align:right; font-size:0; margin-top:-10px; padding-right:10px;}
-.mod_banner .num li{ display:inline-block; *display:inline; *zoom:1; width:20px; height:2px; line-height:0; overflow:hidden; background:#fff; margin-left:2px}
+.mod_banner .num li{ display:inline-block; *display:inline; *zoom:1; width:20px; height:5px; line-height:0; overflow:hidden; background:#fff; margin-left:2px}
 .mod_banner .num li.on{ background:#b59030; width:30px;}
 .mod_banner .dot-infobox{position:absolute;right:10px;bottom:10px;text-align:center;font-size:0;z-index:1}
 .mod_banner .dot-infobox span.swiper-pagination-bullet{display:inline-block;margin:0 1px;background:#fff;width:22px;height:5px;overflow:hidden; opacity:1; border-radius:0}
@@ -200,8 +201,9 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .tabcont .main_tab.on{ display:block;}
 
 /*聊天内容*/
-.chat_content{ position:relative; z-index:1;height:480px; overflow: hidden;}
-.chat_content .scrollbox{ padding:0 20px;}
+.chat_content{ position:relative; z-index:1; overflow: hidden;}
+.chat_content .scrollbox{ padding:0 20px; position: relative;}
+.boxmask{ background: url(../../images/fxstudio/boxmask.png) 0 0 repeat-x; height: 44px; position: absolute; left: 0; top: 0; width: 100%; z-index: 10 }
 .dialoglist {padding-top:15px; z-index:10}
 .dialog{ height:auto; position:relative; padding:0 48px; margin-bottom:17px; width:auto; clear:both; /*z-index:1*/}
 .dialog.showchat{ z-index:2}
@@ -218,7 +220,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .dialog.analyst .uname { color:#edbb38}
 .dialog.admin .uname { color:#68b8fc}
 .dialog .uname:hover{ text-decoration:none}
-.dialog .dcont{ text-align:left; white-space: normal;word-break: break-all; overflow:auto; display:block;}
+.dialog .dcont{ text-align:left; white-space: normal;word-break: break-all; display:block;}
 .dialog .dcont .aname{ color:#4975ac; text-decoration:none;}
 .dialog .dcont em.ruleTipStyle{color:#ff0000;font-size:12px;margin-left:5px;}
 .dialog .headimg{ display:block; width:33px; height:auto; position:absolute; left:0; top:0; z-index:1}
@@ -243,6 +245,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .analyst .dialog_reply{ border-color: #2f3f6b; color: #ecc288 }
 .dialog_reply b{ font-weight: normal; }
 .dialog_reply span{ font-size: 15px }
+.mCSB_scrollTools{ z-index: 11 }
 .txt_dia {color:#4975ac;margin-right:5px;cursor: pointer;}
 .txt_dia label{cursor: pointer;}
 .chat_input{ position:relative; z-index:101}
@@ -306,7 +309,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .view_select .se_cont a:hover{ background:#4369a6;}
 
 /*快讯*/
-.message_list { padding:0 0 0 20px;}
+.message_list { padding:0 0 0 20px; position: relative;}
 .message_list ul{ padding-left:15px; background:url(../../images/fxstudio/msg_border.png) 3px 26px repeat-y;padding-right: 0;}
 .message_list li{ position:relative;border-bottom:1px solid #22417d;border-bottom:1px solid rgba(1,8,37,.1); padding:13px 0 13px 70px;}
 .message_list li span{ font-size:14px; color:#fff; line-height:22px; text-align:justify; text-justify:distribute}
@@ -315,7 +318,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 
 
 /*实盘直播*/
-.guidelist{ }
+.guidelist{ position: relative; }
 .guidelist ul {padding:0 20px;}
 .guidelist .guideli { border-bottom:1px solid #193e79; padding:20px 0 20px; width:auto; font-family:'Microsoft YaHei','Microsoft JhengHei','SimSun'; position:relative;}
 .guideli .himg{ width:61px; height:61px; border-radius:4px; float:left; margin-right:18px;}
@@ -352,9 +355,10 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .mod_room .changeroom.open .roomctrl{ color:#ffe39c; background-color:#3e67b3;}
 .roomctrl i{display:inline-block; *display:inline; *zoom:1; margin-top:14px;background-position:-180px 0; width:14px; height:12px; margin-right:5px; vertical-align:top ; *margin-top:5px;}
 .changeroom.open .roomctrl i,.changeroom .roomctrl:hover i{background-position:-180px -15px;}
-.mod_room .cont{ box-shadow:inset 0 -10px 50px rgba(250,247,195,.1); background:url(../../images/fxstudio/contbg70.png) repeat; padding:12px 0px 12px 12px; height:86px;}
+.mod_room .cont{     box-shadow: inset 0 -10px 50px rgba(250,247,195,.1);background: url(../../images/fxstudio/contbg70.png) repeat; padding: 12px 0;height:86px; }
+.mod_room .room-info{ padding: 0 12px;text-align: justify; text-justify:distribute; }
 .mod_room .tit{display:inline-block; *display:inline; *zoom:1; padding:0 6px; color:#e2e2e2; font-size:14px; line-height:20px; background:#284e91;background:rgba(58,103,166,.5); margin-bottom:5px;}
-.mod_room .cont p{ color:#d3d3d3; font-size:12px; line-height:18px;}
+.mod_room .cont p{ color:#d3d3d3; font-size:12px; line-height:18px; text-align: justify; text-justify:distribute;}
 .mod_room .rooms{ display:none; background:#fff; position:absolute; top:41px; right:-5px; box-shadow:0 0 4px rgba(0,0,0,.3); z-index:10001; padding:6px 26px 20px; border-radius:2px;}
 .mod_room .changeroom.open .rooms{ display:block; }
 .rooms .arr{  display:block; position:absolute; width:0; height:0; right:25px; top:-16px; border-width:8px; border-color: transparent transparent #fff transparent ; border-style:solid}
@@ -393,7 +397,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .mod_userlist li .headimg img{width:33px;height:33px; border-radius:3px;}
 
 /*右侧菜单*/
-.mod_menu { background:url(../../images/fxstudio/contbg70.png) repeat; position:fixed; right:0; top:60px; width:74px;border:5px solid #1e2d58;border:5px solid rgba(5,15,36,.6); border-bottom:0;height:900px; z-index:10001}
+.mod_menu { background:url(../../images/fxstudio/contbg70.png) repeat; position:fixed; right:0; top:65px; width:74px;border:5px solid #1e2d58;border:5px solid rgba(5,15,36,.6); border-bottom:0; border-top:0;height:900px; z-index:10001}
 .mod_menu .dropitem{border-bottom:1px solid #1a366f; border-bottom:1px solid rgba(4,16,47,.3); }
 .mod_menu .dropitem > a{ display:block; height:80px; text-align:center; color:#fff;  text-decoration:none; font-size: 0; position: relative;}
 .mod_menu .dropitem.on > a{ background:#3e67b3; color:#ffe39c}
@@ -602,7 +606,8 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .upg_box > span{ color:#666; font-size:14px; padding-left:18px; line-height:50px;}
 .upg_box td{ text-align:center; color:#666; font-size:14px;border-bottom:1px solid #e9e9e9;line-height:49px; vertical-align:middle}
 .upg_box .current td{ color:#444; font-weight:bold}
-.upg_box td p{ line-height:22px;}
+.upg_box td p{ line-height:22px; padding: 5px 0;}
+.upg_box td p.p2{padding: 5px 10px}
 .upg_box td a{ color:#2980d1}
 .upg_box th{text-align:center; color:#7c7c7c; font-size:12px; font-weight:normal; padding:11px 0; border-bottom:1px solid #e9e9e9;border-top:1px solid #e9e9e9;}
 .upg_box th span{ display:block; height:17px; line-height:17px; border-left:1px solid #ececec}
@@ -782,8 +787,8 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .pletter_win .chat_content .scrollbox{ padding:0}
 .pletter_win .chat_content{ }
 .pletter_win .dialoglist{padding:17px 5px 0; }
-.pletter_win .dialog{ padding:0 38px 0 6px;}
-.pletter_win .dialog.mine{ padding:0 6px 0 38px }
+.pletter_win .dialog{ padding:0 38px 0 6px !important;}
+.pletter_win .dialog.mine{ padding:0 6px 0 38px !important  }
 .pletter_win .dialog > p{ background:#ededed;}
 .pletter_win .dialog > p i{ left:0; background-position:-100px -90px}
 .pletter_win .dialog.mine > p i{ right:0; left:auto; background-position:-110px -90px}
@@ -819,7 +824,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .cmtalk .cm_prev i,.cmtalk .cm_next i{ display:block; width:7px; height:13px; background-position:-20px -320px;}
 .cmtalk .cm_prev i{ background-position:-30px -320px;}
 .cmtalk .cmt{ display:block; float:left; height:28px; line-height:28px; font-size:14px; color:#444; width:75px; padding:0 0px 0 15px}
-.who_list{ position:absolute; bottom:50px; left:53px; width:95px; background:#fff; box-shadow:0 0 8px rgba(12,3,5,.3); border-radius:2px; overflow:hidden;}
+.who_list{ position:absolute; bottom:50px; left:53px; width:95px; background:#fff; box-shadow:0 0 8px rgba(12,3,5,.3); border-radius:2px; overflow:hidden; z-index: 102}
 .who_list a{ display:block; height:30px; text-align:center; color:#4c4c4c; font-size:14px; line-height:30px;}
 .who_list a.on,.who_list a:hover{ background:#ebebeb; text-decoration:none}
 .have_op{opacity:0.5;filter:alpha(opacity=50);}
@@ -835,10 +840,16 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 /*响应式*/
 .wid1 .left1_cont{ margin-right: 450px}
 .wid1 .left2{ width:450px; margin-left:-450px}
+.wid2 .left1_cont{ margin-right: 400px}
+.wid2 .left2{ width:400px; margin-left:-400px}
 .wid2 .left_cont{    margin-right: 205px;}
 .wid2 .right_row{ width:200px;margin-left: -205px; }
 .wid1 .mod_banner,.wid1 .mod_room{ height:113px;}
-.wid1 .mod_room .cont{ height: 53px}
+.wid1 .mod_room .cont{ height: 53px; padding: 10px 0}
+.wid2 .mod_banner,.wid2 .mod_room{ height: 100px }
+.wid2 .mod_room .tit{ display: inline; font-size: 12px; }
+.wid2 .mod_room .cont p{ display: inline; font-size: 12px; line-height: 14px; }
+.wid2 .mod_room .cont{height: 50px; padding: 5px 0}
 .wid1 .live-notice .cont{ height:250px; margin-top:-125px;}
 .wid1 .live-notice .ntext{    margin-bottom: 15px;}
 .wid1 .nextbox .tec_head img{ width:65px; height:65px;}
@@ -852,8 +863,10 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .wid2 .header-right .toplink span{ padding:0 12px; font-size:14px}
 .wid2 .header-right .user .dropcont{ right:-40px}
 .wid2 .header-right .user .dropcont .arr{ right:76px;}
+.wid2 .list_tab .teacher-view{ width: 46%; }
+.wid2 .list_tab .info2{ width: 51% }
 .wid1 .te_detail{ width:68%; }
-.wid2 .te_detail{ width: 92.5%; }
+.wid2 .te_detail{ width: 88%; margin-right: 0; }
 .wid1 .te_detail span strong{white-space: nowrap;}
 .wid2 .mod_userlist li .uname{ padding-left:14px; }
 .wid2 .mod_userlist li span{max-width:100px;}
@@ -876,7 +889,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .wid2 .listcont{ height: 205px; }
 .wid2 .dialog{ padding-right: 0 }
 .wid2 .dialog.mine{ padding: 0 48px 0 0 }
-.wid2 .dialog > p,.wid2 .mymsg p{ font-size: 10pt; line-height: 14pt; }
+.wid2 .dialog > p,.wid2 .mymsg p,.wid2 .pletter_win .whcls{ font-size: 10pt; line-height: 14pt; }
 .wid2 .input_box .toolbar{ padding: 8px 10px 8px;}
 .wid2 .input_area .sendbtn{ width:70px; line-height:26px; height:26px; margin-top:-32px;}
 .wid2 .input_area .sendbtn span{font-size:14px; }
@@ -884,6 +897,53 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .wid2 .input_area .adiv{ height: 70px }
 .wid2 .input_area .ctextarea{ font-size: 13px; height: 36px; }
 .wid2 .mymsg{ bottom: 137px }
+
+/*1024*/
+.wid3 .left_cont{    margin-right: 170px;}
+.wid3 .right_row{ width:165px;margin-left: -170px; border-left: 0;border-right: 5px solid #1e2d58; border-right: 5px solid rgba(5,15,36,.6);}
+.wid3 .mod_room .titbar > span,.wid3 .mod_userlist .titbar span{ font-size: 14px;}
+.wid3 .mod_userlist li .headimg{ margin-right: 10px; }
+.wid3 .mod_userlist li .headimg,.wid3 .mod_userlist li .headimg img { width: 28px;height: 28px; vertical-align: top;  }
+.wid3 .mod_userlist li .uname{ padding-left: 10px; font-size: 12px; height: 28px;line-height: 28px;}
+.wid3 .mod_userlist li span{ max-width: 75px; }
+.wid3 .mod_room .changeroom .roomctrl{ font-size: 12px; }
+.wid3 .mod_room .changeroom .roomctrl i{ display: none; }
+.wid3 .header-right .notice .dropcont{width: 400px;}
+.wid3 .wrapper{ padding-right: 65px; }
+.wid3 .mod_menu{ border-left: 0; width: 60px; }
+.wid3 .mod_menu .dropcont{ right: 60px }
+.wid3 .left1_cont{ margin-right: 320px}
+.wid3 .left2{ width: 315px; margin-left: -320px; border-right:5px solid #1e2d58;border-right:5px solid rgba(5,15,36,.6);}
+.wid3 .mod_banner, .wid3 .mod_room{ height: 89px; }
+.wid3 .mod_banner img{ height: 89px; margin-left:-20px; width: 355px  }
+.wid3 .box-header h1{padding-left: 10px; }
+.wid3 .header-btn a{ width: 124px; margin-left: 10px; font-size: 13px;margin-top: 15px; height: 32px;line-height: 32px;}
+.wid3 .chat_content .scrollbox{ padding: 0 10px }
+.wid3 .dialog > p,.wid3 .mymsg p,.wid3 .dialog_reply,.wid3 .dialog_reply span{ font-size: 12px; line-height: 16px; }
+.wid3 .mymsg p{ padding: 0 25px 0 65px }
+.wid3 .mymsg .replybtn{ font-size: 12px;line-height: 18px;height: 18px;width: 45px; }
+.wid3 .mod_main .tabnav a{ margin: 0 15px ;font-size: 14px;}
+.wid3 .dialog .headimg,.wid3 .dialog .headimg img{ width: 28px; }
+.wid3 .dialog{ padding-left: 40px; }
+.wid3 .dialog.mine{ padding: 0 40px 0 0 }
+.wid3 .dialog.push{ padding: 0 }
+.wid3 .dialog > p i{ left: 34px }
+.wid3 .dialog.mine > p i{ right: 34px; left: auto; }
+.wid3 .header-right .toplink span{ font-size: 13px;padding: 0 10px }
+.wid3 .mod_main .tabnav sup{ font-size: 10px;left: 37px; }
+.wid3 .input_area .adiv{ padding: 5px;  }
+.wid3 .mymsg{ bottom: 127px }
+.wid3 .te_detail .rcont{ padding-left: 67px; }
+.wid3 .te_detail img{ width: 56px;height: 56px; }
+.wid3 .list_tab .te_detail{ height: 64px; }
+.wid3 .te_detail span{padding-top: 4px;}
+.wid3 .te_detail span strong{ font-size: 14px;line-height: 16px; }
+.wid3 .te_detail span i{ font-size: 11px;line-height: 16px; }
+.wid3 .mod_room .tit{ display: inline; font-size: 12px; }
+.wid3 .mod_room .cont p{ display: inline; font-size: 12px; }
+.wid3 .mod_room .cont{height: 39px;}
+.wid3 .view_select .se_cont a,.wid3 .view_select .selected{ font-size: 12px; }
+.wid3 .view_select .se_cont,.wid3 .view_select{ width: 100px; }
 
 /*无直播状态*/
 .live-notice{ position:absolute; height:100%; width:100%; left:0; top:0; background:url(../../images/fxstudio/nolive-bg.jpg) center center no-repeat}
@@ -936,3 +996,5 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .popbanner.ban_act .act_link{ display:block; width:100%; height:400px;}
 .tipsbox{ position:fixed; top:50%; width:100%; left:0; margin-top:-19px; height:38px; font-size:0; text-align:center; z-index:100}
 .tipsbox .cont{ display:inline-block; padding:0 10px; height:38px;background: #fff; color: #333; line-height:38px; font-size:14px; border-radius:2px;}
+
+.swiper-slide{ overflow: hidden; }

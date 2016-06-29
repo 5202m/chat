@@ -50,8 +50,8 @@ var videos={
                         if(row){
                             $("#tvInfoId").attr("tid",row._id);
                             var detail=row.detailList[0];
-                            $("#tvInfoId .intro p").text(detail.remark);
-                            $("#tvInfoId .teacher-view p").text(detail.seoDescription);
+                            $("#tvInfoId p.remark").text(detail.remark);
+                            $("#tvInfoId p.content").text(detail.seoDescription);
                             var pd=$("#tvInfoId .te_detail");
                             var info=detail.authorInfo;
                             if(info){
@@ -62,8 +62,7 @@ var videos={
                             }
                         }
                     });
-                    indexJS.setListScroll('#tvInfoId .intro p');//设置滚动
-                    indexJS.setListScroll('#tvInfoId .teacher-view p');//设置滚动
+                    indexJS.setListScroll('#tvInfoId');//设置滚动
                 });
             }
             if(isInit){
@@ -343,7 +342,7 @@ var videos={
         $.getJSON('/studio/getCourseInfo',{day:course.day,startTime:course.startTime,endTime:course.endTime,authorId:course.lecturerId},function(data){
             $("#lvInfoId").attr("dy",course.day).attr("st",course.startTime).attr("et",course.endTime);
             $("#lvInfoId .intro p").text(data.remark);
-            indexJS.setListScroll('#lvInfoId .intro p');//设置滚动
+            indexJS.setListScroll('#lvInfoId');//设置滚动
             var pd=$("#lvInfoId .te_list").html("");
             var authorArr=data.authors;
             var authorObj=null;
@@ -380,10 +379,10 @@ var videos={
         indexJS.getArticleList("trade_strategy_article",indexJS.userInfo.groupId,1,1,1,'{"createDate":"desc"}', '',function(dataList) {
         	if(dataList && dataList.result==0 && dataList.data && dataList.data.length>0) {
                 var data = dataList.data[0],row = data.detailList[0];
-                $("#lvInfoId .teacher-view p").html(row.content);
-                indexJS.setListScroll('#lvInfoId .teacher-view p');//设置滚动
+                $("#lvInfoId p.content").html(row.content);
+                indexJS.setListScroll('#lvInfoId');//设置滚动
             }else{
-            	$('#lvInfoId .teacher-view p').html('亲，老师还未发布观点哦');
+            	$('#lvInfoId p.content').html('亲，老师还未发布观点哦');
             }
         });
     },

@@ -152,17 +152,19 @@
                     <div class="main_tab">
                     	<div class="message_list">
                         	<div class="scrollbox">
-                        	<ul></ul>
+                        		<ul></ul>
                             </div>
+                            <div class="boxmask"></div>
                     	</div>
                     </div>
                     <div class="main_tab">
                     	<div class="guidelist" id="guidelist">
-                        <div class="scrollbox">
-                        <ul></ul>
-                        <a class="loadmore" href="">查看更多</a>
-                        </div>
-                    </div>
+                        	<div class="scrollbox">
+                        		<ul></ul>
+                        		<a class="loadmore" href="">查看更多</a>
+                        	</div>
+                        	<div class="boxmask"></div>
+                    	</div>
                     </div>
                 </div>
                 <div class="radius_tool">
@@ -203,8 +205,10 @@
                     </div>
             </div>
             <div class="cont">
-                <span class="tit">房间简介</span>
-                <p><%= row.remark %></p>
+            	<div class="room-info">
+	                <span class="tit">房间简介</span>
+	                <p><%= row.remark %></p>
+	            </div>
             </div>
             <% }}); %>
             <% } %>
@@ -268,43 +272,46 @@
     indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
     indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
     indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
+    function widthCheck(){
+        var ww = $(window).width();
+        if(ww <= 1680 ){
+            $('body').addClass('wid1');
+            if(ww < 1440 ){
+                $('body').addClass('wid2');
+                if(ww < 1281 ){
+                    $('body').addClass('wid3')
+                }
+            }
+        }
+        if(ww >1680){
+            $('body').removeClass('wid1');
+            $('body').removeClass('wid2');
+            $('body').removeClass('wid3');
+        }
+    }
+    function heightCalcu() {
+        var hh = $(window).height(), hh_banner = $('.mod_banner').height();
+        var hh_room = $('.mod_room').height();
+        $('.mod_main .tabcont').height(hh - hh_banner - 115);
+        $('.mod_video').height(hh - $(".mod_videolist").height() - 70);
+        var hTmp = $(".mod_videolist .listcont").height();
+        $('.mod_videolist .list_tab').height(hTmp - 30);
+        $('.mod_videolist .sd_show').height(hTmp - 40);
+        $('.mod_userlist .scrollbox').height(hh - hh_room - 115);
+        $('.mod_menu').height(hh - 70);
+        $('.calendar_ul.scrollbox2').height(hh - 165);
+        $('.ppt_list').height(hh - 101);
+        $('.main_tab .scrollbox:gt(0)').height(hh - hh_banner - 115);
+        $('#chatMsgContentDiv').height(hh - hh_banner - 115 - $(".chat_input").height());
+        $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
+    }
+    widthCheck();
+    heightCalcu();
     $(function() {
-        widthCheck();
-        heightCalcu();
         $(window).resize(function (e) {
             widthCheck();
             heightCalcu();
         });
-        function widthCheck(){
-            var ww = $(window).width();
-            if(ww <= 1680 ){
-                $('body').addClass('wid1');
-                if(ww < 1440 ){
-                    $('body').addClass('wid2');
-                }
-            }
-            if(ww >1680){
-                $('body').removeClass('wid1');
-                $('body').removeClass('wid2');
-            }
-        }
-        function heightCalcu() {
-            var hh = $(window).height(), hh_banner = $('.mod_banner').height();
-            var hh_room = $('.mod_room').height();
-            $('.mod_main .tabcont').height(hh - hh_banner - 115);
-            $('.mod_video').height(hh - $(".mod_videolist").height() - 70);
-            var hTmp = $(".mod_videolist .listcont").height();
-            $('.mod_videolist .remark').height(hTmp - 58);
-            $('.mod_videolist .content').height(hTmp - 140);
-            $('.mod_videolist .sd_show').height(hTmp - 40);
-            $('.mod_userlist .scrollbox').height(hh - hh_room - 115);
-            $('.mod_menu').height(hh - 70);
-            $('.calendar_ul.scrollbox2').height(hh - 165);
-            $('.ppt_list').height(hh - 101);
-            $('.main_tab .scrollbox').height(hh - hh_banner - 115);
-            $('.main_tab .chat_content').height(hh - hh_banner - 115 - $(".chat_input").height());
-            $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
-        }
         lightbox.option({
             'resizeDuration': 200,
             'wrapAround': true,

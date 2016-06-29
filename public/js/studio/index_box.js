@@ -73,7 +73,7 @@ var box={
                                 continue;
                             }
                             var trDomArr=[];
-                            trDomArr.push('<tr class="'+curCls+'"><td>'+box.getUserLevelShortName(rowTmp.clientGroupId)+'</td><td>'+common.trim(rowTmp.remark)+'</td><td><p>'+common.trim(rowTmp.authorityDes)+'</p></td><td>'+currLevel+'</td></tr>');
+                            trDomArr.push('<tr class="'+curCls+'"><td><p>'+box.getUserLevelShortName(rowTmp.clientGroupId)+'</p></td><td><p class="p2">'+common.trim(rowTmp.remark)+'</p></td><td><p>'+common.trim(rowTmp.authorityDes)+'</p></td><td>'+currLevel+'</td></tr>');
                             $("#upg_tbody_id").append(trDomArr.join(""));
                         }
                         //升级点击事件
@@ -100,7 +100,8 @@ var box={
                                         loc_msg = "很遗憾，您未开通金道模拟交易账户，升级失败！<br>如有疑问请联系客服！";
                                     }
                                     $(".upgrade_result .succ").hide();
-                                    $(".upgrade_result,.upgrade_result .fail").show().find("span").html(loc_msg);
+                                    $(".upgrade_result,.upgrade_result .fail").show();
+                                    $(".upgrade_result .fail>span").html(loc_msg);
                                 }
                             },true,function(err){
                                 _this.attr('disabled',false);
@@ -317,30 +318,30 @@ var box={
      * @param clientGroup
      */
     getUserLevelShortName:function(clientGroup){
-        var levelShortName='';
+        var levelClsName='';
         switch(clientGroup){
             case "vip":
-                levelShortName = "[V]";
+                levelClsName = "l4";
                 break;
             case "real":
-                levelShortName = "[R]";
+                levelClsName = "l3";
                 break;
             case "active":
-                levelShortName = "[A]";
+                levelClsName = "l3";
                 break;
             case "notActive":
-                levelShortName = "[N]";
+                levelClsName = "l3";
                 break;
             case "simulate":
-                levelShortName = "[D]";
+                levelClsName = "l2";
                 break;
             case "register":
-                levelShortName = "[M]";
+                levelClsName = "l1";
                 break;
             default:
-                levelShortName = "游客";
+                levelClsName = "l0";
         }
-        return levelShortName;
+        return '<i class="level ' + levelClsName + '"></i>';
     },
     /**
      * 检查页面输入
