@@ -294,7 +294,7 @@ var studioChatMb={
                         loc_html.push('<ul class="teach-ul">');
                     }
                     row=data[i].detailList[0];
-                    loc_html.push('<li><a title="' + row.title + '" href="javascript:_gaq.push([\'_trackEvent\', \'m_24k_studio\', \'teachvideo_'+i+'\', \'content_middle\',1,true]);" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'"><i></i><span>'+row.title+'</span></a></li>');
+                    loc_html.push('<li><a title="' + row.title + '" href="javascript:void(0)" onclick="_gaq.push([\'_trackEvent\', \'m_24k_studio\', \'teachvideo_'+i+'\', \'content_middle\',1,true]);" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'"><i></i><span>'+row.title+'</span></a></li>');
                     if(i % 5 == 4 || i == lenI - 1){
                         loc_html.push('</ul>');
                     }
