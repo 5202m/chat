@@ -396,6 +396,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .mod_userlist .dialogbtn{ left:18px; top:49px; z-index:10001}
 .mod_userlist li .headimg img{width:33px;height:33px; border-radius:3px;}
 
+.mod_userlist li span.csoffline{color:#999}
 /*右侧菜单*/
 .mod_menu { background:url(../../images/studio/contbg70.png) repeat; position:fixed; right:0; top:65px; width:74px;border:5px solid #1e2d58;border:5px solid rgba(5,15,36,.6); border-bottom:0; border-top:0;height:900px; z-index:10001}
 .mod_menu .dropitem{border-bottom:1px solid #1a366f; border-bottom:1px solid rgba(4,16,47,.3); }

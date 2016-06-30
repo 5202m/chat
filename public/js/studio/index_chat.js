@@ -14,6 +14,8 @@ var chat={
     },
     init:function(){
         this.setEvent();//设置各种事件
+        this.setUserListIdEmpty();//清空用户列表
+        this.getCSList();//设置所有客服
         this.setSocket();//设置socket连接
         this.setTalkListScroll(true);
     },
@@ -145,6 +147,34 @@ var chat={
         });
         //私聊框拖拽
         $( ".pletter_win" ).draggable({handle: ".wh_drag" });
+    },
+    getCSList:function(){
+        var groupType = LoginAuto.sessionUser['groupType'];
+        var groupId = LoginAuto.sessionUser['groupId'];
+        try{
+            $.getJSON('/'+groupType+'/getCS',{groupId:groupId},function(result){
+                if(result){
+                    row = null;
+                    this.csUserList = result;
+                    for(var i in result){
+                        row=result[i];
+                        row['nickname']=row['userName'];
+                        row['userId']=row['userNo'];
+
+                        row['clientGroup'] = 'visitor';
+                        row['sequence'] = 0; //before;
+                        row['userType'] = 3;
+                        row['isLogin'] = false;
+
+                        chat.setOnlineUser(row);//设置在线用户
+                    }
+
+                }
+            });
+        }catch (e){
+            console.error("getCSList->"+e);
+            callback(null);
+        }
     },
     /**
      * 提取uiId,用于标记记录的id，信息发送成功后取发布日期代替
@@ -482,18 +512,27 @@ var chat={
             seq = "0";
             meCls='mynk';
         }
+        var isCsOnLineFirst = false;
         if(row.userType==3){
             var gIdDom=$("#roomInfoId");
             if(gIdDom.attr("aw")=="true" && common.containSplitStr(gIdDom.attr("awr"), row.userType)){
                 csHtml='<em>私聊</em>';
             }
-            isMeHtml = "&nbsp;（助理）"
+            isMeHtml = "&nbsp;（助理）";
+            if(row.isLogin==undefined){ //在线的派在隐身的前面
+                isCsOnLineFirst = true;
+            }
+        }
+        if(row.isLogin!=undefined && row.isLogin == false ){
+            meCls='csoffline';
         }
         var lav=chat.getAImgOrLevel(row.userId, row.clientGroup,row.userType,row.avatar);
         var lis=$("#userListId li"),
             liDom='<li id="'+row.userId+'" cg="'+(common.isBlank(row.clientGroup)?'':row.clientGroup)+'" t="'+seq+'" utype="'+row.userType+'" class="'+lav.level+'" >'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+lav.aImg+'<b></b></div><span class="'+meCls+'">'+row.nickname+isMeHtml+'<i></i></span>'+csHtml+'</a></li>';
         if(lis.length==0){
             $("#userListId").append(liDom);
+        }else if(isCsOnLineFirst){
+            lis.first('csoffline').before(liDom);
         }else if(seq=="0"){
             lis.first().before(liDom);
         }else{
@@ -859,6 +898,9 @@ var chat={
         }).get();
         return userArr;
     },
+    setUserListIdEmpty : function(){
+        $('#userListId').html("");
+    },
     /**
      * 设置socket
      */
@@ -874,7 +916,7 @@ var chat={
         });
         //进入聊天室加载的在线用户
         this.socket.on('onlineUserList',function(data,dataLength){
-            $('#userListId').html("");
+            //$('#userListId').html("");放到this.setUserListIdEmpty()方法中
             //如客户数小于200，则追加额外游客数
             if($("#roomInfoId").attr("av")=="true" && dataLength<=200){
                 var randId= 0,size=dataLength<=10?60:(200/dataLength)*3+10;
