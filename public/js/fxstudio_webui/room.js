@@ -380,7 +380,10 @@ var studioChatMb={
                 studioChatMb.view.boardCtrl(1);
             }
             //初始化标签
-            studioChatMb.face.init($("#facePanel"), $("#contentText"), studioChatMb.filePath+'/face/', "visitor"==studioChatMb.userInfo.clientGroup);
+            studioChatMb.face.init($("#facePanel"),
+                $("#contentText"),
+                studioChatMb.filePath+'/face/',
+                !studioChatMb.visitorSpeak && "visitor"==studioChatMb.userInfo.clientGroup);
         });
 
         /*聊天屏蔽下拉框*/
@@ -713,10 +716,10 @@ var studioChatMb={
              */
             $("#backToLive").draggable({
             	start : function(){
-                    $(this).css("background", 'rgba(181,144,48,0.8)');
+                    $(this).css("background", '#1A4C90');
             	},
             	stop : function(){
-            		$(this).css("background", 'rgba(181,144,48,0.6)');
+            		$(this).css("background", '#4874b0');
             	}
             });
             $("#backToLive").bind("click", function(){
@@ -833,7 +836,7 @@ var studioChatMb={
      */
     setListScroll:function(domClass,options){
         var dom=(typeof domClass=='object')?domClass:$(domClass);
-        options = $.extend({scrollButtons:{enable:false},theme:"light-2",toButtom:false}, options);
+        options = $.extend({scrollButtons:{enable:false},theme:"dark-2",toButtom:false}, options);
         if(dom.hasClass("mCustomScrollbar")){
             dom.mCustomScrollbar("update");
             if(options.toButtom){

@@ -407,7 +407,10 @@ var studioChatMb={
                 studioChatMb.view.boardCtrl(1);
             }
             //初始化标签
-            studioChatMb.face.init($("#facePanel"), $("#contentText"), studioChatMb.filePath+'/face/', "visitor"==studioChatMb.userInfo.clientGroup);
+            studioChatMb.face.init($("#facePanel"),
+                $("#contentText"),
+                studioChatMb.filePath+'/face/',
+                !studioChatMb.visitorSpeak && "visitor"==studioChatMb.userInfo.clientGroup);
         });
 
         /*聊天屏蔽下拉框*/

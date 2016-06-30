@@ -197,6 +197,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         var isVisitor=(constant.clientGroup.visitor==clientGroup);
         var viewDataObj={apiUrl:config.pmApiUrl,filePath:config.filesDomain,web24kPath:config.web24kPath,mobile24kPath:config.mobile24kPath};//输出参数
         chatUser.groupId=groupId;
+        viewDataObj.theme = req.query["theme"] || "";
         viewDataObj.socketUrl=JSON.stringify(config.socketServerUrl);
         viewDataObj.userInfo=JSON.stringify({avatar:chatUser.avatar,groupType:chatUser.groupType,isLogin:chatUser.isLogin,groupId:chatUser.groupId,userId:chatUser.userId,clientGroup:chatUser.clientGroup,nickname:chatUser.nickname,userType:chatUser.userType});
         viewDataObj.userSession=chatUser;

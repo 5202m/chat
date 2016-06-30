@@ -62,7 +62,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .cen-pubox .boxcont{padding:0 0 0 5px; position:relative; height:270px;overflow:hidden;}
 .home .cen-pubox .boxcont{ height:auto; box-sizing: border-box; padding-bottom:40px;}
 .moreitem{ display:block; background:rgba(48,61,88,.6); height:30px; line-height:30px; font-size:13px; color:#8695b8; text-align:center; border-radius:5px; margin-bottom:10px;}
-.room.cen-ulist li{ width:25%; font-size:16px; position: relative;}
+.room.cen-ulist li{ width:25%; font-size:16px; position: relative;cursor:pointer}
 .room.cen-ulist li i.wh_tips{border: 1px solid #FF0000; background-color: #FF0000; border-radius: 12px; height: 13px; color: #FFFFFF; right: 0; font-size: 12px; line-height: 12px; text-indent: 0; width: auto; padding: 0 3px; font-style: normal;}
 
 /* 直播视频 */
@@ -180,7 +180,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .talk-infobox .analyst .dialog::after{border-color:#f0f3f6 transparent transparent transparent;}
 .talk-infobox .me-li .dialog{background:#fff; border-top-left-radius:5px; border-top-right-radius:0; float:right; }
 .talk-infobox .me-li .dialog::after{border-color:#fff transparent transparent transparent; left:auto; right:-3px;}
-.talk-infobox .push{background-color: #474b51; padding: 6px 10px;}
+.talk-infobox .push{background-color: #f0f3f6; padding: 6px 10px;}
 .talk-infobox .push p{color: #FF4C3C; background-color: inherit; font-size: 14px; word-break: break-all;}
 .talk-infobox .push p a{color: #3181c6; text-decoration: underline;}
 .talk-infobox .dialog img{ vertical-align:bottom;}
@@ -266,7 +266,7 @@ input::-webkit-input-placeholder,textarea::-webkit-input-placeholder{color:#b4b4
 input:-moz-placeholder,textarea:-moz-placeholder{color:#b4b4b4}
 input::-moz-placeholder,textarea::-moz-placeholder{color:#b4b4b4}
 input:-ms-input-placeholder,textarea:-ms-input-placeholder{color:#b4b4b4}
-.popupbox.pop-member {background: url(../../images/fxstudio_mb/mbg.jpg) center 0 no-repeat #fff;background-size:100% auto;}
+.popupbox.pop-member {background-size:100% auto;}
 .popupbox.pop-member .cont{ padding:30px 15px 10px;}
 .popupbox.pop-member .cont:after{clear:both;content:"";display:block;height:0;visibility:hidden}
 .mtit { font-size:0; text-align:center; height:20px; margin:0; position:relative}
