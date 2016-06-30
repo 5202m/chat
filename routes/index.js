@@ -17,7 +17,11 @@ exports.init = function(app){
         var currGroupType=req.path.replace(/\/(.*studio)(\/.*)?/g,"$1");
         if(useSession && useSession.groupType && currGroupType!=useSession.groupType){//请求访问的直播间类别有变化，清除session
             req.session.studioUserInfo=null;
-            res.redirect("/"+currGroupType);
+            if(req.query["platform"]){
+                next();
+            }else{
+                res.redirect("/"+currGroupType);
+            }
         }else{
             next();
         }
