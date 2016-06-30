@@ -7,7 +7,10 @@ var config = {
         platfrom:'webui,app,pc,web24k',
         webui:'webui', //直播间中studio.js中针对webui不跳转到mini版本
         web24k:'web24k', //api中课程表信息，web24k只取一条课程记录
-        roomId:'studio_teach'
+        roomId:{
+            studio : 'studio_teach',
+            fxstudio : 'fxstudio_11'
+        }
     },
     isDevTest:true,//是否开发或测试环境
     clusterWorkCount:2,//开启多线程个数，如果该参数大于系统内核个数，默认是开启(cpu核数-1)个线程

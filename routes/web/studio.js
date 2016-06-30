@@ -142,7 +142,7 @@ router.get('/', function(req, res) {
     var isMobile = common.isMobile(req);
     var fromPlatform=req.query["platform"];
     if(fromPlatform && !chatUser.toGroup && !chatUser.groupId && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform)){
-        chatUser.groupId=config.studioThirdUsed.roomId;
+        chatUser.groupId=config.studioThirdUsed.roomId[chatUser.groupType];
     }else if(fromPlatform == "wechat"){
         chatUser.groupId = null; //微信每次请求直接跳转到首页
     }
