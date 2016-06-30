@@ -863,7 +863,7 @@ var studioChatMb={
      */
     setListScroll:function(domClass,options){
         var dom=(typeof domClass=='object')?domClass:$(domClass);
-        options = $.extend({scrollButtons:{enable:false},theme:"light-2",toButtom:false}, options);
+        options = $.extend({scrollButtons:{enable:false},theme:"dark-2",toButtom:false}, options);
         if(dom.hasClass("mCustomScrollbar")){
             dom.mCustomScrollbar("update");
             if(options.toButtom){
