@@ -104,7 +104,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .trade-ul li span{ display:block; color:#fff; width:100%; box-sizing:border-box;  overflow:hidden; white-space:nowrap;text-overflow:ellipsis;}
 .trade-ul li time{ position:absolute; right:5px; top:0; height:30px; line-height:28px; font-size:10px; color:#b0b0b0;}
 /* 快讯 */
-.message_list { padding-left:15px; background:url(../../images/fxstudio/msg_border.png) 3px 26px repeat-y;padding-right: 0;}
+.message_list { padding-left:15px; background:url(../../images/studio/msg_border.png) 3px 26px repeat-y;padding-right: 0;}
 .message_list li{ position:relative;border-bottom:1px solid #303d58; padding:13px 0 13px 53px;}
 .message_list li span{ font-size:14px; color:#fff; line-height:22px; text-align:justify; text-justify:distribute}
 .message_list li b{ display:inline-block; *display:inline; *zoom:1; font-size:12px; font-weight:normal; color:#d3d3d3; padding:0 4px;line-height:17px; border:1px solid #d3d3d3; border-radius:2px; margin-right:13px; position:absolute; left:0; top:15px}
