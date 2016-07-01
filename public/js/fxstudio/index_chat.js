@@ -154,21 +154,21 @@ var chat={
         try{
             $.getJSON('/'+groupType+'/getCS',{groupId:groupId},function(result){
                 if(result){
-                    row = null;
+                    var row = null;
                     this.csUserList = result;
                     for(var i in result){
                         row=result[i];
                         row['nickname']=row['userName'];
                         row['userId']=row['userNo'];
-
-                        row['clientGroup'] = 'visitor';
-                        row['sequence'] = 0; //before;
+                        row['sequence'] = 3;
                         row['userType'] = 3;
-                        row['isLogin'] = false;
-
-                        chat.setOnlineUser(row);//设置在线用户
+                        row['isFromAjax']=true;
+                        //如果客服不在线显示。
+                        if($("#userListId li[id='"+row.userId+"']").size()==0) {
+                            chat.setOnlineUser(row);//设置在线用户
+                        }
                     }
-
+					chat.setOnlineNum();//重新设置在线人数
                 }
             });
         }catch (e){
@@ -512,28 +512,20 @@ var chat={
             seq = "0";
             meCls='mynk';
         }
-        var isCsOnLineFirst = false;
         if(row.userType==3){
             var gIdDom=$("#roomInfoId");
             if(gIdDom.attr("aw")=="true" && common.containSplitStr(gIdDom.attr("awr"), row.userType)){
                 csHtml='<em>私聊</em>';
             }
             isMeHtml = "&nbsp;（助理）"
-            if(row.isLogin==undefined){ //在线的派在隐身的前面
-                isCsOnLineFirst = true;
-            }
         }
-        if(row.isLogin!=undefined && row.isLogin == false ){
+        if(row.isFromAjax === true){ //不在线的客服
             meCls='csoffline';
         }
         var lav=chat.getAImgOrLevel(row.userId, row.clientGroup,row.userType,row.avatar);
         var lis=$("#userListId li"),
             liDom='<li id="'+row.userId+'" cg="'+(common.isBlank(row.clientGroup)?'':row.clientGroup)+'" t="'+seq+'" utype="'+row.userType+'" class="'+lav.level+'" >'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+lav.aImg+'<b></b></div><span class="'+meCls+'">'+row.nickname+isMeHtml+'<i></i></span>'+csHtml+'</a></li>';
-        if(lis.length==0){
-            $("#userListId").append(liDom);
-        }else if(isCsOnLineFirst){
-            lis.first('csoffline').before(liDom);
-        }else if(seq=="0"){
+        if(seq=="0"){
             lis.first().before(liDom);
         }else{
             var isInsert=false,seqTmp= 0,nickTmp='';//按用户级别顺序插入
@@ -544,6 +536,14 @@ var chat={
                     isInsert=true;
                     return false;
                 }else if(row.sequence==seqTmp){
+                    //在线客服显示在前面
+                    nickCsTmp=$(this).find("span[class='csoffline']").size();
+                    if(nickCsTmp){
+                        $(this).before(liDom);
+                        isInsert=true;
+                        return false;
+                    }
+
                     nickTmp=$(this).find("a span").text();
                     if(row.nickname<=nickTmp){
                         $(this).before(liDom);
@@ -922,7 +922,7 @@ var chat={
                 var randId= 0,size=dataLength<=10?60:(200/dataLength)*3+10;
                 for(var i=0;i<size;i++){
                     randId=common.randomNumber(6);
-                    data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:-1});
+                    data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:15,userType:-1});
                 }
             }
             var row=null;
@@ -959,8 +959,13 @@ var chat={
                         chat.setOnlineUser(userInfoTmp);
                     }else{
                         if(indexJS.userInfo.userId!=userInfoTmp.userId){
-                            $("#userListId #"+userInfoTmp.userId).remove();
-                            indexJS.setListScroll(".user_box");
+                            //客服不下线，显示灰色
+                            if(userInfoTmp.userType == 3){
+                                $("#userListId #"+userInfoTmp.userId+' .uname>span').addClass('csoffline');
+                            }else{
+                                $("#userListId #"+userInfoTmp.userId).remove();
+                                indexJS.setListScroll(".user_box");
+                            }
                         }
                     }
                     chat.setOnlineNum();//设置在线人数
