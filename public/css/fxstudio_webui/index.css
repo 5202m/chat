@@ -63,7 +63,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .home .cen-pubox .boxcont{ height:auto; box-sizing: border-box; padding-bottom:40px;}
 .moreitem{ display:block; background:rgba(48,61,88,.6); height:30px; line-height:30px; font-size:13px; color:#8695b8; text-align:center; border-radius:5px; margin-bottom:10px;}
 .room.cen-ulist li{ width:25%; font-size:16px; position: relative;cursor:pointer}
-.room.cen-ulist li i.wh_tips{border: 1px solid #FF0000; background-color: #FF0000; border-radius: 12px; height: 13px; color: #FFFFFF; right: 0; font-size: 12px; line-height: 12px; text-indent: 0; width: auto; padding: 0 3px; font-style: normal;}
+.room.cen-ulist li i.wh_tips{border: 1px solid #c10e1b; background-color: #c10e1b; border-radius: 12px; height: 13px; color: #FFFFFF; right: -5px; font-size: 12px; line-height: 12px; text-indent: 0; width: auto; padding: 0 3px; font-style: normal;}
 
 /* 直播视频 */
 .videoroom-ul{ color:#fff; padding-top:5px;}
@@ -163,7 +163,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .talk-infobox .headimg img{ width:100%; height:auto; display:block; vertical-align:bottom; border-radius:2px; }
 .talk-infobox .me-li .headimg{ left:auto; right:0}
 .talk-infobox .uname{ height:24px; line-height:20px; font-size:12px; color:#aeaeae; float:left;}
-.talk-infobox .uname strong{ font-size:14px; color:#cbcbcb; font-weight:normal; line-height:12px; padding-right:5px;}
+.talk-infobox .uname strong{ font-size:14px; color:#333; font-weight:normal; line-height:12px; padding-right:5px;}
 .talk-infobox .me-li .uname strong{padding-right: 0px; padding-left: 5px;}
 .talk-infobox .admin .uname strong{ color:#3181c6}
 .talk-infobox .me-li .detail{ text-align:right}
@@ -178,8 +178,8 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .talk-infobox .admin .dialog::after{border-color:#f0f3f6 transparent transparent}
 .talk-infobox .analyst .dialog{background:#f0f3f6;color: #555;}
 .talk-infobox .analyst .dialog::after{border-color:#f0f3f6 transparent transparent transparent;}
-.talk-infobox .me-li .dialog{background:#fff; border-top-left-radius:5px; border-top-right-radius:0; float:right; }
-.talk-infobox .me-li .dialog::after{border-color:#fff transparent transparent transparent; left:auto; right:-3px;}
+.talk-infobox .me-li .dialog{background:#f0f3f6; border-top-left-radius:5px; border-top-right-radius:0; float:right; }
+.talk-infobox .me-li .dialog::after{border-color:#f0f3f6 transparent transparent transparent; left:auto; right:-3px;}
 .talk-infobox .push{background-color: #f0f3f6; padding: 6px 10px;}
 .talk-infobox .push p{color: #FF4C3C; background-color: inherit; font-size: 14px; word-break: break-all;}
 .talk-infobox .push p a{color: #3181c6; text-decoration: underline;}
@@ -187,9 +187,8 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .talk-infobox .dialog .to{ color:#666; font-size:10px;}
 .talk-infobox .dialog .question{ color:#555; font-size:12px; border-bottom:1px solid #e8e8e8; padding-bottom:5px; margin-bottom:5px}
 .talk-infobox .dialog .question em{ font-style:normal; font-weight:bold}
-.talk-infobox .dialog .reply span{ font-weight:bold}
-.talk-infobox .analyst .dialog .question{ color:#555;border-bottom-color:#e8e8e8}
-.talk-infobox .analyst .dialog .reply{ color:#ffa933}
+.talk-infobox .analyst .dialog .question{ color:#333;border-bottom-color:#e8e8e8}
+.talk-infobox .analyst .dialog .reply{ color:#a37c2b}
 .ss-tk-info{position:fixed;height:25px;line-height:25px;color:#e93030;font-size:12px;background:#F2F181; z-index: 100001;width: 100%; left: 0; top: 0; overflow: hidden;}
 .ss-tk-info label{margin-left: 10px}
 .ss-tk-info span{margin-left:5px;text-align:justify;}
@@ -208,10 +207,10 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .me-li .talk-content{margin-right:10px}
 .me-li .talk-content p{width:100%}
 .me-li .arrow-outer{left:auto;right:-13px}
-.float-sel{ position:absolute; right:10px; top:10px;z-index:100000}
+.float-sel{ position:absolute; right:15px; top:10px;z-index:100000}
 .view_select{ width:120px;height:27px; float:right; position:relative; }
 .view_select.dw {}
-.view_select i { display:block; position:absolute; right:11px; top:9px; background-position:-60px 0; width:14px; height:9px; opacity:0.2}
+.view_select i { display:block; position:absolute; right:11px; top:12px; background-position:-60px 0; width:14px; height:9px; opacity:0.2}
 .view_select.dw i{ opacity:0.5 }
 .view_select .se_cont{  width:100%; height:27px; overflow:hidden;background:#fff; border-radius:2px; position:absolute; left:0; top:0;border:1px #cecfd8 solid}
 .view_select.dw .se_cont{ height:auto;background:#fff;}
@@ -236,7 +235,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .face-btn{position: absolute;left: 10px; top: 5px;display: block;width: 29px;height: 29px;background-position: 0 -60px}
 .sent-btn{position: absolute;right: 10px;top: 5px;display: block;width: 50px;height: 29px;background:#b1b1b1; color:#fff; text-align:center; font-size:15px; line-height:29px; border-radius:3px;font-family:'microsoft yahei','Arial'}
 .sent-btn.pressed{background: #4874b0;}
-.txt_dia {color:#0BA1EC;margin-right:5px;}
+.txt_dia {color:#285fbb;margin-right:5px;}
 
 /*popup*/
 .popupbg{ position:fixed; z-index:100; top:0; left:0; width:100%; height:100%; padding:0 10px; box-sizing:border-box; background:rgba(0,0,0,0.5)}
@@ -319,6 +318,9 @@ input:-ms-input-placeholder,textarea:-ms-input-placeholder{color:#b4b4b4}
 .level-table td b{ display:block; color:#333; font-size:12px; line-height:14px; font-weight:normal}
 .level-table tr.on td,.level-table tr.on td b{ color:#b59030; font-weight:bold}
 .pop-person .logoutbtn{display:block; color:#333; background:#fff; width:100%; margin:15px auto 0; height:30px; line-height:28px; font-size:15px; border-top:1px solid #efefef; height:30px; border-bottom:1px solid #efefef; box-sizing:border-box; text-align:center;}
+
+.mCS-dark-2.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{background-color: rgba(140,145,162,0.75) !important; }
+.mCS-dark-2.mCSB_scrollTools .mCSB_draggerRail{ background-color: rgba(0,0,0,0.2) !important;}
 
 /*键盘出现*/
 body.keyboard:before { /*background:none*/}

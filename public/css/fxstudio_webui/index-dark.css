@@ -6,7 +6,7 @@ img{border:0 none}
 .fl{float:left}
 .fr{float:right}
 .vcen{vertical-align:middle}
-a{color:#333;text-decoration:none; outline:none;-webkit-tap-highlight-color: rgba(0,0,0,0); -webkit-tap-highlight-color: transparent;}
+a{color:#dfdfdf;text-decoration:none; outline:none;-webkit-tap-highlight-color: rgba(0,0,0,0); -webkit-tap-highlight-color: transparent;}
 a:hover{text-decoration:none}
 a:active{noOutline:expression(this.onFocus=this.blur())}
 .red{color:#C8310C}
@@ -63,7 +63,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .home .cen-pubox .boxcont{ height:auto; box-sizing: border-box; padding-bottom:40px;}
 .moreitem{ display:block; background:rgba(48,61,88,.6); height:30px; line-height:30px; font-size:13px; color:#8695b8; text-align:center; border-radius:5px; margin-bottom:10px;}
 .room.cen-ulist li{ width:25%; font-size:16px; position: relative;cursor:pointer}
-.room.cen-ulist li i.wh_tips{border: 1px solid #FF0000; background-color: #FF0000; border-radius: 12px; height: 13px; color: #FFFFFF; right: 0; font-size: 12px; line-height: 12px; text-indent: 0; width: auto; padding: 0 3px; font-style: normal;}
+.room.cen-ulist li i.wh_tips{border: 1px solid #c10e1b; background-color: #c10e1b; border-radius: 12px; height: 13px; color: #FFFFFF; right: 0; font-size: 12px; line-height: 12px; text-indent: 0; width: auto; padding: 0 3px; font-style: normal;}
 
 /* 直播视频 */
 .videoroom-ul{ color:#fff; padding-top:5px;}
@@ -168,8 +168,8 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .talk-infobox .admin .uname strong{ color:#a8bbd9}
 .talk-infobox .me-li .detail{ text-align:right}
 .talk-infobox .me-li .uname{ clear:both; float:right}
-.talk-infobox .dialog{ clear:both; background:#fff; line-height:20px; border-radius:5px; border-top-left-radius:0; padding:6px 10px; position:relative; color:#333; font-size:14px;text-align:left; float:left; white-space: normal; word-break: break-all;}
-.talk-infobox .dialog a{color:#3181c6;}
+.talk-infobox .dialog{ clear:both; background:#fff; line-height:20px; border-radius:5px; border-top-left-radius:0; padding:6px 10px; position:relative; color:#dfdfdf; font-size:14px;text-align:left; float:left; white-space: normal; word-break: break-all;}
+.talk-infobox .dialog a{color:#a8bbd9 !important}
 .talk-infobox .dialog em.ruleTipStyle{color:#ff0000;font-size:12px;margin-left:5px;}
 .talk-infobox .dialog::after{ display:block; content:''; height:0; width:0; border-style:solid; border-width:3px; border-color:#fff transparent transparent transparent; left:-3px; top:0; position:absolute; }
 .talk-infobox .visitor-li .dialog{background:#fff;}
@@ -177,19 +177,18 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .talk-infobox .admin .dialog{background:#474b50;color:#dfdfdf}
 .talk-infobox .admin .dialog::after{border-color:#474b50 transparent transparent}
 .talk-infobox .analyst .dialog{background:#474b50;color: #dfdfdf;}
-.talk-infobox .analyst .dialog::after{border-color:#f0f3f6 transparent transparent transparent;}
-.talk-infobox .me-li .dialog{background:#fff; border-top-left-radius:5px; border-top-right-radius:0; float:right; }
-.talk-infobox .me-li .dialog::after{border-color:#fff transparent transparent transparent; left:auto; right:-3px;}
-.talk-infobox .push{background-color: #f0f3f6; padding: 6px 10px;}
+.talk-infobox .analyst .dialog::after{border-color:#474b50 transparent transparent transparent;}
+.talk-infobox .me-li .dialog{background:#474b50; border-top-left-radius:5px; border-top-right-radius:0; float:right; }
+.talk-infobox .me-li .dialog::after{border-color:#474b50 transparent transparent transparent; left:auto; right:-3px;}
+.talk-infobox .push{background-color: #474b50; padding: 6px 10px;}
 .talk-infobox .push p{color: #ec5858; background-color: inherit; font-size: 14px; word-break: break-all;}
 .talk-infobox .push p a{color: #a8bbd9; text-decoration: underline;}
 .talk-infobox .dialog img{ vertical-align:bottom;}
 .talk-infobox .dialog .to{ color:#666; font-size:10px;}
 .talk-infobox .dialog .question{ color:#dfdfdf; font-size:12px; border-bottom:1px solid #676767; padding-bottom:5px; margin-bottom:5px}
 .talk-infobox .dialog .question em{ font-style:normal; font-weight:bold}
-.talk-infobox .dialog .reply span{ font-weight:bold}
 .talk-infobox .analyst .dialog .question{ color:#dfdfdf;border-bottom-color:#676767}
-.talk-infobox .analyst .dialog .reply{ color:#ffa933}
+.talk-infobox .analyst .dialog .reply{ color:#c79d45}
 .ss-tk-info{position:fixed;height:25px;line-height:25px;color:#e93030;font-size:12px;background:#F2F181; z-index: 100001;width: 100%; left: 0; top: 0; overflow: hidden;}
 .ss-tk-info label{margin-left: 10px}
 .ss-tk-info span{margin-left:5px;text-align:justify;}
@@ -208,19 +207,19 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .me-li .talk-content{margin-right:10px}
 .me-li .talk-content p{width:100%}
 .me-li .arrow-outer{left:auto;right:-13px}
-.float-sel{ position:absolute; right:10px; top:10px;z-index:100000}
+.float-sel{ position:absolute; right:15px; top:10px;z-index:100000}
 .view_select{ width:120px;height:27px; float:right; position:relative; }
 .view_select.dw {}
-.view_select i { display:block; position:absolute; right:11px; top:9px; background-position:-60px 0; width:14px; height:9px; opacity:0.2}
+.view_select i { display:block; position:absolute; right:11px; top:12px; background-position:-60px 0; width:14px; height:9px; opacity:0.2}
 .view_select.dw i{ opacity:0.5 }
-.view_select .se_cont{  width:100%; height:27px; overflow:hidden;background:#fff; border-radius:2px; position:absolute; left:0; top:0;border:1px #cecfd8 solid}
+.view_select .se_cont{  width:100%; height:27px; overflow:hidden;background:#686b6f; border-radius:2px; position:absolute; left:0; top:0;border:1px #686b6f solid;color:#dfdfdf}
 .view_select.dw .se_cont{ height:auto;background:#fff;}
-.view_select .se_cont a{ display:block;padding-left:10px; color:#898d94; line-height:27px; font-size:14px; text-decoration:none}
-.view_select .se_cont a.on{color:#335b9f;background:#eaedf7;}
-.view_select .selected{ line-height:27px; font-size:14px; height:27px; color:#898d94;padding-left:10px; }
+.view_select .se_cont a{ display:block;padding-left:10px; color:#dfdfdf; line-height:27px; font-size:14px; text-decoration:none}
+.view_select .se_cont a.on{color:#dfdfdf;background:#646b76;}
+.view_select .selected{ line-height:27px; font-size:14px; height:27px; color:#dfdfdf;padding-left:10px; }
 .view_select .selectlist{ display:none;}
-.view_select.dw .selected{color:#555;}
-.view_select.dw .selectlist{display:block;}
+.view_select.dw .selected{color:#dfdfdf;background:#7d848e}
+.view_select.dw .selectlist{display:block;background:#7d848e}
 .c-menu{ position:absolute; left:32px; top:35px; background:#b59030; border-radius:2px; width:75px;}
 .c-menu li{ width:100%; box-sizing:border-box;padding: 0 0 0 35px;height:30px; margin:0; line-height:30px;}
 .c-menu li a{ display:block; font-size:14px; color:#fff;}
@@ -334,6 +333,9 @@ body.keyboard:before { /*background:none*/}
 .float-box .board .face table tr{height: 40px;}
 .float-box .board .face-nav{bottom: 3px;}
 .float-box .board .face-nav span.on{opacity: 0.7}
+
+.mCS-dark-2.mCSB_scrollTools .mCSB_draggerRail{background-color: #474b50 !important;}
+.mCS-dark-2.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{background-color: rgba(140,145,162,0.75) !important;}
 
 /*底部按钮*/
 .fob_open{display:block;position:fixed;bottom:0px;left:0;width:100%;height:40px;z-index:99;background:rgba(0,0,0,0.8);}

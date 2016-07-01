@@ -432,7 +432,7 @@ var chat={
                     continue;
                 }
                 var newTest=linkTxt.replace(/(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|\\&|-)+)(:\d+)?(\/|\S)+/g,function(m){
-                    return '<a href="'+m+'" target="_blank" style="color:#3181c6;">'+m+'</a>';
+                    return '<a href="'+m+'" target="_blank">'+m+'</a>';
                 });
                 el.innerHTML = el.innerHTML.replace(linkTxt,newTest);
             }

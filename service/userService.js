@@ -196,8 +196,12 @@ var userService = {
                 tip=ruleRow.afterRuleTips;
                 isPass=common.dateTimeWeekCheck(ruleRow.periodDate, true);
                 if(isWh){
-                    if(!isPass && type=='whisper_allowed'){//允许私聊
-                        callback({isOK:false,tip:tip});
+                    if(type=='whisper_allowed'){
+                        if(!isPass){
+                            callback({isOK:false,tip:tip});
+                        }else{
+                            callback({isOK:true,tip:'',talkStyle:row.talkStyle,whisperRoles:row.whisperRoles});
+                        }
                         return;
                     }
                 }else{
@@ -211,50 +215,54 @@ var userService = {
                         visitorSpeak.allowed = isPass;
                         visitorSpeak.tip = tip;
                     }
-                }
-                if(isImg && isPass && type=='img_not_allowed'){//禁止发送图片
-                    callback({isOK:false,tip:tip});
-                    return;
-                }
-                if(!isImg && isPass && type!='speak_not_allowed' && common.isValid(beforeVal)){
-                    beforeVal=beforeVal.replace(/(,|，)$/,'');//去掉结尾的逗号
-                    beforeVal=beforeVal.replace(/,|，/g,'|');//逗号替换成|，便于统一使用正则表达式
-                    if(type=='visitor_filter' && !isWh){
-                        if(visitorSpeak.allowed && isVisitor && eval('/'+beforeVal+'/').test(nickname)){
-                            callback({isOK:false,tip:tip});
-                            return;
+                    if(isImg && isPass && type=='img_not_allowed'){//禁止发送图片
+                        callback({isOK:false,tip:tip});
+                        return;
+                    }
+                    if(!isImg && isPass && type!='speak_not_allowed' && common.isValid(beforeVal)){
+                        beforeVal=beforeVal.replace(/(,|，)$/,'');//去掉结尾的逗号
+                        beforeVal=beforeVal.replace(/,|，/g,'|');//逗号替换成|，便于统一使用正则表达式
+                        if(type=='visitor_filter'){
+                            if(visitorSpeak.allowed && isVisitor && eval('/'+beforeVal+'/').test(nickname)){
+                                callback({isOK:false,tip:tip});
+                                return;
+                            }
+                        }
+                        if(type=='keyword_filter'){//过滤关键字或过滤链接
+                            if(eval('/'+beforeVal+'/').test(contentVal)){
+                                callback({isOK:false,tip:tip});
+                                return;
+                            }
+                        }
+                        if(type=='url_not_allowed'){//禁止链接
+                            var val=beforeVal.replace(/\//g,'\\/').replace(/\./g,'\\.');
+                            if(eval('/'+val+'/').test(contentVal)){
+                                callback({isOK:false,tip:tip});
+                                return;
+                            }
+                        }
+                        if(type=='url_allowed'){//除该连接外其他连接会禁止
+                            urlArr.push(beforeVal);
+                            urlTipArr.push(tip);
+                        }
+                        if(type=='keyword_replace'){//替换关键字
+                            if(eval('/'+beforeVal+'/').test(contentVal)){
+                                content.value=common.encodeHtml(content.value).replace(eval('/'+beforeVal+'/g'),ruleArr[i].afterRuleVal);
+                                resultTip.push(tip);
+                            }
                         }
                     }
-                    if(type=='keyword_filter'){//过滤关键字或过滤链接
-                        if(eval('/'+beforeVal+'/').test(contentVal)){
-                            callback({isOK:false,tip:tip});
-                            return;
-                        }
+                    if(isPass && type=='need_approval'){//需要审批
+                        needApproval=true;
+                        needApprovalTip=tip;
                     }
-                    if(type=='url_not_allowed'){//禁止链接
-                        var val=beforeVal.replace(/\//g,'\\/').replace(/\./g,'\\.');
-                        if(eval('/'+val+'/').test(contentVal)){
-                            callback({isOK:false,tip:tip});
-                            return;
-                        }
-                    }
-                    if(type=='url_allowed'){//除该连接外其他连接会禁止
-                        urlArr.push(beforeVal);
-                        urlTipArr.push(tip);
-                    }
-                    if(type=='keyword_replace'){//替换关键字
-                        if(eval('/'+beforeVal+'/').test(contentVal)){
-                            content.value=common.encodeHtml(content.value).replace(eval('/'+beforeVal+'/g'),ruleArr[i].afterRuleVal);
-                            resultTip.push(tip);
-                        }
-                    }
-                }
-                if(isPass && type=='need_approval'){//需要审批
-                    needApproval=true;
-                    needApprovalTip=tip;
                 }
             }
-            if(!isWh && isVisitor && !visitorSpeak.allowed){
+            if(isWh){ //私聊不校验规则
+                callback({isOK:true,tip:resultTip.join(";"),talkStyle:row.talkStyle,whisperRoles:row.whisperRoles});
+                return;
+            }
+            if(isVisitor && !visitorSpeak.allowed){
                 callback({isOK:false,tip:visitorSpeak.tip});
                 return;
             }
