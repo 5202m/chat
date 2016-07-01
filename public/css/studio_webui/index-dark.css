@@ -347,7 +347,7 @@ body.keyboard:before { /*background:none*/}
 .fob_open .qq-fon{position:absolute;left:50%;margin-left:-42px;top:7px;display:block;width:30px;height:30px;background:url(../../images/studio_mb/fo_open.png) no-repeat center -103px;background-size:36px auto}
 
 /*返回直播*/
-.backtolive{ display:block; position:fixed; top:70px; left:10px; width:36px; height:26px; padding:5px 0; text-align:center; background: #4874b0; border-radius:23px; z-index:99}
+.backtolive{ display:block; position:fixed; top:70px; left:10px; width:36px; height:26px; padding:5px 0; text-align:center; background:#4874b0; border-radius:23px; z-index:99}
 .backtolive span{ line-height:13px; display:inline-block; font-size:11px; color:#fff;}
 
 /*Responsive*/

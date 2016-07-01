@@ -788,8 +788,8 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .pletter_win .chat_content .scrollbox{ padding:0}
 .pletter_win .chat_content{ }
 .pletter_win .dialoglist{padding:17px 5px 0; }
-.pletter_win .dialog{ padding:0 38px 0 6px;}
-.pletter_win .dialog.mine{ padding:0 6px 0 38px }
+.pletter_win .dialog{ padding:0 38px 0 6px !important;}
+.pletter_win .dialog.mine{ padding:0 6px 0 38px !important;}
 .pletter_win .dialog > p{ background:#ededed;}
 .pletter_win .dialog > p i{ left:0; background-position:-100px -90px}
 .pletter_win .dialog.mine > p i{ right:0; left:auto; background-position:-110px -90px}

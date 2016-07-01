@@ -397,7 +397,6 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .mod_userlist li .headimg img{width:33px;height:33px; border-radius:3px;}
 
 .mod_userlist li span.csoffline{color:#999}
-
 /*右侧菜单*/
 .mod_menu { background:url(../../images/fxstudio/contbg70.png) repeat; position:fixed; right:0; top:65px; width:74px;border:5px solid #1e2d58;border:5px solid rgba(5,15,36,.6); border-bottom:0; border-top:0;height:900px; z-index:10001}
 .mod_menu .dropitem{border-bottom:1px solid #1a366f; border-bottom:1px solid rgba(4,16,47,.3); }
@@ -539,7 +538,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 
 /*扫一扫*/
 .dr8 .dropcont .cont{ padding:8px 0 0;}
-.mod_menu .dr8 .dropcont{ width:203px; height:380px; top:310px;/*top:350px;*/}
+.mod_menu .dr8 .dropcont{ width:203px; height:380px; top:310px;}
 .qr_box { text-align:center; padding-top:28px;}
 .qr_box img{ display:block; border:0; vertical-align:bottom; margin:0 auto; width:99px; margin:0 auto 10px}
 .qr_box span{ color:#555; font-size:14px; line-height:16px}
@@ -790,7 +789,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .pletter_win .chat_content{ }
 .pletter_win .dialoglist{padding:17px 5px 0; }
 .pletter_win .dialog{ padding:0 38px 0 6px !important;}
-.pletter_win .dialog.mine{ padding:0 6px 0 38px !important  }
+.pletter_win .dialog.mine{ padding:0 6px 0 38px !important;}
 .pletter_win .dialog > p{ background:#ededed;}
 .pletter_win .dialog > p i{ left:0; background-position:-100px -90px}
 .pletter_win .dialog.mine > p i{ right:0; left:auto; background-position:-110px -90px}
