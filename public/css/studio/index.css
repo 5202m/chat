@@ -1005,3 +1005,5 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .video_ad img{ border: 0; vertical-align: bottom; }
 .video_ad .ad_closebtn{ display: block; position: absolute; right: 0;top: 0; width: 15px;height: 15px; z-index: 10 }
 .menu_ad img{ width: 100%; height: auto; }
+
+.swiper-slide{ overflow: hidden; }
