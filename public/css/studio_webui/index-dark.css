@@ -23,7 +23,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .p0-non{font-size:0;height:0;overflow:hidden}
 
 /* img */
-.rightbar .qq i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i{background:url(../../images/studio_mb/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
+.rightbar .qq i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i{background:url(img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
 
 /* header */
 body{font-family:'microsoft yahei','Arial'}
@@ -227,7 +227,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .float-box{position:fixed;bottom:0;left:0;width:100%;z-index:10}
 .float-con{padding:5px;background:#fff;position: relative;}
 .inp-fon-tix{position:relative;margin:0 60px 0 40px; height:29px; }
-.text-area-box{width:100%; border:0;border-bottom:solid #BFBFBF 1px;background:none; padding:0;height:29px;font:12px microsoft yahei; line-height:29px; resize:none; text-indent:5px;-webkit-appearance:none;outline:none; border-radius:0; overflow-y: scroll;}
+.text-area-box{width:100%; border:0;border-bottom:solid #BFBFBF 1px;background:none; padding:0;height:29px;font:12px microsoft yahei; line-height:29px; resize:none; text-indent:5px;-webkit-appearance:none;outline:none; border-radius:0; overflow-y: auto;}
 .face-btn{position: absolute;left: 10px; top: 5px;display: block;width: 29px;height: 29px;background-position: 0 -60px}
 .sent-btn{position: absolute;right: 10px;top: 5px;display: block;width: 50px;height: 29px;background:#b1b1b1; color:#fff; text-align:center; font-size:15px; line-height:29px; border-radius:3px;font-family:'microsoft yahei','Arial'}
 .sent-btn.pressed{background: #4874b0;}
