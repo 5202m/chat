@@ -28,6 +28,28 @@ var chatPraiseService = require('../../service/chatPraiseService');//引入chatP
 function getGroupType(req,isBase){
     return isBase?req.baseUrl:req.baseUrl.replace(/\//g,"");
 }
+
+/**
+ * 获取重定向URL参数
+ * @param req
+ * @param platform
+ */
+function getRredirctUrl(req, platform){
+    var paramArr = [];
+    if(platform){
+        paramArr.push("platform=" + platform);
+    }else if(req.query["platform"]){
+        paramArr.push("platform=" + req.query["platform"]);
+    }
+    var argKeys = ["utm_source", "utm_medium", "utm_campaign", "theme"],argKey;
+    for(var i = 0, lenI = argKeys.length; i < lenI; i++){
+        argKey = argKeys[i];
+        if(req.query[argKey]){
+            paramArr.push(argKey + "=" + req.query[argKey]);
+        }
+    }
+    return paramArr.length > 0 ? ("?" + paramArr.join("&")) : "";
+}
 /**
  * 聊天室页面入口
  */
@@ -118,7 +140,7 @@ router.get('/', function(req, res) {
                     thirdId : openId
                 };
             }
-            res.redirect(getGroupType(req,true)+"?platform=wechat");
+            res.redirect(getGroupType(req,true)+getRredirctUrl(req, "wechat"));
         });
         return;
     }else if(chatUser && chatUser.isLogin){
@@ -146,8 +168,7 @@ router.get('/', function(req, res) {
     }else if(fromPlatform == "wechat"){
         chatUser.groupId = null; //微信每次请求直接跳转到首页
     }
-    var redirctUrl = fromPlatform ? ("?platform=" + fromPlatform) : "";
-
+    var redirctUrl = getRredirctUrl(req, fromPlatform);
     if(isMobile && !chatUser.toGroup && !chatUser.groupId){
         chatUser.groupId = null;
         req.session.studioUserInfo.groupId = null;
