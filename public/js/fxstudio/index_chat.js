@@ -155,7 +155,6 @@ var chat={
             $.getJSON('/'+groupType+'/getCS',{groupId:groupId},function(result){
                 if(result){
                     var row = null;
-                    this.csUserList = result;
                     for(var i in result){
                         row=result[i];
                         row['nickname']=row['userName'];
