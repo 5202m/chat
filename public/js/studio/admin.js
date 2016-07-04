@@ -6,6 +6,9 @@
 var studioChat={
     filePath:'',
     //信息类型
+    enable : true, //是否使用store
+    storeInfoKey : "storeInfo_WhTipMsg",
+    whTipIntervalId:{},
     msgType:{
        text:'text' ,
         img:'img',
@@ -15,6 +18,10 @@ var studioChat={
     socketUrl:'',
     userInfo:null,
     init:function(){
+        this.enable = store && store.enabled;
+        if (!this.enable && console){
+            console.log('Local storage is not supported by your browser.');
+        }
         this.setEvent();
         this.setSocket();
         this.setVideo();
@@ -285,6 +292,8 @@ var studioChat={
                 if($("#"+whId).length==0){
                     var msgHtml='<div id="'+whId+'" class="wh-tab-msg"><div class="wh-title"><span><label>'+$(this).find("label").text()+'</label>【<strong></strong>】</span><span class="title-tip"></span></div><div class="wh-content"></div>'+
                         '<div class="wh-txt"><div class="toolbar"><a href="javascript:" class="facebtn">表情</a><label for="file_'+whId+'" class="send-wh-img" title="发送图片"></label><input type="file" id="file_'+whId+'" style="position:absolute;clip:rect(0 0 0 0);" class="fileBtn"/></div><div contenteditable="true" class="ctextarea" id="whTxt_'+userId+'" data-placeholder="按回车键发送"></div></div></div>';
+                    //取消已读数据提示
+                    studioChat.updateWhTipStore(studioChat.storeInfoKey+studioChat.userInfo.accountNo , userId);
                     $(".wh-right").append(msgHtml);
                     //私聊天内容发送事件
                     $("#"+whId).find(".ctextarea").keydown(function(e){
@@ -350,22 +359,28 @@ var studioChat={
      * @param userId
      */
     setWhTipImgPlay:function(userId){
-        $(".wh_msg_ftip").attr("uid",userId).attr("k",1).show().addClass("have");
+        if($(".wh_msg_ftip").attr('class').indexOf(' have') == -1){
+            $(".wh_msg_ftip").attr("uid",userId).attr("k",1).show().addClass("have");
+        }
         $('#userListId li[id='+userId+']').attr("k",1);
-        studioChat.whTipIntervalId=setInterval(function(){
-            $('#userListId li[k=1],.wh_msg_ftip[k=1]').toggleClass("have_op");
+        studioChat.whTipIntervalId[userId]=setInterval(function(){
+            $('#userListId li[id='+userId+'][k=1],.wh_msg_ftip[k=1]').toggleClass("have_op");
         },1000);
     },
     /**
      * 关闭私聊提示
      */
     closeWhTipMsg:function(userId){
-        $('.wh_msg_ftip[uid='+userId+']').attr("k",0).removeClass("have have_op");
         $('#userListId li[id='+userId+']').attr("k",0).removeClass("have_op");
+        if($('#userListId [k=1]').length>0){
+            $('.wh_msg_ftip').attr("uid",$('#userListId [k=1]:first').attr('id'));
+        }else{
+            $('.wh_msg_ftip[uid='+userId+']').attr("k",0).removeClass("have have_op");
+        }
         if($('#userListId[k=1]').length==0 && $('.wh_msg_ftip[k=1]').length==0){
-            if(studioChat.whTipIntervalId){
-                clearInterval(studioChat.whTipIntervalId);
-                studioChat.whTipIntervalId=null;
+            if(studioChat.whTipIntervalId.userId){
+                clearInterval(studioChat.whTipIntervalId.userId);
+                studioChat.whTipIntervalId.userId=null;
             }
         }
     },
@@ -379,11 +394,12 @@ var studioChat={
      */
     fillWhBox:function(userType,clientGroup,userId,nickname,isTip,isShowNum){
         var whBox=this.getWhBox();
+        var key=this.storeInfoKey+this.userInfo.accountNo;
         if(whBox.length==0){//私聊框不存在，则初始化私聊框
             studioChat.setWhBox(true);
             studioChat.setWhVisitors(userType,clientGroup,userId,nickname,true,isShowNum);
             if(isTip){
-                studioChat.setWhTipInfo(userId);
+                studioChat.setWhTipStore(key,userId);
             }
             return false;
         }else{
@@ -392,7 +408,7 @@ var studioChat={
                 studioChat.setWhVisitors(userType,clientGroup,userId,nickname,true,isShowNum);
                 if(whBox.is(':hidden')){
                     if(isTip) {
-                        studioChat.setWhTipInfo(userId);
+                        studioChat.setWhTipStore(key,userId);
                     }
                 }else{
                     return false;
@@ -408,11 +424,11 @@ var studioChat={
                         return false;
                     }
                     if(isTip){
-                        studioChat.setWhTipImgPlay(userId);
+                        studioChat.setWhTipStore(key,userId);
                     }
                 }else{
                     if(!userTab.hasClass("on") && isTip){
-                        studioChat.setWhTipImgPlay(userId);
+                        studioChat.setWhTipStore(key,userId);
                     }
                 }
             }
@@ -612,13 +628,14 @@ var studioChat={
         $("#header_img_id").attr("src",studioChat.userInfo.avatar);
         /*#################私聊事件#################begin*/
         var currTab=$("#groupInfoId"),awr=currTab.attr("awr"), aw=currTab.attr("aw");
+
         if("true"==aw && common.containSplitStr(awr,studioChat.userInfo.userType)){
             $(".wh_msg_ftip").show();
         }
         jqWindowsEngineZIndex=100000;
         $("#newMsgTipBtn").click(function(){
             var uid=$(this).attr("uid");
-            studioChat.closeWhTipMsg(uid);
+            //studioChat.closeWhTipMsg(uid);点击其他是保留未读闪烁提示
             var wBox=studioChat.getWhBox();
             if(wBox.length>0){
                 wBox.show();
@@ -657,12 +674,13 @@ var studioChat={
         });
         $(".wh_msg_ftip").click(function(){
             var uid=$(this).attr("uid");
-            studioChat.closeWhTipMsg(uid);
+            //studioChat.closeWhTipMsg(uid);
             var wBox=studioChat.getWhBox();
             if(wBox.length>0){
                 $('.visitorDiv ul li[uid='+uid+']').click();
                 wBox.show();
             }else{
+                $('.dialogbtn[uid="'+uid+'"] a.d2').click();
                 $("#newMsgTipBtn").click();
             }
         });
@@ -1199,7 +1217,8 @@ var studioChat={
         if(common.isValid(dialogHtml)){
             $("#userListId li[id="+row.userId+"] a[t=header]").click(function(){
                 var pt=$(this).parent();
-                studioChat.closeWhTipMsg(pt.attr("id"));
+
+                //studioChat.closeWhTipMsg(pt.attr("id")); ##点击只显示图层菜单还显示提示
                 $('.dialogbtn').hide();
                 $('.user_box li').removeClass('zin');
                 pt.addClass('zin');
@@ -1260,6 +1279,9 @@ var studioChat={
             }
             $("#onLineSizeNum").text(dataSize);
             studioChat.setListScroll(".user_box");
+            /** 载入未读信息提示 **/
+            studioChat.loadWhTipStore(studioChat.storeInfoKey+studioChat.userInfo.accountNo);
+            /** 未读取信息提示结束 **/
         });
         //断开连接
         this.socket.on('disconnect',function(e){
@@ -1374,7 +1396,8 @@ var studioChat={
                         userId=index;
                         studioChat.setWhVisitors(data[index].userType,data[index].clientGroup,index,data[index].nickname,$("#userListId li[id='"+index+"']").length>0);
                     }
-                    studioChat.setWhTipInfo(userId);
+                    var key=studioChat.storeInfoKey+studioChat.userInfo.accountNo;
+                    studioChat.setWhTipStore(key,userId);
                 }
             }else{//私聊框中每个用户tab对应的私聊信息
                 if(data && $.isArray(data)) {
@@ -1419,8 +1442,68 @@ var studioChat={
         }else{
             studioChat.setContent({fromUser: fromUser,content:row.content},false,true);
         }
+    },
+    /**
+     * 更新私聊未读提示
+     * @param key
+     */
+    updateWhTipStore:function(key , userId){
+        if(!this.enable) return ;
+        //取消已读数据
+        var keyVal=store.get(key);
+        var newVal = [] ;
+        for(var i=0;i<keyVal.length;i++){
+            if(keyVal[i] == userId){
+                delete keyVal[i]; //还会留下空
+            }else if(keyVal[i]){
+                newVal.push(keyVal[i]) ;//新数据
+            }
+        }
+        store.set(key , newVal);
+    },
+    /**
+     * 存储私聊未读提示
+     * @param key
+     * @param keyVal
+     */
+    setWhTipStore:function(key , userId){
+        if(!this.enable) return ;
+        if(!userId) return ;
+        var keyVal=store.get(key);
+        if(common.isBlank(keyVal)){
+            keyVal = [];
+            keyVal.push(userId);
+        }else{
+            if($.inArray(userId , keyVal) == -1){
+                keyVal.push(userId);
+            }
+        }
+        store.set(key,keyVal);
+        studioChat.loadWhTipStore(key);
+    },
+    /**
+     * 载入私聊未读提示
+     * @param key
+     */
+    loadWhTipStore:function(key) {
+        if(!this.enable) return ;
+        var keyVal=store.get(key);
+        if(keyVal.length>0){
+            for(var i=0;i<keyVal.length;i++){
+                if(keyVal[i]){
+                    studioChat.setWhTipInfo(keyVal[i]);//未读
+                }
+            }
+        }
+    },
+    whTipStoreUserIdFirst : function(key) {
+        if(!this.enable) return ;
+        if(store.get(key).length){
+            return store.get(key)[0];
+        }
     }
-};
+
+ };
 // 初始化
 $(function() {
     studioChat.init();
