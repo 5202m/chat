@@ -156,7 +156,7 @@ var studioChatMbIdx={
      * 设置广告
      */
     setAdvertisement:function(){
-        this.getArticleList("advertisement","fxstudio_home","0",1,3,'{"sequence":"asc","createDate":"desc"}',function(dataList){
+        this.getArticleList("advertisement","fxstudio_home","0",1,5,'{"sequence":"asc","createDate":"desc"}',function(dataList){
             if(dataList.result==0){
                 var data=dataList.data;
                 for(var i in data){

@@ -473,7 +473,7 @@ var indexJS ={
      * 设置广告
      */
     setAdvertisement:function(){
-        this.getArticleList("advertisement",indexJS.userInfo.groupId,"0",1,3,'{"sequence":"asc","createDate":"desc"}',null,function(dataList){
+        this.getArticleList("advertisement",indexJS.userInfo.groupId,"0",1,5,'{"sequence":"asc","createDate":"desc"}',null,function(dataList){
             if(dataList && dataList.result==0){
                 var data=dataList.data;
                 for(var i in data){
