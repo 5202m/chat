@@ -9,6 +9,7 @@ var studioChat={
     enable : true, //是否使用store
     storeInfoKey : "storeInfo_WhTipMsg",
     whTipIntervalId:{},
+    hasWhTipIntervalId:{},//是否存在提示
     msgType:{
        text:'text' ,
         img:'img',
@@ -359,13 +360,20 @@ var studioChat={
      * @param userId
      */
     setWhTipImgPlay:function(userId){
+        var wh_msg_ftip = 0;
         if($(".wh_msg_ftip").attr('class').indexOf(' have') == -1){
             $(".wh_msg_ftip").attr("uid",userId).attr("k",1).show().addClass("have");
+            wh_msg_ftip = 1;
         }
         $('#userListId li[id='+userId+']').attr("k",1);
-        studioChat.whTipIntervalId[userId]=setInterval(function(){
-            $('#userListId li[id='+userId+'][k=1],.wh_msg_ftip[k=1]').toggleClass("have_op");
-        },1000);
+
+        if(studioChat.hasWhTipIntervalId[userId] == undefined){ //用户发多条信息，保持闪烁频率一致
+            studioChat.whTipIntervalId[userId]=setInterval(function(){
+                $('#userListId li[id='+userId+'][k=1]').toggleClass("have_op");
+                studioChat.hasWhTipIntervalId[userId] = true ;
+                wh_msg_ftip == 1 && $('.wh_msg_ftip[k=1]').toggleClass("have_op"); //总体上闪烁一次
+            },1000);
+        }
     },
     /**
      * 关闭私聊提示
@@ -378,9 +386,9 @@ var studioChat={
             $('.wh_msg_ftip[uid='+userId+']').attr("k",0).removeClass("have have_op");
         }
         if($('#userListId[k=1]').length==0 && $('.wh_msg_ftip[k=1]').length==0){
-            if(studioChat.whTipIntervalId.userId){
-                clearInterval(studioChat.whTipIntervalId.userId);
-                studioChat.whTipIntervalId.userId=null;
+            if(studioChat.whTipIntervalId[userId]){
+                clearInterval(studioChat.whTipIntervalId[userId]);
+                studioChat.whTipIntervalId[userId]=null;
             }
         }
     },
