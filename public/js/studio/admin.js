@@ -389,6 +389,9 @@ var studioChat={
             if(studioChat.whTipIntervalId[userId]){
                 clearInterval(studioChat.whTipIntervalId[userId]);
                 studioChat.whTipIntervalId[userId]=null;
+                if(studioChat.hasWhTipIntervalId[userId]){
+                    studioChat.hasWhTipIntervalId[userId] = null;
+                }
             }
         }
     },
