@@ -5,6 +5,8 @@
 var box={
     verifyCodeIntId:null,
     toRoomId:null,
+    enable : true, //是否使用store
+    storeInfoKey : "storeInfo_VerifyCodeTime",
     /**
      * 方法入口
      */
@@ -23,11 +25,13 @@ var box={
                 this.reset();
             });
         });
+        //继续上一次的获取验证码间隔时间，防刷新
+        this.contVerifyCodeTime();
         //登录相关事件
         this.loginEvent();
         //账号升级事件
         this.upgradeEvent();
-        //专家邮箱事件
+        //专家咨询事件
         this.expertMailEvent();
     },
     /**
@@ -389,6 +393,8 @@ var box={
      */
     setVerifyCodeTime:function(tId){
         var t=parseInt($(tId).attr("t"))||60;
+        var key = this.storeInfoKey + $("#loginForm input[name=mobilePhone]").val();
+        this.enable && store.set(key , t-1);
         if(!this.verifyCodeIntId){
             this.verifyCodeIntId=setInterval("box.setVerifyCodeTime('"+tId+"')",1000);
         }
@@ -434,7 +440,7 @@ var box={
         $(".nk_box,.blackbg").show();
     },
     /**
-     * 专家邮箱相关事件
+     * 专家咨询相关事件
      */
     expertMailEvent:function(){
         $('.expert_box .error').hide();
@@ -536,6 +542,21 @@ var box={
      */
     showTipBox:function(msg){
         $(".tipsbox").fadeIn().delay(1000).fadeOut(200).find(".cont").text(msg);
+    },
+    /**
+     * 防止刷新获取手机验证码
+     */
+    contVerifyCodeTime:function(){
+        var mobile =  $("#loginForm input[name=mobilePhone]").val();
+        if(mobile && this.enable){
+            var key = this.storeInfoKey + mobile;
+            var t = store.get(key);
+            if(t>1){
+                var tId = "#loginForm .rbtn";
+                $(tId).attr("t",t).addClass("pressed");
+                box.setVerifyCodeTime(tId);
+            }
+        }
     }
 };
 // 初始化
