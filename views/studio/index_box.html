@@ -36,10 +36,10 @@
     </div>
 </div>
 
-<!-- 专家邮箱 -->
+<!-- 专家咨询 -->
 <div class="popup_box expert dn">
 	<div class="cont">
-    	<div class="pop_tit">专家邮箱</div>   
+    	<div class="pop_tit">专家咨询</div>
     	<div class="expert_box">
             <div class="set_box b2 clearfix">
             	<div class="set_name">收件人</div>
@@ -52,8 +52,14 @@
             <div class="set_box b2 clearfix">
             	<textarea id="mailContent" placeholder="输入您想对专家说的话~" class="set_textaera"></textarea>
             </div>
+            <div class="set_box b2 clearfix" id="verifyCodeId">
+                <div class="set_name s1">验证码</div>
+                <img alt="验证码">
+                <input id="mailImgCode" type="text" class="set_inp" placeholder="请输入验证码" >
+            </div>
+
             <div class="error"><i></i>输入内容有误，请重新输入！</div>
-            <div class="btnbar"><input id="btnSendMail" type="button" class="set_submit" value="确定"></div>
+            <div class="btnbar"><input id="btnSendMail" type="button" class="set_submit" value="提交"></div>
         </div>
     	<a class="pop_close" href="javascript:"><i>关闭</i></a>
     </div>

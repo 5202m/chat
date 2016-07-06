@@ -440,11 +440,19 @@ var box={
         $(".nk_box,.blackbg").show();
     },
     /**
+     * 提取验证码
+     */
+    refreshVerifyCode:function(){
+        var groupType = LoginAuto.sessionUser['groupType'];
+        $("#verifyCodeId img").attr("src",'/'+groupType+'/getVerifyCode?v='+Math.random());
+    },
+    /**
      * 专家咨询相关事件
      */
     expertMailEvent:function(){
         $('.expert_box .error').hide();
         $('#expert').click(function(){
+            box.refreshVerifyCode();
             $('.expert,.blackbg').removeClass('dn').show();
         });
         /**
@@ -457,11 +465,15 @@ var box={
             else if($.trim($('#mailContent').val())==''){
                 $('.expert_box .error').html('<i></i>输入内容有误，请重新输入！').show();
             }
+            else if($.trim($('#mailImgCode').val())==''){
+                $('.expert_box .error').html('<i></i>验证码不能为空！').show();
+            }
             else{
                 $('.expert_box .error').hide();
                 var param = {};
                 param.content = $.trim($('#mailContent').val());
                 param.email = $.trim($('#mailFrom').val());
+                param.code = $.trim($('#mailImgCode').val());
                 common.getJson('/studio/email', {key:'studio',data: JSON.stringify(param)}, function(result){
                     if(result.isOK){
                         box.showMsg(result.msg);
@@ -482,6 +494,12 @@ var box={
                 $("#btnSendMail").click();
                 return false;
             }
+        });
+        /**
+         * 更新图片验证码
+         */
+        $("#verifyCodeId img").click(function(){
+            box.refreshVerifyCode();
         });
     },
     /**隐藏消息*/

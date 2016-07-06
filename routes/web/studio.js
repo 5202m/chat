@@ -319,6 +319,32 @@ router.get('/getMobileVerifyCode',function(req, res){
     }
 });
 /**
+ * 提取验证码,专家咨询
+ */
+router.get('/getVerifyCode', function(req, res) {
+    console.log(process.platform);
+    if(process.platform.indexOf("win")!=-1){
+        /** 支持win32本地测试验证码
+        var captchapng = require('captchapng');
+        var code = parseInt(Math.random()*9000+1000);
+        var p = new captchapng(80,30,code);
+        p.color(0, 0, 0, 0);
+        p.color(Math.floor(parseInt(Math.random()*100)%255), Math.floor(parseInt(Math.random()*100)%255), Math.floor(parseInt(Math.random()*100)%255), 255);
+        req.session.emailVerifyCode=code;
+        console.log("req.session.emailVerifyCode:"+req.session.emailVerifyCode);
+        res.writeHead(200, { 'Content-Type': 'image/png'});
+        res.end( new Buffer(p.getBase64(),'base64'));
+         **/
+        res.end("");
+    }else{
+        var verifyCodeObj = require("../../util/verifyCode").Generate(50,25);
+        req.session.emailVerifyCode= verifyCodeObj.code;
+        console.log("req.session.emailVerifyCode:"+req.session.emailVerifyCode);
+        res.writeHead(200, {"Content-Type": "image/jpeg"});
+        res.end(new Buffer(verifyCodeObj.dataURL.replace(/^data:image.*base64,/,""),'base64'));
+    }
+});
+/**
  * 直播间登录
  * 1）手机号+验证码直接登陆，如果没有从API中检查用户类型并添加一条记录
  * 2）用户ID登陆
@@ -862,16 +888,21 @@ router.get('/getShortCut', function(req, res) {
 });
 
 /**
- * 专家邮箱发送邮件
+ * 专家咨询发送邮件
  */
 router.post('/email', function(req, res){
     var key = req.body['key'];
     var data = req.body['data'];
+    var code = req.body['code'];
     data = JSON.parse(data);
     if(common.isBlank(data.email)){
         res.json({isOK:false,msg:'请输入发件人！'});
     }else if(common.isBlank(data.content)){
         res.json({isOK:false,msg:'请输入邮件内容！'});
+    }else if(common.isBlank(data.code)) {
+        res.json({isOK:false,msg:'请输入验证码！'});
+    }else if(req.session.emailVerifyCode && data.code != req.session.emailVerifyCode){
+       res.json({isOK:false,msg:'验证码错误，请重新输入！'});
     }else{
         pmApiService.sendEmail(key, data, function(result){
             if(result.result==0){
