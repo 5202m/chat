@@ -135,8 +135,6 @@ var box={
         //当前房间未授权，并且是游客
         if(!indexJS.currStudioAuth && indexJS.userInfo.clientGroup=='visitor'){
             $("#login_a").trigger("click", {closeable : false}); //弹出登录框，隐藏关闭按钮
-        }else{
-            $(".blackbg,#main_ad1_box").show();
         }
         /**
          * 注销
