@@ -427,7 +427,7 @@ var studioChatMbIdx={
      */
     getArticleList:function(code,platform,hasContent,curPageNo,pageSize,orderByStr,callback){
         try{
-            $.getJSON('/wechat/getArticleList',{
+            $.getJSON('/studio/getArticleList',{
                 code:code,
                 platform:platform,
                 hasContent:hasContent,
