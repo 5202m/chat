@@ -38,7 +38,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 /*header*/
 .box-header{width:100%;background:url(../../images/fxstudio/headerbg.png) repeat; height:60px; position:relative;z-index:19999}
 .box-header-in{width:auto;margin:0 auto;height:60px}
-.box-header h1{margin-top:10px; padding-left:20px; background:url(../../images/fxstudio/logotit.png) 20px 0 no-repeat; height:40px;width:310px}
+.box-header h1{margin-top: 11px;padding-left:20px;background: url(../../images/fxstudio/logotit.png) 20px 0 no-repeat;height: 40px;width: 205px;margin-right: 10px;}
 .header-logo{display:block;float:left;width:130px;height:40px}
 .header-btn a{ display:block; width:150px; background:#c49351; float:left; height:35px; line-height:35px; color:#fff; font-size:16px; text-align:center; position:relative; margin-left:20px; border-radius:3px; box-shadow:0 1px 1px rgba(21,78,136,.4); margin-top:15px}
 .header-btn a:hover{ text-decoration:none}
@@ -203,7 +203,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 /*聊天内容*/
 .chat_content{ position:relative; z-index:1; overflow: hidden;}
 .chat_content .scrollbox{ padding:0 20px; position: relative;}
-.boxmask{ background: url(../../images/fxstudio/boxmask.png) 0 0 repeat-x; height: 44px; position: absolute; left: 0; top: 0; width: 100%; z-index: 10 }
+.boxmask{ background: url(../../images/fxstudio/boxmask.png) 0 0 repeat-x; height: 30px; position: absolute; left: 0; top: 0; width: 100%; z-index: 10 }
 .dialoglist {padding-top:15px; z-index:10}
 .dialog{ height:auto; position:relative; padding:0 48px; margin-bottom:17px; width:auto; clear:both; /*z-index:1*/}
 .dialog.showchat{ z-index:2}
@@ -669,6 +669,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .set_submit{ width:100%; display:block; height:47px; line-height:47px; color:#fff; font-size:20px; text-align:center; cursor:pointer; background:#c09355; border-radius:4px;font-family:'Microsoft YaHei'}
 .set_submit:hover{ background:#c58735;}
 .set_box .set_textaera{ width:385px; height:135px; line-height:22px; border:0; padding:5px 10px; color:#444; resize:none; background:none;font-family:'Microsoft YaHei'; }
+.set_box .verify_img{position: absolute; right: 0; top: 0; padding:0 5px;   border-left: 1px solid #e0e0e0; height: 39px;}
 .time_select{ width:260px; position:absolute;right:-1px; height:39px; top:0; cursor:pointer; z-index:10}
 .time_select i {display:block; position:absolute; width:0; height:0; top:16px; right:8px; border-width:8px; border-color:#a7a7a7 transparent transparent transparent ; border-style:solid;}
 .time_select.dw i{  border-color: transparent transparent #a7a7a7 transparent ; top:8px}
@@ -917,7 +918,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .wid3 .left2{ width: 315px; margin-left: -320px; border-right:5px solid #1e2d58;border-right:5px solid rgba(5,15,36,.6);}
 .wid3 .mod_banner, .wid3 .mod_room{ height: 89px; }
 .wid3 .mod_banner img{ height: 89px; margin-left:-20px; width: 355px  }
-.wid3 .box-header h1{padding-left: 10px; }
+.wid3 .box-header h1{ background: url(../../images/studio/logotit-mini.png) 10px center no-repeat; width: 160px; height: 40px;margin-top: 10px; padding-left: 10px; }
 .wid3 .header-btn a{ width: 124px; margin-left: 10px; font-size: 13px;margin-top: 15px; height: 32px;line-height: 32px;}
 .wid3 .chat_content .scrollbox{ padding: 0 10px }
 .wid3 .dialog > p,.wid3 .mymsg p,.wid3 .dialog_reply,.wid3 .dialog_reply span{ font-size: 12px; line-height: 16px; }

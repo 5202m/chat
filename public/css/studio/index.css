@@ -669,6 +669,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .set_submit{ width:100%; display:block; height:47px; line-height:47px; color:#fff; font-size:20px; text-align:center; cursor:pointer; background:#c09355; border-radius:4px;font-family:'Microsoft YaHei'}
 .set_submit:hover{ background:#c58735;}
 .set_box .set_textaera{ width:385px; height:135px; line-height:22px; border:0; padding:5px 10px; color:#444; resize:none; background:none;font-family:'Microsoft YaHei'; }
+.set_box .verify_img{position: absolute; right: 0; top: 0; padding:0 5px;   border-left: 1px solid #e0e0e0; height: 39px;}
 .time_select{ width:260px; position:absolute;right:-1px; height:39px; top:0; cursor:pointer; z-index:10}
 .time_select i {display:block; position:absolute; width:0; height:0; top:16px; right:8px; border-width:8px; border-color:#a7a7a7 transparent transparent transparent ; border-style:solid;}
 .time_select.dw i{  border-color: transparent transparent #a7a7a7 transparent ; top:8px}
