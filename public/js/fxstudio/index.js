@@ -518,7 +518,7 @@ var indexJS ={
                 obj.lastDateTime = null;
             }
         }
-        $.getJSON(indexJS.apiUrl+ '/common/getInformation?t='+indexJS.serverTime, null, function(result){
+        $.getJSON(indexJS.apiUrl+ '/common/getInformation?t='+new Date().getTime(), null, function(result){
             if(result){
                 if(result.isOK) {
                     var itemLenth = result.data.news.item.length;
