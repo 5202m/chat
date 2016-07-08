@@ -154,25 +154,6 @@ var indexJS ={
             $(this).addClass("on");
             $(".mod_main .tabcont .main_tab").removeClass("on").eq(index).addClass("on");
             if(index==1){
-                if (!store.enabled){
-                    console.log('Local storage is not supported by your browser.');
-                    return;
-                }
-                var key='information_count',keyVal=store.get(key);
-                var obj={};
-                if(common.isBlank(keyVal)){
-                    obj.lastDateTime = null;
-                }
-                else{
-                    obj = keyVal;
-                }
-                var pubDateTime = $('#newInfoCount').attr('pt');
-                if($.trim(obj.lastDateTime) != $.trim(pubDateTime)){
-                    obj.lastDateTime = pubDateTime;
-                    store.set(key, obj);
-                    $('#newInfoCount').hide();
-                    return;
-                }
                 indexJS.setInformation();
             }
             if(index==2){
@@ -503,33 +484,17 @@ var indexJS ={
             return;
         }
         var today = common.formatterDate(indexJS.serverTime, '-');
-        if (!store.enabled){
-            console.log('Local storage is not supported by your browser.');
-            return;
-        }
-        var key='information_count',keyVal=store.get(key);
-        var obj={};
-        if(common.isBlank(keyVal)){
-            obj.lastDateTime = null;
-        }
-        else{
-            obj = keyVal;
-            if(!common.isBlank(obj.lastDateTime) && obj.lastDateTime.substring(0,10) != today){
-                obj.lastDateTime = null;
-            }
-        }
         $.getJSON(indexJS.apiUrl+ '/common/getInformation?t='+indexJS.serverTime, null, function(result){
             if(result){
                 if(result.isOK) {
                     var itemLenth = result.data.news.item.length, pt = $('#newInfoCount').attr('pt');
-                    if(obj.lastDateTime == null && !common.isBlank(pt)){
+                    if(!common.isBlank(pt)){
                         $('#newInfoCount').text(itemLenth);
                         $('#newInfoCount').hide();
                     }
-                    $('.mod_main .message_list ul').html('');
                     var pubDateTime = null,newsHtml = '', newsFormatHtml = indexJS.formatHtml('news');
                     $.each(result.data.news.item, function(key, row){
-                        if (obj.lastDateTime != null && obj.lastDateTime == row.pubDate  && !common.isBlank(pt)) {
+                        if (pt == row.pubDate  && !common.isBlank(pt)) {
                             if (key > 0) {
                                 $('#newInfoCount').text(key);
                                 $('#newInfoCount').show();
@@ -538,7 +503,7 @@ var indexJS ={
                                 $('#newInfoCount').hide();
                             }
                         }
-                        else if(obj.lastDateTime != null && row.pubDate > obj.lastDateTime && (key+1) == itemLenth  && !common.isBlank(pt)){
+                        else if(row.pubDate > pt && (key+1) == itemLenth  && !common.isBlank(pt)){
                             $('#newInfoCount').text(itemLenth);
                             $('#newInfoCount').show();
                         }
@@ -549,12 +514,10 @@ var indexJS ={
                             newsHtml += newsFormatHtml.formatStr(row.pubDate.substring(10), row.title);
                         }
                     });
-                    $('.mod_main .message_list .scrollbox ul').prepend(newsHtml);
                     if(common.isValid(newsHtml)) {
-                        newsHtml += $('.mod_main .message_list .scrollbox ul').html();
-                        $('.mod_main .message_list .scrollbox ul').html(newsHtml);
+                        $('.mod_main .message_list .scrollbox ul').prepend(newsHtml);
                     }
-                    if(obj.lastDateTime == pubDateTime) {
+                    if(pt == pubDateTime) {
                         $('#newInfoCount').hide();
                     }
                     indexJS.setListScroll(scrollDom);//设置滚动
