@@ -918,7 +918,7 @@ body{ background:url(../../images/fxstudio/bg.jpg) center 0 no-repeat;font-famil
 .wid3 .left2{ width: 315px; margin-left: -320px; border-right:5px solid #1e2d58;border-right:5px solid rgba(5,15,36,.6);}
 .wid3 .mod_banner, .wid3 .mod_room{ height: 89px; }
 .wid3 .mod_banner img{ height: 89px; margin-left:-20px; width: 355px  }
-.wid3 .box-header h1{ background: url(../../images/studio/logotit-mini.png) 10px center no-repeat; width: 160px; height: 40px;margin-top: 10px; padding-left: 10px; }
+.wid3 .box-header h1{ background: url(../../images/fxstudio/logotit-mini.png) 10px center no-repeat; width: 160px; height: 40px;margin-top: 10px; padding-left: 10px; }
 .wid3 .header-btn a{ width: 124px; margin-left: 10px; font-size: 13px;margin-top: 15px; height: 32px;line-height: 32px;}
 .wid3 .chat_content .scrollbox{ padding: 0 10px }
 .wid3 .dialog > p,.wid3 .mymsg p,.wid3 .dialog_reply,.wid3 .dialog_reply span{ font-size: 12px; line-height: 16px; }
