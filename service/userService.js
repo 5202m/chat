@@ -690,19 +690,24 @@ var userService = {
                     logger.error("getCustomerInfoByMobileNo->error" + error);
                 }
                 if(!error && common.isValid(tmpData)) {
-                    var allData = JSON.parse(tmpData);
-                    var result = allData.result;
-                    if (allData.code == 'SUCCESS' && result && result.length > 0) {
-                        flagResult.flag = 2;//未入金激活
-                        var acc = null;
-                        for(var i = 0, lenI = result ? result.length : 0; i < lenI; i++){
-                            acc = result[i];
-                            flagResult.accountNo = acc.accountNo;
-                            if(acc.accountStatus == "A"){
-                                flagResult.flag = 3;
-                                break;
+                    try{
+                        var allData = JSON.parse(tmpData);
+                        var result = allData.result;
+                        if (allData.code == 'SUCCESS' && result && result.length > 0) {
+                            flagResult.flag = 2;//未入金激活
+                            var acc = null;
+                            for(var i = 0, lenI = result ? result.length : 0; i < lenI; i++){
+                                acc = result[i];
+                                flagResult.accountNo = acc.accountNo;
+                                if(acc.accountStatus == "A"){
+                                    flagResult.flag = 3;
+                                    break;
+                                }
                             }
                         }
+                    }catch(e){
+                        logger.error("getCustomerInfoByMobileNo->error" + error);
+                        flagResult.flag = 0;//没有对应记录
                     }
                 }
                 callback(flagResult);
@@ -710,19 +715,24 @@ var userService = {
         }else{
             request.post({url:(config.goldApiUrl+'/account/getCustomerInfo'), form: {loginname:accountNo}}, function(error,response,tmpData){
                 if(!error && common.isValid(tmpData)) {
-                    var allData = JSON.parse(tmpData);
-                    var result = allData.result;
-                    if (allData.code == 'SUCCESS'&& result!=null) {
-                        if (result.mobilePhone.indexOf(mobile)==-1) {
+                    try{
+                        var allData = JSON.parse(tmpData);
+                        var result = allData.result;
+                        if (allData.code == 'SUCCESS'&& result!=null) {
+                            if (result.mobilePhone.indexOf(mobile)==-1) {
+                                flagResult.flag = 0;//没有对应记录
+                            }  else if (result.accountStatus != 'A') {
+                                flagResult.flag = 2;//未入金激活
+                            } else if (result.isBindWeichat!=1) {
+                                flagResult.flag = 1;//未绑定微信
+                            }else {
+                                flagResult.flag = 3;//绑定微信并且已经入金激活
+                            }
+                        } else {
                             flagResult.flag = 0;//没有对应记录
-                        }  else if (result.accountStatus != 'A') {
-                            flagResult.flag = 2;//未入金激活
-                        } else if (result.isBindWeichat!=1) {
-                            flagResult.flag = 1;//未绑定微信
-                        }else {
-                            flagResult.flag = 3;//绑定微信并且已经入金激活
                         }
-                    } else {
+                    }catch(e){
+                        logger.error("getCustomerInfo->error" + error);
                         flagResult.flag = 0;//没有对应记录
                     }
                 }
