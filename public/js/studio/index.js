@@ -483,7 +483,6 @@ var indexJS ={
         if(!common.isBlank(intervalTime) && indexJS.serverTime - intervalTime < 2*60*1000){
             return;
         }
-        var today = common.formatterDate(indexJS.serverTime, '-');
         $.getJSON(indexJS.apiUrl+ '/common/getInformation?t='+indexJS.serverTime, null, function(result){
             if(result){
                 if(result.isOK) {
@@ -523,7 +522,7 @@ var indexJS ={
                     indexJS.setListScroll(scrollDom);//设置滚动
                     $('#newInfoCount').attr('pt', pubDateTime);
                     if($(".mod_main .tabcont .main_tab").eq(1).hasClass('on')){
-                        $('#newInfoCount').attr('t', indexJS.serverTime);
+                        $('#newInfoCount').attr('t', indexJS.serverTime).hide();
                     }
                 }
             }
