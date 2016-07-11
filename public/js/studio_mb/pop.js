@@ -226,7 +226,7 @@ var studioMbLogin = {
         //手机校验
         $("#loginForm_mb").bind("input propertychange", function(){
             var domBtn=$("#loginForm_vcb");
-            if(parseInt(domBtn.attr("t")) < 60 && domBtn.is(".pressed") == false)
+            if(parseInt(domBtn.attr("t")) < 120 && domBtn.is(".pressed") == false)
             {
                 //倒计时状态不修改样式
                 return;
@@ -301,7 +301,7 @@ var studioMbLogin = {
             clearInterval(studioMbLogin.verifyCodeIntervalId);
             studioMbLogin.verifyCodeIntervalId=null;
         }
-        $("#loginForm_vcb").attr("t",60).val("获取验证码");
+        $("#loginForm_vcb").attr("t",120).val("获取验证码");
         $("#loginForm_mb").trigger("input");
     },
     /**
@@ -309,7 +309,7 @@ var studioMbLogin = {
      */
     setVerifyCodeTime:function(){
         var item = $("#loginForm_vcb");
-        var t=parseInt(item.attr("t"))||60;
+        var t=parseInt(item.attr("t"))||120;
         if(!studioMbLogin.verifyCodeIntervalId){
             studioMbLogin.verifyCodeIntervalId=window.setInterval(studioMbLogin.setVerifyCodeTime,1000);
         }

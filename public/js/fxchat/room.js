@@ -197,7 +197,7 @@ var room={
          */
         $('#loginForm input[name=mobilePhone]')[0].addEventListener("input", function(e) {
             var domBtn=$(this).parents("form").find(".rbtn");
-            if(parseInt(domBtn.attr("t")) < 60 && domBtn.prop("disabled"))
+            if(parseInt(domBtn.attr("t")) < 120 && domBtn.prop("disabled"))
             {
                 //倒计时状态不修改样式
                 return;
@@ -744,7 +744,7 @@ var room={
     setVerifyCodeTime:function(tId,isClear){
         var t=0;
         if(!isClear){
-            t=parseInt($(tId).attr("t"))||60;
+            t=parseInt($(tId).attr("t"))||120;
             if(t>1 && common.isBlank(room.verifyCodeIntervalId)){
                 room.verifyCodeIntervalId=setInterval("room.setVerifyCodeTime('"+tId+"')",1000);
             }
@@ -768,7 +768,7 @@ var room={
         if(common.isMobilePhone($("#loginForm input[name=mobilePhone]").val())){
             disabled=false;
         }
-        $(domId).attr("t",60).attr("disabled",disabled).val("获取验证码");
+        $(domId).attr("t",120).attr("disabled",disabled).val("获取验证码");
     },
     /**
      * 打开登录框

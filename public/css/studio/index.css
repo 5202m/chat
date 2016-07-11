@@ -694,7 +694,7 @@ body{ background:url(../../images/studio/bg.jpg) center 0 no-repeat;font-family:
 .in_line .in1.in2{/*width:255px; float:left*/}
 .in_line .in1.in3{width:197px; float:right; text-align:center; padding-left:0}
 
-.in_line .rbtn { position:absolute; right:0; top:0;width:106px; display:block; border-left:1px solid #e2e2e2; height:18px; text-align:center; color:#2980d1; line-height:18px; font-size:14px; text-decoration:none; margin-top:13px;}
+.in_line .rbtn { position:absolute; right:0; top:0;width:126px; display:block; border-left:1px solid #e2e2e2; height:18px; text-align:center; color:#2980d1; line-height:18px; font-size:14px; text-decoration:none; margin-top:13px;}
 .in_line .rbtn:hover{ text-decoration: underline; }
 .in_line .rbtn.pressed{ color:#999; cursor:default}
 .in_line .frbtn{ position:absolute; right:-85px; top:0;  padding:0 10px; display:block;color:#b59030; line-height:40px; font-size:12pt; }

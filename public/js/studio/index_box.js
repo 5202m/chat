@@ -25,8 +25,8 @@ var box={
                 this.reset();
             });
         });
-        //继续上一次的获取验证码间隔时间，防刷新
-        this.contVerifyCodeTime();
+        //继续上一次的获取验证码间隔时间，防刷新,先注销
+        //this.contVerifyCodeTime();
         //登录相关事件
         this.loginEvent();
         //账号升级事件
@@ -392,7 +392,7 @@ var box={
      * @param tId
      */
     setVerifyCodeTime:function(tId){
-        var t=parseInt($(tId).attr("t"))||60;
+        var t=parseInt($(tId).attr("t"))||120;
         var key = this.storeInfoKey + $("#loginForm input[name=mobilePhone]").val();
         this.enable && store.set(key , t-1);
         if(!this.verifyCodeIntId){
@@ -403,7 +403,7 @@ var box={
         }else{
             clearInterval(this.verifyCodeIntId);
             this.verifyCodeIntId="";
-            $(tId).attr("t",60).html("获取验证码").removeClass("pressed");
+            $(tId).attr("t",120).html("获取验证码").removeClass("pressed");
         }
     },
     /**
@@ -414,7 +414,7 @@ var box={
             clearInterval(this.verifyCodeIntId);
             this.verifyCodeIntId='';
         }
-        $("#loginForm .rbtn").attr("t",60).html("获取验证码").removeClass("pressed");
+        $("#loginForm .rbtn").attr("t",120).html("获取验证码").removeClass("pressed");
     },
     /**
      * 弹出登录框
