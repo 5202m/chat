@@ -469,7 +469,7 @@ var chat={
             if(isNaN(idTmp)){
                 idTmp = 100;
             }
-            idTmp = (idTmp + 17) % 39;
+            idTmp = (idTmp + 17) % 40;
             retObj.aImg = '<img src="' + indexJS.filePath + '/upload/pic/header/chat/visitor/' + idTmp + '.png">';;
             retObj.level='visitor';
         }else{

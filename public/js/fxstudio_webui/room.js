@@ -1198,7 +1198,7 @@ var studioChatMb={
             if(userId && userId.length > 0){
                 idTmp += (userId.charCodeAt(0) + userId.charCodeAt(userId.length - 1));
             }
-            idTmp = (idTmp + 15) % 39;
+            idTmp = (idTmp + 15) % 40;
             return '<img src="' + studioChatMb.filePath + '/upload/pic/header/chat/visitor/' + idTmp + '.png">';
         }else if("notActive"==clientGroup){
             aImgCls="user_r";
@@ -1212,7 +1212,7 @@ var studioChatMb={
             if(isNaN(idTmp)){
                 idTmp = 100;
             }
-            idTmp = (idTmp + 17) % 39;
+            idTmp = (idTmp + 17) % 40;
             return '<img src="' + studioChatMb.filePath + '/upload/pic/header/chat/visitor/' + idTmp + '.png">';
         }else{
             aImgCls="user_c";

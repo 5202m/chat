@@ -550,7 +550,7 @@ var StudioChatMini = {
             if(isNaN(idTmp)){
                 idTmp = 100;
             }
-            idTmp = (idTmp + 17) % 39;
+            idTmp = (idTmp + 17) % 40;
             return '<img src="' + StudioChatMini.filePath + '/upload/pic/header/chat/visitor/' + idTmp + '.png">';
         } else {
             aImgCls = "user_c";
