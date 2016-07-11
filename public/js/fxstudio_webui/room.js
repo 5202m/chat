@@ -366,6 +366,12 @@ var studioChatMb={
                 });
             }
         });
+
+        /**resize*/
+        $(window).resize(function () {
+            studioChatMb.setHeight();
+            studioChatMb.setListScroll($(".mCustomScrollbar"));
+        });
     },
     /**
      * 设置聊天相关事件
