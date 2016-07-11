@@ -322,7 +322,6 @@ router.get('/getMobileVerifyCode',function(req, res){
  * 提取验证码,专家咨询
  */
 router.get('/getVerifyCode', function(req, res) {
-    console.log(process.platform);
     if(process.platform.indexOf("win")!=-1){
         /** 支持win32本地测试验证码
         var captchapng = require('captchapng');
@@ -339,7 +338,6 @@ router.get('/getVerifyCode', function(req, res) {
     }else{
         var verifyCodeObj = require("../../util/verifyCode").Generate(50,25);
         req.session.emailVerifyCode= verifyCodeObj.code;
-        console.log("req.session.emailVerifyCode:"+req.session.emailVerifyCode);
         res.writeHead(200, {"Content-Type": "image/jpeg"});
         res.end(new Buffer(verifyCodeObj.dataURL.replace(/^data:image.*base64,/,""),'base64'));
     }
