@@ -7,7 +7,7 @@ var studioChat={
     filePath:'',
     //信息类型
     enable : true, //是否使用store
-    storeInfoKey : "storeInfo_WhTipMsg",
+    storeInfoKey : "storeWhMsg_",
     whTipIntervalId:{},
     hasWhTipIntervalId:{},//是否存在提示
     msgType:{
@@ -294,7 +294,7 @@ var studioChat={
                     var msgHtml='<div id="'+whId+'" class="wh-tab-msg"><div class="wh-title"><span><label>'+$(this).find("label").text()+'</label>【<strong></strong>】</span><span class="title-tip"></span></div><div class="wh-content"></div>'+
                         '<div class="wh-txt"><div class="toolbar"><a href="javascript:" class="facebtn">表情</a><label for="file_'+whId+'" class="send-wh-img" title="发送图片"></label><input type="file" id="file_'+whId+'" style="position:absolute;clip:rect(0 0 0 0);" class="fileBtn"/></div><div contenteditable="true" class="ctextarea" id="whTxt_'+userId+'" data-placeholder="按回车键发送"></div></div></div>';
                     //取消已读数据提示
-                    studioChat.updateWhTipStore(studioChat.storeInfoKey+studioChat.userInfo.accountNo , userId);
+                    studioChat.updateWhTipStore(studioChat.userStoreInfoKey(studioChat.userInfo) , userId);
                     $(".wh-right").append(msgHtml);
                     //私聊天内容发送事件
                     $("#"+whId).find(".ctextarea").keydown(function(e){
@@ -405,7 +405,7 @@ var studioChat={
      */
     fillWhBox:function(userType,clientGroup,userId,nickname,isTip,isShowNum){
         var whBox=this.getWhBox();
-        var key=this.storeInfoKey+this.userInfo.accountNo;
+        var key=studioChat.userStoreInfoKey(this.userInfo);
         if(whBox.length==0){//私聊框不存在，则初始化私聊框
             studioChat.setWhBox(true);
             studioChat.setWhVisitors(userType,clientGroup,userId,nickname,true,isShowNum);
@@ -1291,7 +1291,7 @@ var studioChat={
             $("#onLineSizeNum").text(dataSize);
             studioChat.setListScroll(".user_box");
             /** 载入未读信息提示 **/
-            studioChat.loadWhTipStore(studioChat.storeInfoKey+studioChat.userInfo.accountNo);
+            studioChat.loadWhTipStore(studioChat.userStoreInfoKey(studioChat.userInfo));
             /** 未读取信息提示结束 **/
         });
         //断开连接
@@ -1407,7 +1407,7 @@ var studioChat={
                         userId=index;
                         studioChat.setWhVisitors(data[index].userType,data[index].clientGroup,index,data[index].nickname,$("#userListId li[id='"+index+"']").length>0);
                     }
-                    var key=studioChat.storeInfoKey+studioChat.userInfo.accountNo;
+                    var key=studioChat.userStoreInfoKey(studioChat.userInfo);
                     studioChat.setWhTipStore(key,userId);
                 }
             }else{//私聊框中每个用户tab对应的私聊信息
@@ -1512,6 +1512,9 @@ var studioChat={
         if(store.get(key).length){
             return store.get(key)[0];
         }
+    },
+    userStoreInfoKey : function(userInfo){
+        return studioChat.storeInfoKey+userInfo.groupId + '_'+userInfo.accountNo;
     }
 
  };
