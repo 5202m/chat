@@ -405,12 +405,13 @@ var studioChat={
      */
     fillWhBox:function(userType,clientGroup,userId,nickname,isTip,isShowNum){
         var whBox=this.getWhBox();
+        var storeUserObj ={'userId':userId , 'userType':userType ,'clientGroup':clientGroup , 'nickname': nickname , 'isShowNum': isShowNum };
         var key=studioChat.userStoreInfoKey(this.userInfo);
         if(whBox.length==0){//私聊框不存在，则初始化私聊框
             studioChat.setWhBox(true);
             studioChat.setWhVisitors(userType,clientGroup,userId,nickname,true,isShowNum);
             if(isTip){
-                studioChat.setWhTipStore(key,userId);
+                studioChat.setWhTipStore(key,storeUserObj);
             }
             return false;
         }else{
@@ -419,7 +420,7 @@ var studioChat={
                 studioChat.setWhVisitors(userType,clientGroup,userId,nickname,true,isShowNum);
                 if(whBox.is(':hidden')){
                     if(isTip) {
-                        studioChat.setWhTipStore(key,userId);
+                        studioChat.setWhTipStore(key,storeUserObj)
                     }
                 }else{
                     return false;
@@ -435,11 +436,11 @@ var studioChat={
                         return false;
                     }
                     if(isTip){
-                        studioChat.setWhTipStore(key,userId);
+                        studioChat.setWhTipStore(key,storeUserObj);
                     }
                 }else{
                     if(!userTab.hasClass("on") && isTip){
-                        studioChat.setWhTipStore(key,userId);
+                        studioChat.setWhTipStore(key,storeUserObj);
                     }
                 }
             }
@@ -690,8 +691,19 @@ var studioChat={
                 $('.visitorDiv ul li[uid='+uid+']').click();
                 wBox.show();
             }else{
-                $('.dialogbtn[uid="'+uid+'"] a.d2').click();
-                $("#newMsgTipBtn").click();
+                if($('.dialogbtn[uid="'+uid+'"] a.d2').size()>0){
+                    $('.dialogbtn[uid="'+uid+'"] a.d2').click(); //如果有列表的触发列表的内容
+                }else{
+                    /**
+                     * 没有直接取缓存离线内容的
+                     */
+                    $("#newMsgTipBtn").click();
+                    if(studioChat.enable){
+                        var userObj = store.get(studioChat.storeInfoKey + uid);
+                        studioChat.setWhVisitors(userObj['userType'],userObj['clientGroup'],userObj['userId'],userObj['nickname'],false,userObj['isShowNum']);
+                        $('.visitorDiv ul li[uid='+uid+']').click();
+                    }
+                }
             }
         });
         /*#################私聊事件#################end*/
@@ -1407,7 +1419,7 @@ var studioChat={
                     }
                     //studioChat.setWhTipInfo(userId);
                     var key=studioChat.userStoreInfoKey(studioChat.userInfo);
-                    studioChat.setWhTipStore(key,userId);
+                    var storeUserObj = {'userId': userId ,'userType': data[index].userType, 'clientGroup':data[index].clientGroup,'nickname':data[index].nickname}
                 }
             }else{//私聊框中每个用户tab对应的私聊信息
                 if(data && $.isArray(data)) {
@@ -1470,15 +1482,17 @@ var studioChat={
             }
         }
         store.set(key , newVal);
+        store.remove(studioChat.storeInfoKey + userId); //删除未读用户信息
     },
     /**
      * 存储私聊未读提示
      * @param key
      * @param keyVal
      */
-    setWhTipStore:function(key , userId){
+    setWhTipStore:function(key , userObj){
         if(!this.enable) return ;
-        if(!userId) return ;
+        if(!userObj['userId']) return ;
+        var userId = userObj['userId'];
         var keyVal=store.get(key);
         if(common.isBlank(keyVal)){
             keyVal = [];
@@ -1489,6 +1503,7 @@ var studioChat={
             }
         }
         store.set(key,keyVal);
+        store.set(studioChat.storeInfoKey + userId,userObj); //可以公用
         studioChat.loadWhTipStore(key);
     },
     /**
