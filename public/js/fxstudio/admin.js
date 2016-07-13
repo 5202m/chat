@@ -6,10 +6,6 @@
 var studioChat={
     filePath:'',
     //信息类型
-    enable : true, //是否使用store
-    storeInfoKey : "storeWhMsg_",
-    whTipIntervalId:{},
-	hasWhTipIntervalId:{},//是否存在提示
     msgType:{
        text:'text' ,
         img:'img',
@@ -19,10 +15,6 @@ var studioChat={
     socketUrl:'',
     userInfo:null,
     init:function(){
-        this.enable = store && store.enabled;
-        if (!this.enable && console){
-            console.log('Local storage is not supported by your browser.');
-        }
         this.setEvent();
         this.setSocket();
         this.setVideo();
@@ -293,8 +285,6 @@ var studioChat={
                 if($("#"+whId).length==0){
                     var msgHtml='<div id="'+whId+'" class="wh-tab-msg"><div class="wh-title"><span><label>'+$(this).find("label").text()+'</label>【<strong></strong>】</span><span class="title-tip"></span></div><div class="wh-content"></div>'+
                         '<div class="wh-txt"><div class="toolbar"><a href="javascript:" class="facebtn">表情</a><label for="file_'+whId+'" class="send-wh-img" title="发送图片"></label><input type="file" id="file_'+whId+'" style="position:absolute;clip:rect(0 0 0 0);" class="fileBtn"/></div><div contenteditable="true" class="ctextarea" id="whTxt_'+userId+'" data-placeholder="按回车键发送"></div></div></div>';
-                    //取消已读数据提示
-                    studioChat.updateWhTipStore(studioChat.userStoreInfoKey(studioChat.userInfo) , userId);
                     $(".wh-right").append(msgHtml);
                     //私聊天内容发送事件
                     $("#"+whId).find(".ctextarea").keydown(function(e){
@@ -360,38 +350,22 @@ var studioChat={
      * @param userId
      */
     setWhTipImgPlay:function(userId){
-        var wh_msg_ftip = 0;
-        if($(".wh_msg_ftip").attr('class').indexOf(' have') == -1){
-            $(".wh_msg_ftip").attr("uid",userId).attr("k",1).show().addClass("have");
-            wh_msg_ftip = 1;
-        }
+        $(".wh_msg_ftip").attr("uid",userId).attr("k",1).show().addClass("have");
         $('#userListId li[id='+userId+']').attr("k",1);
-
-        if(studioChat.hasWhTipIntervalId[userId] == undefined){ //用户发多条信息，保持闪烁频率一致
-            studioChat.whTipIntervalId[userId]=setInterval(function(){
-                $('#userListId li[id='+userId+'][k=1]').toggleClass("have_op");
-                studioChat.hasWhTipIntervalId[userId] = true ;
-                wh_msg_ftip == 1 && $('.wh_msg_ftip[k=1]').toggleClass("have_op"); //总体上闪烁一次
-            },1000);
-        }
+        studioChat.whTipIntervalId=setInterval(function(){
+            $('#userListId li[k=1],.wh_msg_ftip[k=1]').toggleClass("have_op");
+        },1000);
     },
     /**
      * 关闭私聊提示
      */
     closeWhTipMsg:function(userId){
+        $('.wh_msg_ftip[uid='+userId+']').attr("k",0).removeClass("have have_op");
         $('#userListId li[id='+userId+']').attr("k",0).removeClass("have_op");
-        if($('#userListId [k=1]').length>0){
-            $('.wh_msg_ftip').attr("uid",$('#userListId [k=1]:first').attr('id'));
-        }else{
-            $('.wh_msg_ftip[uid='+userId+']').attr("k",0).removeClass("have have_op");
-        }
         if($('#userListId[k=1]').length==0 && $('.wh_msg_ftip[k=1]').length==0){
-            if(studioChat.whTipIntervalId[userId]){
-                clearInterval(studioChat.whTipIntervalId[userId]);
-                studioChat.whTipIntervalId[userId]=null;
-                if(studioChat.hasWhTipIntervalId[userId]){
-                    studioChat.hasWhTipIntervalId[userId] = null;
-                }
+            if(studioChat.whTipIntervalId){
+                clearInterval(studioChat.whTipIntervalId);
+                studioChat.whTipIntervalId=null;
             }
         }
     },
@@ -405,13 +379,11 @@ var studioChat={
      */
     fillWhBox:function(userType,clientGroup,userId,nickname,isTip,isShowNum){
         var whBox=this.getWhBox();
-        var storeUserObj ={'userId':userId , 'userType':userType ,'clientGroup':clientGroup , 'nickname': nickname , 'isShowNum': isShowNum };
-        var key=studioChat.userStoreInfoKey(this.userInfo);
         if(whBox.length==0){//私聊框不存在，则初始化私聊框
             studioChat.setWhBox(true);
             studioChat.setWhVisitors(userType,clientGroup,userId,nickname,true,isShowNum);
             if(isTip){
-                studioChat.setWhTipStore(key,storeUserObj);
+                studioChat.setWhTipInfo(userId);
             }
             return false;
         }else{
@@ -420,7 +392,7 @@ var studioChat={
                 studioChat.setWhVisitors(userType,clientGroup,userId,nickname,true,isShowNum);
                 if(whBox.is(':hidden')){
                     if(isTip) {
-                        studioChat.setWhTipStore(key,storeUserObj)
+                        studioChat.setWhTipInfo(userId);
                     }
                 }else{
                     return false;
@@ -436,11 +408,11 @@ var studioChat={
                         return false;
                     }
                     if(isTip){
-                        studioChat.setWhTipStore(key,storeUserObj);
+                        studioChat.setWhTipImgPlay(userId);
                     }
                 }else{
                     if(!userTab.hasClass("on") && isTip){
-                        studioChat.setWhTipStore(key,storeUserObj);
+                        studioChat.setWhTipImgPlay(userId);
                     }
                 }
             }
@@ -646,7 +618,7 @@ var studioChat={
         jqWindowsEngineZIndex=100000;
         $("#newMsgTipBtn").click(function(){
             var uid=$(this).attr("uid");
-            //studioChat.closeWhTipMsg(uid);
+            studioChat.closeWhTipMsg(uid);
             var wBox=studioChat.getWhBox();
             if(wBox.length>0){
                 wBox.show();
@@ -685,25 +657,13 @@ var studioChat={
         });
         $(".wh_msg_ftip").click(function(){
             var uid=$(this).attr("uid");
-            //studioChat.closeWhTipMsg(uid);
+            studioChat.closeWhTipMsg(uid);
             var wBox=studioChat.getWhBox();
             if(wBox.length>0){
                 $('.visitorDiv ul li[uid='+uid+']').click();
                 wBox.show();
             }else{
-                if($('.dialogbtn[uid="'+uid+'"] a.d2').size()>0){
-                    $('.dialogbtn[uid="'+uid+'"] a.d2').click(); //如果有列表的触发列表的内容
-                }else{
-                    /**
-                     * 没有直接取缓存离线内容的
-                     */
-                    $("#newMsgTipBtn").click();
-                    if(studioChat.enable){
-                        var userObj = store.get(studioChat.storeInfoKey + uid);
-                        studioChat.setWhVisitors(userObj['userType'],userObj['clientGroup'],userObj['userId'],userObj['nickname'],false,userObj['isShowNum']);
-                        $('.visitorDiv ul li[uid='+uid+']').click();
-                    }
-                }
+                $("#newMsgTipBtn").click();
             }
         });
         /*#################私聊事件#################end*/
@@ -1239,7 +1199,7 @@ var studioChat={
         if(common.isValid(dialogHtml)){
             $("#userListId li[id="+row.userId+"] a[t=header]").click(function(){
                 var pt=$(this).parent();
-                //studioChat.closeWhTipMsg(pt.attr("id"));
+                studioChat.closeWhTipMsg(pt.attr("id"));
                 $('.dialogbtn').hide();
                 $('.user_box li').removeClass('zin');
                 pt.addClass('zin');
@@ -1300,9 +1260,6 @@ var studioChat={
             }
             $("#onLineSizeNum").text(dataSize);
             studioChat.setListScroll(".user_box");
-            /** 载入未读信息提示 **/
-            studioChat.loadWhTipStore(studioChat.userStoreInfoKey(studioChat.userInfo));
-            /** 未读取信息提示结束 **/
         });
         //断开连接
         this.socket.on('disconnect',function(e){
@@ -1417,9 +1374,7 @@ var studioChat={
                         userId=index;
                         studioChat.setWhVisitors(data[index].userType,data[index].clientGroup,index,data[index].nickname,$("#userListId li[id='"+index+"']").length>0);
                     }
-                    //studioChat.setWhTipInfo(userId);
-                    var key=studioChat.userStoreInfoKey(studioChat.userInfo);
-                    var storeUserObj = {'userId': userId ,'userType': data[index].userType, 'clientGroup':data[index].clientGroup,'nickname':data[index].nickname}
+                    studioChat.setWhTipInfo(userId);
                 }
             }else{//私聊框中每个用户tab对应的私聊信息
                 if(data && $.isArray(data)) {
@@ -1464,71 +1419,6 @@ var studioChat={
         }else{
             studioChat.setContent({fromUser: fromUser,content:row.content},false,true);
         }
-    },
-    /**
-     * 更新私聊未读提示
-     * @param key
-     */
-    updateWhTipStore:function(key , userId){
-        if(!this.enable) return ;
-        //取消已读数据
-        var keyVal=store.get(key);
-        var newVal = [] ;
-        for(var i=0;i<keyVal.length;i++){
-            if(keyVal[i] == userId){
-                delete keyVal[i]; //还会留下空
-            }else if(keyVal[i]){
-                newVal.push(keyVal[i]) ;//新数据
-            }
-        }
-        store.set(key , newVal);
-        store.remove(studioChat.storeInfoKey + userId); //删除未读用户信息
-    },
-    /**
-     * 存储私聊未读提示
-     * @param key
-     * @param keyVal
-     */
-    setWhTipStore:function(key , userObj){
-        if(!this.enable) return ;
-        if(!userObj['userId']) return ;
-        var userId = userObj['userId'];
-        var keyVal=store.get(key);
-        if(common.isBlank(keyVal)){
-            keyVal = [];
-            keyVal.push(userId);
-        }else{
-            if($.inArray(userId , keyVal) == -1){
-                keyVal.push(userId);
-            }
-        }
-        store.set(key,keyVal);
-        store.set(studioChat.storeInfoKey + userId,userObj); //可以公用
-        studioChat.loadWhTipStore(key);
-    },
-    /**
-     * 载入私聊未读提示
-     * @param key
-     */
-    loadWhTipStore:function(key) {
-        if(!this.enable) return ;
-        var keyVal=store.get(key);
-        if(keyVal.length>0){
-            for(var i=0;i<keyVal.length;i++){
-                if(keyVal[i]){
-                    studioChat.setWhTipInfo(keyVal[i]);//未读
-                }
-            }
-        }
-    },
-    whTipStoreUserIdFirst : function(key) {
-        if(!this.enable) return ;
-        if(store.get(key).length){
-            return store.get(key)[0];
-        }
-    },
-    userStoreInfoKey : function(userInfo){
-        return studioChat.storeInfoKey+userInfo.groupId + '_'+userInfo.accountNo;
     }
 };
 // 初始化
