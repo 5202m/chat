@@ -314,7 +314,7 @@ var studioMbLogin = {
             studioMbLogin.verifyCodeIntervalId=window.setInterval(studioMbLogin.setVerifyCodeTime,1000);
         }
         if(t>1){
-            item.attr("t",t-1).val((t-1)+"秒后重新获取");
+            item.attr("t",t-1).val("重新获取(" + (t-1) + ")");
         }else{
             studioMbLogin.resetVerifyCode();
         }

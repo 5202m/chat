@@ -328,7 +328,7 @@ var box={
             this.verifyCodeIntId=setInterval("box.setVerifyCodeTime('"+tId+"')",1000);
         }
         if(t>1){
-            $(tId).attr("t",t-1).html((t-1)+"秒后重新获取");
+            $(tId).attr("t",t-1).html("重新获取(" + (t-1) + ")");
         }else{
             clearInterval(this.verifyCodeIntId);
             this.verifyCodeIntId="";
