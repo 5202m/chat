@@ -1,0 +1,338 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta content="always" name="referrer">
+    <meta charset="utf-8"/>
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>视频直播间 - 金道贵金属打造在线贵金属实盘直播室，掘金之旅在此起航！</title>
+    <meta content="实盘直播,贵金属实盘直播室,金道贵金属实盘直播,金道贵金属" name="keywords">
+    <meta content="金道贵金属打造在线贵金属实盘直播室，金道研究院名家观点即时播报，让您的掘金之旅在此起航！携手金道，生金有道！" name="description">
+    <link href="/base/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+    <link href="/base/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
+    <link href="/base/lib/lightbox/lightbox.css" type="text/css" rel="stylesheet"/>
+    <link href="/base/lib/swipe/swiper.min.css"  type="text/css" rel="stylesheet" />
+    <link href="/base/lib/face/face.css" type="text/css" rel="stylesheet" />
+    <link href="/pm/theme1/css/index<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" type="text/css" rel="stylesheet" />
+    <link href="/base/lib/pikaday/pikaday.min.css" type="text/css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <link href="/pm/theme1/css/studioIE.css" rel="stylesheet" type="text/css">
+    <![endif]-->
+    <script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="/base/lib/store.min.js"></script>
+    <!-- 自动登录 begin -->
+    <script type="text/javascript" src="/pm/theme1/js/loginAuto.js"></script>
+    <script>
+        LoginAuto.sessionUser = JSON.parse('<%- userInfo %>');
+        LoginAuto.init();
+    </script>
+</head>
+<body class="">
+<!-- header begin -->
+<div class="box-header">
+  <div class="box-header-in clearfix">
+      <h1 class="fl hide-t">金道贵金属</h1>
+      <div class="header-btn fl">
+      	<a href="http://oa.24k.hk/zh/realaccount_open.html?utm_source=studio&utm_medium=yy&utm_content=TOP&utm_campaign=realaccount_open" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','open_real_account', 'content_top',1,true]);"><i class="real"></i><span>真实交易开户</span></a>
+        <a href="http://oa.24k.hk/zh/account_02.html?utm_source=studio&utm_medium=yy&utm_content=TOP&utm_campaign=account_02" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','open_demo_account', 'content_top',1,true]);"><i class="mn"></i><span>模拟交易开户</span></a>
+      </div>
+      <div class="header-right fr clearfix">
+       	<ul>
+        <li class="cursor">
+            <a href="javascript:" class="toplink">
+                <span>课程安排</span><b class="arr"></b>
+            </a>
+        	<div class="dropcont">
+            	<div class="cont">
+                	<!--<a href="javascript:" class="on noticebtn"><i></i><span>上课通知</span>--></a>
+                    <div class="clearfix"></div>
+                	<div class="course_nav"></div>
+                </div>
+            </div>
+        </li>
+        <li class="notice">
+    	    <a href="javascript:" class="toplink">
+                <span>公告</span><b class="arr"></b>
+            </a>
+	        <div class="dropcont">
+            	<div class="cont" id="bulletinTab">
+                	<strong></strong>
+                    <p></p>
+                </div>
+            </div>
+        </li>
+        <li id="saveToDesktop">
+            <a href="javascript:" class="toplink" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','header_shortCut','content_top',1,true]);">
+                <span>添加到桌面</span>
+            </a>
+        </li>
+        <li id="expert">
+            <a href="javascript:" class="toplink" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','header_expert','content_top',1,true]);">
+                <span>专家咨询</span>
+            </a>
+        </li>
+        <li id="qqcs">
+            <a href="javascript:" class="toplink" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','header_qqcs','content_top',1,true]);">
+                <span>QQ客服</span>
+            </a>
+        </li>
+        <%if(userSession.isLogin){%>
+            <li class="user"><a href="javascript:" class="toplink"><span><strong class="username"><%= userSession.nickname || "匿名_xxx" %></strong></span><b class="arr"></b></a>
+                <div class="dropcont">
+                    <div class="cont">
+                        <div class="per_info">
+                            <div class="per_item clearfix p1">
+                                <div class="headimg"><img src="<%= userSession.avatar || '/pm/theme1/img/user.png' %>" id="avatarInfoId" style="width:100%;"></div>
+                                <span class="username"><%= userSession.nickname || "匿名_xxx" %></span>
+                                <a href="javascript:" id="modifyAvatar">修改头像</a>
+                                <form method="post" enctype='multipart/form-data' id="fileForm" name="fileForm" style="display: none;">
+                                    <input type="file" name="file" />
+                                    <input type="hidden" name="fileDir" value="pic/header/chat/front"/>
+                                </form>
+                            </div>
+                            <div class="per_item clearfix">
+                                <span>账号：<strong><%= userSession.mobilePhone %></strong></span>
+                                <!--<a href="">修改密码</a>-->
+                            </div>
+                            <div class="per_item clearfix">
+                                <span class="level">等级：
+                                    <%if('vip'==userSession.clientGroup){%>
+                                        <strong>VIP</strong><i class="l4"></i>
+                                    <%} else if('active'==userSession.clientGroup) {%>
+                                        <strong>真实[A]</strong><i class="l3"></i>
+                                    <%} else if('notActive'==userSession.clientGroup) {%>
+                                        <strong>真实[N]</strong><i class="l3"></i>
+                                    <%} else if('simulate'==userSession.clientGroup) {%>
+                                        <strong>模拟</strong><i class="l2"></i>
+                                    <%} else if('register'==userSession.clientGroup) {%>
+                                        <strong>注册</strong><i class="l1"></i>
+                                    <%} else {%>
+                                        <strong>游客</strong>
+                                    <%}%>
+                                </span>
+                                <a href="javascript:" class="tipbtn" id="tipbtnId"><i></i></a><a href="javascript:" class="upgradebtn">升级</a>
+                                <div class="upg_tip dn"><i></i>直播间等级由高至低包括<strong>V、R、D、M、游客</strong>，等级愈高，拥有的权限亦愈多</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li><a href="javascript:" class="toplink last logout"><span>注销</span></a></li>
+        <%} else {%>
+            <li><a href="javascript:" class="toplink last" id="login_a" tp="content_top"><span>登录</span></a></li>
+        <%}%>
+        </ul>
+      </div>
+  </div>
+</div>
+
+<!-- header end -->
+
+<!-- mod_menu begin -->
+<% include index_tool.html %>
+<!-- mod_menu end -->
+
+<!-- wrapper begin -->
+<div class="wrapper clearfix">
+	<div class="left_row clearfix">
+    	<div class="left_cont">
+    	<div class="left1">
+            <!-- 视频模块 -->
+            <% include index_video.html %>
+        </div>
+        <div class="left2">
+        	<div class="mod_banner swiper-container">
+            	<ul class="ban_ul swiper-wrapper"></ul>
+                <div id="mod_position" class="dot-infobox"></div>
+                <div class="radius_tool">
+                    <i class="topl"></i>
+                    <i class="topr"></i>
+                    <i class="botl"></i>
+                    <i class="botr"></i>
+                </div>
+            </div>
+            <div class="mod_main">
+            	<div class="tabnav">
+                    <a href="javascript:" class="on">聊天</a>
+                    <a href="javascript:">快讯<sup id="newInfoCount" style="display:none;"></sup></a>
+                    <a href="javascript:" style="display:none;">实盘策略</a>
+                </div>
+                <div class="tabcont">
+                    <!-- 聊天模块 -->
+                    <% include index_chat.html %>
+                    <div class="main_tab">
+                    	<div class="message_list">
+                        	<div class="scrollbox">
+                        		<ul></ul>
+                            </div>
+                            <div class="boxmask"></div>
+                    	</div>
+                    </div>
+                    <div class="main_tab">
+                    	<div class="guidelist" id="guidelist">
+                        	<div class="scrollbox">
+                        		<ul></ul>
+                        		<a class="loadmore" href="">查看更多</a>
+                        	</div>
+                        	<div class="boxmask"></div>
+                    	</div>
+                    </div>
+                </div>
+                <div class="radius_tool">
+                    <i class="topl"></i>
+                    <i class="topr"></i>
+                    <i class="botl"></i>
+                    <i class="botr"></i>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="right_row clearfix">
+        <div class="mod_room">
+            <% if (studioList!='[]') { %>
+            <% studioList.forEach(function(row,index){  if(row.isCurr) {%>
+            <div class="titbar clearfix">
+                   <span id="roomInfoId" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>"><%= row.name %><i class="off"></i></span>
+                   <div class="changeroom"><a href="javascript:" class="roomctrl"><i></i><span>切换房间</span></a>
+                	<div class="rooms">
+                        <% studioList.forEach(function(rowIn,indexIn){ if(row.id!=rowIn.id) {%>
+                            <div class="rbox" rid="<%= rowIn.id %>"> <!--last-->
+                                <div class="rbox_top">
+                                    <span class="rname"><%= rowIn.name %><i></i></span>
+                                    <span class="peo_num" title="在线人数"><i></i><label></label></span>
+                                    <a href="javascript:" class="enterbtn" rid="<%= rowIn.id %>" cgs="<%= rowIn.clientGroup %>" aw="<%= rowIn.allowWhisper %>" awr="<%= rowIn.whisperRoles %>"  av="<%= rowIn.allowVisitor %>">进入</a>
+                                </div>
+                                <div class="info">
+                                    <span>主讲人：<label class="nk"></label></span>
+                                    <span>直播时间：<label class="st"></label></span>
+                                    <span>房间介绍</span>
+                                    <p><%= rowIn.remark %></p>
+                                </div>
+                            </div>
+                        <% }}); %>
+                        <i class="arr"></i>
+                    </div>
+                    </div>
+            </div>
+            <div class="cont">
+            	<div class="room-info">
+	                <span class="tit">房间简介</span>
+	                <p><%= row.remark %></p>
+	            </div>
+            </div>
+            <% }}); %>
+            <% } %>
+            <div class="radius_tool">
+                <i class="topl"></i>
+                <i class="topr"></i>
+                <i class="botl"></i>
+                <i class="botr"></i>
+            </div>
+        </div>
+        <div class="mod_userlist">
+            <div class="titbar">
+                <span>用户列表<i>(<label></label>)</i></span>
+            </div>
+            <div class="cont">
+                <div class="user_box scrollbox">
+                <ul id="userListId"></ul>
+                </div>
+            </div>
+            <div class="radius_tool">
+                <i class="topl"></i>
+                <i class="topr"></i>
+                <i class="botl"></i>
+                <i class="botr"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- wrapper end -->
+<!-- 各种弹窗 -->
+<% include index_box.html %>
+<script type="text/javascript" src="/base/lib/socket.io.js"></script>
+<script type="text/javascript" src="/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript" src="/base/lib/lightbox/lightbox.min.js"></script>
+<script type="text/javascript" src="/base/lib/jqueryUI/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/base/lib/swipe/swiper.min.js"></script>
+<script type="text/javascript" src="/base/lib/websocket.min.js"></script>
+<script type="text/javascript" src="/base/lib/jquery.xdomainrequest.min.js"></script>
+<script type="text/javascript" src="/base/lib/lazyload/lazyload.min.js"></script>
+<script type="text/javascript" src="/base/lib/flowplayer/flowplayer.min.js"></script>
+<% if(isDevTest) { %>
+<script type="text/javascript" src="/base/lib/newquote.js"></script>
+<script type="text/javascript" src="/base/lib/jquery.face.js"></script>
+<script type="text/javascript" src="/base/util/common.js"></script>
+<script type="text/javascript" src="/base/util/chatAnalyze.js"></script>
+<script type="text/javascript" src="/pm/theme1/js/index.js"></script>
+<script type="text/javascript" src="/pm/theme1/js/index_chat.js"></script>
+<script type="text/javascript" src="/pm/theme1/js/index_video.js"></script>
+<script type="text/javascript" src="/pm/theme1/js/index_box.js"></script>
+<script type="text/javascript" src="/pm/theme1/js/index_tool.js"></script>
+<% }else{ %>
+<script type="text/javascript" src="/pm/theme1/js/index.min.js?t=<%=new Date().getTime()%>"></script>
+<% }%>
+<script type="text/javascript">
+    indexJS.fromPlatform='<%- fromPlatform%>';
+    indexJS.apiUrl='<%= apiUrl %>';
+    indexJS.userInfo=JSON.parse('<%- userInfo %>');
+    indexJS.serverTime=Number('<%= serverTime %>');
+    indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
+    indexJS.filePath='<%= filePath %>';
+    indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
+    indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
+    indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
+    function widthCheck(){
+        var ww = $(window).width();
+        if(ww <= 1680 ){
+            $('body').addClass('wid1');
+            if(ww < 1440 ){
+                $('body').addClass('wid2');
+                if(ww < 1281 ){
+                    $('body').addClass('wid3')
+                }
+            }
+        }
+        if(ww >1680){
+            $('body').removeClass('wid1');
+            $('body').removeClass('wid2');
+            $('body').removeClass('wid3');
+        }
+    }
+    function heightCalcu() {
+        var hh = $(window).height(), hh_banner = $('.mod_banner').height();
+        var hh_room = $('.mod_room').height();
+        $('.mod_main .tabcont').height(hh - hh_banner - 115);
+        $('.mod_video').height(hh - $(".mod_videolist").height() - 70);
+        var hTmp = $(".mod_videolist .listcont").height();
+        $('.mod_videolist .list_tab').height(hTmp - 30);
+        $('.mod_videolist .sd_show').height(hTmp - 40);
+        $('.mod_userlist .scrollbox').height(hh - hh_room - 115);
+        $('.mod_menu').height(hh - 70);
+        $('.calendar_ul.scrollbox2').height(hh - 165);
+        $('.ppt_list').height(hh - 101);
+        $('.main_tab .scrollbox:gt(0)').height(hh - hh_banner - 115);
+        $('#chatMsgContentDiv').height(hh - hh_banner - 115 - $(".chat_input").height());
+        $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
+    }
+    widthCheck();
+    heightCalcu();
+    $(function() {
+        $(window).resize(function (e) {
+            widthCheck();
+            heightCalcu();
+        });
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'disableScrolling':true,
+            'positionFromTop':50,
+            'albumLabel':"%1 of %2"
+        });
+    });
+</script>
+</body>
+</html>

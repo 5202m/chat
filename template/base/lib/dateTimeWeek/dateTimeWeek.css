@@ -1,0 +1,15 @@
+.date-time-week-body{
+    height:180px;
+    overflow:auto;
+}
+.date-time-week{
+  border-bottom: 1px solid #D0D0D0;
+  padding: 2px 0 2px 0px;
+}
+.date-time-week-each{
+  padding: 2px 0 2px 0px;
+}
+.date-time-week label{
+  vertical-align: middle;
+  margin-right:6px;
+}

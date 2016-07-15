@@ -1,0 +1,10 @@
+.chat{ background:url(../img/bg3.png) repeat;}
+.mymsg{ background:url(../img/bg_msg.png) repeat;}
+.mod_left1{ background:#dfe1e3}
+.mod_video,.mod_notice,.te_list .jt_btn{background:url(../img/bg1.png) repeat;}
+.mod_tab{ background:#c7c8cb}
+.mod_tab .tabcont{ *padding-top:0}
+.te_ctrl a,.view_select .se_cont{background:url(../img/black20.png) repeat;}
+.te_ctrl a:hover,.view_select.dw .se_cont,.blackbg{background:url(../img/black40.png) repeat;}
+.input_area .sendbtn{ margin-top:-51px}
+.mod_video .vbackbtn{ background:#5b4818}

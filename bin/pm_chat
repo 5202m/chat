@@ -1,0 +1,66 @@
+﻿#!/usr/bin/env node
+var cluster = require('cluster'),numCPUs = require('os').cpus().length;
+var config=require('../resources/config');//资源文件
+if(!global.memored){//引入全局内存块，以便多进程多端口共享数据
+    global.memored=require('memored');
+}
+numCPUs=config.clusterWorkCount>=numCPUs?(numCPUs>2?numCPUs-1:numCPUs):config.clusterWorkCount;//结合clusterWorkCount分配实际可开启的进程数
+//如果是主进程，负责分配工作进程
+if (cluster.isMaster) {
+    console.log("The Master Start....");
+    for (var i = 1; i <= numCPUs; i++) {
+        cluster.fork();
+    }
+    cluster.on('listening',function(worker,address){
+        console.log('Listening: worker process pid ' + worker.process.pid +', Port:'+address.port);
+    });
+    cluster.on('exit', function(worker, code, signal) {
+        console.log('Worker process pid ' + worker.process.pid + ' died');
+    });
+    process.on('SIGINT', function() {
+        setTimeout(function() {//1秒钟后停止进程
+            console.log('1s later the main process kill',process.pid);
+            process.exit(0);//退出进程
+        }, 1000);
+    });
+} else {//工作进程处理各自任务
+    console.log('The Worker Start[workId:' + cluster.worker.id+']');
+    var mongoose = require('mongoose');
+    var logger=require('../resources/logConf');//日志文件
+    /*＃＃＃＃＃＃＃＃＃＃数据库连接配置＃＃＃＃＃＃＃＃begin */
+    var dbOptions = {
+        server: {auto_reconnect: true, poolSize: 5 },
+        user: config.dbUserName,
+        pass: config.dbUserPWD
+    };
+    mongoose.connect(config.dbURL,dbOptions);
+    /*＃＃＃＃＃＃＃＃＃＃数据库连接配置＃＃＃＃＃＃＃＃end */
+    var app =null,chatWebServer=null,chatSocketServer=null;
+    if (cluster.worker.id==1) {//单进程处理（针对不支持WebSocket）交给id号为1的工作进程处理
+        app=require('express')();
+        chatSocketServer=app.listen('3003', function() {
+            console.log('Chat socket one server running. Listening on port 3003');
+        });
+        //监听pm2停止进程,释放资源，同步缓存数据到db等操作
+        process.on('SIGINT', function() {
+            require("../service/chatService").clearAllData(function () {
+                console.log('Synch data and clearing cache success!');
+            });
+            setTimeout(function() {//500毫秒钟后停止进程
+                console.log('500ms later the child process kill',process.pid);
+                process.exit(0);//退出进程
+            }, 500);
+        });
+    }else{//多进程处理（针对支持WebSocket）
+        app = require('../app');
+        chatWebServer = app.listen('3001', function () {
+            console.log('Chat web multi server running. Listening on port 3001');
+        });
+        chatSocketServer=app.listen('3002', function() {
+            console.log('Chat socket multi server running. Listening on port 3002');
+        });
+    }
+    logger.use(app);//配置框架日志输出
+    require("../routes/chatServer").start(chatSocketServer);//启动socket
+}
+

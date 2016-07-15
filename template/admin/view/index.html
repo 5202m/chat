@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <title>后台聊天室</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <link href="/base/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet" />
+    <link href="/admin/css/index<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" rel="stylesheet" />
+    <script type="text/javascript" src="/base/lib/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="/base/lib/jqueryUI/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/base/util/common<%=isDevTest? '.js' : ('.min.js?t=' + new Date().getTime())%>"></script>
+    <script type="text/javascript" src="/admin/js/index<%=isDevTest? '.js' : ('.min.js?t=' + new Date().getTime())%>"></script>
+    <script type="text/javascript">
+        index.isNw = <%=isNw%>;
+    </script>
+  </head>
+  <body>
+    <% if(isLogin){ %>
+    <div class="main">
+        <div class="left_row clearfix">
+            <div class="left1">
+                <div class="mod_left1">
+                    <div class="title">
+                        <h3 class="title">后台聊天室</h3>
+                        <a href="javascript:" title="退出登录" <%= isNw?' style=display:none':''%>></a>
+                    </div>
+                    <div class="teacher">
+                        <div class="te_l"><a href="javascript:"><img src="<%= teacher.avatar %>"/></a></div>
+                        <div class="te_r"><div><span><%= teacher.nickname %></span></div><div style="margin-top:4px;"><span><%= teacher.position %></span></div></div>
+                    </div>
+                    <div class="lst_p">
+                        <% if(chatGroup != null){ %>
+                        <% chatGroup.forEach(function(row,index){ %>
+                        <div class="rm_p">
+                            <label><i class="rm_img"></i><%=row.nameCN %></label>
+                            <ul class="rm_list">
+                                <% if(rooms != null){%>
+                                <% rooms.forEach(function(room,i){%>
+                                <% if(row.code == room.groupType){%>
+                                <li class="" t="<%=room.groupType%>" r="<%=room._id %>"><i></i><span><%= room.name %></span></li>
+                                <% } %>
+                                <% }) %>
+                                <% } %>
+                            </ul>
+                        </div>
+                        <% }) %>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% if(isNw){%>
+    <script type="text/javascript">
+        $(function(){
+            try {
+                var gui = require('nw.gui');
+                index.currNwWin = gui.Window.get();
+                index.currNwWin.resizeTo(255, 590);
+                index.currNwWin.setMinimumSize(255, 590);
+                index.currNwWin.setMaximumSize(255, 590);
+                index.currNwWin.on('restore',function(){
+                    index.currNwWin.resizeTo(255, 590);
+                    index.currNwWin.setMinimumSize(255, 590);
+                    index.currNwWin.setMaximumSize(255, 590);
+                });
+                index.currNwWin.on('close',function(){
+                    if(confirm('确定退出并关闭？')){
+                        index.closeOpenWin(true);
+                    }else{
+                        index.currNwWin.minimize();
+                    }
+                });
+                index.currNwWin.moveTo(30,30);
+            }catch(e){
+                console.log(e.message);
+            }
+        });
+    </script>
+    <%}%>
+    <% }else{ %>
+    <div class="popup_box login" id="loginBox">
+        <div class="cont">
+            <div class="pop_tit">后台聊天室登录</div>
+            <form method="post" action="" id="loginForm">
+                <input type="hidden" name="clientStoreId"/>
+                <div class="login_tab on">
+                    <div class="formcont">
+                        <div class="in_line">
+                            <i class="ic_phone"></i>
+                            <input type="text" name="userId" placeholder="用户名" class="in1">
+                        </div>
+                        <div class="in_line clearfix">
+                            <i class="ic_msg"></i>
+                            <input type="password"  name="password" placeholder="密码" class="in1"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="error"></div>
+                <div class="btnbar"><input type="button" class="set_submit" value="登录" id="logBtnSub" /></div>
+            </form>
+        </div>
+        <i class="img-loading" style="top: 50%;right: 50%;display:none;" id="formBtnLoad"></i>
+    </div>
+    <% if(isNw){%>
+    <script type="text/javascript">
+        $(function(){
+            $('#loginBox').removeClass('login');
+        });
+    </script>
+    <%}%>
+    <% }%>
+  </body>
+</html>

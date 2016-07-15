@@ -1,0 +1,281 @@
+<div class="mod_menu">
+    <div class="mod_menu_bg"></div>
+    <ul>
+        <li class="dropitem">
+            <a href="https://myid.hx9999.com/cn/deposit.html?action=1&pmf_group=optimization&pmf_source=seo_handan&pmf_medium=seo_handan_zhuz&pmf_keyword=seo_handan_zhuz&pmf_id=seo_handan_zhuz&utm_source=seo_handan&utm_medium=seo_handan_zhuz&utm_term=seo_handan_zhuz&utm_content=seo_handan_zhuz&utm_campaign=seo_handan_zhuz" class="item_icon" target="_blank" onClick="ga('send', 'event', 'account', 'deposit', 'hxstudio_toplink');_trackData.push(['addaction','account', 'deposit', 'hxstudio_toplink']);">
+                <i class="i1"></i><span>账户注资</span>
+            </a>
+        </li>
+        <li class="dropitem dr2">
+            <a href="javascript:void(0)" class="item_icon" onClick="ga('send', 'event', 'click', 'lsgd', 'hxstudio_leftlink');_trackData.push(['addaction','click', 'lsgd', 'hxstudio_leftlink']);">
+                <i class="i2"></i><span>老师观点</span><b class="arr"></b>
+            </a>
+            <div class="dropcont">
+                <div class="cont">
+                    <div class="teacher-point">
+                        <h2>老师观点</h2>
+                        <ul><!-- 老师观点列表 --></ul>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="dropitem dr3">
+            <a href="javascript:void(0)" class="item_icon" onClick="ga('send', 'event', 'click', 'cjrl', 'hxstudio_leftlink');_trackData.push(['addaction','click', 'cjrl', 'hxstudio_leftlink']);">
+                <i class="i3"></i><span>财经日历</span><b class="arr"></b>
+            </a>
+            <div class="dropcont">
+                <div class="cont">
+                  <!--  <a href="" class="on notebtn"><i></i>桌面通知</a>-->
+                    <div class="clearfix"></div>
+                    <div class="date_select">
+                        <input type="text" id="calendarFinance" class="date_inp">
+                        <a href="javascript:void(0);" onClick="ga('send', 'event', 'click', 'xzrq', 'hxstudio_leftlink');_trackData.push(['addaction','click', 'xzrq', 'hxstudio_leftlink']);">
+                            选择日期
+                        </a>
+                        <div id="calendarContainer"></div>
+                    </div>
+                    <div class="calendar_ul scrollbox2">
+                        <ul></ul>
+                    </div>
+                </div>
+                <i class="arr"></i>
+            </div>
+        </li>
+        <li class="dropitem dr4">
+            <a href="javascript:" class="item_icon">
+                <i class="i4"></i>
+                <span class="line2">CFTC<br>持仓比例</span>
+                <b class="arr"></b>
+            </a>
+            <div class="dropcont">
+                <div class="cont">
+                    <div class="percent_list">
+                        <div class="labeltip">
+                            <span><i></i>多头</span>
+                            <span class="c2"><i></i>空头</span>
+                        </div>
+
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%" class="perc_table">
+                        </table>
+
+                    </div>
+                    <div class="perc_data">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%" class="data_table">
+                            <thead>
+                            <tr>
+                                <td width="60"></td>
+                                <td width="60" align="right">净多头</td>
+                                <td width="68" align="right">净空头</td>
+                                <td></td>
+                                <td width="70" align="center">日期</td>
+                            </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <span class="bottip">* 以上为非商业持仓数据</span>
+                    </div>
+                </div>
+                <i class="arr"></i>
+            </div>
+        </li>
+        <li class="dropitem dr5">
+            <a href="javascript:" class="item_icon">
+                <i class="i5"></i>
+                <span class="line2">支点<br>计算器</span>
+                <b class="arr"></b>
+            </a>
+            <div class="dropcont">
+                <div class="cont">
+                    <div class="calc_box">
+                        <div class="calc_tabnav">
+                            <a href="javascript:" class="on a1 clicked" symbol="LLG">伦敦金<i></i></a>
+                            <a href="javascript:" class="a2" symbol="LLS">伦敦银<i></i></a>
+                        </div>
+                        <div class="calc_cont">
+                            <div class="calc_tab on">
+                                <table cellpadding="0" cellspacing="0" border="0" width="100%" class="calc_table">
+                                    <tr>
+                                        <th width="102">每日</th>
+                                        <th></th>
+                                        <th width="102">每周</th>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r3_LLG_d"></span></td>
+                                        <td>阻力位3</td>
+                                        <td><span id="r3_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r2_LLG_d"></span></td>
+                                        <td>阻力位2</td>
+                                        <td><span id="r2_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r1_LLG_d"></span></td>
+                                        <td>阻力位1</td>
+                                        <td><span id="r1_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="p_LLG_d"></span></td>
+                                        <td>支点</td>
+                                        <td><span id="p_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s1_LLG_d"></span></td>
+                                        <td>支持位1</td>
+                                        <td><span id="s1_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s2_LLG_d"></span></td>
+                                        <td>支持位2</td>
+                                        <td><span id="s2_LLG_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s3_LLG_d"></span></td>
+                                        <td>支持位3</td>
+                                        <td><span id="s3_LLG_w"></span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="calc_tab">
+                                <table cellpadding="0" cellspacing="0" border="0" width="100%" class="calc_table">
+                                    <tr>
+                                        <th width="102">每日</th>
+                                        <th></th>
+                                        <th width="102">每周</th>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r3_LLS_d"></span></td>
+                                        <td>阻力位3</td>
+                                        <td><span id="r3_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r2_LLS_d"></span></td>
+                                        <td>阻力位2</td>
+                                        <td><span id="r2_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="r1_LLS_d"></span></td>
+                                        <td>阻力位1</td>
+                                        <td><span id="r1_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="p_LLS_d"></span></td>
+                                        <td>支点</td>
+                                        <td><span id="p_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s1_LLS_d"></span></td>
+                                        <td>支持位1</td>
+                                        <td><span id="s1_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s2_LLS_d"></span></td>
+                                        <td>支持位2</td>
+                                        <td><span id="s2_LLS_w"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span id="s3_LLS_d"></span></td>
+                                        <td>支持位3</td>
+                                        <td><span id="s3_LLS_w"></span></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <i class="arr"></i>
+            </div>
+        </li>
+        <li class="dropitem dr6">
+            <a href="javascript:" class="item_icon">
+                <i class="i6"></i>
+                <span>课件下载</span>
+                <b class="arr"></b>
+            </a>
+            <div class="dropcont">
+                <div class="cont">
+                    <div class="ppt_list">
+                        <ul></ul>
+                    </div>
+                </div>
+                <i class="arr"></i>
+            </div>
+        </li>
+        <li class="dropitem dr7">
+            <a href="javascript:void(0)" class="item_icon">
+                <i class="i7"></i>
+                <span>平台下载</span>
+                <b class="arr"></b>
+            </a>
+            <div class="dropcont">
+                <div class="cont">
+                    <div class="plate_box p1">
+                        <h4><b>HX-GTS2</b>桌面版</h4>
+                        <span>独家研发，免登录看行情 <br>95%交易在0.06秒内执行，更高流动性</span>
+                        <a href="http://images.hx9999.com/uploads/gts2/HX-GTS2Setup_Real.exe" target="_blank" class="downbtn" onClick="ga('send', 'event', 'gts2_download', 'hxstudio', 'hxstudio_leftlink');_trackData.push(['addaction','download', 'gts2', 'hxstudio_leftlink']);">
+                            <span>下载HX-GTS2桌面版</span><i></i>
+                        </a>
+                    </div>
+                    <div class="plate_box p2">
+                        <h4><b>HX-GTS2</b>移动版<span>扫一扫下载HX-GTS2</span></h4>
+                        <div class="codebox">
+                            <div class="code2">
+                                <img src="/hx/theme1/img/code-android.jpg">
+                                <p><i></i>Android</p>
+                            </div>
+                            <div class="code1">
+                                <img src="/hx/theme1/img/code-ios.jpg">
+                                <p><i></i>ios</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <i class="arr"></i> -->
+            </div>
+            <div class="dropcont" style="left: 404px;">
+                <div class="cont">
+                    <div class="plate_box p1 pp1">
+                        <h4><b>MT4</b>桌面版</h4>
+                        <span>国际通用，90%交易量载体<br>数十年不断完善，成熟，安全，精准，稳定</span>
+                        <a href="http://images.hx9999.com/uploads/HXPM_Traders_Setup.zip" target="_blank" class="downbtn" onClick="ga('send', 'event', 'download', 'mt4', 'hxstudio_leftlink');_trackData.push(['addaction','download', 'mt4', 'hxstudio_leftlink']);">
+                            <span>下载MT4桌面版</span><i></i>
+                        </a>
+                    </div>
+                    <div class="plate_box p2">
+                        <h4><b>MT4</b>移动版<span>扫一扫下载MT4</span></h4>
+                        <div class="codebox">
+                            <div class="code2">
+                                <img src="/hx/theme1/img/code-android-mt4.jpg">
+                                <p><i></i>Android</p>
+                            </div>
+                            <div class="code1">
+                                <img src="/hx/theme1/img/code-ios-mt4.jpg">
+                                <p><i></i>ios</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <i class="arr"></i> -->
+            </div>
+        </li>
+        <!--<li class="dropitem dr8">
+            <a href="javascript:void(0)" class="item_icon" onClick="ga('send', 'event', 'download', 'sys', 'hxstudio_leftlink');_trackData.push(['addaction','download', 'shaoys', 'hxstudio_leftlink']);">
+                <i class="i8"></i><span class="line2">扫一扫<br>移动直播</span><b class="arr"></b>
+            </a>
+            <div class="dropcont">
+                <div class="cont">
+                    <div class="qr_box">
+                        <img src="/hx/theme1/img/firmlive_qr.png" alt="">
+                        <span>扫一扫<br>手机看直播</span>
+                    </div>
+                    <div class="qr_box">
+                        <img src="/hx/theme1/img/firmlive_qr2.png" alt="">
+                        <span>微信解盘<br>快来扫</span>
+                    </div>
+                </div>
+                &lt;!&ndash; <i class="arr"></i> &ndash;&gt;
+            </div>
+        </li>-->
+
+    </ul>
+</div>

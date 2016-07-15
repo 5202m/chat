@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta charset="utf-8"/>
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+<title>视频直播间 - 金道贵金属打造在线贵金属实盘直播室，掘金之旅在此起航！</title>
+<meta content="实盘直播,贵金属实盘直播室,金道贵金属实盘直播,金道贵金属" name="keywords">
+<meta content="金道贵金属打造在线贵金属实盘直播室，金道研究院名家观点即时播报，让您的掘金之旅在此起航！携手金道，生金有道！" name="description">
+<link href="/base/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+<link href="/base/lib/lightbox/lightbox.css" type="text/css" rel="stylesheet"/>
+<link href="/pm/theme3/css/index<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" type="text/css" rel="stylesheet" />
+<!--[if lt IE 9]>
+<link href="/pm/theme3/css/studioIE.css" rel="stylesheet" type="text/css">
+<![endif]-->
+</head>
+<body>
+<!-- wrapper begin -->
+<div class="wrapper clearfix">
+	<div class="left_row clearfix">
+        <div class="mod_video" id="stVideoDiv" style="background-color: #000000;">
+            <div class="vcont">
+                <div class="vtitle">当前直播：<span></span></div>
+                <a href="javascript:" class="vbackbtn" id="vbackbtn_video">观看教学视频？</a>
+                <div id="studioVideoDiv" class="vcont">
+                    <i class="img-loading"></i>
+                </div>
+            </div>
+        </div>
+        <div class="mod_video dn" id="tvDivId" style="background-color: #000000;">
+            <div class="vcont">
+                <div class="vtitle">当前视频：<span></span></div>
+                <a href="javascript:" class="vbackbtn" id="vbackbtn_live">直播开始了，赶紧去看</a>
+                <a href="javascript:" class="vbackbtn" id="vbackbtn_chg">换一换</a>
+                <div id="tVideoDiv" class="vcont">
+                    <i class="img-loading"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="right_row">
+    	<div class="chat clearfix">
+            <div class="chat_content">
+            	<div id="chatMsgContentDiv">
+                    <div class="dialoglist clearfix" id="dialog_list"></div>
+                </div>
+                <i class="img-loading" pf="chatMessage"></i>
+            </div>
+        </div>
+        <!-- chat_input begin -->
+        <div class="chat_input">
+            <div class="input_box">
+                <div class="input_area">
+                    <div class="adiv">
+                        <div id="contentText" class="ctextarea">
+                            更多精彩，请
+                            <a href="http://pmchat.24k.hk/studio" target="_blank" style="text-decoration: underline;color:#3F51B5;cursor: pointer;">进入视频直播间</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- wrapper end -->
+<script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="/base/lib/socket.io.js"></script>
+<script type="text/javascript" src="/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript" src="/base/lib/store.min.js"></script>
+<script type="text/javascript" src="/base/lib/jquery.xdomainrequest.min.js"></script>
+<script type="text/javascript" src="/base/lib/lightbox/lightbox.min.js"></script>
+<% if(isDevTest) { %>
+<script type="text/javascript" src="/base/util/common.js"></script>
+<script type="text/javascript" src="/pm/theme3/js/index.js"></script>
+<% }else{ %>
+<script type="text/javascript" src="/pm/theme3/js/index.min.js?t=<%=new Date().getTime()%>"></script>
+<% }%>
+<script type="text/javascript" src="http://static.polyv.net/file/polyvplayer_v2.0.min.js"></script>
+<script type="text/javascript">
+StudioChatMini.apiUrl='<%= apiUrl %>';
+StudioChatMini.filePath='<%= filePath %>';
+StudioChatMini.userInfo=JSON.parse('<%- userInfo %>');
+StudioChatMini.serverTime=Number('<%= serverTime %>');
+StudioChatMini.socketUrl=JSON.parse('<%- socketUrl %>');
+StudioChatMini.syllabusData=common.formatToJson('<%- syllabusData%>');
+StudioChatMini.currStudioAuth=('<%- currStudioAuth%>'=='true');
+StudioChatMini.fromPlatform='<%- fromPlatform%>';
+$(function(){
+    $(window).resize(function(){
+        var hh = $(window).height();
+        $('#chatMsgContentDiv').height(hh - 70);
+        $(".wrapper").height(hh);
+        $(".mod_video").height(hh - 29);
+        $(".vtitle").width($(".mod_video").width() - 256);
+        $('.chat').height(hh);
+    });
+    $(window).resize();
+});
+
+lightbox.option({
+    'resizeDuration': 200,
+    'wrapAround': true,
+    'disableScrolling':true,
+    'positionFromTop':50,
+    'showImageNumberLabel' : false
+});
+</script>
+</body>
+</html>

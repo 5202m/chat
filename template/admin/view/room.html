@@ -1,0 +1,282 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+      <title><%=roomName%></title>
+      <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+      <meta name="apple-mobile-web-app-capable" content="yes"/>
+      <link rel="stylesheet" type="text/css" href="/base/lib/jqueryUI/jquery-ui.min.css"/>
+      <link rel="stylesheet" type="text/css" href="/base/lib/mScroll/jquery.mCustomScrollbar.min.css"/>
+      <link rel="stylesheet" type="text/css"  href="/base/lib/lightbox/lightbox.css"/>
+      <link rel="stylesheet" type="text/css" href="/base/lib/pnotify/pnotify.custom.min.css" />
+      <link rel="stylesheet" type="text/css" href="/base/lib/dateTimeWeek/dateTimeWeek.css"/>
+      <link rel="stylesheet" type="text/css" href="/admin/css/room<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" />
+      <script type="text/javascript" src="/base/lib/jquery-1.11.0.min.js"></script>
+      <script type="text/javascript" src="/base/lib/store.min.js"></script>
+      <script type="text/javascript" src="/base/lib/My97DatePicker/WdatePicker.js"></script>
+      <script type="text/javascript" src="/base/lib/dateTimeWeek/dateTimeWeek.js"></script>
+      <script type="text/javascript">
+          $(function(){
+              room.widthCheck();
+              room.heightCalcu();
+          });
+          $(window).resize(function(e){
+              room.widthCheck(true);
+              room.heightCalcu(true);
+          });
+      </script>
+  </head>
+  <body>
+  <audio id="tipsound" src="/admin/audio/2.mp3">您的浏览器不支持 audio 标签。</audio>
+    <div calss="main">
+        <div class="window-content open_wh_box dn" style="position: absolute;z-index: 10000;top: 10px;width:650px;height:550px;left:20%;">
+            <div class="box_title"><stong style="float:left;">私聊框</stong><span style="float:right;"><stong class="openWhBoxBtn btn">关闭</stong><stong style="margin-left:10px;"></stong></span></div>
+            <div class="wh-box">
+                <div class="wh-left margin-left7">
+                    <div class="visitorDiv"></div>
+                </div>
+                <div class="wh-middle"></div>
+            </div>
+        </div>
+        <div class="window-content local_box">
+            <div class="wh-box">
+                <div class="wh-left margin-left7">
+                    <div class="visitorDiv">
+                        <ul style="z-index: 100001;" class="pub_tab_ul">
+                            <li uid="public" utype="" public="true" class="on" style="width:168px;">
+                                <span class="user-row public-chat">
+                                    <label>房间公聊区</label>
+                                </span>
+                            </li>
+                        </ul>
+                        <div class="wh_out_div dn">
+                            <div class="searchDiv">
+                                <div><a href="javascript:void(0);" class="tip-sound"></a><strong class="openWhBoxBtn" style="float: right;padding-bottom: 4px;">弹出</strong><input type="text" id="vSearchTxt" /><a href="javascript:" id="vSearchTxtBtn"><em></em></a></div>
+                                <div class="searchResult" style="display: none;">
+                                    <ul></ul>
+                                </div>
+                            </div>
+                            <div class="wh_tab_div"><ul style="z-index: 100001;" class="wh_tab_ul"></ul></div></div>
+                    </div>
+                </div>
+                <div class="wh-middle">
+                    <div class="wh-tab-msg" id="wh_msg_public">
+                        <div class="wh-title pub-title">
+                            <span id="show_top_btn"><label>@记录</label><strong>0</strong></span>
+                        </div>
+                        <div class="top-box dn">
+                            <div style="height: 20px;"><h3 style="float:left;">等待回复的@记录<strong id="top_num">【0】</strong>：</h3><i id="close-top-box"></i></div>
+                            <div class="cont" id="talk_top_id" style="overflow-y: auto;height:290px;"></div>
+                        </div>
+                        <div class="wh-content" id="chatMsgContentDiv">
+                            <div class="dialoglist clearfix" id="dialog_list"><!-- 聊天内容框 --></div>
+                            <i class="img-loading" style="top: 50%;right: 50%;display: none;" pf="chatMessage"></i>
+                        </div>
+                        <a href="javascript:" style="display:none;" id="newMsgShowBtn"></a>
+                        <span  id="newMsgTipBtn" style="display:none;">新信息</span>
+                        <div class="wh-txt">
+                            <div class="mymsg dn">
+                                <p><span class="sender"></span>对&nbsp;你说<label></label>：<span class="xcont"></span></p>
+                                <a href="javascript:" class="replybtn" uId="">回复</a><em style="position: absolute;top: 10px;right: 40px;font-size: 12px;display:none;">正在输入...</em>
+                                <a href="javascript:" class="closebtn">关闭</a>
+                            </div>
+                            <div class="toolbar">
+                                <a href="javascript:" class="facebtn">表情</a>
+                                <a href="javascript:" class="tbtn scrollbtn on" title="自动滚屏">滚屏</a>
+                                <label for="file_wh_msg" class="send-wh-img" title="发送图片"></label>
+                                <input type="file" id="file_wh_msg" style="position:absolute;clip:rect(0 0 0 0);" class="fileBtn">
+                                <a href="javascript:" class="tbtn approveall" id="approveAllHandler">
+                                    <input type="checkbox" id="approveCheckAll"/>
+                                    <label for="approveCheckAll">全选</label>
+                                    &nbsp;
+                                    <button btnType="1">通过</button>
+                                    &nbsp;
+                                    <button btnType="2">拒绝</button>
+                                </a>
+                            </div>
+                            <div contenteditable="true" class="ctextarea" id="whTxt" data-placeholder="按回车键发送"></div>
+                        </div>
+                    </div>
+                    <div class="wh_msg_only"></div>
+                </div>
+                <div class="wh-right right-teacher">
+                    <div class="rightTitle">
+                        <strong>主讲人</strong>
+                    </div>
+                    <div class="teacher">
+                        <div class="te_l">
+                            <a href="javascript:"><img src=""/></a>
+                            <div><span class="nk">老师暂未上线</span></div>
+                        </div>
+                        <div class="te_r">
+                            <div class="video_icon"><a href="javascript:" class="open-video"><img src="/admin/img/u50.jpg"/></a></div>
+                            <% if (userType=='2') { %>
+                                <div>
+                                    <input type="button" id="publish_point" class="viewpoint dn btn" value="发布观点" />
+                                </div>
+                                <div>
+                                    <input type="button" id="point_list" class="viewpoint dn btn" value="观点列表" />
+                                </div>
+                            <% } %>
+                        </div>
+                        <span style="display:none;" id="groupInfoId" aw="<%= groupInfo.allowWhisper %>" awr="<%= groupInfo.whisperRoles %>"></span>
+                    </div>
+                    <div class="publish-point dn">
+                        <div class="publish-title">
+                            <strong>发布观点</strong>
+                            <a href="javascript:void(0);" class="publish-close"></a>
+                        </div>
+                        <div class="publish-content">
+                            <div class="set_box">
+                                <div class="set_title">标题：</div>
+                                <div class="setTitle"><input type="text" name="title" id="title" /></div>
+                                <div class="clear"></div>
+                            </div>
+                            <div>
+                                发布时间：从<input type="text" name="publishStartDateStr" id="publishStartDateStr" class="date" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'publishEndDateStr\')}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                                到<input type="text" name="publishEndDateStr" id="publishEndDateStr" class="date" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'publishStartDateStr\')}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+                            </div>
+                            <div>内容：</div>
+                            <div><textarea name="content" id="content"></textarea></div>
+                            <div class="publish-sub"><input type="button" class="publish-btn" value="提交" /></div>
+                        </div>
+                    </div>
+                    <div class="point-list dn">
+                        <div class="point-title">
+                            <strong>观点列表</strong>
+                            <a href="javascript:void(0);" class="point-close"></a>
+                        </div>
+                        <div class="point-list-content">
+                            <ul><!-- 老师观点列表 --></ul>
+                        </div>
+                    </div>
+                    <div class="rightTitle" style="margin-top:15px;">
+                        <strong>在线用户</strong>【<span id="onLineSizeNum">0</span>】
+                    </div>
+                    <div class="online user_box">
+                        <ul id="userListId"></ul>
+                    </div>
+                    <div class="not-talk dn">
+                        <div class="talk-title"><span>设置禁言</span><a href="javascript:void(0);" class="talk-close"></a></div>
+                        <div class="talk-content">
+                            <div style="padding:5px;overflow:hidden;">
+                                <form id="userGagForm" class="yxForm" method="post">
+                                    <input type="hidden" name="utype" value="" />
+                                    <input type="hidden" name="memberId" value=""/>
+                                    <input type="hidden" name="groupId" value=""/>
+                                    <input type="hidden" name="groupType" value=""/>
+                                    <table class="tableForm_L" border="0" cellspacing="1" cellpadding="0">
+                                        <tbody>
+                                        <tr>
+                                            <th width="30%">
+                                                禁言时间段<br>
+                                                <span style="color: red; font-weight: bolder;">
+                                                    (若不填值，则禁言无效或解除禁言)
+                                                </span>
+                                            </th>
+                                            <td width="70%">
+                                                <input type="hidden" name="gagDate"  id="userGag_gagDate"/>
+                                                <div id="userGag_gagDate_div"></div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>禁言提示语</th>
+                                            <td><input type="text" name="gagTips" value="" style="width:350px;" /></td>
+                                        </tr>
+                                        <tr>
+                                            <th>备注</th>
+                                            <td><input type="text" name="gagRemark" value="" style="width:350px;" /></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="talk-bottons">
+                                        <input type="button" value="提交" name="btnCantTalk" id="btnCantTalk" />
+                                        <input type="button" value="取消" name="btnCantTalkCancel" id="btnCantTalkCancel" />
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% if (userType!='2') { %><% } %>
+            <div class="video dn">
+                <div class="close-title"><a href="javascript:void(0);" class="video-close" title="关闭"></a></div>
+                <div class="mod_video" style="position:relative;width:100%;" id="yyVideoDiv">
+                    <div style="color:#fff;padding-top:50%;"><strong>目前没有直播的相关课程，可以联系管理员设置相关课程！</strong></div>
+                </div>
+                <!--div class="mod_bottom_div" style="width:100%;height:auto;margin-left:5px;background-color: rgba(246,246,246,0.9);"></div-->
+            </div>
+        </div>
+        <div class="blackbg dn"></div>
+        <!-- 通用提示框 -->
+        <div class="popup_box pub_hint dn" id="popMsgBox">
+            <div class="cont" id="popMsgCont">
+                <h4 id="popMsgTit"></h4>
+                <p id="popMsgTxt"></p>
+                <a id="popMsgClo" class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+            </div>
+        </div>
+
+        <!-- 通用自动关闭提示框 -->
+        <section class="tipsbox dn">
+            <div class="cont"></div>
+        </section>
+    </div>
+    <script type="text/javascript" src="/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript" src="/base/lib/lightbox/lightbox.min.js"></script>
+    <script type="text/javascript" src="/base/lib/socket.io.js"></script>
+    <script type="text/javascript" src="/base/lib/paste.js"></script>
+    <script type="text/javascript" src="/base/lib/pnotify/pnotify.custom.min.js"></script>
+    <script type="text/javascript" src="/base/lib/jqueryUI/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/base/lib/jquery.face.js"></script>
+    <script type="text/javascript" src="/base/util/common<%=isDevTest? '.js' : ('.min.js?t=' + new Date().getTime())%>"></script>
+    <script type="text/javascript" src="/admin/js/room<%=isDevTest? '.js' : ('.min.js?t=' + new Date().getTime())%>"></script>
+    <script type="text/javascript">
+        room.filePath='<%= filePath%>';
+        room.apiUrl='<%= apiUrl%>';
+        room.userInfo=JSON.parse('<%- userInfo %>');
+        room.socketUrl=JSON.parse('<%- socketUrl %>');
+        room.roomName = '<%=roomName%>';
+        $(function(){
+            lightbox.option({
+                'resizeDuration': 200,
+                'wrapAround': true,
+                'disableScrolling':true,
+                'positionFromTop':50,
+                'albumLabel':"%1 of %2"
+            });
+            <%if(isNw){%>
+            try {
+                var gui = require('nw.gui');
+                room.nwWin = gui.Window.get();
+                room.nwWin.resizeTo(940, 780);
+                room.nwWin.setMinimumSize(900, 580);
+                room.nwWin.moveTo(300,30);
+                room.nwWin.on('minimize', function(){
+                    room.nwWin.setAlwaysOnTop(false);
+                    room.nwIsMinimize = true;
+                });
+                room.nwTray = new gui.Tray({ title: room.roomName, icon: 'icon.png' });
+                room.nwTray.on('click', function(){
+                                room.nwWin.setAlwaysOnTop(true);
+                                room.nwWin.show();
+                                room.nwWin.setAlwaysOnTop(false);
+                        });
+                room.nwWin.on('close', function(){
+                    room.nwTray.remove();
+                    room.nwTray = null;
+                    this.close(true);
+                });
+            }catch(e){
+                console.log(e.message);
+            }
+            <%}else{%>
+                room.rmWin = this.window;
+                //this.window.focus();
+                //this.window.blur();
+            <%}%>
+        });
+    </script>
+  </body>
+</html>

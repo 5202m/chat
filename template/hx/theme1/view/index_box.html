@@ -1,0 +1,231 @@
+<div class="blackbg dn"></div>
+<!-- 专家邮箱 -->
+<div class="popup_box expert dn">
+	<div class="cont">
+    	<div class="pop_tit">专家邮箱</div>   
+    	<div class="expert_box">
+            <div class="set_box b2 clearfix">
+            	<div class="set_name">收件人</div>
+                <div class="set_show">expert@hx9999.com</div>
+            </div>
+            <div class="set_box b2 clearfix">
+            	<div class="set_name s1">发件人</div>
+                <input id="mailFrom" type="text" class="set_inp" placeholder="建议输入qq/手机号码/邮箱" >
+            </div>
+            <div class="set_box b2 clearfix">
+            	<textarea id="mailContent" placeholder="输入您想对专家说的话~" class="set_textaera"></textarea>
+            </div>
+            <div class="set_box b2 clearfix" id="verifyCodeId">
+                <div class="set_name s1">验证码</div>
+                <img class="verify_img" alt="验证码">
+                <input id="mailImgCode" type="text" class="set_inp" placeholder="请输入验证码" >
+            </div>
+            <div class="error"><i></i>输入内容有误，请重新输入！</div>
+            <div class="btnbar"><input id="btnSendMail" type="button" class="set_submit" value="确定"></div>
+        </div>
+    	<a class="pop_close" href="javascript:"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 昵称设置 -->
+<div class="popup_box reset_psw nk_box dn">
+	<div class="cont">
+    	<div class="pop_tit">设置昵称</div>
+    	<form method="post" action="" id="setNkForm">
+            <div class="formcont">
+            	<div class="in_line">
+                	<i class="ic_psw"></i>
+                    <input type="text" placeholder="填一个好听的昵称吧" name="nickname" class="in1"/>
+                </div>
+            </div>
+            <div class="error"></div>
+            <div class="btnbar"><input type="button" class="set_submit" value="确定" id="setNkBtn"></div>
+        </form>
+    	<a class="pop_close" href="javascript:"><i>关闭</i></a>
+    </div>
+    <i class="img-loading" style="top: 50%;right: 50%;display:none;" id="setNkLoad"></i>
+</div>
+
+
+<!-- 直播间登录 -->
+<div class="loginbox" id="loginBox">
+    <div class="login">
+        <h2>直播间登录</h2>
+        <ul class="login-mode">
+            <li class="on">
+                <a href="javascript:;" onClick="ga('send', 'event', 'link', 'login_sjdl', 'hxstudio_toplink');_trackData.push(['addaction','link', 'login_sjdl', 'hxstudio_toplink']);">
+                    手机登录
+                </a>
+            </li>
+            <li>
+                <a href="javascript:;" onClick="ga('send', 'event', 'link', 'login_sjdl', 'hxstudio_toplink');_trackData.push(['addaction','link', 'login_sjdl', 'hxstudio_toplink']);">
+                    帐号登录
+                </a>
+            </li>
+        </ul>
+        <div class="login-modebox">
+            <form method="post" action="" id="loginForm">
+                <input type="hidden" name="clientStoreId"/>
+                <ul class="login-phone on">
+                    <li>
+                        <i class="phone-icon"></i><input type="text" name="mobilePhone" placeholder="手机号码"/>
+                    </li>
+                    <li>
+                        <i class="inf-icon"></i><input type="text" name="verifyCode" placeholder="短信验证码"/>
+                        <a href="javascript:" class="rbtn" ut="hxstudio_login" t="60" onClick="ga('send', 'event', 'click', 'login_yzm', 'hxstudio_toplink');_trackData.push(['addaction','click', 'login_yzm', 'hxstudio_toplink']);">
+                            获取验证码
+                        </a>
+                    </li>
+                    <li class="login-help no-border">
+                        <span>如未收到验证码，请咨询<a onclick="box.openCSBox();" href="javascript:void(0);" style="color:#2980d1;">在线客服</a></span>
+                        <label><input type="checkbox" id="autoLogin" checked="checked">下次自动登录</label>
+                    </li>
+                </ul>
+                <ul class="login-inf">
+                    <li>
+                        <i class="phone-icon"></i><input type="text" name="accountNo"  placeholder="请输入交易账号"/>
+                    </li>
+                    <li>
+                        <i class="phone-icon"></i><input type="password" name="pwd" placeholder="请输入密码"/>
+                    </li>
+                    <li class="yzm">
+                        <a href="javascript:" id="verMalCodeId"><img src="" alt=""></a>
+                        <i class="inf-icon"></i><input type="text" name="verMalCode" placeholder="请输入验证码">
+                    </li>
+                </ul>
+                <label class="error"></label>
+            </form>
+        </div>
+        <input class="login-btn" type="button" value="登录" id="logBtnSub">
+        <div class="login-link">
+            <span>
+                <a href="https://myid.hx9999.com/cn/newAccount.html?action=0" target="_blank" onClick="ga('send', 'event', 'account', 'real_account_login', 'hxstudio_toplink');_trackData.push(['addaction','account', 'real_account_login', 'hxstudio_toplink']);">
+                    开立账户
+                </a>
+            </span>
+            <span>
+                <a href="https://myid.hx9999.com/cn/forgot_pass.html" target="_blank" onClick="ga('send', 'event', 'link', 'forgot_pass', 'hxstudio_toplink');_trackData.push(['addaction','link', 'forgot_pass', 'hxstudio_toplink']);">
+                    忘记密码
+                </a>
+            </span>
+        </div>
+        <a class="pop_close" href="javascript:"><i>关闭</i></a>
+    </div>
+    <i class="img-loading" style="top: 50%;right: 50%;display:none;" id="formBtnLoad"></i>
+</div>
+
+<!-- 升级等级说明 -->
+<div class="popup_box upgrade dn" style="top:40%;width:580px;">
+	<div class="cont">
+    	<div class="upg_box">
+        	<span>恒信直播间用户登录分为5级，根据用户注册情况选择升级，详情如下：</span>
+            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                <tbody>
+                    <tr>
+                        <th width="70"><span class="fir">级别</span></th>
+                        <th width="112"><span>说明</span></th>
+                        <th><span>权限</span></th>
+                        <th width="112"><span>操作</span></th>
+                    </tr>
+                </tbody>
+                <tbody id="upg_tbody_id"></tbody>
+            </table>
+            <i class="img-loading" style="top: 50%;right: 50%;display:none;"  id="up_loading"></i>
+        </div>
+    	<a class="pop_close" href="javascript:"><i>关闭</i></a>
+    </div>
+</div>
+
+
+<!-- 升级成功或失败 -->
+<div class="popup_box upgrade_result dn" style="width:580px;">
+	<div class="cont">
+    	<div class="upg_result fail">
+        	<i></i>
+            <h4>很遗憾，升级失败！</h4>
+            <span>您未开通恒信模拟交易账户，如有疑问请联系客服！</span>
+            <div class="kh-btn clearfix">
+                <a href="https://myid.hx9999.com/cn/newAccount.html?action=0&pmf_group=optimization&pmf_source=seo_handan&pmf_medium=seo_handan_kaihu&pmf_keyword=seo_handan_kaihu&pmf_id=seo_handan_kaihu&utm_source=seo_handan&utm_medium=seo_handan_kaihu&utm_term=seo_handan_kaihu&utm_content=seo_handan_kaihu&utm_campaign=seo_handan_kaih" target="_blank" class="fl" onClick="ga('send', 'event', 'account', 'real_account', 'hxstudio_toplink');_trackData.push(['addaction','account', 'real_account', 'hxstudio_toplink']);">
+                    <i class="real"></i><span>真实交易开户</span>
+                </a>
+                <a href="https://myid.hx9999.com/cn/practice.html?action=0&pmf_group=free&pmf_source=free_handan&pmf_medium=free_handan_moni&pmf_keyword=free_handan_moni&pmf_id=free_handan_moni&utm_source=free_handan&utm_medium=free_handan_moni&utm_term=free_handan_moni&utm_content=free_handan_moni&utm_campaign=free_handan_moni" target="_blank" class="fr" onClick="ga('send', 'event', 'account', 'hxstudio', 'hxstudio_toplink');_trackData.push(['addaction','account', 'demo_account', 'hxstudio_toplink']);">
+                    <i class="mn"></i><span>模拟交易开户</span>
+                </a>
+      		</div>
+        </div>
+        <div class="upg_result succ">
+            <i></i>
+            <h4>升级成功！重新登录后，您可享用更多直播间权限！ </h4>
+            <span class="dn" id="studioUpgA">注：你已经激活真实交易账户，直接为你升级到A级别。</span>
+        </div>
+    	<a class="pop_close" href="javascript:"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 注册成功 -->
+<div class="popup_box register_result dn">
+	<div class="cont">
+    	<div class="reg_result">
+        	<i></i>
+            <h4>恭喜您注册直播间成功！ </h4>
+        </div>
+    	<a class="pop_close" href="javascript:"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 私信窗口 -->
+<div class="pletter_win clearfix mult dn">
+    <div class="mult_dialog"></div>
+</div>
+<div id="wh_content_tmp">
+    <div class="cont dn">
+        <div class="tit wh_drag"><label class="wh_nk"></label><label class="tit">【<strong></strong>】</label></div>
+        <div class="chat_content">
+            <div class="wh-content" style="height:269px">
+                <div class="dialoglist clearfix"></div>
+            </div>
+        </div>
+        <div class="input_box">
+            <div class="toolbar">
+                <a href="javascript:" class="tbtn facebtn" title="添加表情"></a>
+                <a href="javascript:" class="tbtn imgbtn" title="发图"></a>
+                <input type="file" class="imginp" style="display: none;">
+            </div>
+            <div class="input_area">
+                <div class="adiv">
+                    <!--<textarea class="ctextarea" placeholder="按回车发送私信"></textarea>-->
+                    <div contenteditable="true" class="ctextarea"></div>
+                </div>
+                <a href="javascript:" class="sendbtn"><i></i><span>发送</span></a>
+            </div>
+        </div>
+        <a class="pop_small" href="javascript:" title="最小化">-</a>
+        <a class="pop_close" href="javascript:" title="关闭">×</a>
+    </div>
+</div>
+
+<!-- 公告提示框 -->
+<div class="popup_box box_ann dn" id="popAnnBox">
+    <div class="cont">
+        <h4 id="popAnnTit"></h4>
+        <div class="popAnnCont">
+            <div id="popAnnTxt"></div>
+        </div>
+        <a class="yesbtn" href="javascript:void(0)">确定</a>
+        <a class="pop_close" href="javascript:void(0)">×</a>
+    </div>
+</div>
+
+<!-- 通用提示框 -->
+<div class="popup_box pub_hint dn" id="popMsgBox">
+    <div class="cont" id="popMsgCont">
+        <h4 id="popMsgTit"></h4>
+        <p id="popMsgTxt"></p>
+        <a id="popMsgClo" class="pop_close" href="javascript:void(0)">×</a>
+    </div>
+</div>
+
+<!-- 通用自动关闭提示框 -->
+<section class="tipsbox dn">
+    <div class="cont"></div>
+</section>

@@ -1,0 +1,439 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta content="always" name="referrer">
+    <meta charset="utf-8"/>
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>视频直播间</title>
+    <meta content="实盘直播,贵金属实盘直播室,恒信贵金属实盘直播,恒信贵金属" name="keywords">
+    <meta content="恒信贵金属打造在线贵金属实盘直播室，恒信研究院名家观点即时播报，让您的掘金之旅在此起航！携手恒信，生金有道！" name="description">
+    <link href="/base/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+    <link href="/base/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
+    <link href="/base/lib/lightbox/lightbox.css"type="text/css" rel="stylesheet"/>
+    <link href="/base/lib/swipe/swiper.min.css"  type="text/css" rel="stylesheet" />
+    <link href="/base/lib/face/face.css" type="text/css" rel="stylesheet" />
+    <link href="/base/lib/pikaday/pikaday.min.css" type="text/css" rel="stylesheet" />
+    <link href="/hx/theme1/css/index<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="/base/lib/store.min.js"></script>
+    <!-- 自动登录 begin -->
+    <script type="text/javascript" src="/hx/theme1/js/loginAuto.js"></script>
+    <script>
+        LoginAuto.sessionUser = JSON.parse('<%- userInfo %>');
+        LoginAuto.init();
+        //初始化ga，防止ga脚本加载失败导致的页面异常
+        var ga = function(){};
+        var _trackData = [];
+    </script>
+</head>
+<body class="">
+<div class="box-header">
+    <div class="box-header-in clearfix">
+        <h1 class="fl">
+            <a href="http://www.hx9999.com" target="_blank" onClick="ga('send', 'event', 'link', 'logo_index', 'hxstudio_toplink');_trackData.push(['addaction','link', 'logo_index', 'hxstudio_toplink']);"><img src="/hx/theme1/img/logo.png" alt=""></a>
+            视频直播间
+        </h1>
+        <div class="header-right fr clearfix">
+            <ul>
+                <li class="cursor">
+                    <a href="http://www.hx9999.com/cn/sd/sd-index.html" class="toplink" target="_blank" onClick="ga('send', 'event', 'link', 'sdzs_sd-index', 'hxstudio_toplink');_trackData.push(['addaction','link', 'sdzs_sd-index', 'hxstudio_toplink']);"><span>晒单之声</span></a>
+                </li>
+                <!--<li>
+                    <a href="http://wj.qq.com/s/569815/fccf" class="toplink" target="_blank"><span>问卷调查</span></a>
+                </li>-->
+                <li class="room_rule">
+                    <a href="javascript:void(0)" class="toplink" onClick="ga('send', 'event', 'click', 'fjgz', 'hxstudio_toplink');_trackData.push(['addaction','click', 'fjgz', 'hxstudio_toplink']);">
+                        <span>房间规则</span><b class="arr"></b>
+                    </a>
+                    <div class="dropcont" style="padding: 20px 30px;">
+                        <div class="cont" id="bulletinRoomRule">
+                            <strong></strong>
+                            <p></p>
+                        </div>
+                        <!-- <i class="arr"></i> -->
+                    </div>
+                </li>
+                <li class="cursor">
+                    <a href="javascript:void(0)" class="toplink" onClick="ga('send', 'event', 'click', 'kcap', 'hxstudio_toplink');_trackData.push(['addaction','click', 'kcap', 'hxstudio_toplink']);">
+                        <span>课程安排</span><b class="arr"></b>
+                    </a>
+                    <div class="dropcont ">
+                        <div class="cont">
+                            <div class="clearfix"></div>
+                            <div class="course_nav"></div>
+                        </div>
+                        <!-- <i class="arr"></i> -->
+                    </div>
+                </li>
+                <li class="notice">
+                    <a href="javascript:void(0)" class="toplink" onClick="ga('send', 'event', 'click', 'gonggao', 'hxstudio_toplink');_trackData.push(['addaction','click', 'gg', 'hxstudio_toplink']);">
+                        <span>公告</span>
+                    </a>
+                    <div class="dropcont" style="padding: 20px 30px;">
+                        <div class="cont" id="bulletinTab">
+                            <strong></strong>
+                            <p></p>
+                        </div>
+                        <!-- <i class="arr"></i> -->
+                    </div>
+                </li>
+                <li id="saveToDesktop">
+                    <a href="javascript:void(0)" class="toplink" onClick="ga('send', 'event', 'click', 'tjdzm', 'hxstudio_toplink');_trackData.push(['addaction','click', 'tjdzm', 'hxstudio_toplink']);">
+                        <span>添加到桌面</span>
+                    </a>
+                </li>
+                <li id="expert">
+                    <a href="javascript:void(0)" class="toplink" onClick="ga('send', 'event', 'click', 'zjyx', 'hxstudio_toplink');_trackData.push(['addaction','click', 'zjyx', 'hxstudio_toplink']);">
+                        <span>专家邮箱</span>
+                    </a>
+                </li>
+                <li id="onlineCs">
+                    <a href="javascript:void(0)" class="toplink last" onClick="ga('send', 'event', 'chat', '800', 'hxstudio_toplink');_trackData.push(['addaction','chat', '800', 'hxstudio_toplink']);">
+                        <span>在线客服</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="header-btn">
+                <a href="https://myid.hx9999.com/cn/newAccount.html?action=0&pmf_group=optimization&pmf_source=seo_handan&pmf_medium=seo_handan_kaihu&pmf_keyword=seo_handan_kaihu&pmf_id=seo_handan_kaihu&utm_source=seo_handan&utm_medium=seo_handan_kaihu&utm_term=seo_handan_kaihu&utm_content=seo_handan_kaihu&utm_campaign=seo_handan_kaih" target="_blank" onClick="ga('send', 'event', 'account', 'real_account', 'hxstudio_toplink');_trackData.push(['addaction','account', 'real_account', 'hxstudio_toplink']);">
+                    <i class="real"></i><span>开立真实账户</span>
+                </a>
+                <a href="https://myid.hx9999.com/cn/practice.html?action=0&pmf_group=free&pmf_source=free_handan&pmf_medium=free_handan_moni&pmf_keyword=free_handan_moni&pmf_id=free_handan_moni&utm_source=free_handan&utm_medium=free_handan_moni&utm_term=free_handan_moni&utm_content=free_handan_moni&utm_campaign=free_handan_moni" target="_blank" onClick="ga('send', 'event', 'account', 'demo_account', 'hxstudio_toplink');_trackData.push(['addaction','account', 'demo_account', 'hxstudio_toplink']);">
+                    <i class="mn"></i><span>开立模拟账户</span>
+                </a>
+            </div>
+            <%if(userSession.isLogin){%>
+            <ul class="ul-info">
+            <li>
+                <a href="javascript:" class="toplink info-name"><span><strong class="username"><%= userSession.nickname || "匿名_xxx" %></strong></span><b class="arr"></b></a>
+                <div class="dropcont u-info" style="left:auto;right: 0px;width: 350px;overflow: hidden;">
+                    <div class="cont">
+                        <div class="per_info">
+                            <div class="per_item clearfix p1">
+                                <div class="headimg"><img src="<%= userSession.avatar || '/hx/theme1/img/user.png' %>" id="avatarInfoId" style="width:100%;"></div>
+                                <span class="username"><%= userSession.nickname || "匿名_xxx" %></span>
+                                <a href="javascript:" id="modifyAvatar">修改头像</a>
+                                <a href="javascript:" id="modifyNickName">修改昵称</a>
+                                <form method="post" enctype='multipart/form-data' id="fileForm" name="fileForm" style="display: none;">
+                                    <input type="file" name="file" />
+                                    <input type="hidden" name="fileDir" value="pic/header/chat/front"/>
+                                </form>
+                            </div>
+                            <div class="per_item clearfix">
+                                <span>账号：<label style="margin-left:5px;"><%= userSession.mobilePhone %></label></span>
+                            </div>
+                            <div class="per_item clearfix">
+                                <span class="level">等级：
+                                    <%if('vip'==userSession.clientGroup){%>
+                                        <label>VIP</label><i class="l4"></i>
+                                    <%} else if('active'==userSession.clientGroup) {%>
+                                        <label>真实[A]</label><i class="l3"></i>
+                                    <%} else if('notActive'==userSession.clientGroup) {%>
+                                        <label>真实[N]</label><i class="l3"></i>
+                                    <%} else if('simulate'==userSession.clientGroup) {%>
+                                        <label>模拟</label><i class="l2"></i>
+                                    <%} else if('register'==userSession.clientGroup) {%>
+                                        <label>注册</label><i class="l1"></i>
+                                    <%} else {%>
+                                        <label>游客</label>
+                                    <%}%>
+                                </span>
+                                <a href="javascript:" class="tipbtn" id="tipbtnId"><i>?</i></a><a href="javascript:" class="upgradebtn">升级</a>
+                                <div class="upg_tip dn"><i></i><strong>直播间等级由高至低包括V、R、D、M、游客，等级愈高，拥有的权限亦愈多</strong></div>
+                            </div>
+                            <div class="per_item clearfix">
+                                <a href="javascript:" class="tipbtn logout">退出登录</a>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="arr"></i>
+                </div>
+            </li>
+            </ul>
+            <%} else {%>
+            <div class="header-btn">
+                <a class="header-login" href="javascript:" id="login_a" tp="content_top" onClick="ga('send', 'event', 'link', 'login', 'hxstudio_toplink');_trackData.push(['addaction','link', 'login', 'hxstudio_toplink']);">
+                    登录
+                </a>
+            </div>
+            <%}%>
+        </div>
+    </div>
+</div>
+
+<!-- header end -->
+<!-- mod_menu begin -->
+<% include index_tool.html %>
+<!-- mod_menu end -->
+
+<!-- wrapper begin -->
+<div class="wrapper clearfix">
+    <div class="left_row clearfix">
+        <div class="left_cont clearfix">
+            <div class="left2">
+                <div class="mod_menu_bg"></div>
+                <div class="mod_banner swiper-container">
+                    <ul class="ban_ul swiper-wrapper"></ul>
+                    <div id="mod_position" class="dot-infobox"></div>
+                    <div class="radius_tool">
+                        <i class="topl"></i>
+                        <i class="topr"></i>
+                        <i class="botl"></i>
+                        <i class="botr"></i>
+                    </div>
+                </div>
+
+                <div class="mod_main">
+                    <div class="tabcont">
+                        <div class="tabtxt">
+                            <div class="mod_menu_bg"></div>
+                            <!--公告：滚动文字-->
+                            <div class="bulletinPanel" id="bulletinPanel">
+                                <ul class="anouncelist" id="bulletinDomId"></ul>
+                            </div>
+                        </div>
+                        <% include index_chat.html %>
+                    </div>
+                    <div class="radius_tool">
+                        <i class="topl"></i>
+                        <i class="topr"></i>
+                        <i class="botl"></i>
+                        <i class="botr"></i>
+                    </div>
+                </div>
+
+            </div>
+            <div class="left1">
+                <div class="mod_menu_bg"></div>
+                <div class="left1_cont">
+                    <!-- 视频模块 -->
+                    <% include index_video.html %>
+                    <div class="mod_videolist">
+                        <div class="tabnav clearfix">
+                            <div class="mod_menu_bg"></div>
+                            <a class="on" href="javascript:void(0)" onClick="ga('send', 'event', 'click', 'hangqing', 'hxstudio_rightlink');_trackData.push(['addaction','click', 'hangqing', 'hxstudio_rightlink']);">
+                                行情
+                            </a>
+                            <a class="" href="javascript:void(0)" onClick="ga('send', 'event', 'click', 'message', 'hxstudio_rightlink');_trackData.push(['addaction','click', 'message', 'hxstudio_rightlink']);">
+                                快讯<sup id="newInfoCount" style="display:none;"></sup>
+                            </a>
+                        </div>
+                        <div class="listcont scrollbox">
+                            <div class="list_tab on">
+                                <div class="mod_menu_bg"></div>
+                                <ul class="hangqing">
+                                    <li>
+                                        <h5>伦敦金</h5>
+                                        <b id="price_XAUUSD"><span></span><i class="hq-up" changeCss="true"></i></b>
+                                        <p id="deltaPercent_XAUUSD"></p>
+                                    </li>
+                                    <li>
+                                        <h5>伦敦银</h5>
+                                        <b id="price_XAGUSD"><span></span><i class="hq-up" changeCss="true"></i></b>
+                                        <p id="deltaPercent_XAGUSD"></p>
+                                    </li>
+                                    <!--<li>
+                                        <h5>CNH黄金</h5>
+                                        <b>1926<span>.96</span><i class="hq-up"></i></b>
+                                        <p>32.44  2.57%</p>
+                                    </li>
+                                    <li>
+                                        <h5>CNH白银</h5>
+                                        <b>1926<span>.96</span><i class="hq-down"></i></b>
+                                        <p>32.44  2.57%</p>
+                                    </li>-->
+                                    <li>
+                                        <h5>美元指数</h5>
+                                        <b id="price_USDX"><span></span><i class="hq-down" changeCss="true"></i></b>
+                                        <p id="deltaPercent_USDX"></p>
+                                    </li>
+                                    <li>
+                                        <h5>纽约原油</h5>
+                                        <b id="price_CLWTI"><span></span><i class="hq-down" changeCss="true"></i></b>
+                                        <p id="deltaPercent_CLWTI"></p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="list_tab">
+                                <div class="message_list">
+                                    <div class="scrollbox">
+                                        <ul class="news"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="radius_tool">
+                        <i class="botl"></i>
+                        <i class="botr"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="right_row clearfix">
+    <div class="mod_menu_bg"></div>
+    <div class="mod_userlist">
+        <div class="user-information">
+            <% if (studioList!='[]') { %>
+            <% studioList.forEach(function(row,index){  if(row.isCurr) {%>
+            <div class="user-inftop">
+                <div class="mod_menu_bg"></div>
+                <span id="roomInfoId" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>"><%= row.name %><i class="off"></i></span>
+                <!--<a class="toggle-room" href="javascript:;">切换房间 <i></i></a>-->
+                <div class="changeroom">
+                    <a href="javascript:" class="roomctrl toggle-room" onClick="ga('send', 'event', 'click', 'room', 'hxstudio_leftlink');_trackData.push(['addaction','click', 'room', 'hxstudio_leftlink']);">
+                        <span>切换房间</span><i></i>
+                    </a>
+                    <div class="rooms">
+                        <% studioList.forEach(function(rowIn,indexIn){ if(row.id!=rowIn.id) {%>
+                        <div class="rbox" rid="<%= rowIn.id %>"> <!--last-->
+                            <div class="rbox_top">
+                                <span class="rname"><%= rowIn.name %><i></i></span>
+                                <span class="peo_num" title="在线人数"><i></i><label></label></span>
+                                <a href="javascript:" class="enterbtn" rid="<%= rowIn.id %>" cgs="<%= rowIn.clientGroup %>" aw="<%= rowIn.allowWhisper %>" awr="<%= rowIn.whisperRoles %>"  av="<%= rowIn.allowVisitor %>" onClick="ga('send', 'event', 'click', 'room_jr', 'hxstudio_leftlink');_trackData.push(['addaction','click', 'room_jr', 'hxstudio_leftlink']);">
+                                    进入
+                                </a>
+                            </div>
+                            <div class="info">
+                                <span>主讲人：<label class="nk"></label></span>
+                                <span>直播时间：<label class="st"></label></span>
+                                <span>房间介绍</span>
+                                <p><%= rowIn.remark %></p>
+                            </div>
+                        </div>
+                        <% }}); %>
+                        <i class="arr"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="user-infbox">
+                <img class="user-code dn" src="">
+                <dl id="teacherInfoId" class="dn">
+                    <dt><img src="" alt=""></dt>
+                    <dd>
+                        <h5></h5>
+                        <p></p>
+                    </dd>
+                </dl>
+                <h5 id="outline">老师还未上线哦</h5>
+                <span><%= row.remark %></span>
+            </div>
+            <% }}); %>
+            <% } %>
+        </div>
+        <div class="titbar">
+            <div class="mod_menu_bg"></div>
+            <span class="on">会员<i>（<label></label>）</i></span><span>游客<i>（<label></label>）</i></span>
+        </div>
+        <div class="cont">
+            <div class="user_box scrollbox">
+                <ul id="userListId"></ul>
+                <ul id="visitorListId" class="dn"></ul>
+            </div>
+        </div>
+        <div class="radius_tool">
+            <i class="topl"></i>
+            <i class="topr"></i>
+            <i class="botl"></i>
+            <i class="botr"></i>
+        </div>
+    </div>
+
+</div>
+<a class="shrinkbtn" href="javascript:void(0)"></a>
+</div>
+<!-- wrapper end -->
+<!-- 各种弹窗 -->
+<% include index_box.html %>
+<script type="text/javascript" src="/base/lib/socket.io.js"></script>
+<script type="text/javascript" src="/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
+<script type="text/javascript" src="/base/lib/lightbox/lightbox.min.js"></script>
+<script type="text/javascript" src="/base/lib/jqueryUI/jquery-ui.min.js"></script>
+<script type="text/javascript" src="/base/lib/swipe/swiper.min.js"></script>
+<script type="text/javascript" src="/base/lib/jquery.superslide.2.1.1.js"></script>
+<script type="text/javascript" src="/base/lib/websocket.min.js"></script>
+<script type="text/javascript" src="/base/lib/jquery.xdomainrequest.min.js"></script>
+<script type="text/javascript" src="/base/lib/lazyload/lazyload.min.js"></script>
+<script type="text/javascript" src="/base/lib/paste.js"></script>
+<% if(isDevTest) { %>
+<script type="text/javascript" src="/base/lib/newquote.js"></script>
+<script type="text/javascript" src="/base/lib/face/jquery.face.js"></script>
+<script type="text/javascript" src="/base/util/common.js"></script>
+<script type="text/javascript" src="/base/util/chatAnalyze.js"></script>
+<script type="text/javascript" src="/hx/theme1/js/index.js"></script>
+<script type="text/javascript" src="/hx/theme1/js/index_chat.js"></script>
+<script type="text/javascript" src="/hx/theme1/js/index_video.js"></script>
+<script type="text/javascript" src="/hx/theme1/js/index_box.js"></script>
+<script type="text/javascript" src="/hx/theme1/js/index_tool.js"></script>
+<% }else{ %>
+<script type="text/javascript" src="/hx/theme1/js/index.min.js?t=<%=new Date().getTime()%>"></script>
+<% }%>
+<script type="text/javascript" src="http://images.hx9999.com/scripts/analytics.js"></script>
+<script type="text/javascript">
+    indexJS.apiUrl='<%= apiUrl %>';
+    indexJS.userInfo=JSON.parse('<%- userInfo %>');
+    indexJS.serverTime=Number('<%= serverTime %>');
+    indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
+    indexJS.filePath='<%= filePath %>';
+    indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
+    indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
+    indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
+
+    function widthCheck(){
+        var ww = $(window).width();
+        if(ww <= 1680 ){
+            $('body').addClass('wid1');
+            if(ww < 1440 ){
+                $('body').addClass('wid2');
+                if(ww < 1209 ){
+                    $('body').addClass('wid3');
+                }
+            }
+        }
+        if(ww >1680){
+            $('body').removeClass('wid1');
+            $('body').removeClass('wid2');
+            $('body').removeClass('wid3');
+        }
+    }
+
+    function heightCalcu(){
+        var hh = $(window).height();
+        var hh_banner = $('.mod_banner').height();
+        var hh_room = $('.mod_room').height();
+        var hh_tit = $('.user-information').height();
+        var hh_txt = $('.tabtxt').height();
+        var hh_inp = $('.input_box').height();
+        $('.mod_main .tabcont').height(hh-hh_banner-68);
+        $('.mod_userlist .scrollbox').height(hh-hh_room-110-hh_tit);
+        $('.mod_menu').height(hh-60);
+        $('.calendar_ul.scrollbox2').height(hh-165);
+        $('.main_tab .scrollbox').height(hh-hh_banner-hh_txt-hh_inp-80);
+        $('.main_tab .chat_content').height(hh-hh_banner-90-$('.chat_input').height()-$('.mymsg').height());
+        $('.left2').height(hh-68);
+        $('.left1').height(hh-68);
+        $('.mod_video').height(hh - 393);
+        $('.mod_videolist .listcont').height(hh-65-$('.mod_video').height()-$('.mod_videolist .tabnav').height());
+    }
+    widthCheck();
+    heightCalcu();
+    $(function() {
+        $(window).resize(function (e) {
+            widthCheck();
+            heightCalcu();
+        });
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'disableScrolling':true,
+            'positionFromTop':50,
+            'albumLabel':"%1 of %2"
+        });
+    });
+</script>
+</body>
+</html>
