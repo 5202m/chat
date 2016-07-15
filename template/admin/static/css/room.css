@@ -525,7 +525,7 @@ body{ overflow:hidden;/*background:url(../img/studio_admin/bg.jpg) center 0 no-r
 .point-list  .point-list-content .date{width: 164px;border: 1px solid #e3e4ea;height: 22px;margin:5px auto;}
 .point-list  .point-list-content textarea {width: 354px;height: 150px;margin: 5px 0;}
 
-.video {position: absolute;top:30px;right:20px;width:530px;height:500px;background:#e3e4ea;z-index: 10000;}
+.video {position: absolute;top:30px;right:20px;width:530px;height:500px;background:#e3e4ea;z-index: 10000;border: 1px solid #c2c3c7;padding: 4px;}
 .video .close-title{position: relative;width: 100%;height: 30px;background: #fff;border-bottom:1px solid #e3e4ea; }
 .video .video-close {position: absolute;background: url(../img/u64.png) no-repeat;width:26px;height:26px;right:0px;z-index: 100000;}
 

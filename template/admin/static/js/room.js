@@ -888,7 +888,10 @@ var room={
         $(".video .video-close").click(function(){
             $('.video').addClass('dn');
         });
-        $('.video').draggable();
+        $('.video').draggable({handle: ".close-title"}).resizable({minWidth: 450,minHeight:420,maxWidth:1024,maxHeight:900});
+        $('.video').resize(function(e){
+            $(this).find(".mod_video").height($(this).height()-40);
+        });
         $('.not-talk .talk-title .talk-close,#btnCantTalkCancel').click(function(){
             $('.not-talk').addClass('dn');
         });
