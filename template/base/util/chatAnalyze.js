@@ -81,7 +81,7 @@ var chatAnalyze = {
     },
     //初始化GA
     initGA : function(type){
-        if(type == "fxstudio"){
+        if(type == "studio"){
             _gaq.push([ '_setAccount', 'UA-49389835-1' ]);
             _gaq.push([ '_setDomainName', 'gwfx.com' ]);
             _gaq.push([ '_addIgnoredRef', 'gwfx.com' ]);
