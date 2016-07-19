@@ -47,14 +47,13 @@ var studioService = {
                     }
                 },
                 memberInfo : function(callback){
-                    if(isGetMember && userInfo.userId && userInfo.groupId){
+                    if(isGetMember && userInfo.userId){
                         member.findOne({
                             valid: 1,
                             'loginPlatform.chatUserGroup': {
                                 $elemMatch: {
                                     _id: userInfo.groupType,
-                                    userId: userInfo.userId,
-                                    "rooms._id": userInfo.groupId
+                                    userId: userInfo.userId
                                 }
                             }
                         },function(err,row) {
