@@ -19,16 +19,18 @@ var syllabusService = require('../service/syllabusService');//引入syllabusServ
 var studioService = {
     /**
      * 提取主页需要加载的数据
+     * @param userInfo
      * @param groupId
      * @param isGetRoomList 是否加载房间
      * @param isGetSyllabus 是否加载课程表数据
+     * @param isGetMember   是否客户信息
      * @param dataCallback
      */
-    getIndexLoadData:function(groupType,groupId,isGetRoomList,isGetSyllabus,dataCallback){
+    getIndexLoadData:function(userInfo,groupId,isGetRoomList,isGetSyllabus,isGetMember,dataCallback){
         async.parallel({
                 studioList: function(callback){
                     if(isGetRoomList){
-                        studioService.getRoomList(groupType,function(rows){
+                        studioService.getRoomList(userInfo.groupType,function(rows){
                             callback(null,rows);
                         });
                     }else{
@@ -37,12 +39,38 @@ var studioService = {
                 },
                 syllabusResult: function(callback){
                     if(isGetSyllabus){
-                        syllabusService.getSyllabus(groupType, groupId, function(data){
+                        syllabusService.getSyllabus(userInfo.groupType, groupId, function(data){
                             callback(null,data);
                         });
                     }else{
                         callback(null,null);
                     }
+                },
+                memberInfo : function(callback){
+                    if(isGetMember && userInfo.userId && userInfo.groupId){
+                        member.findOne({
+                            valid: 1,
+                            'loginPlatform.chatUserGroup': {
+                                $elemMatch: {
+                                    _id: userInfo.groupType,
+                                    userId: userInfo.userId,
+                                    "rooms._id": userInfo.groupId
+                                }
+                            }
+                        },function(err,row) {
+                            if (!err && row && common.checkArrExist(row.loginPlatform.chatUserGroup)) {
+                                var group = row.loginPlatform.chatUserGroup.id(userInfo.groupType);
+                                if (group) {
+                                    userInfo.avatar = group.avatar;
+                                    userInfo.clientGroup = group.vipUser ? constant.clientGroup.vip:group.clientGroup;
+                                    userInfo.nickname = group.nickname;
+                                }
+                            }
+                            callback(null, userInfo);
+                        });
+                        return;
+                    }
+                    callback(null, userInfo);
                 }
             },
             function(err, results) {

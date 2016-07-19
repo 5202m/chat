@@ -43,14 +43,51 @@ var adminService ={
                 result.nickname=row.userName;
                 result.mobilePhone=row.telephone;
                 result.fromPlatform = constant.fromPlatform.pm_mis;
-                if(common.isBlank(userTypeTmp)){
+                adminService.updateMember(result, function(isOK){
                     callback(result);
-                    return false;
-                }
-                callback(result);
+                });
             }else{
                 callback(result);
             }
+        });
+    },
+    /**
+     * 后台使用最新数据更新member
+     * */
+    updateMember : function(userInfo, callback){
+        member.findOne({
+            valid: 1,
+            'loginPlatform.chatUserGroup': {
+                $elemMatch: {
+                    accountNo: userInfo.userId
+                }
+            }
+        },function(err,row){
+            if(err){
+                logger.error("updateMember->fail!:"+err);
+                callback(false);
+                return;
+            }else if(row && common.checkArrExist(row.loginPlatform.chatUserGroup)){
+                var groups = row.loginPlatform.chatUserGroup,group;
+                for(var i = 0, lenI = groups.length; i < lenI; i++){
+                    group = groups[i];
+                    if(group.accountNo == userInfo.userId){
+                        group.nickname = userInfo.nickname;
+                        group.userType = userInfo.userType;
+                        group.avatar   = userInfo.avatar;
+                    }
+                }
+                row.save(function(err){
+                    if(err){
+                        logger.error("updateMember->fail!:"+err);
+                        callback(false);
+                        return;
+                    }
+                    callback(true);
+                });
+                return;
+            }
+            callback(true);
         });
     },
     /**

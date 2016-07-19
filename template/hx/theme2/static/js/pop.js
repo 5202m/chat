@@ -47,7 +47,7 @@ var studioMbPerson = {
                         common.getJson("/hxstudio/upgrade",{clientGroup : loc_upLevel},function(result){
                             studioMbPop.loadingBlock($("#personPop"), true);
                             if(result.isOK){
-                                var msg = "升级成功！重新登录后，您可享用更多直播间权限。";
+                                var msg = "升级成功！刷新页面后，您可享用更多直播间权限。";
                                 if(result.clientGroup === "active" && "notActive" === loc_upLevel){
                                     msg += "<br/>注：你已经激活真实交易账户，直接为你升级到A级别。"
                                 }

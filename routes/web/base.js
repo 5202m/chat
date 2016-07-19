@@ -144,7 +144,12 @@ router.get('/', function(req, res) {
 
 //转到页面
 function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
-    studioService.getIndexLoadData(chatUser.groupType,groupId, true,(!isMobile||(isMobile && common.isValid(groupId))),function(data){
+    studioService.getIndexLoadData(chatUser,groupId, true,(!isMobile||(isMobile && common.isValid(groupId))), chatUser.isLogin, function(data){
+        if(chatUser.isLogin){
+            //每次刷新，从后台数据库重新获取最新客户信息后更新session，应用于升级和修改昵称等
+            req.session.studioUserInfo = data.memberInfo;
+            chatUser = data.memberInfo;
+        }
         var newStudioList=[],rowTmp=null;
         var isVisitor=(constant.clientGroup.visitor==clientGroup);
         var viewDataObj={apiUrl:config.pmApiUrl,filePath:config.filesDomain,web24kPath:config.web24kPath,mobile24kPath:config.mobile24kPath};//输出参数
