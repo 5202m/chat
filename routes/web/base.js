@@ -853,14 +853,7 @@ router.post('/getShowTrade', function(req, res){
     if(typeof params == 'string'){
         params = JSON.parse(params);
     }
-    /*params.pageNo = common.isBlank(params.pageNo) ? constant.curPageNo : params.pageNo;
-    params.pageSize = common.isBlank(params.pageSize) ? constant.pageSize : params.pageSize;
-    if(!params.pageNo||params.pageNo <= 0){
-        params.pageNo = 1;
-    }
-    params.pageNo=parseInt(params.pageNo);
-    params.pageSize=parseInt(params.pageSize)||20;*/
-    if(/*isNaN(params.pageNo)||isNaN(params.pageSize) || */common.isBlank(params.groupType)){
+    if(common.isBlank(params.groupType)){
         res.json({'isOK':false,'data':null, 'msg':'参数错误'});
     }else{
         showTradeService.getShowTradeList(params,function(page){
@@ -877,6 +870,7 @@ router.post('/addShowTrade', function(req, res){
     if(typeof params == 'string'){
         params = JSON.parse(params);
     }
+    params.Ip = common.getClientIp(req);
     if(common.isBlank(params.title)){
         res.json({'isOK':false, 'msg':'请输入晒单标题'});
     }else if(common.isBlank(params.tradeImg)){

@@ -32,6 +32,9 @@ var chatShowTradeSchema = new Schema({
     remark: String,//心得
     valid : Number, //是否删除 1-有效 0-无效
     updateDate : Date,
+    createUser: String,
+    createIp: String,
+    createDate: Date,
     title: String,//标题
     tradeType: Number,//类别：1 分析师晒单，2 客户晒单
     status: Number, //状态：0 待审核， 1 审核通过， -1 审核不通过

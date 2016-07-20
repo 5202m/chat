@@ -118,6 +118,8 @@ var tool={
         });
         /*返回晒单墙按钮事件*/
         $('#backShowTrade').click(function(){
+            tool.tradeForUser = null;
+            tool.initShowTrade();
             $('.dr9 .allsd_list').removeClass('dn');
             $('.dr9 .mysd_list').addClass('dn');
         });
