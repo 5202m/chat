@@ -1063,6 +1063,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .sd_result .kh-btn a.fl{ background: #c49351; color: #fff }
 .sd_result .kh-btn a.fl:hover{ background-color: #c58735 }
 .popup_box.pop_addsd{ margin-top: -260px; }
+.loading_trade {position: absolute;z-index: 10010;top: 45%;left: 40%;}
 
 .mod_scrollnews{ width: 100%; position: absolute; top: 0;  z-index: 100 ; overflow: hidden;}
 .newslist{background-color: rgba(31,35,47,.8);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#CC1f232f,endColorstr=#CC1f232f);  overflow: hidden;float: right; padding-right: 27px; position: relative; padding-left: 10px;}

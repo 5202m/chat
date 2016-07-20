@@ -2,6 +2,7 @@ var chatShowTrade = require('../models/chatShowTrade');//引入chatShowTrade数�
 var logger=require('../resources/logConf').getLogger('showTradeService');//引入log4js
 var chatPraiseService = require('../service/chatPraiseService');//引入chatPraiseService
 var constant = require('../constant/constant');//引入constant
+var common = require('../util/common');//引入common类
 /**
  * 晒单服务类
  * 备注：查询各分析师的晒单数据
@@ -23,7 +24,7 @@ var showTradeService = {
             "valid" : 1
         }).sort({"showDate":-1}).exec("find", function(err, data){
             if(err){
-                logger.error("查询晒单数据失败!", err);
+                logger.error("查询晒单数据失败!>>getShowTrade:", err);
                 callback(null);
                 return;
             }
@@ -51,6 +52,115 @@ var showTradeService = {
                 }
             }
             callback(result);
+        });
+    },
+    /**
+     * 查询指定条数数据
+     * @param params
+     * @param callback
+     */
+    getShowTradeList:function(params, callback){
+        var searchObj = {"groupType":params.groupType, "valid":1, "status":1};
+        if(common.isValid(params.userNo)){
+            searchObj = {"groupType":params.groupType, "valid":1,"boUser.userNo":params.userNo};
+        }
+        //var from = (params.pageNo-1) * params.pageSize;
+        var orderByJsonObj={"showDate": 'desc' };
+        if(common.isValid(params.skipLimit)){
+            callback(null);
+            return;
+        }
+        chatShowTrade.find(searchObj)
+            //.skip(from)
+            //.limit(params.pageSize)
+            .sort(orderByJsonObj)
+            .exec("find",function(err, data){
+            if(err){
+                logger.error("查询晒单数据失败! >>getShowTradeList:", err);
+                callback(null);
+                return;
+            }
+            var result = null;
+            if(data && data.length > 0){
+                result = {
+                    tradeList : []
+                };
+                var tradeInfo = null;
+                for(var i = 0,lenI = data.length; i < lenI;i++){
+                    tradeInfo = data[i].toObject();
+                    tradeInfo.user = data[i].boUser.toObject();
+                    delete tradeInfo["boUser"];
+                    result.tradeList.push(tradeInfo);
+                }
+            }
+            callback(result);
+        });
+    },
+    /**
+     * 新增晒单
+     * @param params
+     * @param callback
+     */
+    addShowTrade:function(params, callback){
+        var insertModel = {
+            _id : null,
+            groupType : params.groupType, //聊天室组别
+            boUser : {
+                _id : null,   //userId
+                userNo : params.userNo,//userNo
+                avatar : params.avatar,//头像
+                userName : params.userName,//分析师姓名
+                wechatCode : '',//分析师微信号
+                wechatCodeImg : '',//分析师微信二维码
+                winRate : ''//分析师胜率
+            },
+            showDate : new Date(), //晒单时间
+            tradeImg : params.tradeImg, //晒单图片
+            profit : '', //盈利
+            remark : params.remark,//心得
+            valid : 1, //是否删除 1-有效 0-无效
+            updateDate : new Date(),
+            title: params.title,//标题
+            tradeType: params.tradeType,//类别：1 分析师晒单，2 客户晒单
+            status: 0, //状态：0 待审核， 1 审核通过， -1 审核不通过
+            praise: 0 //点赞数
+        };
+        new chatShowTrade(insertModel).save(function(err){
+            if (err) {
+                logger.error("保存晒单数据失败! >>addShowTrade:", err);
+                callback({isOK:false, msg:'晒单失败'});
+            }else{
+                callback({isOK:true, msg: ''});
+            }
+        });
+    },
+    /**
+     * 更新点赞数
+     * @param params
+     * @param callback
+     */
+    setShowTradePraise:function(params, callback){
+        var searchObj = {_id:params.praiseId};
+        chatShowTrade.findOne(searchObj, function(err, row){
+            if(err){
+                logger.error("查询数据失败! >>setShowTradePraise:", err);
+                callback({isOK:false, msg:'点赞失败'});
+            }else{
+                if(common.isBlank(row.praise)){
+                    row.praise = 1;
+                }else{
+                    row.praise += 1;
+                }
+                var setObj = { '$set': {'praise': row.praise}};
+                chatShowTrade.findOneAndUpdate(searchObj, setObj, function(err1, row1){
+                    if (err1) {
+                        logger.error('setShowTradePraise=>fail!' + err1);
+                        callback({isOK: false,  msg: '点赞失败'});
+                    }else{
+                        callback({isOK: true, msg: ''});
+                    }
+                });
+            }
         });
     }
 };

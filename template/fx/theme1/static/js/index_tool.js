@@ -5,6 +5,9 @@
 var tool={
     financeShowIntervalId:null,
     financeHideIntervalId:null,
+    tradeForUser:null,//指定用户的晒单(userNo)
+    tradeList:[],//晒单数据
+    tradeLoadAll:false,
     /**
      * 初始化入口
      */
@@ -37,6 +40,9 @@ var tool={
             //报价页面已关闭则关闭报价连接
             if(!$('.dr2').hasClass('on') && pkMarketSocket){
                 pkMarketSocket.close();
+            }
+            if($('.dr9').hasClass('entered')){
+                $('.dr9').removeClass('entered');
             }
         });
         /*行情投票tab切换*/
@@ -84,6 +90,106 @@ var tool={
             $(this).addClass('on clicked');
             $($('.calc_box .calc_tab')[$(this).index()]).addClass('on');
         });
+        /*我要晒单按钮事件*/
+        $('.dr9 .dropcont .cont .userad_btnbar .fl').click(function(){
+            if(indexJS.userInfo.isLogin){
+                if(common.isBlank(indexJS.userInfo.isSetName) || indexJS.userInfo.isSetName) {
+                    $('#userName').val(indexJS.userInfo.nickname).attr('readonly', 'readonly');
+                }
+                $('.pop_addsd').removeClass('dn').show();
+            }else{
+                var ops = ops || {};
+                box.openLgBox(ops.closeable, ops.showTip);
+            }
+        });
+        /*我的晒单按钮事件*/
+        $('#myShowTrade').click(function(){
+            if(indexJS.userInfo.isLogin){
+                tool.tradeForUser = indexJS.userInfo.userId;
+                tool.initShowTrade();
+                $('.dr9 .mysd_list .sdinfo .sdinfo_cont .headimg img').attr('src',$('#avatarInfoId').attr('src'));
+                $('.dr9 .mysd_list .sdinfo .sdinfo_cont span b').text(indexJS.userInfo.nickname);
+                $('.dr9 .allsd_list').addClass('dn');
+                $('.dr9 .mysd_list').removeClass('dn');
+            }else{
+                var ops = {};
+                box.openLgBox(ops.closeable, ops.showTip);
+            }
+        });
+        /*返回晒单墙按钮事件*/
+        $('#backShowTrade').click(function(){
+            $('.dr9 .allsd_list').removeClass('dn');
+            $('.dr9 .mysd_list').addClass('dn');
+        });
+        /*上传晒单图片*/
+        $("#flTradeImg").change(function (){
+            var _this=this;
+            var img = _this.files[0];
+            // 判断是否图片
+            if(!img){
+                return false;
+            }
+            // 判断图片格式
+            if(!(img.type.indexOf('image')==0 && img.type && /\.(?:jpg|png|gif)$/.test(img.name.toLowerCase())) ){
+                alert('目前暂支持jpg,gif,png格式的图片！');
+                return false;
+            }
+            var fileSize=img.size;
+            if(fileSize>=1024*512){
+                alert('上传的图片大小不要超过512KB.');
+                return false ;
+            }
+            try{
+                var formData = new FormData($("#showTradeForm")[0]);
+                $.ajax({
+                    url: indexJS.apiUrl+'/upload/uploadFile',
+                    type: 'POST',
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (dataRt) {
+                        if(dataRt.result==0){
+                            var data=dataRt.data?dataRt.data[0]:null;
+                            if(data){
+                                $('#tradeImg').val(data.fileDomain+data.filePath);
+                            }
+                        }else{
+                            alert("上传图片失败，请联系在线客服！");
+                        }
+                    },
+                    error: function (result) {
+                        console.error("error:",result);
+                    }
+                });
+            }catch(es){
+                console.error("上传图片失败",es);
+            }
+        });
+        /*提交晒单数据*/
+        $('#tradeSubmit').click(function(){
+            tool.showTrade();
+        });
+        /*继续晒单*/
+        $('#showTradeAgain').click(function(){
+            $('.pop_addsd input[type="text"],.pop_addsd textarea').val('');
+            $('#flTradeImg').val('');
+            if(indexJS.userInfo.isSetName) {
+                $('#userName').val(indexJS.userInfo.nickname).attr('readonly', 'readonly');
+            }
+            $('.sd_result').addClass('dn').hide();
+        });
+        /*我知道了*/
+        $('#sdResultClose').click(function(){
+            $('.pop_addsd input[type="text"],.pop_addsd textarea').val('');
+            $('#flTradeImg').val('');
+            if(indexJS.userInfo.isSetName) {
+                $('#userName').val(indexJS.userInfo.nickname).attr('readonly', 'readonly');
+            }
+            $('.sd_result').addClass('dn').hide();
+            $('.pop_close').click();
+        });
     },
     /**
      * 根据激活隐藏域的class加载数据
@@ -111,6 +217,9 @@ var tool={
                 break;
             case 'dropitem dr6':
                 tool.setDownloadPPT();/*课件下载*/
+                break;
+            case 'dropitem dr9':
+                tool.initShowTrade();/*晒单墙*/
                 break;
         }
     },
@@ -340,6 +449,150 @@ var tool={
         });
     },
     /**
+     * 获取晒单数据
+     * @param pageNo
+     * @param pageSize
+     */
+    initShowTrade:function(){
+        $('.loading_trade').removeClass('dn');
+        var params = {groupType:indexJS.userInfo.groupType};
+        if(common.isValid(tool.tradeForUser)){
+            params.userNo = tool.tradeForUser;
+        }
+        common.getJson('/fxstudio/getShowTrade',{data:JSON.stringify(params)},function(data){
+            if(data.isOK && common.isValid(data.data)){
+                if(common.isBlank(tool.tradeForUser)) {
+                    $('.dr9 .allsd_list .sdlistcont ul').empty();
+                }else{
+                    $('.dr9 .mysd_list .sdlistcont ul').empty();
+                }
+                tool.tradeList = data.data.tradeList || [];
+                tool.tradeLoadAll = false;
+                tool.setShowTrade();
+            }else{
+                $('.loading_trade').addClass('dn');
+            }
+        });
+    },
+    /**
+     * 设置晒单墙数据显示
+     * @returns {boolean}
+     */
+    setShowTrade:function(){
+        if(tool.tradeLoadAll){
+            $('.loading_trade').addClass('dn');
+            return false;
+        }
+        var start = common.isBlank(tool.tradeForUser) ? $(".dr9 .allsd_list .usersd_list li").size() : $(".dr9 .mysd_list .usersd_list li").size();
+        var listData = tool.tradeList;
+        var row = null;
+        var length = listData.length;
+        $('#sdcount').text(common.isValid(tool.tradeForUser)?length:'');
+        var tradeHtml='',tradeFormat = common.isBlank(tool.tradeForUser) ? tool.formatHtml('showTradeAll') : tool.formatHtml('showTradeUser'),cls;
+        for(var i = start; i < length && i < start + 20; i++){
+            row = listData[i];
+            switch (row.status){
+                case 1:
+                    cls = '';
+                    break;
+                case 0:
+                    cls = ' class="s1"';
+                    break;
+                case -1:
+                    cls = ' class="s2"';
+                    break;
+            }
+            var showTradeDate = common.formatterDateTime(row.showDate,'/').substr(0,16);
+            if(common.isBlank(tool.tradeForUser)){
+                tradeHtml += tradeFormat.formatStr(row.title, row.user.userName, showTradeDate, row.tradeImg, row.remark, common.isBlank(row.praise)?0:row.praise, row._id, row.user.userNo, row.user.avatar);
+            }else{
+                tradeHtml += tradeFormat.formatStr(cls, row.title, row.tradeImg, row.remark, showTradeDate, common.isBlank(row.praise)?0:row.praise, row._id);
+            }
+        }
+        if(common.isBlank(tool.tradeForUser)) {
+            $('.dr9 .allsd_list .sdlistcont ul').append(tradeHtml);
+        }else{
+            $('.dr9 .mysd_list .sdlistcont ul').append(tradeHtml);
+        }
+        $('.loading_trade').addClass('dn');
+        if(i >= length - 1){
+            tool.tradeLoadAll = true;
+        }
+        tool.setUserShowTrade();
+        tool.showTradePraise();
+        indexJS.setListScroll('.dr9 .sdlistcont',{isCustom:false, scrollbarPosition:"outside",theme:"dark-2", callbacks : {onTotalScroll : function(){$('.loading_trade').removeClass('dn');tool.setShowTrade();}}});/*设置滚动条*/
+    },
+    /**
+     * 用户晒单数据
+     */
+    setUserShowTrade:function(){
+        $('.dr9 .allsd_list .usersd_list li .sdinfo_bar .fl a').click(function(){
+            tool.tradeForUser = $(this).attr('userId');
+            tool.initShowTrade();
+            $('.dr9 .mysd_list .sdinfo .sdinfo_cont .headimg img').attr('src',$(this).attr('avatar'));
+            $('.dr9 .mysd_list .sdinfo .sdinfo_cont span b').text($(this).text());
+            $('.dr9 .allsd_list').addClass('dn');
+            $('.dr9 .mysd_list').removeClass('dn');
+        });
+    },
+    /**
+     * 我要晒单提交
+     */
+    showTrade:function(){
+        var title = $('#title').val();
+        var userName = $('#userName').val();
+        var tradeImg = $('#tradeImg').val();
+        var remark = $('#remark').val();
+        if(common.isBlank(title)){
+            $('#trade_error').text('请输入标题').show();
+        }else if(common.isBlank(userName)){
+            $('#trade_error').text('请输入晒单人').show();
+        }else if(common.isBlank(tradeImg)){
+            $('#trade_error').text('请上传晒单图片').show();
+        }else{
+            var params = {groupType:indexJS.userInfo.groupType,
+                userNo:indexJS.userInfo.userId,
+                avatar:$('#avatarInfoId').attr('src'),
+                userName:userName,
+                tradeImg:tradeImg,
+                remark:remark,
+                title:title,
+                tradeType:2
+            };
+            common.getJson('/fxstudio/addShowTrade',{data:JSON.stringify(params)},function(data){
+                if(data.isOK){
+                    $('.sd_result').removeClass('dn').show();
+                    if(!indexJS.userInfo.isSetName){
+                        $('#setNkForm input[name="nickname"]').val(userName);
+                        $('#setNkBtn').click();
+                    }
+                }else{
+                    box.showMsg(data.msg);
+                }
+            });
+        }
+    },
+    /**
+     * 晒单墙点赞事件
+     */
+    showTradePraise:function(){
+        $('.dr9 .sdlistcont ul li .support').click(function(){
+            var $this = $(this);
+            var params = {clientId:indexJS.userInfo.userId, praiseId:$(this).attr('id')};
+            common.getJson("/fxstudio/setTradePraise",{data:JSON.stringify(params)},function(result){
+                if(result.isOK) {
+                    $this.find('i').fadeIn().delay(400).fadeOut();
+                    var sp= $this.find("span");
+                    sp.text(common.isValid(sp.text())?(parseInt(sp.text())+1):0);
+                }else{
+                    box.showTipBox('亲，已点赞，当天只能点赞一次！');
+                }
+                $this.addClass('supported');
+                $this.attr('title','已点赞');
+            },true);
+        });
+    },
+    /**
      * 返回服务器当天日期
      */
     currentDate:function(){
@@ -405,6 +658,30 @@ var tool={
                 formatHtmlArr.push('       <span>{3}<b>{4}</b></span>');
                 formatHtmlArr.push('       <a href="{5}" target="download" download="{6}" class="downbtn" onclick="_gaq.push([\'_trackEvent\', \'fx_studio\', \'file_download\',$(this).prev().prev().text()]);"><i></i><span>下载<b>{7}</b></span></a>');
                 formatHtmlArr.push('   </div>');
+                formatHtmlArr.push('</li>');
+                break;
+            case 'showTradeAll':
+                formatHtmlArr.push('<li>');
+                formatHtmlArr.push('    <span class="sd_tit" title="{0}">{0}</span>');
+                formatHtmlArr.push('    <div class="sdinfo_bar">');
+                formatHtmlArr.push('        <span class="fl">晒单人：<a href="javascript:void(0)" userId="{7}" avatar="{8}">{1}</a></span>');
+                formatHtmlArr.push('        <span class="sd_date">{2}</span>');
+                formatHtmlArr.push('    </div>');
+                formatHtmlArr.push('    <a href="{3}" data-rel="usersd" data-title="{0}" class="lightbox" data-lightbox="dialog-img"><img src="{3}" alt="{0}"><i></i></a>');
+                formatHtmlArr.push('    <p class="sd_skill">{4}</p>');
+                formatHtmlArr.push('    <a href="javascript:void(0)" class="support" id="{6}">(<span>{5}</span>)<i>+1</i></a>');
+                formatHtmlArr.push('</li>');
+                break;
+            case 'showTradeUser':
+                formatHtmlArr.push('<li{0}>');
+                formatHtmlArr.push('    <i class="state"></i>');
+                formatHtmlArr.push('    <span class="sd_tit" title="{1}">{1}</span>');
+                formatHtmlArr.push('    <a href="{2}" data-rel="usersd" data-title="{1}" class="lightbox" data-lightbox="dialog-img"><img src="{2}" alt="{1}"><i></i></a>');
+                formatHtmlArr.push('    <p class="sd_skill">{3}</p>');
+                formatHtmlArr.push('    <div class="sdbotbar">');
+                formatHtmlArr.push('        <span class="sd_date">{4}</span>');
+                formatHtmlArr.push('        <a href="javascript:void(0)" class="support" id="{6}">(<span>{5}</span>)<i>+1</i></a>');
+                formatHtmlArr.push('    </div>');
                 formatHtmlArr.push('</li>');
                 break;
         }

@@ -845,4 +845,75 @@ router.get('/getVerifyCode', function(req, res) {
     }
 });
 
+/**
+ * 获取晒单数据
+ */
+router.post('/getShowTrade', function(req, res){
+    var params = req.body['data'];
+    if(typeof params == 'string'){
+        params = JSON.parse(params);
+    }
+    /*params.pageNo = common.isBlank(params.pageNo) ? constant.curPageNo : params.pageNo;
+    params.pageSize = common.isBlank(params.pageSize) ? constant.pageSize : params.pageSize;
+    if(!params.pageNo||params.pageNo <= 0){
+        params.pageNo = 1;
+    }
+    params.pageNo=parseInt(params.pageNo);
+    params.pageSize=parseInt(params.pageSize)||20;*/
+    if(/*isNaN(params.pageNo)||isNaN(params.pageSize) || */common.isBlank(params.groupType)){
+        res.json({'isOK':false,'data':null, 'msg':'参数错误'});
+    }else{
+        showTradeService.getShowTradeList(params,function(page){
+            res.json({'isOK':true,'data':page,'msg':''});
+        });
+    }
+});
+
+/**
+ * 新增晒单
+ */
+router.post('/addShowTrade', function(req, res){
+    var params = req.body['data'];
+    if(typeof params == 'string'){
+        params = JSON.parse(params);
+    }
+    if(common.isBlank(params.title)){
+        res.json({'isOK':false, 'msg':'请输入晒单标题'});
+    }else if(common.isBlank(params.tradeImg)){
+        res.json({'isOK':false, 'msg':'请上传晒单图片'});
+    }else if(common.isBlank(params.userName)){
+        res.json({'isOK':false, 'msg':'请输入晒单人'});
+    }else if(common.isBlank(params.groupType) || common.isBlank(params.userNo) || common.isBlank(params.avatar) || common.isBlank(params.tradeType)){
+        res.json({'isOK':false, 'msg':'参数错误'});
+    }else{
+        showTradeService.addShowTrade(params, function(result){
+            res.json(result);
+        });
+    }
+});
+
+/**
+ * 设置晒单点赞
+ */
+router.post('/setTradePraise', function(req, res) {
+    var params = req.body['data'];
+    if(typeof params == 'string'){
+        params = JSON.parse(params);
+    }
+    if(common.isBlank(params.clientId)||common.isBlank(params.praiseId)){
+        res.json({isOK:false});
+    }else{
+        var fromPlatform=getGroupType(req);
+        baseApiService.checkChatPraise(params.clientId,params.praiseId,fromPlatform,function(isOK){
+            if(isOK){
+                showTradeService.setShowTradePraise(params, function(result){
+                    res.json(result);
+                });
+            }else{
+                res.json({isOK:isOK});
+            }
+        });
+    }
+});
+
 module.exports = router;

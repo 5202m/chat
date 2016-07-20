@@ -361,3 +361,52 @@
         <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
     </div>
 </div>
+
+<!-- 用户晒单 -->
+<div class="popup_box pop_addsd dn">
+    <div class="cont">
+        <div class="pop_tit">我要晒单</div>
+        <div class="expert_box">
+            <div class="set_box b2 clearfix">
+                <div class="set_name">标&nbsp;&nbsp;&nbsp;题 <em class="require">*</em></div>
+                <input type="text" id="title" name="title" class="set_inp" placeholder="如6月21日，黄金空仓1手，盈利500美元" />
+            </div>
+            <div class="set_box b2 clearfix">
+                <div class="set_name s1">晒单人 <em class="require">*</em></div>
+                <input type="text" id="userName" name="userName" class="set_inp" placeholder="您在直播间的昵称" />
+            </div>
+            <div class="set_box b2 clearfix">
+                <div class="set_name s1">图&nbsp;&nbsp;&nbsp;片 <em class="require">*</em></div>
+                <input type="text" name="tradeImg" id="tradeImg" class="set_inp" readonly="readonly" placeholder="xxxxx.jpg" />
+                <div class="sdpic_upload">
+                    <span class="sdpic_btn">+ 上传图片</span>
+                    <form method="post" enctype='multipart/form-data' id="showTradeForm" name="showTradeForm">
+                        <input class="sdpic_file" name="flTradeImg" id="flTradeImg" type="file" />
+                        <input type="hidden" name="fileDir" value="pic/trade/chat/front" />
+                    </form>
+                </div>
+            </div>
+            <div class="set_box b2 clearfix">
+                <textarea placeholder="给大家简单说两句交易心得~~" id="remark" name="remark" class="set_textaera"></textarea>
+            </div>
+            <div class="btnbar"><input type="button" class="set_submit" id="tradeSubmit" value="提交" /></div>
+            <div class="error" id="trade_error"><i></i>输入内容有误，请重新输入！</div>
+        </div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 晒单成功 -->
+<div class="popup_box sd_result dn">
+    <div class="cont">
+        <div class="reg_result">
+            <i></i>
+            <h4>您的晒单已成功提交，等待系统审核！ </h4>
+            <div class="kh-btn clearfix">
+                <a href="javascript:void(0);" class="fl" id="showTradeAgain"><span>继续晒单</span></a>
+                <a href="javascript:void(0);" class="fr" id="sdResultClose"><span>我知道了</span></a>
+            </div>
+        </div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
