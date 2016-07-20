@@ -489,7 +489,7 @@ var tool={
         var listData = tool.tradeList;
         var row = null;
         var length = listData.length;
-        $('#sdcount').text(common.isValid(tool.tradeForUser)?length:'');
+        $('#sdcount').text(common.isValid(tool.tradeForUser)?length:'0');
         var tradeHtml='',tradeFormat = common.isBlank(tool.tradeForUser) ? tool.formatHtml('showTradeAll') : tool.formatHtml('showTradeUser'),cls;
         for(var i = start; i < length && i < start + 20; i++){
             row = listData[i];
