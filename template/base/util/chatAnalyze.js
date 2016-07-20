@@ -82,14 +82,14 @@ var chatAnalyze = {
     //初始化GA
     initGA : function(type){
         if(type == "studio"){
-            _gaq.push([ '_setAccount', 'UA-49389835-1' ]);
-            _gaq.push([ '_setDomainName', 'gwfx.com' ]);
-            _gaq.push([ '_addIgnoredRef', 'gwfx.com' ]);
-        }
-        if(type == "fxstudio"){
             _gaq.push(['_setAccount', 'UA-31478987-1']);
             _gaq.push(['_setDomainName', '24k.hk']);
             _gaq.push(['_addIgnoredRef', '24k.hk']);
+        }
+        if(type == "fxstudio"){
+            _gaq.push([ '_setAccount', 'UA-49389835-1' ]);
+            _gaq.push([ '_setDomainName', 'gwfx.com' ]);
+            _gaq.push([ '_addIgnoredRef', 'gwfx.com' ]);
         }
         if(type == "hxstudio"){
         	 _gaq.push(['_setAccount', '']);
