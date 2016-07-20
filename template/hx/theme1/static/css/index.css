@@ -443,8 +443,9 @@ body {
 
 /*视频课程*/
 .video-class{
-    height: 0;
-    background-color: #fff;
+    height: 50px;
+    width: 100%;
+    background-color: rgba(0,0,0,.7);
     position: absolute;
     z-index: 100;
 }
@@ -1885,6 +1886,10 @@ body {
     margin-top: 5px;
     font-size: 12px;
     color: #a7804e;
+    word-break: keep-all;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .input_area .adiv {
@@ -5696,11 +5701,15 @@ body {
 }
 
 .wid1.wid2 .left1_cont {
-    margin-left: 450px;
+    margin-left: 350px;
 }
 
 .wid1.wid2 .left2 {
-    width: 450px;
+    width: 350px;
+}
+
+.wid1.wid2 .mod_banner {
+    height: 87.5px;
 }
 
 .wid2 .left_cont {
@@ -5718,14 +5727,6 @@ body {
 .wid2 .pletter_win .facebox{
     bottom: 32px;
 }
-
-.wid2 .mod_banner {
-    height: 116px;
-}
-
-/*.wid1 .mod_banner, .wid1 .mod_room {
-    height: 113px;
-}*/
 
 .wid1 .mod_room .cont {
     height: 53px
@@ -6500,6 +6501,7 @@ body {
     height: 20px;
     cursor: pointer;
     background: url("../img/class.jpg") no-repeat;
+    z-index: 101;
 }
 .classmore ul{
     position: absolute;
@@ -6548,6 +6550,7 @@ body {
     top: 14px;
     font-size: 16px;
     color: #fff;
+    z-index: 101;
 }
 
 
