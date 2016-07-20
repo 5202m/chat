@@ -73,6 +73,7 @@ router.get('/', function(req, res) {
             }
             res.redirect(getGroupType(req,true)+getRredirctUrl(req, "wechat"));
         });
+        logger.info("【WECHAT-ENTRY】openid="+openId + " url=" + getGroupType(req,true)+getRredirctUrl(req, "wechat"));
         return;
     }else if(chatUser && chatUser.isLogin){
         clientGroup=chatUser.clientGroup;
@@ -663,7 +664,7 @@ router.get('/getRmCourseList', function(req, res) {
     }else {
         syllabusService.getSyllabus(userInfo.groupType,roomIds,function(data){
             result.isOK=true;
-            if(data && data.length>0){
+            if(data){
                 var row=null,course=null;
                 var currTime=new Date().getTime();
                 var newData=[];
