@@ -1,5 +1,5 @@
 /**
- * 直播间聊天室操作类
+ * 聊天室操作类
  * author Alan.wu
  */
 var chat={

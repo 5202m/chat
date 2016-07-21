@@ -1,5 +1,5 @@
 /**
- * 直播间前台客户端入口
+ * 前台客户端入口
  * author Alan.wu
  */
 var indexJS ={
@@ -190,8 +190,8 @@ var indexJS ={
         });
         /**添加到桌面*/
         $("#saveToDesktop").click(function(){
-            if(common.saveToDesktop(window.location.href, "视频直播间-金道贵金属")){
-                box.showMsg("直播间快捷方式已成功添加到桌面");
+            if(common.saveToDesktop(window.location.href, "在线教育-金道贵金属")){
+                box.showMsg("在线教育快捷方式已成功添加到桌面");
             }else{
                 window.location.href = "/fxstudio/getShortCut?t=" + new Date().getTime();
             }
@@ -270,7 +270,7 @@ var indexJS ={
     fillCourse:function(){
         var courses=indexJS.syllabusData && indexJS.syllabusData.courses;
         if(courses){
-            var courseType = {'0':'文字直播','1':'视频直播','2':'oneTV直播'};
+            var courseType = {'0':'文字在线','1':'视频在线','2':'oneTV在线'};
             var days=courses.days,tmk=courses.timeBuckets;
             var nva=$(".course_nav").html("");
             var als='',ons='',curDay=new Date(indexJS.serverTime).getDay();
@@ -441,7 +441,7 @@ var indexJS ={
         }
     },
     /**
-     * 文档信息(视频,公告，直播安排
+     * 文档信息(视频,公告，课程安排)
      * @param code
      * @param platform
      * @param hasContent

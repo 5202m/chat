@@ -1,5 +1,5 @@
 /**
- * 直播间客户端通用操作类
+ * 客户端通用操作类
  * author Dick.guo
  */
 var studioChatMb={
@@ -756,10 +756,10 @@ var studioChatMb={
         initPlayer : false,//播放器是否初始化
         playerType :  '',  //播放器类别: video、sewise
         videoType : '',    //视频类别: mp4、m3u8...
-        studioType : '',   //直播类别: studio、yy、oneTV
-        liveUrl : "http://ct.phgsa.cn:1935/live/01/playlist.m3u8", //yy直播URL
+        studioType : '',   //在线类别: studio、yy、oneTV
+        liveUrl : "http://ct.phgsa.cn:1935/live/01/playlist.m3u8", //yyURL
         $panel : null,     //播放器容器
-        backToLivePos : {  //返回直播按钮位置
+        backToLivePos : {  //返回在线视频按钮位置
             x : 0,
             y : 0
         },
@@ -784,7 +784,7 @@ var studioChatMb={
             var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime);
              if(!course||course.isNext||(course.courseType!=0 && common.isBlank(course.studioLink))||course.courseType==2||course.courseType==0){
                 if(isBack){
-                	studioMbPop.showMessage("目前还没有视频直播，详情请留意直播间的课程安排！");
+                	studioMbPop.showMessage("目前还没有视频，详情请留意课程安排！");
                 }else if(course && !course.isNext && course.courseType==0){
                 	$(".videopart").hide();
     	            studioChatMb.setHeight();
@@ -807,8 +807,8 @@ var studioChatMb={
         },
         /**
          * 播放
-         * @param studioType "studio"-教学视频 "yy"-yy直播
-         * @param videoType "mp4"-MP4视频 ""-未知,yy直播的视频类型
+         * @param studioType "studio"-教学视频 "yy"-yy
+         * @param videoType "mp4"-MP4视频 ""-未知,yy的视频类型
          * @param url
          * @param title
          */
@@ -890,7 +890,7 @@ var studioChatMb={
             });
 
             /**
-             * 返回直播初始位置
+             * 返回在线视频初始位置
              */
             $('#backToLive').css({
                 left:function(){
@@ -911,7 +911,7 @@ var studioChatMb={
             });
 
             /**
-             * 返回直播拖动控制
+             * 返回在线视频拖动控制
              */
             var rangeControl = function(num,max){
                 num = Math.max(num,10);//10代表可拖放范围的边距
@@ -919,11 +919,11 @@ var studioChatMb={
             };
 
             /**
-             * 返回直播
+             * 返回在线视频
              */
             util.toucher($("#backToLive")[0])
                 .on('singleTap',function(){
-                    //点击返回直播
+                    //点击返回在线视频
                     studioChatMb.socket.emit('serverTime');
                     //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
                     window.setTimeout(function(){
@@ -1055,7 +1055,7 @@ var studioChatMb={
         return currentDate.getTime()+"_ms";
     },
     /**
-     * 文档信息(视频,公告,直播安排
+     * 文档信息(视频,公告,课程安排)
      * @param code
      * @param platform
      * @param hasContent

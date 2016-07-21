@@ -65,7 +65,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .room.cen-ulist li{ width:25%; font-size:16px; position: relative;cursor:pointer}
 .room.cen-ulist li i.wh_tips{border: 1px solid #c10e1b; background-color: #c10e1b; border-radius: 12px; height: 13px; color: #FFFFFF; right:-5px; font-size: 12px; line-height: 12px; text-indent: 0; width: auto; padding: 0 3px; font-style: normal;}
 
-/* 直播视频 */
+/* 在线视频 */
 .videoroom-ul{ color:#fff; padding-top:5px;}
 .videoroom-ul li{ padding:10px 10px 15px; border-bottom:1px solid #303d58; margin-bottom:5px;}
 .videoroom-ul li:last-child{ border:0}
@@ -352,7 +352,7 @@ body.keyboard:before { /*background:none*/}
 .fob_open a:hover{text-decoration:none}
 .fob_open .qq-fon{position:absolute;left:50%;margin-left:-42px;top:7px;display:block;width:30px;height:30px;background:url(../img/fo_open.png) no-repeat center -103px;background-size:36px auto}
 
-/*返回直播*/
+/*返回视频*/
 .backtolive{ display:block; position:fixed; top:70px; left:10px; width:36px; height:26px; padding:5px 0; text-align:center; background: #4874b0; border-radius:23px; z-index:99}
 .backtolive span{ line-height:13px; display:inline-block; font-size:11px; color:#fff;}
 

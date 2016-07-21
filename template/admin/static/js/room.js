@@ -1040,7 +1040,7 @@ var room={
     setDialog:function(clientGroup,userId,nickname,talkStyle,userType,ptm, txt){
         if(talkStyle==1){//私聊,则直接弹私聊框
             room.fillWhBox(userType,clientGroup,userId,nickname,false);
-            room.getWhBox(userId).show();
+            room.getWhBox(userId).removeClass("dn");
             $('.visitorDiv ul li[uid='+userId+']').click();
         }else if(talkStyle==3) {//禁言，弹出禁言框 (?<=^\【)\w+(?=\】) \\((.| )+?\\) /\【(.+?)\】/g
             $('.not-talk .talk-title span').text('设置禁言【用户：'+nickname+'；房间：'+$('title').text()+'】');

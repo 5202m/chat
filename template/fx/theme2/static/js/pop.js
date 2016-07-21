@@ -47,7 +47,7 @@ var studioMbPerson = {
                         common.getJson("/fxstudio/upgrade",{clientGroup : loc_upLevel},function(result){
                             studioMbPop.loadingBlock($("#personPop"), true);
                             if(result.isOK){
-                                var msg = "升级成功！刷新页面后，您可享用更多直播间权限。";
+                                var msg = "升级成功！刷新页面后，您可享用更多权限。";
                                 if(result.clientGroup === "active" && "notActive" === loc_upLevel){
                                     msg += "<br/>注：你已经激活真实交易账户，直接为你升级到A级别。"
                                 }
@@ -126,7 +126,7 @@ var studioMbPerson = {
 };
 
 /**
- * 直播间登录
+ * 登录
  */
 var studioMbLogin = {
     verifyCodeIntervalId : 0,
@@ -373,7 +373,7 @@ var studioMbMsg = {
 };
 
 /**
- * 直播间设置
+ * 设置
  */
 var studioMbSet = {
     studioChatObj : null,
@@ -435,7 +435,7 @@ var studioMbSet = {
 };
 
 /**
- * 直播间弹出层控制类
+ * 弹出层控制类
  */
 var studioMbPop = {
     Person : studioMbPerson,

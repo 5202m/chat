@@ -1,5 +1,5 @@
 /**
- * 直播间工具操作类
+ * 工具操作类
  * author Alan.wu
  */
 var tool={

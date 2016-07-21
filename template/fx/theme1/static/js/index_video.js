@@ -1,5 +1,5 @@
 /**
- * 直播间视频通用操作类
+ * 视频通用操作类
  * author Alan.wu
  */
 var videos={
@@ -133,7 +133,7 @@ var videos={
             videos.setVdMaxBox();
         });
         /**
-         * 直播视频与教学视频切换事件
+         * 在线视频与教学视频切换事件
          */
         $("#vdTabId a").click(function(){
             $("#vdTabId a").removeClass("on");
@@ -145,7 +145,7 @@ var videos={
             }else{
                 var currDom=$(".mod_video").hide().eq(idx);
                 currDom.show();
-                if(idx==0){//直播
+                if(idx==0){//在线视频
                     videos.playVideoByDate(false);
                 }else{//教学视频
                     videos.playMp4Vd();
@@ -197,11 +197,11 @@ var videos={
      */
     clientVideoTask:function(){
         var exSrc=$("#lvDivId embed").attr("src");
-        if($("#lvVideoId").is(":visible")&&(exSrc && exSrc.indexOf("yy.com")==-1) && ($("#lvVideoId").find("object").length==0)){//如果非主直播的其他直播
+        if($("#lvVideoId").is(":visible")&&(exSrc && exSrc.indexOf("yy.com")==-1) && ($("#lvVideoId").find("object").length==0)){//如果非主在线视频的其他在线视频
             videos.playVideoByDate(false);
         }
     },
-    /**按直播时间播放
+    /**按时间播放
      * @param isInit
      * 备注：按时间点播放yy视频,不符合时间点直接播放视频
      */
@@ -221,7 +221,7 @@ var videos={
             }else{
                 this.setStudioInfo(course);
             }
-        }else{//直播时间段，则播放直播
+        }else{
             this.setVdTab(true);
             this.setStudioVideoDiv(course.studioLink);
             this.setStudioInfo(course);
@@ -240,7 +240,7 @@ var videos={
         }
     },
     /**
-     * 设置直播提示
+     * 设置提示
      * @param isLive
      */
     setStudioTip:function(isLive){
@@ -256,9 +256,9 @@ var videos={
      */
     setNextCourse:function(course,data){
         if(course){
-            var txt='当前暂无直播，请关注下节课';
+            var txt='当前暂无在线视频，请关注下节课';
             if(!course.isNext && course.courseType==0){
-                txt='当前正在文字直播';
+                txt='文字在线时间';
             }
             $("#nextCourse").find(".ntext").text(txt);
             $("#nextCourse .nextbox").show();
@@ -278,7 +278,7 @@ var videos={
         return '<embed src="'+url+'" autostart="true" wmode="Opaque" quality="high" width="100%" height="100%" align="middle" allowScriptAccess="never" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>';
     },
     /**
-     * 设置直播视频
+     * 设置在线视频
      * @param url
      */
     setStudioVideoDiv:function(url){
@@ -320,11 +320,11 @@ var videos={
         }
     },
     /**
-     * 设置直播信息
+     * 设置在线视频信息
      */
     setStudioInfo:function(course){
         if(!course){
-            $("#nextCourse").find(".ntext").text("当前暂无直播");
+            $("#nextCourse").find(".ntext").text("当前暂无在线视频");
             $("#nextCourse .nextbox").hide();
             return;
         }
@@ -385,14 +385,12 @@ var videos={
     },
     /**
      *
-     * @param isStudio 是否直播设置视频
      * @param thisDom
-     * @param studioUrl
      */
     setVideo:function(thisDom){
         try{
             this.setStudioTip(false);
-            $("#lvVideoId").html("");//播放教学视频则移除直播元素
+            $("#lvVideoId").html("");//播放教学视频则移除在线视频元素
             var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
             if(vUrl.indexOf(".html")!=-1){
                 if(window.SewisePlayer){//停播放教学视频
@@ -533,7 +531,7 @@ var videos={
                         }
                         _this.addClass('supported');
                         _this.attr('title','已点赞');
-                        //同步视频直播老师中的点赞信息
+                        //同步在线视频老师中的点赞信息
                         var _that = $("#lvInfoId .te_detail .support[uid='" + videos.sd.analyst.userNo + "']");
                         _that.find("label").text(_this.find("label").text());
                         _that.addClass('supported');

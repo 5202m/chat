@@ -300,7 +300,7 @@ var studioChatMbIdx={
                 return false;
             }
             if(loc_liDom.attr("go") != 'true'){
-                studioMbPop.showMessage("该直播间暂未开放，请稍后访问！");
+                studioMbPop.showMessage("该房间暂未开放，请稍后访问！");
                 return false;
             }
             studioMbPop.loadingBlock($("body"));
@@ -340,7 +340,7 @@ var studioChatMbIdx={
                 }
                 var row=null,liDom=null,courseObj=null,syTipDom=null;
                 var dayCn=['周日','周一','周二','周三','周四','周五','周六'];
-                var courseTypeTxt={'0':'文字直播','1':'视频直播','2':'ONE TV'};
+                var courseTypeTxt={'0':'文字在线','1':'视频在线','2':'ONE TV'};
                 for(var i in data){
                     row=data[i];
                     if(row.courses){

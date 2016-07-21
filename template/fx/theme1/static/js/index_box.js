@@ -1,5 +1,5 @@
 /**
- * 直播间弹框操作类
+ * 弹框操作类
  * author Alan.wu
  */
 var box={

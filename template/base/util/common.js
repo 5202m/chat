@@ -472,7 +472,7 @@ var common = {
      * 格式化显示课程安排表
      * @param syllabus {{days : [{day: Integer, status : Integer}], timeBuckets : [{startTime : String, endTime : String, course : [{lecturer : String, title : String, status : Integer}]}]}}
      * @param serverTime
-     * @param style 类型 1-直播间 2-微解盘 3-直播间手机版
+     * @param style 类型 1-在线视频 2-微解盘 3-直播间手机版
      * @param [options]
      */
     formatSyllabus:function(syllabus, serverTime, style, options){
@@ -481,7 +481,7 @@ var common = {
             indexCN : ['第一节','第二节','第三节','第四节','第五节','第六节','第七节','第八节'],
             courseCls : ['prev', 'ing', 'next'],
             tableCls : "syllabus",
-            courseType : {'0':'文字直播','1':'视频直播','2':'ONE TV'}
+            courseType : {'0':'文字在线','1':'视频在线','2':'ONE TV'}
         };
         var currDay=new Date(serverTime).getDay(),currTimes=this.getHHMM(serverTime);
         var loc_constants = $.extend({}, defConstants, options);

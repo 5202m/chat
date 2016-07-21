@@ -318,7 +318,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .message_list li i{ display:block; width:7px; height:7px; background-position:-130px -50px; position:absolute; left:-15px; top:20px;}
 
 
-/*实盘直播*/
+/*实盘*/
 .guidelist{ position: relative; }
 .guidelist ul {padding:0 20px;}
 .guidelist .guideli { border-bottom:1px solid #193e79; padding:20px 0 20px; width:auto; font-family:'Microsoft YaHei','Microsoft JhengHei','SimSun'; position:relative;}
@@ -343,7 +343,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .guideli .support i{ display: none; width: 30px;position: absolute; right: -30px; top: 0; color: #eaeaea; font-size: 18px; line-height: 20px; height: 20px; font-weight: bold;  font-style: normal;}
 .loadmore{ display:none; width:auto; margin-right:30px; margin-top:30px;text-align:center; height:40px; line-height:40px; color:#4e90bd; font-size:22px;font-family:'Microsoft YaHei','Microsoft JhengHei','SimSun'; border:1px solid #deecf5; background:#fff; border-radius:3px;}
 
-/*行情直播*/
+/*行情*/
 .mod_room{ height:150px;border-bottom:5px solid #1e2d58;border-bottom:5px solid rgba(5,15,36,.6); position: relative;}
 .mod_room .titbar{ background:url(../img/contbg80.png) repeat; height:40px; padding:0 0 0 12px;}
 .mod_room .titbar > span{ float:left; color:#fff; line-height:40px; font-size:16px; font-weight:bold; vertical-align:top;}
@@ -953,7 +953,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .wid3 .view_select .se_cont,.wid3 .view_select{ width: 100px; }
 .wid3 .message_list li{padding: 37px 0 13px 5px;}
 
-/*无直播状态*/
+/*无视频状态*/
 .live-notice{ position:absolute; height:100%; width:100%; left:0; top:0; background:url(../img/nolive-bg.jpg) center center no-repeat}
 .live-notice .cont{ height:400px; width:100%; position:absolute; top:50%; margin-top:-210px; left:0; z-index:2}
 .live-notice .ntext{ font-size:24px; line-height:33px; height:40px; background:url(../img/noticebox.png) center center no-repeat; color:#83b0e4; margin-bottom:55px;}
