@@ -473,7 +473,7 @@ var indexJS ={
     getArticleList:function(code,platform,hasContent,curPageNo,pageSize,orderByStr,authorId,callback){
         try{
             $.getJSON('/hxstudio/getArticleList',{authorId:common.trim(authorId),code:code,platform:platform,hasContent:hasContent,pageNo:curPageNo,pageSize:pageSize,orderByStr:orderByStr},function(data){
-                console.log("getArticleList->data:"+JSON.stringify(data));
+                //console.log("getArticleList->data:"+JSON.stringify(data));
                 callback(data);
             });
         }catch (e){
@@ -511,15 +511,6 @@ var indexJS ={
                     }
                 }
                 if(data && data.length>1){
-                    if (!Array.prototype.indexOf) {
-                        Array.prototype.indexOf = function(obj, start) {
-                            for (var i = (start || 0), j = this.length; i < j; i++) {
-                                if (this[i] === obj) { return i; }
-                            }
-                            return -1;
-                        }
-                    }
-                    /**
                     new Swiper('.mod_banner', {
                         pagination: '#mod_position',
                         paginationClickable: true,
@@ -527,7 +518,6 @@ var indexJS ={
                         autoplay : 5000,
                         autoplayDisableOnInteraction : false
                     });
-                     **/
                 }
             }
         });
