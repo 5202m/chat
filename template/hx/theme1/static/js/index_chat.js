@@ -1480,7 +1480,7 @@ var chat={
         if($('.inp-bar4').hasClass('clicked')){
             $('.envelope-reward').removeClass('dn');
         }else {
-            var data = {groupId: indexJS.userInfo.groupId, hasQRCode:true};
+            var data = {groupId: indexJS.userInfo.groupId, hasQRCode:false};
             common.getJson('/hxstudio/getTeachers', {data: JSON.stringify(data)}, function (data) {
                 if (data) {
                     $('#js-reward-user').empty();
