@@ -202,10 +202,10 @@ var videos={
                 //txt='当前正在文字直播';
                 var  url='';
                 var row=null;
-                for(var i in indexJS.syllabusData){
-                    row=indexJS.syllabusData[i];
+                for(var i in indexJS.syllabusData.studioLink){
+                    row=indexJS.syllabusData.studioLink[i];
                     if(row.code=='1'){
-                        url=row.studioLink;
+                        url=row.url;
                         break;
                     }
                 }
