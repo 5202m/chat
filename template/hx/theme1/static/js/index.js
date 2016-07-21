@@ -197,7 +197,7 @@ var indexJS ={
                     httpUrl = "http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache",
                     option = {downCss:'hq-down',upCss:'hq-up',down:'down'};
                 getAllMarketpriceIndex(wsUrl ,wsData, httpUrl, option);/*行情数据*/
-                indexJS.setListScroll('.listcont .list_tab .hangqing');
+                indexJS.setListScroll('#hangqing');
             }
             if(index==1){
                 indexJS.setInformation();
@@ -451,7 +451,7 @@ var indexJS ={
         var dom=(typeof domClass=='object')?domClass:$(domClass);
         if(dom.hasClass("mCustomScrollbar")){
             dom.mCustomScrollbar("update");
-        }else{
+        }else {
             options = $.extend({scrollButtons:{enable:false},theme:"light-2",isCustom:true}, options);
             dom.mCustomScrollbar(options);
             if(options.isCustom){
@@ -473,7 +473,7 @@ var indexJS ={
     getArticleList:function(code,platform,hasContent,curPageNo,pageSize,orderByStr,authorId,callback){
         try{
             $.getJSON('/hxstudio/getArticleList',{authorId:common.trim(authorId),code:code,platform:platform,hasContent:hasContent,pageNo:curPageNo,pageSize:pageSize,orderByStr:orderByStr},function(data){
-                //console.log("getArticleList->data:"+JSON.stringify(data));
+                console.log("getArticleList->data:"+JSON.stringify(data));
                 callback(data);
             });
         }catch (e){
@@ -511,6 +511,15 @@ var indexJS ={
                     }
                 }
                 if(data && data.length>1){
+                    if (!Array.prototype.indexOf) {
+                        Array.prototype.indexOf = function(obj, start) {
+                            for (var i = (start || 0), j = this.length; i < j; i++) {
+                                if (this[i] === obj) { return i; }
+                            }
+                            return -1;
+                        }
+                    }
+                    /**
                     new Swiper('.mod_banner', {
                         pagination: '#mod_position',
                         paginationClickable: true,
@@ -518,6 +527,7 @@ var indexJS ={
                         autoplay : 5000,
                         autoplayDisableOnInteraction : false
                     });
+                     **/
                 }
             }
         });

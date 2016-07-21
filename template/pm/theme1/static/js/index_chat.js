@@ -80,7 +80,16 @@ var chat={
         /**
          * contentText键盘事件
          */
-        $("#contentText").keydown(function(e){
+        $("#contentText").pastableTextarea().on('pasteImage', function(ev, data){
+            var img=$(this).find(".text-min-img");
+            if(img.length>0){
+                img.attr("href",data.dataURL);
+                img.find("img").attr("src",data.dataURL);
+            }else{
+                $(this).append('<a class="text-min-img" href="'+data.dataURL+'" data-lightbox="send-img"><img src="'+data.dataURL+'"/></a>');
+                $(this).focusEnd();
+            }
+        }).keydown(function(e){
             var val=$(this).html();
             if(e.keyCode==13){//按回车键发送
                 if(common.isValid(val)){
@@ -120,33 +129,199 @@ var chat={
             return $("<li>").attr( "data-value", item.label).append("<a>" + item.label +"</a>").appendTo(ul);
         };
         //聊天内容发送事件
-        $("#sendBtn").click(function(){
-            if(!indexJS.visitorSpeak && indexJS.checkClientGroup("visitor")){
+        $("#sendBtn").click(function() {
+            if (!indexJS.visitorSpeak && indexJS.checkClientGroup("visitor")) {
                 box.openLgBox();
                 return;
             }
-            if(indexJS.userInfo.isSetName === false){
+            if (indexJS.userInfo.isSetName === false) {
                 box.openSetNameBox();
                 return;
             }
-            var toUser=chat.getToUser();
+            var toUser = chat.getToUser();
+            //发送剪切图片
+            var imgObj = $("#contentText .text-min-img img");
+            if (imgObj.size() > 0) {
+                var imgData = imgObj.attr("src");
+                if (imgData.length > 1024 * 1024) {
+                    alert('发送的图片大小不要超过1MB.');
+                } else {
+                    chat.setUploadImg(imgData, toUser);
+                    imgObj.remove();
+                }
+            }
             var msg = chat.getSendMsg();
-            if(msg === false){
+            if (msg === false) {
                 return;
             }
-            var sendObj={uiId:chat.getUiId(),fromUser:indexJS.userInfo,content:{msgType:chat.msgType.text,value:msg}};
-            var replyDom=$(".replybtn");
-            if(toUser && toUser.userId==replyDom.attr("uid") && toUser.talkStyle==replyDom.attr("ts")){//如果对话userId匹配则表示当前回复结束
+            var sendObj = {
+                uiId: chat.getUiId(),
+                fromUser: indexJS.userInfo,
+                content: {msgType: chat.msgType.text, value: msg}
+            };
+            var replyDom = $(".replybtn");
+            if (toUser && toUser.userId == replyDom.attr("uid") && toUser.talkStyle == replyDom.attr("ts")) {//如果对话userId匹配则表示当前回复结束
                 $(".mymsg,.mymsg em").hide();
             }
             sendObj.fromUser.toUser = toUser;
-            chat.socket.emit('sendMsg',sendObj);//发送数据
-            chat.setContent(sendObj,true,false);//直接把数据填入内容栏
+            chat.socket.emit('sendMsg', sendObj);//发送数据
+            chat.setContent(sendObj, true, false);//直接把数据填入内容栏
             //清空输入框
             $("#contentText").html("");//清空内容
+
+        });
+        //发送图片--选择图片
+        $("#sendImgBtn").click(function () {
+            if (!FileReader) {
+                alert("发送图片功能目前只支持Chrome、Firefox、IE10或以上版本的浏览器！");
+                return;
+            }
+            if (!indexJS.visitorSpeak && indexJS.checkClientGroup("visitor")) {
+                box.openLgBox();
+                return;
+            }
+            if (indexJS.userInfo.isSetName === false) {
+                box.openSetNameBox(true);
+                return;
+            }
+            $("#sendImgInp").trigger("click");
+        });
+        //发送图片
+        $("#sendImgInp").bind("change", function () {
+            var _this = this;
+            var img = _this.files[0];
+            // 判断是否图片
+            if (!img) {
+                return false;
+            }
+            // 判断图片格式
+            if (!(img.type.indexOf('image') == 0 && img.type && /\.(?:jpg|png|gif)$/.test(img.name.toLowerCase()))) {
+                alert('目前暂支持jpg,gif,png格式的图片！');
+                return false;
+            }
+            var fileSize = img.size;
+            if (fileSize >= 1024 * 1024) {
+                alert('发送的图片大小不要超过1MB.');
+                return false;
+            }
+            //加载文件转成URL所需的文件流
+            var reader = new FileReader();
+            reader.readAsDataURL(img);
+            reader.onload = function (e) {
+                chat.setUploadImg(e.target.result, chat.getToUser());//处理并发送图片
+            };
+            reader.onprogress = function (e) {};
+            reader.onloadend = function (e) {};
+            $(this).val("");
         });
         //私聊框拖拽
         $( ".pletter_win" ).draggable({handle: ".wh_drag" });
+    },
+    /**
+     * 设置并压缩图片
+     */
+    setUploadImg:function(base64Data, toUser){
+        var uiId=chat.getUiId();
+        //先填充内容框
+        var formUser={};
+        common.copyObject(formUser,indexJS.userInfo,true);
+        formUser.toUser=toUser;
+        var sendObj={uiId:uiId,fromUser:formUser,content:{msgType:this.msgType.img,value:'',needMax:0,maxValue:''}};
+        if(toUser && toUser.talkStyle == 1) {
+            this.setWhContent(sendObj,true,false);
+        }else{
+            this.setContent(sendObj,true,false);
+        }
+        sendObj.content.value=base64Data;
+        this.zipImg(sendObj,100,60,function(result,value){//压缩缩略图
+            if(result.error){
+                alert(result.error);
+                $('#'+uiId).remove();
+                return false;
+            }
+            var aObj=$("#"+result.uiId+" span[contt='a'] a");
+            aObj.attr("href", value)
+                .children("img").attr("src",value).attr("needMax",result.content.needMax);
+            chat.dataUpload(result);
+        });
+    },
+
+    /**
+     * 图片压缩
+     * @param sendObj
+     * @param max
+     * @param quality 压缩量
+     * @param callback
+     */
+    zipImg:function(sendObj,max,quality,callback){
+        var image = new Image();
+        // 绑定 load 事件处理器，加载完成后执行
+        image.onload = function(){
+            var canvas = document.createElement('canvas');
+            if(!canvas){
+                callback({error:'发送图片功能目前只支持Chrome、Firefox、IE10或以上版本的浏览器！'});
+            }
+            var w = image.width;
+            var h = image.height;
+            if(h>=9*w){
+                callback({error:'该图片高度太高，暂不支持发送！'});
+                return false;
+            }
+            if(max>0) {
+                if ((h > max) || (w > max)) {     //计算比例
+                    sendObj.content.needMax=1;
+                    if(h>max && w<=max){
+                        w= (max/h)*w;
+                        h = max;
+                    }else{
+                        h = (max / w) * h;
+                        w = max;
+                    }
+                    image.height = h;
+                    image.width = w;
+                }
+            }
+            var ctx = canvas.getContext("2d");
+            canvas.width = w;
+            canvas.height = h;
+            // canvas清屏
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // 将图像绘制到canvas上
+            ctx.drawImage(image, 0, 0, w, h);
+            callback(sendObj,canvas.toDataURL("image/jpeg",quality/100));
+        };
+        image.src = sendObj.content.value;
+    },
+    /**
+     * 数据上传
+     * @param data
+     */
+    dataUpload:function(data){
+        //上传图片到后端
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/studio/uploadData');
+        xhr.addEventListener("progress", function(e){
+            if (e.lengthComputable) {
+                var ra= ((e.loaded / e.total *100)|0)+"%";
+                $("#"+data.uiId+" .shadow-box").css({height:"'+ra+'"});
+                $("#"+data.uiId+" .shadow-conut").html(ra);
+            }
+        }, false);
+        xhr.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                console.log("dataUpload success!");
+            }
+        };
+        data.fromUser.socketId=this.socket.id;
+        xhr.send(JSON.stringify(data)); //发送base64
+    },
+    /**
+     * 移除加载提示的dom
+     * @param uiId
+     */
+    removeLoadDom:function(uiId){
+        $('#'+uiId+' .img-loading,#'+uiId+' .img-load-gan,#'+uiId+' .shadow-box,#'+uiId+' .shadow-conut').remove();
     },
     getCSList:function(){
         var groupType = LoginAuto.sessionUser['groupType'];
@@ -174,6 +349,16 @@ var chat={
             console.error("getCSList->"+e);
             callback(null);
         }
+    },
+    /**
+     * 提取要发送的img信息
+     */
+    getSendImgInfo:function(){
+        var curDom=$('#contentText .text-min-img');
+        if(curDom.length>0){
+            return {userId:curDom.attr("uid"),nickname:curDom.find("label").text(),talkStyle:0,userType:curDom.attr("utype")};
+        }
+        return null;
     },
     /**
      * 提取uiId,用于标记记录的id，信息发送成功后取发布日期代替
@@ -282,6 +467,12 @@ var chat={
         if(!isMeSend && indexJS.userInfo.userId==fromUser.userId && data.serverSuccess){//发送成功，则去掉加载框，清除原始数据。
             $('#'+data.uiId+' .dtime').html(chat.formatPublishTime(fromUser.publishTime));
             $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
+            if(data.content.msgType==chat.msgType.img){
+                chat.removeLoadDom(fromUser.publishTime);//去掉加载框
+                var aObj=$('#'+fromUser.publishTime+' span[contt="a"]>a');
+                var url=data.content.needMax?'/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
+                aObj.attr("href",url);
+            }
             return;
         }
         var dialog=chat.formatContentHtml(data,isMeSend,isLoadData);
@@ -368,7 +559,14 @@ var chat={
         var cls='dialog ',pHtml='',dialog='',isMe='false',nkTmHtml='',
             fromUser=data.fromUser,
             content=data.content,
-            nickname=fromUser.nickname;
+            nickname=fromUser.nickname,
+            loadHtml='';
+        if(indexJS.userInfo.userId==fromUser.userId){
+            if(isMeSend){//发送，并检查状态
+                fromUser.publishTime=data.uiId;
+                loadHtml='<em class="img-loading"></em><span class="shadow-box"></span><s class="shadow-conut"></s>';
+            }
+        }
         var toUser=fromUser.toUser,toUserHtml='';
         if(toUser && common.isValid(toUser.userId)){
             toUserHtml='<span class="txt_dia" uid="'+toUser.userId+'" utype="'+toUser.userType+'">@<label>'+toUser.nickname+'</label></span>';
@@ -382,6 +580,7 @@ var chat={
             }else{
                 pHtml='<a href="'+(content.value ? content.value : 'javascript:')+'" data-lightbox="dialog-img"><img src="'+content.value+'" alt="图片" /></a>';
             }
+            pHtml+=loadHtml;
         }else{
             pHtml=content.value;
         }
@@ -657,11 +856,29 @@ var chat={
             userli.addClass("have_op");
         }
     },
+    /**获取私聊对象用户信息*/
+    getWhToUser : function(){
+        var liDom=$('.mult_dialog a[class=on]');
+        var uid=liDom.attr("uid");
+        return {userId:uid,nickname:liDom.find("label").text(),talkStyle:1,userType:liDom.attr("utype")};
+    },
     /**
      * 发送私聊信息
      * @param msg
      */
     sendWhMsg:function(txtObj){
+        //发送剪切图片
+        var toUser = chat.getWhToUser();
+        var imgObj = txtObj.find(".text-min-img img");
+        if(imgObj.size() > 0){
+            var imgData = imgObj.attr("src");
+            if(imgData.length > 1024*1024){
+                alert('发送的图片大小不要超过1MB.');
+            }else{
+                chat.setUploadImg(imgData, toUser);
+                imgObj.remove();
+            }
+        }
         var msg = chat.getSendMsg(txtObj);
         if(msg === false){
             return;
@@ -726,8 +943,58 @@ var chat={
                         assign:whTxtId, //给控件赋值
                         path:indexJS.filePath+'/face/'//表情存放的路径
                     });
+
+                    //发送图片--选择图片
+                    $("#"+whId).find('.imgbtn').click(function(){
+                        if(!FileReader){
+                            alert("发送图片功能目前只支持Chrome、Firefox、IE10或以上版本的浏览器！");
+                            return;
+                        }
+                        $("#"+whId).find('.imginp').trigger("click");
+                    });
+                    //发送图片
+                    $("#"+whId).find('.imginp').bind("change", function(){
+
+                        var _this=this;
+                        var toUser = chat.getWhToUser();
+                        var img = _this.files[0];
+                        // 判断是否图片
+                        if(!img){
+                            return false;
+                        }
+                        // 判断图片格式
+                        if(!(img.type.indexOf('image')==0 && img.type && /\.(?:jpg|png|gif)$/.test(img.name.toLowerCase())) ){
+                            alert('目前暂支持jpg,gif,png格式的图片！');
+                            return false;
+                        }
+                        var fileSize=img.size;
+                        if(fileSize>=1024*1024){
+                            alert('发送的图片大小不要超过1MB.');
+                            return false ;
+                        }
+
+                        //加载文件转成URL所需的文件流
+                        var reader = new FileReader();
+                        reader.readAsDataURL(img);
+
+                        reader.onload = function(e){
+                            chat.setUploadImg(e.target.result, toUser);//处理并发送图片
+                        };
+                        reader.onprogress=function(e){};
+                        reader.onloadend = function(e){};
+                        $(this).val("");
+                    });
                     //私聊天内容发送事件
-                    $("#"+whId).find(".ctextarea").keydown(function(e){
+                    $("#"+whId).find(".ctextarea").pastableTextarea().on('pasteImage', function(ev, data){
+                        var img=$(this).find(".text-min-img");
+                        if(img.length>0){
+                            img.attr("href",data.dataURL);
+                            img.find("img").attr("src",data.dataURL);
+                        }else{
+                            $(this).append('<a class="text-min-img" href="'+data.dataURL+'" data-lightbox="whSend-img"><img src="'+data.dataURL+'"/></a>');
+                            $(this).focusEnd();
+                        }
+                    }).keydown(function(e){
                         if(e.keyCode==13){//按回车键发送
                             chat.sendWhMsg($(this));
                             return false;
@@ -842,6 +1109,12 @@ var chat={
             if(data.serverSuccess){//发送成功，则去掉加载框，清除原始数据。
                 $('#'+data.uiId+' .dtime').html(chat.formatPublishTime(fromUser.publishTime));
                 $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
+                if(data.content.msgType==chat.msgType.img){
+                    chat.removeLoadDom(fromUser.publishTime);//去掉加载框
+                    var aObj=$('#'+fromUser.publishTime+' span[contt="a"]>a');
+                    var url=data.content.needMax?'/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
+                    aObj.attr("href",url);
+                }
                 return;
             }
             cls+='mine';
@@ -865,10 +1138,12 @@ var chat={
         var html='';
         if(content.msgType==chat.msgType.img){
             if(content.needMax){
-                pHtml='<p><i></i><a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="whImg-' + fromUser.toWhUserId + '"><img src="'+content.value+'" alt="图片"/></a></p>';
+                pHtml='<a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="whimg-"' + fromUser.userId + '><img src="'+content.value+'" alt="图片"/></a>';
             }else{
-                pHtml='<p><i></i><a href="'+content.value+'" data-lightbox="whImg-' + fromUser.toWhUserId + '"><img src="'+content.value+'" alt="图片" /></a></p>';
+                pHtml='<a href="'+content.value+'" data-lightbox="whimg-"' + fromUser.userId + '><img src="'+content.value+'" alt="图片" /></a>';
             }
+            var loadhtml = isMeSend ? '</span><em class="img-loading"></em><span class="shadow-box"></span><s class="shadow-conut"></s>' : '';
+            pHtml ='<p><i></i><span class="dcont" contt="a">' + pHtml + loadhtml + '</p>';
         }else if(isOnlyFill){
             pHtml='<div class="whcls"><i></i><div class="whblt" rid="'+content.infoId+'">'+content.value+'</div></div>';
         }else{

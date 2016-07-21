@@ -1081,3 +1081,21 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .mod_scrollnews .newsbtn:hover{ text-decoration: none; }
 .mod_scrollnews .newsclose{ display: block; width:10px; height: 10px; padding: 10px 8.5px; position: absolute; right: 0; top: 0  }
 .mod_scrollnews .newsclose i{ display: block;width:10px; height: 10px; background-position: -140px -300px; }
+.input_area .text-min-img img {
+    height: 30px;
+    cursor: move;
+}
+.shadow-conut {
+	position: absolute;
+	left: 30px;
+	bottom: 5px;
+	width: 100%;
+	max-width: 150px;
+	display: block;
+	text-align: center;
+	font: 25px arial;
+	color: #fff;
+	text-shadow: 0 2px 0 #000;
+	z-index: 10;
+	text-decoration: none
+}

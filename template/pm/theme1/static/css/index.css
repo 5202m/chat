@@ -630,7 +630,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .upg_result > span{ color:#666; font-size:16px; line-height:20px}
 .kh-btn { width:372px; margin:25px auto 0}
 .kh-btn a{ display:block; width:172px; border:1px solid #c49351; height:37px; line-height:35px; color:#c49351; font-size:16px; text-align:center; position:relative;  border-radius:2px;}
-.kh-btn a i{ display:inline-block; *display:inline; *zoom:1; vertical-align:top; width:19px; height:20px;  background-position:0 0;margin-right:9px; margin-top:9px;*vertical-align:middle; *margin-top:0; background-position:0px -30px}
+.kh-btn a i{ display:inline-block; *display:inline; *zoom:1; vertical-align:top; width:19px; height:20px;  background-position:0 0;margin-right:9px; margin-top:9px;*vertical-align:middle; *margin-top:0; background-position:-110px -200px}
 .kh-btn a i.mn{ background-position:-30px -30px}
 .kh-btn a:hover{ background:#c49351; color:#fff; text-decoration:none}
 .kh-btn a:hover i{ background-position:0 0}
@@ -669,7 +669,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .set_box .set_name.s2 i{ padding:0 4px}
 .set_box .set_show{ width:258px;float:right; height:39px; line-height:39px; background:#f5f5f9;border-top-right-radius:4px;border-bottom-right-radius:4px; text-indent:10px}
 .set_box.b2 .set_show,.set_box.b2 .set_inp{ width:338px;}
-.set_box .set_inp{ width:258px;float:right; height:39px; line-height:39px; text-indent:10px;font-family:'Microsoft YaHei'; background: none}
+.set_box .set_inp{ width:258px;float:right; height:39px; line-height:39px; text-indent:10px;font-family:'Microsoft YaHei'}
 .set_submit{ width:100%; display:block; height:47px; line-height:47px; color:#fff; font-size:20px; text-align:center; cursor:pointer; background:#c09355; border-radius:4px;font-family:'Microsoft YaHei'}
 .set_submit:hover{ background:#c58735;}
 .set_box .set_textaera{ width:385px; height:135px; line-height:22px; border:0; padding:5px 10px; color:#444; resize:none; background:none;font-family:'Microsoft YaHei'; }
@@ -1081,3 +1081,21 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .mod_scrollnews .newsbtn:hover{ text-decoration: none; }
 .mod_scrollnews .newsclose{ display: block; width:10px; height: 10px; padding: 10px 8.5px; position: absolute; right: 0; top: 0  }
 .mod_scrollnews .newsclose i{ display: block;width:10px; height: 10px; background-position: -140px -300px; }
+.input_area .text-min-img img {
+    height: 30px;
+    cursor: move;
+}
+.shadow-conut {
+	position: absolute;
+	left: 30px;
+	bottom: 5px;
+	width: 100%;
+	max-width: 150px;
+	display: block;
+	text-align: center;
+	font: 25px arial;
+	color: #fff;
+	text-shadow: 0 2px 0 #000;
+	z-index: 10;
+	text-decoration: none
+}

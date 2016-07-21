@@ -620,7 +620,7 @@ var chat={
                 if(common.isBlank(linkTxt)){
                     continue;
                 }
-                var newTest=linkTxt.replace(/(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|\\&|-)+)(:\d+)?(\/|\S)+/g,function(m){
+                var newTest=linkTxt.toString().replace(/(http:\/\/|https:\/\/)((\w|=|\?|\.|\/|\\&|-)+)(:\d+)?(\/|\S)+/g,function(m){
                     return '<a href="'+m+'" target="_blank">'+m+'</a>';
                 });
                 el.innerHTML = el.innerHTML.replace(linkTxt,newTest);
@@ -1175,7 +1175,9 @@ var chat={
             console.error('e:'+e);
         });
         //信息传输
+
         this.socket.on('sendMsg',function(data){
+            alert(JSON.stringify(data));
             if(data.fromUser.toUser && data.fromUser.toUser.talkStyle==1){//如果是私聊则转到私聊框处理
                 chat.setWhContent(data,false,false);
             }else{
@@ -1187,8 +1189,7 @@ var chat={
         });
         //通知信息
         this.socket.on('notice',function(result){
-            switch (result.type)
-            {
+            switch (result.type){
                 case 'onlineNum':{
                     var data=result.data,userInfoTmp=data.onlineUserInfo;
                     if(data.online){
@@ -1257,7 +1258,7 @@ var chat={
             if(msgData && $.isArray(msgData)) {
                 msgData.reverse();
                 for (var i in msgData) {
-                    chat.formatUserToContent(msgData[i]);
+                    typeof msgData[i] == "object" &&  chat.formatUserToContent(msgData[i]);//空返回function
                 }
             }
             chat.setTalkListScroll(true);

@@ -23,7 +23,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .p0-non{font-size:0;height:0;overflow:hidden}
 
 /* img */
-.rightbar .qq i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i{background:url(../img/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
+.rightbar .qq i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i,.addpic-btn,.select-img i{background:url(../img/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
 
 /* header */
 body{font-family:'microsoft yahei','Arial'; background:#000}
@@ -347,9 +347,35 @@ body.keyboard:before { /*background:none*/}
 .backtolive{ display:block; position:fixed; top:70px; left:10px; width:36px; height:26px; padding:5px 0; text-align:center; background:rgba(181,144,48,.6); border-radius:23px; z-index:99}
 .backtolive span{ line-height:13px; display:inline-block; font-size:11px; color:#fff;}
 
+.sent-btn.ok{ background-color: #b59030 }
+.addpic-btn{position: absolute; right: 10px; top: 5px;display: block;width: 29px;height: 29px;background-position: 0 -100px}
+.private_chat .sent-btn{ display: block; }
+.private .inp-fon-tix{ margin-right: 40px; }
+.add-img{position:relative;margin-top:2px;padding:10px 10px 0;}
+.add-img-in{width:42px;border-top:solid #FAFAFA 1px}
+.select-img{position:absolute;left:8px;top:8px;width:44px;height:20px; padding:10px 0;border:none;background-color:#ececec;border-radius:4px}
+.select-img i{width:28px;height:20px; display:block;background-position:0 -240px; margin-left: auto;margin-right: auto;}
+.file-img{width:40px;height:40px;opacity:0; vertical-align: top;}
+.add-img p{text-align:center;color:#616366;font-size: 12px;line-height:18px;}
 /*Responsive*/
 @media(max-width:359px){
 	.logobar{ width:140px;}
 	.rightbar .qq i{ margin:0 10px;}
     .room.cen-ulist li{font-size:14px;}
 }
+
+.shadow-conut {
+    position: absolute;
+    left: 30px;
+    bottom: 5px;
+    width: 100%;
+    max-width: 150px;
+    display: block;
+    text-align: center;
+    font: 25px arial;
+    color: #fff;
+    text-shadow: 0 2px 0 #000;
+    z-index: 10;
+    text-decoration: none
+}
+.img-loading{position:absolute;bottom:0;display:block;width:25px;height:25px;border-radius:4px;background:url(../img/loading2.gif) no-repeat center;background-size:40px 40px;z-index:9}
