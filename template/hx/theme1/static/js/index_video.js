@@ -118,11 +118,17 @@ var videos={
         },function() {
             $(this).find('ul').hide();
         });
-        $('.mod_video').hover(function (e) {
-            $('.video-class').removeClass('dn');
+        $('#video_content').hover(function (e) {
+            $(this).children('.video-class').removeClass('dn');
+            if($('#tvDivId').is(':visible')) {
+                $('#teachVideoId,#video_content .video-name').show();
+            }
         },function(e) {
-            if(e.target != 'div.video-class' && e.target != 'div.mod_video'){
-                $('.video-class').addClass('dn');
+            if(!$(e.target).hasClass('video-class') && !$(e.target).hasClass('mod_video')){
+                $(this).children('.video-class').addClass('dn');
+                if($('#tvDivId').is(':visible')) {
+                    $('#teachVideoId,#video_content .video-name').hide();
+                }
             }
         });
         $('.video-checkbox-list').mouseleave(function () {
