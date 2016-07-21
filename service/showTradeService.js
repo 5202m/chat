@@ -65,6 +65,7 @@ var showTradeService = {
         if(common.isValid(params.userNo)){
             searchObj = {"groupType":params.groupType, "valid":1,"tradeType":2,"boUser.userNo":params.userNo};
         }
+        //var from = (params.pageNo-1) * params.pageSize;
         var orderByJsonObj={"showDate": 'desc' };
         if(common.isValid(params.skipLimit)){
             callback(null);
@@ -72,6 +73,8 @@ var showTradeService = {
         }
         chatShowTrade.find(searchObj)
             .sort(orderByJsonObj)
+            //.skip(from)
+            .limit(params.pageSize)
             .exec("find",function(err, data){
             if(err){
                 logger.error("查询晒单数据失败! >>getShowTradeList:", err);
