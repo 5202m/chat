@@ -383,17 +383,14 @@
     indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
 
     function widthCheck(){
-        var ww = $(window).width();
-        if(ww <= 1680 ){
-            $('body').addClass('wid1');
-            if(ww < 1440 ){
-                $('body').addClass('wid2');
-                if(ww < 1209 ){
-                    $('body').addClass('wid3');
-                }
+        var ww = $(window).width();console.log(ww);
+        if(ww <= 1600 ){
+            $('body').addClass('wid1 wid2');
+            if(ww < 1209 ){
+                $('body').addClass('wid3');
             }
         }
-        if(ww >1680){
+        if(ww >1600){
             $('body').removeClass('wid1');
             $('body').removeClass('wid2');
             $('body').removeClass('wid3');
@@ -415,8 +412,9 @@
         $('.main_tab .chat_content').height(hh-hh_banner-90-$('.chat_input').height()-$('.mymsg').height());
         $('.left2').height(hh-68);
         $('.left1').height(hh-68);
-        $('.mod_video').height(hh - 393);
+        $('.mod_video').height(hh - 333);
         $('.mod_videolist .listcont').height(hh-65-$('.mod_video').height()-$('.mod_videolist .tabnav').height());
+        $('.message_list .scrollbox').css('max-height',(hh-65-$('.mod_video').height()-$('.mod_videolist .tabnav').height())+'px');
     }
     widthCheck();
     heightCalcu();

@@ -540,13 +540,29 @@ var indexJS ={
         if(!common.isBlank(intervalTime) && indexJS.serverTime - intervalTime < 2*60*1000){
             return;
         }
-        var today = common.formatterDate(indexJS.serverTime, '-');
         $.getJSON(indexJS.apiUrl+ '/common/getInformation?t='+indexJS.serverTime, null, function(result){
             if(result){
                 if(result.isOK) {
                     var itemLenth = result.data.news.item.length, pt = $('#newInfoCount').attr('pt');
+                    if(!common.isBlank(pt)){
+                        $('#newInfoCount').text(itemLenth);
+                        $('#newInfoCount').hide();
+                    }
                     var pubDateTime = null,newsHtml = '', newsFormatHtml = indexJS.formatHtml('news');
                     $.each(result.data.news.item, function(key, row){
+                        if (pt == row.pubDate  && !common.isBlank(pt)) {
+                            if (key > 0) {
+                                $('#newInfoCount').text(key);
+                                $('#newInfoCount').show();
+                            }
+                            else {
+                                $('#newInfoCount').hide();
+                            }
+                        }
+                        else if(row.pubDate > pt && (key+1) == itemLenth  && !common.isBlank(pt)){
+                            $('#newInfoCount').text(itemLenth);
+                            $('#newInfoCount').show();
+                        }
                         if(key < 1){
                             pubDateTime = row.pubDate;
                         }
@@ -556,6 +572,9 @@ var indexJS ={
                     });
                     if(common.isValid(newsHtml)) {
                         $('.mod_videolist .message_list .scrollbox ul.news').prepend(newsHtml);
+                    }
+                    if(pt == pubDateTime) {
+                        $('#newInfoCount').hide();
                     }
                     indexJS.setListScroll($(".mod_videolist .message_list .scrollbox"));//设置滚动
                     $('#newInfoCount').attr('pt', pubDateTime);

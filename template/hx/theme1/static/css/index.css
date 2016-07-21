@@ -3756,7 +3756,13 @@ body {
     height: 380px;
     top: 350px;
 }
-
+/* MT4网页版 */
+.dropitem.dr9 i.i9{
+    background: url(../img/left-icon.png) no-repeat;
+}
+.dropitem.dr9:hover i.i9{
+    background-position: -34px 0;
+}
 .qr_box {
     text-align: center;
     padding-top: 28px;
@@ -6413,8 +6419,7 @@ body {
 }
 .mod_videolist .hangqing li{
     display: inline-block;
-    padding-top: 25px;
-    padding-bottom: 45px;
+    padding: 16px 0;
     width:50%;/*width: 33.33%;*/
     box-sizing: border-box;
     border-width: 0 1px 1px 0;
