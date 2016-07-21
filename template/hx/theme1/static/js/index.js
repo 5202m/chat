@@ -49,7 +49,7 @@ var indexJS ={
             }
             if($(this).is(".room_rule")){
                 if(!$(this).hasClass('hover-in')) {
-                    indexJS.getArticleList("bulletin_room_rule", indexJS.userInfo.groupId, 1, 1, 1, '{"sequence":"asc"}', null, function (dataList) {
+                    indexJS.getArticleList("bulletin_room_rule", indexJS.userInfo.groupId, 1, 1, 1, '{"sequence":"desc"}', null, function (dataList) {
                         if (dataList && dataList.result == 0) {
                             var data = dataList.data;
                             if (data && data.length > 0) {
@@ -68,7 +68,7 @@ var indexJS ={
                     $('.notice .dropcont').css('width', '450px');
                 }
                 if(!$(this).hasClass('hover-in')) {
-                    indexJS.getArticleList("bulletin_system",indexJS.userInfo.groupId,1,1,1,'{"sequence":"asc"}',null,function(dataList){
+                    indexJS.getArticleList("bulletin_system",indexJS.userInfo.groupId,1,1,1,'{"sequence":"desc"}',null,function(dataList){
                         if(dataList && dataList.result==0){
                             var data=dataList.data;
                             if(data && data.length > 0){
@@ -501,7 +501,7 @@ var indexJS ={
      * 设置广告
      */
     setAdvertisement:function(){
-        this.getArticleList("advertisement",indexJS.userInfo.groupId,"0",1,5,'{"sequence":"asc"}',null,function(dataList){
+        this.getArticleList("advertisement",indexJS.userInfo.groupId,"0",1,5,'{"sequence":"desc"}',null,function(dataList){
             if(dataList && dataList.result==0){
                 var data=dataList.data;
                 for(var i in data){
@@ -570,7 +570,7 @@ var indexJS ={
      * 加载实盘策略
      */
     setTradeStrategy: function(scrollDom){
-        this.getArticleList("trade_strategy_article",indexJS.userInfo.groupId,1,1,100,'{"sequence":"asc"}',null,function(dataList){
+        this.getArticleList("trade_strategy_article",indexJS.userInfo.groupId,1,1,100,'{"sequence":"desc"}',null,function(dataList){
             if(dataList && dataList.result==0){
                 var data=dataList.data,row=null;
                 var tradeStrategyHtml = '';

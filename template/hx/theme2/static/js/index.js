@@ -184,7 +184,7 @@ var indexJS={
      * 设置广告
      */
     setAdvertisement:function(){
-        this.getArticleList("advertisement","hxstudio_home","0",1,5,'{"sequence":"asc","createDate":"desc"}',function(dataList){
+        this.getArticleList("advertisement","hxstudio_home","0",1,5,'{"sequence":"desc","publishStartDate":"desc"}',function(dataList){
             if(dataList.result==0){
                 var data=dataList.data;
                 for(var i in data){
@@ -210,7 +210,7 @@ var indexJS={
      */
     setBulletin : function(){
         studioMbPop.loadingBlock($("#bulletinTab"));
-        indexJS.getArticleList("bulletin_room_rule","hxstudio_home",1,1,1,'{"sequence":"asc","createDate":"desc"}',function(dataList){
+        indexJS.getArticleList("bulletin_room_rule","hxstudio_home",1,1,1,'{"sequence":"desc","publishStartDate":"desc"}',function(dataList){
             var loc_panel = $("#bulletinTab .notice_cont");
             loc_panel.html("");
             if(dataList && dataList.result==0){

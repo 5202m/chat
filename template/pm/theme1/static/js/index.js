@@ -37,7 +37,7 @@ var indexJS ={
             }
             //公告显示
             if($(this).is(".notice")){
-                indexJS.getArticleList("bulletin_system",indexJS.userInfo.groupId,1,1,1,'{"sequence":"asc","createDate":"desc"}',null,function(dataList){
+                indexJS.getArticleList("bulletin_system",indexJS.userInfo.groupId,1,1,1,'{"sequence":"desc","publishStartDate":"desc"}',null,function(dataList){
                     if(dataList && dataList.result==0){
                         var data=dataList.data;
                         if(data && data.length > 0){
@@ -463,7 +463,7 @@ var indexJS ={
      * 设置广告
      */
     setAdvertisement:function(){
-        this.getArticleList("advertisement",indexJS.userInfo.groupId,"0",1,5,'{"sequence":"asc","createDate":"desc"}',null,function(dataList){
+        this.getArticleList("advertisement",indexJS.userInfo.groupId,"0",1,5,'{"sequence":"desc","publishStartDate":"desc"}',null,function(dataList){
             if(dataList && dataList.result==0){
                 var data=dataList.data;
                 for(var i in data){

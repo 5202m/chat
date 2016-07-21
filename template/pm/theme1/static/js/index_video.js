@@ -23,7 +23,7 @@ var videos={
             return;
         }
         cateDiv.html("");
-        indexJS.getArticleList(categoryId,indexJS.userInfo.groupId,0,1,100,'{"sequence":"asc","createDate":"desc"}',null,function(dataList){
+        indexJS.getArticleList(categoryId,indexJS.userInfo.groupId,0,1,100,'{"sequence":"desc","publishStartDate":"desc"}',null,function(dataList){
             if(dataList && dataList.result==0){
                 var data=dataList.data;
                 var row=null;

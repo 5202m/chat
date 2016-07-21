@@ -428,7 +428,7 @@ var tool={
      */
     setDownloadPPT:function(){
         var fileSuffix = {'pptx':'','ppt':'','pdf':' class="pdf"','docx':' class="word"','doc':' class="word"'};
-        indexJS.getArticleList("download",indexJS.userInfo.groupId,1,1,100,'{"sequence":"asc","createDate":"desc"}',null,function(dataList){
+        indexJS.getArticleList("download",indexJS.userInfo.groupId,1,1,100,'{"sequence":"desc","publishStartDate":"desc"}',null,function(dataList){
             if(dataList && dataList.result==0){
                 var data=dataList.data,row=null;
                 var pptHtml = '';
