@@ -1177,7 +1177,6 @@ var chat={
         //信息传输
 
         this.socket.on('sendMsg',function(data){
-            alert(JSON.stringify(data));
             if(data.fromUser.toUser && data.fromUser.toUser.talkStyle==1){//如果是私聊则转到私聊框处理
                 chat.setWhContent(data,false,false);
             }else{
