@@ -6744,6 +6744,6 @@ button, input, optgroup, select, textarea {color: inherit;font: inherit;margin: 
 .img-responsive, .thumbnail>img, .thumbnail a>img, .carousel-inner>.item>img, .carousel-inner>.item>a>img {display: block;max-width: 100%;height: auto;}
 img {vertical-align: middle;}
 img {border: 0;}
-#newInfoCount {border-radius: 50%;background: #FF4700;line-height: 1;padding: 0 5px;font-size: 12px;color: #fff;}
+#newInfoCount {text-align: center;height: 15px;line-height: 14px;font-family: Arial;color: #fff;display: inline-block;background: #da4454;border-radius: 8px;padding: 0 3px;font-size: 9pt;min-width: 9px;}
 
 
