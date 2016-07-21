@@ -118,6 +118,13 @@ var videos={
         },function() {
             $(this).find('ul').hide();
         });
+        $('.mod_video').hover(function (e) {
+            $('.video-class').removeClass('dn');
+        },function(e) {
+            if(e.target != 'div.video-class' && e.target != 'div.mod_video'){
+                $('.video-class').addClass('dn');
+            }
+        });
         $('.video-checkbox-list').mouseleave(function () {
             $(this).hide();
         });
