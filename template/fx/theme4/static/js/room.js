@@ -646,7 +646,7 @@ var studioChatMb={
     dataUpload:function(data){
         //上传图片到后端
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/studio/uploadData');
+        xhr.open('POST', '/fxstudio/uploadData');
         xhr.addEventListener("progress", function(e){
             if (e.lengthComputable) {
                 var ra= ((e.loaded / e.total *100)|0)+"%";
@@ -2034,7 +2034,9 @@ var studioChatMb={
                 sendObj.fromUser.toUser.publishTime=this.askMsgObj.publishTime;
             }
             studioChatMb.whTalk.receiveMsg(sendObj,true,false);//直接把数据填入内容栏
-            studioChatMb.socket.emit('sendMsg',sendObj);//发送数据
+            if(sendObj.content.msgType != studioChatMb.msgType.img) {
+                studioChatMb.socket.emit('sendMsg', sendObj);//发送数据
+            }
         }
     }
 };

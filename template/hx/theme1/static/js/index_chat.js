@@ -187,7 +187,7 @@ var chat={
             }else{
                 $('.envelope-reward .reward-form').addClass('dn');
                 $('.envelope-reward .reward-title .reward-back,.envelope-reward .reward-weima').removeClass('dn').show();
-                $('#qrCode').attr('src','/hx/theme1/img/rew/'+userId+'.png');
+                $('#qrCode').attr('src','/hx/theme1/img/rew/'+userId+'.png').show();
             }
         });
         //发送图片--选择图片
@@ -1480,7 +1480,7 @@ var chat={
         if($('.inp-bar4').hasClass('clicked')){
             $('.envelope-reward').removeClass('dn');
         }else {
-            var data = {groupId: indexJS.userInfo.groupId, hasQRCode:false};
+            /*var data = {groupId: indexJS.userInfo.groupId, hasQRCode:true};
             common.getJson('/hxstudio/getTeachers', {data: JSON.stringify(data)}, function (data) {
                 if (data) {
                     $('#js-reward-user').empty();
@@ -1488,11 +1488,11 @@ var chat={
                     $.each(data, function (key, row) {
                         $('#js-reward-user').append('<option value="' + row.userNo + '">' + row.userName + '</option>');
                         //$('#rewardQRCode').append('<img id="js-'+row.userNo+'" src="'+row.wechatCodeImg+'" class="img-responsive" style="display:none;">');
-                    });
+                    });*/
                     $('.inp-bar4').addClass('clicked');
                     $('.envelope-reward').removeClass('dn');
-                }
-            });
+                /*}
+            });*/
         }
     },
     /**

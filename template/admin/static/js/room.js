@@ -680,6 +680,7 @@ var room={
             $('.point-list .point-list-content ul li .cancel-btn').click();
         });
         $('.publish-point .publish-btn').click(function(){
+            $(this).attr('disabled','disabled');
             room.publishViewPoint();
         });
         $('#point_list').click(function(){
@@ -1766,6 +1767,7 @@ var room={
             else{
                 room.showTipBox(result.msg);
             }
+            $('.publish-point .publish-btn').removeAttr('disabled');
         });
     },
     /**

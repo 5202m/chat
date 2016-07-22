@@ -362,7 +362,7 @@ var roomJS={
                 roomJS.whTalk.whSwitch(false);
             }else if(type=="whTalkBoxTab"){
                 roomJS.whTalk.whSwitch(true);
-                roomJS.view.boardCtrl(1);
+                roomJS.view.boardCtrl($.trim($('#contentText').html()) ? 1 : 4);
             }else{
                 roomJS.whTalk.whSwitch(false);
                 roomJS.view.boardCtrl(0);
@@ -401,10 +401,17 @@ var roomJS={
         //表情输入控制
         $('#msgFaceBtn').bind("click", function(){
             $(this).blur();
-            if($("#facePanel").is(":hidden")){
-                roomJS.view.boardCtrl(2);
+            if($("ul.cen-ulist>li.on").attr('t') == 'whTalkBoxTab'){ //$('.private_chat').is('hidden') === false 无效
+                roomJS.view.boardCtrl( $("#facePanel").is(":hidden") ? 6 : 4);
+                if($.trim($('#contentText').html())){
+                    roomJS.view.boardCtrl(2);
+                }
             }else{
-                roomJS.view.boardCtrl(1);
+                if($("#facePanel").is(":hidden")){
+                    roomJS.view.boardCtrl(2);
+                }else{
+                    roomJS.view.boardCtrl(1);
+                }
             }
             //初始化标签
             roomJS.face.init($("#facePanel"),
@@ -476,6 +483,10 @@ var roomJS={
         }).bind("input", function(){
             var isOk =  (roomJS.visitorSpeak || roomJS.userInfo.clientGroup!='visitor')
                 && ($.trim($(this).text())!=$(this).find(".txt_dia").text() || $(this).find("img").size() > 0);
+            //如果当前是私聊
+            if($("ul.cen-ulist>li.on").attr('t') == 'whTalkBoxTab'){
+                roomJS.view.boardCtrl( isOk ? ($("#facePanel").is(':hidden') === true ? 1:2) : 4);
+            }
             if(isOk){
                 $("#sendBtn").addClass("pressed");
             }else{
@@ -512,6 +523,14 @@ var roomJS={
             $("#contentText").html("").trigger("input");//清空内容
         });
 
+        $('.addpic-btn').click(function(){
+            if($(".add-img").is(":hidden")){
+                roomJS.view.boardCtrl(5);
+            }else{
+                roomJS.view.boardCtrl(4);
+            }
+        });
+
         /**
          * top信息点击
          */
@@ -525,52 +544,39 @@ var roomJS={
             return false;
         });
         //发送图片--选择图片
-        $("#sendImgBtn").click(function(){
-            if(!FileReader){
+        $(".file-img").click(function () {
+            if (!FileReader) {
                 alert("发送图片功能目前只支持Chrome、Firefox、IE10或以上版本的浏览器！");
                 return;
             }
-            if(!roomJS.visitorSpeak && roomJS.checkClientGroup("visitor")){
-                studioMbPop.popBox("login", {
-                    groupId : "",
-                    clientGroup : roomJS.userInfo.clientGroup,
-                    clientStoreId : roomJS.userInfo.clientStoreId,
-                    platform : roomJS.fromPlatform
-                });
-                return;
-            }
-            if(roomJS.userInfo.isSetName === false){
-                studioMbPop.popBox("set", {studioChatObj : roomJS});
-                return;
-            }
-            $("#sendImgInp").trigger("click");
         });
         //发送图片
-        $("#sendImgInp").bind("change", function(){
-            var _this=this;
+        $(".file-img").bind("change", function () {
+            var _this = this;
             var img = _this.files[0];
             // 判断是否图片
-            if(!img){
+            if (!img) {
                 return false;
             }
             // 判断图片格式
-            if(!(img.type.indexOf('image')==0 && img.type && /\.(?:jpg|png|gif)$/.test(img.name.toLowerCase())) ){
+            if (!(img.type.indexOf('image') == 0 && img.type && /\.(?:jpg|png|gif)$/.test(img.name.toLowerCase()))) {
                 alert('目前暂支持jpg,gif,png格式的图片！');
                 return false;
             }
-            var fileSize=img.size;
-            if(fileSize>=1024*1024){
+            var fileSize = img.size;
+            if (fileSize >= 1024 * 1024) {
                 alert('发送的图片大小不要超过1MB.');
-                return false ;
+                return false;
             }
             //加载文件转成URL所需的文件流
             var reader = new FileReader();
             reader.readAsDataURL(img);
-            reader.onload = function(e){
+
+            reader.onload = function (e) {
                 roomJS.setUploadImg(e.target.result, roomJS.getToUser());//处理并发送图片
             };
-            reader.onprogress=function(e){};
-            reader.onloadend = function(e){};
+            reader.onprogress = function (e) {};
+            reader.onloadend = function (e) {};
             $(this).val("");
         });
     },
@@ -579,13 +585,14 @@ var roomJS={
      */
     setUploadImg:function(base64Data, toUser){
         var uiId=roomJS.getUiId();
+
         //先填充内容框
         var formUser={};
         common.copyObject(formUser,roomJS.userInfo,true);
         formUser.toUser=toUser;
         var sendObj={uiId:uiId,fromUser:formUser,content:{msgType:this.msgType.img,value:'',needMax:0,maxValue:''}};
-        if(toUser && toUser.talkStyle == 1) {
-            this.setWhContent(sendObj,true,false);
+        if(roomJS.whTalk.tabCheck) {
+            roomJS.whTalk.sendWhMsg(sendObj);
         }else{
             this.setContent(sendObj,true,false);
         }
@@ -596,12 +603,13 @@ var roomJS={
                 $('#'+uiId).remove();
                 return false;
             }
-            var aObj=$("#"+result.uiId+" span[contt='a'] a");
+            var aObj=$("#"+result.uiId+" span[contt='a'] a");//[contt='a']
             aObj.attr("href", value)
                 .children("img").attr("src",value).attr("needMax",result.content.needMax);
             roomJS.dataUpload(result);
         });
     },
+
     /**
      * 图片压缩
      * @param sendObj
@@ -673,13 +681,6 @@ var roomJS={
         xhr.send(JSON.stringify(data)); //发送base64
     },
     /**
-     * 移除加载提示的dom
-     * @param uiId
-     */
-    removeLoadDom:function(uiId){
-        $('#'+uiId+' .img-loading,#'+uiId+' .img-load-gan,#'+uiId+' .shadow-box,#'+uiId+' .shadow-conut').remove();
-    },
-    /**
      * 页面控制
      */
     view : {
@@ -694,13 +695,16 @@ var roomJS={
                 header : $("#header"),
                 backToLive : $("#backToLive"),
                 facePanel : $("#facePanel"),
-                floatBox : $(".float-box")
+                floatBox : $(".float-box"),
+                publicChat :$(".public_chat"),
+                privateChat : $(".private_chat"),
+                imgBox : $(".add-img")
             };
             switch(type){
                 case 0:
+                    blocks.floatBox.hide();
                     blocks.header.show();
                     blocks.backToLive.data("showBoard", true).trigger("show");
-                    blocks.floatBox.hide();
                     break;
                 case 1:
                     blocks.header.show();
@@ -720,7 +724,39 @@ var roomJS={
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
                     break;
+                case 4:
+                    blocks.header.hide();
+                    blocks.backToLive.data("showBoard", false).trigger("show");
+                    blocks.floatBox.show();
+                    blocks.facePanel.hide();
+                    blocks.privateChat.show();
+                    blocks.publicChat.hide();
+                    blocks.imgBox.hide();
+                    break;
+                case 5:
+                    blocks.header.hide();
+                    blocks.backToLive.data("showBoard", false).trigger("show");
+                    blocks.floatBox.show();
+                    blocks.facePanel.hide();
+                    blocks.privateChat.show();
+                    blocks.publicChat.hide();
+                    blocks.imgBox.show();
+                    break;
+                    blocks.header.hide();
+                case 6:
+                    blocks.backToLive.data("showBoard", false).trigger("show");
+                    blocks.floatBox.show();
+                    blocks.facePanel.show();
+                    blocks.privateChat.show();
+                    blocks.publicChat.hide();
+                    blocks.imgBox.hide();
             }
+            if(blocks.privateChat.is(':hidden') === false){
+                $('.float-box').addClass('private');
+            }else{
+                $('.float-box').removeClass('private');
+            }
+
         }
     },
     /**
@@ -1245,14 +1281,23 @@ var roomJS={
             fromUser=data.fromUser,
             content=data.content,
             nickname=fromUser.nickname;
-        var toUser=fromUser.toUser,pHtml=[],msgVal;
+        var toUser=fromUser.toUser,pHtml=[],msgVal,
+            loadHtml='';
+
+        if(roomJS.userInfo.userId==fromUser.userId){
+            if(isMeSend){//发送，并检查状态
+                fromUser.publishTime=data.uiId;
+                loadHtml='<em class="img-loading"></em><span class="shadow-box"></span><s class="shadow-conut"></s>';
+            }
+        }
         if(content.msgType==roomJS.msgType.img){
             var lightboxArg = isWh ? "whimg-" + fromUser.userId : "dialog-img";
             if(content.needMax){
-                msgVal='<p><a href="/hxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片"/></a></p>';
+                msgVal='<a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片"/></a>';
             }else{
-                msgVal='<p><a href="'+content.value+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片" /></a></p>';
+                msgVal='<a href="'+content.value+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片" /></a>';
             }
+            msgVal = '<span contt="a">' + msgVal + '</span>' +loadHtml;
         }else{
             msgVal = '<span contt="a">' + content.value + '</span>';
         }
@@ -1289,7 +1334,7 @@ var roomJS={
             }
         }else{
             if(fromUser.userType==3){
-                nickname += "&nbsp;（客服）";
+                nickname += "&nbsp;（助理）";
                 cls+='admin';
             }else if(fromUser.userType==2){
                 cls+='analyst';
@@ -1352,6 +1397,13 @@ var roomJS={
                 el.innerHTML = el.innerHTML.replace(linkTxt,newTest);
             }
         });
+    },
+    /**
+     * 移除加载提示的dom
+     * @param uiId
+     */
+    removeLoadDom:function(uiId){
+        $('#'+uiId+' .img-loading,#'+uiId+' .img-load-gan,#'+uiId+' .shadow-box,#'+uiId+' .shadow-conut').remove();
     },
     /**
      * 提取头像样式
@@ -1984,7 +2036,9 @@ var roomJS={
                 sendObj.fromUser.toUser.publishTime=this.askMsgObj.publishTime;
             }
             roomJS.whTalk.receiveMsg(sendObj,true,false);//直接把数据填入内容栏
-            roomJS.socket.emit('sendMsg',sendObj);//发送数据
+            if(sendObj.content.msgType!=roomJS.msgType.img) {
+                roomJS.socket.emit('sendMsg', sendObj);//发送数据
+            }
         }
     }
 };

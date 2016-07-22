@@ -142,17 +142,32 @@
     <footer class="float-box">
         <article class="float-con">
             <button id="msgFaceBtn" class="face-btn hide-t">表情</button>
-            <!--a href="javascript:" class="inp-bar5" id="sendImgBtn" title="发图">发图</a>
-            <input type="file" style="display: none;" id="sendImgInp"-->
             <section class="inp-fon-tix">
                 <div id="contentText" contenteditable="true" class="text-area-box">
 
                 </div>
             </section>
-            <button id="sendBtn" class="sent-btn">发送</button>
+            <!-- 公聊 -->
+            <div class="public_chat">
+                <button id="sendBtn" class="sent-btn">发送</button>
+                <!-- <button class="sent-btn ok">发送</button>可发送状态 -->
+            </div>
+            <!-- 私聊 -->
+            <div class="private_chat dn">
+                <button class="addpic-btn"></button>
+                <!-- <button class="sent-btn ok">发送</button>可发送状态 -->
+            </div>
             <section id="facePanel" class="board swiper-container">
                 <div class="face clearfix swiper-wrapper"></div>
                 <div class="face-nav swiper-pagination"></div>
+            </section>
+            <!-- 图片发送 -->
+            <section class="add-img dn">
+                <article class="add-img-in">
+                    <aside class="select-img"><i></i></aside>
+                    <input type="file" class="file-img">
+                    <p>图片</p>
+                </article>
             </section>
         </article>
     </footer>

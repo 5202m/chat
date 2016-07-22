@@ -185,7 +185,7 @@ a:active {
 }
 
 /* img */
-.rightbar .qq i, .room-main .tit .st i, .popupbox .pop-close, .ss-tk-info i, .face-btn, .view_select i, .ctrlblock .ctrlbtn a, .teach-ul li i, .collect-tip b, .collect-tip i, .collect-tip .c_close, .inp i, .resultbox i, .c-menu li i {
+.rightbar .qq i, .room-main .tit .st i, .popupbox .pop-close, .ss-tk-info i, .face-btn, .view_select i, .ctrlblock .ctrlbtn a, .teach-ul li i, .collect-tip b, .collect-tip i, .collect-tip .c_close, .inp i, .resultbox i, .c-menu li i,.addpic-btn,.select-img i {
     background: url(../img/img_css.png) no-repeat;
     background-size: 100px auto;
     -moz-background-size: 100px auto;
@@ -2281,3 +2281,15 @@ ul.message_list li{
     color: #507bb6;
     vertical-align: top;
 }
+
+
+.sent-btn.ok{ background-color: #b59030 }
+.addpic-btn{position: absolute; right: 10px; top: 5px;display: block;width: 29px;height: 29px;background-position: 0 -100px}
+.private_chat .sent-btn{ display: block; }
+.private .inp-fon-tix{ margin-right: 40px; }
+.add-img{position:relative;margin-top:2px;padding:10px 10px 0;}
+.add-img-in{width:42px;border-top:solid #FAFAFA 1px}
+.select-img{position:absolute;left:8px;top:8px;width:44px;height:20px; padding:10px 0;border:none;background-color:#ececec;border-radius:4px}
+.select-img i{width:28px;height:20px; display:block;background-position:0 -240px; margin-left: auto;margin-right: auto;}
+.file-img{width:40px;height:40px;opacity:0; vertical-align: top;}
+.add-img p{text-align:center;color:#616366;font-size: 12px;line-height:18px;}

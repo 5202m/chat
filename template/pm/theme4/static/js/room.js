@@ -2055,7 +2055,9 @@ var studioChatMb={
                 sendObj.fromUser.toUser.publishTime=this.askMsgObj.publishTime;
             }
             studioChatMb.whTalk.receiveMsg(sendObj,true,false);//直接把数据填入内容栏
-            studioChatMb.socket.emit('sendMsg',sendObj);//发送数据
+            if(sendObj.content.msgType != studioChatMb.msgType.img) {
+                studioChatMb.socket.emit('sendMsg', sendObj);//发送数据
+            }
         }
     }
 };
