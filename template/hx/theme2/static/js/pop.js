@@ -641,5 +641,12 @@ var studioMbPop = {
      */
     openCSBox:function(){
         window.open ('https://www.serve888.com/serve888/chatClient/chatbox.jsp?companyID=217&s=1','Live800Chatindow','height=520,width=740,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+    },
+    /**GA统计*/
+    studioGA: function(gaArg1,gaArg2,gaArg3,gaArg4,gaArg5,trackDataArg1){
+        if(ga instanceof Function && _trackData instanceof Array){
+            ga(gaArg1,gaArg2,gaArg3,gaArg4,gaArg5);
+            _trackData.push(trackDataArg1);
+        }
     }
 };

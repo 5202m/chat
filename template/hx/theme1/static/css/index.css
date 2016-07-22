@@ -160,6 +160,11 @@ body {
     border-radius: 4px
 }
 
+.dialog .headimg b,.mod_userlist .headimg b{
+    background-image:url(../img/img_css.png);
+    background-repeat:no-repeat;
+}
+
 .img-loading {
 	position: absolute;
 	bottom: 0;

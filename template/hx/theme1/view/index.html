@@ -24,28 +24,25 @@
     <script>
         LoginAuto.sessionUser = JSON.parse('<%- userInfo %>');
         LoginAuto.init();
-        //初始化ga，防止ga脚本加载失败导致的页面异常
-        var ga = function(){};
-        var _trackData = [];
     </script>
 </head>
 <body class="">
 <div class="box-header">
     <div class="box-header-in clearfix">
         <h1 class="fl">
-            <a href="http://www.hx9999.com" target="_blank" onClick="ga('send', 'event', 'link', 'logo_index', 'hxstudio_toplink');_trackData.push(['addaction','link', 'logo_index', 'hxstudio_toplink']);"><img src="/hx/theme1/img/logo.png" alt=""></a>
+            <a href="http://www.hx9999.com" target="_blank" onClick="indexJS.studioGA('send', 'event', 'link', 'logo_index', 'hxstudio_toplink', ['addaction','link', 'logo_index', 'hxstudio_toplink']);"><img src="/hx/theme1/img/logo.png" alt=""></a>
             视频直播间
         </h1>
         <div class="header-right fr clearfix">
             <ul>
                 <li class="cursor">
-                    <a href="http://www.hx9999.com/cn/sd/sd-index.html" class="toplink" target="_blank" onClick="ga('send', 'event', 'link', 'sdzs_sd-index', 'hxstudio_toplink');_trackData.push(['addaction','link', 'sdzs_sd-index', 'hxstudio_toplink']);"><span>晒单之声</span></a>
+                    <a href="http://www.hx9999.com/cn/sd/sd-index.html" class="toplink" target="_blank" onClick="indexJS.studioGA('send', 'event', 'link', 'sdzs_sd-index', 'hxstudio_toplink', ['addaction','link', 'sdzs_sd-index', 'hxstudio_toplink']);"><span>晒单之声</span></a>
                 </li>
                 <!--<li>
                     <a href="http://wj.qq.com/s/569815/fccf" class="toplink" target="_blank"><span>问卷调查</span></a>
                 </li>-->
                 <li class="room_rule">
-                    <a href="javascript:void(0)" class="toplink" onClick="ga('send', 'event', 'click', 'fjgz', 'hxstudio_toplink');_trackData.push(['addaction','click', 'fjgz', 'hxstudio_toplink']);">
+                    <a href="javascript:void(0)" class="toplink" onClick="indexJS.studioGA('send', 'event', 'click', 'fjgz', 'hxstudio_toplink', ['addaction','click', 'fjgz', 'hxstudio_toplink']);">
                         <span>房间规则</span><b class="arr"></b>
                     </a>
                     <div class="dropcont" style="padding: 20px 30px;">
@@ -57,7 +54,7 @@
                     </div>
                 </li>
                 <li class="cursor">
-                    <a href="javascript:void(0)" class="toplink" onClick="ga('send', 'event', 'click', 'kcap', 'hxstudio_toplink');_trackData.push(['addaction','click', 'kcap', 'hxstudio_toplink']);">
+                    <a href="javascript:void(0)" class="toplink" onClick="indexJS.studioGA('send', 'event', 'click', 'kcap', 'hxstudio_toplink', ['addaction','click', 'kcap', 'hxstudio_toplink']);">
                         <span>课程安排</span><b class="arr"></b>
                     </a>
                     <div class="dropcont ">
@@ -69,7 +66,7 @@
                     </div>
                 </li>
                 <li class="notice">
-                    <a href="javascript:void(0)" class="toplink" onClick="ga('send', 'event', 'click', 'gonggao', 'hxstudio_toplink');_trackData.push(['addaction','click', 'gg', 'hxstudio_toplink']);">
+                    <a href="javascript:void(0)" class="toplink" onClick="indexJS.studioGA('send', 'event', 'click', 'gonggao', 'hxstudio_toplink', ['addaction','click', 'gg', 'hxstudio_toplink']);">
                         <span>公告</span>
                     </a>
                     <div class="dropcont" style="padding: 20px 30px;">
@@ -81,26 +78,26 @@
                     </div>
                 </li>
                 <li id="saveToDesktop">
-                    <a href="javascript:void(0)" class="toplink" onClick="ga('send', 'event', 'click', 'tjdzm', 'hxstudio_toplink');_trackData.push(['addaction','click', 'tjdzm', 'hxstudio_toplink']);">
+                    <a href="javascript:void(0)" class="toplink" onClick="indexJS.studioGA('send', 'event', 'click', 'tjdzm', 'hxstudio_toplink', ['addaction','click', 'tjdzm', 'hxstudio_toplink']);">
                         <span>添加到桌面</span>
                     </a>
                 </li>
                 <li id="expert">
-                    <a href="javascript:void(0)" class="toplink" onClick="ga('send', 'event', 'click', 'zjyx', 'hxstudio_toplink');_trackData.push(['addaction','click', 'zjyx', 'hxstudio_toplink']);">
+                    <a href="javascript:void(0)" class="toplink" onClick="indexJS.studioGA('send', 'event', 'click', 'zjyx', 'hxstudio_toplink', ['addaction','click', 'zjyx', 'hxstudio_toplink']);">
                         <span>专家邮箱</span>
                     </a>
                 </li>
                 <li id="onlineCs">
-                    <a href="javascript:void(0)" class="toplink last" onClick="ga('send', 'event', 'chat', '800', 'hxstudio_toplink');_trackData.push(['addaction','chat', '800', 'hxstudio_toplink']);">
+                    <a href="javascript:void(0)" class="toplink last" onClick="indexJS.studioGA('send', 'event', 'chat', '800', 'hxstudio_toplink', ['addaction','chat', '800', 'hxstudio_toplink']);">
                         <span>在线客服</span>
                     </a>
                 </li>
             </ul>
             <div class="header-btn">
-                <a href="https://myid.hx9999.com/cn/newAccount.html?action=0&pmf_group=optimization&pmf_source=seo_handan&pmf_medium=seo_handan_kaihu&pmf_keyword=seo_handan_kaihu&pmf_id=seo_handan_kaihu&utm_source=seo_handan&utm_medium=seo_handan_kaihu&utm_term=seo_handan_kaihu&utm_content=seo_handan_kaihu&utm_campaign=seo_handan_kaih" target="_blank" onClick="ga('send', 'event', 'account', 'real_account', 'hxstudio_toplink');_trackData.push(['addaction','account', 'real_account', 'hxstudio_toplink']);">
+                <a href="https://myid.hx9999.com/cn/newAccount.html?action=0&pmf_group=optimization&pmf_source=seo_handan&pmf_medium=seo_handan_kaihu&pmf_keyword=seo_handan_kaihu&pmf_id=seo_handan_kaihu&utm_source=seo_handan&utm_medium=seo_handan_kaihu&utm_term=seo_handan_kaihu&utm_content=seo_handan_kaihu&utm_campaign=seo_handan_kaih" target="_blank" onClick="indexJS.studioGA('send', 'event', 'account', 'real_account', 'hxstudio_toplink', ['addaction','account', 'real_account', 'hxstudio_toplink']);">
                     <i class="real"></i><span>开立真实账户</span>
                 </a>
-                <a href="https://myid.hx9999.com/cn/practice.html?action=0&pmf_group=free&pmf_source=free_handan&pmf_medium=free_handan_moni&pmf_keyword=free_handan_moni&pmf_id=free_handan_moni&utm_source=free_handan&utm_medium=free_handan_moni&utm_term=free_handan_moni&utm_content=free_handan_moni&utm_campaign=free_handan_moni" target="_blank" onClick="ga('send', 'event', 'account', 'demo_account', 'hxstudio_toplink');_trackData.push(['addaction','account', 'demo_account', 'hxstudio_toplink']);">
+                <a href="https://myid.hx9999.com/cn/practice.html?action=0&pmf_group=free&pmf_source=free_handan&pmf_medium=free_handan_moni&pmf_keyword=free_handan_moni&pmf_id=free_handan_moni&utm_source=free_handan&utm_medium=free_handan_moni&utm_term=free_handan_moni&utm_content=free_handan_moni&utm_campaign=free_handan_moni" target="_blank" onClick="indexJS.studioGA('send', 'event', 'account', 'demo_account', 'hxstudio_toplink', ['addaction','account', 'demo_account', 'hxstudio_toplink']);">
                     <i class="mn"></i><span>开立模拟账户</span>
                 </a>
             </div>
@@ -154,7 +151,7 @@
             </ul>
             <%} else {%>
             <div class="header-btn">
-                <a class="header-login" href="javascript:" id="login_a" tp="content_top" onClick="ga('send', 'event', 'link', 'login', 'hxstudio_toplink');_trackData.push(['addaction','link', 'login', 'hxstudio_toplink']);">
+                <a class="header-login" href="javascript:" id="login_a" tp="content_top" onClick="indexJS.studioGA('send', 'event', 'link', 'login', 'hxstudio_toplink', ['addaction','link', 'login', 'hxstudio_toplink']);">
                     登录
                 </a>
             </div>
@@ -213,10 +210,10 @@
                     <div class="mod_videolist">
                         <div class="tabnav clearfix">
                             <div class="mod_menu_bg"></div>
-                            <a class="on" href="javascript:void(0)" onClick="ga('send', 'event', 'click', 'hangqing', 'hxstudio_rightlink');_trackData.push(['addaction','click', 'hangqing', 'hxstudio_rightlink']);">
+                            <a class="on" href="javascript:void(0)" onClick="indexJS.studioGA('send', 'event', 'click', 'hangqing', 'hxstudio_rightlink', ['addaction','click', 'hangqing', 'hxstudio_rightlink']);">
                                 行情
                             </a>
-                            <a class="" href="javascript:void(0)" onClick="ga('send', 'event', 'click', 'message', 'hxstudio_rightlink');_trackData.push(['addaction','click', 'message', 'hxstudio_rightlink']);">
+                            <a class="" href="javascript:void(0)" onClick="indexJS.studioGA('send', 'event', 'click', 'message', 'hxstudio_rightlink', ['addaction','click', 'message', 'hxstudio_rightlink']);">
                                 快讯<sup id="newInfoCount" style="display:none;"></sup>
                             </a>
                         </div>
@@ -285,7 +282,7 @@
                 <span id="roomInfoId" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>"><%= row.name %><i class="off"></i></span>
                 <!--<a class="toggle-room" href="javascript:;">切换房间 <i></i></a>-->
                 <div class="changeroom">
-                    <a href="javascript:" class="roomctrl toggle-room" onClick="ga('send', 'event', 'click', 'room', 'hxstudio_leftlink');_trackData.push(['addaction','click', 'room', 'hxstudio_leftlink']);">
+                    <a href="javascript:" class="roomctrl toggle-room" onClick="indexJS.studioGA('send', 'event', 'click', 'room', 'hxstudio_leftlink', ['addaction','click', 'room', 'hxstudio_leftlink']);">
                         <span>切换房间</span><i></i>
                     </a>
                     <div class="rooms">
@@ -294,7 +291,7 @@
                             <div class="rbox_top">
                                 <span class="rname"><%= rowIn.name %><i></i></span>
                                 <span class="peo_num" title="在线人数"><i></i><label></label></span>
-                                <a href="javascript:" class="enterbtn" rid="<%= rowIn.id %>" cgs="<%= rowIn.clientGroup %>" aw="<%= rowIn.allowWhisper %>" awr="<%= rowIn.whisperRoles %>"  av="<%= rowIn.allowVisitor %>" onClick="ga('send', 'event', 'click', 'room_jr', 'hxstudio_leftlink');_trackData.push(['addaction','click', 'room_jr', 'hxstudio_leftlink']);">
+                                <a href="javascript:" class="enterbtn" rid="<%= rowIn.id %>" cgs="<%= rowIn.clientGroup %>" aw="<%= rowIn.allowWhisper %>" awr="<%= rowIn.whisperRoles %>"  av="<%= rowIn.allowVisitor %>" onClick="indexJS.studioGA('send', 'event', 'click', 'room_jr', 'hxstudio_leftlink', ['addaction','click', 'room_jr', 'hxstudio_leftlink']);">
                                     进入
                                 </a>
                             </div>

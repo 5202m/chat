@@ -38,12 +38,12 @@
         </div>
         <ul class="login-mode">
             <li class="on">
-                <a href="javascript:;" onClick="ga('send', 'event', 'click_m', 'login_sj', 'hxstudio_toplink');_trackData.push(['addaction','click_m', 'login_sj', 'hxstudio_toplink']);">
+                <a href="javascript:;" onClick="studioMbPop.studioGA('send', 'event', 'click_m', 'login_sj', 'hxstudio_toplink', ['addaction','click_m', 'login_sj', 'hxstudio_toplink']);">
                     手机登录
                 </a>
             </li>
             <li>
-                <a href="javascript:;" onClick="ga('send', 'event', 'click_m', 'login_zh', 'hxstudio_toplink');_trackData.push(['addaction','click_m', 'login_zh', 'hxstudio_toplink']);">
+                <a href="javascript:;" onClick="studioMbPop.studioGA('send', 'event', 'click_m', 'login_zh', 'hxstudio_toplink', ['addaction','click_m', 'login_zh', 'hxstudio_toplink']);">
                     帐号登录
                 </a>
             </li>
@@ -68,7 +68,7 @@
                         </div>
                         <span class="vc_tip">
                             如未收到验证码，请咨询
-                            <a href="javascript:" onclick="studioMbPop.openCSBox(); ga('send', 'event', 'chat_m', '800', 'hxstudio_toplink');_trackData.push(['addaction','chat_m', '800', 'hxstudio_toplink']);">
+                            <a href="javascript:" onclick="studioMbPop.openCSBox(); studioMbPop.studioGA('send', 'event', 'chat_m', '800', 'hxstudio_toplink', ['addaction','chat_m', '800', 'hxstudio_toplink']);">
                                 在线客服
                             </a>
                         </span>
