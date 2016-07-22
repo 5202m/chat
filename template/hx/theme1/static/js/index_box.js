@@ -171,7 +171,7 @@ var box={
             if(!indexJS.currStudioAuth){
                 $("#login_a").trigger("click", {closeable : false}); //弹出登录框，隐藏关闭按钮
             }
-            /*var  lgt=$('#roomInfoId').attr("lgt");//后台控制登录弹框时间
+            var  lgt=$('#roomInfoId').attr("lgt");//后台控制登录弹框时间
             if(common.isValid(lgt) && !isNaN(lgt)){
                 try{
                   lgt=parseInt(lgt);
@@ -181,7 +181,7 @@ var box={
                 }catch(e){
                     console.error("set login Time has error",e);
                 }
-            }*/
+            }
         }
         /**
          * 注销

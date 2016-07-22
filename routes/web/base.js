@@ -180,18 +180,21 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
                 rowTmp.whisperRoles=row.whisperRoles;
                 rowTmp.disable=(!common.containSplitStr(row.clientGroup,clientGroup));
                 rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.clientGroup,constant.clientGroup.visitor);
-                var ruleArr=row.chatRules,isPass=true;
+                var ruleArr=row.chatRules,isPass=true,ruleRow=null;
                 for(var i in ruleArr) {
-                    isPass = common.dateTimeWeekCheck(ruleArr[i].periodDate, true);
-                    if (ruleArr[i].type == 'whisper_allowed') {
+                	ruleRow=ruleArr[i];
+                    isPass = common.dateTimeWeekCheck(ruleRow.periodDate, true);
+                    if (ruleRow.type == 'whisper_allowed') {
                         if(rowTmp.allowWhisper && !isPass){
                             rowTmp.allowWhisper=false;
                             rowTmp.whisperRoles=null;
                         }
-                    }else if(ruleArr[i].type == 'visitor_filter'){
+                    }else if(ruleRow.type == 'visitor_filter'){
                         if(rowTmp.isCurr && rowTmp.allowVisitor && isPass){
                             viewDataObj.visitorSpeak = true;
                         }
+                    }else if(ruleRow.type == 'login_time_set'&& isPass){
+                        rowTmp.loginBoxTime=ruleRow.beforeRuleVal;
                     }
                 }
                 rowTmp.remark=common.trim(row.remark);
