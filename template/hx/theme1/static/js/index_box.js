@@ -165,12 +165,23 @@ var box={
         $('#login_a').bind("click", function(e, ops){
             ops = ops || {};
             box.toRoomId = ops.groupId;
-            box.openLgBox(ops.closeable, ops.showTip);
+            box.openLgBox(ops.closeable, ops.showTip,ops.loginTime);
         });
         if(indexJS.userInfo.clientGroup=='visitor'){
             if(!indexJS.currStudioAuth){
                 $("#login_a").trigger("click", {closeable : false}); //弹出登录框，隐藏关闭按钮
             }
+            /*var  lgt=$('#roomInfoId').attr("lgt");//后台控制登录弹框时间
+            if(common.isValid(lgt) && !isNaN(lgt)){
+                try{
+                  lgt=parseInt(lgt);
+                  setTimeout(function(){
+                    $("#login_a").trigger("click", {closeable : false,showTip:true,loginTime:lgt});
+                  },lgt* 60 * 1000);
+                }catch(e){
+                    console.error("set login Time has error",e);
+                }
+            }*/
         }
         /**
          * 注销
@@ -424,14 +435,15 @@ var box={
     /**
      * 弹出登录框
      */
-    openLgBox:function(closeable, showTip){
+    openLgBox:function(closeable, showTip,lgTime){
         if(closeable === false){
             $("#loginBox .pop_close").hide();
         }else{
             $("#loginBox .pop_close").show();
         }
         if(showTip){
-            $("#login_tip").show();
+            lgTime=lgTime||1;
+            $("#login_tip").show().find('label').text(lgTime);
         }else{
             $("#login_tip").hide();
         }

@@ -744,6 +744,15 @@ var chat={
                     pv.attr("avs", $(this).find(".headimg img").attr("src"));
                     chat.openDiaLog(pv);
                 }
+            }).dblclick(function(){
+                var pDom=$(this).parent("[utype]");
+                var userType=pDom.attr("utype");
+                if(userType!=3){
+                    return false;
+                }
+                var userId=pDom.attr("id");
+                chat.closeWhTip(userId);
+                chat.fillWhBox(pDom.attr("cg"),pDom.find(".headimg img").attr("src"),pDom.attr("utype"),userId,pDom.find(".uname span").text(),false,false);
             });
         }
     },
@@ -1224,8 +1233,7 @@ var chat={
                         chat.whPushObj = {info: data.content,publishTime: data.publishTime,infoId: data.contentId};
                         chat.pushInfoTimeOutId = window.setTimeout(function () {//按推送结果提示私聊
                             var aDom = $("#userListId li[t=3] a .headimg:not(.have_op)");
-                            $(aDom.get(common.randomIndex(aDom.length))).parent().find('em').click();
-                            $('#main_ad_box .pop_close').click();
+                            $(aDom.get(common.randomIndex(aDom.length))).parent().dblclick();
                         }, data.timeOut * 60 * 1000);
                     }else if(data.position==3){ //公聊框
                         chat.talkBoxPush.initTBP(data.infos);

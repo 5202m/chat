@@ -279,7 +279,7 @@
             <% studioList.forEach(function(row,index){  if(row.isCurr) {%>
             <div class="user-inftop">
                 <div class="mod_menu_bg"></div>
-                <span id="roomInfoId" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>"><%= row.name %><i class="off"></i></span>
+                <span id="roomInfoId" lgt='<%= row.loginBoxTime %>' aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>"><%= row.name %><i class="off"></i></span>
                 <!--<a class="toggle-room" href="javascript:;">切换房间 <i></i></a>-->
                 <div class="changeroom">
                     <a href="javascript:" class="roomctrl toggle-room" onClick="indexJS.studioGA('send', 'event', 'click', 'room', 'hxstudio_leftlink', ['addaction','click', 'room', 'hxstudio_leftlink']);">
