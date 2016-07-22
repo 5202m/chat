@@ -999,6 +999,48 @@ var studioChatMb={
             }else if(this.playerType == "sewise" && window.SewisePlayer){
                 SewisePlayer.doPause();
             }
+        },
+        /**
+         * 外部控制视频全屏
+         */
+        doFullscreen:function(){
+            if(this.playerType == 'video') {
+                var videoDom = this.$panel.find("video")[0];
+                if(videoDom){
+                    if(videoDom.requestFullscreen) {
+                        videoDom.requestFullscreen();
+                    } else if(videoDom.mozRequestFullScreen) {
+                        videoDom.mozRequestFullScreen();
+                    } else if(videoDom.msRequestFullscreen){
+                        videoDom.msRequestFullscreen();
+                    } else if(videoDom.oRequestFullscreen){
+                        videoDom.oRequestFullscreen();
+                    } else if(videoDom.webkitRequestFullscreen){
+                        videoDom.webkitRequestFullScreen();
+                    }
+                }
+            }
+        },
+        /**
+         * 外部控制视频退出全屏
+         */
+        doExitFullscreen:function(){
+            if(this.playerType == 'video') {
+                var videoDom = this.$panel.find("video")[0];
+                if(videoDom){
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if(document.oRequestFullscreen){
+                        document.oCancelFullScreen();
+                    }else if (document.webkitExitFullscreen){
+                        document.webkitExitFullscreen();
+                    }
+                }
+            }
         }
     },
     /**
