@@ -2726,7 +2726,7 @@ body {
     display: inline-block;
     *display: inline;
     *zoom: 1;
-    background: #ceac3f;
+    background: #4db057;
     color: #fff;
     font-size: 10px;
     line-height: 15px;
@@ -3593,6 +3593,10 @@ body {
 
 .ppt_list li > i.pdf {
     background-position: center -100px;
+}
+
+.ppt_list li > i.rar {
+    background-position: center -150px;
 }
 
 .ppt_list li strong {

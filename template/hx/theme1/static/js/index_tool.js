@@ -217,7 +217,7 @@ var tool={
      * 课件下载
      */
     setDownloadPPT:function(){
-        var fileSuffix = {'pptx':'','ppt':'','pdf':' class="pdf"','docx':' class="word"','doc':' class="word"'};
+        var fileSuffix = {'pptx':'','ppt':'','pdf':' class="pdf"','docx':' class="word"','doc':' class="word"','rar':' class="rar"','zip':' class="rar"'};
         indexJS.getArticleList("download",indexJS.userInfo.groupId,1,1,100,'{"sequence":"desc"}',null,function(dataList){
             if(dataList && dataList.result==0){
                 var data=dataList.data,row=null;

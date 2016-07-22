@@ -832,7 +832,7 @@ $.fn.focusEnd = function() {
 String.prototype.formatStr=function() {
     if(arguments.length==0) return this;
     for(var s=this, i=0; i<arguments.length; i++)
-        s=s.replace(new RegExp("\\{"+i+"\\}","g"), arguments[i]);
+        s=s.replace(new RegExp("\\{"+i+"\\}","g"), (arguments[i] == null || arguments[i] == undefined) ? "" : arguments[i]);
     return s;
 };
 /*替换字符串中占位符 扩展方法 end*/

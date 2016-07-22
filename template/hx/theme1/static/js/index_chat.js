@@ -705,6 +705,13 @@ var chat={
             seq = "0";
             meCls='mynk';
         }
+        if(row.userType==3){
+            var gIdDom=$("#roomInfoId");
+            if(gIdDom.attr("aw")=="true" && common.containSplitStr(gIdDom.attr("awr"), row.userType)){
+                csHtml='<em>私聊</em>';
+            }
+            isMeHtml = "&nbsp;（客服）";
+        }
         var lav=chat.getAImgOrLevel(row.userId, row.clientGroup,row.userType,row.avatar);
         var lis=$(userListDomId+" li"),
             liDom='<li id="'+row.userId+'" cg="'+(common.isBlank(row.clientGroup)?'':row.clientGroup)+'" t="'+seq+'" utype="'+row.userType+'" class="'+lav.level+'" >'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+lav.aImg+'<b></b></div><span class="'+meCls+'">'+row.nickname+isMeHtml+'<i></i></span>'+csHtml+'</a></li>';
@@ -745,7 +752,9 @@ var chat={
                     chat.openDiaLog(pv);
                 }
             }).dblclick(function(){
-                var pDom=$(this).parent("[utype]");
+                $(this).find("em").trigger("click");
+            }).find("em").click(function(e){
+                var pDom=$(this).parents("[utype]");
                 var userType=pDom.attr("utype");
                 if(userType!=3){
                     return false;
@@ -753,6 +762,7 @@ var chat={
                 var userId=pDom.attr("id");
                 chat.closeWhTip(userId);
                 chat.fillWhBox(pDom.attr("cg"),pDom.find(".headimg img").attr("src"),pDom.attr("utype"),userId,pDom.find(".uname span").text(),false,false);
+                return false;
             });
         }
     },

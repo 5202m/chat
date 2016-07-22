@@ -735,10 +735,10 @@ var indexJS ={
     },
     /**GA统计*/
     studioGA: function(gaArg1,gaArg2,gaArg3,gaArg4,gaArg5,trackDataArg1){
-        if(ga instanceof Function && _trackData instanceof Array){
-            ga(gaArg1,gaArg2,gaArg3,gaArg4,gaArg5);
+        try{
+            ga(gaArg1, gaArg2, gaArg3, gaArg4, gaArg5);
             _trackData.push(trackDataArg1);
-        }
+        }catch (e){}
     }
 };
 // 初始化
