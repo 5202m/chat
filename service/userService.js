@@ -455,9 +455,6 @@ var userService = {
                     var group=row.loginPlatform.chatUserGroup.id(userInfo.groupType);
                     if(group){
                         var room=group.rooms.id(userInfo.groupId);
-                        if(userInfo.isSetName !== false){
-
-                        }
                         room.onlineDate=userInfo.onlineDate;
                         room.onlineStatus=userInfo.onlineStatus;
                         userInfo.hasRegister=true;
