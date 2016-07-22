@@ -855,14 +855,14 @@ var studioChatMb={
             if(this.playerType == 'video'){
                 if(this.initPlayer) {
                     var loc_item = this.$panel.find("video");
-                    loc_item[0].pause();
+                    loc_item.trigger("pause");
                     loc_item.attr("src", url);
-                    loc_item[0].play();
+                    loc_item.trigger("play");
                 }else {
                     var bf=$("body").attr("fp"), isOnlyMb=('webui'!=bf && 'app'!=bf);
                     this.$panel.append('<video src="' + url + '" controls="true" autoplay="'+isOnlyMb+'" style="width: 100%; height: 100%; background-color: rgb(0, 0, 0);"></video>')
                     if(!isOnlyMb){
-                        this.$panel.find("video")[0].pause();
+                        this.$panel.find("video").trigger("pause");
                     }
                     this.initPlayer = true;
                     this.setEventAd();
@@ -1005,6 +1005,26 @@ var studioChatMb={
                 }).bind("loadstart", function(){
                     $(".ctrlblock").hide();
                 });
+            }
+        },
+        /**
+         * 外部控制视频播放
+         */
+        doPlay:function(){
+            if(this.playerType == 'video') {
+                this.$panel.find("video").trigger("play");
+            }else if(this.playerType == "sewise" && window.SewisePlayer){
+                SewisePlayer.doPlay();
+            }
+        },
+        /**
+         * 外部控制视频暂停
+         */
+        doPause:function(){
+            if(this.playerType == 'video') {
+                this.$panel.find("video").trigger("pause");
+            }else if(this.playerType == "sewise" && window.SewisePlayer){
+                SewisePlayer.doPause();
             }
         }
     },
