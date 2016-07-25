@@ -1523,7 +1523,11 @@ var chat={
             if (data) {
                 if(common.isValid(data.wechatCodeImg)) {
                     $('.user-infbox .user-code').attr('src', data.wechatCodeImg).removeClass('dn');
+                }else{
+                    $('.user-infbox .user-code').attr('src', '').addClass('dn');
                 }
+            }else{
+                $('.user-infbox .user-code').attr('src', '').addClass('dn');
             }
         });
     }
