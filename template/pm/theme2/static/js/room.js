@@ -1366,7 +1366,7 @@ var studioChatMb={
         if(studioChatMb.userInfo.userId==fromUser.userId){
             if(isMeSend){//发送，并检查状态
                 fromUser.publishTime=data.uiId;
-                loadHtml='<em class="img-loading"></em><span class="shadow-box"></span><s class="shadow-conut"></s>';
+                loadHtml='<em class="img-loading"><i></i></em><span class="shadow-box"></span><s class="shadow-conut"></s>';
             }
         }
         if(content.msgType==studioChatMb.msgType.img){
