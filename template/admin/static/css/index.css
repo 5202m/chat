@@ -8,10 +8,10 @@ ol,ul,li{list-style:none;}
 .mod_left1 .title h3{float:left;margin-top: 15px;}
 .mod_left1 .title a{float:right;margin-top: 8px;}
 .mod_left1 .title img{width: 20px;height: 19px;}
-.teacher {height: 50px;padding-left: 5px;font-weight: normal;color: #1735D2;font-size: 13pt;background: #f6f6f6;border-top-left-radius: 4px;border-top-right-radius: 4px;display: inline-block;}
+.teacher {width:90%;height: 50px;padding-left: 5px;font-weight: normal;color: #1735D2;font-size: 13pt;background: #f6f6f6;border-top-left-radius: 4px;border-top-right-radius: 4px;display: inline-block;}
 .teacher .te_l{float:left;}
 .teacher .te_l img {width: 46px;height: 46px;margin-left: 10px;border-radius: 5px;}
-.teacher .te_r{float:right;margin-left: 5px;}
+.teacher .te_r{float:left;margin-left: 5px;}
 .teacher .te_r div{ padding: 2px;}
 .lst_p{margin: 10px 5px 0px 5px;width: 225px;background-color: white;height: 450px;padding-top: 2px;border: 1px solid #DCDADA;border-radius: 2px;}
 .lst_p .rm_p{margin:15px 10px 15px 15px;}
