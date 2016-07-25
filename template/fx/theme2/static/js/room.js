@@ -715,7 +715,7 @@ var studioChatMb={
                     break;
                 case 4:
                     blocks.header.hide();
-                    blocks.backToLive.data("showBoard", false).trigger("show");
+                    blocks.backToLive.data("showBoard", true).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
                     blocks.privateChat.show();
