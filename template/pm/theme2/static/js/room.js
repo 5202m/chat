@@ -732,7 +732,7 @@ var studioChatMb={
                     blocks.imgBox.hide();
                     break;
                 case 3:
-                    blocks.header.hide();
+                    blocks.header.show();
                     blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
@@ -741,7 +741,7 @@ var studioChatMb={
                     blocks.imgBox.hide();
                     break;
                 case 4:
-                    blocks.header.hide();
+                    blocks.header.show();
                     blocks.backToLive.data("showBoard", true).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
@@ -750,7 +750,7 @@ var studioChatMb={
                     blocks.imgBox.hide();
                     break;
                 case 5:
-                    blocks.header.hide();
+                    blocks.header.show();
                     blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
@@ -759,7 +759,7 @@ var studioChatMb={
                     blocks.imgBox.show();
                     break;
                 case 6:
-                    blocks.header.hide();
+                    blocks.header.show();
                     blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.show();
