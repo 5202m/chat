@@ -1651,7 +1651,7 @@ body {
     background-position: -122px -34px;
 }
 .input-toolbar a.inp-bar3{
-    background-position: -144px -34px;
+    background: url("../img/icon-i1.png") no-repeat;
 }
 .input-toolbar a.inp-bar4{
     background: url("../img/s.png") no-repeat;
