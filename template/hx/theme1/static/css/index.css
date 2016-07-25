@@ -2799,7 +2799,7 @@ body {
 
 .mod_menu .dropitem > a {
     display: block;
-    height: 80px;
+    /*height: 80px;*/
     padding-top: 15px;
     text-align: center;
     color: #3f3f3f;
@@ -3761,8 +3761,8 @@ body {
 }
 
 .mod_menu .dr8 .dropcont {
-    width: 203px;
-    height: 380px;
+    width: 130px;
+    height: 180px;
     top: 350px;
 }
 /* MT4网页版 */
@@ -3774,7 +3774,7 @@ body {
 }
 .qr_box {
     text-align: center;
-    padding-top: 28px;
+    padding-top: 13px;
 }
 
 .qr_box img {
@@ -5773,7 +5773,7 @@ body {
 }
 
 .wid1 .mod_menu .dropitem > a {
-    height: 72px;
+    /*height: 72px;*/
 }
 
 .wid1 .mod_menu .dropitem > a span {
@@ -5790,7 +5790,7 @@ body {
 }
 
 .wid1 .mod_menu .dr8 .dropcont {
-    top: 244px
+    top: 453px
 }
 
 .wid2 .header-right .toplink span {
