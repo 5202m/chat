@@ -1260,7 +1260,7 @@ var studioChatMb={
             $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
             if(data.content.msgType==studioChatMb.msgType.img){
                 studioChatMb.removeLoadDom(fromUser.publishTime);//去掉加载框
-                var aObj=$('#'+fromUser.publishTime+' .dialog[contt="a"]>a');
+                var aObj=$('#'+fromUser.publishTime+' span[contt="a"]>a');
                 var url=data.content.needMax?'/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
                 aObj.attr("href",url);
             }
@@ -1935,7 +1935,7 @@ var studioChatMb={
                 $('#'+data.uiId).attr("id",fromUser.publishTime);//发布成功id同步成服务器发布日期
                 if(data.content.msgType==studioChatMb.msgType.img){
                     studioChatMb.removeLoadDom(fromUser.publishTime);//去掉加载框
-                    var aObj=$('#'+fromUser.publishTime+' .dialog[contt="a"]>a');
+                    var aObj=$('#'+fromUser.publishTime+' span[contt="a"]>a');
                     var url=data.content.needMax?'/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
                     aObj.attr("href",url);
                 }
