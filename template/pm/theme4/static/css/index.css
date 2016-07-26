@@ -150,7 +150,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .ctrlblock .ctrlbtn span{ color:#fff; font-size:16px; line-height:34px }
 .ctrlblock .video_ad{ position:relative; width:90%; margin:40px 5% 0}
 .ctrlblock .video_ad img{ vertical-align:bottom; width:100%; height:auto;}
-.video-pop{width: 0; height: 0;}
+.videopart .main-video div.video-pop{width: 0; height: 0;}
 .video-pop .pop{position: absolute; top: 0; left: 0; padding: 5px; background-color: #b59030; color: #FFF}
 .video-pop .play{position: absolute; top: 50%; left: 50%; display:block; height:51px; width:51px; background-size:150px auto; background-position:-97.5px -90px; margin:-25.5px 0 0 -25.5px;}
 

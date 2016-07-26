@@ -579,7 +579,7 @@ var studioChatMb={
                 return false;
             }
             var aObj=$("#"+result.uiId+" span[contt='a'] a");//[contt='a']
-            aObj.attr("href", value)
+            aObj.attr("url", value)
                 .children("img").attr("src",value).attr("needMax",result.content.needMax);
             studioChatMb.dataUpload(result);
         });
@@ -767,7 +767,7 @@ var studioChatMb={
             }
             var yyDom = $(".videopart input:first"), yc = yyDom.attr("yc"), mc = yyDom.attr("mc");
             this.$panel = $("#tVideoDiv");
-            this.$panel.css({'z-index': "inherit"}).height(this.$panel.width() * 0.55);
+            this.$panel.css({'z-index': "inherit"}).height($(".videopart").width() * 0.55);
             this.setEvent();
         },
         /**
@@ -1314,7 +1314,7 @@ var studioChatMb={
                 studioChatMb.removeLoadDom(fromUser.publishTime);//去掉加载框
                 var aObj=$('#'+fromUser.publishTime+' span[contt="a"]>a');
                 var url=data.content.needMax?'/fxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
-                aObj.attr("href",url);
+                aObj.attr("url",url);
             }
             return;
         }
@@ -1997,7 +1997,7 @@ var studioChatMb={
                     studioChatMb.removeLoadDom(fromUser.publishTime);//去掉加载框
                     var aObj=$('#'+fromUser.publishTime+' span[contt="a"]>a');
                     var url=data.content.needMax?'/fxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
-                    aObj.attr("href",url);
+                    aObj.attr("url",url);
                 }
                 return;
             }
