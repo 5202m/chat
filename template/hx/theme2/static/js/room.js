@@ -331,7 +331,7 @@ var roomJS={
      */
     setHeight : function(){
         var loc_amount = 0;
-        loc_amount += $(".videopart").is(":hidden") ? 0 : $(".videopart").height();
+        loc_amount += $(".videopart").height();
         loc_amount += $(".cen-ulist").is(":hidden") ? 0 : $(".cen-ulist").height();
         loc_amount += $("#header").is(":hidden") ? 0 : $("#header").height();
         loc_amount = $(window).height() - loc_amount;
@@ -796,7 +796,7 @@ var roomJS={
                 if(isBack){
                 	studioMbPop.showMessage("目前还没有视频直播，详情请留意直播间的课程安排！");
                 }else if(course && !course.isNext && course.courseType==0){
-                	$(".videopart").hide();
+                	$(".videopart").hide().css({height:"0"});
     	            roomJS.setHeight();
                 }else{
                 	this.playMp4Vd();
@@ -826,7 +826,7 @@ var roomJS={
             this.studioType = studioType;
             var backToLive = $("#backToLive");
             if($(".videopart").is(":hidden")){
-                $(".videopart").show();
+                $(".videopart").show().css({height:"auto"});
                 roomJS.setHeight();
             }
             if(studioType == "studio"){
@@ -1293,7 +1293,7 @@ var roomJS={
         if(content.msgType==roomJS.msgType.img){
             var lightboxArg = isWh ? "whimg-" + fromUser.userId : "dialog-img";
             if(content.needMax){
-                msgVal='<a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片"/></a>';
+                msgVal='<a href="/hxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片"/></a>';
             }else{
                 msgVal='<a href="'+content.value+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片" /></a>';
             }
