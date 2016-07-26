@@ -327,6 +327,7 @@ var studioChatMb={
      * 设置高度
      */
     setHeight : function(){
+        $("#tVideoDiv").height($(".videopart").width() * 0.55);
         var loc_amount = 0;
         loc_amount += $(".videopart").height();
         loc_amount += $(".cen-ulist").is(":hidden") ? 0 : $(".cen-ulist").height();
@@ -793,7 +794,7 @@ var studioChatMb={
             }
             var yyDom=$(".videopart input:first"),yc=yyDom.attr("yc"),mc=yyDom.attr("mc");
             this.$panel = $("#tVideoDiv");
-            this.$panel.css({'z-index':"inherit"}).height($(".videopart").width()*0.55);
+            this.$panel.css({'z-index':"inherit"});
             this.setEvent();
         },
         /**
