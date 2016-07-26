@@ -844,8 +844,10 @@ var roomJS={
                 }else {
                     var bf=$("body").attr("fp"), isOnlyMb=('webui'!=bf && 'app'!=bf);
                     this.$panel.append('<video src="' + url + '" controls="true" autoplay="'+isOnlyMb+'" style="width: 100%; height: 100%; background-color: rgb(0, 0, 0);"></video>')
+                    var vDom=this.$panel.find("video");
+                    makeVideoPlayableInline(vDom.get(0));
                     if(!isOnlyMb){
-                        this.$panel.find("video")[0].pause();
+                        vDom.trigger("pause");
                     }
                     this.initPlayer = true;
                     this.setEventAd();

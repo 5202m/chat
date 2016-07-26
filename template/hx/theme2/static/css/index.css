@@ -2293,3 +2293,8 @@ ul.message_list li{
 .select-img i{width:28px;height:20px; display:block;background-position:0 -240px; margin-left: auto;margin-right: auto;}
 .file-img{width:40px;height:40px;opacity:0; vertical-align: top;}
 .add-img p{text-align:center;color:#616366;font-size: 12px;line-height:18px;}
+.IIV::-webkit-media-controls-play-button,.IIV::-webkit-media-controls-start-playback-button {
+    opacity: 0;
+    pointer-events: none;
+    width: 5px;
+}
