@@ -453,7 +453,7 @@ var StudioChatMini = {
         }
         if(content.msgType==StudioChatMini.msgType.img){
             if(content.needMax){
-                pHtml='<a href="/hxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="dialog-img"><img src="'+content.value+'" alt="图片"/></a>';
+                pHtml='<a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="dialog-img"><img src="'+content.value+'" alt="图片"/></a>';
             }else{
                 pHtml='<a href="'+(content.value ? content.value : 'javascript:')+'" data-lightbox="dialog-img"><img src="'+content.value+'" alt="图片" /></a>';
             }

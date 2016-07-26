@@ -331,7 +331,7 @@ var studioChatMb={
      */
     setHeight : function(){
         var loc_amount = 0;
-        loc_amount += $(".videopart").is(":hidden") ? 0 : $(".videopart").height();
+        loc_amount += $(".videopart").height();
         loc_amount += $(".cen-ulist").is(":hidden") ? 0 : $(".cen-ulist").height();
         loc_amount += $("#header").is(":hidden") ? 0 : $("#header").height();
         loc_amount = $(window).height() - loc_amount;
@@ -813,7 +813,7 @@ var studioChatMb={
                 if(isBack){
                 	studioMbPop.showMessage("目前还没有视频直播，详情请留意直播间的课程安排！");
                 }else if(course && !course.isNext && course.courseType==0){
-                	$(".videopart").hide();
+                	$(".videopart").hide().css({height:"0"});
     	            studioChatMb.setHeight();
                 }else{
                 	this.playMp4Vd();
@@ -843,7 +843,7 @@ var studioChatMb={
             this.studioType = studioType;
             var backToLive = $("#backToLive");
             if($(".videopart").is(":hidden")){
-                $(".videopart").show();
+                $(".videopart").show().css({height:"auto"});
                 studioChatMb.setHeight();
             }
             if(studioType == "studio"){

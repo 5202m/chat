@@ -241,6 +241,21 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
         }
     });
 }
+
+/**
+ * 跳转到视频专属页面
+ */
+router.get('/gotoVideo', function(req, res) {
+    var params = {
+        playerType : req.query["playerType"] || "",
+        studioType : req.query["studioType"] || "",
+        videoType  : req.query["videoType"] || "",
+        url : req.query["url"] || "",
+        title : req.query["title"] || ""
+    };
+    res.render(common.renderPath(req,constant.tempPlatform.webui,"video"),params);
+});
+
 /**
  * 提取手机验证码
  */

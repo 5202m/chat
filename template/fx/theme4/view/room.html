@@ -24,7 +24,6 @@
 <link type="text/css" rel="stylesheet" href="/base/lib/mScroll/jquery.mCustomScrollbar.min.css"/>
 <link type="text/css" rel="stylesheet" href="/fx/theme4/css/index<%= theme == 'dark' ? '-dark' : '' %><%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" />
 <link type="text/css" rel="stylesheet" href="/base/lib/swipe/swiper.min.css" />
-<link type="text/css" rel="stylesheet" href="/base/lib/lightbox/lightbox.css"/>
 </head>
 <body fp="<%= fromPlatform %>">
 <% if (studioList!='[]') { %>
@@ -38,6 +37,12 @@
     <!-- video begin -->
     <section class="videopart">
         <div class="main-video" id="tVideoDiv">
+            <div t="1" class="dn"></div><!--直播视频块-->
+            <div t="2" class="dn"></div><!--点播视频块-->
+        </div>
+        <div class="video-pop">
+            <a class="pop" id="videoPop" href="javacript:void(0)">弹出</a>
+            <a class="play" id="videoPopPlay" href="javacript:void(0)" style="display: none;"></a>
         </div>
         <div class="ctrlblock dn">
             <div class="vcenter">
@@ -49,7 +54,7 @@
     <!-- video end -->
 
     <!-- 切换tab -->
-    <section class="cen-qhbox swiper-container">
+    <section class="cen-qhbox">
         <ul class="cen-ulist clearfix room">
             <li class="on" t="talkBoxTab"><span>互动交流</span></li>
             <li t="whTalkBoxTab"><span>老师助理</span><i class="wh_tips" style="display: none;"></i></li>
@@ -57,9 +62,9 @@
             <li t="videosTab"><span>教学视频</span></li>
         </ul>
 
-        <article class="cen-qhcon swiper-wrapper">
+        <article class="cen-qhcon" id="cenTabPanel">
             <!-- 互动交流begin -->
-            <section class="cen-pubox swiper-slide" id="talkBoxTab">
+            <section class="cen-pubox" id="talkBoxTab">
                 <div class="float-sel">
                     <div class="view_select">
                         <div class="se_cont">
@@ -87,7 +92,7 @@
             </section>
             <!-- 互动交流end -->
             <!-- 老师助理begin -->
-            <section class="cen-pubox swiper-slide" id="whTalkBoxTab">
+            <section class="cen-pubox" id="whTalkBoxTab" style="display: none;">
                 <div class="float-sel">
                     <div class="view_select" style="display: none;">
                         <div class="se_cont">
@@ -108,7 +113,7 @@
             </section>
             <!-- 老师助理end -->
             <!-- 老师观点begin -->
-            <section class="cen-pubox swiper-slide" id="TradeArticleTab">
+            <section class="cen-pubox" id="TradeArticleTab" style="display: none;">
                 <div class="boxcont">
                     <div class="point_ul">
                         <ul>
@@ -118,7 +123,7 @@
             </section>
             <!-- 老师观点end -->
             <!-- 教学视频begin -->
-            <section class="cen-pubox swiper-slide" id="videosTab">
+            <section class="cen-pubox" id="videosTab" style="display: none;">
                 <div class="boxcont">
                 </div>
             </section>
@@ -175,7 +180,7 @@
 <script type="text/javascript" src="/base/lib/jqueryUI/jquery-ui.min.js"></script>
 <script type="text/javascript" src="/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript" src="/base/lib/swipe/swiper.min.js"></script>
-<script type="text/javascript" src="/base/lib/lightbox/lightbox.min.js"></script>
+<script type="text/javascript" src="/base/lib/flowplayer/flowplayer.min.js"></script>
 <script type="text/javascript" src="/base/lib/toucher.js"></script>
 <% if(isDevTest) { %>
 <script type="text/javascript" src="/base/util/common.js"></script>
@@ -197,13 +202,6 @@
         studioChatMb.fromPlatform='<%- fromPlatform%>';
         studioChatMb.theme='<%- theme%>';
         studioChatMb.init();
-        lightbox.option({
-            'resizeDuration': 200,
-            'wrapAround': true,
-            'disableScrolling':true,
-            'positionFromTop':200,
-            'showImageNumberLabel' : false
-        });
     });
 </script>
 </body>

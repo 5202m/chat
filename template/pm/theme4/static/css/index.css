@@ -23,7 +23,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .p0-non{font-size:0;height:0;overflow:hidden}
 
 /* img */
-.rightbar .qq i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i,.addpic-btn,.select-img i{background:url(../img/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
+.rightbar .qq i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.video-pop .play,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i,.addpic-btn,.select-img i{background:url(../img/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
 
 /* header */
 body{font-family:'microsoft yahei','Arial'}
@@ -59,7 +59,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .cen-ulist li.on{background:0 0;color:#285fbb;height:42px;border-bottom:2px solid #285fbb}
 .cen-ulist li span{ display:inline-block; position:relative;}
 .cen-ulist li i{ position:absolute; display:block; height:12px; width:25px;  font-size:0; text-indent:-9999px; text-align:center; background-position:0 -160px; right:-28px; top:7px;}
-.cen-pubox{ display:block; box-sizing:border-box;-moz-box-sizing: border-box; -webkit-box-sizing: border-box;  -o-box-sizing: border-box; -ms-box-sizing: border-box;}
+.cen-pubox{position: relative; display:block; box-sizing:border-box;-moz-box-sizing: border-box; -webkit-box-sizing: border-box;  -o-box-sizing: border-box; -ms-box-sizing: border-box;}
 .cen-pubox .boxcont{padding:0 0 0 5px; position:relative; height:270px;overflow:hidden;}
 .home .cen-pubox .boxcont{ height:auto; box-sizing: border-box; padding-bottom:40px;}
 .moreitem{ display:block; background:rgba(48,61,88,.6); height:30px; line-height:30px; font-size:13px; color:#8695b8; text-align:center; border-radius:5px; margin-bottom:10px;}
@@ -150,6 +150,9 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .ctrlblock .ctrlbtn span{ color:#fff; font-size:16px; line-height:34px }
 .ctrlblock .video_ad{ position:relative; width:90%; margin:40px 5% 0}
 .ctrlblock .video_ad img{ vertical-align:bottom; width:100%; height:auto;}
+.video-pop{width: 0; height: 0;}
+.video-pop .pop{position: absolute; top: 0; left: 0; padding: 5px; background-color: #b59030; color: #FFF}
+.video-pop .play{position: absolute; top: 50%; left: 50%; display:block; height:51px; width:51px; background-size:150px auto; background-position:-97.5px -90px; margin:-25.5px 0 0 -25.5px;}
 
 /*聊天室*/
 .talk-infobox{padding:10px;}

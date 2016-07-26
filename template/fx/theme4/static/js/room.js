@@ -301,7 +301,7 @@ var studioChatMb={
      */
     setHeight : function(){
         var loc_amount = 0;
-        loc_amount += $(".videopart").is(":hidden") ? 0 : $(".videopart").height();
+        loc_amount += $(".videopart").height();
         loc_amount += $(".cen-ulist").is(":hidden") ? 0 : $(".cen-ulist").height();
         loc_amount += $("#header").is(":hidden") ? 0 : $("#header").height();
         loc_amount = $(window).height() - loc_amount;
@@ -313,14 +313,6 @@ var studioChatMb={
      * 设置页面tab事件等
      */
     setEventCen:function(){
-        var cenTab = new Swiper('.cen-qhbox', {
-            loop: false,
-            autoplay : false,
-            onSlideChangeStart: function(mySwiper){
-                $('.cen-ulist li').eq(mySwiper.activeIndex).trigger("click");
-            }
-        });
-
         /*tab切换*/
         $('.cen-ulist li').click(function(){
             $('.cen-ulist li.on').removeClass('on');
@@ -343,7 +335,7 @@ var studioChatMb={
                     _gaq.push(['_trackEvent', 'm_fx_studio', 'teachvideo_tab', 'content_middle',1,true]);
                 }
             }
-            cenTab.slideTo($(this).index(), 300, false);
+            $("#cenTabPanel").children().hide().eq($(this).index()).show();
         });
 
         //主页按钮
@@ -756,51 +748,53 @@ var studioChatMb={
      * 视频控制
      */
     video : {
-        initPlayer : false,//播放器是否初始化
-        playerType :  '',  //播放器类别: video、sewise
-        videoType : '',    //视频类别: mp4、m3u8...
-        studioType : '',   //在线类别: studio、yy、oneTV
-        liveUrl : "http://ct.phgsa.cn:1935/live/01/playlist.m3u8", //yy视频URL
-        $panel : null,     //播放器容器
+        initPlayer: false,//播放器是否初始化
+        playerType: '',   //播放器类别: video、swf
+        videoType: '',    //视频类别: mp4、m3u8...
+        studioType: '',   //在线类别: studio、yy、oneTV
+        videoUrl : '',    //视频URL
+        videoTitle : '',  //视频标题
+        liveUrl: "http://ct.phgsa.cn:1935/live/01/playlist.m3u8", //yy视频URL
+        $panel: null,     //播放器容器
         /**
          * 初始化
          */
-        init : function(){
-            if(navigator.userAgent.match(/Android/i)||(navigator.userAgent.indexOf('iPhone') != -1) || (navigator.userAgent.indexOf('iPod') != -1) || (navigator.userAgent.indexOf('iPad') != -1)){
+        init: function () {
+            if (navigator.userAgent.match(/Android/i) || (navigator.userAgent.indexOf('iPhone') != -1) || (navigator.userAgent.indexOf('iPod') != -1) || (navigator.userAgent.indexOf('iPad') != -1)) {
                 this.playerType = 'video';
-            }else{
-                this.playerType = 'sewise';
+            } else {
+                this.playerType = 'swf';
             }
-            var yyDom=$(".videopart input:first"),yc=yyDom.attr("yc"),mc=yyDom.attr("mc");
+            var yyDom = $(".videopart input:first"), yc = yyDom.attr("yc"), mc = yyDom.attr("mc");
             this.$panel = $("#tVideoDiv");
-            this.$panel.css({'z-index':"inherit"}).height(this.$panel.width()*0.55);
+            this.$panel.css({'z-index': "inherit"}).height(this.$panel.width() * 0.55);
             this.setEvent();
         },
         /**
          * 启动，只能选择播放
          */
-        start : function(isBack){
-            var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime);
-             if(!course||course.isNext||(course.courseType!=0 && common.isBlank(course.studioLink))||course.courseType==2||course.courseType==0){
-                if(isBack){
-                	studioMbPop.showMessage("目前还没有在线视频，详情请留意课程安排！");
-                }else if(course && !course.isNext && course.courseType==0){
-                	$(".videopart").hide();
-    	            studioChatMb.setHeight();
-                }else{
-                	this.playMp4Vd();
+        start: function (isBack) {
+            var course = common.getSyllabusPlan(studioChatMb.syllabusData, studioChatMb.serverTime);
+            if (!course || course.isNext || (course.courseType != 0 && common.isBlank(course.studioLink)) || course.courseType == 2 || course.courseType == 0) {
+                if (isBack) {
+                    studioMbPop.showMessage("目前还没有在线视频，详情请留意课程安排！");
+                } else if (course && !course.isNext && course.courseType == 0) {
+                    $(".videopart").hide().css({height:"0"});
+                    studioChatMb.setHeight();
+                } else {
+                    this.playMp4Vd();
                 }
-            }else{
-            	this.play("yy", "", course.studioLink, "");
+            } else {
+                this.play("yy", "", course.studioLink, "");
             }
         },
         /**
          *随机播放MP4视频
          */
-        playMp4Vd:function(){
-            if($("#studioTeachId a[class=on]").length<=0){
-                var mpDom=$("#videosTab li a");
-                var vdom=$(mpDom.get(common.randomIndex(mpDom.length)));
+        playMp4Vd: function () {
+            if ($("#studioTeachId a[class=on]").length <= 0) {
+                var mpDom = $("#videosTab li a");
+                var vdom = $(mpDom.get(common.randomIndex(mpDom.length)));
                 vdom.click();
             }
         },
@@ -811,36 +805,43 @@ var studioChatMb={
          * @param url
          * @param title
          */
-        play : function(studioType, videoType, url, title){
+        play: function (studioType, videoType, url, title) {
+            this.videoUrl = url;
+            this.videoTitle = title;
+            this.stop();
             this.studioType = studioType;
             var backToLive = $("#backToLive");
-            if($(".videopart").is(":hidden")){
-                $(".videopart").show();
+            if ($(".videopart").is(":hidden")) {
+                $(".videopart").show().css({height:"auto"});
                 studioChatMb.setHeight();
             }
-            if(studioType == "studio"){
+            var panelVideo = "";
+            if (studioType == "studio") {
+                panelVideo = this.$panel.children("div[t=2]");
                 backToLive.data("showVideo", true).trigger("show");
-            }else{
+            } else {
+                panelVideo = this.$panel.children("div[t=1]");
                 $("#videosTab li a.on").removeClass("on");
                 backToLive.data("showVideo", false).trigger("show");
             }
-            if(this.playerType == 'video'){
-                if(this.initPlayer) {
-                    var loc_item = this.$panel.find("video");
-                    loc_item[0].pause();
+            panelVideo.show();
+            if (this.playerType == 'video') {
+                if (this.initPlayer) {
+                    var loc_item = panelVideo.find("video");
+                    loc_item[0].trigger("pause");
                     loc_item.attr("src", url);
-                    loc_item[0].play();
-                }else {
-                    var bf=$("body").attr("fp"), isOnlyMb=('webui'!=bf && 'app'!=bf);
-                    this.$panel.append('<video src="' + url + '" controls="true" autoplay="'+isOnlyMb+'" style="width: 100%; height: 100%; background-color: rgb(0, 0, 0);"></video>')
-                    if(!isOnlyMb){
-                        this.$panel.find("video")[0].pause();
+                    loc_item[0].trigger("play");
+                } else {
+                    var bf = $("body").attr("fp"), isOnlyMb = ('webui' != bf && 'app' != bf);
+                    panelVideo.append('<video src="' + url + '" controls="true" autoplay="' + isOnlyMb + '" style="width: 100%; height: 100%; background-color: rgb(0, 0, 0);"></video>');
+                    if (!isOnlyMb) {
+                        panelVideo.find("video").trigger("pause");
                     }
                     this.initPlayer = true;
                     this.setEventAd();
                 }
-            }else{
-                if(this.initPlayer){
+            }else if(studioType == "studio"){ //教学视频
+                if(this.initPlayer && window.SewisePlayer){
                     SewisePlayer.toPlay(url, title, 0, true);
                     this.videoType = videoType;
                 }else{
@@ -858,10 +859,54 @@ var studioChatMb={
                     script.src = srcPath;
                     this.initPlayer = true;
                     this.videoType = videoType;
-                    this.$panel.get(0).appendChild(script);
+                    panelVideo.get(0).appendChild(script);
                     this.setEventAd();
                 }
+            } else { //在线视频
+                if (url.indexOf("rtmp") != -1) {
+                    var urlGroupArr = /(.*)\/([0-9]+)$/g.exec(url);
+                    if (!urlGroupArr || urlGroupArr.length < 3) {
+                        return;
+                    }
+                    flowplayer(panelVideo[0], "/base/lib/flowplayer/flowplayer.swf", {
+                        clip: {
+                            url: urlGroupArr[2],
+                            provider: 'rtmp',
+                            live: true
+                        },
+                        plugins: {
+                            rtmp: {
+                                proxyType: 'best',
+                                url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
+                                netConnectionUrl: urlGroupArr[1]
+                            }
+                        },
+                        onError: function (e) {
+                        }
+                    });
+                } else {
+                    panelVideo.html('<embed src="' + url + '" autostart="true" wmode="Opaque" quality="high" width="100%" height="100%" align="middle" allowScriptAccess="never" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>');
+                }
+                this.initPlayer = true;
+                this.videoType = videoType;
             }
+        },
+        /**
+         * 停止视频或者清空
+         */
+        stop : function () {
+            var panelVideo = this.studioType == "studio" ? this.$panel.children("div[t=2]") : this.$panel.children("div[t=1]");
+            if (this.playerType == "video") {
+                panelVideo.find("video").trigger("pause");
+            }else if(this.studioType == "studio" && window.SewisePlayer){
+                SewisePlayer.doStop();
+            }else{
+                panelVideo.empty();
+            }
+            panelVideo.hide();
+            $(".ctrlblock").hide();
+            $("#videoPop").show();
+            $("#videoPopPlay").hide();
         },
         /**
          * 设置事件
@@ -936,6 +981,21 @@ var studioChatMb={
                 	studioChatMb.video.start(true);
                 }, 1000);
             });
+
+            /**弹出视频窗口*/
+            $("#videoPop").bind("click", function(){
+                studioChatMb.video.popVideoWindow();
+                $("#videoPopPlay").show();
+                $(this).hide();
+            });
+
+            /**弹出弹出后重新播放*/
+            $("#videoPopPlay").bind("click", function(){
+                studioChatMb.video.play(studioChatMb.video.studioType,
+                    studioChatMb.video.videoType,
+                    studioChatMb.video.videoUrl,
+                    studioChatMb.video.videoTitle);
+            });
         },
         /**
          * 设置视频控制块事件
@@ -972,6 +1032,19 @@ var studioChatMb={
                     $(".ctrlblock").hide();
                 });
             }
+        },
+        /**
+         * 打开视频新窗口
+         * */
+        popVideoWindow : function(){
+            this.stop();
+            var params = "playerType=" + this.playerType
+                       + "&studioType=" + this.studioType
+                       + "&videoType=" + this.videoType
+                       + "&url=" + this.videoUrl
+                       + "&title=" + this.videoTitle;
+            window.open("/fxstudio/gotoVideo?" + params,'studioVideoWindow'
+                ,'height=600,width=800,top=0,right=0,toolbar=no,menubar=no,scrollbars=no,location=no,status=no');
         }
     },
     /**
@@ -1240,7 +1313,7 @@ var studioChatMb={
             if(data.content.msgType==studioChatMb.msgType.img){
                 studioChatMb.removeLoadDom(fromUser.publishTime);//去掉加载框
                 var aObj=$('#'+fromUser.publishTime+' span[contt="a"]>a');
-                var url=data.content.needMax?'/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
+                var url=data.content.needMax?'/fxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
                 aObj.attr("href",url);
             }
             return;
@@ -1293,11 +1366,10 @@ var studioChatMb={
             }
         }
         if(content.msgType==studioChatMb.msgType.img){
-        	var lightboxArg = isWh ? "whimg-" + fromUser.userId : "dialog-img";
             if(content.needMax){
-                msgVal='<a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片"/></a>';
+                msgVal='<a href="javascript:void(0)" onclick="studioChatMb.showImgInWindow(this)" url="/fxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'"><img src="'+content.value+'" alt="图片"/></a>';
             }else{
-                msgVal='<a href="'+content.value+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片" /></a>';
+                msgVal='<a href="javascript:void(0)" onclick="studioChatMb.showImgInWindow(this)" url="'+content.value+'"><img src="'+content.value+'" alt="图片" /></a>';
             }
             msgVal = '<span contt="a">' + msgVal + '</span>' +loadHtml;
         }else{
@@ -1379,6 +1451,15 @@ var studioChatMb={
         loc_html.push(dialog);
         loc_html.push('</li>');
         return loc_html.join("");
+    },
+    /**
+     * 新窗口显示大图
+     * */
+    showImgInWindow:function(dom){
+        var url = $(dom).attr("url");
+        if(url){
+            window.open(url, 'studioImgWindow', 'top=0,right=0,toolbar=no,menubar=no,scrollbars=no,location=no,status=no');
+        }
     },
     /**
      * 格式链接
@@ -1915,7 +1996,7 @@ var studioChatMb={
                 if(data.content.msgType==studioChatMb.msgType.img){
                     studioChatMb.removeLoadDom(fromUser.publishTime);//去掉加载框
                     var aObj=$('#'+fromUser.publishTime+' span[contt="a"]>a');
-                    var url=data.content.needMax?'/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
+                    var url=data.content.needMax?'/fxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
                     aObj.attr("href",url);
                 }
                 return;

@@ -304,7 +304,7 @@ var studioChatMb={
      */
     setHeight : function(){
         var loc_amount = 0;
-        loc_amount += $(".videopart").is(":hidden") ? 0 : $(".videopart").height();
+        loc_amount += $(".videopart").height();
         loc_amount += $(".cen-ulist").is(":hidden") ? 0 : $(".cen-ulist").height();
         loc_amount += $("#header").is(":hidden") ? 0 : $("#header").height();
         loc_amount = $(window).height() - loc_amount;
@@ -786,7 +786,7 @@ var studioChatMb={
                 if(isBack){
                 	studioMbPop.showMessage("目前还没有视频，详情请留意课程安排！");
                 }else if(course && !course.isNext && course.courseType==0){
-                	$(".videopart").hide();
+                	$(".videopart").hide().css({height:"0"});
     	            studioChatMb.setHeight();
                 }else{
                 	this.playMp4Vd();
@@ -816,7 +816,7 @@ var studioChatMb={
             this.studioType = studioType;
             var backToLive = $("#backToLive");
             if($(".videopart").is(":hidden")){
-                $(".videopart").show();
+                $(".videopart").show().css({height:"auto"});
                 studioChatMb.setHeight();
             }
             if(studioType == "studio"){
@@ -1289,7 +1289,7 @@ var studioChatMb={
             if(data.content.msgType==studioChatMb.msgType.img){
                 studioChatMb.removeLoadDom(fromUser.publishTime);//去掉加载框
                 var aObj=$('#'+fromUser.publishTime+' span[contt="a"] a');
-                var url=data.content.needMax?'/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
+                var url=data.content.needMax?'/fxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
                 aObj.attr("href",url);
             }
             return;
@@ -1345,7 +1345,7 @@ var studioChatMb={
         if(content.msgType==studioChatMb.msgType.img){
         	var lightboxArg = isWh ? "whimg-" + fromUser.userId : "dialog-img";
             if(content.needMax){
-                msgVal='<a href="/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片"/></a>';
+                msgVal='<a href="/fxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片"/></a>';
             }else{
                 msgVal='<a href="'+content.value+'" data-lightbox="' + lightboxArg + '"><img src="'+content.value+'" alt="图片" /></a>';
             }
@@ -1968,7 +1968,7 @@ var studioChatMb={
                 if(data.content.msgType==studioChatMb.msgType.img){
                     studioChatMb.removeLoadDom(fromUser.publishTime);//去掉加载框
                     var aObj=$('#'+fromUser.publishTime+' span[contt="a"] a');
-                    var url=data.content.needMax?'/studio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
+                    var url=data.content.needMax?'/fxstudio/getBigImg?publishTime='+fromUser.publishTime+'&userId='+fromUser.userId:aObj.children("img").attr("src");
                     aObj.attr("href",url);
                 }
                 return;
