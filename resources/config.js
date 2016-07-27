@@ -33,7 +33,7 @@ var config = {
     hxGTS2SmApiUrl:'http://192.168.35.99:8080/Goldoffice_demo_api/RESTful',//恒信GTS2 真实地址 http://gts2apidemo.hx9999.com/Goldoffice_api/RESTful
     hxMT4ApiUrl:'http://hxapi.hx9999.com',//恒信MT4 Api地址 http://hxapi.hx9999.com
     hxApiLoginSid:{apiLogin:'handan',apiPassword:'abc123'},
-    socketServerUrl:{webSocket:'http://172.30.5.22:3002',socketIO:'http://172.30.5.22:3003'},
+    socketServerUrl:{webSocket:'http://192.168.35.91:3002',socketIO:'http://192.168.35.91:3003'},
     filesDomain: 'http://192.168.35.91:8090',//图片等文件访问域名
     web24kPath:'http://testweb1.24k.hk:8090',//24k信息地址
     packetAcUrl:'http://testweb1.24k.hk/activity20160105/getActivityUrl',//红包活动连接

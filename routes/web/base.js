@@ -221,7 +221,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
             visitorService.saveVisitorRecord("login",vrRow);
         }
         viewDataObj.fromPlatform=fromPlatform;
-        if(!isMobile && fromPlatform == config.studioThirdUsed.webui){
+        if(!isMobile && fromPlatform == config.studioThirdUsed.webui && chatUser.groupType == constant.fromPlatform.fxstudio){
             res.render(common.renderPath(req,constant.tempPlatform.webui,"room"),viewDataObj);
             return;
         }
