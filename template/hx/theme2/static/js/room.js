@@ -1441,7 +1441,7 @@ var roomJS={
         }else{
             aImgCls="user_c";
         }
-        return '<img src="/hx/theme1/img/'+aImgCls+'.png">';
+        return '<img src="/hx/theme2/img/'+aImgCls+'.png">';
     },
     /**
      * 离开房间提示
@@ -1841,7 +1841,7 @@ var roomJS={
                             csTmp.userNo = cs.userNo;
                             csTmp.userName = cs.userName;
                             csTmp.userType = 3;
-                            csTmp.avatar = common.isValid(cs.avatar)?cs.avatar:'/hx/theme1/img/cm.png';
+                            csTmp.avatar = common.isValid(cs.avatar)?cs.avatar:'/hx/theme2/img/cm.png';
                             csTmp.load = false;
                         }
                     }
