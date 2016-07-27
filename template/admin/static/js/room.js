@@ -350,7 +350,7 @@ var room={
                         var reader = new FileReader();
                         reader.readAsDataURL(img);
                         reader.onload = function(e){
-                            room.setUploadImg(e.target.result,true);//处理并发送图片
+                            room.setUploadImg(e.target.result,room.getWhToUser());//处理并发送图片
                         };
                         reader.onprogress=function(e){};
                         reader.onloadend = function(e){};
@@ -520,17 +520,17 @@ var room={
      * 设置并压缩图片
      * @param base64Data
      */
-    setUploadImg:function(base64Data,isWh){
+    setUploadImg:function(base64Data,toUser){
+        var isWh = toUser && toUser.talkStyle == 1;
         var uiId=room.getUiId();
         //先填充内容框
         var formUser={};
         common.copyObject(formUser,room.userInfo,true);
+        formUser.toUser=toUser;
         var sendObj={uiId:uiId,fromUser:formUser,content:{msgType:room.msgType.img,value:'',needMax:0,maxValue:''}};
         if(isWh){
-            formUser.toUser=this.getWhToUser();
             room.setWhContent(sendObj, true, false);
         }else {
-            formUser.toUser=null;
             room.setContent(sendObj, true, false);
         }
         sendObj.content.value=base64Data;
@@ -811,7 +811,7 @@ var room={
             var reader = new FileReader();
             reader.readAsDataURL(img);
             reader.onload = function(e){
-                room.setUploadImg(e.target.result,false);//处理并发送图片
+                room.setUploadImg(e.target.result,null);//处理并发送图片
             };
             reader.onprogress=function(e){};
             reader.onloadend = function(e){};
