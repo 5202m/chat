@@ -266,6 +266,13 @@ var videos={
         $("#nextCourse").show();
     },
     /**
+     * 提取embed对应的dom
+     * @param url
+     */
+    getEmbedDom:function(url){
+        return '<embed src="'+url+'" autostart="true" wmode="Opaque" quality="high" width="100%" height="100%" align="middle" allowScriptAccess="never" allowFullScreen="true" mode="transparent" type="application/x-shockwave-flash"></embed>';
+    },
+    /**
      * 设置直播视频
      * @param url
      */

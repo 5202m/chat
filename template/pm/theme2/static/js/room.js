@@ -362,7 +362,7 @@ var studioChatMb={
                 studioChatMb.whTalk.whSwitch(false);
             }else if(type=="whTalkBoxTab"){
                 studioChatMb.whTalk.whSwitch(true);
-                studioChatMb.view.boardCtrl($.trim($('#contentText').html()) ? 1 : 4);
+                studioChatMb.view.boardCtrl(1);
             }else{
                 studioChatMb.whTalk.whSwitch(false);
                 studioChatMb.view.boardCtrl(0);
@@ -404,17 +404,10 @@ var studioChatMb={
         //表情输入控制
         $('#msgFaceBtn').bind("click", function(){
             $(this).blur();
-            if($("ul.cen-ulist>li.on").attr('t') == 'whTalkBoxTab'){ //$('.private_chat').is('hidden') === false 无效
-                studioChatMb.view.boardCtrl( $("#facePanel").is(":hidden") ? 6 : 4);
-                if($.trim($('#contentText').html())){
-                    studioChatMb.view.boardCtrl(2);
-                }
+            if(studioChatMb.view.viewBoard == 2){
+                studioChatMb.view.boardCtrl(1);
             }else{
-                if($("#facePanel").is(":hidden")){
-                    studioChatMb.view.boardCtrl(2);
-                }else{
-                    studioChatMb.view.boardCtrl(1);
-                }
+                studioChatMb.view.boardCtrl(2);
             }
             //初始化标签
             studioChatMb.face.init($("#facePanel"),
@@ -458,9 +451,6 @@ var studioChatMb={
                     viewSelect.trigger('click');
                 }
             }
-            if(studioChatMb.view.viewBoard == 2 && $(".float-box").find(e.target).length == 0){
-                $("#contentText").trigger("blur");
-            }
         });
 
         /**
@@ -485,29 +475,36 @@ var studioChatMb={
                 }
             }
         }).focus(function(){
+            if(studioChatMb.view.viewBoard == 4){
+                studioChatMb.view.boardCtrl(1);
+            }
             //studioChatMb.view.boardCtrl(3);
         }).blur(function(){
             //studioChatMb.view.boardCtrl(1);
         }).bind("input", function(){
-            var isOk =  (studioChatMb.visitorSpeak || studioChatMb.userInfo.clientGroup!='visitor')
-                && ($.trim($(this).text())!=$(this).find(".txt_dia").text() || $(this).find("img").size() > 0);
-            //如果当前是私聊
-            if($("ul.cen-ulist>li.on").attr('t') == 'whTalkBoxTab'){
-                studioChatMb.view.boardCtrl( isOk ? ($("#facePanel").is(':hidden') === true ? 1:2) : 4);
-            }
+            var isOk = ($.trim($(this).text())!=$(this).find(".txt_dia").text() || $(this).find("img").size() > 0);
             if(isOk){
-                $("#sendBtn").addClass("pressed");
+                $("#sendBtn").show();
+                $("#sendToolBtn").hide();
+                $("#floatBox").removeClass('send-add');
             }else{
-                $("#sendBtn").removeClass("pressed");
+                $("#sendBtn").hide();
+                $("#sendToolBtn").show();
+                $("#floatBox").addClass('send-add');
             }
-
         });
         //聊天内容发送事件
         $("#sendBtn").click(function(){
             $(this).blur();
             studioChatMb.view.boardCtrl(1);
-            if(!studioChatMb.visitorSpeak && studioChatMb.userInfo.clientGroup=='visitor'){
-                return;
+            if(!studioChatMb.whTalk.tabCheck && !studioChatMb.visitorSpeak && studioChatMb.userInfo.clientGroup=='visitor'){
+            	studioMbPop.popBox("login", {
+                    groupId : studioChatMb.userInfo.groupId,
+                    clientGroup : studioChatMb.userInfo.clientGroup,
+                    clientStoreId : studioChatMb.userInfo.clientStoreId,
+                    platform : studioChatMb.fromPlatform
+                });
+            	return;
             }
             if(studioChatMb.userInfo.isSetName === false){
                 studioMbPop.popBox("set", {studioChatObj : studioChatMb});
@@ -530,9 +527,12 @@ var studioChatMb={
             $("#contentText").html("").trigger("input");//清空内容
         });
 
-        $('.addpic-btn').click(function(){
-            if($(".add-img").is(":hidden")){
-                studioChatMb.view.boardCtrl(5);
+        /**
+         * 点击“+”号
+         * */
+        $('#sendToolBtn').click(function(){
+            if(studioChatMb.view.viewBoard == 4){
+                studioChatMb.view.boardCtrl(1);
             }else{
                 studioChatMb.view.boardCtrl(4);
             }
@@ -554,6 +554,19 @@ var studioChatMb={
         $(".file-img").click(function () {
             if (!FileReader) {
                 alert("发送图片功能目前只支持Chrome、Firefox、IE10或以上版本的浏览器！");
+                return;
+            }
+            if(!studioChatMb.whTalk.tabCheck && !studioChatMb.visitorSpeak && studioChatMb.userInfo.clientGroup=='visitor'){
+            	studioMbPop.popBox("login", {
+                    groupId : studioChatMb.userInfo.groupId,
+                    clientGroup : studioChatMb.userInfo.clientGroup,
+                    clientStoreId : studioChatMb.userInfo.clientStoreId,
+                    platform : studioChatMb.fromPlatform
+                });
+            	return;
+            }
+            if(studioChatMb.userInfo.isSetName === false){
+                studioMbPop.popBox("set", {studioChatObj : studioChatMb});
                 return;
             }
         });
@@ -584,6 +597,7 @@ var studioChatMb={
             };
             reader.onprogress = function (e) {};
             reader.onloadend = function (e) {};
+            studioChatMb.view.boardCtrl(1);
             $(this).val("");
         });
     },
@@ -692,7 +706,7 @@ var studioChatMb={
      */
     view : {
         viewSelect : false,
-        viewBoard : 1, //0-不显示输入框 1-仅显示输入框 2-显示表情 3-显示键盘 4 显示+ 5显示图片框 6显示表情和“+”
+        viewBoard : 1, //0-不显示输入框 1-仅显示输入框 2-显示表情 3-显示键盘 4显示图片框
         boardCtrl : function(type){
             if(this.viewBoard == type){
                 return;
@@ -701,11 +715,9 @@ var studioChatMb={
             var blocks = {
                 header : $("#header"),
                 backToLive : $("#backToLive"),
+                floatBox : $("#floatBox"),
                 facePanel : $("#facePanel"),
-                floatBox : $(".float-box"),
-                publicChat :$(".public_chat"),
-                privateChat : $(".private_chat"),
-                imgBox : $(".add-img")
+                imgBox : $("#sendToolPanel")
             };
             switch(type){
                 case 0:
@@ -718,8 +730,6 @@ var studioChatMb={
                     blocks.backToLive.data("showBoard", true).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
-                    blocks.privateChat.hide();
-                    blocks.publicChat.show();
                     blocks.imgBox.hide();
                     break;
                 case 2:
@@ -727,8 +737,6 @@ var studioChatMb={
                     blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.show();
-                    blocks.privateChat.hide();
-                    blocks.publicChat.show();
                     blocks.imgBox.hide();
                     break;
                 case 3:
@@ -736,45 +744,17 @@ var studioChatMb={
                     blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
-                    blocks.privateChat.hide();
-                    blocks.publicChat.show();
                     blocks.imgBox.hide();
                     break;
                 case 4:
-                    blocks.header.show();
-                    blocks.backToLive.data("showBoard", true).trigger("show");
-                    blocks.floatBox.show();
-                    blocks.facePanel.hide();
-                    blocks.privateChat.show();
-                    blocks.publicChat.hide();
-                    blocks.imgBox.hide();
-                    break;
-                case 5:
-                    blocks.header.show();
+                    blocks.header.hide();
                     blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
-                    blocks.privateChat.show();
-                    blocks.publicChat.hide();
                     blocks.imgBox.show();
                     break;
-                case 6:
-                    blocks.header.show();
-                    blocks.backToLive.data("showBoard", false).trigger("show");
-                    blocks.floatBox.show();
-                    blocks.facePanel.show();
-                    blocks.privateChat.show();
-                    blocks.publicChat.hide();
-                    blocks.imgBox.hide();
             }
-            if(blocks.privateChat.is(':hidden') === false){
-                $('.float-box').addClass('private');
-            }else{
-                $('.float-box').removeClass('private');
-            }
-
         }
-
     },
     /**
      * 视频控制

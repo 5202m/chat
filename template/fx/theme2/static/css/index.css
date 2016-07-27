@@ -351,10 +351,8 @@ body.keyboard:before { /*background:none*/}
 .backtolive{ display:block; position:fixed; top:70px; left:10px; width:36px; height:26px; padding:5px 0; text-align:center; background:rgba(181,144,48,.6); border-radius:23px; z-index:99}
 .backtolive span{ line-height:13px; display:inline-block; font-size:11px; color:#fff;}
 
-.sent-btn.ok{ background-color: #b59030 }
 .addpic-btn{position: absolute; right: 10px; top: 5px;display: block;width: 29px;height: 29px;background-position: 0 -100px}
-.private_chat .sent-btn{ display: block; }
-.private .inp-fon-tix{ margin-right: 40px; }
+.send-add .inp-fon-tix{ margin-right: 40px; }
 .add-img{position:relative;margin-top:2px;padding:10px 10px 0;}
 .add-img-in{width:42px;border-top:solid #FAFAFA 1px}
 .select-img{position:absolute;left:8px;top:8px;width:44px;height:20px; padding:10px 0;border:none;background-color:#ececec;border-radius:4px}

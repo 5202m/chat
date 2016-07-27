@@ -135,7 +135,7 @@
         </article>
     </section>
     <!-- 切换 end -->
-    <footer class="float-box"><!-- +private 私聊 // private -->
+    <footer id="floatBox" class="float-box send-add">
         <article class="float-con">
             <button id="msgFaceBtn" class="face-btn hide-t">表情</button>
             <section class="inp-fon-tix">
@@ -143,22 +143,14 @@
 
                 </div>
             </section>
-            <!-- 公聊 -->
-            <div class="public_chat">
-                <button id="sendBtn" class="sent-btn">发送</button>
-                <!-- <button class="sent-btn ok">发送</button>可发送状态 -->
-            </div>
-            <!-- 私聊 -->
-            <div class="private_chat dn">
-                <button class="addpic-btn"></button>
-                <!-- <button class="sent-btn ok">发送</button>可发送状态 -->
-            </div>
+            <button id="sendBtn" class="sent-btn pressed" style="display: none;">发送</button>
+            <button id="sendToolBtn" class="addpic-btn"></button>
             <section id="facePanel" class="board swiper-container">
                 <div class="face clearfix swiper-wrapper"></div>
                 <div class="face-nav swiper-pagination"></div>
             </section>
             <!-- 图片发送 -->
-            <section class="add-img dn">
+            <section id="sendToolPanel" class="add-img dn">
                 <article class="add-img-in">
                     <aside class="select-img"><i></i></aside>
                     <input type="file" class="file-img">

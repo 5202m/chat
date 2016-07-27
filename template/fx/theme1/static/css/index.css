@@ -261,6 +261,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .toolbar .tbtn.clearbtn{ background-position:-30px -110px}
 .toolbar .tbtn.scrollbtn{ background-position:-60px -110px}
 .toolbar .tbtn.scrollbtn.on{ background-position:-90px -110px}
+.toolbar .tbtn.imgbtn{ background-position:-100px -300px}
 .facebox{ position:absolute; bottom:40px; left:0; z-index:101; background:#fff; border-radius:3px; padding:5px}
 .facebox .arr{display:block; position:absolute; width:0; height:0; left:25px; bottom:-12px; border-width:8px; border-color: #fff transparent transparent transparent; border-style:solid; z-index:101}
 .pletter_win .facebox { border: 1px solid #cbcbcb; left: 8px; bottom: 32px }

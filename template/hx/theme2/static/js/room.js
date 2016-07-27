@@ -362,7 +362,7 @@ var roomJS={
                 roomJS.whTalk.whSwitch(false);
             }else if(type=="whTalkBoxTab"){
                 roomJS.whTalk.whSwitch(true);
-                roomJS.view.boardCtrl($.trim($('#contentText').html()) ? 1 : 4);
+                roomJS.view.boardCtrl(1);
             }else{
                 roomJS.whTalk.whSwitch(false);
                 roomJS.view.boardCtrl(0);
@@ -401,17 +401,10 @@ var roomJS={
         //表情输入控制
         $('#msgFaceBtn').bind("click", function(){
             $(this).blur();
-            if($("ul.cen-ulist>li.on").attr('t') == 'whTalkBoxTab'){ //$('.private_chat').is('hidden') === false 无效
-                roomJS.view.boardCtrl( $("#facePanel").is(":hidden") ? 6 : 4);
-                if($.trim($('#contentText').html())){
-                    roomJS.view.boardCtrl(2);
-                }
+            if(roomJS.view.viewBoard == 2){
+                roomJS.view.boardCtrl(1);
             }else{
-                if($("#facePanel").is(":hidden")){
-                    roomJS.view.boardCtrl(2);
-                }else{
-                    roomJS.view.boardCtrl(1);
-                }
+                roomJS.view.boardCtrl(2);
             }
             //初始化标签
             roomJS.face.init($("#facePanel"),
@@ -454,9 +447,6 @@ var roomJS={
                     viewSelect.trigger('click');
                 }
             }
-            if(roomJS.view.viewBoard == 2 && $(".float-box").find(e.target).length == 0){
-                $("#contentText").trigger("blur");
-            }
         });
 
         /**
@@ -480,17 +470,21 @@ var roomJS={
                     return true;
                 }
             }
-        }).bind("input", function(){
-            var isOk =  (roomJS.visitorSpeak || roomJS.userInfo.clientGroup!='visitor')
-                && ($.trim($(this).text())!=$(this).find(".txt_dia").text() || $(this).find("img").size() > 0);
-            //如果当前是私聊
-            if($("ul.cen-ulist>li.on").attr('t') == 'whTalkBoxTab'){
-                roomJS.view.boardCtrl( isOk ? ($("#facePanel").is(':hidden') === true ? 1:2) : 4);
+        }).focus(function(){
+            if(roomJS.view.viewBoard == 4){
+                roomJS.view.boardCtrl(1);
             }
+            //roomJS.view.boardCtrl(3);
+        }).bind("input", function(){
+            var isOk = ($.trim($(this).text())!=$(this).find(".txt_dia").text() || $(this).find("img").size() > 0);
             if(isOk){
-                $("#sendBtn").addClass("pressed");
+                $("#sendBtn").show();
+                $("#sendToolBtn").hide();
+                $("#floatBox").removeClass('send-add');
             }else{
-                $("#sendBtn").removeClass("pressed");
+                $("#sendBtn").hide();
+                $("#sendToolBtn").show();
+                $("#floatBox").addClass('send-add');
             }
         });
 
@@ -498,8 +492,14 @@ var roomJS={
         $("#sendBtn").click(function(){
             $(this).blur();
             roomJS.view.boardCtrl(1);
-            if(!roomJS.visitorSpeak && roomJS.userInfo.clientGroup=='visitor'){
-                return;
+            if(!roomJS.whTalk.tabCheck && !roomJS.visitorSpeak && roomJS.userInfo.clientGroup=='visitor'){
+            	studioMbPop.popBox("login", {
+                    groupId : roomJS.userInfo.groupId,
+                    clientGroup : roomJS.userInfo.clientGroup,
+                    clientStoreId : roomJS.userInfo.clientStoreId,
+                    platform : roomJS.fromPlatform
+                });
+            	return;
             }
             if(roomJS.userInfo.isSetName === false){
                 studioMbPop.popBox("set", {studioChatObj : roomJS});
@@ -523,9 +523,12 @@ var roomJS={
             $("#contentText").html("").trigger("input");//清空内容
         });
 
-        $('.addpic-btn').click(function(){
-            if($(".add-img").is(":hidden")){
-                roomJS.view.boardCtrl(5);
+        /**
+         * 点击“+”号
+         * */
+        $('#sendToolBtn').click(function(){
+            if(roomJS.view.viewBoard == 4){
+                roomJS.view.boardCtrl(1);
             }else{
                 roomJS.view.boardCtrl(4);
             }
@@ -547,6 +550,19 @@ var roomJS={
         $(".file-img").click(function () {
             if (!FileReader) {
                 alert("发送图片功能目前只支持Chrome、Firefox、IE10或以上版本的浏览器！");
+                return;
+            }
+            if(!roomJS.whTalk.tabCheck && !roomJS.visitorSpeak && roomJS.userInfo.clientGroup=='visitor'){
+            	studioMbPop.popBox("login", {
+                    groupId : roomJS.userInfo.groupId,
+                    clientGroup : roomJS.userInfo.clientGroup,
+                    clientStoreId : roomJS.userInfo.clientStoreId,
+                    platform : roomJS.fromPlatform
+                });
+            	return;
+            }
+            if(roomJS.userInfo.isSetName === false){
+                studioMbPop.popBox("set", {studioChatObj : roomJS});
                 return;
             }
         });
@@ -577,6 +593,7 @@ var roomJS={
             };
             reader.onprogress = function (e) {};
             reader.onloadend = function (e) {};
+            roomJS.view.boardCtrl(1);
             $(this).val("");
         });
     },
@@ -685,7 +702,7 @@ var roomJS={
      */
     view : {
         viewSelect : false,
-        viewBoard : 1, //0-不显示输入框 1-仅显示输入框 2-显示表情 3-显示键盘
+        viewBoard : 1, //0-不显示输入框 1-仅显示输入框 2-显示表情 3-显示键盘 4-显示图片框
         boardCtrl : function(type){
             if(this.viewBoard == type){
                 return;
@@ -694,69 +711,45 @@ var roomJS={
             var blocks = {
                 header : $("#header"),
                 backToLive : $("#backToLive"),
+                floatBox : $("#floatBox"),
                 facePanel : $("#facePanel"),
-                floatBox : $(".float-box"),
-                publicChat :$(".public_chat"),
-                privateChat : $(".private_chat"),
-                imgBox : $(".add-img")
+                imgBox : $("#sendToolPanel")
             };
             switch(type){
                 case 0:
-                    blocks.floatBox.hide();
                     blocks.header.show();
                     blocks.backToLive.data("showBoard", true).trigger("show");
+                    blocks.floatBox.hide();
                     break;
                 case 1:
                     blocks.header.show();
                     blocks.backToLive.data("showBoard", true).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
+                    blocks.imgBox.hide();
                     break;
                 case 2:
                     blocks.header.hide();
                     blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.show();
+                    blocks.imgBox.hide();
                     break;
                 case 3:
-                    blocks.header.hide();
+                    blocks.header.show();
                     blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
+                    blocks.imgBox.hide();
                     break;
                 case 4:
                     blocks.header.hide();
                     blocks.backToLive.data("showBoard", false).trigger("show");
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
-                    blocks.privateChat.show();
-                    blocks.publicChat.hide();
-                    blocks.imgBox.hide();
-                    break;
-                case 5:
-                    blocks.header.hide();
-                    blocks.backToLive.data("showBoard", false).trigger("show");
-                    blocks.floatBox.show();
-                    blocks.facePanel.hide();
-                    blocks.privateChat.show();
-                    blocks.publicChat.hide();
                     blocks.imgBox.show();
                     break;
-                    blocks.header.hide();
-                case 6:
-                    blocks.backToLive.data("showBoard", false).trigger("show");
-                    blocks.floatBox.show();
-                    blocks.facePanel.show();
-                    blocks.privateChat.show();
-                    blocks.publicChat.hide();
-                    blocks.imgBox.hide();
             }
-            if(blocks.privateChat.is(':hidden') === false){
-                $('.float-box').addClass('private');
-            }else{
-                $('.float-box').removeClass('private');
-            }
-
         }
     },
     /**
