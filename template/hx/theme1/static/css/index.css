@@ -6755,7 +6755,7 @@ img {vertical-align: middle;}
 img {border: 0;}
 #newInfoCount {text-align: center;height: 15px;line-height: 14px;font-family: Arial;color: #fff;display: inline-block;background: #da4454;border-radius: 8px;padding: 0 3px;font-size: 9pt;min-width: 9px;}
 
-.header-btn a i, .te_detail .support, .dialog > p i, .dialog .headimg b, .toolbar .tbtn, .mymsg .closebtn i, .input_area .sendbtn i, .view_select i, .message_list li i, .guideli .support, .tag i, .mod_room .titbar > span i, .roomctrl i, .mod_userlist .headimg b, .rbox_top .rname i, .rbox_top .peo_num i, .hqbox li i, .votebox a, .notebtn.on i, .calendar_table .stars span, .ppt_list li .downbtn i, .plate_box .downbtn i, .course_tab li i, .noticebtn.on i, .pop_close i, .error i, .per_item .level i, .per_item .tipbtn i, .upg_box .level, .upg_tip i, .kh-btn a i, .mult_dialog .close, .mult_dialog .num, .mult_dialog .headimg b, .pletter_win .pl_close, .pletter_win .pl_small, .tec_videolist .list-icon i, .tec_videolist .v_name i, .tec_videolist .refresh-icon i, .cate_box .cate_name i, .cate_box li a i, .nextbox .live_time i, .pletter_win .whcls > i, .pop_small i, .sd_ul .cont > i, .sd_pages .arr i, .sd_stat p i, .usersd_list .lightbox > i, .usersd_list .support, .usersd_list .state, .mod_scrollnews a i, .mod_scrollnews .newsbtn i, .mod_scrollnews .newsclose i {
+.tec_videolist .list-icon i, .tec_videolist .v_name i, .tec_videolist .refresh-icon i, .cate_box .cate_name i, .cate_box li a i {
 background-image: url(../img/img_css.png);
 background-repeat: no-repeat;
 }

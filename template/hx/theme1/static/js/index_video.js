@@ -37,32 +37,8 @@ var videos={
                     $("#teachVideoId li a.on").removeClass("on");
                     $(this).addClass("on");
                     $(".max_box").show();
-                    //var minBox=$(".min_box").attr("vid",this.id).hide();
-                    //minBox.find(".v_cate").text($(this).parents('.cate_box').find(".cate_name").text());
                     $("#video_content .video-name").text($(this).text());
                     videos.setVideo($(this));
-                    //显示课程简述
-                    /*var vdId=$(this).attr("id");
-                    if($("#tvInfoId").attr("tid")==vdId){
-                        return;
-                    }
-                    indexJS.getArticleInfo(vdId,function(row){
-                        if(row){
-                            $("#tvInfoId").attr("tid",row._id);
-                            var detail=row.detailList[0];
-                            $("#tvInfoId p.remark").text(detail.remark);
-                            $("#tvInfoId p.content").text(detail.seoDescription);
-                            var pd=$("#tvInfoId .te_detail");
-                            var info=detail.authorInfo;
-                            if(info){
-                                pd.find("strong").attr("uid",info.userId).text(info.name);
-                                pd.find(".rcont i").text(info.position);
-                                pd.find("img").attr("src",info.avatar);
-                                pd.find("img").attr("src",info.avatar);
-                            }
-                        }
-                    });
-                    indexJS.setListScroll('#tvInfoId');//设置滚动*/
                 });
             }
             if(isInit){
@@ -147,11 +123,6 @@ var videos={
      * 设置各种事件
      */
     setEvent:function(){
-        //maxbox控制
-        $(".max_box").hover(function() {
-        },function(){
-            //videos.setVdMaxBox();
-        });
         /**
          * 视频切换事件
          */
@@ -210,16 +181,6 @@ var videos={
             $("#teachVideoId .cate_box").removeClass("show");
             videos.setVideoList($(this).parent().addClass("show").attr("t"));
         });
-        /**
-         *  教学视频视频框鼠标移入移出事件
-         */
-        /*$("#tvDivId").hover(function() {
-            if($(".max_box").is(':hidden')) {
-                $(".min_box,.v_cate,.v_name").show();
-            }
-        },function(){
-            $(".max_box,.min_box").hide();
-        });*/
     },
     /**
      * 客户端视频任务
