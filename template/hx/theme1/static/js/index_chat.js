@@ -415,6 +415,9 @@ var chat={
             $("#dialog_list").children("[isme='false']").hide();
         }else if(t=='admin'){
             $("#dialog_list").children("[utype!=1]").hide();
+        }else if(t=='cs'){
+            $("#dialog_list").children("[utype=3]").show();
+            $("#dialog_list").children("[utype!=3]").hide();
         }else{
             $("#dialog_list").children().show();
         }

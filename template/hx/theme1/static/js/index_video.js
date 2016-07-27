@@ -6,32 +6,68 @@ var videos={
     blwsPlayer:null,//保利威视
     init:function(){
         this.setEvent();//设置各种事件
-        this.setVideoList();//设置视频列表
+        this.setVideoList(null,true);//设置视频列表
         return this;
     },
     /**
      * 设置视频
+     * @param categoryId
      */
-    setVideoList:function(){
-        indexJS.getArticleList('teach_video_base',indexJS.userInfo.groupId,0,1,100,'{"sequence":"desc"}',null,function(dataList){
-            var cateDiv=$('#teachVideoId ul');
+    setVideoList:function(categoryId,isInit){
+        if(isInit){
+            var teachTypeArr=$("#teachVideoId").children().map(function(){return $(this).attr("t");}).get();
+            categoryId=teachTypeArr[common.randomIndex(teachTypeArr.length)];
+        }
+        var cateDiv=$('#teachVideoId div[t='+categoryId+'] ul');
+        if(cateDiv.find("li").length>0){
+            return;
+        }
+        cateDiv.html("");
+        indexJS.getArticleList(categoryId,indexJS.userInfo.groupId,0,1,100,'{"sequence":"desc","publishStartDate":"desc"}',null,function(dataList){
             if(dataList && dataList.result==0){
                 var data=dataList.data;
                 var row=null;
                 for(var i in data){
                     row=data[i].detailList[0];
-                    cateDiv.append('<li title="'+row.title+'"><a href="javascript:" id="'+data[i]._id+'" t="'+((common.isValid(data[i].mediaUrl) && data[i].mediaUrl.indexOf('.mp4')!=-1)?'mp4':'')+'" vUrl="'+data[i].mediaUrl+'"><i></i><label>'+row.title+'</label></a></li>');
+                    cateDiv.append('<li title="'+row.title+'"><a href="javascript:" ct="'+data[i].categoryId+'" id="'+data[i]._id+'" t="'+((common.isValid(data[i].mediaUrl) && data[i].mediaUrl.indexOf('.mp4')!=-1)?'mp4':'')+'" vUrl="'+data[i].mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',$(this).text()]);"><i></i>'+row.title+'</a></li>');
                 }
                 indexJS.setListScroll(cateDiv,{isCustom:false,theme:"minimal-dark"});
                 //播放视频
                 $("#teachVideoId li a").click(function(){
                     $("#teachVideoId li a.on").removeClass("on");
                     $(this).addClass("on");
-                    $(".video-name").show().text($(this).text());
+                    $(".max_box").show();
+                    //var minBox=$(".min_box").attr("vid",this.id).hide();
+                    //minBox.find(".v_cate").text($(this).parents('.cate_box').find(".cate_name").text());
+                    $("#video_content .video-name").text($(this).text());
                     videos.setVideo($(this));
+                    //显示课程简述
+                    /*var vdId=$(this).attr("id");
+                    if($("#tvInfoId").attr("tid")==vdId){
+                        return;
+                    }
+                    indexJS.getArticleInfo(vdId,function(row){
+                        if(row){
+                            $("#tvInfoId").attr("tid",row._id);
+                            var detail=row.detailList[0];
+                            $("#tvInfoId p.remark").text(detail.remark);
+                            $("#tvInfoId p.content").text(detail.seoDescription);
+                            var pd=$("#tvInfoId .te_detail");
+                            var info=detail.authorInfo;
+                            if(info){
+                                pd.find("strong").attr("uid",info.userId).text(info.name);
+                                pd.find(".rcont i").text(info.position);
+                                pd.find("img").attr("src",info.avatar);
+                                pd.find("img").attr("src",info.avatar);
+                            }
+                        }
+                    });
+                    indexJS.setListScroll('#tvInfoId');//设置滚动*/
                 });
             }
-            videos.playVideoByDate(true);
+            if(isInit){
+                videos.playVideoByDate(true);
+            }
         });
     },
     /**
@@ -67,6 +103,8 @@ var videos={
                 vdom=$(mpDom.get(common.randomIndex(mpDom.length)));
                 $('#teachVideoId ul').mCustomScrollbar("scrollTo", "#"+vdom.attr("id"));
             }
+            $("#teachVideoId .cate_box").removeClass("show");
+            $('div[t='+vdom.attr('ct')+']').addClass('show');
             vdom.click();
         }else{
             currVdDom.click();
@@ -95,9 +133,25 @@ var videos={
         }
     },
     /**
+     * 设置教学视频列表的显隐
+     */
+    setVdMaxBox:function(){
+        if($(".max_box").is(':hidden')){
+            return;
+        }
+        $(".max_box").slideUp(1000,function(e){
+            $(".min_box").fadeIn("fast");
+        });
+    },
+    /**
      * 设置各种事件
      */
     setEvent:function(){
+        //maxbox控制
+        $(".max_box").hover(function() {
+        },function(){
+            //videos.setVdMaxBox();
+        });
         /**
          * 视频切换事件
          */
@@ -121,13 +175,13 @@ var videos={
         $('#video_content').hover(function (e) {
             $(this).children('.video-class').removeClass('dn');
             if($('#tvDivId').is(':visible')) {
-                $('#teachVideoId,#video_content .video-name').show();
+                $('#teachVideoId,#video_content .video-name,.classmore').show();
             }
         },function(e) {
             if(!$(e.target).hasClass('video-class') && !$(e.target).hasClass('mod_video')){
                 $(this).children('.video-class').addClass('dn');
                 if($('#tvDivId').is(':visible')) {
-                    $('#teachVideoId,#video_content .video-name').hide();
+                    $('#teachVideoId,#video_content .video-name,.classmore').hide();
                 }
             }
         });
@@ -138,15 +192,34 @@ var videos={
             $(".video-checkbox-list").toggle();
         });
         /**
+         * 教学视频列表可视事件
+         */
+        $("#vdLs_min,#vdLs_max").click(function(){
+            if(this.id=="vdLs_min"){
+                $(".min_box").hide();
+                $(".max_box").show();
+            }else{
+                $(".max_box").hide();
+                $(".min_box").show();
+            }
+        });
+        /**
+         * 教学视频列表切换
+         */
+        $("#teachVideoId .cate_name").click(function(){
+            $("#teachVideoId .cate_box").removeClass("show");
+            videos.setVideoList($(this).parent().addClass("show").attr("t"));
+        });
+        /**
          *  教学视频视频框鼠标移入移出事件
          */
-        $("#tvDivId").hover(function() {
+        /*$("#tvDivId").hover(function() {
             if($(".max_box").is(':hidden')) {
                 $(".min_box,.v_cate,.v_name").show();
             }
         },function(){
             $(".max_box,.min_box").hide();
-        });
+        });*/
     },
     /**
      * 客户端视频任务

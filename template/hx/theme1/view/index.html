@@ -412,6 +412,7 @@
         $('.mod_video').height(hh - 333);
         $('.mod_videolist .listcont').height(hh-65-$('.mod_video').height()-$('.mod_videolist .tabnav').height());
         $('.message_list .scrollbox').css('max-height',(hh-65-$('.mod_video').height()-$('.mod_videolist .tabnav').height())+'px');
+        $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
     }
     widthCheck();
     heightCalcu();
