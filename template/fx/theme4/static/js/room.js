@@ -168,6 +168,9 @@ var studioChatMb={
             if(data.fromUser.toUser && data.fromUser.toUser.talkStyle==1){//如果是私聊则转到私聊框处理
                 studioChatMb.whTalk.receiveMsg(data, false, false);
             }else{
+                if(!data.serverSuccess && studioChatMb.userInfo.userId == data.fromUser.userId && !data.rule){
+                    return;
+                }
                 studioChatMb.setContent(data, false, false);
             }
         });

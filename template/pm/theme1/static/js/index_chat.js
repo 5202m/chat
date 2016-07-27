@@ -1228,7 +1228,7 @@ var chat={
             if(data.fromUser.toUser && data.fromUser.toUser.talkStyle==1){//如果是私聊则转到私聊框处理
                 chat.setWhContent(data,false,false);
             }else{
-                if(!data.serverSuccess && room.userInfo.userId == data.fromUser.userId && !data.rule){
+                if(!data.serverSuccess && indexJS.userInfo.userId == data.fromUser.userId && !data.rule){
                     return;
                 }
                 chat.setContent(data,false,false);

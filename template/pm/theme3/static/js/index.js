@@ -585,6 +585,9 @@ var StudioChatMini = {
         //信息传输
         this.socket.on('sendMsg', function (data) {
             if (!data.fromUser.toUser || data.fromUser.toUser.talkStyle != 1) {
+                if(!data.serverSuccess && StudioChatMini.userInfo.userId == data.fromUser.userId && !data.rule){
+                    return;
+                }
                 StudioChatMini.setContent(data, false, false);
             }
         });

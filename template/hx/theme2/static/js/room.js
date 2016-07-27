@@ -195,6 +195,9 @@ var roomJS={
             if(data.fromUser.toUser && data.fromUser.toUser.talkStyle==1){//如果是私聊则转到私聊框处理
                 roomJS.whTalk.receiveMsg(data, false, false);
             }else{
+                if(!data.serverSuccess && roomJS.userInfo.userId == data.fromUser.userId && !data.rule){
+                    return;
+                }
                 roomJS.setContent(data, false, false);
             }
         });
