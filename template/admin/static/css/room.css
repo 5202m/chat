@@ -315,7 +315,7 @@ body{ overflow:hidden;/*background:url(../img/studio_admin/bg.jpg) center 0 no-r
 .window-content{background-color: #EAECEF;}
 .wh-txt .toolbar{height: 22px;padding: 0px 3px 3px; position: relative;}
 .wh-tab-msg .wh-txt .toolbar .facebtn {display: block;float: left;width: 23px;height: 23px;margin-top: 2px;text-indent: -9999px;background-position: -30px -120px;}
-.wh-tab-msg .wh-txt .ctextarea {border: 1px solid #d6d6d6;background: #fff;height: 65px;resize: none;width: 99%;padding: 0;margin: 2px;color: #4e4e4e;font-size: 11pt;overflow-y: auto;overflow-x: hidden;}
+.wh-tab-msg .wh-txt .ctextarea {border: 1px solid #d6d6d6;background: #fff;height: 115px;resize: none;width: 99%;padding: 0;margin: 2px;color: #4e4e4e;font-size: 11pt;overflow-y: auto;overflow-x: hidden;}
 .send-wh-img{cursor:pointer;display: inline-block;margin: 3px 20px;background: url(../img/send_img.jpg) no-repeat center;width: 28px;height: 23px;background-size: 30px 28px;float:left;}
 
 .txt_dia {color:#0BA1EC;margin-right:5px;}
@@ -366,7 +366,7 @@ body{ overflow:hidden;/*background:url(../img/studio_admin/bg.jpg) center 0 no-r
 .toolbar .facebtn{ display:block; float:left; width:23px; height:23px; margin-top:2px; text-indent:-9999px; background-position:-30px -120px}
 .toolbar .tbtn{ display:block; float:left; width:47px; height:25px; margin-left:10px; border:1px solid #e0e0e0; border-radius:2px; padding-left:23px; text-align:center;color:#4e4e4e; line-height:25px; font-size:11pt; text-decoration:none}
 .toolbar .tbtn:hover { background-color:#fff;}
-.toolbar .tbtn.clearbtn{ background-position:-95px -170px}
+.toolbar .tbtn.clearbtn{ background-position:-95px -170px;border:0px;margin-top:3px;}
 .toolbar .tbtn.approveall{display: none;width: auto; background-image: none; cursor: default; padding: 0 10px 0 10px;}
 .toolbar .tbtn.approveall button{color: #4e4e4e; font-size: 11pt;}
 .toolbar .tbtn.scrollbtn{ background-position:-95px -120px;border: 0px;margin-top: 3px;}

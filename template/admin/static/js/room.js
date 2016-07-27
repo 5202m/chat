@@ -705,6 +705,11 @@ var room={
                 }
             });
         });
+        //清屏
+        $(".clearbtn").click(function(){
+            $("#dialog_list").html("");//设置对话
+            room.setTalkListScroll();
+        });
         //滚动设置
         $(".scrollbtn").click(function(){
             if($(this).hasClass("on")){
@@ -2072,7 +2077,7 @@ var room={
         /*$(prefixDom+' .visitorDiv').height(hh-45).css('max-height',(hh-55)+'px');*/
         $(prefixDom+' .visitorDiv .wh_tab_div').height($(prefixDom+' .wh-left').height()-disH);
         $(prefixDom+' .wh-tab-msg').height(hh-50);
-        $(prefixDom+' .wh-content').height(hh-150);
+        $(prefixDom+' .wh-content').height(hh-200);
     },
     /**
      * 根据区域返回对应HTML
