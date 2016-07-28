@@ -75,7 +75,6 @@ router.post('/leaveRoom', function(req, res) {
 router.post('/submitPushInfo', function(req, res) {
     var infoStr=req.body["infoStr"];
     var isValid=req.body["isValid"];
-    console.log(req.body["utf8"]);
     var result={isOK:false,error:null };
     if(common.isBlank(infoStr)){
         result.error=errorMessage.code_1000;
@@ -96,9 +95,6 @@ router.post('/removePushInfo', function(req, res) {
     if(common.isBlank(ids)){
         result.error=errorMessage.code_1000;
     }else{
-        console.log(position);
-        console.log(roomIds);
-        console.log(ids);
         chatService.removePushInfo(position,roomIds,ids);//多个
         result.isOK=true;
     }
