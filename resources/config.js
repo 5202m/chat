@@ -9,7 +9,8 @@ var config = {
         web24k:'web24k', //api中课程表信息，web24k只取一条课程记录
         roomId:{
             studio : 'studio_teach',
-            fxstudio : 'fxstudio_11'
+            fxstudio : 'fxstudio_11',
+            hxstudio : 'hxstudio_26'
         }
     },
     defTemplate:{
