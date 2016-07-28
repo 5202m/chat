@@ -1066,10 +1066,10 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .popup_box.pop_addsd{ margin-top: -260px; }
 .loading_trade {position: absolute;z-index: 10010;top: 45%;left: 40%;}
 
-.mod_scrollnews{ width: 100%; position: absolute; top: 0;  z-index: 100 ; overflow: hidden;}
-.newslist{background-color: rgba(31,35,47,.8);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#CC1f232f,endColorstr=#CC1f232f);  overflow: hidden;float: right; padding-right: 27px; position: relative; padding-left: 10px;}
-.newslist .newsbox{  height: 30px; text-align: left; overflow: hidden;}
-.newsbox .innerbox{ width: 800%;float: left;  }
+.mod_scrollnews{ position: absolute;left: 0;overflow: hidden;float: left;min-width:400px;}
+.newslist{width:100%;background-color: rgba(31,35,47,.8);filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#CC1f232f,endColorstr=#CC1f232f);  overflow: hidden;float: right; padding-right: 27px; position: relative; padding-left: 10px;}
+.newslist .newsbox{  height: 30px; text-align: left; overflow: hidden;width: 100%;}
+.newsbox .innerbox{ width: 100%;float: left;  } /* width:100%获取不到 */
 .innerbox #newscont1,.innerbox #newscont2{ float: left; }
 .mod_scrollnews .newsbox a{ margin-right: 50px; margin-left:0; position: relative; color: #f0f0f0;font-size: 14px; line-height: 30px; padding-left: 22px; font-weight: bold; }
 .mod_scrollnews .newsbox a:hover{ color: #aad7ff }

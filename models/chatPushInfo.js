@@ -5,9 +5,11 @@
  */
 var mongoose = require('mongoose')
     , Schema = mongoose.Schema
+    ,ObjectId = Schema.ObjectId
     ,chatPushInfoSchema=new Schema(
         {
-            _id: String,
+            _id:ObjectId,
+            title:String,//推送标题
             content:String,
             pushType:Number,
             position:Number,//推送位置：0 任务栏 、1 私聊框、2、页面提示

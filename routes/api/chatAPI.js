@@ -69,5 +69,39 @@ router.post('/leaveRoom', function(req, res) {
     }
     res.json(result);
 });
-
+/**
+ * 更新视频客户端推送信息
+ */
+router.post('/submitPushInfo', function(req, res) {
+    var infoStr=req.body["infoStr"];
+    var isValid=req.body["isValid"];
+    console.log(req.body["utf8"]);
+    var result={isOK:false,error:null };
+    if(common.isBlank(infoStr)){
+        result.error=errorMessage.code_1000;
+    }else{
+        chatService.submitPushInfo(infoStr , isValid);//多个
+        result.isOK=true;
+    }
+    res.json(result);
+});
+/**
+ * 更新视频客户端推送信息
+ */
+router.post('/removePushInfo', function(req, res) {
+    var ids=req.body["ids"];
+    var roomIds=req.body["roomIds"];
+    var position=req.body["position"];
+    var result={isOK:false,error:null };
+    if(common.isBlank(ids)){
+        result.error=errorMessage.code_1000;
+    }else{
+        console.log(position);
+        console.log(roomIds);
+        console.log(ids);
+        chatService.removePushInfo(position,roomIds,ids);//多个
+        result.isOK=true;
+    }
+    res.json(result);
+});
 module.exports = router;

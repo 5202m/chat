@@ -396,6 +396,17 @@ var chatService ={
                                 socket.emit('notice',noticeInfo);
                             }
                         });
+                        //视频框推送
+                        pushInfoService.checkPushInfo(userInfo.groupType,userInfo.groupId,userInfo.clientGroup,constant.pushInfoPosition.videoBox, true,function(pushInfos){
+                            if(pushInfos && pushInfos.length > 0){
+                                var pushInfo = null, noticeInfo = {type:chatService.noticeType.pushInfo, data:{position:constant.pushInfoPosition.videoBox, infos : []}};
+                                for(var i = 0, lenI = pushInfos.length; i < lenI; i++){
+                                    pushInfo = pushInfos[i];
+                                    noticeInfo.data.infos.push({contentId:pushInfo._id,title: pushInfo.title, pushDate:pushInfo.pushDate,pushType: pushInfo.pushType,clientGroup: pushInfo.clientGroup, intervalMin:pushInfo.intervalMin, onlineMin:pushInfo.onlineMin,content:pushInfo.content});
+                                }
+                                socket.emit('notice',noticeInfo);
+                            }
+                        });
                     }
                 });
                 //加载已有内容
@@ -699,6 +710,49 @@ var chatService ={
         chatService.sendMsgToRoom(true,null,groupId,"notice",{type:chatService.noticeType.removeMsg,data:msgIds});
     },
 
+    /**
+     * 删除字幕推送信息
+     * @param groupId
+     * @param msgIds
+     */
+    removePushInfo:function(position,groupIds ,ids){
+        try{
+            var groupIds = groupIds.split('|');
+            if(groupIds.length>0) {
+                var obj=null;
+                for(var i=0;i<groupIds.length;i++) {
+                    obj=groupIds[i].split(",");
+                    for(var j=0;j<obj.length;j++) {
+                        chatService.sendMsgToRoom(true, null, obj[j], "notice", {
+                            type: chatService.noticeType.pushInfo,
+                            data:{position:position,ids: ids.split('|')[i],delete:true}
+                        });
+                    }
+                }
+            }
+        }catch(e){
+            logger.error("removePushInfo fail",e);
+        }
+    },
+    /**
+     * 新赠或修改字幕,需要查询数据
+     * @param ids
+     */
+    submitPushInfo:function(infoStr , isValid){
+        try{
+            console.log(infoStr);
+            var obj=JSON.parse(infoStr);
+            obj.isValid=isValid;
+            obj.edit=true;
+            var rmIds=obj.roomIds;
+            for(var i in rmIds ){
+                chatService.sendMsgToRoom(true,null,rmIds[i],"notice",{type:chatService.noticeType.pushInfo,data:obj});
+            }
+        }catch(e){
+            logger.error("submitPushInfo fail",e);
+        }
+
+    },
     /**
      * 离开房间(房间关闭）
      * @param groupIds
