@@ -4,6 +4,7 @@
  */
 var videos={
     blwsPlayer:null,//保利威视
+    newMarIntervalId:null,//新闻滚动
     init:function(){
         this.setEvent();//设置各种事件
         this.setVideoList(null,true);//设置视频列表
@@ -223,7 +224,7 @@ var videos={
             }
         }else{
             this.setVdTab(true);
-            this.setStudioVideoDiv(course.studioLink);
+            this.setStudioVideoDiv(course.studioLink,course.courseType);
             this.setStudioInfo(course);
             this.setStudioTip(course.courseType!=2);
             this.synCourseStyle(course);
@@ -280,8 +281,9 @@ var videos={
     /**
      * 设置在线视频
      * @param url
+     * @param courseType
      */
-    setStudioVideoDiv:function(url){
+    setStudioVideoDiv:function(url,courseType){
         $("#nextCourse").hide();
         $("#lvVideoId").show().html("");
         if(url.indexOf("rtmp")!=-1){
@@ -318,6 +320,43 @@ var videos={
             $("#lvVideoId .img-loading").fadeIn(0).delay(2000).fadeOut(200);
             $(videos.getEmbedDom(url)).appendTo('#lvVideoId');
         }
+        //新闻滚动
+        if(1==courseType){
+            this.newsMarquee();
+        }
+    },
+    /**
+     * 新闻滚动
+     */
+    newsMarquee:function (){
+        $(".mod_scrollnews").show();
+        var speed=30;
+        var tab=$("#scrollnews_demo")[0];
+        var tab1=$("#newscont1")[0];
+        var tab2=$("#newscont2")[0];
+        tab2.innerHTML=tab1.innerHTML;
+        function Marquee(){
+            if(tab2.offsetWidth-tab.scrollLeft<=0) {
+                tab.scrollLeft -= tab1.offsetWidth;
+            }else{
+                tab.scrollLeft++;
+            }
+        }
+        if(videos.newMarIntervalId){
+            clearInterval(videos.newMarIntervalId);
+            videos.newMarIntervalId=null;
+        }
+        videos.newMarIntervalId=setInterval(Marquee,speed);
+        tab.onmouseover=function() {
+            clearInterval(videos.newMarIntervalId);
+        };
+        tab.onmouseout=function() {
+            if(videos.newMarIntervalId){
+                clearInterval(videos.newMarIntervalId);
+                videos.newMarIntervalId=null;
+            }
+            videos.newMarIntervalId=setInterval(Marquee,speed);
+        };
     },
     /**
      * 设置在线视频信息

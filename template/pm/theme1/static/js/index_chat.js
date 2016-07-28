@@ -220,10 +220,6 @@ var chat={
         });
         //私聊框拖拽
         $( ".pletter_win" ).draggable({handle: ".wh_drag" });
-
-        $("a.newsclose").click(function(){
-            $('.mod_scrollnews').hide();
-        });
     },
     /**
      * 设置并压缩图片
@@ -739,7 +735,6 @@ var chat={
         var lav=chat.getAImgOrLevel(row.userId, row.clientGroup,row.userType,row.avatar);
         var lis=$("#userListId li"),
             liDom='<li id="'+row.userId+'" cg="'+(common.isBlank(row.clientGroup)?'':row.clientGroup)+'" t="'+seq+'" utype="'+row.userType+'" class="'+lav.level+'" >'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+lav.aImg+'<b></b></div><span class="'+meCls+'">'+row.nickname+isMeHtml+'<i></i></span>'+csHtml+'</a></li>';
-
          if(seq=="0"){
             lis.first().before(liDom);
         }else{
@@ -1292,7 +1287,7 @@ var chat={
                             if(ids.length>0){
                                 for(var i=0;i<ids.length;i++){
                                     $('#newscont1 a[tid="' +ids[i]+'"]').remove();
-                                    $('#newscont1_content div[tid='+ids[i]+']').remove();
+                                    $('#newscont2 div[tid='+ids[i]+']').remove();
                                 }
                             }
                         }else if(data.edit){
@@ -1305,23 +1300,25 @@ var chat={
                             if(data.isValid){
                                 if(tids.size()>0){ //修改
                                     tids.attr('title' ,data.title ).html('<i></i><span>'+data.title+'</span>');
-                                    $('#newscont1_content div[tid='+data.id+']').html(data.content);
-                                    alert($('#newscont1_content div[tid='+data.id+']').width());
+                                    $('#newscont2 div[tid='+data.id+']').html(data.content);
                                 }else{  //新增
                                     var title = '<a href="javascript:void();" tid="'+data.id+'" title="'+data.title+'" target="_blank"><i></i><span>'+data.title+'</span></a>';
                                     var content = '<div tid="'+data.id+'">'+data.content+'</div>';
-                                    $('#newscont1 span').each( function(){
-                                        $(this).append(title);
-                                    });
-                                    $('#newscont1_content div[tid='+data.id+']').append(content);
+                                    $('#newscont1').append(title);
+                                    $('#newscont2').append(content);
+                                    if($('#newscont1 a').length==1){
+                                        $('.newslist .newsclose').show().click(function(){
+                                            $('.mod_scrollnews').hide();
+                                        });
+                                        chat.newsMarquee();
+                                    }
                                 }
                             }else{
                                 if(tids.size()>0) {
                                     tids.remove();
-                                    $('#newscont1_content div[tid=' + data.id + ']').remove();
+                                    $('#newscont2 div[tid=' + data.id + ']').remove();
                                 }
                             }
-
                         }else{
                             if(data.infos){
                                 var count = data.infos.length,titles='',contents='';
@@ -1329,37 +1326,29 @@ var chat={
                                     for(var i = 0 ;i<count ; i++){
                                         if(indexJS.userInfo.clientGroup && data.infos[i].clientGroup && $.inArray(indexJS.userInfo.clientGroup, data.infos[i].clientGroup)>-1){
                                             if(data.infos[i].pushType == 1 && data.infos[i].contentId && data.infos[i].title){
-                                                titles += '<a href="javascript:void();" tid="'+data.infos[i].contentId+'" title="'+data.infos[i].title+'" target="_blank"><i></i><span>'+data.infos[i].title+'</span></a>';
+                                                titles += '<a href="javascript;" tid="'+data.infos[i].contentId+'" title="'+data.infos[i].title+'" target="_blank"><i></i><span>'+data.infos[i].title+'</span></a>';
                                                 contents +='<div tid="'+data.infos[i].contentId+'">'+data.infos[i].content+'</div>';
                                             }
                                         }
                                     }
                                 }
-                                $('#newscont1').html('<li>'+titles+'</li>');
-                                alert(($('#newscont1').html()));
-                                $('#newscont1_content').html(contents);
-                                $(".mod_scrollnews").show();
-                                $("#innerboxId").slide({
-                                    mainCell: "#newscont1",
-                                    autoPlay: true,
-                                    effect: "leftMarquee",
-                                    interTime: 60,
-                                    trigger: "click"
-                                });
+                                $('#newscont1').html(titles);
+                                $('#newscont2').html(contents);
                                 if($('#newscont1 a').length>0){
-                                    $('#newscont1 .newsclose').show();
+                                    $('.newslist .newsclose').show().click(function(){
+                                        $('.mod_scrollnews').hide();
+                                    });
                                 }
                                 $('#newscont1 a').click(function(){
                                     var id = $(this).attr('tid');
                                     $("#popMsgTit").text($(this).attr("title"));
-                                    $("#popMsgTxt").html($('#newscont1_content div[tid='+id+']').html() || "没有内容");
+                                    $("#popMsgTxt").html($('#newscont2 div[tid='+id+']').html() || "没有内容");
                                     $("#popMsgBox,.blackbg").show();
                                     indexJS.setListScroll(".popMsgBox");
                                     return false;
                                 });
                             }
                         }
-
                     }
                     break;
                 }
