@@ -83,8 +83,12 @@ var room={
             $(".mymsg em").hide();
             $(".replybtn").attr("tm",fromUser.publishTime).attr("uid",fromUser.userId).attr("ts",fromUser.talkStyle).attr("utype",fromUser.userType);
             $(".sender").html(fromUser.nickname);
-            $(".xcont").html(data.content.value);
-            $("#talk_top_id").prepend('<section class="ss-tk-info clearfix" tm="'+fromUser.publishTime+'"><label><strong>'+fromUser.nickname+'</strong>：</label><span style="margin-left:5px;text-align:justify;">'+data.content.value+'</span><button type="button">关闭</button><button type="button" uid="'+fromUser.userId+'" utype="'+fromUser.userType+'">回复</button></section>');
+            var talkContent = data.content.value;
+            if(data.content.msgType==room.msgType.img){
+                talkContent = '<img src="'+data.content.value+'" />';
+            }
+            $(".xcont").html(talkContent);
+            $("#talk_top_id").prepend('<section class="ss-tk-info clearfix" tm="'+fromUser.publishTime+'"><label><strong>'+fromUser.nickname+'</strong>：</label><span style="margin-left:5px;text-align:justify;">'+talkContent+'</span><button type="button">关闭</button><button type="button" uid="'+fromUser.userId+'" utype="'+fromUser.userType+'">回复</button></section>');
             var pDom=$('#talk_top_id .ss-tk-info[tm='+fromUser.publishTime+']');
             pDom.find("button").click(function(){
                 var tp=$(this).parents(".ss-tk-info");
@@ -852,6 +856,10 @@ var room={
                         return false;
                     }
                     var sendObj = {uiId: room.getUiId(), fromUser: room.userInfo, content: {msgType: room.msgType.text, value: msg}};
+                    var replyDom = $(".replybtn");
+                    if (toUser && toUser.userId == replyDom.attr("uid") && toUser.talkStyle == 0) {//如果对话userId匹配则表示当前回复结束
+                        $(".mymsg,.mymsg em").hide();
+                    }
                     sendObj.fromUser.toUser = toUser;
                     room.socket.emit('sendMsg', sendObj);//发送数据
                     room.setContent(sendObj, true, false);//直接把数据填入内容栏
@@ -1226,7 +1234,12 @@ var room={
             var t = $(this).attr("t");
             if(t == "2"){
                 t = 0;
-                txt = tp.prev().find("span[contt='a']").html();
+                var spanDom = tp.prev().find("span[contt='a']");
+                var imgTxt = spanDom.find('a[data-lightbox]').html();
+                if(common.isValid(imgTxt)){
+                    spanDom.find('span:last').html(imgTxt);
+                }
+                txt = spanDom.html();
             }
             room.setDialog(tp.attr("cg"),tp.attr("uId"),tp.attr("nk"),t,tp.attr("utype"),tp.attr("tm"),txt);//设置对话
             tp.hide();

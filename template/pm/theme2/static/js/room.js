@@ -315,7 +315,7 @@ var studioChatMb={
                     studioChatMb.video.play("studio", "mp4", $(this).attr("vUrl"), $(this).text());
                 });
             }
-            studioChatMb.video.start();
+            studioChatMb.video.start(false, true);
             studioMbPop.loadingBlock($("#videosTab"), true);
         });
     },
@@ -375,6 +375,8 @@ var studioChatMb={
                 }else if(type == 'videosTab'){
                     _gaq.push(['_trackEvent', 'm_24k_studio', 'teachvideo_tab', 'content_middle',1,true]);
                 }
+                studioChatMb.setHeight();
+                $('#tVideoDiv').height($('#tVideoDiv').width()*0.55);
             }
             cenTab.slideTo($(this).index(), 300, false);
         });
@@ -725,33 +727,33 @@ var studioChatMb={
             switch(type){
                 case 0:
                     blocks.header.show();
-                    blocks.backToLive.data("showBoard", true).trigger("show");
+                    blocks.backToLive.show();
                     blocks.floatBox.hide();
                     break;
                 case 1:
                     blocks.header.show();
-                    blocks.backToLive.data("showBoard", true).trigger("show");
+                    blocks.backToLive.show();
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
                     blocks.imgBox.hide();
                     break;
                 case 2:
                     blocks.header.hide();
-                    blocks.backToLive.data("showBoard", false).trigger("show");
+                    blocks.backToLive.hide();
                     blocks.floatBox.show();
                     blocks.facePanel.show();
                     blocks.imgBox.hide();
                     break;
                 case 3:
                     blocks.header.show();
-                    blocks.backToLive.data("showBoard", false).trigger("show");
+                    blocks.backToLive.hide();
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
                     blocks.imgBox.hide();
                     break;
                 case 4:
                     blocks.header.hide();
-                    blocks.backToLive.data("showBoard", false).trigger("show");
+                    blocks.backToLive.hide();
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
                     blocks.imgBox.show();
@@ -773,6 +775,7 @@ var studioChatMb={
             x : 0,
             y : 0
         },
+        waveAudio:$('#voiceWaveAudio')[0],//音频audio对象
         /**
          * 初始化
          */
@@ -790,8 +793,8 @@ var studioChatMb={
         /**
          * 启动，只能选择播放
          */
-        start : function(isBack){
-            var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime);
+        start : function(isBack, isAudio){
+             var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime, isAudio);
              if(!course||course.isNext||(course.courseType!=0 && common.isBlank(course.studioLink))||course.courseType==2||course.courseType==0){
                 if(isBack){
                 	studioMbPop.showMessage("目前还没有视频直播，详情请留意直播间的课程安排！");
@@ -802,7 +805,11 @@ var studioChatMb={
                 	this.playMp4Vd();
                 }
             }else{
-            	this.play("yy", "", course.studioLink, "");
+                 if(isAudio){
+                    this.voiceWave(true, course.studioLink, course.title);
+                 }else{
+            	    this.play("yy", "", course.studioLink, "");
+                 }
             }
         },
         /**
@@ -829,11 +836,8 @@ var studioChatMb={
                 $(".videopart").show().css({height:"auto"});
                 studioChatMb.setHeight();
             }
-            if(studioType == "studio"){
-                backToLive.data("showVideo", true).trigger("show");
-            }else{
+            if(studioType != "studio"){
                 $("#videosTab li a.on").removeClass("on");
-                backToLive.data("showVideo", false).trigger("show");
             }
             if(this.playerType == 'video'){
                 if(this.initPlayer) {
@@ -911,15 +915,6 @@ var studioChatMb={
                 top:function(){
                     return $(window).height() - $('#header').height() - 70;
                 }
-            }).data("showBoard", true)
-              .data("showVideo", true)
-              .bind("show", function(){
-                var thiz = $(this);
-                if(thiz.data("showBoard") && thiz.data("showVideo")){
-                    thiz.show();
-                }else{
-                    thiz.hide();
-                }
             });
 
             /**
@@ -937,10 +932,25 @@ var studioChatMb={
                 .on('singleTap',function(){
                     //点击返回直播
                     studioChatMb.socket.emit('serverTime');
-                    //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
-                    window.setTimeout(function(){
-                        studioChatMb.video.start(true);
-                    }, 1000);
+                    if($("#backToLive").hasClass('video')){
+                        $('#waveDiv').removeClass('dn');
+                        $('#tVideoDiv').addClass('dn');
+                        $("#backToLive").removeClass('video').html('<span>视频<br />直播</span>');
+                        //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
+                        window.setTimeout(function(){
+                            studioChatMb.video.start(false, true);
+                        }, 1000);
+                    } else {
+                        $('#waveDiv').addClass('dn');
+                        $('#tVideoDiv').removeClass('dn').height($('#tVideoDiv').width()*0.55);
+                        $("#backToLive").addClass('video').html('<span>音频<br />直播</span>');
+                        studioChatMb.video.voiceWave(false);
+                        //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
+                        window.setTimeout(function(){
+                            studioChatMb.video.start(true, false);
+                        }, 1000);
+                    }
+                    studioChatMb.setHeight();
                 })
                 .on('swipeStart',function(){
                     studioChatMb.video.backToLivePos.x = parseInt(this.style.left) || 0;
@@ -955,6 +965,22 @@ var studioChatMb={
                     this.style.background = ' rgba(181,144,48,.6)';
                     return false;
                 });
+            /*音频图片显示隐藏*/
+            $('#waveDiv .voice_ctrl .togglebtn').click(function(){
+                var $this=$(this);
+                if($('#waveDiv .voice_wave').hasClass('dn')){
+                    $this.removeClass('hiding');
+                    $('#waveDiv .voice_wave').removeClass('dn');
+                }else{
+                    $this.addClass('hiding');
+                    $('#waveDiv .voice_wave').addClass('dn');
+                }
+                studioChatMb.setHeight();
+            });
+            /*音频播放停止按钮事件*/
+            $('#waveDiv .voice_ctrl .playbtn').click(function(){
+                studioChatMb.video.start(false, true);
+            });
         },
         /**
          * 设置视频控制块事件
@@ -1052,6 +1078,26 @@ var studioChatMb={
                         document.webkitExitFullscreen();
                     }
                 }
+            }
+        },
+        /**
+         * 音频播放停止事件
+         */
+        voiceWave:function(doPlay, voiceUrl, title){
+            if(common.isValid(voiceUrl)){
+                $('#voiceWaveAudio').attr('src',voiceUrl);
+            }
+            if(common.isValid(title)){
+                $('#waveDiv .voice_ctrl .tit span').text(title);
+            }
+            if($('#waveDiv').hasClass('stopped') && doPlay) {
+                $('#waveDiv').removeClass('stopped');
+                $('#waveImg').attr('src','/pm/theme2/img/wave4.gif');
+                studioChatMb.video.waveAudio.play();
+            }else{
+                $('#waveDiv').addClass('stopped');
+                $('#waveImg').attr('src','/pm/theme2/img/wave4.jpg');
+                studioChatMb.video.waveAudio.pause();
             }
         }
     },

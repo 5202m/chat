@@ -370,7 +370,7 @@ var common = {
     /**
      * 提取课程数据
      */
-    getSyllabusPlan:function(data,serverTime){
+    getSyllabusPlan:function(data,serverTime, isAudio){
         if(!data||!data.courses){
             return null;
         }
@@ -385,7 +385,7 @@ var common = {
                 for(var i in studioLinkTmp){
                     linkTmp=studioLinkTmp[i];
                     if(isMb){
-                        if(studioType==1  && linkTmp.code==3){
+                        if(studioType==1 && ((!isAudio  && linkTmp.code==3) || (isAudio  && linkTmp.code==4))){
                             return linkTmp.url;
                         }
                     }else{
