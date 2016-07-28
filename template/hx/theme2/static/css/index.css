@@ -460,7 +460,7 @@ body:before {
 }
 
 .videoroom-ul li.on {
-    padding: 10px 10px 13px;
+    /*padding: 10px 10px 13px;*/
 }
 
 .videoroom-ul li .intro {

@@ -4911,9 +4911,8 @@ body {
     text-align: center;
     display: block;
     color: #c49351;
-    margin-top: -5px;
+    margin-top: 10px;
     position: relative;
-    margin-bottom: 5px;
 }
 
 .btnbar {
@@ -6560,7 +6559,7 @@ body {
 .video-name{
     display: inline-block;
     position: absolute;
-    left: 200px;
+    left: 140px;
     top: 14px;
     font-size: 16px;
     color: #fff;
@@ -6602,7 +6601,7 @@ body {
     text-align: center;
 }
 .login .login-mode{
-    margin: 20px auto 0;
+    margin: 10px auto 0;
     width: 80%;
     font-size: 0;
 }
