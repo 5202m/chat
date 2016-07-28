@@ -148,6 +148,10 @@ var chat={
                 } else {
                     chat.setUploadImg(imgData, toUser);
                     imgObj.remove();
+                    var replyDom = $(".replybtn");
+                    if (toUser && toUser.userId == replyDom.attr("uid") && toUser.talkStyle == replyDom.attr("ts")) {//如果对话userId匹配则表示当前回复结束
+                        $(".mymsg,.mymsg em").hide();
+                    }
                 }
             }
             var msg = chat.getSendMsg();
