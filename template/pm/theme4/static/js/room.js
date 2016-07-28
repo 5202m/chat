@@ -195,6 +195,9 @@ var studioChatMb={
             if(data.fromUser.toUser && data.fromUser.toUser.talkStyle==1){//如果是私聊则转到私聊框处理
                 studioChatMb.whTalk.receiveMsg(data, false, false);
             }else{
+                if(!data.serverSuccess && studioChatMb.userInfo.userId == data.fromUser.userId && !data.rule){
+                    return;
+                }
                 studioChatMb.setContent(data, false, false);
             }
         });
@@ -827,7 +830,7 @@ var studioChatMb={
                 $(".videopart").show().css({height:"auto"});
                 studioChatMb.setHeight();
             }
-            var panelVideo = "";
+            var panelVideo;
             if(studioType == "studio"){
                 panelVideo = this.$panel.children("div[t=2]");
                 backToLive.data("showVideo", true).trigger("show");
@@ -967,23 +970,15 @@ var studioChatMb={
             });
 
             /**
-             * 返回直播拖动控制
-             */
-            var rangeControl = function(num,max){
-                num = Math.max(num,10);//10代表可拖放范围的边距
-                return Math.min(num,max-10);
-            };
-
-            /**
              * 返回直播
              */
             $("#backToLive").draggable({
-            	start : function(){
-                    $(this).css("background", 'rgba(181,144,48,0.8)');
-            	},
-            	stop : function(){
-            		$(this).css("background", 'rgba(181,144,48,0.6)');
-            	}
+                start : function(){
+                    $(this).css("background", '#1A4C90');
+                },
+                stop : function(){
+                    $(this).css("background", '#4874b0');
+                }
             });
             $("#backToLive").bind("click", function(){
             	//点击返回直播

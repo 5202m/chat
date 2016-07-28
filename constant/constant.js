@@ -7,7 +7,8 @@ var constant={
         wechat:'wechat',//黄金微解盘
         fxchat:'fxchat',//外汇微解盘
         studio:'studio',//pm直播间
-        fxstudio:'fxstudio'//fx直播间
+        fxstudio:'fxstudio',//fx直播间
+        hxstudio:'hxstudio'//hx直播间
     },
     tempPlatform:{//模板对应的平台，与config文件对应defTemplate 对应
       pc:'pc',

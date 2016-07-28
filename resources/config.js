@@ -16,7 +16,7 @@ var config = {
     defTemplate:{
         pm:{usedNum:4,pc:'theme1',mb:'theme2',mini:'theme3',webui:'theme4',routeKey:'/studio'},
         fx:{usedNum:4,pc:'theme1',mb:'theme2',mini:'',webui:'theme4',routeKey:'/fxstudio'},
-        hx:{usedNum:2,pc:'theme1',mb:'theme2',routeKey:'/hxstudio'}
+        hx:{usedNum:4,pc:'theme1',mb:'theme2',mini:'',webui:'theme4',routeKey:'/hxstudio'}
     },//默认模板设置
     isDevTest:true,//是否开发或测试环境
     clusterWorkCount:2,//开启多线程个数，如果该参数大于系统内核个数，默认是开启(cpu核数-1)个线程
