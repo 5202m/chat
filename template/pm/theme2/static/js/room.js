@@ -802,15 +802,24 @@ var studioChatMb={
                 	$(".videopart").hide().css({height:"0"});
     	            studioChatMb.setHeight();
                 }else{
+                    $('#waveDiv').addClass('dn');
+                    $('#tVideoDiv').removeClass('dn');
+                    $('#tVideoDiv').removeClass('dn').height($('#tVideoDiv').width()*0.55);
+                    this.voiceWave(false);
                 	this.playMp4Vd();
                 }
             }else{
                  if(isAudio){
-                    this.voiceWave(true, course.studioLink, course.title);
+                     this.voiceWave(true, course.studioLink, course.title);
                  }else{
-            	    this.play("yy", "", course.studioLink, "");
+                     $('#waveDiv').addClass('dn');
+                     $('#tVideoDiv').removeClass('dn');
+                     $('#tVideoDiv').removeClass('dn').height($('#tVideoDiv').width()*0.55);
+                     this.voiceWave(false);
+            	     this.play("yy", "", course.studioLink, "");
                  }
             }
+            studioChatMb.setHeight();
         },
         /**
          *随机播放MP4视频

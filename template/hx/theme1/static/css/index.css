@@ -6763,3 +6763,5 @@ background-repeat: no-repeat;
 .max_box{position: absolute;top: 43px;left: 10px;width: 190px;height: 100%;}
 .tec_listcont .cate_box {height: 30px;overflow: hidden;position: relative;}
 .tec_listcont .cate_box.show {height: auto;}
+div#teachVideoId {background: #222;}
+

@@ -95,13 +95,13 @@ var videos={
             if(window.SewisePlayer){//停播放教学视频
                 SewisePlayer.doStop();
             }
-            $('.mod_video .classmore').hide();
+            $('.mod_video .classmore,#video_content .max_box,#video_content .video-name').hide();
             $("#tvDivId").hide().find("iframe").remove();
             $("#lvDivId").show();
             $('.video-checkbox').text("直播视频").attr("t",'lv');
             $(".video-checkbox-list").prepend($('.video-checkbox-list a[t=lv]'));
         }else{
-            $('.mod_video .classmore').show();
+            $('.mod_video .classmore,#video_content .max_box,#video_content .video-name').show();
             $('.video-checkbox').text("教学视频").attr("t",'tv');
             $(".video-checkbox-list").prepend($('.video-checkbox-list a[t=tv]'));
             $("#tvDivId").show();
