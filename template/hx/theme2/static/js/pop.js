@@ -143,7 +143,7 @@ var studioMbLogin = {
     /**
      * 初始化（页面初始化）
      */
-    init : function(platform, groupId, clientStoreId, clientGroup, closeable, showTip){
+    init : function(platform, groupId, clientStoreId, clientGroup, closeable, showTip, lgTime){
         this.groupId = groupId;
         this.clientStoreId = clientStoreId;
         this.clientGroup = clientGroup;
@@ -155,7 +155,7 @@ var studioMbLogin = {
             $("#loginPop .pop-close").hide();
         }
         if(showTip){
-            $("#login_tip").show();
+            $("#login_tip").show().find('label').text(lgTime);
         }else{
             $("#login_tip").hide();
         }

@@ -168,18 +168,24 @@ var box={
             box.openLgBox(ops.closeable, ops.showTip,ops.loginTime);
         });
         if(indexJS.userInfo.clientGroup=='visitor'){
+            var lgt = $('#roomInfoId').attr("lgt");//后台控制登录弹框时间
             if(!indexJS.currStudioAuth){
-                $("#login_a").trigger("click", {closeable : false}); //弹出登录框，隐藏关闭按钮
-            }
-            var  lgt=$('#roomInfoId').attr("lgt");//后台控制登录弹框时间
-            if(common.isValid(lgt) && !isNaN(lgt)){
-                try{
-                  lgt=parseInt(lgt);
-                  setTimeout(function(){
-                    $("#login_a").trigger("click", {closeable : false,showTip:true,loginTime:lgt});
-                  },lgt* 60 * 1000);
-                }catch(e){
-                    console.error("set login Time has error",e);
+                $("#login_a").trigger("click", {closeable : false, showTip: true, loginTime: lgt}); //弹出登录框，隐藏关闭按钮
+            }else if(this.forceLogin()){
+                $("#login_a").trigger("click", {closeable : false, showTip:true, loginTime: lgt}); //弹出登录框，不允许关闭
+            }else {
+                if (common.isValid(lgt) && !isNaN(lgt)) {
+                    try {
+                        lgt = parseInt(lgt);
+                        setTimeout(function () {
+                            //if(indexJS.userInfo.clientGroup=='visitor') {
+                                box.forceLogin(true);
+                                $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt});
+                            //}
+                        }, lgt * 60 * 1000);
+                    } catch (e) {
+                        console.error("set login Time has error", e);
+                    }
                 }
             }
         }
@@ -435,7 +441,7 @@ var box={
     /**
      * 弹出登录框
      */
-    openLgBox:function(closeable, showTip,lgTime){
+    openLgBox:function(closeable, showTip, lgTime){
         if(closeable === false){
             $("#loginBox .pop_close").hide();
         }else{

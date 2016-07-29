@@ -50,6 +50,7 @@ var roomJS={
             this.refreshNickname(false, "匿名_" + this.userInfo.userId.substring(8,12));
         }
         if(this.userInfo.clientGroup=='visitor'){
+            var lgt = $('#currStudioInfo').attr("lgt");//后台控制登录弹框时间
             //当前房间未授权，并且是游客
             if(!this.currStudioAuth){
                 studioMbPop.popBox("login", {
@@ -57,9 +58,11 @@ var roomJS={
                     clientGroup : roomJS.userInfo.clientGroup,
                     clientStoreId : roomJS.userInfo.clientStoreId,
                     platform : roomJS.fromPlatform,
-                    closeable:false
+                    closeable:false,
+                    showTip:true,
+                    lgTime: lgt
                 });
-            }/*else if(studioMbPop.Login.forceLogin()){
+            }else if(studioMbPop.Login.forceLogin()){
                 //之前已经看过3分钟了。
                 studioMbPop.popBox("login", {
                     groupId : roomJS.userInfo.groupId,
@@ -67,24 +70,33 @@ var roomJS={
                     clientStoreId : roomJS.userInfo.clientStoreId,
                     platform : roomJS.fromPlatform,
                     closeable:false,
-                    showTip:true
+                    showTip:true,
+                    lgTime: lgt
                 });
             }else{
                 //3分钟后强制要求登录
-                window.setTimeout(function(){
-                    if(roomJS.userInfo.clientGroup=='visitor'){
-                        studioMbPop.Login.forceLogin(true);
-                        studioMbPop.popBox("login", {
-                            groupId : roomJS.userInfo.groupId,
-                            clientGroup : roomJS.userInfo.clientGroup,
-                            clientStoreId : roomJS.userInfo.clientStoreId,
-                            platform : roomJS.fromPlatform,
-                            closeable:false,
-                            showTip:true
-                        });
+                if (common.isValid(lgt) && !isNaN(lgt)) {
+                    try {
+                        lgt = parseInt(lgt);
+                        window.setTimeout(function () {
+                            //if (roomJS.userInfo.clientGroup == 'visitor') {
+                                studioMbPop.Login.forceLogin(true);
+                                studioMbPop.popBox("login", {
+                                    groupId: roomJS.userInfo.groupId,
+                                    clientGroup: roomJS.userInfo.clientGroup,
+                                    clientStoreId: roomJS.userInfo.clientStoreId,
+                                    platform: roomJS.fromPlatform,
+                                    closeable: false,
+                                    showTip: true,
+                                    lgTime:lgt
+                                });
+                            //}
+                        }, lgt * 60 * 1000);
+                    } catch (e) {
+                        console.error("set login Time has error", e);
                     }
-                }, 180000);
-            }*/
+                }
+            }
         }
     },
     /**

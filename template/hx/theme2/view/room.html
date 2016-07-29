@@ -23,7 +23,7 @@
 <% if (studioList!='[]') { %>
 <% studioList.forEach(function(row,index){ %>
 <% if (row.isCurr) { %>
-<input id="currStudioInfo" type="hidden" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>">
+<input id="currStudioInfo" lgt='<%= row.loginBoxTime %>' type="hidden" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>">
 <% } %>
 <% }); %>
 <% } %>
