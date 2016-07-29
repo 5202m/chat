@@ -187,11 +187,14 @@ var videos={
 
         /**绑定晒单相关事件*/
         videos.sd.setSDEvent();
+
+        /**滚动字幕事件*/
+        this.bindEventRollNews();
         
         /**天使计划广告*/
         $('.video_ad .ad_closebtn').click(function() {
             $('.video_ad').hide();
-        })
+        });
     },
     /**
      * 客户端视频任务
@@ -222,12 +225,16 @@ var videos={
             }else{
                 this.setStudioInfo(course);
             }
+            //新闻滚动
+            this.newsMarquee(false);
         }else{
             this.setVdTab(true);
             this.setStudioVideoDiv(course.studioLink,course.courseType);
             this.setStudioInfo(course);
             this.setStudioTip(course.courseType!=2);
             this.synCourseStyle(course);
+            //新闻滚动
+            this.newsMarquee(1==course.courseType);
         }
     },
     /**
@@ -320,43 +327,136 @@ var videos={
             $("#lvVideoId .img-loading").fadeIn(0).delay(2000).fadeOut(200);
             $(videos.getEmbedDom(url)).appendTo('#lvVideoId');
         }
-        //新闻滚动
-        if(1==courseType){
-            this.newsMarquee();
+    },
+    /**
+     * 滚动新闻事件
+     */
+    bindEventRollNews : function(){
+        /**
+         * 隐藏滚动文字
+         */
+        $('.newslist .newsclose').click(function(){
+            $('.mod_scrollnews').hide();
+        });
+
+        /**
+         * 点击显示详细内容
+         */
+        $("#newscont1 a").live("click", function(){
+            $("#popMsgTit").text($(this).attr("title"));
+            $("#popMsgTxt").html($(this).data("content") || "没有内容");
+            $("#popMsgBox,.blackbg").show();
+            indexJS.setListScroll(".popMsgBox");
+            return false;
+        });
+
+        /**
+         * 点击显示详细内容
+         */
+        $("#newscont2 a").live("click", function(){
+            $("#newscont1 a[tid='" + $(this).attr('tid') + "']").trigger("click");
+        });
+    },
+    /**
+     * 滚动新闻
+     * @param data
+     */
+    rollNews : function(data){
+        var newsPanel = $('#newscont1');
+        if(data.delete){
+            var ids = data.ids.split(',');
+            if(ids.length>0){
+                for(var i=0;i<ids.length;i++){
+                    newsPanel.find('a[tid="' +ids[i]+'"]').remove();
+                }
+            }
+        }else if(data.edit){
+            data.isValid = data.isValid  == "true" ? true  : false ;
+            //如果不在该组，remove元素；该处不判断房间，修改房间后只能推送到新房间，老房间不remove
+            if(data.isValid && (!indexJS.userInfo.clientGroup || ! data.clientGroup ||  $.inArray(indexJS.userInfo.clientGroup, data.clientGroup) == -1)) {
+                data.isValid = false ;
+            }
+            var tids = newsPanel.find('a[tid="' + data.id+'"]');
+            if(data.isValid){
+                if(tids.size()>0){ //修改
+                    tids.attr('title' ,data.title )
+                        .html('<i></i><span>'+data.title+'</span>')
+                        .data('content', data.content);
+                }else{  //新增
+                    var title = $('<a href="javascript:void();" tid="'+data.id+'" title="'+data.title+'" target="_blank"><i></i><span>'+data.title+'</span></a>');
+                    title.data('content', data.content);
+                    newsPanel.append(title);
+                }
+            }else{
+                if(tids.size()>0) {
+                    tids.remove();
+                }
+            }
+        }else{
+            if(data.infos){
+                var count = data.infos.length,title=null,contents='';
+                if(count>0){
+                    for(var i = 0 ;i<count ; i++){
+                        if(indexJS.userInfo.clientGroup && data.infos[i].clientGroup && $.inArray(indexJS.userInfo.clientGroup, data.infos[i].clientGroup)>-1){
+                            if(data.infos[i].pushType == 1 && data.infos[i].contentId && data.infos[i].title){
+                                title = $('<a href="javascript;" tid="'+data.infos[i].contentId+'" title="'+data.infos[i].title+'" target="_blank"><i></i><span>'+data.infos[i].title+'</span></a>');
+                                title.data('content', data.infos[i].content);
+                                newsPanel.append(title);
+                            }
+                        }
+                    }
+                }
+            }
         }
+        this.newsMarquee(true);
     },
     /**
      * 新闻滚动
      */
-    newsMarquee:function (){
-        $(".mod_scrollnews").show();
-        var speed=30;
-        var tab=$("#scrollnews_demo")[0];
-        var tab1=$("#newscont1")[0];
-        var tab2=$("#newscont2")[0];
-        tab2.innerHTML=tab1.innerHTML;
-        function Marquee(){
-            if(tab2.offsetWidth-tab.scrollLeft<=0) {
-                tab.scrollLeft -= tab1.offsetWidth;
-            }else{
-                tab.scrollLeft++;
-            }
-        }
+    newsMarquee:function (isShow){
         if(videos.newMarIntervalId){
             clearInterval(videos.newMarIntervalId);
             videos.newMarIntervalId=null;
         }
-        videos.newMarIntervalId=window.setInterval(Marquee,speed);
-        tab.onmouseover=function() {
-            clearInterval(videos.newMarIntervalId);
-        };
-        tab.onmouseout=function() {
-            if(videos.newMarIntervalId){
-                clearInterval(videos.newMarIntervalId);
+        var speed=30;
+        var newsPanel = $(".mod_scrollnews");
+        var tab=$("#scrollnews_demo");
+        var tab1=$("#newscont1");
+        var tab2=$("#newscont2");
+        if(isShow && tab1.children().size() > 0){
+            newsPanel.show();
+        }else{
+            newsPanel.hide();
+        }
+        tab2.html("");
+        tab.unbind("mouseover mouseout");
+        if(isShow && tab1.width() > newsPanel.width() - 27){
+            //需要滚动
+            tab2.html(tab1.html());
+            videos.newMarIntervalId=window.setInterval(videos.marqueeFunc,speed);
+            tab.bind("mouseover", function() {
+                window.clearInterval(videos.newMarIntervalId);
                 videos.newMarIntervalId=null;
-            }
-            videos.newMarIntervalId=window.setInterval(Marquee,speed);
-        };
+            }).bind("mouseout", function() {
+                if(videos.newMarIntervalId){
+                    window.clearInterval(videos.newMarIntervalId);
+                    videos.newMarIntervalId=null;
+                }
+                videos.newMarIntervalId=window.setInterval(videos.marqueeFunc,speed);
+            });
+        }
+    },
+    /**
+     * 滚动
+     */
+    marqueeFunc : function Marquee(){
+        var tab=$("#scrollnews_demo")[0];
+        var tab1=$("#newscont1");
+        if(tab1.width()-tab.scrollLeft<=0) {
+            tab.scrollLeft -= tab1.width();
+        }else{
+            tab.scrollLeft++;
+        }
     },
     /**
      * 设置在线视频信息
