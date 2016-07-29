@@ -190,6 +190,11 @@ var videos={
 
         /**滚动字幕事件*/
         this.bindEventRollNews();
+
+        /**天使计划广告*/
+         $('.video_ad .ad_closebtn').click(function() {
+            $('.video_ad').hide();
+        });
     },
     /**
      * 客户端视频任务
@@ -350,6 +355,7 @@ var videos={
          */
         $("#newscont2 a").live("click", function(){
             $("#newscont1 a[tid='" + $(this).attr('tid') + "']").trigger("click");
+            return false;
         });
     },
     /**
@@ -394,7 +400,7 @@ var videos={
                     for(var i = 0 ;i<count ; i++){
                         if(indexJS.userInfo.clientGroup && data.infos[i].clientGroup && $.inArray(indexJS.userInfo.clientGroup, data.infos[i].clientGroup)>-1){
                             if(data.infos[i].pushType == 1 && data.infos[i].contentId && data.infos[i].title){
-                                title = $('<a href="javascript;" tid="'+data.infos[i].contentId+'" title="'+data.infos[i].title+'" target="_blank"><i></i><span>'+data.infos[i].title+'</span></a>');
+                                title = $('<a href="javascript:void(0)" tid="'+data.infos[i].contentId+'" title="'+data.infos[i].title+'" target="_blank"><i></i><span>'+data.infos[i].title+'</span></a>');
                                 title.data('content', data.infos[i].content);
                                 newsPanel.append(title);
                             }

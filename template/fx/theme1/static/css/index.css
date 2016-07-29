@@ -863,10 +863,10 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .wid1 .nextbox .tec_head img{ width:65px; height:65px;}
 .wid1 .nextbox .live_name{     font-size: 26px;line-height: 34px;    padding: 10px 0 10px;}
 .wid1 .nextbox .live_time{ font-size:16px; line-height:30px}
-.wid1 .mod_menu .dropitem > a{ height: 66px;}
-.wid1 .mod_menu .dropitem > a span{font-size: 12px; line-height: 16px;}
-.wid1 .mod_menu .dropitem > a i{ margin-top: 11px }
-.wid1 .mod_menu .dropitem > a i.i4,.wid1 .mod_menu .dropitem > a i.i8,.wid1 .mod_menu .dropitem > a i.i5{ margin-top: 5px; }
+.wid1 .mod_menu .dropitem > a{height: 60px;}
+.wid1 .mod_menu .dropitem > a span{font-size: 12px;line-height: 14px;}
+.wid1 .mod_menu .dropitem > a i{margin-top: 6px;}
+.wid1 .mod_menu .dropitem > a i.i4,.wid1 .mod_menu .dropitem > a i.i8,.wid1 .mod_menu .dropitem > a i.i5{margin-top: 3px;}
 .wid1 .mod_menu .dr8 .dropcont{top: 244px}
 .wid2 .header-right .toplink span{ padding:0 12px; font-size:14px}
 .wid2 .header-right .user .dropcont{ right:-40px}
