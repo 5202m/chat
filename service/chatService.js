@@ -740,7 +740,6 @@ var chatService ={
      */
     submitPushInfo:function(infoStr , isValid){
         try{
-            console.log(infoStr);
             var obj=JSON.parse(infoStr);
             obj.isValid=isValid;
             obj.edit=true;

@@ -4,7 +4,7 @@
  */
 var videos={
     blwsPlayer:null,//保利威视
-    newMarIntervalId:null,//新闻滚动
+    newMarIntervalId:0,//新闻滚动
     init:function(){
         this.setEvent();//设置各种事件
         this.setVideoList(null,true);//设置视频列表
@@ -346,7 +346,7 @@ var videos={
             clearInterval(videos.newMarIntervalId);
             videos.newMarIntervalId=null;
         }
-        videos.newMarIntervalId=setInterval(Marquee,speed);
+        videos.newMarIntervalId=window.setInterval(Marquee,speed);
         tab.onmouseover=function() {
             clearInterval(videos.newMarIntervalId);
         };
@@ -355,7 +355,7 @@ var videos={
                 clearInterval(videos.newMarIntervalId);
                 videos.newMarIntervalId=null;
             }
-            videos.newMarIntervalId=setInterval(Marquee,speed);
+            videos.newMarIntervalId=window.setInterval(Marquee,speed);
         };
     },
     /**

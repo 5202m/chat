@@ -628,7 +628,10 @@ var indexJS ={
                 $('#bulletinDomId li a').each(function(){
                     var aDom = $(this);
                     aDom.text(aDom.next().text());
-                    aDom.parent().width(aDom.width());
+                    var widthTmp = aDom.width();
+                    if(widthTmp > $("#bulletinPanel").width()){
+                        aDom.parent().width(widthTmp);
+                    }
                     aDom.click(function(){
                         $("#popAnnTit").text($(this).attr("title"));
                         $("#popAnnTxt").html($(this).next('div').html());
