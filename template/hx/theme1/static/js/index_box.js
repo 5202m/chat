@@ -449,7 +449,7 @@ var box={
         }
         if(showTip){
             lgTime=lgTime||1;
-            $("#login_tip").show().find('label').text(lgTime);
+            $("#login_tip").show().text($('#setlogintip').text());
         }else{
             $("#login_tip").hide();
         }

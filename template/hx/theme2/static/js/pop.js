@@ -155,7 +155,7 @@ var studioMbLogin = {
             $("#loginPop .pop-close").hide();
         }
         if(showTip){
-            $("#login_tip").show().find('label').text(lgTime);
+            $("#login_tip").show().text($('#setlogintip').text());
         }else{
             $("#login_tip").hide();
         }

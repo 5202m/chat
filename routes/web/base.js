@@ -195,6 +195,7 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
                         }
                     }else if(ruleRow.type == 'login_time_set'&& isPass){
                         rowTmp.loginBoxTime=ruleRow.beforeRuleVal;
+                        rowTmp.loginBoxTip = ruleRow.afterRuleTips
                     }
                 }
                 rowTmp.remark=common.trim(row.remark);
