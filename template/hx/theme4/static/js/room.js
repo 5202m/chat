@@ -59,7 +59,7 @@ var roomJS={
                     platform : roomJS.fromPlatform,
                     closeable:false
                 });
-            }/*else if(studioMbPop.Login.forceLogin()){
+            }else if(studioMbPop.Login.forceLogin()){
                 //之前已经看过3分钟了。
                 studioMbPop.popBox("login", {
                     groupId : roomJS.userInfo.groupId,
@@ -72,7 +72,7 @@ var roomJS={
             }else{
                 //3分钟后强制要求登录
                 window.setTimeout(function(){
-                    if(roomJS.userInfo.clientGroup=='visitor'){
+                    //if(roomJS.userInfo.clientGroup=='visitor'){
                         studioMbPop.Login.forceLogin(true);
                         studioMbPop.popBox("login", {
                             groupId : roomJS.userInfo.groupId,
@@ -82,9 +82,9 @@ var roomJS={
                             closeable:false,
                             showTip:true
                         });
-                    }
+                    //}
                 }, 180000);
-            }*/
+            }
         }
     },
     /**

@@ -58,9 +58,7 @@ var roomJS={
                     clientGroup : roomJS.userInfo.clientGroup,
                     clientStoreId : roomJS.userInfo.clientStoreId,
                     platform : roomJS.fromPlatform,
-                    closeable:false,
-                    showTip:true,
-                    lgTime: lgt
+                    closeable:false
                 });
             }else if(studioMbPop.Login.forceLogin()){
                 //之前已经看过3分钟了。
@@ -70,8 +68,7 @@ var roomJS={
                     clientStoreId : roomJS.userInfo.clientStoreId,
                     platform : roomJS.fromPlatform,
                     closeable:false,
-                    showTip:true,
-                    lgTime: lgt
+                    showTip:true
                 });
             }else{
                 //3分钟后强制要求登录
@@ -87,8 +84,7 @@ var roomJS={
                                     clientStoreId: roomJS.userInfo.clientStoreId,
                                     platform: roomJS.fromPlatform,
                                     closeable: false,
-                                    showTip: true,
-                                    lgTime:lgt
+                                    showTip: true
                                 });
                             //}
                         }, lgt * 60 * 1000);

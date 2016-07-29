@@ -143,7 +143,7 @@ var studioMbLogin = {
     /**
      * 初始化（页面初始化）
      */
-    init : function(platform, groupId, clientStoreId, clientGroup, closeable, showTip, lgTime){
+    init : function(platform, groupId, clientStoreId, clientGroup, closeable, showTip){
         this.groupId = groupId;
         this.clientStoreId = clientStoreId;
         this.clientGroup = clientGroup;
