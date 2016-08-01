@@ -1483,10 +1483,16 @@ var chat={
          * 将消息显示在公聊框
          * @param info
          */
-        showMsg : function(info){
+        showMsg : function(info){console.log(info);
             var html = [];
             html.push('<div class="dialog push">');
-            html.push(info.content);
+            if(info.content.indexOf('img') > -1){
+                html.push('<a href="'+$(info.content).find('img').attr('src')+'" data-lightbox="dialog-img">');
+                html.push(info.content);
+                html.push('</a>');
+            }else {
+                html.push(info.content);
+            }
             html.push('</div>');
             $("#dialog_list").append(html.join(""));
             if($(".scrollbtn").hasClass("on")) {

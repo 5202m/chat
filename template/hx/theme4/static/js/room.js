@@ -1703,7 +1703,13 @@ var roomJS={
         showMsg : function(info){
             var html = [];
             html.push('<li class="clearfix push">');
-            html.push(info.content);
+            if(info.content.indexOf('img') > -1){
+                html.push('<a href="'+$(info.content).find('img').attr('src')+'" data-lightbox="dialog-img">');
+                html.push(info.content);
+                html.push('</a>');
+            }else {
+                html.push(info.content);
+            }
             html.push('</div>');
             var talkPanel = $("#talkPanel");
             $("#dialog_list").append(html.join(""));
