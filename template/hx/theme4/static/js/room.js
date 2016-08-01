@@ -1301,6 +1301,7 @@ var roomJS={
             if(data.value && data.value.needApproval){
                 $('#'+data.uiId).attr("id",fromUser.publishTime);
             }else{
+                roomJS.removeLoadDom(data.uiId);//去掉加载框
                 $('#'+data.uiId+' .dialog').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
             }
             return;
@@ -1704,8 +1705,9 @@ var roomJS={
             var html = [];
             html.push('<li class="clearfix push">');
             if(info.content.indexOf('img') > -1){
-                html.push('<a href="'+$(info.content).find('img').attr('src')+'" data-lightbox="dialog-img">');
-                html.push(info.content);
+                var imgSrc = $(info.content).find('img').attr('src');
+                html.push('<a href="'+imgSrc+'" data-lightbox="dialog-img">');
+                html.push('<p><img src="'+imgSrc+'" style="width:90%;height:auto;" /></p>');
                 html.push('</a>');
             }else {
                 html.push(info.content);
@@ -1713,6 +1715,11 @@ var roomJS={
             html.push('</div>');
             var talkPanel = $("#talkPanel");
             $("#dialog_list").append(html.join(""));
+            var img=$("#dialog_list").find(".dialog.push img");
+            if(img.length>0){
+                img.width("100%");
+                img.height(100);
+            }
             roomJS.setListScroll($("#talkPanel"), {toButtom:true});
         }
     },

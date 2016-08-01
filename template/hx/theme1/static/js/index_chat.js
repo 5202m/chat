@@ -445,6 +445,7 @@ var chat={
             if(data.value && data.value.needApproval){
                 $('#'+data.uiId).attr("id",fromUser.publishTime);
             }else{
+                chat.removeLoadDom(data.uiId);//去掉加载框
                 $('#'+data.uiId+' span[contt="a"]').append('<em class="ruleTipStyle">'+(data.value.tip)+'</em>');
             }
             return;
@@ -1497,7 +1498,7 @@ var chat={
             $("#dialog_list").append(html.join(""));
             var img=$("#dialog_list").find(".dialog.push img");
             if(img.length>0){
-                img.width(100);
+                img.width("100%");
                 img.height(100);
             }
             if($(".scrollbtn").hasClass("on")) {
