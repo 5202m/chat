@@ -1495,6 +1495,11 @@ var chat={
             }
             html.push('</div>');
             $("#dialog_list").append(html.join(""));
+            var img=$("#dialog_list").find(".dialog.push img");
+            if(img.length>0){
+                img.width(100);
+                img.height(100);
+            }
             if($(".scrollbtn").hasClass("on")) {
                 chat.setTalkListScroll(true);
             }
