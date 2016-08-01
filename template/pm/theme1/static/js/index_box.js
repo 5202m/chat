@@ -162,29 +162,6 @@ var box={
                         $("#login_a").trigger("click", {closeable : false, showTip:true}); //弹出登录框，不允许关闭
                     }
                 }, 180000);
-
-                if(!indexJS.userInfo.isLogin){
-                    $(".blackbg,#main_ad_box").show();
-                    window.setTimeout(function(){
-                        if($(".blackbg").is(":hidden")){
-                            $(".blackbg,#main_ad_box").show();
-                        }
-                    }, 300000);
-                    /**
-                     * 进入VIP专场
-                     */
-                    $('#mainAdBtn1').click(function(){
-                        $("#main_ad_box .pop_close").trigger("click");
-                        $(".rooms .enterbtn:first").trigger("click");
-                    });
-                    /**
-                     * 进入新手专场
-                     */
-                    $('#mainAdBtn2').click(function(){
-                        $("#main_ad_box .pop_close").trigger("click");
-                        $("#login_a").trigger("click");
-                    });
-                }
             }
         }
         /**
