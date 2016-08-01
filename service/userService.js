@@ -149,7 +149,7 @@ var userService = {
                 callback({isOK:false,tip:'房间开放时间结束！',leaveRoom:true});
                 return;
             }
-            var ruleArr=row.chatRules,resultTip=[],beforeVal='',type='',tip='';
+            var ruleArr=row.chatRules,resultTip=[],beforeVal='',type='',tip='',clientGroupVal='';
             var urlArr=[],urlTipArr=[],ruleRow=null,needApproval=false,needApprovalTip=null,isPass=false;
             //先检查禁止发言的规则
             var isVisitor = (constant.roleUserType.visitor == userType);
@@ -160,6 +160,7 @@ var userService = {
                 type=ruleRow.type;
                 tip=ruleRow.afterRuleTips;
                 isPass=common.dateTimeWeekCheck(ruleRow.periodDate, true);
+                clientGroupVal = ruleRow.clientGroup;
                 if(isWh){
                     if(type=='whisper_allowed'){
                         if(!isPass){
@@ -181,7 +182,7 @@ var userService = {
                         visitorSpeak.tip = tip;
                     }
                     if(isImg && isPass && type=='img_not_allowed'){//禁止发送图片
-                        if(common.isValid(ruleRow.clientGroup) && common.containSplitStr(ruleRow.clientGroup, clientGroup)) {
+                        if(common.isBlank(clientGroupVal) || (common.isValid(clientGroupVal) && common.containSplitStr(clientGroupVal, clientGroup))) {
                             callback({isOK: false, tip: tip});
                             return;
                         }

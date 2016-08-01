@@ -16,7 +16,8 @@ var chatGroupRuleSchema=new Schema(
       type:{type:String}, //规则类别，数据字典中配置
       beforeRuleVal:{type:String},//使用规则前的值
       afterRuleVal:{type:String}, //使用规则后的值
-      valid:{type:Number, default:1} //是否删除：0 、删除 ；1、正常
+      valid:{type:Number, default:1}, //是否删除：0 、删除 ；1、正常
+      clientGroup:{type:String}//客户组别
     }
 );
 module.exports =mongoose.model('chatGroupRule',chatGroupRuleSchema,'chatGroupRule');

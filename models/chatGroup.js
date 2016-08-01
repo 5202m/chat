@@ -31,7 +31,8 @@ var mongoose = require('mongoose')
               beforeRuleVal:{type:String},//使用规则前的值
               afterRuleVal:{type:String},//使用规则后的值
               periodDate:{type:String}, //时间段（开始时间）
-              afterRuleTips:{type:String} //执行规则后的提示语
+              afterRuleTips:{type:String}, //执行规则后的提示语
+              clientGroup:{type:String}//客户组别
           }],
           clientGroup:String,//客户组（对应数据字典的客户组,多个逗号分隔）
           remark:String //备注
