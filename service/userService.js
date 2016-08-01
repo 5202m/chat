@@ -114,13 +114,14 @@ var userService = {
     },
     /**
      * 验证规则
+     * @param clientGroup
      * @param nickname
      * @param isWh 是否私聊
      * @param groupId
      * @param content
      * @param callback
      */
-    verifyRule:function(nickname, isWh,userType,groupId,content,callback){
+    verifyRule:function(clientGroup,nickname, isWh,userType,groupId,content,callback){
         var isImg=content.msgType!='text',contentVal=content.value;
         if(common.isBlank(contentVal)){
             callback({isOK:false,tip:"发送的内容有误，已被拒绝!"});
@@ -180,8 +181,10 @@ var userService = {
                         visitorSpeak.tip = tip;
                     }
                     if(isImg && isPass && type=='img_not_allowed'){//禁止发送图片
-                        callback({isOK:false,tip:tip});
-                        return;
+                        if(common.isValid(ruleRow.clientGroup) && common.containSplitStr(ruleRow.clientGroup, clientGroup)) {
+                            callback({isOK: false, tip: tip});
+                            return;
+                        }
                     }
                     if(!isImg && isPass && type!='speak_not_allowed' && common.isValid(beforeVal)){
                         beforeVal=beforeVal.replace(/(^[,，])|([,|，]$)/g,'');//去掉结尾的逗号
