@@ -1484,7 +1484,7 @@ var chat={
          * 将消息显示在公聊框
          * @param info
          */
-        showMsg : function(info){console.log(info);
+        showMsg : function(info){
             var html = [];
             html.push('<div class="dialog push">');
             if(info.content.indexOf('img') > -1){

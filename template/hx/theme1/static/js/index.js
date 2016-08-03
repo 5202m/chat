@@ -192,11 +192,10 @@ var indexJS ={
             $(this).addClass("on");
             $(".mod_videolist .listcont .list_tab").removeClass("on").eq(index).addClass("on");
             if(index==0){
-                var wsUrl = "ws://kdata.gwfx.com:8087/websocket.do",
-                    wsData = "service=HqDataWebSocketService&method=pushMarketprice&symbol=XAGUSD|XAUUSD|USDX|CLWTI&dataType=simpleMarketPrice",
-                    httpUrl = "http://kdata.gwfx.com:8099/gateway.do?service=HqDataService&method=getMarkrtPriceDataFromCache",
-                    option = {downCss:'hq-down',upCss:'hq-up',down:'down'};
-                getAllMarketpriceIndex(wsUrl ,wsData, httpUrl, option);/*行情数据*/
+                var option = {downCss:'hq-down',upCss:'hq-up',down:'down'};
+                //每隔断时间调用下
+                var url ='http://news1.hx9999.com/datajson/ajaxchinesedatas';
+                setInterval(function(){getSymbolPriceDatas(url,option);},5000);
                 indexJS.setListScroll('#hangqing');
             }
             if(index==1){

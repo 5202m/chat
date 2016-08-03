@@ -470,3 +470,71 @@ function getAllMarketpriceIndex(wsUrl, wsData, httpUrl,selfOptions) {
         console.log("get price has error!");
     }
 }
+
+function getSymbolPriceDatas(url, selfOptions){
+    $.ajax({
+        url: url,
+        type: "GET",
+        dataType: 'jsonp',
+        jsonp: 'jsoncallback',
+        jsonpCallback:'_setViewPrice',
+        timeout: 5000,
+        beforeSend: function(){
+        },
+        success:function(data){
+            _setViewPrice(data, selfOptions);
+        },
+        error: function(xhr){
+        }
+    });
+}
+
+function _setViewPrice(data, selfOptions){
+    if(data.status===0){
+        var _index_price_type = 2,symbol='',deltaPrice= 0,deltaPercent= 0,price=0;
+        $.each(data.data,function(key, val){
+            symbol=key;
+            deltaPrice=val.fluctuate;
+            price=val.now;
+            deltaPercent=val.Percent;
+            if (symbol == "XAGUSD"||symbol == "USDJPY") {
+                _index_price_type = 3;
+            } else if(symbol == "EURUSD"){
+                _index_price_type = 3;
+            } else{
+                _index_price_type = 2;
+            }
+            var priceDom = $("#price_" +symbol);
+            priceDom.html(parseFloat(price).toFixed(_index_price_type));
+            var percentDom=$("#deltaPercent_" +symbol);
+            percentDom.text((deltaPercent * 100).toFixed(2) + "%");
+            if(!selfOptions){
+                if (deltaPrice > 0) {
+                    $("#price_" +symbol).parent().addClass("up");
+                } else {
+                    $("#price_" + symbol).parent().removeClass("up");
+                }
+                $("#deltaPrice_" +symbol).html(parseFloat(deltaPrice).toFixed(_index_price_type));
+            }else{
+                var priceFormat = parseFloat(price).toFixed(_index_price_type);
+                priceFormat = priceFormat.toString().substring(0,priceFormat.indexOf('.'))+'<span>.'+priceFormat.toString().substring(priceFormat.indexOf('.')+1)+'</span>';
+                priceDom.html(priceFormat+'<i changeCss="true"></i>');
+                var changeCssDom = $("#price_" +symbol+" i");
+                percentDom.text(deltaPrice + "  " +(deltaPercent * 100).toFixed(2) + "%");
+                if (deltaPrice > 0) {
+                    if(changeCssDom.attr("changeCss")=="true"){
+                        priceDom.removeClass(selfOptions.down);
+                        percentDom.removeClass(selfOptions.down);
+                        changeCssDom.removeClass(selfOptions.downCss).addClass(selfOptions.upCss);
+                    }
+                } else {
+                    if(changeCssDom.attr("changeCss")=="true"){
+                        priceDom.addClass(selfOptions.down);
+                        percentDom.addClass(selfOptions.down);
+                        changeCssDom.removeClass(selfOptions.upCss).addClass(selfOptions.downCss);
+                    }
+                }
+            }
+        });
+    }
+}
