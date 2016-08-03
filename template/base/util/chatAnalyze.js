@@ -64,12 +64,14 @@ var chatAnalyze = {
     init:function(){
         //引入GA分析
         var type = "";
-        if(chatAnalyze.localHref.indexOf("pmchat.24k.hk")!=-1){
-            type = "studio";
-        }else if(chatAnalyze.localHref.indexOf("chat.gwfx.com")!=-1){
-            type = "fxstudio"
-        }else if(chatAnalyze.localHref.indexOf("handan.hx9999.com")!=-1){
-            type = "hxstudio"
+        if(!/^https?:\/\/(\d{1,3}\.){3}\d{1,3}.+/.test(chatAnalyze.localHref)){
+            if(chatAnalyze.localHref.indexOf("/studio")!=-1){
+                type = "studio";
+            }else if(chatAnalyze.localHref.indexOf("/fxstudio")!=-1){
+                type = "fxstudio"
+            }else if(chatAnalyze.localHref.indexOf("/hxstudio")!=-1){
+                type = "hxstudio"
+            }
         }
         if(type!="") {
             this.initGA(type);
