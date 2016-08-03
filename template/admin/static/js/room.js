@@ -88,15 +88,18 @@ var room={
                 talkContent = '<img src="'+data.content.value+'" />';
             }
             $(".xcont").html(talkContent);
-            $("#talk_top_id").prepend('<section class="ss-tk-info clearfix" tm="'+fromUser.publishTime+'"><label><strong>'+fromUser.nickname+'</strong>：</label><span style="margin-left:5px;text-align:justify;">'+talkContent+'</span><button type="button">关闭</button><button type="button" uid="'+fromUser.userId+'" utype="'+fromUser.userType+'">回复</button></section>');
+            $("#talk_top_id").prepend('<section class="ss-tk-info clearfix" tm="'+fromUser.publishTime+'"><label><strong>'+fromUser.nickname+'</strong>：</label><span style="margin-left:5px;text-align:justify;">'+talkContent+'</span><button type="button">关闭</button><button type="button" uid="'+fromUser.userId+'" utype="'+fromUser.userType+'" cg="'+fromUser.clientGroup+'" nk="'+fromUser.nickname+'" iswh="true">私聊</button><button type="button" uid="'+fromUser.userId+'" utype="'+fromUser.userType+'">回复</button></section>');
             var pDom=$('#talk_top_id .ss-tk-info[tm='+fromUser.publishTime+']');
             pDom.find("button").click(function(){
                 var tp=$(this).parents(".ss-tk-info");
                 var fuId=$(this).attr("uid");
+                var isWh = $(this).attr('iswh');
                 var tm=tp.attr("tm");
-                if(common.isValid(fuId)){
+                if(common.isValid(fuId) && common.isBlank(isWh)){
                     var $this = $(this);
                     room.setDialog(null,fuId,tp.find("strong").addClass("reply-st").html(),$this.attr("ts"),$this.attr("utype"),tm, $this.siblings("span").html());//设置对话
+                }else if(common.isValid(isWh) && isWh) {
+                    room.setDialog($(this).attr("cg"), fuId, $(this).attr("nk"), '1', $(this).attr("utype"), tm, "");//设置对话
                 }else{
                     tp.remove();
                     $("#show_top_btn strong,#top_num").text("【"+$("#talk_top_id .ss-tk-info").length+"】");
@@ -946,6 +949,26 @@ var room={
             }
             store.set(room.tipSoundObj.key,obj);
         });
+        /*在线用户列表搜索*/
+        $('.rightTitle a').click(function(){
+            if($('.onlineSearch').hasClass('dn')){
+                $('.onlineSearch').removeClass('dn');
+            }else{
+                $('.onlineSearch').addClass('dn');
+                $('#userListId li').show();
+                $("#onlineSearchTxt").val('');
+            }
+            room.heightCalcu();
+            room.setListScroll(".user_box");
+        });
+        $("#onlineSearchTxt").keydown(function(e){
+            if(e.keyCode==13){//按回车键进行查询
+                room.searchUser($(this).val());
+            }
+        });
+        $("#onlineSearchTxtBtn").click(function(){
+            room.searchUser($("#onlineSearchTxt").val());
+        });
     },
 
     /*openWin:function(){
@@ -1277,6 +1300,9 @@ var room={
             }
             if(fromUser.userType==1){
                 cls+='admin';
+            }
+            if(fromUser.userType==3){
+                cls+='cs';
             }
             dialog=room.getDialogHtml(fromUser.clientGroup,fromUser.userId,nickname,fromUser.userType,fromUser.isMobile, true);
             if(!isLoadData && toUser){
@@ -2040,6 +2066,21 @@ var room={
         });
     },
     /**
+     * 查询用户
+     * @param val
+     */
+    searchUser:function(val){
+        if(common.isValid(val)) {
+            $('#userListId li').hide();
+            var userDomArr = $('#userListId li .uname label:contains("' + val + '")');
+            $.each(userDomArr, function(key,val){
+                $(val).parent().parent().show();
+            });
+        }else{
+            $('#userListId li').show();
+        }
+    },
+    /**
      * 计算宽度
      */
     widthCheck: function(resize){
@@ -2079,7 +2120,11 @@ var room={
         var  hh = $(window).height();
         var disH=130;
         if($(".open_wh_box").is(':hidden')||resize){
-            $('.user_box').height(hh-180).css('max-height',(hh-180)+'px');
+            if($('.onlineSearch').hasClass('dn')){
+                $('.user_box').height(hh-180).css('max-height',(hh-180)+'px');
+            }else{
+                $('.user_box').height(hh-205).css('max-height',(hh-205)+'px');
+            }
             $('.right-teacher').height(hh-10);
         }else{
             hh =$(".open_wh_box").height()-25;
@@ -2089,8 +2134,8 @@ var room={
         $(prefixDom+' .wh-left,'+prefixDom+' .wh-middle').height(hh-10);
         /*$(prefixDom+' .visitorDiv').height(hh-45).css('max-height',(hh-55)+'px');*/
         $(prefixDom+' .visitorDiv .wh_tab_div').height($(prefixDom+' .wh-left').height()-disH);
-        $(prefixDom+' .wh-tab-msg').height(hh-50);
-        $(prefixDom+' .wh-content').height(hh-200);
+        $(prefixDom+' .wh-tab-msg').height(hh-80);
+        $(prefixDom+' .wh-content').height(hh-230);
     },
     /**
      * 根据区域返回对应HTML

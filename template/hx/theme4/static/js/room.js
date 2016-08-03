@@ -1718,7 +1718,7 @@ var roomJS={
             var img=$("#dialog_list").find(".dialog.push img");
             if(img.length>0){
                 img.width("100%");
-                img.height(100);
+                img.height("auto");
             }
             roomJS.setListScroll($("#talkPanel"), {toButtom:true});
         }
