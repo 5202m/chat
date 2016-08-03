@@ -285,6 +285,7 @@ var studioChatMb={
                         $("#videosTab .boxcont li a.on").removeClass("on");
                         $(this).addClass("on");
                     }
+                    studioChatMb.video.change(false, true);
                     studioChatMb.video.play("studio", "mp4", $(this).attr("vUrl"), $(this).text());
                 });
             }
@@ -349,7 +350,6 @@ var studioChatMb={
                     _gaq.push(['_trackEvent', 'm_fx_studio', 'teachvideo_tab', 'content_middle',1,true]);
                 }
                 studioChatMb.setHeight();
-                $('#tVideoDiv').height($('#tVideoDiv').width()*0.55);
             }
             cenTab.slideTo($(this).index(), 300, false);
         });
@@ -749,7 +749,7 @@ var studioChatMb={
             x : 0,
             y : 0
         },
-        waveAudio:$('#voiceWaveAudio')[0],//音频audio对象
+        waveAudio:$('#voiceWaveAudio'),//音频audio对象
         /**
          * 初始化
          */
@@ -761,7 +761,7 @@ var studioChatMb={
             }
             var yyDom=$(".videopart input:first"),yc=yyDom.attr("yc"),mc=yyDom.attr("mc");
             this.$panel = $("#tVideoDiv");
-            this.$panel.css({'z-index':"inherit"}).height(this.$panel.width()*0.55);
+            this.$panel.css({'z-index':"inherit"}).height($(".videopart").width()*0.55);
             this.setEvent();
         },
         /**
@@ -772,28 +772,45 @@ var studioChatMb={
              if(!course||course.isNext||(course.courseType!=0 && common.isBlank(course.studioLink))||course.courseType==2||course.courseType==0){
                 if(isBack){
                 	studioMbPop.showMessage("目前还没有视频，详情请留意课程安排！");
+                    return;
                 }else if(course && !course.isNext && course.courseType==0){
                 	$(".videopart").hide().css({height:"0"});
-    	            studioChatMb.setHeight();
                 }else{
-                    $('#waveDiv').addClass('dn');
-                    $('#tVideoDiv').removeClass('dn');
-                    $('#tVideoDiv').removeClass('dn').height($('#tVideoDiv').width()*0.55);
-                    this.voiceWave(false);
                 	this.playMp4Vd();
                 }
             }else{
                  if(isAudio){
-                     this.voiceWave(true, course.studioLink, course.title);
+                     this.change(true);
+                     this.studioType = "yy";
+                     this.voiceWave(false, course.studioLink, course.title);
                  }else{
-                     $('#waveDiv').addClass('dn');
-                     $('#tVideoDiv').removeClass('dn');
-                     $('#tVideoDiv').removeClass('dn').height($('#tVideoDiv').width()*0.55);
-                     this.voiceWave(false);
+                     this.change(false);
                      this.play("yy", "", course.studioLink, "");
                  }
             }
             studioChatMb.setHeight();
+        },
+        /**
+         * 视频音频切换
+         * @param isAudio
+         * @param isStudio
+         */
+        change : function(isAudio, isStudio){
+            if(isAudio){
+                this.doPause();
+                $('#waveDiv').removeClass('dn');
+                $('#tVideoDiv').addClass('dn');
+                if(!isStudio){
+                    $("#backToLive").removeClass('video').html('<span>视频<br />直播</span>');
+                }
+            }else{
+                this.voiceWave(false);
+                $('#waveDiv').addClass('dn');
+                $('#tVideoDiv').removeClass('dn');
+                if(!isStudio) {
+                    $("#backToLive").addClass('video').html('<span>音频<br />直播</span>');
+                }
+            }
         },
         /**
          *随机播放MP4视频
@@ -838,6 +855,8 @@ var studioChatMb={
                     /*makeVideoPlayableInline(vDom.get(0),true);*/
                     if(!isOnlyMb){
                         vDom.trigger("pause");
+                    }else{
+                        vDom.trigger("play");
                     }
                     this.initPlayer = true;
                     this.setEventAd();
@@ -918,25 +937,12 @@ var studioChatMb={
                 .on('singleTap',function(){
                     //点击返回直播
                     studioChatMb.socket.emit('serverTime');
-                    if($("#backToLive").hasClass('video')){
-                        $('#waveDiv').removeClass('dn');
-                        $('#tVideoDiv').addClass('dn');
-                        $("#backToLive").removeClass('video').html('<span>视频<br />在线</span>');
-                        //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
-                        window.setTimeout(function(){
-                            studioChatMb.video.start(false, true);
-                        }, 1000);
-                    } else {
-                        $('#waveDiv').addClass('dn');
-                        $('#tVideoDiv').removeClass('dn').height($('#tVideoDiv').width()*0.55);
-                        $("#backToLive").addClass('video').html('<span>音频<br />在线</span>');
-                        studioChatMb.video.voiceWave(false);
-                        //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
-                        window.setTimeout(function(){
-                            studioChatMb.video.start(true, false);
-                        }, 1000);
-                    }
-                    studioChatMb.setHeight();
+                    //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
+                    window.setTimeout(function(){
+                        var isAudio = $("#backToLive").is('.video');
+                        isAudio = studioChatMb.video.studioType == 'studio' ? !isAudio : isAudio;
+                        studioChatMb.video.start(true, isAudio);
+                    }, 1000);
                 })
                 .on('swipeStart',function(){
                     studioChatMb.video.backToLivePos.x = parseInt(this.style.left) || 0;
@@ -953,19 +959,19 @@ var studioChatMb={
                 });
             /*音频图片显示隐藏*/
             $('#waveDiv .voice_ctrl .togglebtn').click(function(){
-                var $this=$(this);
-                if($('#waveDiv .voice_wave').hasClass('dn')){
+                var $this=$(this),$wave = $('#waveDiv .voice_wave');
+                if($wave.hasClass('dn')){
                     $this.removeClass('hiding');
-                    $('#waveDiv .voice_wave').removeClass('dn');
+                    $wave.removeClass('dn');
                 }else{
                     $this.addClass('hiding');
-                    $('#waveDiv .voice_wave').addClass('dn');
+                    $wave.addClass('dn');
                 }
                 studioChatMb.setHeight();
             });
             /*音频播放停止按钮事件*/
             $('#waveDiv .voice_ctrl .playbtn').click(function(){
-                studioChatMb.video.start(false, true);
+                studioChatMb.video.voiceWave($('#waveDiv').is(".stopped"));
             });
         },
         /**
@@ -1070,20 +1076,24 @@ var studioChatMb={
          * 音频播放停止事件
          */
         voiceWave:function(doPlay, voiceUrl, title){
+            var imgIdx;
             if(common.isValid(voiceUrl)){
+                imgIdx = common.randomIndex(5);
+                $('#waveImg').attr("idx", imgIdx);
                 $('#voiceWaveAudio').attr('src',voiceUrl);
             }
             if(common.isValid(title)){
                 $('#waveDiv .voice_ctrl .tit span').text(title);
             }
-            if($('#waveDiv').hasClass('stopped') && doPlay) {
+            imgIdx = imgIdx || $('#waveImg').attr("idx") || "0";
+            if(doPlay) {
                 $('#waveDiv').removeClass('stopped');
-                $('#waveImg').attr('src','/fx/theme2/img/wave4.gif');
-                studioChatMb.video.waveAudio.play();
+                $('#waveImg').attr('src','/fx/theme2/img/wave' + imgIdx + '.gif');
+                studioChatMb.video.waveAudio.trigger("play");
             }else{
                 $('#waveDiv').addClass('stopped');
-                $('#waveImg').attr('src','/fx/theme2/img/wave4.jpg');
-                studioChatMb.video.waveAudio.pause();
+                $('#waveImg').attr('src','/fx/theme2/img/wave' + imgIdx + '.jpg');
+                studioChatMb.video.waveAudio.trigger("pause");
             }
         }
     },

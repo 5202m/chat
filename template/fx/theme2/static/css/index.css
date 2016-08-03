@@ -23,7 +23,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .p0-non{font-size:0;height:0;overflow:hidden}
 
 /* img */
-.rightbar .qq i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i,.addpic-btn,.select-img i{background:url(../img/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
+.rightbar .qq i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i,.voice_ctrl .tit i,.voice_ctrl a.togglebtn i,.addpic-btn,.select-img i{background:url(../img/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
 
 /* header */
 body{font-family:'microsoft yahei','Arial'; background:#000}
@@ -387,6 +387,7 @@ body.keyboard:before { /*background:none*/}
 .voicepart.stopped .stopjpg{ display: block; }
 .voicepart.stopped .gif{ display: none; }
 .voicepart img{ vertical-align: bottom; border: 0; width: 100%; height: auto; }
+.voicepart video{display: none;}
 .voice_ctrl {  position: relative; background: #222 }
 .voice_ctrl a{ display: block; height: 40px; width: 30px; position: absolute; top: 0; z-index: 2 }
 .voice_ctrl a.playbtn{ left: 0 }
