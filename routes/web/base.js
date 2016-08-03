@@ -358,7 +358,29 @@ router.post('/login',function(req, res){
                 req.session.studioUserInfo=loginRes.userInfo;
                 req.session.studioUserInfo.clientStoreId=clientStoreId;
                 req.session.studioUserInfo.firstLogin=true;
-                res.json({isOK:true, clientGroup : loginRes.userInfo.clientGroup});
+                req.session.studioUserInfo.isLogin=true;
+                if(loginRes.userInfo.clientGroup!=constant.clientGroup.vip && loginRes.userInfo.clientGroup!=constant.clientGroup.active) {//检查账号接口同步数据
+                    studioService.checkClientGroup(loginRes.userInfo.mobilePhone, null, common.getTempPlatformKey(userSession.groupType), function (clientGroup, accountNo) {
+                        if(constant.clientGroupSeq[clientGroup]<constant.clientGroupSeq[loginRes.userInfo.clientGroup]){
+                            res.json({isOK: true, clientGroup:loginRes.userInfo.clientGroup});
+                        }else{
+                            var userInfo = {
+                                mobilePhone: loginRes.userInfo.mobilePhone,
+                                ip: common.getClientIp(req),
+                                groupType: userSession.groupType,
+                                accountNo: accountNo,
+                                clientGroup:clientGroup
+                            };
+                            studioService.checkMemberAndSave(userInfo,function(result){
+                                req.session.studioUserInfo.defGroupId=userInfo.defGroupId;
+                                req.session.studioUserInfo.clientGroup=userInfo.clientGroup;
+                                res.json({isOK: true, clientGroup:userInfo.clientGroup});
+                            });
+                        }
+                    });
+                }else{
+                    res.json({isOK: true, clientGroup:loginRes.userInfo.clientGroup});
+                }
             }else{
                 res.json(loginRes);
             }

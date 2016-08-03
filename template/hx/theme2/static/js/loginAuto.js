@@ -62,7 +62,7 @@ var LoginAuto = {
      */
     autoLogin : function(){
         var storeObj = this.get();
-        if(this.sessionUser && !this.sessionUser.isLogin && storeObj && storeObj.loginId && storeObj.autoLogin){
+        if(this.sessionUser && !this.sessionUser.isLogin && storeObj && storeObj.loginId && storeObj.autoLogin && !storeObj.doLogin){
             var params = {
                 userId : storeObj.loginId,
                 clientStoreId : storeObj.clientStoreId
@@ -89,9 +89,15 @@ var LoginAuto = {
             });
             if(loginRes.isOK){//自动登录成功
                 this.stopLoad();
+                storeObj.doLogin=true;
+                LoginAuto.set(storeObj);
                 window.location.reload();
                 return true;
             }
+        }
+        if(storeObj.doLogin){//检测是否登录过了
+            storeObj.doLogin=false;
+            LoginAuto.set(storeObj);
         }
         return false;
     },

@@ -26,6 +26,15 @@ var constant={
       register:'register',//注册用户
       visitor:'visitor'//游客
     },
+    clientGroupSeq:{//客户类别序列
+        vip:7,
+        active : 6, //真实客户-激活
+        notActive : 5, //真实客户-未激活
+        real:4,//真实用户
+        simulate:3,//模拟用户
+        register:2,//注册用户
+        visitor:1//游客
+    },
     pushInfoPosition:{//信息推送位置
         taskbar:0,//任务栏
         whBox:1,//私聊框

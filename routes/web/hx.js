@@ -71,7 +71,7 @@ router.post('/hxLogin',function(req, res){
                     if(checkAResult.flag==3){
                         clientGroup=constant.clientGroup.active;
                     }
-                    saveLoginInfo(isPwdLogin,res,req,userSession,checkAResult.mobilePhone,accountNo,null,clientStoreId,clientGroup,function(saveResult){
+                    saveLoginInfo(res,req,userSession,checkAResult.mobilePhone,accountNo,null,clientStoreId,clientGroup,function(saveResult){
                         saveResult.isOK=true;
                         res.json(saveResult);
                     });
@@ -99,10 +99,18 @@ router.post('/hxLogin',function(req, res){
                             req.session.studioUserInfo = loginRes.userInfo;
                             req.session.studioUserInfo.clientStoreId = clientStoreId;
                             req.session.studioUserInfo.firstLogin = true;
-                            res.json({isOK: true, userInfo: {clientGroup: loginRes.userInfo.clientGroup}});
+                            if(loginRes.userInfo.clientGroup!=constant.clientGroup.vip && loginRes.userInfo.clientGroup!=constant.clientGroup.active){//检查账号接口同步数据
+                                studioService.checkClientGroup(mobilePhone, null, common.getTempPlatformKey(userSession.groupType), function (clientGroup, accountNo) {
+                                    saveLoginInfo(res,req,userSession,mobilePhone,accountNo,thirdId,clientStoreId,clientGroup,function(saveResult){
+                                        res.json({isOK: true, userInfo: {clientGroup:clientGroup}});
+                                    });
+                                });
+                            }else{
+                                res.json({isOK: true, userInfo: {clientGroup: loginRes.userInfo.clientGroup}});
+                            }
                         } else {//本地库没有该客户，则通过接口验证并提取数据
                             studioService.checkClientGroup(mobilePhone, null, common.getTempPlatformKey(userSession.groupType), function (clientGroup, accountNo) {
-                                saveLoginInfo(isPwdLogin,res,req,userSession,mobilePhone,accountNo,thirdId,clientStoreId,clientGroup,function(saveResult){
+                                saveLoginInfo(res,req,userSession,mobilePhone,accountNo,thirdId,clientStoreId,clientGroup,function(saveResult){
                                     res.json(saveResult);
                                 });
                             });
@@ -119,7 +127,15 @@ router.post('/hxLogin',function(req, res){
                 req.session.studioUserInfo=loginRes.userInfo;
                 req.session.studioUserInfo.clientStoreId=clientStoreId;
                 req.session.studioUserInfo.firstLogin=true;
-                res.json({isOK:true, clientGroup : loginRes.userInfo.clientGroup});
+                if(loginRes.userInfo.clientGroup!=constant.clientGroup.vip && loginRes.userInfo.clientGroup!=constant.clientGroup.active) {//检查账号接口同步数据
+                    studioService.checkClientGroup(loginRes.userInfo.mobilePhone, null, common.getTempPlatformKey(userSession.groupType), function (clientGroup, accountNo) {
+                        saveLoginInfo(res, req, userSession, mobilePhone, accountNo, null, clientStoreId, clientGroup, function (saveResult) {
+                            res.json({isOK: true, clientGroup:clientGroup});
+                        });
+                    });
+                }else{
+                    res.json({isOK: true, clientGroup:loginRes.userInfo.clientGroup});
+                }
             }else{
                 res.json(loginRes);
             }
@@ -137,31 +153,29 @@ router.post('/hxLogin',function(req, res){
  * @param thirdId
  * @param clientStoreId
  */
-function saveLoginInfo(isPwdLogin,res,req,userSession,mobilePhone,accountNo,thirdId,clientStoreId,clientGroup,callback){
+function saveLoginInfo(res,req,userSession,mobilePhone,accountNo,thirdId,clientStoreId,clientGroup,callback){
     var userInfo = {
         mobilePhone: mobilePhone,
         ip: common.getClientIp(req),
         groupType: userSession.groupType,
         accountNo: accountNo,
-        thirdId: thirdId,
-        isPwdLogin:isPwdLogin
+        thirdId: null,
+        clientGroup:clientGroup
     };
-    studioService.studioRegisterSave(userInfo, clientGroup, function (result) {
-        if (result.isOK || isPwdLogin) {
-            req.session.studioUserInfo = {
-                groupType: userSession.groupType,
-                clientStoreId: clientStoreId,
-                firstLogin: true,
-                isLogin: true,
-                mobilePhone: userInfo.mobilePhone,
-                userId: userInfo.userId,
-                defGroupId: userInfo.defGroupId,
-                clientGroup: userInfo.clientGroup,
-                nickname: userInfo.nickname,
-                avatar:userInfo.avatar
-            };
-            result.userInfo = {clientGroup: userInfo.clientGroup};
-        }
+    studioService.checkMemberAndSave(userInfo,function(result){
+        req.session.studioUserInfo = {
+            groupType: userSession.groupType,
+            clientStoreId: clientStoreId,
+            firstLogin: true,
+            isLogin: true,
+            mobilePhone: userInfo.mobilePhone,
+            userId: userInfo.userId,
+            defGroupId: userInfo.defGroupId,
+            clientGroup: userInfo.clientGroup,
+            nickname: userInfo.nickname,
+            avatar:userInfo.avatar
+        };
+        result.userInfo = {clientGroup: userInfo.clientGroup};
         callback(result);
     });
 }

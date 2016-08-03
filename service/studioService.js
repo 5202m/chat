@@ -214,6 +214,58 @@ var studioService = {
         });
     },
     /**
+     * 检查客户信息是否存在，
+     * 1、存在则把需要与接口提取的用户数据（交易账号，账号级别）同步更新
+     * 2、不存在则视为新的记录插入
+     * @param userInfo
+     * @param callback
+     */
+    checkMemberAndSave : function(userInfo, callback){
+        var result={isOK:false,error:errorMessage.code_10};
+        member.findOne({mobilePhone:userInfo.mobilePhone,valid:1,'loginPlatform.chatUserGroup.userType':0},"loginPlatform.chatUserGroup",function (err,row) {
+            if(err){
+                logger.error("checkMemberAndSave fail:"+err);
+                callback(result);
+            }else{
+                if(row && row.loginPlatform && common.checkArrExist(row.loginPlatform.chatUserGroup)){
+                    var userGroupArr=row.loginPlatform.chatUserGroup;
+                    var currRow=userGroupArr.id(userInfo.groupType);
+                    if(currRow){
+                        result.userId=currRow.userId;
+                        userInfo.userId=currRow.userId;
+                        userInfo.nickname=currRow.nickname;
+                        userInfo.avatar=currRow.avatar;
+                        if(currRow.vipUser){//如果是mis后台内部修改为vip，则以该值为准，
+                            userInfo.clientGroup = constant.clientGroup.vip;
+                        }else{
+                            //如果是低级别的需要升级别
+                            if(constant.clientGroupSeq[currRow.clientGroup]<constant.clientGroupSeq[userInfo.clientGroup]){
+                                currRow.clientGroup=userInfo.clientGroup;
+                            }
+                            if(common.isValid(userInfo.accountNo) && common.isValid(currRow.accountNo) && !common.containSplitStr(currRow.accountNo,userInfo.accountNo)){
+                                currRow.accountNo+=','+userInfo.accountNo;//保存多个账号
+                            }
+                        }
+                        row.save(function(err){
+                            if(err){
+                                logger.error("checkMemberAndSave->update member fail!:"+err);
+                            }
+                        });
+                        result.isOK=true;
+                        callback(result);
+                    }else{
+                        result.error=errorMessage.code_1004;
+                        callback(result);
+                    }
+                }else{
+                    studioService.setClientInfo(row,userInfo,function(resultTmp){
+                        callback(resultTmp);
+                    });
+                }
+            }
+        });
+    },
+    /**
      * 判断昵称唯一
      * @param userInfo {{mobilePhone:String, groupType:String, nickname:String}}
      * @param callback (err, boolean)，true-唯一，false-不唯一
@@ -382,6 +434,7 @@ var studioService = {
                 var info=row.loginPlatform.chatUserGroup[0];
                 result.userInfo={mobilePhone:row.mobilePhone,userId:info.userId,nickname:info.nickname,avatar:info.avatar,groupType:info._id};
                 result.userInfo.clientGroup=info.vipUser?constant.clientGroup.vip:info.clientGroup;
+                result.userInfo.accountNo=info.accountNo;
                 if(type == 1 && userInfo.thirdId && !info.thirdId){ //微信直播间登录，绑定openId
                     member.update(searchObj, {
                         $set : {"loginPlatform.chatUserGroup.$.thirdId" : userInfo.thirdId}
