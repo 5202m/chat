@@ -515,12 +515,12 @@ function _setViewPrice(data, selfOptions, symbolArr){
                     percentDom.text(deltaPrice + "  " + deltaPercent + "%");
                 }
                 if (!selfOptions) {
-                    if (val.fluctuate > 0) {
+                    if (deltaPrice > 0) {
                         $("#price_" + symbol).parent().addClass("up");
                     } else {
                         $("#price_" + symbol).parent().removeClass("up");
                     }
-                    $("#deltaPrice_" + symbol).html(parseFloat(val.fluctuate).toFixed(_index_price_type));
+                    $("#deltaPrice_" + symbol).html(parseFloat(deltaPrice).toFixed(_index_price_type));
                 } else {
                     if (symbol == "XAGCNH") {
                         priceDom.html(price + '<i changeCss="true"></i>');
@@ -531,7 +531,7 @@ function _setViewPrice(data, selfOptions, symbolArr){
                     }
                     var changeCssDom = $("#price_" + symbol + " i");
                     percentDom.text(deltaPrice + "  " + deltaPercent + "%");
-                    if (val.fluctuate > 0) {
+                    if (deltaPrice > 0) {
                         if (changeCssDom.attr("changeCss") == "true") {
                             priceDom.removeClass(selfOptions.down);
                             percentDom.removeClass(selfOptions.down);
