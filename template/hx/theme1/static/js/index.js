@@ -192,10 +192,11 @@ var indexJS ={
             $(this).addClass("on");
             $(".mod_videolist .listcont .list_tab").removeClass("on").eq(index).addClass("on");
             if(index==0){
-                var option = {downCss:'hq-down',upCss:'hq-up',down:'down'};
+                var option = {downCss:'hq-down',upCss:'hq-up',down:'down'},
+                    url ='http://news1.hx9999.com/datajson/ajaxchinesedatas',
+                    symbolArr = ['GOLD','SILVER','XAUCNH','XAGCNH','USDX','CL'];
                 //每隔断时间调用下
-                var url ='http://news1.hx9999.com/datajson/ajaxchinesedatas';
-                setInterval(function(){getSymbolPriceDatas(url,option);},5000);
+                setInterval(function(){getSymbolPriceDatas(url,option,symbolArr);},5000);
                 indexJS.setListScroll('#hangqing');
             }
             if(index==1){

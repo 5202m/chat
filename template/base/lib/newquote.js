@@ -471,7 +471,7 @@ function getAllMarketpriceIndex(wsUrl, wsData, httpUrl,selfOptions) {
     }
 }
 
-function getSymbolPriceDatas(url, selfOptions){
+function getSymbolPriceDatas(url, selfOptions, symbolArr){
     $.ajax({
         url: url,
         type: "GET",
@@ -482,65 +482,67 @@ function getSymbolPriceDatas(url, selfOptions){
         beforeSend: function(){
         },
         success:function(data){
-            _setViewPrice(data, selfOptions);
+            _setViewPrice(data, selfOptions, symbolArr);
         },
         error: function(xhr){
         }
     });
 }
 
-function _setViewPrice(data, selfOptions){
+function _setViewPrice(data, selfOptions, symbolArr){
     if(data.status===0){
         var _index_price_type = 2,symbol='',deltaPrice= 0,deltaPercent= 0,price=0;
         $.each(data.data,function(key, val){
-            symbol=key;
-            deltaPrice=val.fluctuate;
-            price=val.now;
-            deltaPercent=val.Percent;
-            if (symbol == "XAGUSD"||symbol == "USDJPY" || symbol == 'SILVER') {
-                _index_price_type = 3;
-            } else if(symbol == "EURUSD"){
-                _index_price_type = 3;
-            } else{
-                _index_price_type = 2;
-            }
-            var priceDom = $("#price_" +symbol);
-            var percentDom=$("#deltaPercent_" +symbol);
-            if(symbol == "XAGCNH"){
-                priceDom.html(parseInt(price));
-                percentDom.text(deltaPercent + "%");
-            } else {
-                priceDom.html(parseFloat(price).toFixed(_index_price_type));
-                percentDom.text(deltaPercent + "%");
-            }
-            if(!selfOptions){
-                if (deltaPrice > 0) {
-                    $("#price_" +symbol).parent().addClass("up");
+            if(common.isValid(symbolArr) && $.isArray(symbolArr) && $.inArray(key, symbolArr)>-1) {
+                symbol = key;
+                deltaPrice = val.fluctuate;
+                price = val.now;
+                deltaPercent = val.Percent;
+                if (symbol == "XAGUSD" || symbol == "USDJPY" || symbol == 'SILVER') {
+                    _index_price_type = 3;
+                } else if (symbol == "EURUSD") {
+                    _index_price_type = 3;
                 } else {
-                    $("#price_" + symbol).parent().removeClass("up");
+                    _index_price_type = 2;
                 }
-                $("#deltaPrice_" +symbol).html(parseFloat(deltaPrice).toFixed(_index_price_type));
-            }else{
-                if(symbol == "XAGCNH"){
-                    priceDom.html(price + '<i changeCss="true"></i>');
-                }else {
-                    var priceFormat = parseFloat(price).toFixed(_index_price_type);
-                    priceFormat = priceFormat.toString().substring(0, priceFormat.indexOf('.')) + '<span>.' + priceFormat.toString().substring(priceFormat.indexOf('.') + 1) + '</span>';
-                    priceDom.html(priceFormat + '<i changeCss="true"></i>');
+                var priceDom = $("#price_" + symbol);
+                var percentDom = $("#deltaPercent_" + symbol);
+                if (symbol == "XAGCNH") {
+                    priceDom.html(price);
+                    percentDom.text(deltaPrice + "  " + deltaPercent + "%");
+                } else {
+                    priceDom.html(parseFloat(price).toFixed(_index_price_type));
+                    percentDom.text(deltaPrice + "  " + deltaPercent + "%");
                 }
-                var changeCssDom = $("#price_" +symbol+" i");
-                percentDom.text(deltaPrice + "  " +deltaPercent + "%");
-                if (deltaPrice > 0) {
-                    if(changeCssDom.attr("changeCss")=="true"){
-                        priceDom.removeClass(selfOptions.down);
-                        percentDom.removeClass(selfOptions.down);
-                        changeCssDom.removeClass(selfOptions.downCss).addClass(selfOptions.upCss);
+                if (!selfOptions) {
+                    if (val.fluctuate > 0) {
+                        $("#price_" + symbol).parent().addClass("up");
+                    } else {
+                        $("#price_" + symbol).parent().removeClass("up");
                     }
+                    $("#deltaPrice_" + symbol).html(parseFloat(val.fluctuate).toFixed(_index_price_type));
                 } else {
-                    if(changeCssDom.attr("changeCss")=="true"){
-                        priceDom.addClass(selfOptions.down);
-                        percentDom.addClass(selfOptions.down);
-                        changeCssDom.removeClass(selfOptions.upCss).addClass(selfOptions.downCss);
+                    if (symbol == "XAGCNH") {
+                        priceDom.html(price + '<i changeCss="true"></i>');
+                    } else {
+                        var priceFormat = parseFloat(price).toFixed(_index_price_type);
+                        priceFormat = priceFormat.toString().substring(0, priceFormat.indexOf('.')) + '<span>.' + priceFormat.toString().substring(priceFormat.indexOf('.') + 1) + '</span>';
+                        priceDom.html(priceFormat + '<i changeCss="true"></i>');
+                    }
+                    var changeCssDom = $("#price_" + symbol + " i");
+                    percentDom.text(deltaPrice + "  " + deltaPercent + "%");
+                    if (val.fluctuate > 0) {
+                        if (changeCssDom.attr("changeCss") == "true") {
+                            priceDom.removeClass(selfOptions.down);
+                            percentDom.removeClass(selfOptions.down);
+                            changeCssDom.removeClass(selfOptions.downCss).addClass(selfOptions.upCss);
+                        }
+                    } else {
+                        if (changeCssDom.attr("changeCss") == "true") {
+                            priceDom.addClass(selfOptions.down);
+                            percentDom.addClass(selfOptions.down);
+                            changeCssDom.removeClass(selfOptions.upCss).addClass(selfOptions.downCss);
+                        }
                     }
                 }
             }
