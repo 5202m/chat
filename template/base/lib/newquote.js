@@ -497,7 +497,7 @@ function _setViewPrice(data, selfOptions){
             deltaPrice=val.fluctuate;
             price=val.now;
             deltaPercent=val.Percent;
-            if (symbol == "XAGUSD"||symbol == "USDJPY") {
+            if (symbol == "XAGUSD"||symbol == "USDJPY" || symbol == 'SILVER') {
                 _index_price_type = 3;
             } else if(symbol == "EURUSD"){
                 _index_price_type = 3;
@@ -505,9 +505,14 @@ function _setViewPrice(data, selfOptions){
                 _index_price_type = 2;
             }
             var priceDom = $("#price_" +symbol);
-            priceDom.html(parseFloat(price).toFixed(_index_price_type));
             var percentDom=$("#deltaPercent_" +symbol);
-            percentDom.text((deltaPercent * 100).toFixed(2) + "%");
+            if(symbol == "XAGCNH"){
+                priceDom.html(parseInt(price));
+                percentDom.text((deltaPercent * 100).toFixed(2) + "%");
+            } else {
+                priceDom.html(parseFloat(price).toFixed(_index_price_type));
+                percentDom.text((deltaPercent * 100).toFixed(2) + "%");
+            }
             if(!selfOptions){
                 if (deltaPrice > 0) {
                     $("#price_" +symbol).parent().addClass("up");
@@ -516,9 +521,13 @@ function _setViewPrice(data, selfOptions){
                 }
                 $("#deltaPrice_" +symbol).html(parseFloat(deltaPrice).toFixed(_index_price_type));
             }else{
-                var priceFormat = parseFloat(price).toFixed(_index_price_type);
-                priceFormat = priceFormat.toString().substring(0,priceFormat.indexOf('.'))+'<span>.'+priceFormat.toString().substring(priceFormat.indexOf('.')+1)+'</span>';
-                priceDom.html(priceFormat+'<i changeCss="true"></i>');
+                if(symbol == "XAGCNH"){
+                    priceDom.html(price + '<i changeCss="true"></i>');
+                }else {
+                    var priceFormat = parseFloat(price).toFixed(_index_price_type);
+                    priceFormat = priceFormat.toString().substring(0, priceFormat.indexOf('.')) + '<span>.' + priceFormat.toString().substring(priceFormat.indexOf('.') + 1) + '</span>';
+                    priceDom.html(priceFormat + '<i changeCss="true"></i>');
+                }
                 var changeCssDom = $("#price_" +symbol+" i");
                 percentDom.text(deltaPrice + "  " +(deltaPercent * 100).toFixed(2) + "%");
                 if (deltaPrice > 0) {
