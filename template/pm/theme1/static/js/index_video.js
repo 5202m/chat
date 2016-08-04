@@ -335,8 +335,20 @@ var videos={
         /**
          * 隐藏滚动文字
          */
-        $('.newslist .newsclose').click(function(){
-            $('.mod_scrollnews').hide();
+        $('.mod_scrollnews .newsclose').click(function(){
+            $('.mod_scrollnews .newslist').hide();
+            $('.mod_scrollnews .newsbtn').show();
+            clearInterval(videos.newMarIntervalId);
+            videos.newMarIntervalId=null;
+        });
+
+        /**
+         * 显示滚动文字
+         */
+        $('.mod_scrollnews .newsbtn').click(function(){
+            $(this).hide();
+            $('.mod_scrollnews .newslist').slideDown();
+            videos.newsMarquee(true);
         });
 
         /**
@@ -431,7 +443,13 @@ var videos={
         }
         tab2.html("");
         $(tab).unbind("mouseover mouseout");
-        if(isShow && tab1.width() > newsPanel.width() - 27){
+        if(isShow){
+            var widthTmp = newsPanel.width() - 27;
+            if(tab1.width() > widthTmp){
+                widthTmp = "auto";
+            }
+            tab1.css("width", widthTmp);
+            tab2.css("width", widthTmp);
             //需要滚动
             tab2.html(tab1.html());
             /**滚动*/

@@ -841,7 +841,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .popup_box.pub_hint{ text-align: center; }
 .popup_box.pub_hint .cont{padding: 40px 60px 40px;text-align: center; font-size: 0}
 .popup_box.pub_hint h4{  font-size: 24px; line-height: 34px; font-weight: normal;}
-.popup_box.pub_hint p{  font-size: 14px; line-height: 24px; color: #333; padding: 10px 0 }
+.popup_box.pub_hint p{  font-size: 14px; line-height: 24px; color: #333; padding: 10px 0; word-break: break-all;}
 .popup_box.pub_hint .yesbtn{ display: inline-block; *display: inline; *zoom:1; width: 100px; color: #fff; font-size:16px;  height: 30px; line-height: 30px; background:#c09355; border-radius:4px; text-decoration: none; margin: 10px 5px 0; vertical-align: top;}
 .popup_box.pub_hint .yesbtn:hover{ background:#c58735;}
 
