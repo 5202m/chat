@@ -1114,9 +1114,6 @@ var studioChatMb={
                 $('#waveDiv').removeClass('stopped');
                 $('#waveImg').attr('src','/pm/theme2/img/wave' + imgIdx + '.gif');
                 studioChatMb.video.waveAudio.trigger("play");
-                window.setTimeout(function(){
-                    studioChatMb.video.waveAudio.trigger("play");
-                }, 5000);
             }else{
                 $('#waveDiv').addClass('stopped');
                 $('#waveImg').attr('src','/pm/theme2/img/wave' + imgIdx + '.jpg');
