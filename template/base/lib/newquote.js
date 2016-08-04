@@ -508,10 +508,10 @@ function _setViewPrice(data, selfOptions){
             var percentDom=$("#deltaPercent_" +symbol);
             if(symbol == "XAGCNH"){
                 priceDom.html(parseInt(price));
-                percentDom.text((deltaPercent * 100).toFixed(2) + "%");
+                percentDom.text(deltaPercent + "%");
             } else {
                 priceDom.html(parseFloat(price).toFixed(_index_price_type));
-                percentDom.text((deltaPercent * 100).toFixed(2) + "%");
+                percentDom.text(deltaPercent + "%");
             }
             if(!selfOptions){
                 if (deltaPrice > 0) {
@@ -529,7 +529,7 @@ function _setViewPrice(data, selfOptions){
                     priceDom.html(priceFormat + '<i changeCss="true"></i>');
                 }
                 var changeCssDom = $("#price_" +symbol+" i");
-                percentDom.text(deltaPrice + "  " +(deltaPercent * 100).toFixed(2) + "%");
+                percentDom.text(deltaPrice + "  " +deltaPercent + "%");
                 if (deltaPrice > 0) {
                     if(changeCssDom.attr("changeCss")=="true"){
                         priceDom.removeClass(selfOptions.down);
