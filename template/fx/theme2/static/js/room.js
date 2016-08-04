@@ -974,6 +974,10 @@ var studioChatMb={
             $('#waveDiv .voice_ctrl .playbtn').click(function(){
                 studioChatMb.video.voiceWave($('#waveDiv').is(".stopped"));
             });
+
+            $('#waveDiv .voice_playbtn').click(function(){
+                studioChatMb.video.voiceWave(true);
+            });
         },
         /**
          * 设置视频控制块事件
