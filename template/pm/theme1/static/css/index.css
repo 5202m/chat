@@ -543,7 +543,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 
 /*扫一扫*/
 .dr8 .dropcont .cont{ padding:8px 0 0;}
-.mod_menu .dr8 .dropcont{ width:203px; height:380px; top:350px;}
+.mod_menu .dr8 .dropcont{ width:203px; height:380px; top:431px;}
 .qr_box { text-align:center; padding-top:28px;}
 .qr_box img{ display:block; border:0; vertical-align:bottom; margin:0 auto; width:99px; margin:0 auto 10px}
 .qr_box span{ color:#555; font-size:14px; line-height:16px}
