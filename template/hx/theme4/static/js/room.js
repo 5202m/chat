@@ -1706,8 +1706,8 @@ var roomJS={
             html.push('<li class="clearfix push">');
             if(info.content.indexOf('img') > -1){
                 var imgSrc = $(info.content).find('img').attr('src');
-                html.push('<a href="'+imgSrc+'" data-lightbox="dialog-img">');
-                html.push('<p><img src="'+imgSrc+'" style="width:90%;height:auto;" /></p>');
+                html.push('<a href="javascript:void(0)" onclick="roomJS.showImgInWindow(this)" url="'+imgSrc+'">');
+                html.push('<p><img src="'+imgSrc+'" style="width:100%;height:auto;" /></p>');
                 html.push('</a>');
             }else {
                 html.push(info.content);
