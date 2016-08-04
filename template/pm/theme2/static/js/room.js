@@ -789,6 +789,7 @@ var studioChatMb={
             this.$panel = $("#tVideoDiv");
             this.$panel.css({'z-index':"inherit"}).height($(".videopart").width()*0.55);
             this.setEvent();
+            makeVideoPlayableInline(this.waveAudio[0]);
         },
         /**
          * 启动，只能选择播放
