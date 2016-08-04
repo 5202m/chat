@@ -402,7 +402,7 @@ var chatService ={
                                 var pushInfo = null, noticeInfo = {type:chatService.noticeType.pushInfo, data:{position:constant.pushInfoPosition.videoBox, infos : []}};
                                 for(var i = 0, lenI = pushInfos.length; i < lenI; i++){
                                     pushInfo = pushInfos[i];
-                                    noticeInfo.data.infos.push({contentId:pushInfo._id,title: pushInfo.title, pushDate:pushInfo.pushDate,pushType: pushInfo.pushType,clientGroup: pushInfo.clientGroup, intervalMin:pushInfo.intervalMin, onlineMin:pushInfo.onlineMin,content:pushInfo.content});
+                                    noticeInfo.data.infos.push({contentId:pushInfo._id,title: pushInfo.title, pushDate:pushInfo.pushDate,pushType: pushInfo.pushType,clientGroup: pushInfo.clientGroup, intervalMin:pushInfo.intervalMin, onlineMin:pushInfo.onlineMin,content:pushInfo.content,url:pushInfo.url});
                                 }
                                 socket.emit('notice',noticeInfo);
                             }

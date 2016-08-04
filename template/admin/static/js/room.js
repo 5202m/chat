@@ -78,6 +78,8 @@ var room={
      */
     setTalkTop:function(isAdd,data){
         if(isAdd){
+            var gIdDom = $("#groupInfoId");
+            var hasWh = gIdDom.attr("aw")=="true"&& common.containSplitStr(gIdDom.attr("awr"),room.userInfo.userType);
             var fromUser=data.fromUser;
             $(".mymsg").show();
             $(".mymsg em").hide();
@@ -88,7 +90,7 @@ var room={
                 talkContent = '<img src="'+data.content.value+'" />';
             }
             $(".xcont").html(talkContent);
-            $("#talk_top_id").prepend('<section class="ss-tk-info clearfix" tm="'+fromUser.publishTime+'"><label><strong>'+fromUser.nickname+'</strong>：</label><span style="margin-left:5px;text-align:justify;">'+talkContent+'</span><button type="button">关闭</button><button type="button" uid="'+fromUser.userId+'" utype="'+fromUser.userType+'" cg="'+fromUser.clientGroup+'" nk="'+fromUser.nickname+'" iswh="true">私聊</button><button type="button" uid="'+fromUser.userId+'" utype="'+fromUser.userType+'">回复</button></section>');
+            $("#talk_top_id").prepend('<section class="ss-tk-info clearfix" tm="'+fromUser.publishTime+'"><label><strong>'+fromUser.nickname+'</strong>：</label><span style="margin-left:5px;text-align:justify;">'+talkContent+'</span><button type="button">关闭</button><button type="button" uid="'+fromUser.userId+'" utype="'+fromUser.userType+'" '+(hasWh?'':'style="display:none;"')+'" cg="'+fromUser.clientGroup+'" nk="'+fromUser.nickname+'" iswh="true">私聊</button><button type="button" uid="'+fromUser.userId+'" utype="'+fromUser.userType+'">回复</button></section>');
             var pDom=$('#talk_top_id .ss-tk-info[tm='+fromUser.publishTime+']');
             pDom.find("button").click(function(){
                 var tp=$(this).parents(".ss-tk-info");

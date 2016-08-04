@@ -23,6 +23,7 @@ var mongoose = require('mongoose')
             pushDate: String,
             status: {type:Number, default:1}, //状态：0 、禁用 ；1、启动
             isExce:{type:Number, default:0},//是否执行，0否，1是
-            valid: {type:Number, default:1} //是否删除：0 、删除 ；1、正常
+            valid: {type:Number, default:1}, //是否删除：0 、删除 ；1、正常
+            url:{type:String} //跳转链接
         });
 module.exports =mongoose.model('chatPushInfo',chatPushInfoSchema,'chatPushInfo');
