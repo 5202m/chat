@@ -444,12 +444,13 @@ var videos={
         tab2.html("");
         $(tab).unbind("mouseover mouseout");
         if(isShow){
+            tab1.css("width", "auto");
+            tab2.css("width", "auto");
             var widthTmp = newsPanel.width() - 27;
-            if(tab1.width() > widthTmp){
-                widthTmp = "auto";
+            if(tab1.width() < widthTmp){
+                tab1.css("width", widthTmp);
+                tab2.css("width", widthTmp);
             }
-            tab1.css("width", widthTmp);
-            tab2.css("width", widthTmp);
             //需要滚动
             tab2.html(tab1.html());
             /**滚动*/
