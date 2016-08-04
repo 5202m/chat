@@ -145,7 +145,7 @@ var hxApiService = {
                                 if(!error && common.isValid(mt4TmpData)) {
                                     try{
                                         var mt4Data = JSON.parse(mt4TmpData);
-                                        if(0==mt4Data.status && mt4Data.data && tmpData.data.login){
+                                        if(0==mt4Data.status && mt4Data.data && mt4Data.data.login){
                                             flagResult.flag=(mt4Data.data.isActivate=='Y')?3:2;
                                             flagResult.accountNo=mt4Data.data.login;
                                         }

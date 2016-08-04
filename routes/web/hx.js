@@ -129,7 +129,7 @@ router.post('/hxLogin',function(req, res){
                 req.session.studioUserInfo.firstLogin=true;
                 if(loginRes.userInfo.clientGroup!=constant.clientGroup.vip && loginRes.userInfo.clientGroup!=constant.clientGroup.active) {//检查账号接口同步数据
                     studioService.checkClientGroup(loginRes.userInfo.mobilePhone, null, common.getTempPlatformKey(userSession.groupType), function (clientGroup, accountNo) {
-                        saveLoginInfo(res, req, userSession, mobilePhone, accountNo, null, clientStoreId, clientGroup, function (saveResult) {
+                        saveLoginInfo(res, req, userSession, loginRes.userInfo.mobilePhone, accountNo, null, clientStoreId, clientGroup, function (saveResult) {
                             res.json({isOK: true, clientGroup:clientGroup});
                         });
                     });
