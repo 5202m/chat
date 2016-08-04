@@ -232,7 +232,7 @@ var fxApiService = {
         }
         submitInfo["_signature_"]=sg;
         submitInfo['_principal_']=JSON.stringify(submitInfo['_principal_']);
-        request.post({url:(config.gwfxGTS2SmApiUrl+'/checkDemoContainActivateMobilePhone'), form: submitInfo}, function(error,response,tmpData) {
+        request.post({url:(config.gwfxGTS2SmApiUrl+'/demo/checkDemoContainActivateMobilePhone'), form: submitInfo}, function(error,response,tmpData) {
             /*logger.info("tmpDataGTS2:" + tmpData);*/
             try{
                 if (!error && common.isValid(tmpData)) {
