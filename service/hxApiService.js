@@ -6,7 +6,7 @@ var config = require('../resources/config');//引入config
 var errorMessage = require('../util/errorMessage');
 var logger = require('../resources/logConf').getLogger('hxApiService');
 /**
- * fxApi服务类
+ * hxApi服务类
  * @type {{}}
  * create by alan.wu
  */
@@ -212,7 +212,7 @@ var hxApiService = {
             countryCode:86,
             mobilePhone:mobilePhone,
             args:'[]',
-            _principal_:{loginName:mobilePhone, remoteIpAddress:'', invoker:constant.gwApiInvoker.fx_website.key, companyId:2}
+            _principal_:{loginName:mobilePhone, remoteIpAddress:'', invoker:constant.gwApiInvoker.hx_website.key, companyId:2}
         };
         var sg=this.getApiSignature(submitInfo);
         if(!sg){
@@ -221,7 +221,7 @@ var hxApiService = {
         }
         submitInfo["_signature_"]=sg;
         submitInfo['_principal_']=JSON.stringify(submitInfo['_principal_']);
-        request.post({url:(config.gwfxGTS2SmApiUrl+'/checkDemoContainActivateMobilePhone'), form: submitInfo}, function(error,response,tmpData) {
+        request.post({url:(config.hxGTS2SmApiUrl+'/checkDemoContainActivateMobilePhone'), form: submitInfo}, function(error,response,tmpData) {
             /*logger.info("tmpDataGTS2:" + tmpData);*/
             try{
                 if (!error && common.isValid(tmpData)) {
