@@ -435,6 +435,21 @@ var common = {
      */
     isStudio:function(groupType){
         return groupType && groupType.indexOf("studio")!=-1;
+    },
+    /**
+     * 设置浏览器跨域
+     * @param req
+     * @param res
+     */
+    setCrossDomain:function(req, res){
+        /**IE设置跨域*/
+        if(req.headers["user-agent"].toLowerCase().indexOf("msie") > 0){
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Headers", "X-Requested-With");
+            res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+            res.header("X-Powered-By",' 3.2.1');
+            res.header("P3P","CP=CAO PSA OUR");//处理ie跨域问题
+        }
     }
 };
 //导出类

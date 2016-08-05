@@ -53,6 +53,7 @@ function getRredirctUrl(req, platform){
  * 直播间页面入口
  */
 router.get('/', function(req, res) {
+    common.setCrossDomain(req, res);
     var chatUser=req.session.studioUserInfo,clientGroup=constant.clientGroup.visitor;
     var targetGType=getGroupType(req);
     var openId = req.query["userId"];
