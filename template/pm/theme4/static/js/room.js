@@ -789,7 +789,7 @@ var studioChatMb={
          * 启动，只能选择播放
          */
         start : function(isBack){
-            var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime);
+            var course=common.getSyllabusPlan(studioChatMb.syllabusData,studioChatMb.serverTime,false,true);
              if(!course||course.isNext||(course.courseType!=0 && common.isBlank(course.studioLink))||course.courseType==2||course.courseType==0){
                 if(isBack){
                 	studioMbPop.showMessage("目前还没有视频直播，详情请留意直播间的课程安排！");
@@ -893,7 +893,7 @@ var studioChatMb={
                             rtmp: {
                                 proxyType: 'best',
                                 url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
-                                netConnectionUrl: urlGroupArr[1]
+                                netConnectionUrl: "rtmps://5748416443938.streamlock.net/live"//urlGroupArr[1]
                             }
                         },
                         onError: function (e) {

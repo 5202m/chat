@@ -45,7 +45,7 @@
                     panelVideo.get(0).appendChild(script);
                 } else { //在线视频
                     if (this.url.indexOf("rtmp") != -1) {
-                        var urlGroupArr = /(.*)\/([0-9]+)$/g.exec(url);
+                        var urlGroupArr = /(.*)\/([0-9]+)$/g.exec(this.url);
                         if (!urlGroupArr || urlGroupArr.length < 3) {
                             return;
                         }
@@ -59,7 +59,7 @@
                                 rtmp: {
                                     proxyType: 'best',
                                     url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
-                                    netConnectionUrl: urlGroupArr[1]
+                                    netConnectionUrl: "rtmps://5748416443938.streamlock.net/live"//urlGroupArr[1]
                                 }
                             },
                             onError: function (e) {

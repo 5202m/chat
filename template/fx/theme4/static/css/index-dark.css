@@ -171,10 +171,10 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .talk-infobox .admin .uname strong{ color:#d49f56}
 .talk-infobox .me-li .detail{ text-align:right}
 .talk-infobox .me-li .uname{ clear:both; float:right;padding-right:35px}
-.talk-infobox .dialog{ clear:both; background:#fff; line-height:20px; border-radius:10px;padding:3px 10px; position:relative; color:#dfdfdf; font-size:12px;text-align:left; float:left; white-space: normal; word-break: break-all;}
+.talk-infobox .dialog{ clear:both; background:#353739; line-height:20px; border-radius:10px;padding:3px 10px; position:relative; color:#dfdfdf; font-size:12px;text-align:left; float:left; white-space: normal; word-break: break-all;}
 .talk-infobox .dialog a{color:#6aa3fc !important}
 .talk-infobox .dialog em.ruleTipStyle{color:#d75a5a;font-size:12px;margin-left:5px;font-style:normal}
-.talk-infobox .dialog::after{ display:block; content:''; height:0; width:0; border-style:solid; border-width:5px; border-color:#fff transparent transparent transparent; left:8px; top:-9px; position:absolute; }
+.talk-infobox .dialog::after{ display:block; content:''; height:0; width:0; border-style:solid; border-width:5px; border-color:#353739 transparent transparent transparent; left:8px; top:-9px; position:absolute;-webkit-transform: rotate(180deg);-o-transform: rotate(180deg);-ms-transform: rotate(180deg);transform: rotate(180deg);}
 .talk-infobox .visitor-li .dialog{background:#fff;}
 .talk-infobox .visitor-li .dialog::after{border-color:#fff transparent transparent transparent;}
 .talk-infobox .admin .dialog{background:#353739;color:#dfdfdf}

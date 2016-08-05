@@ -370,7 +370,7 @@ var common = {
     /**
      * 提取课程数据
      */
-    getSyllabusPlan:function(data,serverTime, isAudio){
+    getSyllabusPlan:function(data,serverTime, isAudio, isHttps){
         if(!data||!data.courses){
             return null;
         }
@@ -378,7 +378,7 @@ var common = {
         var getSLink=function(studioLinkTmp,studioType){
             if(studioLinkTmp){
                 var isMb=common.isMobile();
-                var linkTmp=null;
+                var linkTmp;
                 if(typeof studioLinkTmp !='object'){
                     studioLinkTmp=JSON.parse(studioLinkTmp);
                 }
@@ -387,6 +387,12 @@ var common = {
                     if(isMb){
                         if(studioType==1 && ((!isAudio  && linkTmp.code==3) || (isAudio  && linkTmp.code==4))){
                             return linkTmp.url;
+                        }
+                    }else if(isHttps) {
+                        if(studioType==1 && linkTmp.code==3){
+                            var urlTmp = linkTmp.url || "";
+                            urlTmp = urlTmp.replace(/^http:/, "rtmps:").replace(/\/playlist\.m3u8$/, "");
+                            return urlTmp;
                         }
                     }else{
                         if(linkTmp.code==studioType){
@@ -689,10 +695,15 @@ var common = {
     },
     /**
      * 判断客户端是否手机
-     * @param req
      */
     isMobile : function(){
         return /(iphone|ipod|ipad|android|mobile|playbook|bb10|meego)/.test(navigator.userAgent.toLowerCase());
+    },
+    /**
+     * 判断客户端是否https协议
+     */
+    isHTTPS : function(){
+        return /^https:\/\//.test(location.href);
     },
     /**
      * 对象copy

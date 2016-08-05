@@ -288,7 +288,7 @@ var videos={
     /**
      * 设置直播视频
      * @param url
-     * @param courseType
+     * @param courseType rtmps://html1.phgse.cn:1935/live/10
      */
     setStudioVideoDiv:function(url,courseType){
         $("#nextCourse").hide();
@@ -308,7 +308,7 @@ var videos={
                     rtmp: {
                         proxyType: 'best',
                         url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
-                        netConnectionUrl: urlGroupArr[1]
+                        netConnectionUrl: "rtmps://5748416443938.streamlock.net/live"//urlGroupArr[1]
                     }
                 },
                 onError:function(e){
