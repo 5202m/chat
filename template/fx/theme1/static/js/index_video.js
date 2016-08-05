@@ -355,19 +355,23 @@ var videos={
          * 点击显示详细内容
          */
         $("#newscont1 a").live("click", function(){
-            $("#popMsgTit").text($(this).attr("title"));
-            $("#popMsgTxt").html($(this).data("content") || "没有内容");
-            $("#popMsgBox,.blackbg").show();
-            indexJS.setListScroll(".popMsgBox");
-            return false;
+            if($(this).attr('url')==='false') {
+                $("#popMsgTit").text($(this).attr("title"));
+                $("#popMsgTxt").html($(this).data("content") || "没有内容");
+                $("#popMsgBox,.blackbg").show();
+                indexJS.setListScroll(".popMsgBox");
+                return false;
+            }
         });
 
         /**
          * 点击显示详细内容
          */
         $("#newscont2 a").live("click", function(){
-            $("#newscont1 a[tid='" + $(this).attr('tid') + "']").trigger("click");
-            return false;
+            if($(this).attr('url')==='false') {
+                $("#newscont1 a[tid='" + $(this).attr('tid') + "']").trigger("click");
+                return false;
+            }
         });
     },
     /**
@@ -392,12 +396,21 @@ var videos={
             var tids = newsPanel.find('a[tid="' + data.id+'"]');
             if(data.isValid){
                 if(tids.size()>0){ //修改
-                    tids.attr('title' ,data.title )
-                        .html('<i></i><span>'+data.title+'</span>')
-                        .data('content', data.content);
+                    if(common.isValid(data.url)){
+                        tids.attr({'title': data.title, 'href':data.url,'url':'true'})
+                            .html('<i></i><span>' + data.title + '</span>');
+                    }else {
+                        tids.attr({'title': data.title,'url':'false'})
+                            .html('<i></i><span>' + data.title + '</span>')
+                            .data('content', data.content);
+                    }
                 }else{  //新增
-                    var title = $('<a href="javascript:void();" tid="'+data.id+'" title="'+data.title+'" target="_blank"><i></i><span>'+data.title+'</span></a>');
-                    title.data('content', data.content);
+                    var title = $('<a href="javascript:void(0);" tid="' + data.id + '" title="' + data.title + '" target="_blank"><i></i><span>' + data.title + '</span></a>');
+                    if(common.isValid(data.url)) {
+                        title.attr({'href':data.url,'url':'true'});
+                    }else{
+                        title.attr({'url':'false'}).data('content', data.content);
+                    }
                     newsPanel.append(title);
                 }
             }else{
@@ -412,8 +425,12 @@ var videos={
                     for(var i = 0 ;i<count ; i++){
                         if(indexJS.userInfo.clientGroup && data.infos[i].clientGroup && $.inArray(indexJS.userInfo.clientGroup, data.infos[i].clientGroup)>-1){
                             if(data.infos[i].pushType == 1 && data.infos[i].contentId && data.infos[i].title){
-                                title = $('<a href="javascript:void(0)" tid="'+data.infos[i].contentId+'" title="'+data.infos[i].title+'" target="_blank"><i></i><span>'+data.infos[i].title+'</span></a>');
-                                title.data('content', data.infos[i].content);
+                                if(common.isValid(data.infos[i].url)){
+                                    title = $('<a href="'+data.infos[i].url+'" url="true" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank"><i></i><span>' + data.infos[i].title + '</span></a>');
+                                }else {
+                                    title = $('<a href="javascript:void(0);" url="false" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank"><i></i><span>' + data.infos[i].title + '</span></a>');
+                                    title.data('content', data.infos[i].content);
+                                }
                                 newsPanel.append(title);
                             }
                         }
