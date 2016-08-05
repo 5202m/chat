@@ -74,7 +74,7 @@ router.get('/', function(req, res) {
             }
             res.redirect(getGroupType(req,true)+getRredirctUrl(req, "wechat"));
         });
-        logger.info("【WECHAT-ENTRY】openid="+openId + " url=" + getGroupType(req,true)+getRredirctUrl(req, "wechat"));
+        //logger.info("【WECHAT-ENTRY】openid="+openId + " url=" + getGroupType(req,true)+getRredirctUrl(req, "wechat"));
         return;
     }else if(chatUser && chatUser.isLogin){
         clientGroup=chatUser.clientGroup;
