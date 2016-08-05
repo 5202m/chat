@@ -62,7 +62,10 @@ var LoginAuto = {
      */
     autoLogin : function(){
         var storeObj = this.get();
-        if(this.sessionUser && !this.sessionUser.isLogin && storeObj && storeObj.loginId && storeObj.autoLogin && !storeObj.doLogin){
+        if(!storeObj){
+            return false;
+        }
+        if(this.sessionUser && !this.sessionUser.isLogin && storeObj.loginId && storeObj.autoLogin && !storeObj.doLogin){
             var params = {
                 userId : storeObj.loginId,
                 clientStoreId : storeObj.clientStoreId
