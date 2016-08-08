@@ -372,15 +372,17 @@ var chatService ={
                             pushInfoService.checkPushInfo(userInfo.groupType,userInfo.groupId,userInfo.clientGroup,constant.pushInfoPosition.whBox,true,function(pushInfos){
                                  if(pushInfos && pushInfos.length > 0){
                                      var pushInfo = pushInfos[0];
-                                     var noticeInfo={type:chatService.noticeType.pushInfo,data:{publishTime:((new Date().getTime()+pushInfo.onlineMin*60*1000)+"_"+process.hrtime()[1]),contentId:pushInfo._id,position:pushInfo.position,timeOut:pushInfo.onlineMin,content:pushInfo.content}};
-                                     if(pushInfo.replyRepeat==0){
-                                         messageService.existRecord({"toUser.talkStyle": 1,"toUser.userType":3,"toUser.questionId":pushInfo._id},function(hasRecord){
-                                             if(!hasRecord){
-                                                 socket.emit('notice',noticeInfo);
-                                             }
-                                         });
-                                     }else{
-                                         socket.emit('notice',noticeInfo);
+                                     if(pushInfo.clientGroup && userInfo.clientGroup && common.containSplitStr(pushInfo.clientGroup.join(","), userInfo.clientGroup)){
+                                         var noticeInfo={type:chatService.noticeType.pushInfo,data:{publishTime:((new Date().getTime()+pushInfo.onlineMin*60*1000)+"_"+process.hrtime()[1]),contentId:pushInfo._id,position:pushInfo.position,timeOut:pushInfo.onlineMin,content:pushInfo.content}};
+                                         if(pushInfo.replyRepeat==0){
+                                             messageService.existRecord({"toUser.talkStyle": 1,"toUser.userType":3,"toUser.questionId":pushInfo._id},function(hasRecord){
+                                                 if(!hasRecord){
+                                                     socket.emit('notice',noticeInfo);
+                                                 }
+                                             });
+                                         }else{
+                                             socket.emit('notice',noticeInfo);
+                                         }
                                      }
                                  }
                             });
