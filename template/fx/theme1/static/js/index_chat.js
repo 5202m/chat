@@ -214,7 +214,10 @@ var chat={
             $(this).val("");
         });
         //私聊框拖拽
-        $( ".pletter_win" ).draggable({handle: ".wh_drag" });
+        $( ".pletter_win").css({
+            top : $(window).height() / 2 - 218,
+            left : $(window).width() / 2 - 310
+        }).draggable({handle: ".wh_drag", cursor: "move" ,containment: "document", scroll: false });
     },
     /**
      * 设置并压缩图片
@@ -906,7 +909,7 @@ var chat={
     setWhVisitors:function(clientGroup,userType,userId,nickname,avatar,isOnline,isShowNum){
         if($(".mult_dialog a[uid="+userId+"]").length==0){
             var avObj=this.getAImgOrLevel(userId, clientGroup?clientGroup:$("#userListId li[id='"+userId+"']").attr("cg"),userType,avatar);
-            $(".mult_dialog").append('<a href="javascript:" uid="'+userId+'" utype="'+userType+'" class="on"><div class="headimg '+avObj.level+'">'+avObj.aImg+'<b></b></div><label>'+nickname+'</label><i class="num dn" t="0"></i><i class="close"></i></a>');
+            $(".mult_dialog").append('<a href="javascript:" uid="'+userId+'" utype="'+userType+'" class=""><div class="headimg '+avObj.level+'">'+avObj.aImg+'<b></b></div><label>'+nickname+'</label><i class="num dn" t="0"></i><i class="close"></i></a>');
             var liDom=$('.mult_dialog a[uid='+userId+']');
             if(isShowNum) {
                 var numDom = liDom.find(".num"), num = parseInt(numDom.attr("t")) + 1;
@@ -1036,9 +1039,11 @@ var chat={
                 $('#userListId li[id=' + userId + '] a.uname span i').text(parseInt(iNo)+1);
             }
             $('#userListId li[id=' + userId + ']').attr("k", 1);
-            this.whTipInterId = setInterval(function () {
-                $('#userListId li[k=1]').toggleClass("tip_mrg");
-            }, 1000);
+            if(!this.whTipInterId){
+                this.whTipInterId = setInterval(function () {
+                    $('#userListId li[k=1]').toggleClass("tip_mrg");
+                }, 1000);
+            }
         }
     },
     /**
@@ -1046,7 +1051,7 @@ var chat={
      */
     closeWhTip:function(userId){
         $('#userListId li[id='+userId+']').attr("k",0).removeClass("tip_mrg").find("a.uname span i").text('');
-        if($('#userListId[k=1]').length==0){
+        if($('#userListId li[k=1]').length==0){
             if(this.whTipInterId){
                 clearInterval(this.whTipInterId);
                 this.whTipInterId=null;

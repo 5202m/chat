@@ -777,7 +777,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 
 
 /*私信窗口*/
-.pletter_win{ width:620px; height:436px;box-shadow:0 0 8px rgba(0,0,0,.5);position:fixed; right:50%; margin-right:-310px; top:50%; margin-top:-218px; z-index:19999; overflow:hidden}
+.pletter_win{ width:620px; height:436px;box-shadow:0 0 8px rgba(0,0,0,.5);position:fixed; left:0; top:0; z-index:19999; overflow:hidden}
 .pletter_win .tit{height:39px; line-height:39px; text-indent:16px; font-size:14px; color:#666; background:#f5f5f5 }
 .pletter_win .cont{ position:relative; float:right; width:500px; background:#fff; border-top-right-radius:3px;border-bottom-right-radius:3px;}
 .pletter_win .mult_dialog{float:left; width:110px; padding:10px 5px 0;height:100%; background:#4774b3; border-top-left-radius:3px;border-bottom-left-radius:3px;}

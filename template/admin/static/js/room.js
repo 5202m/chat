@@ -655,7 +655,7 @@ var room={
                 $(".wh_out_div .wh_tab_ul li:first").click();
             }
         });
-        $('.open_wh_box').draggable({handle: ".box_title"}).resizable({minWidth: 550,minHeight:450,maxWidth:1600,maxHeight:900});
+        $('.open_wh_box').draggable({handle: ".box_title", cursor: "move" ,containment: "document", scroll: false}).resizable({minWidth: 550,minHeight:450,maxWidth:1600,maxHeight:900});
         $('.open_wh_box').resize(function(e){
             room.widthCheck();
             room.heightCalcu();

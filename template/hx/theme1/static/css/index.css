@@ -5240,10 +5240,8 @@ body {
     height: 436px;
     box-shadow: 0 0 8px rgba(0, 0, 0, .5);
     position: fixed;
-    right: 50%;
-    margin-right: -310px;
-    top: 50%;
-    margin-top: -218px;
+    left:0;
+    top:0;
     z-index: 20003;
     overflow: hidden
 }
