@@ -850,7 +850,7 @@ var studioChatMb={
                     var loc_item = this.$panel.find("video");
                     loc_item.trigger("pause");
                     loc_item.attr("src", url);
-                    loc_item[0].trigger("play");
+                    loc_item.trigger("play");
                 }else {
                     var bf=$("body").attr("fp"), isOnlyMb=('webui'!=bf && 'app'!=bf);
                     this.$panel.append('<video src="' + url + '" webkit-playsinline controls="true" autoplay="'+isOnlyMb+'" style="width: 100%; height: 100%; background-color: rgb(0, 0, 0);"></video>');
