@@ -2795,6 +2795,7 @@ body {
     border-top: 0;
     height: 900px;
     z-index: 1000;
+    overflow: hidden;
 }
 
 .mod_menu .dropitem > a {
