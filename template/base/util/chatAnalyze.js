@@ -58,6 +58,15 @@ UUID.rand = function(max) {
 var chatAnalyze = {
     COOKIE_NAME:'GWAFLGPHONECOOIKETRACK',
     localHref:window.location.href,
+    utmStore:{//utm 数据统计全局数据
+        ip:'',
+        storeKey:'utmKey',//userId key
+        userId:'',//用户id
+        roomId:'',//房间编号
+        speakCount:0,//发言条数
+        onlineSTM:new Date().getTime(),//上线开始时间
+        onlineETM:0//上线结束时间
+    },
     /**
      * 初始化
      */
@@ -78,8 +87,6 @@ var chatAnalyze = {
             this.setGA();
             this.setBaidu();
         }
-        //引入utm分析
-        //this.setUTM();
     },
     //初始化GA
     initGA : function(type){
@@ -134,61 +141,108 @@ var chatAnalyze = {
         }
     },
     /**
+     * 获取ip
+     * @param callback
+     */
+    getIp:function(callback){
+        $.getJSON('http://chaxun.1616.net/s.php?type=ip&output=json&callback=?&_='+ Math.random(), function(datas) {
+            chatAnalyze.utmStore.ip=datas.Ip;
+            if(callback){
+                callback();
+            }
+        });
+    },
+    /**
      * 设置utm系统所需行为
      */
-    setUTM:function(flagTmp){
+    setUTM:function(init,data){
         try{
-            var c = this.getCookie();
-            if (c == null || typeof (c) == "undefined" || $.trim(c) == "") {
-                c=UUID.prototype.createUUID();
-                this.setCookie(c);
-            }
-            var flag=flagTmp||'';
-            _gaq.push(function() {
-                $.getJSON('http://chaxun.1616.net/s.php?type=ip&output=json&callback=?&_='+ Math.random(), function(datas) {
-                    var sendData={data:[{user_id: c,businessPlatform:"2",visit_time:new Date(),behavior_type:6
-                        ,ip:datas.Ip,url:chatAnalyze.localHref,flag:flag,gacookiesTrack:'' }]};
-                    var sendUrl =chatAnalyze.localHref.indexOf("pmchat.24k.hk") != -1? "http://utm.gwfx.com/putData/ajax/ajaxTrackData": "http://testweb.gwfx.com:8088/GwUserTrackingManager_NEW/putData/ajax/ajaxTrackData";
-                    $.ajax({
-                        async : true,
-                        url : sendUrl,
-                        cache : false,
-                        dataType : 'jsonp',
-                        data : {
-                            data : sendData
-                        },
-                        success : function(t) {}
-                    });
+            this.getIp();
+            if(init){
+                this.utmStore.roomId=data.groupId;
+                this.utmStore.userId=data.userId;
+                this.utmStore.userTel=data.userTel;
+                this.utmStore.clientGroup=data.clientGroup;
+                $(window).unload(function(){
+                    chatAnalyze.utmStore.onlineETM=new Date().getTime();
+                    chatAnalyze.sendUTM(null);
+                    window.event.returnValue=true;
                 });
-            });
+            }else{
+                if(data.speakCount){
+                    this.utmStore.speakCount+=data.speakCount;
+                }else{
+                    if(chatAnalyze.utmStore.ip){
+                        chatAnalyze.sendUTM(data);
+                    }else{
+                        this.getIp(function(){
+                            chatAnalyze.sendUTM(data);
+                        });
+                    }
+                }
+            }
         }catch(e){
             console.log("Set UTM fail!"+e);
         }
     },
-    setCookie : function(cval) {
-        this.setHC(this.COOKIE_NAME, cval);
+    /**
+     * utm AJAX
+     * @param url
+     */
+    utmAjax:function(url,sendData,async){
+        $.ajax({
+            async : async,
+            url : url+'?t='+new Date().getTime(),
+            cache : false,
+            dataType : (async?'jsonp':'json'),
+            data : {data:JSON.stringify(sendData)},
+            success : function(t) {}
+        });
     },
-    getCookie : function() {
-        var cval = this.getHC(this.COOKIE_NAME);
-        if (typeof (cval) != 'undefined' && cval != null && cval != '') {
-            this.setCookie(cval);
-        }
-        return cval;
-    },
-    setHC : function(cname, cval) {
-        if (typeof (cval) != "undefined") {
-            document.cookie = cname+ '=; expires=Mon, 20 Sep 2010 00:00:00 UTC; path=/;domain=.24k.hk';
-            document.cookie = cname+ '='+ escape(cval)+ '; expires=Tue, 31 Dec 2030 00:00:00 UTC; path=/;domain=.24k.hk';
-        }
-    },
-    getHC : function(cname) {
-        var strCookie = document.cookie;
-        var arrCookie = strCookie.split(/[;&]/);
-        for ( var i = 0; i < arrCookie.length; i++) {
-            var arr = arrCookie[i].split("=");
-            if ($.trim(arr[0]) == $.trim(cname)) {
-                return arr[1];
+    /**
+     * 发送utm数据
+     */
+    sendUTM:function(data){
+        try{
+            if (!store.enabled){
+                console.log('Local storage is not supported by your browser.');
+                return;
             }
+            var tmpData=chatAnalyze.utmStore;
+            var userId=store.get(tmpData.storeKey);
+            if(!userId){
+                userId=UUID.prototype.createUUID();
+                store.set(tmpData.storeKey,userId);
+            }
+            var sendData={
+                userId:userId,
+                customerType: tmpData.clientGroup,
+                ip:tmpData.ip,
+                businessPlatform:tmpData.roomId.indexOf('fx')!=-1?1:2,
+                platformType:(common.isMobile()?1:0),
+                roomId:tmpData.roomId
+            };
+            if(tmpData.userTel){
+                sendData.operationTel=tmpData.userTel;
+            }else{
+                sendData.visitorId=tmpData.userId;
+            }
+            var sendUrl="http://testweb.gwfx.com:8088/GwUserTrackingManager_NEW/put/insertChart";//http://das.gwfx.com/put/insertChar
+            if(data && data.courseId){
+                sendData.courseId=data.courseId;
+                this.utmAjax(sendUrl,sendData,true);
+            }else{
+                sendData.startDateTime=tmpData.onlineSTM;
+                sendData.endDateTime=tmpData.onlineETM;
+                sendData.speakCount=tmpData.speakCount;
+                if(navigator.sendBeacon){
+                    navigator.sendBeacon(sendUrl+"Close",JSON.stringify(sendData));
+                }else{
+                    this.utmAjax(sendUrl,sendData,false);
+                }
+            }
+        }catch(e){
+            console.log("send UTM fail!"+e);
         }
     }
 };

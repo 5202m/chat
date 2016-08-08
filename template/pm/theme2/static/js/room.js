@@ -314,6 +314,7 @@ var studioChatMb={
                     }
                     studioChatMb.video.change(false, true);
                     studioChatMb.video.play("studio", "mp4", $(this).attr("vUrl"), $(this).text());
+                    chatAnalyze.setUTM(false,{courseId:$(this).attr("id")});//统计教学视频点击数
                 });
             }
             studioChatMb.video.start(false, true);
@@ -530,6 +531,7 @@ var studioChatMb={
             }
             //清空输入框
             $("#contentText").html("").trigger("input");//清空内容
+            chatAnalyze.setUTM(false,{speakCount:1});//统计发言次数
         });
 
         /**

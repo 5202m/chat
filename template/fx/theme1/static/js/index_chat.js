@@ -168,6 +168,7 @@ var chat={
             chat.setContent(sendObj,true,false);//直接把数据填入内容栏
             //清空输入框
             $("#contentText").html("");//清空内容
+            chatAnalyze.setUTM(false,{speakCount:1});//统计发言次数
         });
         //发送图片--选择图片
         $("#sendImgBtn").click(function () {

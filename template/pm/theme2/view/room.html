@@ -214,6 +214,7 @@
         studioChatMb.visitorSpeak=('<%- visitorSpeak%>'=='true');
         studioChatMb.fromPlatform='<%- fromPlatform%>';
         studioChatMb.init();
+        chatAnalyze.setUTM(true,$.extend({userTel:'<%= userSession.mobilePhone %>'}, studioChatMb.userInfo));
     });
     lightbox.option({
         'resizeDuration': 200,

@@ -64,6 +64,7 @@ var videos={
                         }
                     });
                     indexJS.setListScroll('#tvInfoId');//设置滚动
+                    chatAnalyze.setUTM(false,{courseId:vdId});//统计教学视频点击数
                 });
             }
             if(isInit){

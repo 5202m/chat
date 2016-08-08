@@ -286,6 +286,7 @@
     indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
     indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
     indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
+    chatAnalyze.setUTM(true,$.extend({userTel:'<%= userSession.mobilePhone %>'}, indexJS.userInfo));
     function widthCheck(){
         var ww = $(window).width();
         if(ww <= 1680 ){
@@ -293,7 +294,7 @@
             if(ww < 1440 ){
                 $('body').addClass('wid2');
                 if(ww < 1281 ){
-                    $('body').addClass('wid3')
+                    $('body').addClass('wid3');
                 }
             }
         }
