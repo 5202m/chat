@@ -68,12 +68,19 @@ var chatAnalyze = {
         onlineETM:0//上线结束时间
     },
     /**
+     * 是否本地访问
+     * @returns {boolean}
+     */
+    isLocalHref:function(){
+       return /^https?:\/\/(\d{1,3}\.){3}\d{1,3}.+/.test(chatAnalyze.localHref);
+    },
+    /**
      * 初始化
      */
     init:function(){
         //引入GA分析
-        var type = "";
-        if(!/^https?:\/\/(\d{1,3}\.){3}\d{1,3}.+/.test(chatAnalyze.localHref)){
+        if(!this.isLocalHref()){
+            var type = "";
             if(chatAnalyze.localHref.indexOf("/studio")!=-1){
                 type = "studio";
             }else if(chatAnalyze.localHref.indexOf("/fxstudio")!=-1){
@@ -81,11 +88,11 @@ var chatAnalyze = {
             }else if(chatAnalyze.localHref.indexOf("/hxstudio")!=-1){
                 type = "hxstudio"
             }
-        }
-        if(type!="") {
-            this.initGA(type);
-            this.setGA();
-            this.setBaidu();
+            if(type!="") {
+                this.initGA(type);
+                this.setGA();
+                this.setBaidu();
+            }
         }
     },
     //初始化GA
@@ -227,7 +234,7 @@ var chatAnalyze = {
             }else{
                 sendData.visitorId=tmpData.userId;
             }
-            var sendUrl="http://testweb.gwfx.com:8088/GwUserTrackingManager_NEW/put/insertChart";//http://das.gwfx.com/put/insertChar
+            var sendUrl=this.isLocalHref()?"http://testweb.gwfx.com:8088/GwUserTrackingManager_NEW/put/insertChart":"http://das.gwfx.com/put/insertChart";
             if(data && data.courseId){
                 sendData.courseId=data.courseId;
                 this.utmAjax(sendUrl,sendData,true);
