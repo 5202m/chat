@@ -380,7 +380,7 @@ var videos={
      */
     rollNews : function(data){
         var newsPanel = $('#newscont1');
-        if(data.delete){
+        if(data["delete"]){
             var ids = data.ids.split(',');
             if(ids.length>0){
                 for(var i=0;i<ids.length;i++){
