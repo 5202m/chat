@@ -16,7 +16,7 @@ UUID.prototype.valueOf = function() {
 UUID.prototype.toString = function() {
     return this.id;
 };
-UUID.prototype.createUUID = function() {
+UUID.prototype.createUUID = function(prefix) {
     var dg = new Date(1582, 10, 15, 0, 0, 0, 0);
     var dc = new Date();
     var t = dc.getTime() - dg.getTime();
@@ -30,7 +30,7 @@ UUID.prototype.createUUID = function() {
         + UUID.getIntegerBits(UUID.rand(8191), 0, 7)
         + UUID.getIntegerBits(UUID.rand(8191), 8, 15)
         + UUID.getIntegerBits(UUID.rand(8191), 0, 15);
-    return "G"+tl + tm + thv + csar + csl + n;
+    return (prefix||'')+tl + tm + thv + csar + csl + n;
 };
 UUID.getIntegerBits = function(val, start, end) {
     var base16 = UUID.returnBase(val, 16);
@@ -60,9 +60,10 @@ var chatAnalyze = {
     localHref:window.location.href,
     utmStore:{//utm 数据统计全局数据
         ip:'',
-        storeKey:'utmKey',//userId key
+        storeKey:'utmKey_',//userId key
         userId:'',//用户id
         roomId:'',//房间编号
+        groupType:'',//房间大类
         speakCount:0,//发言条数
         onlineSTM:new Date().getTime(),//上线开始时间
         onlineETM:0//上线结束时间
@@ -170,6 +171,7 @@ var chatAnalyze = {
                 this.utmStore.userId=data.userId;
                 this.utmStore.userTel=data.userTel;
                 this.utmStore.clientGroup=data.clientGroup;
+                this.utmStore.groupType=data.groupType;
                 $(window).unload(function(){
                     chatAnalyze.utmStore.onlineETM=new Date().getTime();
                     chatAnalyze.sendUTM(null);
@@ -216,16 +218,28 @@ var chatAnalyze = {
                 return;
             }
             var tmpData=chatAnalyze.utmStore;
-            var userId=store.get(tmpData.storeKey);
+            if(!tmpData.roomId||!tmpData.groupType){
+                return;
+            }
+            if(!tmpData.userTel && !tmpData.userId){
+                var st=store.get('storeInfo_'+tmpData.groupType);
+                if(!st){
+                   return;
+                }
+                tmpData.userId=st.userId;
+            }
+            var key=tmpData.storeKey+tmpData.groupType;
+            var bPlatform=tmpData.groupType.indexOf('fx')!=-1?1:2;
+            var userId=store.get(key);
             if(!userId){
-                userId=UUID.prototype.createUUID();
-                store.set(tmpData.storeKey,userId);
+                userId=UUID.prototype.createUUID(bPlatform==1?'':'G');
+                store.set(key,userId);
             }
             var sendData={
                 userId:userId,
                 customerType: tmpData.clientGroup,
                 ip:tmpData.ip,
-                businessPlatform:tmpData.roomId.indexOf('fx')!=-1?1:2,
+                businessPlatform:bPlatform,
                 platformType:(common.isMobile()?1:0),
                 roomId:tmpData.roomId
             };
