@@ -1448,7 +1448,7 @@ var roomJS={
             idTmp = (idTmp + 17) % 45;
             return '<img src="' + roomJS.filePath + '/upload/pic/header/chat/visitor/' + idTmp + '.png">';
         }else{
-            aImgCls="user_c";
+            aImgCls="cm";
         }
         return '<img src="/hx/theme2/img/'+aImgCls+'.png">';
     },
