@@ -433,7 +433,7 @@ var roomJS={
         });
 
         //手势控制
-        $(document).bind("touchstart", function(e) {
+        $(document).bind("click", function(e) {
             if(roomJS.view.viewSelect){
                 var viewSelect = $("#talkBoxTab .view_select");
                 if(!viewSelect.is(e.target) && viewSelect.find(e.target).length == 0){

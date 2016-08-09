@@ -2317,3 +2317,24 @@ ul.message_list li{
 .select-img i{width:28px;height:20px; display:block;background-position:0 -240px; margin-left: auto;margin-right: auto;}
 .file-img{width:40px;height:40px;opacity:0; vertical-align: top;}
 .add-img p{text-align:center;color:#616366;font-size: 12px;line-height:18px;}
+
+.cen-qhbox {
+   background: #252729;
+}
+.talk-infobox .uname strong{
+    color: #fff;
+}
+.cen-ulist li{
+    color: #ccc;
+}
+.cen-ulist li.on{
+    color: #fff;
+    border-bottom: 2px solid #fff;
+}
+.cen-ulist{
+    background: #30353c;
+}
+
+.rightbar .qq i, .room-main .tit .st i, .popupbox .pop-close, .ss-tk-info i, .face-btn, .view_select i, .ctrlblock .ctrlbtn a, .teach-ul li i, .collect-tip b, .collect-tip i, .collect-tip .c_close, .inp i, .resultbox i, .c-menu li i, .addpic-btn, .select-img i{
+    background: url(../img/img_css_dark.png) no-repeat;
+}

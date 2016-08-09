@@ -2317,3 +2317,13 @@ ul.message_list li{
 .select-img i{width:28px;height:20px; display:block;background-position:0 -240px; margin-left: auto;margin-right: auto;}
 .file-img{width:40px;height:40px;opacity:0; vertical-align: top;}
 .add-img p{text-align:center;color:#616366;font-size: 12px;line-height:18px;}
+
+.talk-infobox .push {
+   background: none;
+}
+.cen-qhbox {
+    background: #f1ede3;
+}
+.cen-ulist{
+    height: 43px;
+}
