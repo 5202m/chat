@@ -14,10 +14,10 @@ var config = {
         }
     },
     defTemplate:{
-        pm:{usedNum:4,pc:'theme1',mb:'theme2',mini:'theme3',webui:'theme4',routeKey:'/studio'},
-        fx:{usedNum:4,pc:'theme1',mb:'theme2',mini:'',webui:'theme4',routeKey:'/fxstudio'},
-        hx:{usedNum:4,pc:'theme1',mb:'theme2',mini:'',webui:'theme4',routeKey:'/hxstudio'}
-    },//默认模板设置
+        pm:{usedNum:4,pc:'theme1',mb:'theme2',mini:'theme3',webui:'theme4',routeKey:'/studio',host:'pmchat.24k.hk'},
+        fx:{usedNum:4,pc:'theme1',mb:'theme2',mini:'',webui:'theme4',routeKey:'/fxstudio',host:'chat.gwfx.com'},
+        hx:{usedNum:4,pc:'theme1',mb:'theme2',mini:'',webui:'theme4',routeKey:'/hxstudio',host:'handan.hx9999.com'}
+    },//默认模板设置,//默认模板设置
     isDevTest:true,//是否开发或测试环境
     clusterWorkCount:2,//开启多线程个数，如果该参数大于系统内核个数，默认是开启(cpu核数-1)个线程
     sessionConfig:{key:'connect.sid',secret:'pm@chat'},//session 对应key,secret
@@ -34,7 +34,7 @@ var config = {
     hxGTS2SmApiUrl:'http://192.168.35.99:8080/Goldoffice_demo_api/RESTful',//恒信GTS2 真实地址 http://gts2apidemo.hx9999.com/Goldoffice_api/RESTful
     hxMT4ApiUrl:'http://hxapi.hx9999.com',//恒信MT4 Api地址 http://hxapi.hx9999.com
     hxApiLoginSid:{apiLogin:'handan',apiPassword:'abc123'},
-    socketServerUrl:{webSocket:'http://192.168.35.91:3002',socketIO:'http://192.168.35.91:3003'},
+    socketServerUrl:{webSocket:'http://127.0.0.1:3002',socketIO:'http://127.0.0.1:3003'},
     filesDomain: 'http://192.168.35.91:8090',//图片等文件访问域名
     web24kPath:'http://testweb1.24k.hk:8090',//24k信息地址
     packetAcUrl:'http://testweb1.24k.hk/activity20160105/getActivityUrl',//红包活动连接

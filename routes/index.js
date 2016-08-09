@@ -17,8 +17,20 @@ exports.init = function(app,express){
     app.use('/base',express.static(path.join(dirname, 'template/base')));
     app.use('/admin',express.static(path.join(dirname, 'template/admin/static')));
     var config=require('../resources/config');//资源文件
-    var tempPrefix=null,defTemp=null,viewPathArr=[];
-    var baseRouter=require('./web/base');
+    /**
+     * 域名拦截跳转
+     */
+    app.all('/', function(req, res, next) {
+        var defTmpObj=null;
+        for(var key in config.defTemplate){
+            defTmpObj=config.defTemplate[key];
+            if(defTmpObj.host==req.hostname){
+                res.redirect(defTmpObj.routeKey);
+                return;
+            }
+        }
+        next();
+    });
     /**
      * 设置路由入口拦截
      */
@@ -36,6 +48,8 @@ exports.init = function(app,express){
             next();
         }
     });
+    var tempPrefix=null,defTemp=null,viewPathArr=[];
+    var baseRouter=require('./web/base');
     for(var key in config.defTemplate){
         defTemp=config.defTemplate[key];
         for(var i=1;i<=defTemp.usedNum;i++){
@@ -45,11 +59,8 @@ exports.init = function(app,express){
         }
         app.use(defTemp.routeKey,require('./web/'+key),baseRouter);
         if(key=='hx' && Object.getOwnPropertyNames(config.defTemplate).length==1){
-            app.all('/',function(req, res, next) {
-                res.redirect("/hxstudio");
-            });
             app.all('/v/HXPM',function(req, res, next) {
-                res.redirect("/hxstudio");
+                res.redirect(defTemp.routeKey);
             });
         }
     }
