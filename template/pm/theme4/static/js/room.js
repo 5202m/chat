@@ -173,12 +173,16 @@ var studioChatMb={
         });
         //在线用户列表
         this.socket.on('onlineUserList', function(data,dataLength){
-            if(studioChatMb.whTalk.enable){
-                for(var i in data){
-                    if(data[i].userType==3){
-                        studioChatMb.whTalk.setCSOnline(data[i].userId, true);
-                    }
+            for(var i in data){
+                if(studioChatMb.whTalk.enable && data[i].userType==3){
+                    studioChatMb.whTalk.setCSOnline(data[i].userId, true);
                 }
+                //快捷@
+                if(data[i].userType==3 || data[i].userType==2){
+                    studioChatMb.setFastContact(data[i], true);
+                }
+            }
+            if(studioChatMb.whTalk.enable){
                 studioChatMb.whTalk.getCSList(); //加载客服列表
             }
         });
@@ -209,6 +213,10 @@ var studioChatMb={
                     var data=result.data,userInfoTmp=data.onlineUserInfo;
                     if(userInfoTmp.userType==3 && studioChatMb.whTalk.enable){
                         studioChatMb.whTalk.setCSOnline(userInfoTmp.userId, data.online);
+                    }
+                    //快捷@
+                    if(userInfoTmp.userType==3 || userInfoTmp.userType==2){
+                        studioChatMb.setFastContact(userInfoTmp, data.online);
                     }
                     break;
                 case 'removeMsg':
@@ -341,6 +349,31 @@ var studioChatMb={
         $('.cen-pubox .boxcont:lt(2)').height(loc_amount);
     },
     /**
+     * 快速@功能
+     */
+    setFastContact:function(userInfo, isOnline){
+        var $panel = $("#talkViewCtrl");
+        if(isOnline){
+            if($panel.find("a[uid='" + userInfo.userId + "']").size() == 0){
+                if(userInfo.userType == 3){
+                    userInfo.nickname = userInfo.nickname + "&nbsp;（助理）"
+                }
+                var userTmpDom = $('<a href="javascript:void(0)" class="" uid="' + userInfo.userId + '">@' + userInfo.nickname + '</a>');
+                userTmpDom.bind("click", userInfo, function(e){
+                    var userInfo = e.data;
+                    studioChatMb.setDialog(userInfo.userId, userInfo.nickname, 0, userInfo.userType, userInfo.avatar);
+                });
+                if(userInfo.userType == 3){//3-客服 2-分析师
+                    $panel.prepend(userTmpDom);
+                }else{
+                    $panel.find("a[t='analyst']").before(userTmpDom);
+                }
+            }
+        }else{
+            $panel.find("a[uid='" + userInfo.userId + "']").remove();
+        }
+    },
+    /**
      * 设置页面tab事件等
      */
     setEventCen:function(){
@@ -426,7 +459,7 @@ var studioChatMb={
                 studioChatMb.view.viewSelect = true;
             }
         }).find(".selectlist a").click(function(){
-            if(!$(this).is(".on")){
+            if($(this).is("[t]") && !$(this).is(".on")){
                 $('#talkBoxTab .view_select .selectlist a').removeClass("on");
                 $('#talkBoxTab .view_select .selected').text($(this).text());
                 $(this).addClass("on");

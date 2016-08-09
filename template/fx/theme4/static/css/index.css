@@ -217,7 +217,7 @@ body:before { content: ' ';position: fixed;z-index: -1;top: 0;right: 0;bottom: 0
 .view_select.dw i{ opacity:0.5 }
 .view_select .se_cont{width:100%;height:27px;overflow:hidden;background:#fff;border-radius:2px;position:absolute;left:0;top:0;border:1px #cecfd8 solid}
 .view_select.dw .se_cont{ height:auto;background:#fff;}
-.view_select .se_cont a{ display:block;padding-left:10px; color:#898d94; line-height:27px; font-size:14px; text-decoration:none}
+.view_select .se_cont a{ display:block;padding-left:10px; color:#898d94; line-height:27px; font-size:14px; text-decoration:none; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 .view_select .se_cont a.on{color:#335b9f;background:#eaedf7}
 .view_select .selected{ line-height:27px; font-size:14px; height:27px; color:#898d94;padding-left:10px; }
 .view_select .selectlist{ display:none;}
