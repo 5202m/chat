@@ -1,7 +1,6 @@
 ﻿body {
     font: 12px/1.4 microsoft yahei;
-    background-color: #0A0E12;
-    color: #555;
+    color: #333;
     -webkit-text-size-adjust: none;
     -moz-text-size-adjust: none;
     -ms-text-size-adjust: none;
@@ -48,7 +47,7 @@ img {
 }
 
 a {
-    color: #dfdfdf;
+    color: #333;
     text-decoration: none;
     outline: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
@@ -186,7 +185,7 @@ a:active {
 }
 
 /* img */
-.rightbar .qq i, .room-main .tit .st i, .popupbox .pop-close, .ss-tk-info i, .face-btn, .view_select i, .ctrlblock .ctrlbtn a, .video-pop .play, .teach-ul li i, .collect-tip b, .collect-tip i, .collect-tip .c_close, .inp i, .resultbox i, .c-menu li i,.addpic-btn,.select-img i {
+.rightbar .qq i, .room-main .tit .st i, .popupbox .pop-close, .ss-tk-info i, .face-btn, .view_select i, .ctrlblock .ctrlbtn a, .teach-ul li i, .collect-tip b, .collect-tip i, .collect-tip .c_close, .inp i, .resultbox i, .c-menu li i,.addpic-btn,.select-img i {
     background: url(../img/img_css.png) no-repeat;
     background-size: 100px auto;
     -moz-background-size: 100px auto;
@@ -195,6 +194,7 @@ a:active {
 /* header */
 body {
     font-family: 'microsoft yahei', 'Arial';
+    background: #000
 }
 
 body:before {
@@ -205,6 +205,7 @@ body:before {
     right: 0;
     bottom: 0;
     left: 0;
+    background: url(../img/bg.jpg) center 0 no-repeat;
     background-size: cover;
 }
 
@@ -353,7 +354,7 @@ body:before {
 }
 
 .cen-ulist li.on {
-    background: 0 0;
+    background: none;
     color: #55413c;
     height: 42px;
     border-bottom: 1px solid #9e7847;
@@ -388,7 +389,7 @@ body:before {
 }
 
 .cen-pubox .boxcont {
-    padding: 0 0 0 5px;
+    padding: 0 4%;
     position: relative;
     height: 270px;
     overflow: hidden;
@@ -428,12 +429,12 @@ body:before {
 }
 
 .room.cen-ulist li i.wh_tips {
-    border: 1px solid #c10e1b;
-    background-color: #c10e1b;
+    border: 1px solid #FF0000;
+    background-color: #FF0000;
     border-radius: 12px;
     height: 13px;
     color: #FFFFFF;
-    right: -5px;
+    right: 0;
     font-size: 12px;
     line-height: 12px;
     text-indent: 0;
@@ -459,7 +460,7 @@ body:before {
 }
 
 .videoroom-ul li.on {
-    padding: 10px 10px 13px;
+    /*padding: 10px 10px 13px;*/
 }
 
 .videoroom-ul li .intro {
@@ -717,7 +718,7 @@ body:before {
 
 /*教学视频*/
 .teach-ul {
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #303d58;
     padding: 12px 0 12px 5px
 }
 
@@ -741,7 +742,7 @@ body:before {
 
 .teach-ul li span {
     display: block;
-    color: #555;
+    color: #fff;
     width: 100%;
     box-sizing: border-box;
     overflow: hidden;
@@ -833,7 +834,7 @@ body:before {
 }
 
 .point_ul li {
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #303d58;
     position: relative;
     padding: 10px 0;
 }
@@ -859,7 +860,7 @@ body:before {
 }
 
 .point_ul .detail h3 {
-    color: #555;
+    color: #fff;
     font-size: 14px;
     line-height: 14px;
     padding-bottom: 2px;
@@ -867,16 +868,16 @@ body:before {
 }
 
 .point_ul .detail span {
-    color: #999;
+    color: #bfbfbf;
     font-size: 12px;
     line-height: 24px;
     padding-right: 8px;
 }
 
 .point_ul .detail p {
-    color: #555;
+    color: #d2d2d2;
     font-size: 12px;
-    line-height: 18px;
+    line-height: 16px;
     padding-right: 10px;
     text-align: justify;
 }
@@ -1010,7 +1011,7 @@ body:before {
 }
 
 .talk-infobox li {
-    padding: 5px 0 5px 38px;
+    padding: 5px 38px;
     position: relative;
     margin-bottom: 5px
 }
@@ -1068,19 +1069,19 @@ body:before {
 
 .talk-infobox .me-li .uname {
     clear: both;
-    float: right;
-    padding-right:35px
+    float: right
 }
 
 .talk-infobox .dialog {
     clear: both;
     background: #fff;
     line-height: 20px;
-    border-radius: 10px;
-    padding: 3px 10px;
+    border-radius: 5px;
+    border-top-left-radius: 0;
+    padding: 6px 10px;
     position: relative;
     color: #333;
-    font-size: 12px;
+    font-size: 14px;
     text-align: left;
     font-style: normal;
     font-weight: normal;
@@ -1097,7 +1098,6 @@ body:before {
     color: #ff0000;
     font-size: 12px;
     margin-left: 5px;
-    font-style:normal
 }
 
 /* .talk-infobox .dialog::after {
@@ -1135,10 +1135,6 @@ body:before {
 
 .talk-infobox .admin .dialog::after {
     border-color: #fff7e2 transparent transparent transparent;
-    -webkit-transform: rotate(180deg);
-    -o-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    transform: rotate(180deg);
 }
 
 .talk-infobox .analyst .dialog {
@@ -1147,28 +1143,19 @@ body:before {
 
 .talk-infobox .analyst .dialog::after {
     border-color: #474b51 transparent transparent transparent;
-    -webkit-transform: rotate(180deg);
-    -o-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    transform: rotate(180deg);
 }
 
 .talk-infobox .me-li .dialog {
-    background: #f0f3f6;
-    border-radius: 10px;
+    background: #fff;
+    border-top-left-radius: 5px;
     border-top-right-radius: 0;
     float: right;
-    margin-right:32px;
 }
 
 .talk-infobox .me-li .dialog::after {
     border-color: #fff transparent transparent transparent;
     left: auto;
-    right: 8px;
-    -webkit-transform: rotate(180deg);
-    -o-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    transform: rotate(180deg);
+    right: -3px;
 }
 
 .talk-infobox .push {
@@ -1198,7 +1185,7 @@ body:before {
 }
 
 .talk-infobox .dialog .question {
-    color: #555;
+    color: #777;
     font-size: 12px;
     border-bottom: 1px solid #a0b3c8;
     padding-bottom: 5px;
@@ -1343,7 +1330,7 @@ body:before {
 
 .float-sel {
     position: absolute;
-    right: 15px;
+    right: 10px;
     top: 10px;
     z-index: 99
 }
@@ -1362,7 +1349,7 @@ body:before {
     display: block;
     position: absolute;
     right: 11px;
-    top: 12px;
+    top: 9px;
     background: url(../img/xiala.png) no-repeat;
     background-size: 100%;
     width: 15px;
@@ -1386,7 +1373,7 @@ body:before {
 
 .view_select.dw .se_cont {
     height: auto;
-    background: #fff;
+    background: rgba(0, 0, 0, 0.9);
 }
 
 .view_select .se_cont a {
@@ -1399,8 +1386,7 @@ body:before {
 }
 
 .view_select .se_cont a.on {
-    color: #335b9f;
-    background:#eaedf7
+    color: #fff;
 }
 
 .view_select .selected {
@@ -1416,7 +1402,7 @@ body:before {
 }
 
 .view_select.dw .selected {
-    color: #555;
+    color: #fff;
 }
 
 .view_select.dw .selectlist {
@@ -1478,7 +1464,6 @@ body:before {
 
 .float-con {
     padding: 5px;
-    margin:0 5px;
     background: #faf7f1;
     position: relative;
 }
@@ -1503,7 +1488,7 @@ body:before {
     -webkit-appearance: none;
     outline: none;
     border-radius: 4px;
-    overflow-y: auto;
+    overflow-y: scroll;
 }
 
 .face-btn {
@@ -1719,6 +1704,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 }
 
 .popupbox.pop-member {
+    background: url(../img/mbg.jpg) center 0 no-repeat #fff;
     background-size: 100% auto;
 }
 
@@ -1774,7 +1760,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     padding: 0 5px;
     box-sizing: border-box;
     text-align: center;
-    color: #1e58b9;
+    color: #cda746;
     font-size: 15px;
     vertical-align: middle;
 }
@@ -1784,7 +1770,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 }
 
 .inp .inp_l {
-    border: 1px solid #d9e4f7;
+    border: 1px solid #e8dfcb;
     background: #fff;
     border-radius: 3px;
     width: 100%;
@@ -1869,7 +1855,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     display: block;
     height: 40px;
     width: 100%;
-    background: #335b9f;
+    background: #b59030;
     text-align: center;
     color: #fff;
     border-radius: 3px;
@@ -2121,18 +2107,6 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
     text-align: center;
 }
 
-.mCS-dark-2.mCSB_scrollTools .mCSB_draggerRail {
-	background-color: rgba(140, 145, 162, 0) !important;
-}
-
-.mCS-dark-2.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
-	background-color: rgba(140, 145, 162, 0) !important;
-}
-
-.mCSB_inside>.mCSB_container {
-	margin-right: 0px !important
-}
-
 /*键盘出现*/
 body.keyboard:before { /*background:none*/
 }
@@ -2224,7 +2198,7 @@ body.keyboard:before { /*background:none*/
 }
 
 .redbag a:before {
-    background-image: url(../img/fo_open2.png)
+    background-image: url(../img/fo_open.png)
 }
 
 .fob_open .fb_open_analog {
@@ -2257,7 +2231,7 @@ body.keyboard:before { /*background:none*/
     height: 26px;
     padding: 5px 0;
     text-align: center;
-    background: #4874b0;
+    background: rgba(181, 144, 48, .6);
     border-radius: 23px;
     z-index: 99
 }
@@ -2343,25 +2317,3 @@ ul.message_list li{
 .select-img i{width:28px;height:20px; display:block;background-position:0 -240px; margin-left: auto;margin-right: auto;}
 .file-img{width:40px;height:40px;opacity:0; vertical-align: top;}
 .add-img p{text-align:center;color:#616366;font-size: 12px;line-height:18px;}
-
-/*Responsive*/
-@media(max-width:359px){
-	.logobar{ width:140px;}
-	.rightbar .qq i{ margin:0 10px;}
-    .room.cen-ulist li{font-size:14px;}
-}
-
-.shadow-conut {
-    position: absolute;
-    left: 30px;
-    bottom: 5px;
-    width: 100%;
-    max-width: 150px;
-    display: block;
-    text-align: center;
-    font: 25px arial;
-    color: #fff;
-    text-shadow: 0 2px 0 #000;
-    z-index: 10;
-    text-decoration: none
-}
