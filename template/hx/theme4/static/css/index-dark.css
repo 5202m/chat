@@ -185,10 +185,9 @@ a:active {
 }
 
 /* img */
-.rightbar .qq i, .room-main .tit .st i, .popupbox .pop-close, .ss-tk-info i, .face-btn, .view_select i, .ctrlblock .ctrlbtn a, .teach-ul li i, .collect-tip b, .collect-tip i, .collect-tip .c_close, .inp i, .resultbox i, .c-menu li i,.addpic-btn,.select-img i {
-    background: url(../img/img_css.png) no-repeat;
+.rightbar .qq i, .room-main .tit .st i, .popupbox .pop-close, .ss-tk-info i, .face-btn, .view_select i, .ctrlblock .ctrlbtn a, .teach-ul li i, .collect-tip b, .collect-tip i, .collect-tip .c_close, .inp i, .resultbox i, .c-menu li i, .addpic-btn, .select-img i{
+    background: url(../img/img_css_dark.png) no-repeat;
     background-size: 100px auto;
-    -moz-background-size: 100px auto;
 }
 
 /* header */
@@ -2335,6 +2334,21 @@ ul.message_list li{
     background: #30353c;
 }
 
-.rightbar .qq i, .room-main .tit .st i, .popupbox .pop-close, .ss-tk-info i, .face-btn, .view_select i, .ctrlblock .ctrlbtn a, .teach-ul li i, .collect-tip b, .collect-tip i, .collect-tip .c_close, .inp i, .resultbox i, .c-menu li i, .addpic-btn, .select-img i{
-    background: url(../img/img_css_dark.png) no-repeat;
+
+
+//	新增样式
+.point_ul .detail h3, .point_ul .detail span, .point_ul .detail p, .teach-ul li span {
+    color: #fff;
+}
+.face-btn{
+    background-position: 0px -60px;
+}
+.addpic-btn {
+    background-position: 0 -100px;
+}
+.teach-ul li i{
+	background-position: -20px 0;
+}
+.teach-ul li span{
+	color: #fff;
 }

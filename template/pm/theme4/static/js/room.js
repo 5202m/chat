@@ -364,9 +364,9 @@ var studioChatMb={
                     studioChatMb.setDialog(userInfo.userId, userInfo.nickname, 0, userInfo.userType, userInfo.avatar);
                 });
                 if(userInfo.userType == 3){//3-客服 2-分析师
-                    $panel.prepend(userTmpDom);
-                }else{
                     $panel.find("a[t='analyst']").before(userTmpDom);
+                }else{
+                    $panel.prepend(userTmpDom);
                 }
             }
         }else{

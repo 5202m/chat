@@ -2325,5 +2325,21 @@ ul.message_list li{
     background: #f1ede3;
 }
 .cen-ulist{
-    height: 43px;
+    height: 44px;
+}
+.cen-ulist li.on{
+    border: 2px solid rgb(205, 177, 84);
+}
+.view_select.dw .se_cont{
+    background: #fff;
+}
+.view_select.dw .se_cont{
+    color: #000;
+}
+.view_select .se_cont a.on{
+    color: #000;
+    background: rgb(229, 219, 205);
+}
+.view_select .se_cont{
+    background: rgba(255, 255, 255, 0.8);
 }
