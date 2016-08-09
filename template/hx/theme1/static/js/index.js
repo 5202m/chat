@@ -15,6 +15,7 @@ var indexJS ={
     visitorSpeak:false,//游客是否允许发言
     syllabusData:null,//课程数据
     onlineCsStatus:0,//在线客服链接状态：0-未连接 1-正在连接 2-已连接
+    infoNewCount:0,//快讯新条数
     init:function(){
         this.serverTimeUp();
         this.setVisitStore();//设置访客存储
@@ -533,25 +534,11 @@ var indexJS ={
         $.getJSON(indexJS.apiUrl+ '/common/getInformation?t='+indexJS.serverTime, null, function(result){
             if(result){
                 if(result.isOK) {
-                    var itemLenth = result.data.news.item.length, pt = $('#newInfoCount').attr('pt');
-                    if(!common.isBlank(pt)){
-                        $('#newInfoCount').text(itemLenth);
-                        $('#newInfoCount').hide();
-                    }
-                    var pubDateTime = null,newsHtml = '', newsFormatHtml = indexJS.formatHtml('news');
+                    var pt = $('#newInfoCount').attr('pt'), pubDateTime = null,newsHtml = '', newsFormatHtml = indexJS.formatHtml('news');
                     $.each(result.data.news.item, function(key, row){
-                        if (pt == row.pubDate  && !common.isBlank(pt)) {
-                            if (key > 0) {
-                                $('#newInfoCount').text(key);
-                                $('#newInfoCount').show();
-                            }
-                            else {
-                                $('#newInfoCount').hide();
-                            }
-                        }
-                        else if(row.pubDate > pt && (key+1) == itemLenth  && !common.isBlank(pt)){
-                            $('#newInfoCount').text(itemLenth);
-                            $('#newInfoCount').show();
+                        if (pt == row.pubDate  && common.isValid(pt)) {
+                            indexJS.infoNewCount++;
+                            $('#newInfoCount').text(indexJS.infoNewCount).show();
                         }
                         if(key < 1){
                             pubDateTime = row.pubDate;
@@ -563,13 +550,14 @@ var indexJS ={
                     if(common.isValid(newsHtml)) {
                         $('.mod_videolist .message_list .scrollbox ul.news').prepend(newsHtml);
                     }
-                    if(pt == pubDateTime) {
-                        $('#newInfoCount').hide();
+                    if(common.isBlank(pt)){
+                        $('#newInfoCount').attr('pt', pubDateTime);
                     }
                     indexJS.setListScroll($(".mod_videolist .message_list .scrollbox"));//设置滚动
                     $('#newInfoCount').attr('pt', pubDateTime);
                     if($(".mod_videolist .list_tab").eq(1).hasClass('on')){
-                        $('#newInfoCount').attr('t', indexJS.serverTime);
+                        indexJS.infoNewCount = 0;
+                        $('#newInfoCount').attr({'pt':pubDateTime,'t':indexJS.serverTime}).text(indexJS.infoNewCount).hide();
                     }
                 }
             }
