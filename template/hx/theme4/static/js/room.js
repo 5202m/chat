@@ -969,10 +969,10 @@ var roomJS={
              */
             $("#backToLive").draggable({
                 start : function(){
-                    $(this).css("background", '#1A4C90');
+                    $(this).addClass("blue");
                 },
                 stop : function(){
-                    $(this).css("background", '#4874b0');
+                    $(this).removeClass("blue");
                 }
             });
             $("#backToLive").bind("click", function(){

@@ -2235,6 +2235,10 @@ body.keyboard:before { /*background:none*/
     z-index: 99
 }
 
+.backtolive.blue{
+	background: blue;
+}
+
 .backtolive span {
     line-height: 13px;
     display: inline-block;

@@ -949,14 +949,13 @@ var roomJS={
                 .on('swipeStart',function(){
                     roomJS.video.backToLivePos.x = parseInt(this.style.left) || 0;
                     roomJS.video.backToLivePos.y = parseInt(this.style.top) || 0;
-                    this.style.transition = 'none';
-                    this.style.background = ' rgba(181,144,48,0.8)';
+                    $(this).addClass("blue");
                 }).on('swipe',function(e){
                     this.style.left = rangeControl(roomJS.video.backToLivePos.x + e.moveX, $(window).width() - this.clientWidth) + 'px';
                     this.style.top = rangeControl(roomJS.video.backToLivePos.y + e.moveY, $(window).height() - this.clientHeight) + 'px';
                     return false;
                 }).on('swipeEnd',function(){
-                    this.style.background = ' rgba(181,144,48,.6)';
+                    $(this).removeClass("blue");
                     return false;
                 });
         },
