@@ -88,8 +88,13 @@ var indexJS ={
                                 if(data.hasOwnProperty(roomId)){
                                     var rda=data[roomId];
                                     var size = 0;
-                                    if($(this).find(".enterbtn").attr("av")=="true" && rda.onlineNum>100){
-                                        size=common.randomNumber(50)+275;
+                                    if($(this).find(".enterbtn").attr("av")=="true"){
+                                        if(rda.onlineNum>100){
+                                            size=common.randomNumber(50)+275;
+                                        }else{
+                                            size=rda.onlineNum<=10?60:(200/rda.onlineNum)*3+10;
+                                            size=Math.round(size);
+                                        }
                                     }
                                     $(this).find(".peo_num label").text(rda.onlineNum + size);
                                     if(common.isValid(rda.name)){

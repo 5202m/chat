@@ -1402,7 +1402,7 @@ body:before {
 }
 
 .view_select.dw .selected {
-    color: #fff;
+    color: #000;
 }
 
 .view_select.dw .selectlist {
@@ -2328,7 +2328,7 @@ ul.message_list li{
     height: 44px;
 }
 .cen-ulist li.on{
-    border: 2px solid rgb(205, 177, 84);
+    border-bottom: 2px solid rgb(205, 177, 84);
 }
 .view_select.dw .se_cont{
     background: #fff;

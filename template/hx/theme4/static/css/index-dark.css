@@ -1378,7 +1378,7 @@ body:before {
 .view_select .se_cont a {
     display: block;
     padding-left: 10px;
-    color: #3f3f3f;
+    color: #ccc;
     line-height: 27px;
     font-size: 14px;
     text-decoration: none
@@ -1392,7 +1392,7 @@ body:before {
     line-height: 27px;
     font-size: 14px;
     height: 27px;
-    color: #3f3f3f;
+    color: #fff;
     padding-left: 10px;
 }
 

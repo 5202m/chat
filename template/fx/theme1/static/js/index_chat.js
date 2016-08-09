@@ -1204,8 +1204,13 @@ var chat={
         this.socket.on('onlineUserList',function(data,dataLength){
             //$('#userListId').html("");放到this.setUserListIdEmpty()方法中
             //如客户数小于200，则追加额外游客数
-            if($("#roomInfoId").attr("av")=="true" && dataLength<=200){
-                var randId= 0,size=common.randomNumber(50)+275;
+            if($("#roomInfoId").attr("av")=="true"){
+                var randId= 0,size=0;
+                if(dataLength>100){
+                    size = common.randomNumber(50)+275;
+                }else{
+                    size=dataLength<=10?60:(200/dataLength)*3+10;
+                }
                 for(var i=0;i<size;i++){
                     randId=common.randomNumber(6);
                     data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:15,userType:-1});
