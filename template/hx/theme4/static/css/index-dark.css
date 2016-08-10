@@ -1463,7 +1463,7 @@ body:before {
 
 .float-con {
     padding: 5px;
-    background: #faf7f1;
+    background: #30353c;
     position: relative;
 }
 
@@ -1476,8 +1476,8 @@ body:before {
 .text-area-box {
     width: 100%;
     border: 0;
-    border: 1px solid #BFBFBF;
-    background: #fff;
+    background: #49515c;
+    color: #fff;
     padding: 0;
     height: 29px;
     font-size: .24rem;
