@@ -1207,7 +1207,7 @@ var chat={
             if($("#roomInfoId").attr("av")=="true"){
                 var randId= 0,size=0;
                 if(dataLength>100){
-                    size = common.randomNumber(50)+275;
+                    size = Math.ceil(Math.random()*50)+275;
                 }else{
                     size=dataLength<=10?60:(200/dataLength)*3+10;
                 }

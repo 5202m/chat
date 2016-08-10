@@ -90,7 +90,7 @@ var indexJS ={
                                     var size = 0;
                                     if($(this).find(".enterbtn").attr("av")=="true"){
                                         if(rda.onlineNum>100){
-                                            size=common.randomNumber(50)+275;
+                                            size=Math.ceil(Math.random()*50)+275;
                                         }else{
                                             size=rda.onlineNum<=10?60:(200/rda.onlineNum)*3+10;
                                             size=Math.round(size);
