@@ -169,22 +169,24 @@ var box={
         });
         if(indexJS.userInfo.clientGroup=='visitor'){
             var lgt = $('#roomInfoId').attr("lgt");//后台控制登录弹框时间
-            if(!indexJS.currStudioAuth){
-                $("#login_a").trigger("click", {closeable : false, showTip: true, loginTime: lgt}); //弹出登录框，隐藏关闭按钮
-            }else if(this.forceLogin()){
-                $("#login_a").trigger("click", {closeable : false, showTip:true, loginTime: lgt}); //弹出登录框，不允许关闭
-            }else {
-                if (common.isValid(lgt) && !isNaN(lgt)) {
-                    try {
-                        lgt = parseInt(lgt);
-                        setTimeout(function () {
-                            //if(indexJS.userInfo.clientGroup=='visitor') {
+            if(common.isValid(lgt)) {
+                if (!indexJS.currStudioAuth) {
+                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt}); //弹出登录框，隐藏关闭按钮
+                } else if (this.forceLogin()) {
+                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt}); //弹出登录框，不允许关闭
+                } else {
+                    if (common.isValid(lgt) && !isNaN(lgt)) {
+                        try {
+                            lgt = parseInt(lgt);
+                            setTimeout(function () {
+                                //if(indexJS.userInfo.clientGroup=='visitor') {
                                 box.forceLogin(true);
                                 $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt});
-                            //}
-                        }, lgt * 60 * 1000);
-                    } catch (e) {
-                        console.error("set login Time has error", e);
+                                //}
+                            }, lgt * 60 * 1000);
+                        } catch (e) {
+                            console.error("set login Time has error", e);
+                        }
                     }
                 }
             }
