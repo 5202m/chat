@@ -52,27 +52,27 @@ var roomJS={
         if(this.userInfo.clientGroup=='visitor'){
             var lgt = $('#currStudioInfo').attr("lgt");//后台控制登录弹框时间
             //当前房间未授权，并且是游客
-            if(!this.currStudioAuth){
-                studioMbPop.popBox("login", {
-                    groupId : roomJS.userInfo.groupId,
-                    clientGroup : roomJS.userInfo.clientGroup,
-                    clientStoreId : roomJS.userInfo.clientStoreId,
-                    platform : roomJS.fromPlatform,
-                    closeable:false
-                });
-            }else if(studioMbPop.Login.forceLogin()){
-                //之前已经看过3分钟了。
-                studioMbPop.popBox("login", {
-                    groupId : roomJS.userInfo.groupId,
-                    clientGroup : roomJS.userInfo.clientGroup,
-                    clientStoreId : roomJS.userInfo.clientStoreId,
-                    platform : roomJS.fromPlatform,
-                    closeable:false,
-                    showTip:true
-                });
-            }else{
-                //3分钟后强制要求登录
-                if (common.isValid(lgt) && !isNaN(lgt)) {
+            //3分钟后强制要求登录
+            if (common.isValid(lgt) && !isNaN(lgt)) {
+                if(!this.currStudioAuth){
+                    studioMbPop.popBox("login", {
+                        groupId : roomJS.userInfo.groupId,
+                        clientGroup : roomJS.userInfo.clientGroup,
+                        clientStoreId : roomJS.userInfo.clientStoreId,
+                        platform : roomJS.fromPlatform,
+                        closeable:false
+                    });
+                }else if(studioMbPop.Login.forceLogin()){
+                    //之前已经看过3分钟了。
+                    studioMbPop.popBox("login", {
+                        groupId : roomJS.userInfo.groupId,
+                        clientGroup : roomJS.userInfo.clientGroup,
+                        clientStoreId : roomJS.userInfo.clientStoreId,
+                        platform : roomJS.fromPlatform,
+                        closeable:false,
+                        showTip:true
+                    });
+                }else{
                     try {
                         lgt = parseInt(lgt);
                         window.setTimeout(function () {

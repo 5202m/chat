@@ -143,7 +143,7 @@ var studioMbLogin = {
     /**
      * 初始化（页面初始化）
      */
-    init : function(platform, groupId, clientStoreId, clientGroup, closeable){
+    init : function(platform, groupId, clientStoreId, clientGroup, closeable, showTip){
         this.groupId = groupId;
         this.clientStoreId = clientStoreId;
         this.clientGroup = clientGroup;
@@ -153,6 +153,11 @@ var studioMbLogin = {
             $("#loginPop .pop-close").show();
         }else{
             $("#loginPop .pop-close").hide();
+        }
+        if(showTip){
+            $("#login_tip").show().text($('#setlogintip').text());
+        }else{
+            $("#login_tip").hide();
         }
         if(platform == "wechat"){
             $("#loginForm .auto_login").hide();
@@ -536,7 +541,7 @@ var studioMbPop = {
 
             case "login" :
                 this.popShow($("#loginPop"));
-                this.Login.init(ops.platform, ops.groupId, ops.clientStoreId, ops.clientGroup, ops.closeable !== false);
+                this.Login.init(ops.platform, ops.groupId, ops.clientStoreId, ops.clientGroup, ops.closeable !== false, ops.showTip);
                 break;
 
             case "set" :

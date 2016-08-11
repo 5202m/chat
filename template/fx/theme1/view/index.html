@@ -196,7 +196,8 @@
             <% if (studioList!='[]') { %>
             <% studioList.forEach(function(row,index){  if(row.isCurr) {%>
             <div class="titbar clearfix">
-                   <span id="roomInfoId" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>"><%= row.name %><i class="off"></i></span>
+                   <span id="roomInfoId" lgt='<%= row.loginBoxTime %>' aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>"><%= row.name %><i class="off"></i></span>
+                   <span id="setlogintip" style="display:none;"><%= row.loginBoxTip %></span>
                    <div class="changeroom"><a href="javascript:" class="roomctrl"><i></i><span>切换房间</span></a>
                 	<div class="rooms">
                         <% studioList.forEach(function(rowIn,indexIn){ if(row.id!=rowIn.id) {%>

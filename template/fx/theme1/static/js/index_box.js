@@ -127,14 +127,29 @@ var box={
         $('#login_a').bind("click", function(e, ops){
             ops = ops || {};
             box.toRoomId = ops.groupId;
-            box.openLgBox(ops.closeable);
+            box.openLgBox(ops.closeable, ops.showTip,ops.loginTime);
             if(common.isValid($(this).attr("tp"))){
                 _gaq.push(['_trackEvent', 'fx_studio', 'login', $(this).attr("tp"), 1, true]);
             }
         });
         //当前房间未授权，并且是游客
-        if(!indexJS.currStudioAuth && indexJS.userInfo.clientGroup=='visitor'){
-            $("#login_a").trigger("click", {closeable : false}); //弹出登录框，隐藏关闭按钮
+        if(indexJS.userInfo.clientGroup=='visitor'){
+            var lgt = $('#roomInfoId').attr("lgt");//后台控制登录弹框时间
+            if(common.isValid(lgt)) {
+                if (!indexJS.currStudioAuth) {
+                    $("#login_a").trigger("click", {closeable: false, loginTime: lgt}); //弹出登录框，隐藏关闭按钮
+                } else if (this.forceLogin()) {
+                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt}); //弹出登录框，不允许关闭
+                } else {
+                    //3分钟后强制要求登录
+                    window.setTimeout(function () {
+                        if (indexJS.userInfo.clientGroup == 'visitor') {
+                            box.forceLogin(true);
+                            $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt}); //弹出登录框，不允许关闭
+                        }
+                    }, lgt * 60 * 1000);
+                }
+            }
         }
         /**
          * 注销
@@ -348,11 +363,17 @@ var box={
     /**
      * 弹出登录框
      */
-    openLgBox:function(closeable){
+    openLgBox:function(closeable, showTip, lgTime){
         if(closeable === false){
             $("#loginBox .pop_close").hide();
         }else{
             $("#loginBox .pop_close").show();
+        }
+        if(showTip){
+            lgTime=lgTime||1;
+            $("#login_tip").show().text($('#setlogintip').text());
+        }else{
+            $("#login_tip").hide();
         }
         $(".popup_box").hide();
         $("#loginBox,.blackbg").show();
