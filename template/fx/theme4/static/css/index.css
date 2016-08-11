@@ -388,3 +388,4 @@ body.keyboard:before { /*background:none*/}
     z-index: 102;
     text-decoration: none
 }
+#login_tip {color: #444;font-size: 12px;display: block;text-align: center;padding-top: 11px;}

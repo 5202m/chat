@@ -416,3 +416,5 @@ body.keyboard:before { /*background:none*/}
 .add-img p{text-align:center;color:#616366;font-size: 12px;line-height:18px;}
 
 .IIV::-webkit-media-controls-play-button,.IIV::-webkit-media-controls-start-playback-button {opacity: 0; pointer-events: none; width: 5px;}
+
+#login_tip {color: #444;font-size: 12px;display: block;text-align: center;padding-top: 11px;}

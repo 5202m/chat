@@ -120,6 +120,23 @@ var box={
         });
     },
     /**
+     * 设置或获取强制登录标志
+     * @param [isForceLogin]
+     * @returns {*}
+     */
+    forceLogin : function(isForceLogin){
+        var storeObj = LoginAuto.get();
+        if(typeof isForceLogin == "boolean"){
+            if(storeObj){
+                storeObj.forceLogin = isForceLogin;
+                return LoginAuto.set(storeObj) && isForceLogin;
+            }
+        }else{
+            return storeObj && (storeObj.forceLogin == true);
+        }
+        return false;
+    },
+    /**
      * 登录相关事件
      */
     loginEvent:function(){

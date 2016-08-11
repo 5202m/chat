@@ -340,6 +340,24 @@ var studioMbLogin = {
                 break;
         }
         return chkResult;
+    },
+
+    /**
+     * 设置或获取强制登录标志
+     * @param [isForceLogin]
+     * @returns {*}
+     */
+    forceLogin : function(isForceLogin){
+        var storeObj = LoginAuto.get();
+        if(typeof isForceLogin == "boolean"){
+            if(storeObj){
+                storeObj.forceLogin = isForceLogin;
+                return LoginAuto.set(storeObj) && isForceLogin;
+            }
+        }else{
+            return storeObj && (storeObj.forceLogin == true);
+        }
+        return false;
     }
 };
 
@@ -541,7 +559,7 @@ var studioMbPop = {
 
             case "login" :
                 this.popShow($("#loginPop"));
-                this.Login.init(ops.platform, ops.groupId, ops.clientStoreId, ops.clientGroup, ops.closeable !== false);
+                this.Login.init(ops.platform, ops.groupId, ops.clientStoreId, ops.clientGroup, ops.closeable !== false, ops.showTip);
                 break;
 
             case "set" :
