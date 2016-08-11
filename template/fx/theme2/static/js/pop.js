@@ -518,12 +518,16 @@ var studioMbPop = {
      */
     reload : function(){
         var url = window.location.href;
+        var param = "t=" + new Date().getTime();
         if(url.indexOf("?") == -1){
-            url = url + "?t=" + new Date().getTime();
-        }else if(url.indexOf("t=") == -1){
-            url = url + "&t=" + new Date().getTime();
+            url = url + "?" + param;
         }else{
-            url = url.replace(/t=\d*/, "t=" + new Date().getTime());
+            url = url.replace(/&t=\d*(?=&|$)/g, "");
+            if(/\?t=\d*(?=&|$)/.test(url)){
+                url = url.replace(/\?t=\d*(?=&|$)/, "?" + param);
+            }else{
+                url = url + "&" + param;
+            }
         }
         window.location.href = url;
     },
