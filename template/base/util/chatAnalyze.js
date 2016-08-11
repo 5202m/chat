@@ -56,11 +56,10 @@ UUID.rand = function(max) {
 };
 // 初始化
 var chatAnalyze = {
-    COOKIE_NAME:'GWAFLGPHONECOOIKETRACK',
     localHref:window.location.href,
     utmStore:{//utm 数据统计全局数据
         ip:'',
-        storeKey:'utmKey_',//userId key
+        storeKey:'GWAFLGPHONECOOIKETRACK',//userId key
         userId:'',//用户id
         roomId:'',//房间编号
         groupType:'',//房间大类
@@ -161,6 +160,39 @@ var chatAnalyze = {
         });
     },
     /**
+     * 设置utm cookie
+     * @param cval
+     * @param type
+     */
+    setUTMCookie : function(cval,type) {
+        if (common.isValid(cval)) {
+            var dm='127.0.0.1';
+            if(1==type){
+                dm='.gwfx.com';
+            }
+            if(2==type){
+                dm='.24k.hk';
+            }
+            document.cookie = this.utmStore.storeKey+ '='+ escape(cval)+ '; expires=Tue, 31 Dec 2030 00:00:00 UTC; path=/;domain='+dm;
+        }
+    },
+    /**
+     * 获取utm cookie
+     * @param cval
+     * @param type
+     */
+    getUTMCookie : function() {
+        var strCookie = document.cookie;
+        var arrCookie = strCookie.split(/[;&]/);
+        for ( var i = 0; i < arrCookie.length; i++) {
+            var arr = arrCookie[i].split("=");
+            if ($.trim(arr[0]) == this.utmStore.storeKey) {
+                return arr[1];
+            }
+        }
+        return '';
+    },
+    /**
      * 设置utm系统所需行为
      */
     setUTM:function(init,data){
@@ -228,12 +260,12 @@ var chatAnalyze = {
                 }
                 tmpData.userId=st.userId;
             }
-            var key=tmpData.storeKey+tmpData.groupType;
             var bPlatform=tmpData.groupType.indexOf('fx')!=-1?1:2;
-            var userId=store.get(key);
-            if(!userId){
+            var userId = this.getUTMCookie();
+            var isLocal=this.isLocalHref();
+            if (common.isBlank(userId)) {
                 userId=UUID.prototype.createUUID(bPlatform==1?'':'G');
-                store.set(key,userId);
+                this.setUTMCookie(userId,isLocal?0:bPlatform);
             }
             var sendData={
                 userId:userId,
@@ -248,7 +280,7 @@ var chatAnalyze = {
             }else{
                 sendData.visitorId=tmpData.userId;
             }
-            var sendUrl=this.isLocalHref()?"http://testweb.gwfx.com:8088/GwUserTrackingManager_NEW/put/insertChart":"http://das.gwfx.com/put/insertChart";
+            var sendUrl=isLocal?"http://testweb.gwfx.com:8088/GwUserTrackingManager_NEW/put/insertChart":"http://das.gwfx.com/put/insertChart";
             if(data && data.courseId){
                 sendData.courseId=data.courseId;
                 this.utmAjax(sendUrl,sendData,true);
