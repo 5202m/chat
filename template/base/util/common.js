@@ -782,8 +782,11 @@ function openLive800Chat(type){
 /**
  * 打开客服QQ
  */
-function openQQChatByCommonv3(){
-    var url="http://crm2.qq.com/page/portalpage/wpa.php?uin=800018282&cref=&ref=&f=1&ty=1&ap=&as=";
+function openQQChatByCommonv3(param, uin){
+    if(common.isBlank(uin)){
+        uin = '800018282';
+    }
+    var url="http://crm2.qq.com/page/portalpage/wpa.php?uin="+uin+"&cref=&ref=&f=1&ty=1&ap=&as="+param;
     window.open (url,'QQChatindow','height=544, width=644,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
 }
 //QQ窗口客服(手机)

@@ -178,7 +178,7 @@ var indexJS ={
         });
         /*QQ客服按钮事件*/
         $('#qqcs').click(function(){
-            openQQChatByCommonv3('&utm_source=studio&utm_medium=yy&utm_content=TOP&utm_campaign=qqzx_pm');
+            openQQChatByCommonv3('&utm_source=studio&utm_medium=yy&utm_content=TOP&utm_campaign=qqzx_pm','800018282');
         });
         /**添加到桌面*/
         $("#saveToDesktop").click(function(){

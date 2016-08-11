@@ -207,10 +207,14 @@ var indexJS ={
         $(".mod_videolist .tabnav a.on").trigger("click");
         /**QQ客服按钮事件*/
         $('#qqcs').click(function(){
-            openQQChatByCommonv3('&utm_source=studio&utm_medium=yy&utm_content=TOP&utm_campaign=qqzx_pm');
+            openQQChatByCommonv3('&utm_source=studio&utm_medium=yy&utm_content=TOP&utm_campaign=qqzx_pm','800025930');
         });
         /**设置客服系统*/
-        $('#onlineCs').click(box.openCSBox);
+        $('#onlineCs').click(function(){
+                openQQChatByCommonv3('&utm_source=hxstudio&utm_medium=yy&utm_content=TOP&utm_campaign=qqzx_hx','800025930');
+            }
+            //box.openCSBox
+        );
         /**添加到桌面*/
         $("#saveToDesktop").click(function(){
             if(common.saveToDesktop(window.location.href, "视频直播间-恒信贵金属")){
