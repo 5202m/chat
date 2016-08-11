@@ -308,7 +308,7 @@ var studioChatMb={
                         loc_html.push('<ul class="teach-ul">');
                     }
                     row=data[i].detailList[0];
-                    loc_html.push('<li><a title="' + row.title + '" href="javascript:void(0)" onclick="_gaq.push([\'_trackEvent\', \'m_24k_studio\', \'teachvideo_'+i+'\', \'content_middle\',1,true]);" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'"><i></i><span>'+row.title+'</span></a></li>');
+                    loc_html.push('<li><a title="' + row.title + '" href="javascript:void(0)" onclick="_gaq.push([\'_trackEvent\', \'m_studio\', \'teachvideo_'+i+'\', \'content_middle\',1,true]);" id="'+data[i]._id+'" vUrl="'+data[i].mediaUrl+'"><i></i><span>'+row.title+'</span></a></li>');
                     if(i % 5 == 4 || i == lenI - 1){
                         loc_html.push('</ul>');
                     }
@@ -405,10 +405,10 @@ var studioChatMb={
                 studioChatMb.whTalk.whSwitch(false);
                 studioChatMb.view.boardCtrl(0);
                 if(type=='TradeArticleTab'){
-                    _gaq.push(['_trackEvent', 'm_24k_studio', 'suggest_tab', 'content_middle',1,true]);
+                    _gaq.push(['_trackEvent', 'm_studio', 'suggest_tab', 'content_middle',1,true]);
                     studioChatMb.setTradeArticle();
                 }else if(type == 'videosTab'){
-                    _gaq.push(['_trackEvent', 'm_24k_studio', 'teachvideo_tab', 'content_middle',1,true]);
+                    _gaq.push(['_trackEvent', 'm_studio', 'teachvideo_tab', 'content_middle',1,true]);
                 }
                 studioChatMb.setHeight();
             }
@@ -471,7 +471,7 @@ var studioChatMb={
                 $('#talkBoxTab .view_select .selected').text($(this).text());
                 $(this).addClass("on");
                 var type = $(this).attr("t");
-                _gaq.push(['_trackEvent', 'm_24k_studio', 'filter_' + type, 'content_left',1,true]);
+                _gaq.push(['_trackEvent', 'm_studio', 'filter_' + type, 'content_left',1,true]);
                 studioChatMb.showViewSelect(type);
             }
         });

@@ -188,7 +188,7 @@ var studioChatMbIdx={
             if(dataList.result==0){
                 var data=dataList.data;
                 for(var i in data){
-                    $("#slider ul").append('<li class="swiper-slide"><a href="'+(common.isBlank(data[i].linkUrl)?"javascript:":data[i].linkUrl)+'" target="_blank"><img width="100%" alt="" src="'+data[i].mediaUrl+'"></a></li>');
+                    $("#slider ul").append('<li class="swiper-slide"><a href="'+(common.isBlank(data[i].linkUrl)?"javascript:":data[i].linkUrl)+'" onclick="_gaq.push([\'_trackEvent\', \'m_studio\', \'banner_img\', \''+data[i].detailList[0].title+'\']);"  target="_blank"><img width="100%" alt="" src="'+data[i].mediaUrl+'"></a></li>');
                     if(data.length>1){
                         $("#position").append('<span class="'+(parseInt(i)==0?'p-click':'')+'"></span>');
                     }
@@ -273,22 +273,22 @@ var studioChatMbIdx={
             if(type=='bulletinTab'){
                 studioChatMbIdx.setBulletin();
             }else if(type=='tradeInfoTab'){
-                _gaq.push(['_trackEvent', 'm_24k_studio', 'tradstrategy_tab', 'content_middle',1,true]);
+                _gaq.push(['_trackEvent', 'm_studio', 'tradstrategy_tab', 'content_middle',1,true]);
                 studioChatMbIdx.setNewsInfo("#tradeInfoTab .boxcont",false,3,5);
             }else if(type=='commentTab'){
-                _gaq.push(['_trackEvent', 'm_24k_studio', 'comment_tab', 'content_middle',1,true]);
+                _gaq.push(['_trackEvent', 'm_studio', 'comment_tab', 'content_middle',1,true]);
                 studioChatMbIdx.setNewsInfo("#commentTab .boxcont",false,3,3);
             }
             event.data.slideTo($(this).index(), 300, false);
         });
 
         $("#tradeInfoTab .moreitem").bind("click", function(){
-            _gaq.push(['_trackEvent', 'm_24k_studio', 'tradstrategy_more', 'content_middle',1,true]);
+            _gaq.push(['_trackEvent', 'm_studio', 'tradstrategy_more', 'content_middle',1,true]);
             studioChatMbIdx.setNewsInfo("#tradeInfoTab .boxcont",true,3,5);
         });
 
         $("#commentTab .moreitem").bind("click", function(){
-            _gaq.push(['_trackEvent', 'm_24k_studio', 'comment_more', 'content_middle',1,true]);
+            _gaq.push(['_trackEvent', 'm_studio', 'comment_more', 'content_middle',1,true]);
             studioChatMbIdx.setNewsInfo("#commentTab .boxcont",true,3,3);
         });
     },
@@ -409,7 +409,7 @@ var studioChatMbIdx={
         //显示课程表
         $('.btns .timebtn').click(function(){
             var groupId = $(this).parents("li:first").attr("gi");
-            _gaq.push(['_trackEvent', 'm_24k_studio', 'schedule_' + groupId, 'content_middle', 1, true]);
+            _gaq.push(['_trackEvent', 'm_studio', 'schedule_' + groupId, 'content_middle', 1, true]);
             $(".pop-time .sc_cont").empty().append($(this).parents("li").find(".timetable").clone(true));
             studioMbPop.popShow($('.pop-time'));
             return false;
@@ -464,7 +464,7 @@ var studioChatMbIdx={
                     for(var i in list){
                         row=list[i];
                         if(!isAppend){
-                            gaStr = ' onclick="_gaq.push([\'_trackEvent\', \'m_24k_studio\', \'' + gaKey + i + '\', \'content_middle\',1,true]);"'
+                            gaStr = ' onclick="_gaq.push([\'_trackEvent\', \'m_studio\', \'' + gaKey + i + '\', \'content_middle\',1,true]);"'
                         }else{
                             gaStr = '';
                         }

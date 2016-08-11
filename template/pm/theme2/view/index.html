@@ -29,7 +29,7 @@
                 <h1 class="hide-t">视频直播间</h1>
             </div>
             <div class="rightbar">
-                <a href="javascript:openQQChatByCommonjs('&utm_source=studio&utm_medium=yy&utm_content=wap&utm_campaign=qq_pm');" class="qq"><i></i></a>
+                <a href="javascript:openQQChatByCommonjs('');" onclick="_gaq.push(['_trackEvent', 'm_studio', 'chat_QQ', 'contest_top',1,true]);" class="qq"><i></i></a>
                 <a id="header_ui" href="javascript:void(0)" class="loginbtn"><%= userSession.isLogin ? userSession.nickname : '登录' %></a>
             </div>
         </section>
@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="btns">
                                     <a href="javascript:void(0)" class="timebtn">课程表</a>
-                                    <a href="javascript:void(0)" class="enter">进入</a>
+                                    <a href="javascript:void(0)" class="enter"<% if (row.id=='studio_market'){ %> onclick="_gaq.push(['_trackEvent', 'm_studio', 'chat_yy', 'contest_vip',1,true]);"<%}else{%> onclick="_gaq.push(['_trackEvent', 'm_studio', 'chat_yy', 'contest_dating',1,true]);"<%}%>>进入</a>
                                 </div>
                                 <div class="syll-tip dn">
                                     <span><label>直播时间：</label><label class="syll-time"></label><label style="margin-left:12px;"></label><label style="margin-left:12px;"></label></span>
@@ -130,9 +130,9 @@
 <!-- 底部悬浮菜单begin-->
 <div class="fob_open">
     <div>
-        <a target="_blank" onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'open_real_account', 'content_bottom',1,true]);" class="fb_open_real" href="http://m.24k.hk/realaccount_open.html?utm_source=m_studio&utm_medium=yy&utm_content=bottom&utm_campaign=realaccount_open">开真实账户</a>
-        <a target="_blank" onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'open_demo_account', 'content_bottom',1,true]);" class="fb_open_analog" href="http://m.24k.hk/demoaccount_open.html?utm_source=m_studio&utm_medium=yy&utm_content=bottom&utm_campaign=demoaccount_open">无风险模拟</a>
-        <a href="javascript:void(0)" onclick="_gaq.push(['_trackEvent', 'm_24k_studio', 'chat_qq', 'content_bottom',1,true]);openLive800Chat(null, '&utm_source=m_studio&utm_medium=yy&utm_content=bottom&utm_campaign=onlineservice-hk');" class="fb_consult" style="background-image:none"><i class="qq-fon"><s></s></i>立即咨询</a>
+        <a target="_blank" onclick="_gaq.push(['_trackEvent', 'm_studio', 'open_real_account', 'content_float',1,true]);" class="fb_open_real" href="http://m.24k.hk/realaccount_open.html">开真实账户</a>
+        <a target="_blank" onclick="_gaq.push(['_trackEvent', 'm_studio', 'open_demo_account', 'content_float',1,true]);" class="fb_open_analog" href="http://m.24k.hk/demoaccount_open.html">无风险模拟</a>
+        <a href="javascript:void(0)" onclick="_gaq.push(['_trackEvent', 'm_studio', 'chat_qq', 'content_float',1,true]);openLive800Chat(null, '');" class="fb_consult" style="background-image:none"><i class="qq-fon"><s></s></i>立即咨询</a>
     </div>
 </div>
 <!-- 底部悬浮菜单end-->

@@ -160,7 +160,7 @@ var studioChatMbIdx={
             if(dataList.result==0){
                 var data=dataList.data;
                 for(var i in data){
-                    $("#slider ul").append('<li class="swiper-slide"><a href="'+(common.isBlank(data[i].linkUrl)?"javascript:":data[i].linkUrl)+'" target="_blank"><img width="100%" alt="" src="'+data[i].mediaUrl+'"></a></li>');
+                    $("#slider ul").append('<li class="swiper-slide"><a href="'+(common.isBlank(data[i].linkUrl)?"javascript:":data[i].linkUrl)+'" onclick="_gaq.push([\'_trackEvent\', \'m_fx_studio\', \'banner_img\', \''+data[i].detailList[0].title+'\']);" target="_blank"><img width="100%" alt="" src="'+data[i].mediaUrl+'"></a></li>');
                     if(data.length>1){
                         $("#position").append('<span class="'+(parseInt(i)==0?'p-click':'')+'"></span>');
                     }
