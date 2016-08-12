@@ -209,11 +209,21 @@ var indexJS ={
         $('#qqcs').click(function(){
             openQQChatByCommonv3('&utm_source=studio&utm_medium=yy&utm_content=TOP&utm_campaign=qqzx_pm','800025930');
         });
+        //TODO 测试房间控制
+        if(/op=test/.test(location.href)){
+            $(".rooms>div[rid='hxstudio_4']").show();
+        }else{
+            $(".rooms>div[rid='hxstudio_4']").hide();
+        }
         /**设置客服系统*/
         $('#onlineCs').click(function(){
-                openQQChatByCommonv3('&utm_source=hxstudio&utm_medium=yy&utm_content=TOP&utm_campaign=qqzx_hx','800025930');
+                if(indexJS.userInfo.groupId == "hxstudio_4"){
+                    indexJS.connectOnlineCs();
+                }else{
+                    openQQChatByCommonv3('&utm_source=hxstudio&utm_medium=yy&utm_content=TOP&utm_campaign=qqzx_hx','800025930');
+                }
+                //box.openCSBox();
             }
-            //box.openCSBox
         );
         /**添加到桌面*/
         $("#saveToDesktop").click(function(){
