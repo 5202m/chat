@@ -51,6 +51,7 @@ var roomJS={
         }
         if(this.userInfo.clientGroup=='visitor'){
             var lgt = $('#currStudioInfo').attr("lgt");//后台控制登录弹框时间
+            var spn = $('#currStudioInfo').attr("spn");//后台控制发言次数限制
             //当前房间未授权，并且是游客
             //3分钟后强制要求登录
             if (common.isValid(lgt) && !isNaN(lgt)) {
@@ -91,6 +92,27 @@ var roomJS={
                     } catch (e) {
                         console.error("set login Time has error", e);
                     }
+                }
+            }
+            if(common.isValid(spn)){
+                if(!this.currStudioAuth){
+                    studioMbPop.popBox("login", {
+                        groupId : roomJS.userInfo.groupId,
+                        clientGroup : roomJS.userInfo.clientGroup,
+                        clientStoreId : roomJS.userInfo.clientStoreId,
+                        platform : roomJS.fromPlatform,
+                        closeable:false
+                    });
+                }else if(studioMbPop.Login.forceLogin()){
+                    //之前已经看过3分钟了。
+                    studioMbPop.popBox("login", {
+                        groupId : roomJS.userInfo.groupId,
+                        clientGroup : roomJS.userInfo.clientGroup,
+                        clientStoreId : roomJS.userInfo.clientStoreId,
+                        platform : roomJS.fromPlatform,
+                        closeable:false,
+                        showTip:true
+                    });
                 }
             }
         }
@@ -513,6 +535,19 @@ var roomJS={
             }
             if(roomJS.userInfo.isSetName === false){
                 studioMbPop.popBox("set", {studioChatObj : roomJS});
+                return;
+            }
+            var isMeSend = $('[isme="true"]').size(), speakNum = $('#currStudioInfo').attr('spn');
+            if(common.isValid(speakNum) && isMeSend == speakNum) {//发言次数限制
+                studioMbPop.Login.forceLogin(true);
+                studioMbPop.popBox("login", {
+                    groupId: roomJS.userInfo.groupId,
+                    clientGroup: roomJS.userInfo.clientGroup,
+                    clientStoreId: roomJS.userInfo.clientStoreId,
+                    platform: roomJS.fromPlatform,
+                    closeable: false,
+                    showTip: true
+                });
                 return;
             }
             var toUser=roomJS.getToUser();

@@ -169,6 +169,7 @@ var box={
         });
         if(indexJS.userInfo.clientGroup=='visitor'){
             var lgt = $('#roomInfoId').attr("lgt");//后台控制登录弹框时间
+            var spn = $('#roomInfoId').attr('spn');//发言次数限制
             if(common.isValid(lgt)) {
                 if (!indexJS.currStudioAuth) {
                     $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt}); //弹出登录框，隐藏关闭按钮
@@ -188,6 +189,13 @@ var box={
                             console.error("set login Time has error", e);
                         }
                     }
+                }
+            }
+            if(common.isValid(spn)){
+                if (!indexJS.currStudioAuth) {
+                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: spn}); //弹出登录框，隐藏关闭按钮
+                } else if (this.forceLogin()) {
+                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: spn}); //弹出登录框，不允许关闭
                 }
             }
         }

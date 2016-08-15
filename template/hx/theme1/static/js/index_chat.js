@@ -142,6 +142,12 @@ var chat={
                 box.openSetNameBox(true);
                 return;
             }
+            var isMeSend = $('[isme="true"]').size(), speakNum = $('#roomInfoId').attr('spn');
+            if(common.isValid(speakNum) && isMeSend == speakNum) {//发言次数限制
+                box.forceLogin(true);
+                $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: speakNum}); //弹出登录框，不允许关闭
+                return;
+            }
             var toUser=chat.getToUser();
             //发送剪切图片
             var imgObj = $("#contentText .text-min-img img");
