@@ -172,7 +172,7 @@ var box={
             var spn = $('#roomInfoId').attr('spn');//发言次数限制
             if(common.isValid(lgt)) {
                 if (!indexJS.currStudioAuth) {
-                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt}); //弹出登录框，隐藏关闭按钮
+                    $("#login_a").trigger("click", {closeable: false, showTip: false, loginTime: lgt}); //弹出登录框，隐藏关闭按钮
                 } else if (this.forceLogin()) {
                     $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt}); //弹出登录框，不允许关闭
                 } else {
@@ -193,7 +193,7 @@ var box={
             }
             if(common.isValid(spn)){
                 if (!indexJS.currStudioAuth) {
-                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: spn}); //弹出登录框，隐藏关闭按钮
+                    $("#login_a").trigger("click", {closeable: false, showTip: false, loginTime: spn}); //弹出登录框，隐藏关闭按钮
                 } else if (this.forceLogin()) {
                     $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: spn}); //弹出登录框，不允许关闭
                 }
@@ -458,10 +458,12 @@ var box={
             $("#loginBox .pop_close").show();
         }
         if(showTip){
-            lgTime=lgTime||1;
             $("#login_tip").show().text($('#setlogintip').text());
         }else{
             $("#login_tip").hide();
+        }
+        if(common.isValid(lgTime)){
+            box.disableVideoSocket();
         }
         $(".popup_box").hide();
         $("#loginBox,.blackbg").show();
@@ -593,6 +595,15 @@ var box={
      */
     showTipBox:function(msg){
         $(".tipsbox").fadeIn().delay(1000).fadeOut(200).find(".cont").text(msg);
+    },
+    /**
+     * 清空视频直播及断开socket连接
+     */
+    disableVideoSocket:function(){
+        window.setInterval(function(){
+            $("#lvVideoId").empty();
+            chat.socket.disconnect();
+        }, 5000);
     }
 };
 // 初始化

@@ -61,7 +61,8 @@ var roomJS={
                         clientGroup: roomJS.userInfo.clientGroup,
                         clientStoreId: roomJS.userInfo.clientStoreId,
                         platform: roomJS.fromPlatform,
-                        closeable: false
+                        closeable: false,
+                        lgTime:lgt
                     });
                 } else if (studioMbPop.Login.forceLogin()) {
                     //之前已经看过3分钟了。
@@ -71,7 +72,8 @@ var roomJS={
                         clientStoreId: roomJS.userInfo.clientStoreId,
                         platform: roomJS.fromPlatform,
                         closeable: false,
-                        showTip: true
+                        showTip: true,
+                        lgTime:lgt
                     });
                 } else {
                     try {
@@ -85,7 +87,8 @@ var roomJS={
                                 clientStoreId: roomJS.userInfo.clientStoreId,
                                 platform: roomJS.fromPlatform,
                                 closeable: false,
-                                showTip: true
+                                showTip: true,
+                                lgTime:lgt
                             });
                             //}
                         },  lgt * 60 * 1000);
@@ -101,7 +104,8 @@ var roomJS={
                         clientGroup : roomJS.userInfo.clientGroup,
                         clientStoreId : roomJS.userInfo.clientStoreId,
                         platform : roomJS.fromPlatform,
-                        closeable:false
+                        closeable:false,
+                        lgTime:spn
                     });
                 }else if(studioMbPop.Login.forceLogin()){
                     //之前已经看过3分钟了。
@@ -111,7 +115,8 @@ var roomJS={
                         clientStoreId : roomJS.userInfo.clientStoreId,
                         platform : roomJS.fromPlatform,
                         closeable:false,
-                        showTip:true
+                        showTip:true,
+                        lgTime:spn
                     });
                 }
             }
@@ -549,6 +554,9 @@ var roomJS={
                     showTip: true
                 });
                 return;
+            }
+            if(!roomJS.socket.connected){
+                studioMbPop.showMessage('连接已断开');
             }
             var toUser=roomJS.getToUser();
 
@@ -2173,5 +2181,14 @@ var roomJS={
                 roomJS.socket.emit('sendMsg', sendObj);//发送数据
             }
         }
+    },
+    /**
+     * 清空视频直播及断开socket连接
+     */
+    disableVideoSocket:function(){
+        window.setInterval(function(){
+            $("#tVideoDiv").empty();
+            roomJS.socket.disconnect();
+        }, 5000);
     }
 };

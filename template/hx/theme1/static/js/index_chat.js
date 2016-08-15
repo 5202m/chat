@@ -148,6 +148,9 @@ var chat={
                 $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: speakNum}); //弹出登录框，不允许关闭
                 return;
             }
+            if(!chat.socket.connected){
+                box.showTipBox('连接已断开');
+            }
             var toUser=chat.getToUser();
             //发送剪切图片
             var imgObj = $("#contentText .text-min-img img");

@@ -143,7 +143,7 @@ var studioMbLogin = {
     /**
      * 初始化（页面初始化）
      */
-    init : function(platform, groupId, clientStoreId, clientGroup, closeable, showTip){
+    init : function(platform, groupId, clientStoreId, clientGroup, closeable, showTip, lgTime){
         this.groupId = groupId;
         this.clientStoreId = clientStoreId;
         this.clientGroup = clientGroup;
@@ -158,6 +158,9 @@ var studioMbLogin = {
             $("#login_tip").show().text($('#setlogintip').text());
         }else{
             $("#login_tip").hide();
+        }
+        if(common.isValid(lgTime)){
+            roomJS.disableVideoSocket();
         }
         if(platform == "wechat"){
             $("#loginForm .auto_login").hide();
@@ -626,7 +629,7 @@ var studioMbPop = {
 
             case "login" :
                 this.popShow($("#loginPop"));
-                this.Login.init(ops.platform, ops.groupId, ops.clientStoreId, ops.clientGroup, ops.closeable !== false, ops.showTip);
+                this.Login.init(ops.platform, ops.groupId, ops.clientStoreId, ops.clientGroup, ops.closeable !== false, ops.showTip, ops.lgTime);
                 break;
 
             case "set" :
