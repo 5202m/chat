@@ -350,7 +350,7 @@ var roomJS={
                     roomJS.video.play("studio", "mp4", $(this).attr("vUrl"), $(this).text());
                 });
             }
-            roomJS.video.start();
+            roomJS.video.start(false, true);
             studioMbPop.loadingBlock($("#videosTab"), true);
         });
     },
@@ -772,33 +772,33 @@ var roomJS={
             switch(type){
                 case 0:
                     blocks.header.show();
-                    blocks.backToLive.data("showBoard", true).trigger("show");
+                    blocks.backToLive.show();
                     blocks.floatBox.hide();
                     break;
                 case 1:
                     blocks.header.show();
-                    blocks.backToLive.data("showBoard", true).trigger("show");
+                    blocks.backToLive.show();
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
                     blocks.imgBox.hide();
                     break;
                 case 2:
                     blocks.header.hide();
-                    blocks.backToLive.data("showBoard", false).trigger("show");
+                    blocks.backToLive.hide();
                     blocks.floatBox.show();
                     blocks.facePanel.show();
                     blocks.imgBox.hide();
                     break;
                 case 3:
                     blocks.header.show();
-                    blocks.backToLive.data("showBoard", false).trigger("show");
+                    blocks.backToLive.hide();
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
                     blocks.imgBox.hide();
                     break;
                 case 4:
                     blocks.header.hide();
-                    blocks.backToLive.data("showBoard", false).trigger("show");
+                    blocks.backToLive.hide();
                     blocks.floatBox.show();
                     blocks.facePanel.hide();
                     blocks.imgBox.show();
@@ -820,6 +820,7 @@ var roomJS={
             x : 0,
             y : 0
         },
+        waveAudio:$('#voiceWaveAudio'),//音频audio对象
         /**
          * 初始化
          */
@@ -831,25 +832,55 @@ var roomJS={
             }
             var yyDom=$(".videopart input:first"),yc=yyDom.attr("yc"),mc=yyDom.attr("mc");
             this.$panel = $("#tVideoDiv");
-            this.$panel.css({'z-index':"inherit"}).height(this.$panel.width()*0.55);
+            this.$panel.css({'z-index':"inherit"}).height($(".videopart").width()*0.55);
             this.setEvent();
+            makeVideoPlayableInline(this.waveAudio[0]);
         },
         /**
          * 启动，只能选择播放
          */
-        start : function(isBack){
-            var course=common.getSyllabusPlan(roomJS.syllabusData,roomJS.serverTime);
+        start : function(isBack, isAudio){
+            var course=common.getSyllabusPlan(roomJS.syllabusData,roomJS.serverTime, isAudio);
              if(!course||course.isNext||(course.courseType!=0 && common.isBlank(course.studioLink))||course.courseType==2||course.courseType==0){
                 if(isBack){
                 	studioMbPop.showMessage("目前还没有视频直播，详情请留意直播间的课程安排！");
                 }else if(course && !course.isNext && course.courseType==0){
                 	$(".videopart").hide().css({height:"0"});
-    	            roomJS.setHeight();
                 }else{
                 	this.playMp4Vd();
                 }
             }else{
-            	this.play("yy", "", course.studioLink, "");
+                 if(isAudio){
+                     this.change(true);
+                     this.studioType = "yy";
+                     this.voiceWave(false, course.studioLink, course.title);
+                 }else{
+                     this.change(false);
+                     this.play("yy", "", course.studioLink, "");
+                 }
+            }
+            roomJS.setHeight();
+        },
+        /**
+         * 视频音频切换
+         * @param isAudio
+         * @param isStudio
+         */
+        change : function(isAudio, isStudio){
+            if(isAudio){
+                this.doPause();
+                $('#waveDiv').removeClass('dn');
+                $('#tVideoDiv').addClass('dn');
+                if(!isStudio){
+                    $("#backToLive").removeClass('video').html('<span>视频<br />直播</span>');
+                }
+            }else{
+                this.voiceWave(false);
+                $('#waveDiv').addClass('dn');
+                $('#tVideoDiv').removeClass('dn');
+                if(!isStudio) {
+                    $("#backToLive").addClass('video').html('<span>音频<br />直播</span>');
+                }
             }
         },
         /**
@@ -876,11 +907,8 @@ var roomJS={
                 $(".videopart").show().css({height:"auto"});
                 roomJS.setHeight();
             }
-            if(studioType == "studio"){
-                backToLive.data("showVideo", true).trigger("show");
-            }else{
+            if(studioType != "studio"){
                 $("#videosTab li a.on").removeClass("on");
-                backToLive.data("showVideo", false).trigger("show");
             }
             if(this.playerType == 'video'){
                 if(this.initPlayer) {
@@ -958,15 +986,6 @@ var roomJS={
                 top:function(){
                     return $(window).height() - $('#header').height() - 70;
                 }
-            }).data("showBoard", true)
-              .data("showVideo", true)
-              .bind("show", function(){
-                var thiz = $(this);
-                if(thiz.data("showBoard") && thiz.data("showVideo")){
-                    thiz.show();
-                }else{
-                    thiz.hide();
-                }
             });
 
             /**
@@ -986,7 +1005,9 @@ var roomJS={
                     roomJS.socket.emit('serverTime');
                     //优化手机锁屏对定时器的影响，锁屏后serverTime将停止更新。（微信测试）
                     window.setTimeout(function(){
-                        roomJS.video.start(true);
+                        var isAudio = $("#backToLive").is('.video');
+                        isAudio = roomJS.video.studioType == 'studio' ? !isAudio : isAudio;
+                        roomJS.video.start(true, isAudio);
                     }, 1000);
                 })
                 .on('swipeStart',function(){
@@ -1001,6 +1022,26 @@ var roomJS={
                     $(this).removeClass("blue");
                     return false;
                 });
+            /*音频图片显示隐藏*/
+            $('#waveDiv .voice_ctrl .togglebtn').click(function(){
+                var $this=$(this),$wave = $('#waveDiv .voice_wave');
+                if($wave.hasClass('dn')){
+                    $this.removeClass('hiding');
+                    $wave.removeClass('dn');
+                }else{
+                    $this.addClass('hiding');
+                    $wave.addClass('dn');
+                }
+                roomJS.setHeight();
+            });
+            /*音频播放停止按钮事件*/
+            $('#waveDiv .voice_ctrl .playbtn').click(function(){
+                roomJS.video.voiceWave($('#waveDiv').is(".stopped"));
+            });
+
+            $('#waveDiv .voice_playbtn').click(function(){
+                roomJS.video.voiceWave(true);
+            });
         },
         /**
          * 设置视频控制块事件
@@ -1036,6 +1077,92 @@ var roomJS={
                 }).bind("loadstart", function(){
                     $(".ctrlblock").hide();
                 });
+            }
+        },
+        /**
+         * 外部控制视频播放
+         */
+        doPlay:function(){
+            if(this.playerType == 'video') {
+                this.$panel.find("video").trigger("play");
+            }else if(this.playerType == "sewise" && window.SewisePlayer){
+                SewisePlayer.doPlay();
+            }
+        },
+        /**
+         * 外部控制视频暂停
+         */
+        doPause:function(){
+            if(this.playerType == 'video') {
+                this.$panel.find("video").trigger("pause");
+            }else if(this.playerType == "sewise" && window.SewisePlayer){
+                SewisePlayer.doPause();
+            }
+        },
+        /**
+         * 外部控制视频全屏
+         */
+        doFullscreen:function(){
+            if(this.playerType == 'video') {
+                var videoDom = this.$panel.find("video")[0];
+                if(videoDom){
+                    if(videoDom.requestFullscreen) {
+                        videoDom.requestFullscreen();
+                    } else if(videoDom.mozRequestFullScreen) {
+                        videoDom.mozRequestFullScreen();
+                    } else if(videoDom.msRequestFullscreen){
+                        videoDom.msRequestFullscreen();
+                    } else if(videoDom.oRequestFullscreen){
+                        videoDom.oRequestFullscreen();
+                    } else if(videoDom.webkitRequestFullscreen){
+                        videoDom.webkitRequestFullScreen();
+                    }
+                }
+            }
+        },
+        /**
+         * 外部控制视频退出全屏
+         */
+        doExitFullscreen:function(){
+            if(this.playerType == 'video') {
+                var videoDom = this.$panel.find("video")[0];
+                if(videoDom){
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if(document.oRequestFullscreen){
+                        document.oCancelFullScreen();
+                    }else if (document.webkitExitFullscreen){
+                        document.webkitExitFullscreen();
+                    }
+                }
+            }
+        },
+        /**
+         * 音频播放停止事件
+         */
+        voiceWave:function(doPlay, voiceUrl, title){
+            var imgIdx;
+            if(common.isValid(voiceUrl)){
+                imgIdx = common.randomIndex(5);
+                $('#waveImg').attr("idx", imgIdx);
+                roomJS.video.waveAudio.attr('src',voiceUrl);
+            }
+            if(common.isValid(title)){
+                $('#waveDiv .voice_ctrl .tit span').text(title);
+            }
+            imgIdx = imgIdx || $('#waveImg').attr("idx") || "1";
+            if(doPlay) {
+                $('#waveDiv').removeClass('stopped');
+                $('#waveImg').attr('src','/hx/theme2/img/wave' + imgIdx + '.gif');
+                roomJS.video.waveAudio.trigger("play");
+            }else{
+                $('#waveDiv').addClass('stopped');
+                $('#waveImg').attr('src','/hx/theme2/img/wave' + imgIdx + '.jpg');
+                roomJS.video.waveAudio.trigger("pause");
             }
         }
     },

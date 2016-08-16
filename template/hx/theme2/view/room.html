@@ -50,7 +50,7 @@
 
     <!-- video begin -->
     <section class="videopart">
-        <div class="main-video" id="tVideoDiv">
+        <div class="main-video dn" id="tVideoDiv">
         </div>
         <div class="ctrlblock dn">
             <div class="vcenter">
@@ -58,6 +58,22 @@
                 <div class="ctrlbtn nextbtn"><a href="javacript:void(0)"></a><span>下一集</span></div>
             </div>
         </div>
+        <!-- voice begin -->
+        <div class="voicepart stopped" id="waveDiv"><!-- <div class="voicepart stopped"> 停止直播 -->
+            <div class="voice_wave">
+                <video id="voiceWaveAudio" src="" webkit-playsinline>您的浏览器不支持 video 标签。</video>
+                <div class="style1">
+                    <div class=""><img id="waveImg" src="/hx/theme2/img/wave4.jpg" alt=""></div>
+                </div>
+                <a href="javascript:void(0)" class="voice_playbtn"><i></i></a>
+            </div>
+            <div class="voice_ctrl">
+                <a href="javascript:void(0)" class="playbtn"><i></i></a>
+                <div class="tit"><i></i><span><!--标题-->&nbsp;</span></div>
+                <a href="javascript:void(0)" class="togglebtn"><i></i></a>
+            </div>
+        </div>
+        <!-- voice end -->
     </section>
     <!-- video end -->
 

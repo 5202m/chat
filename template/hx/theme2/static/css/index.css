@@ -2295,3 +2295,27 @@ ul.message_list li{
 .select-img i{width:28px;height:20px; display:block;background-position:0 -240px; margin-left: auto;margin-right: auto;}
 .file-img{width:40px;height:40px;opacity:0; vertical-align: top;}
 .add-img p{text-align:center;color:#616366;font-size: 12px;line-height:18px;}
+
+/*音频直播 begin*/
+.voicepart{}
+.voice_wave{ position: relative; }
+.voicepart .stopjpg{ display: none; }
+.voicepart.stopped .stopjpg{ display: block; }
+.voicepart.stopped .gif{ display: none; }
+.voicepart img{ vertical-align: bottom; border: 0; width: 100%; height: auto; }
+.voicepart video{display: none;}
+.voice_ctrl {  position: relative; background: #222 }
+.voice_ctrl a{ display: block; height: 40px; width: 30px; position: absolute; top: 0; z-index: 2 }
+.voice_ctrl a.playbtn{ left: 0 }
+.voice_ctrl a.togglebtn{ right: 0 }
+.voice_ctrl .tit{ padding: 0 30px 0 60px; position: relative; }
+.voice_ctrl .tit span{ display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #fff; font-size: 12px; line-height: 40px; }
+.voice_ctrl .tit i{ position: absolute; display: block; width: 19px; height: 12px; left: 36px; background-position: 0 -135px; top: 50%; margin-top: -6px; }
+.voice_ctrl a.playbtn i{ display: block; border: 0;width: 10px;height: 10px; margin: 14px auto 0; background-color: #757477  }
+.voicepart.stopped .voice_ctrl a.playbtn i{ background: none; height: 0; width: 0; border-style: solid; border-color: transparent transparent transparent #757477; border-width: 6px 10px; margin: 14px 0 0 12px}
+.voice_ctrl a.togglebtn i{ display: block; width: 12px;height: 7px; margin-top: 16px; margin-left: auto; margin-right: auto; background-position: -20px -135px ; transition: all ease 0.8s}
+.voice_ctrl a.togglebtn.hiding i{ transform: rotate(180deg); }
+.voicepart.stopped .voice_playbtn{display: block;}
+.voice_playbtn{ display: none; width: 40px; height: 40px; box-sizing: border-box; position: absolute; left: 50%; top: 50%; margin: -20px 0 0 -20px; background: rgba(255,255,255,.8); border-radius: 50%; }
+.voice_playbtn i{ display: block;content: ''; width: 0;height: 0; border-style: solid;border-color: transparent transparent transparent #0e0e0e; border-width: 11px 16px; margin: 9px 0 0 14px }
+/*音频直播 end*/
