@@ -1187,9 +1187,15 @@ var chat={
         //进入聊天室加载的在线用户
         this.socket.on('onlineUserList',function(data,dataLength){
             $('#userListId').html("");
-            //如客户数小于200，则追加额外游客数
-            if($("#roomInfoId").attr("av")=="true" && dataLength<=200){
-                var randId= 0,size=dataLength<=10?60:(200/dataLength)*3+10;
+            //如客户数小于500，则追加额外游客数
+            if($("#roomInfoId").attr("av")=="true" && dataLength < 500){
+                var visitorNum = 0;
+                for(var i in data){
+                    if(data[i].clientGroup == 'visitor'){
+                        visitorNum++;//取出真实游客数量
+                    }
+                }
+                var randId= 0,size = visitorNum < 10 ? (560 - dataLength) : (500 - dataLength + 3 * (200 / (visitorNum)) + 10); //dataLength<=10?60:(200/dataLength)*3+10;
                 for(var i=0;i<size;i++){
                     randId=common.randomNumber(6);
                     data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:-1});
