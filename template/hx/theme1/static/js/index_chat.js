@@ -7,6 +7,7 @@ var chat={
     whPushObj:{},//私聊推送信息
     whTipInterId:null,//私聊提示
     pushInfoTimeOutId:null,//延迟执行的ID
+    initUserList: false,
     msgType:{ //信息类型
         text:'text' ,
         img:'img',
@@ -1188,7 +1189,7 @@ var chat={
         this.socket.on('onlineUserList',function(data,dataLength){
             $('#userListId').html("");
             //如客户数小于500，则追加额外游客数
-            if($("#roomInfoId").attr("av")=="true" && dataLength < 500){
+            if($("#roomInfoId").attr("av")=="true" && !chat.initUserList && dataLength < 500){
                 var visitorNum = 0;
                 for(var i in data){
                     if(data[i].clientGroup == 'visitor'){
@@ -1200,6 +1201,7 @@ var chat={
                     randId=common.randomNumber(6);
                     data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:-1});
                 }
+                chat.initUserList = true;
             }
             var row=null;
             for(var i in data){
