@@ -199,7 +199,12 @@ router.get('/getHxShortCut', function(req, res) {
 router.post('/getTeachers',function(req, res){
     var params = req.body['data'];
     if(typeof params == "string"){
-        params = JSON.parse(params);
+        try {
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
     }
     userService.getTeacherList(params, function(result){
         res.json(result);
@@ -213,9 +218,15 @@ router.post('/getTeacher',function(req, res){
     var params = req.body['data'];
     if(common.isBlank(params)){
         res.json(null);
+        return;
     }
     if(typeof params == 'string'){
-        params = JSON.parse(params);
+        try {
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
     }
     userService.getTeacherByUserId(params, function(result){
         res.json(result);
