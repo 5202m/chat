@@ -911,13 +911,7 @@ router.post('/getShowTrade', function(req, res){
         params = JSON.parse(params);
     }
      params.pageSize = common.isBlank(params.pageSize) ? 100 : params.pageSize;
-     /*params.pageNo = common.isBlank(params.pageNo) ? constant.curPageNo : params.pageNo;
-     if(!params.pageNo||params.pageNo <= 0){
-     params.pageNo = 1;
-     }
-     params.pageNo=parseInt(params.pageNo);
-     params.pageSize=parseInt(params.pageSize)||20;*/
-    if(/*isNaN(params.pageNo)||*/isNaN(params.pageSize) || common.isBlank(params.groupType)){
+    if(isNaN(params.pageSize) || common.isBlank(params.groupType)){
         res.json({'isOK':false,'data':null, 'msg':'参数错误'});
     }else{
         showTradeService.getShowTradeList(params,function(page){

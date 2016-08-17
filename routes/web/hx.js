@@ -229,9 +229,15 @@ router.post('/setThemeStyle', function(req, res){
     var params = req.body['data'];
     if(common.isBlank(params)){
         res.json(null);
+        return;
     }
     if(typeof params == 'string'){
-        params = JSON.parse(params);
+        try {
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
     }
     if(common.isBlank(params.userId) || common.isBlank(params.defTemplate)){
         res.json({isOK:false,msg:'参数错误'});
