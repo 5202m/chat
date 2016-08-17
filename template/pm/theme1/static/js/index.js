@@ -27,9 +27,9 @@ var indexJS ={
     setEvent:function(){
         //隐藏广告
         if($("#roomInfoId").attr("av")=='true'){
-            $(".video_ad,.mod_menu .menu_ad").show();
+            $(".mod_menu .menu_ad").show();
         }else{
-            $(".video_ad,.mod_menu .menu_ad").hide();
+            $(".mod_menu .menu_ad").hide();
         }
         //头部框事件
         $(".header-right li").hover(function(){

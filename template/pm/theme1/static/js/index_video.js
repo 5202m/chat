@@ -193,9 +193,9 @@ var videos={
         this.bindEventRollNews();
 
         /**天使计划广告*/
-         $('.video_ad .ad_closebtn').click(function() {
+         /*$('.video_ad .ad_closebtn').click(function() {
             $('.video_ad').hide();
-        });
+        });*/
     },
     /**
      * 客户端视频任务
