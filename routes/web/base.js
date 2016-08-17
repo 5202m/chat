@@ -908,7 +908,12 @@ router.get('/getVerifyCode', function(req, res) {
 router.post('/getShowTrade', function(req, res){
     var params = req.body['data'];
     if(typeof params == 'string'){
-        params = JSON.parse(params);
+        try {
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
     }
      params.pageSize = common.isBlank(params.pageSize) ? 100 : params.pageSize;
     if(isNaN(params.pageSize) || common.isBlank(params.groupType)){
@@ -926,7 +931,12 @@ router.post('/getShowTrade', function(req, res){
 router.post('/addShowTrade', function(req, res){
     var params = req.body['data'];
     if(typeof params == 'string'){
-        params = JSON.parse(params);
+        try {
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
     }
     params.Ip = common.getClientIp(req);
     if(common.isBlank(params.title)){
