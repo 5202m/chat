@@ -324,7 +324,7 @@ var roomJS={
      */
     setVideoList:function(){
         studioMbPop.loadingBlock($("#videosTab"));
-        this.getArticleList("teach_video_base,teach_video_gw,teach_video_expert",this.userInfo.groupId,0,1,100,'{"sequence":"desc","publishStartDate":"desc"}',null,function(dataList){
+        this.getArticleList("teach_video_base,teach_video_gw,teach_video_expert,teach_video_financial",this.userInfo.groupId,0,1,100,'{"sequence":"desc","publishStartDate":"desc"}',null,function(dataList){
             var loc_panel = $("#videosTab .boxcont");
             loc_panel.html("");
             if(dataList && dataList.result==0){
