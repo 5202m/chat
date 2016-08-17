@@ -544,7 +544,7 @@ var roomJS={
                 return;
             }
             var isMeSend = $('[isme="true"]').size(), speakNum = $('#currStudioInfo').attr('spn');
-            if(common.isValid(speakNum) && isMeSend == speakNum) {//发言次数限制
+            if(common.isValid(speakNum) && isMeSend == speakNum && !roomJS.userInfo.isLogin) {//发言次数限制
                 studioMbPop.Login.forceLogin(true);
                 studioMbPop.popBox("login", {
                     groupId: roomJS.userInfo.groupId,
