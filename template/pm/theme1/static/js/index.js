@@ -166,14 +166,25 @@ var indexJS ={
             $(".mod_main .tabnav a").removeClass("on");
             $(this).addClass("on");
             $(".mod_main .tabcont .main_tab").removeClass("on").eq(index).addClass("on");
-            if(index==1){
+            if(index==1){//快讯
                 indexJS.setInformation();
             }
-            if(index==2){
-                indexJS.setTradeStrategy(currDom.find('.scrollbox'));//设置滚动
+            if(index==2){//课堂笔记
+                $("#textLiveCount").data("cnt", 0).html("").hide();
+                indexJS.setTradeStrategyNote(null, true);
             }
-            if(index==0){
+            if(index==3){//实盘策略
+                indexJS.setTradeStrategy(currDom.find('.scrollbox'));
+            }
+            if(index==0){//聊天
                 chat.setTalkListScroll(true);
+            }
+        });
+        /**课堂笔记加载更多*/
+        $("#textliveMore").bind("click", function(){
+            if($(this).not(".all")){
+                var lastId = $("#textlivePanel li[aid]:last").attr("aid");
+                indexJS.setTradeStrategyNote(lastId, false);
             }
         });
         /*QQ客服按钮事件*/
@@ -440,12 +451,24 @@ var indexJS ={
      * @param curPageNo
      * @param pageSize
      * @param orderByStr
-     * @param authorId
+     * @param params {{authorId, pageKey, pageLess, isAll}}
      * @param callback
      */
-    getArticleList:function(code,platform,hasContent,curPageNo,pageSize,orderByStr,authorId,callback){
+    getArticleList:function(code,platform,hasContent,curPageNo,pageSize,orderByStr,params,callback){
+        params = params || {};
         try{
-            $.getJSON('/studio/getArticleList',{authorId:common.trim(authorId),code:code,platform:platform,hasContent:hasContent,pageNo:curPageNo,pageSize:pageSize,orderByStr:orderByStr},function(data){
+            $.getJSON('/studio/getArticleList',{
+                authorId:common.trim(params.authorId),
+                code:code,
+                platform:platform,
+                hasContent:hasContent,
+                pageNo:curPageNo,
+                pageKey:common.trim(params.pageKey),
+                pageLess:common.trim(params.pageLess),
+                isAll:common.trim(params.isAll),
+                pageSize:pageSize,
+                orderByStr:orderByStr
+            },function(data){
                 //console.log("getArticleList->data:"+JSON.stringify(data));
                 callback(data);
             });
@@ -536,6 +559,106 @@ var indexJS ={
         });
     },
     /**
+     * 加载课堂笔记
+     */
+    setTradeStrategyNote : function(noteId, isLoad){
+        if(!isLoad || !$("#textlivePanel").data("loaded")){
+            if(isLoad){
+                $("#textlivePanel").data("loaded", true);
+                if(!noteId){
+                    noteId = $("#textlivePanel li[aid]:last").attr("aid");
+                }
+            }
+            var params = {
+                isAll : 1,
+                pageKey : noteId || "",
+                pageLess : 1
+            };
+            this.getArticleList("class_note",indexJS.userInfo.groupId,1,1,30,'{"publishStartDate":"desc","sequence":"asc","createDate":"desc"}',params,function(dataList){
+                if(dataList && dataList.result==0){
+                    var data=dataList.data;
+                    for(var i in data){
+                        indexJS.appendTradeStrategyNote(data[i], false, false);
+                    }
+                    if(data.length < dataList.pageSize){
+                        $("#textliveMore").addClass("all").html("已加载全部");
+                    }
+                }
+                indexJS.setListScroll($(".textlivelist>.scrollbox"));//设置滚动
+            });
+        }
+    },
+    /**
+     * 追加课堂笔记
+     */
+    appendTradeStrategyNote : function(articleInfo, isPrepend, showNum){
+        var articleDetail,publishTime
+            , $panel = $("#textlivePanel"),$panelUL,html,$li;
+        var format1 = indexJS.formatHtml('tradestrategynote1'); //课程信息
+        var format2 = indexJS.formatHtml('tradestrategynote2'); //文档信息
+        var format3 = indexJS.formatHtml('tradestrategynote3'); //图片信息
+        var imgReg = /<img\s+[^>]*src=['"]([^'"]+)['"][^>]*>/,matches;
+        articleDetail=articleInfo.detailList && articleInfo.detailList[0];
+        publishTime = new Date(articleInfo.publishStartDate).getTime();
+        //课程信息
+        var aid = articleInfo._id || articleInfo.id;
+        if($panel.find("li[aid='" + aid + "']").size() > 0){
+            return;
+        }
+        $panelUL = $panel.find(".textlive[pt='" + publishTime + "']>ul");
+        if($panelUL.size() == 0){
+            var author = '',avatar = '';
+            if(articleDetail.authorInfo){
+                author = articleDetail.authorInfo.name || "";
+                avatar = articleDetail.authorInfo.avatar || "";
+            }
+            var publishTimeStr = common.formatterDateTime(publishTime, '-').substring(0, 16)
+                + "-" + common.formatterDateTime(articleInfo.publishEndDate, '-').substring(11, 16);
+            var cls = articleDetail.title ? "" : " dn";
+            html = format1.formatStr(
+                publishTime,
+                avatar,
+                author,
+                publishTimeStr,
+                cls,
+                articleDetail.title || ""
+            );
+            if(isPrepend){
+                $panel.prepend(html);
+            }else{
+                $panel.append(html);
+            }
+            $panelUL = $panel.find(".textlive[pt='" + publishTime + "']>ul");
+        }
+        //文档信息
+        html = articleDetail.content;
+        matches = imgReg.exec(html);
+        while(matches){
+            html = html.replace(imgReg, format3.formatStr(matches[1]));
+            matches = imgReg.exec(html);
+        }
+        publishTimeStr = common.formatterDateTime(articleInfo.createDate, '-').substring(11);
+        $li = $(format2.formatStr(aid, publishTimeStr, html));
+        $li.find(".picpart>.imgdiv").each(function(){
+            $(this).children("img").attr("src", $(this).attr("url"));
+            $(this).bind("click", function(){
+                $(this).parent().toggleClass("zoom");
+            });
+        });
+        if(isPrepend){
+            $panelUL.prepend($li);
+        }else{
+            $panelUL.append($li);
+        }
+        if(showNum){
+            var $cnt = $("#textLiveCount");
+            if($cnt.parent().not(".on")){
+                var cnt = ($cnt.data("cnt") || 0) + 1;
+                $cnt.data("cnt", cnt).html(cnt).show();
+            }
+        }
+    },
+    /**
      * 加载实盘策略
      */
     setTradeStrategy: function(scrollDom){
@@ -613,6 +736,35 @@ var indexJS ={
     formatHtml:function(region){
         var formatHtmlArr = [];
         switch(region) {
+            case 'tradestrategynote1':
+                formatHtmlArr.push('<div class="textlive" pt="{0}">');
+                formatHtmlArr.push('<div class="liveinfo">');
+                formatHtmlArr.push('<div class="himg"><img src="{1}" alt="{2}"></div>');
+                formatHtmlArr.push('<div class="infocont">');
+                formatHtmlArr.push('<span class="tname">{2}</span>');
+                formatHtmlArr.push('<span class="livetime">{3}</span>');
+                formatHtmlArr.push('<p class="livetit{4}">直播主题 - {5}</p>');
+                formatHtmlArr.push('</div>');
+                formatHtmlArr.push('</div>');
+                formatHtmlArr.push('<ul></ul>');
+                formatHtmlArr.push('</div>');
+                break;
+            case 'tradestrategynote2':
+                formatHtmlArr.push('<li aid="{0}">');
+                formatHtmlArr.push('<div class="cont">');
+                formatHtmlArr.push('<i class="dot"></i>');
+                formatHtmlArr.push('<b>{1}</b>');
+                formatHtmlArr.push('<span>{2}</span>');
+                formatHtmlArr.push('</div>');
+                formatHtmlArr.push('</li>');
+                break;
+            case 'tradestrategynote3':
+                formatHtmlArr.push('<div class="picpart">');
+                formatHtmlArr.push('<div class="imgdiv" url="{0}"><i></i><img alt="">');
+                formatHtmlArr.push('</div>');
+                formatHtmlArr.push('<a href="{0}" data-lightbox="liveinfo-img">点击查看大图</a>');
+                formatHtmlArr.push('</div>');
+                break;
             case 'tradestrategy':
                 formatHtmlArr.push('<li class="guideli">');
                 formatHtmlArr.push('    <div class="line1 clearfix">');

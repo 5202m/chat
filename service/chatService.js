@@ -735,7 +735,7 @@ var chatService ={
         }
     },
     /**
-     * 新赠或修改字幕,需要查询数据
+     * 新增或修改字幕,需要查询数据
      * @param ids
      */
     submitPushInfo:function(infoStr , isValid){
@@ -749,6 +749,28 @@ var chatService ={
             }
         }catch(e){
             logger.error("submitPushInfo fail",e);
+        }
+
+    },
+    /**
+     * 通知文档数据
+     * @param articleJSON
+     * @param opType
+     */
+    noticeArticle:function(articleJSON, opType){
+        try{
+            var article = JSON.parse(articleJSON);
+            if(article && article.platform){
+                article.position = 5;//课堂笔记
+                article.opType   = opType;//操作类型
+                var rmIds = article.platform.split(",");
+                for(var i in rmIds ){
+                    chatService.sendMsgToRoom(true,null,rmIds[i],"notice",{type:chatService.noticeType.pushInfo,data:article});
+                }
+            }
+
+        }catch(e){
+            logger.error("noticeArticle fail",e);
         }
 
     },

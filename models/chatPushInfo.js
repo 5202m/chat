@@ -12,7 +12,7 @@ var mongoose = require('mongoose')
             title:String,//推送标题
             content:String,
             pushType:Number,
-            position:Number,//推送位置：0 任务栏 、1 私聊框、2、页面提示
+            position:Number,//推送位置：0-任务栏 、1-私聊框、2-页面提示、3-公聊框、4-视频字幕
             groupType: {type: String, index: true},//房间组别,
             clientGroup:[],
             roomIds:[],

@@ -426,6 +426,9 @@ router.get('/getArticleList', function(req, res) {
     params.code=req.query["code"];
     params.platform=req.query["platform"];
     params.pageNo=req.query["pageNo"];
+    params.isAll=req.query["isAll"] || "";
+    params.pageKey=req.query["pageKey"] || "";
+    params.pageLess=req.query["pageLess"] || "";
     params.authorId=req.query["authorId"];
     params.pageSize=req.query["pageSize"];
     params.hasContent=req.query["hasContent"];

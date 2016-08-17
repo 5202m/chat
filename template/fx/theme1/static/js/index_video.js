@@ -546,7 +546,7 @@ var videos={
                 videos.setNextCourse(course,(authorArr&&authorArr.length>0?authorArr[0]:{avatar:'',name:''}));
             }
         });
-        indexJS.getArticleList("trade_strategy_article",indexJS.userInfo.groupId,1,1,1,'{"createDate":"desc"}', '',function(dataList) {
+        indexJS.getArticleList("trade_strategy_article",indexJS.userInfo.groupId,1,1,1,'{"createDate":"desc"}', null,function(dataList) {
         	if(dataList && dataList.result==0 && dataList.data && dataList.data.length>0) {
                 var data = dataList.data[0],row = data.detailList[0];
                 $("#lvInfoId p.content").html(row.content);

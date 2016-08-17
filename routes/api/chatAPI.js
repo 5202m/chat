@@ -70,7 +70,7 @@ router.post('/leaveRoom', function(req, res) {
     res.json(result);
 });
 /**
- * 更新视频客户端推送信息
+ * 更新字幕推送信息
  */
 router.post('/submitPushInfo', function(req, res) {
     var infoStr=req.body["infoStr"];
@@ -85,7 +85,7 @@ router.post('/submitPushInfo', function(req, res) {
     res.json(result);
 });
 /**
- * 更新视频客户端推送信息
+ * 更新字幕推送信息
  */
 router.post('/removePushInfo', function(req, res) {
     var ids=req.body["ids"];
@@ -96,6 +96,21 @@ router.post('/removePushInfo', function(req, res) {
         result.error=errorMessage.code_1000;
     }else{
         chatService.removePushInfo(position,roomIds,ids);//多个
+        result.isOK=true;
+    }
+    res.json(result);
+});
+/**
+ * 更新文档推送信息
+ */
+router.post('/noticeArticle', function(req, res) {
+    var articleJSON=req.body["article"];
+    var opType=req.body["opType"];
+    var result={isOK:false,error:null };
+    if(common.isBlank(articleJSON)){
+        result.error=errorMessage.code_1000;
+    }else{
+        chatService.noticeArticle(articleJSON , opType);
         result.isOK=true;
     }
     res.json(result);

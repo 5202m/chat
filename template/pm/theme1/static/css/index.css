@@ -32,7 +32,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .jscroll-h,.jscroll-e { border-radius:4px}
 
 /*images*/
-.header-btn a i,.te_detail .support,.dialog > p i,.dialog .headimg b,.toolbar .tbtn,.mymsg .closebtn i,.input_area .sendbtn i,.view_select i,.message_list li i,.guideli .support,.tag i,.mod_room .titbar > span i,.roomctrl i,.mod_userlist .headimg b,.rbox_top .rname i,.rbox_top .peo_num i,.hqbox li i,.votebox a,.notebtn.on i,.calendar_table .stars span,.ppt_list li .downbtn i,.plate_box .downbtn i,.course_tab li i,.noticebtn.on i,.pop_close i,.error i,.per_item .level i,.per_item .tipbtn i,.upg_box .level,.upg_tip i,.kh-btn a i,.mult_dialog .close,.mult_dialog .num,.mult_dialog .headimg b,.pletter_win .pl_close,.pletter_win .pl_small,.tec_videolist .list-icon i,.tec_videolist .v_name i,.tec_videolist .refresh-icon i,.cate_box .cate_name i,.cate_box li a i,.nextbox .live_time i,.pletter_win .whcls > i,.pop_small i,.sd_ul .cont > i,.sd_pages .arr i,.sd_stat p i,.usersd_list .lightbox > i,.usersd_list .support,.usersd_list .state,.mod_scrollnews a i,.mod_scrollnews .newsbtn i,.mod_scrollnews .newsclose i{ background-image:url(../img/img_css.png); background-repeat:no-repeat;}
+.header-btn a i,.te_detail .support,.dialog > p i,.dialog .headimg b,.toolbar .tbtn,.mymsg .closebtn i,.input_area .sendbtn i,.view_select i,.message_list li i,.guideli .support,.tag i,.mod_room .titbar > span i,.roomctrl i,.mod_userlist .headimg b,.rbox_top .rname i,.rbox_top .peo_num i,.hqbox li i,.votebox a,.notebtn.on i,.calendar_table .stars span,.ppt_list li .downbtn i,.plate_box .downbtn i,.course_tab li i,.noticebtn.on i,.pop_close i,.error i,.per_item .level i,.per_item .tipbtn i,.upg_box .level,.upg_tip i,.kh-btn a i,.mult_dialog .close,.mult_dialog .num,.mult_dialog .headimg b,.pletter_win .pl_close,.pletter_win .pl_small,.tec_videolist .list-icon i,.tec_videolist .v_name i,.tec_videolist .refresh-icon i,.cate_box .cate_name i,.cate_box li a i,.nextbox .live_time i,.pletter_win .whcls > i,.pop_small i,.sd_ul .cont > i,.sd_pages .arr i,.sd_stat p i,.usersd_list .lightbox > i,.usersd_list .support,.usersd_list .state,.mod_scrollnews a i,.mod_scrollnews .newsbtn i,.mod_scrollnews .newsclose i,.textlive li .dot{ background-image:url(../img/img_css.png); background-repeat:no-repeat;}
 .img-loading{position:absolute;bottom:0;display:block;width:25px;height:25px;border-radius:4px;background:url(../img/loading2.gif) no-repeat center;background-size:40px 40px;z-index:9}
 .mod_menu .dropitem > a i{ background-image:url(../img/menu-icon.png); background-repeat:no-repeat;}
 
@@ -190,12 +190,13 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .mod_banner .num li.on{ background:#b59030; width:30px;}
 .mod_banner .dot-infobox{position:absolute;right:10px;bottom:10px;text-align:center;font-size:0;z-index:1}
 .mod_banner .dot-infobox span.swiper-pagination-bullet{display:inline-block;margin:0 1px;background:#fff;width:22px;height:5px;overflow:hidden; opacity:1; border-radius:0}
-.mod_banner .dot-infobox .swiper-pagination-bullet.on{background:#b88807}
+.mod_banner .dot-infobox .swiper-pagination-bullet.on{background:#b88807;}
 
 .mod_main{ position: relative; }
 .mod_main .tabnav{ height:40px; background:url(../img/contbg80.png) repeat; font-size:0; text-align:left}
 .mod_main .tabnav a{  height:38px; line-height:38px;display:inline-block; *display:inline; *zoom:1; margin:0 26px; color:#fff; font-size:16px; padding:0 5px; vertical-align:top; position:relative}
 .mod_main .tabnav sup{ position:absolute; top:6px; left:40px; font-size:12px; min-width: 9px; text-align: center; height:15px; line-height:14px; font-family:'Arial'; color:#fff; display:inline-block; *display:inline; *zoom:1; background:#da4454; border-radius:8px; padding:0 3px}
+.mod_main .tabnav sup.l2{left: 71px;}
 .mod_main .tabnav a.on,.mod_main .tabnav a:hover{border-bottom:2px solid #fff; font-weight:bold; text-decoration:none}
 .tabcont{ box-shadow:inset 0 -10px 50px rgba(250,247,195,.1); background:url(../img/contbg70.png) repeat; height:690px}
 .tabcont .main_tab{ display:none; position:relative}
@@ -631,7 +632,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .upg_result > span{ color:#666; font-size:16px; line-height:20px}
 .kh-btn { width:372px; margin:25px auto 0}
 .kh-btn a{ display:block; width:172px; border:1px solid #c49351; height:37px; line-height:35px; color:#c49351; font-size:16px; text-align:center; position:relative;  border-radius:2px;}
-.kh-btn a i{ display:inline-block; *display:inline; *zoom:1; vertical-align:top; width:19px; height:20px;  background-position:0 0;margin-right:9px; margin-top:9px;*vertical-align:middle; *margin-top:0; background-position:-110px -200px}
+.kh-btn a i{ display:inline-block; *display:inline; *zoom:1; vertical-align:top; width:19px; height:20px;  background-position:0 0;margin-right:9px; margin-top:9px;*vertical-align:middle; *margin-top:0; background-position:0px -30px}
 .kh-btn a i.mn{ background-position:-30px -30px}
 .kh-btn a:hover{ background:#c49351; color:#fff; text-decoration:none}
 .kh-btn a:hover i{ background-position:0 0}
@@ -670,7 +671,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .set_box .set_name.s2 i{ padding:0 4px}
 .set_box .set_show{ width:258px;float:right; height:39px; line-height:39px; background:#f5f5f9;border-top-right-radius:4px;border-bottom-right-radius:4px; text-indent:10px}
 .set_box.b2 .set_show,.set_box.b2 .set_inp{ width:338px;}
-.set_box .set_inp{ width:258px;float:right; height:39px; line-height:39px; text-indent:10px;font-family:'Microsoft YaHei'}
+.set_box .set_inp{ width:258px;float:right; height:39px; line-height:39px; text-indent:10px;font-family:'Microsoft YaHei'; background: none}
 .set_submit{ width:100%; display:block; height:47px; line-height:47px; color:#fff; font-size:20px; text-align:center; cursor:pointer; background:#c09355; border-radius:4px;font-family:'Microsoft YaHei'}
 .set_submit:hover{ background:#c58735;}
 .set_box .set_textaera{ width:385px; height:135px; line-height:22px; border:0; padding:5px 10px; color:#444; resize:none; background:none;font-family:'Microsoft YaHei'; }
@@ -905,6 +906,11 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .wid2 .input_area .adiv{ height: 70px }
 .wid2 .input_area .ctextarea{ font-size: 13px; height: 36px; }
 .wid2 .mymsg{ bottom: 137px }
+.wid2 .textlive .liveinfo{ line-height: 16px; }
+.wid2 .liveinfo .infocont{ padding-top: 2px; }
+.wid2 .liveinfo .tname{ font-size: 13px; }
+.wid2 .liveinfo .livetime{ font-size: 12px;display: block; }
+.wid2 .liveinfo .livetit{ font-size: 13px; }
 
 /*1024*/
 .wid3 .left_cont{    margin-right: 170px;}
@@ -1082,21 +1088,40 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .mod_scrollnews .newsbtn:hover{ text-decoration: none; }
 .mod_scrollnews .newsclose{ display: block; width:10px; height: 10px; padding: 10px 8.5px; position: absolute; right: 0; top: 0  }
 .mod_scrollnews .newsclose i{ display: block;width:10px; height: 10px; background-position: -140px -300px; }
-.input_area .text-min-img img {
-    height: 30px;
-    cursor: move;
-}
-.shadow-conut {
-	position: absolute;
-	left: 30px;
-	bottom: 5px;
-	width: 100%;
-	max-width: 150px;
-	display: block;
-	text-align: center;
-	font: 25px arial;
-	color: #fff;
-	text-shadow: 0 2px 0 #000;
-	z-index: 10;
-	text-decoration: none
-}
+.input_area .text-min-img img {height: 30px;cursor: move;}
+.shadow-conut {position: absolute; left: 30px; bottom: 5px; width: 100%; max-width: 150px; display: block; text-align: center; font: 25px arial; color: #fff; text-shadow: 0 2px 0 #000; z-index: 10; text-decoration: none}
+
+/* 文字直播 */
+.textlivelist{ position: relative;padding: 0 0 0 17px }
+.textlivelist .scrollbox{ }
+.textlivelist .textlive{ margin: 0 5px 20px 0; }
+.textlive ul{ padding-left: 9px; }
+.textlive li{ position: relative; border-left: 1px dashed #666; padding-left: 8px }
+.textlive li .cont{ border-top: 1px solid #1b3a7b; padding-left:70px ; padding-top: 13px; padding-bottom: 10px  }
+.textlive .liveinfo { background: #1b3366; border-radius: 3px; height: 66px; padding: 9px 14px;line-height: 28px; margin-top: 15px; }
+.liveinfo .himg{ width: 66px; height: 66px; float: left; margin-right: 10px; border-radius: 3px;  }
+.liveinfo .himg img{ width: 100%; height: 100%; }
+.liveinfo .infocont{ padding-top:4px;  }
+.liveinfo .tname{ color: #fff; font-size: 15px;  }
+.liveinfo .livetime{ color: #e2e2e2; font-size: 14px;  padding-left: 10px;}
+.liveinfo .livetit{ color: #f2ce9d; font-size: 15px;}
+.textlive li b{ font-size: 12px; color: #fff; line-height: 17px; border: 1px solid #fff; display: inline-block;*display: inline;*zoom: 1; margin-top: 6px; padding: 0 4px; font-weight: normal; position: absolute; left: 10px; top:10px; border-radius: 2px}
+.textlive li .dot{  display:block; width:7px; height:7px; background-position:-130px -50px; position:absolute; left:-4px; top:22px;}
+.textlive li span{ font-size: 14px; color: #fff; line-height: 22px; }
+.textlive li.last{ border-color:transparent; }
+.textlive li.last .dashed{ display: block; position: absolute; border-left: 1px dashed #666; width: 0; height: 23px; left:-1px; top: 0 }
+.textlive .picpart .imgdiv{ display: inline-block;*display: inline;*zoom: 1; border: 1px solid #bfe5ff; width: 122px; height: 80px; position: relative; margin-top: 5px; cursor: url(http://www.24k.hk/public/images/cursor_zoom.cur), auto!important; }
+.textlive .picpart.zoom .imgdiv{ width: auto; height: auto; cursor:url(http://www.24k.hk/public/images/cursor_minify.cur), auto!important; border: 0 }
+.picpart .imgdiv img{ width: 100%; height: 100%; }
+.picpart .imgdiv i{display: block; position: absolute; left: 0 ;top: 0; width: 100%; height: 100%; background: #fff; opacity: 0.5;filter: alpha(opacity=50); z-index: 2 }
+.picpart.zoom .imgdiv i{ display: none; }
+.textlive .picpart a{ color: #4cb6fe; font-size: 13px; line-height: 22px; }
+.textlivelist .loadmore{ display: block; height: 40px; text-align: center; color: #fff;background: #2a508d;background: rgba(58,103,166,.5); border: 0; margin: 20px auto ; font-size: 18px;}
+.textlivelist .loadmore:hover{ background: #37609e;background: rgba(58,103,166,.8); text-decoration: none;}
+.textlivelist .loadmore.all{ color: #468cfc; cursor:default; }
+.textlivelist .loadmore.all:hover{  background: #2a508d;background: rgba(58,103,166,.5); }
+
+
+.mCSB_outside + .mCSB_scrollTools{ right: -20px }
+.mCS-light-thick.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,.mCS-light-thick.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar, .mCS-light-thick.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{background: url(../img/scroll.png) -10px center no-repeat #527bac; }
+.mCS-light-thick.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{ background-position: right center; background-color: #4b7eba }

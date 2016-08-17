@@ -50,7 +50,10 @@ var baseApiService = {
      * @param callback
      */
     getArticleList:function(params,callback){
-        var url=util.format('/article/getArticleList?authorId=%s&platform=%s&code=%s&lang=%s&hasContent=%s&pageNo=%d&pageSize=%d&orderByJsonStr=%s',params.authorId,params.platform,params.code,'zh',params.hasContent,params.pageNo,params.pageSize,params.orderByStr);
+        var url=util.format('/article/getArticleList?authorId=%s&platform=%s&code=%s&lang=%s&hasContent=%s&isAll=%s&pageNo=%d&pageSize=%d&pageLess=%s&pageKey=%s&orderByJsonStr=%s'
+            ,params.authorId,params.platform,params.code,'zh',params.hasContent
+            ,params.isAll,params.pageNo,params.pageSize,params.pageLess,params.pageKey
+            ,params.orderByStr);
         request(this.formatApiUrl(url),function(err, response, data){
             if (!err && response.statusCode == 200) {
                 callback(data);

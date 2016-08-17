@@ -1284,17 +1284,27 @@ var chat={
                 }
                 case 'pushInfo':{
                     var data=result.data;
-                    if(data.position==1){//私聊框
-                        chat.whPushObj = {info: data.content,publishTime: data.publishTime,infoId: data.contentId};
-                        chat.pushInfoTimeOutId = window.setTimeout(function () {//按推送结果提示私聊
-                            var aDom = $("#userListId li[t=3] a .headimg:not(.have_op)");
-                            $(aDom.get(common.randomIndex(aDom.length))).parent().find('em').click();
-                            $('#main_ad_box .pop_close').click();
-                        }, data.timeOut * 60 * 1000);
-                    }else if(data.position==3){ //公聊框
-                        chat.talkBoxPush.initTBP(data.infos);
-                    }else if(data.position==4){ //视频框
-                        videos.rollNews(data);
+                    switch (data.position){
+                        case 1://私聊框
+                            chat.whPushObj = {info: data.content,publishTime: data.publishTime,infoId: data.contentId};
+                            chat.pushInfoTimeOutId = window.setTimeout(function () {//按推送结果提示私聊
+                                var aDom = $("#userListId li[t=3] a .headimg:not(.have_op)");
+                                $(aDom.get(common.randomIndex(aDom.length))).parent().find('em').click();
+                                $('#main_ad_box .pop_close').click();
+                            }, data.timeOut * 60 * 1000);
+                            break;
+                        case 3://公聊框
+                            chat.talkBoxPush.initTBP(data.infos);
+                            break;
+                        case 4://视频字幕
+                            videos.rollNews(data);
+                            break;
+                        case 5://课堂笔记
+                            if(data.platform && data.platform.indexOf(indexJS.userInfo.groupId) != -1){
+                                indexJS.appendTradeStrategyNote(data, true, true);
+                                indexJS.setListScroll($(".textlivelist>.scrollbox"));
+                            }
+                            break;
                     }
                     break;
                 }
