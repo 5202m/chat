@@ -816,7 +816,7 @@ var chat={
             box.showMsg({
                 closeable : false,
                 title : "登出提示",
-                msg : "注意：您的账号已在其他地方登陆，被踢出！",
+                msg : "由于您打开了多个直播室页面，造成重复登录，下线后请重新登录",
                 btns : [{
                     txt : "重新登录",
                     fn : function(){

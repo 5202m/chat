@@ -1648,7 +1648,7 @@ var roomJS={
             }
             roomJS.socket.disconnect();
             studioMbPop.popBox("msg", {
-                msg : "注意：您的账号已在其他地方登陆，被踢出！",
+                msg : "由于您打开了多个直播室页面，造成重复登录，下线后请重新登录",
                 type : "logout"
             });
         }
