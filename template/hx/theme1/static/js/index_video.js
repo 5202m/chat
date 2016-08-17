@@ -4,6 +4,7 @@
  */
 var videos={
     blwsPlayer:null,//保利威视
+    newMarIntervalId:0,//新闻滚动
     init:function(){
         this.setEvent();//设置各种事件
         this.setVideoList(null,true);//设置视频列表
@@ -181,6 +182,12 @@ var videos={
             $("#teachVideoId .cate_box").removeClass("show");
             videos.setVideoList($(this).parent().addClass("show").attr("t"));
         });
+
+        /**绑定晒单相关事件*/
+        videos.sd.setSDEvent();
+
+        /**滚动字幕事件*/
+        this.bindEventRollNews();
     },
     /**
      * 客户端视频任务
@@ -268,6 +275,177 @@ var videos={
         }
         $("#lvVideoId").hide();
         $("#nextCourse").show();
+    },
+    /**
+     * 滚动新闻事件
+     */
+    bindEventRollNews : function(){
+        /**
+         * 隐藏滚动文字
+         */
+        /*$('.mod_scrollnews .newsclose').click(function(){
+            $('.mod_scrollnews .newslist').hide();
+            $('.mod_scrollnews .newsbtn').show();
+            clearInterval(videos.newMarIntervalId);
+            videos.newMarIntervalId=null;
+        });*/
+
+        /**
+         * 显示滚动文字
+         */
+        $('.mod_scrollnews .newsbtn').click(function(){
+            $(this).hide();
+            $('.mod_scrollnews .newslist').slideDown();
+            videos.newsMarquee(true);
+        });
+
+        /**
+         * 点击显示详细内容
+         */
+        $("#newscont1 a").live("click", function(){
+            if($(this).attr('url')==='false') {
+                $("#popMsgTit").text($(this).attr("title"));
+                $("#popMsgTxt").html($(this).data("content") || "没有内容");
+                $("#popMsgBox,.blackbg").show();
+                indexJS.setListScroll(".popMsgBox");
+                return false;
+            }
+        });
+
+        /**
+         * 点击显示详细内容
+         */
+        $("#newscont2 a").live("click", function(){
+            if($(this).attr('url')==='false') {
+                $("#newscont1 a[tid='" + $(this).attr('tid') + "']").trigger("click");
+                return false;
+            }
+        });
+    },
+    /**
+     * 滚动新闻
+     * @param data
+     */
+    rollNews : function(data){
+        var newsPanel = $('#newscont1');
+        if(data.delete){
+            var ids = data.ids.split(',');
+            if(ids.length>0){
+                for(var i=0;i<ids.length;i++){
+                    newsPanel.find('a[tid="' +ids[i]+'"]').remove();
+                }
+            }
+        }else if(data.edit){
+            data.isValid = data.isValid  == "true" ? true  : false ;
+            //如果不在该组，remove元素；该处不判断房间，修改房间后只能推送到新房间，老房间不remove
+            if(data.isValid && (!indexJS.userInfo.clientGroup || ! data.clientGroup ||  $.inArray(indexJS.userInfo.clientGroup, data.clientGroup) == -1)) {
+                data.isValid = false ;
+            }
+            var tids = newsPanel.find('a[tid="' + data.id+'"]');
+            if(data.isValid){
+                if(tids.size()>0){ //修改
+                    if(common.isValid(data.url)){
+                        tids.attr({'title': data.title, 'href':data.url,'url':'true'})
+                            .html('<i></i><span>' + data.title + '</span>');
+                    }else {
+                        tids.attr({'title': data.title,'url':'false'})
+                            .html('<i></i><span>' + data.content + '</span>')
+                            .data('content', data.content);
+                    }
+                }else{  //新增
+                    var title = $('<a href="javascript:void(0);" tid="' + data.id + '" title="' + data.title + '" target="_blank"><i></i><span>' + data.content + '</span></a>');
+                    if(common.isValid(data.url)) {
+                        title.attr({'href':data.url,'url':'true'});
+                        title.find('span').text(data.title);
+                    }else{
+                        title.attr({'url':'false'}).data('content', data.content);
+                    }
+                    newsPanel.append(title);
+                }
+            }else{
+                if(tids.size()>0) {
+                    tids.remove();
+                }
+            }
+        }else{
+            if(data.infos){
+                var count = data.infos.length,title=null,contents='';
+                if(count>0){
+                    for(var i = 0 ;i<count ; i++){
+                        if(indexJS.userInfo.clientGroup && data.infos[i].clientGroup && $.inArray(indexJS.userInfo.clientGroup, data.infos[i].clientGroup)>-1){
+                            if(data.infos[i].pushType == 1 && data.infos[i].contentId && data.infos[i].title){
+                                if(common.isValid(data.infos[i].url)){
+                                    title = $('<a href="'+data.infos[i].url+'" url="true" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank"><i></i><span>' + data.infos[i].content + '</span></a>');
+                                }else {
+                                    title = $('<a href="javascript:void(0);" url="false" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank"><i></i><span>' + data.infos[i].content + '</span></a>');
+                                    title.data('content', data.infos[i].content);
+                                }
+                                newsPanel.append(title);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(newsPanel.is(':empty')){
+            $('#video_content .tabtxt').hide();
+            $('#video_content .video-name').css('top','12px');
+        } else {
+            $('#video_content .tabtxt').show();
+            $('#video_content .video-name').css('top','48px');
+        }
+        this.newsMarquee(true);
+    },
+    /**
+     * 新闻滚动
+     */
+    newsMarquee:function (isShow){
+        if(videos.newMarIntervalId){
+            clearInterval(videos.newMarIntervalId);
+            videos.newMarIntervalId=null;
+        }
+        var speed=30;
+        var newsPanel = $(".mod_scrollnews");
+        var tab=$("#scrollnews_demo")[0];
+        var tab1=$("#newscont1");
+        var tab2=$("#newscont2");
+        if(isShow && tab1.children().size() > 0){
+            newsPanel.show();
+        }else{
+            newsPanel.hide();
+        }
+        tab2.html("");
+        $(tab).unbind("mouseover mouseout");
+        if(isShow){
+            tab1.css("width", "auto");
+            tab2.css("width", "auto");
+            var widthTmp = newsPanel.width() - 27;
+            if(tab1.width() < widthTmp){
+                tab1.css("width", widthTmp);
+                tab2.css("width", widthTmp);
+            }
+            //需要滚动
+            tab2.html(tab1.html());
+            /**滚动*/
+            var marqueeFunc = function(){
+                if(tab1.width()-tab.scrollLeft<=0) {
+                    tab.scrollLeft -= tab1.width();
+                }else{
+                    tab.scrollLeft++;
+                }
+            };
+            videos.newMarIntervalId=window.setInterval(marqueeFunc,speed);
+            $(tab).bind("mouseover", function() {
+                window.clearInterval(videos.newMarIntervalId);
+                videos.newMarIntervalId=null;
+            }).bind("mouseout", function() {
+                if(videos.newMarIntervalId){
+                    window.clearInterval(videos.newMarIntervalId);
+                    videos.newMarIntervalId=null;
+                }
+                videos.newMarIntervalId=window.setInterval(marqueeFunc,speed);
+            });
+        }
     },
     /**
      * 提取embed对应的dom
@@ -451,6 +629,154 @@ var videos={
             }
         }catch(e){
             console.error("setVideo has error:"+e);
+        }
+    },
+    /**
+     * 晒单功能
+     * */
+    sd : {
+        analyst : null, //分析师信息
+        tradeList : [], //晒单交易列表
+        loadAll : false,
+        /**绑定事件*/
+        setSDEvent : function(){
+            $("#sdNoAuthBox .aid_chat span").bind("click", function(){
+                $("#sdNoAuthBox .pop_close").trigger("click");
+                var uid = $(this).attr("uid");
+                var cs = $("#userListId li[id='"+uid+"']");
+                if(cs.size() == 0){
+                    cs = $("#userListId li[utype='3']:first");
+                }
+                cs.find("em").trigger("click");
+            });
+        },
+        /**初始化晒单*/
+        initSD : function(){
+            var course=common.getSyllabusPlan(indexJS.syllabusData,indexJS.serverTime);
+            if(course && course.lecturerId && (!videos.sd.analyst || course.lecturerId.indexOf(videos.sd.analyst.userNo) == -1)){
+                $.getJSON('/hxstudio/getShowTradeInfo',{userNo: course.lecturerId},function(data){
+                    if(data && data.analyst){
+                        videos.sd.analyst = data.analyst;
+                        videos.sd.tradeList = data.tradeList || [];
+                        videos.sd.loadAll = false;
+                        $("#sdInfoId .nosd_tip").hide();
+                        videos.sd.showPraiseInfo();
+                        videos.sd.showSDInfo();
+                        $('#sdInfoId .nosd_tip').hide();
+                    } else {
+                        $('#sdInfoId .nosd_tip').show();
+                    }
+                });
+            }
+        },
+        /**点赞事件*/
+        showPraiseInfo : function(){
+            $("#sdInfoId .te_info").empty();
+            var userInfo = this.analyst;
+            $("#sdInfoId .te_info").append('<div class="te_detail sd" uid="'+userInfo.userNo+'"><img src="'+userInfo.avatar+'" alt=""><div class="rcont"><span><strong>'+userInfo.userName+'</strong><i class="suc">TA的胜率：<b>'+(userInfo.winRate || '--')+'</b></i></span> <a href="javascript:" class="support" uid="'+userInfo.userNo+'"><label>'+userInfo.praiseNum+'</label><i>+1</i></a> </div> </div>');
+            $("#sdInfoId .te_detail .support").click(function(){
+                var _this=$(this);
+                try{
+                    common.getJson("/hxstudio/setUserPraise",{clientId:indexJS.userInfo.userId,praiseId:_this.attr("uid")},function(result){
+                        if(result.isOK) {
+                            _this.find('i').fadeIn().delay(400).fadeOut();
+                            var lb= _this.find("label");
+                            lb.text(common.isValid(lb.text())?(parseInt(lb.text())+1):0);
+                        }else{
+                            box.showTipBox('亲，已点赞，当天只能点赞一次！');
+                        }
+                        _this.addClass('supported');
+                        _this.attr('title','已点赞');
+                        //同步视频直播老师中的点赞信息
+                        /*var _that = $("#lvInfoId .te_detail .support[uid='" + videos.sd.analyst.userNo + "']");
+                        _that.find("label").text(_this.find("label").text());
+                        _that.addClass('supported');
+                        _that.attr('title','已点赞');*/
+                    },true);
+                }catch(e){
+                    console.error("setPraise->"+e);
+                }
+            });
+        },
+        /**显示晒单信息*/
+        showSDInfo : function(){
+            this.showWXInfo();
+            $("#sdInfoId .sd_ul").empty();
+            this.showTradeList();
+        },
+        /**显示微信信息*/
+        showWXInfo: function(){
+            var html = [];
+            if(this.analyst.wechatCode){
+                html.push('<div class="te_wx">');
+                html.push('<div class="wx-qrcode">');
+                if(this.analyst.wechatCodeImg){
+                    html.push('<img src="' + this.analyst.wechatCodeImg + '" alt="' + this.analyst.wechatCode + '">');
+                }
+                html.push('</div>');
+                html.push('<span class="wx-num">老师微信号: <b>' + this.analyst.wechatCode + '</b></span>');
+                html.push('</div>');
+                $("#sdInfoId .te_info").append(html.join(""));
+            }
+        },
+        /**显示晒单交易列表*/
+        showTradeList : function(){
+            if(videos.sd.loadAll){
+                return false;
+            }
+            var start = $("#sdInfoId .sd_ul li").size();
+            var listData = videos.sd.tradeList;
+            var lenI = !listData ? 0 : listData.length;
+            if(lenI==0){
+                $('#sdInfoId .nosd_tip').show();
+            }else{
+                $('#sdInfoId .nosd_tip').hide();
+            }
+            var trade = null;
+            var html = [];
+            var isNotAuth = indexJS.checkClientGroup("new"), isPos = false;
+            for(var i = start; i < lenI && i < start + 6; i++){
+                trade = listData[i];
+                isPos = !trade.profit;
+                html.push('<li><div class="cont">');
+                html.push('<div class="sd_tit">');
+                html.push('<span class="dep">');
+                if(isPos){
+                    html.push('持仓中');
+                }else{
+                    html.push('获利：');
+                    html.push('<b' + (/^-/.test(trade.profit) ? ' class="fall"' : '') + '>' + trade.profit + '</b>');
+                }
+                html.push('</span>');
+                html.push('<span class="sdtime">晒单时间: ' + common.formatterDateTime(trade.showDate).substring(5, 16) + '</span>');
+                html.push('</div>');
+                if(isNotAuth && isPos){
+                    html.push('<a href="javascript:videos.sd.showAuthBox()">');
+                    html.push('<img src="/pm/theme1/img/sd_default.png"></a>');
+                }else{
+                    html.push('<a href="' + trade.tradeImg + '" data-lightbox="sd-img" data-title="' + (isPos ? "持仓中" : "获利：" + trade.profit) + '">');
+                    html.push('<img src="' + trade.tradeImg + '"></a>');
+                }
+                html.push('<i></i></div></li>');
+            }
+            if(i >= lenI - 1){
+                videos.sd.loadAll = true;
+            }
+            $('#sdInfoId .sd_show').css({'max-height':'230px'});
+            $("#sdInfoId .sd_ul").append(html.join(""));
+            indexJS.setListScroll($("#sdInfoId .sd_show"), {callbacks : {onTotalScroll : videos.sd.showTradeList}});
+        },
+        /**显示未授权弹框*/
+        showAuthBox:function(){
+            var csDom = $("#userListId li[utype='3']:first");
+            if(csDom.size() == 0){//没有老师助理在线
+                $("#sdNoAuthBox .sdzl").hide();
+            }else{
+                $("#sdNoAuthBox .sdzl").show();
+                $("#sdNoAuthBox .aid_chat img").attr("src", csDom.find(".headimg img").attr("src"));
+                $("#sdNoAuthBox .aid_chat span").attr("uid", csDom.attr("id")).text(csDom.find(".uname span:first").text());
+            }
+            $("#sdNoAuthBox,.blackbg").show();
         }
     }
 };

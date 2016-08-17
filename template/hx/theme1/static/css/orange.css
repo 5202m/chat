@@ -1,0 +1,112 @@
+body {
+    background: url(../img/orange/background.jpg) center 0 no-repeat;
+	background-size: 100% 100%;
+}
+
+.box-header {background: #da6e34;}
+.header-right .toplink span {border-right:1px solid #ed8c58;}
+.header-right .toplink.on {
+    background: #b59030;
+    color: #fff;
+}
+.header-right li:hover .toplink {
+    color: #fb9c68;
+}
+.header-right .user .toplink strong {
+    color: #ffe39c
+}
+.header-right .toplink .arr {
+    border-color: transparent transparent #fff transparent;
+}
+.header-btn a {
+	border:1px solid #aa5223;
+	background-color:#aa5223;
+    color: #fff;
+}
+
+.header-btn a:hover {
+	color:#fff;
+    background: #ed834a;
+	border:1px solid #ed834a;
+}
+.left1_cont {
+    border-left: 6px solid rgba(5, 15, 36, 0);
+}
+.mod_menu .dropitem > a {color: #222;}
+.header-btn .header-login{
+    color: #fff;
+    border: 1px solid #aa5223;
+	background-color:#aa5223;
+	transition:background 0.3s;
+}
+.header-btn .header-login:hover{
+    background: #ed834a;
+    color: #fff;
+}
+.mod_userlist .user-inftop{border-bottom:1px solid #f7d0be;}
+.mod_userlist li {
+    border-bottom: 0px solid #f7d0be;
+}
+.mod_userlist li .uname {
+    color: #3f3f3f;
+}
+.user-inftop .toggle-room{
+    color: #333;
+	border:1px solid #f0b092;
+}
+.user-inftop .toggle-room:hover{
+	background-color:#e67639;color:#fff;
+	border:1px solid #e67639;
+}
+.user-inftop{
+    color: #e67639;
+}
+.user-infbox dd{
+    color: #333;
+}
+.user-infbox h5{color:#333;}
+.input_area .sendbtn{background-color:#e67639;}
+.input_area .sendbtn:hover{background-color:#e67639;}
+.live-notice .ntext{color:#ccb054;}
+.dialogbtn a:hover {color: #fff;background: #e67639;}
+.dialogbtn a.d1:hover b {
+    border-color: transparent transparent #e67639 transparent;
+}
+.header-right .info-name{background:none;}
+
+
+/*background*/
+.cont,.user-information,.listcont,.mod_userlist .titbar,.tabnav{background-color:rgba(255,255,255,0.4);}
+.tabcont{background-color:rgba(255,255,255,0.2);border-radius:3px;}
+.mod_userlist .titbar,.mod_videolist .tabnav,.news li{border-bottom:1px solid #f7d0be;}
+.mod_userlist .titbar span{color:#333;}
+.mod_userlist .titbar span i{color:#e67639;}
+.mod_userlist .titbar span.on,.mod_videolist .tabnav a.on{border-bottom:1px solid #e67639;}
+.mod_videolist .tabnav a{color:#e67639;}
+.tabcont .main_tab{background-color:rgba(255,255,255,0);}
+.mod_videolist .listcont .listcont {background:none;}
+.mod_videolist .hangqing li{border-color:#f7d0be;}
+.news li em{background: url("../img/orange/time-bg.png") no-repeat;background-size: 100% 100%;color:#e67639;}
+.mod_menu .dropitem > a i{background:url("../img/orange/iconbox.png") no-repeat scroll -259px -34px;}
+.input-toolbar a{background: url("../img/orange/iconbox.png") no-repeat -100px -34px;}
+.input-toolbar a.inp-bar4{background: url("../img/orange/s.png") 1px 0 no-repeat;width:22px;border-radius:50%;animation:largesse-flash 1s linear infinite;}
+@keyframes largesse-flash{
+  0% {background-color:yellow; }
+  50% {background-color:#f60; }
+  100% {background-color:yellow; }
+}
+.input-toolbar a.inp-bar5{background: url("../img/orange/i.png") no-repeat;}
+.dropitem.dr9 i.i9{background: url(../img/orange/left-icon.png) no-repeat;}
+.user-inftop .toggle-room i{background: url("../img/orange/iconbox.png") no-repeat -229px -33px;}
+.input-toolbar a.inp-bar3{
+    background:url("../img/orange/icon-i1.png") no-repeat;
+}
+
+/*晒单*/
+.usersd_list .sdinfo_bar a{ color: #a67a42 }
+.te_detail .support {background:url("../img/orange/icon_recommend.png") 0 0 no-repeat;}
+.te_detail .support.supported {background-position: 0 -30px;color:#f89d6c;}
+.nosd_tip p {color:#e67639;}
+
+
+.mCSB_dragger_bar{width:12px;background:url(../img/orange/scroll.png) center 50% no-repeat;}

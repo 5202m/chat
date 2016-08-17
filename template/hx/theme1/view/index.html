@@ -17,6 +17,18 @@
     <link href="/base/lib/face/face.css" type="text/css" rel="stylesheet" />
     <link href="/base/lib/pikaday/pikaday.min.css" type="text/css" rel="stylesheet" />
     <link href="/hx/theme1/css/index<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" type="text/css" rel="stylesheet" />
+    <% var defSkin = '';
+    if(defTemplate){
+        defTemplate = JSON.parse(defTemplate);
+        if(userSession.defTemplate){
+            defTemplate = JSON.parse(userSession.defTemplate);
+        }
+        defSkin = defTemplate.style;
+    %>
+    <link id="themeStyle" d="<%=isDevTest%>" href="/hx/<%= defTemplate.theme%>/css/<%= defTemplate.style%><%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" type="text/css" rel="stylesheet" />
+    <% }else{%>
+    <link id="themeStyle" d="<%=isDevTest%>" href="/hx/theme1/css/light<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" type="text/css" rel="stylesheet" />
+    <% }%>
     <script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
     <script type="text/javascript" src="/base/lib/store.min.js"></script>
     <!-- 自动登录 begin -->
@@ -140,7 +152,7 @@
                                 <a href="javascript:" class="tipbtn" id="tipbtnId"><i>?</i></a><a href="javascript:" class="upgradebtn">升级</a>
                                 <div class="upg_tip dn"><i></i><strong>直播间等级由高至低包括V、R、D、M、游客，等级愈高，拥有的权限亦愈多</strong></div>
                             </div>
-                            <div class="per_item clearfix">
+                            <div class="per_item clearfix"><!--a href="javascript:void(0);" class="toggleTheme" theme="1" cs="">换肤</a-->
                                 <a href="javascript:" class="tipbtn logout">退出登录</a>
                             </div>
                         </div>
@@ -156,6 +168,22 @@
                 </a>
             </div>
             <%}%>
+            <div class="header-btn">
+                <!--皮肤设置-->
+                <a class="skin" href="javascript:" title="主题设置">
+                    <i id="skinbtn"></i>
+                </a>
+                <div class="skinbox">
+                    <b class="arr"></b>
+                    <ul>
+                        <li class="light<% if(defSkin=='light'){%> on<%}%>" theme="1" cs="light"><p></p>清新蓝<span><% if(defSkin=='light'){%>(默认)<%}%></span></li>
+                        <li class="dark<% if(defSkin=='dark'){%> on<%}%>" theme="1" cs="dark"><p></p>炫酷黑<span><% if(defSkin=='dark'){%>(默认)<%}%></span></li>
+                        <li class="orange<% if(defSkin=='orange'){%> on<%}%>" theme="1" cs="orange"><p></p>橘子橙<span><% if(defSkin=='orange'){%>(默认)<%}%></span></li>
+                        <li class="darkblue<% if(defSkin=='darkblue'){%> on<%}%>" theme="1" cs="darkblue"><p></p>星空蓝<span><% if(defSkin=='darkblue'){%>(默认)<%}%></span></li>
+                        <li class="gold<% if(defSkin=='gold'){%> on<%}%>" theme="1" cs="gold"><p></p>雅金<span><% if(defSkin=='gold'){%>(默认)<%}%></span></li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -184,13 +212,13 @@
 
                 <div class="mod_main">
                     <div class="tabcont">
-                        <div class="tabtxt">
-                            <div class="mod_menu_bg"></div>
+                        <!--div class="tabtxt dn">
+                            <div class="mod_menu_bg"></div-->
                             <!--公告：滚动文字-->
-                            <div class="bulletinPanel" id="bulletinPanel">
+                            <!--div class="bulletinPanel" id="bulletinPanel">
                                 <ul class="anouncelist" id="bulletinDomId"></ul>
                             </div>
-                        </div>
+                        </div-->
                         <% include index_chat.html %>
                     </div>
                     <div class="radius_tool">
@@ -210,7 +238,10 @@
                     <div class="mod_videolist">
                         <div class="tabnav clearfix">
                             <div class="mod_menu_bg"></div>
-                            <a class="on" href="javascript:void(0)" onClick="indexJS.studioGA('send', 'event', 'click', 'hangqing', 'hxstudio_rightlink', ['addaction','click', 'hangqing', 'hxstudio_rightlink']);">
+                            <a class="on" href="javascript:void(0)" onClick="indexJS.studioGA('send', 'event', 'click', 'message', 'hxstudio_rightlink', ['addaction','click', 'sd-techer', 'hxstudio_rightlink']);">
+                                老师晒单
+                            </a>
+                            <a class="" href="javascript:void(0)" onClick="indexJS.studioGA('send', 'event', 'click', 'hangqing', 'hxstudio_rightlink', ['addaction','click', 'hangqing', 'hxstudio_rightlink']);">
                                 行情
                             </a>
                             <a class="" href="javascript:void(0)" onClick="indexJS.studioGA('send', 'event', 'click', 'message', 'hxstudio_rightlink', ['addaction','click', 'message', 'hxstudio_rightlink']);">
@@ -218,7 +249,19 @@
                             </a>
                         </div>
                         <div class="listcont scrollbox">
-                            <div class="list_tab on listcont" id="hangqing">
+                            <!--老师晒单-->
+                            <div id="sdInfoId" class="list_tab on clearfix">
+                                <div class="nosd_tip" style="display: none;"><p>老师操作很稳健，暂时还没有做单，耐心等待吧，我们将第一时间更新提示。</p></div>
+                                <div class="te_info">
+                                </div>
+                                <div class="sd_show">
+                                    <!-- 滚动部分 -->
+                                    <ul class="sd_ul"></ul>
+                                    <!-- 滚动部分 -->
+                                </div>
+                            </div>
+                            <!--//老师晒单-->
+                            <div class="list_tab listcont" id="hangqing">
                                 <div class="mod_menu_bg"></div>
                                 <ul class="hangqing">
                                     <li>
@@ -260,6 +303,8 @@
                                     </div>
                                 </div>
                             </div>
+
+
                         </div>
                     </div>
                     <div class="radius_tool">
@@ -318,6 +363,13 @@
                         <p></p>
                     </dd>
                 </dl>
+                <!--老师交易数据-->
+                <div class="tradedata">
+                    <b class="arr"></b>
+                    <!--i class="close">×</i-->
+                    <img src="" />
+                </div>
+                <!--//老师交易数据-->
                 <h5 id="outline">老师还未上线哦</h5>
                 <span><%= row.remark %></span>
             </div>
@@ -404,17 +456,19 @@
         var hh_txt = $('.tabtxt').height();
         var hh_inp = $('.input_box').height();
         $('.mod_main .tabcont').height(hh-hh_banner-68);
-        $('.mod_userlist .scrollbox').height(hh-hh_room-110-hh_tit);
+        $('.mod_userlist .scrollbox').height(hh-hh_room-118-hh_tit);
         $('.mod_menu').height(hh-60);
         $('.calendar_ul.scrollbox2').height(hh-165);
         $('.main_tab .scrollbox').height(hh-hh_banner-hh_txt-hh_inp-80);
-        $('.main_tab .chat_content').height(hh-hh_banner-90-$('.chat_input').height()-$('.mymsg').height());
+        $('.main_tab .chat_content').height(hh-hh_banner-54-$('.chat_input').height()-$('.mymsg').height());
         $('.left2').height(hh-68);
         $('.left1').height(hh-68);
-        $('.mod_video').height(hh - 333);
-        $('.mod_videolist .listcont').height(hh-65-$('.mod_video').height()-$('.mod_videolist .tabnav').height());
+        $('.mod_video').height(hh - 365);
+        $('.mod_videolist .listcont').height(hh-78-$('.mod_video').height()-$('.mod_videolist .tabnav').height());
         $('.message_list .scrollbox').css('max-height',(hh-65-$('.mod_video').height()-$('.mod_videolist .tabnav').height())+'px');
         $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
+        $('.allsd_list .sdlistcont').height(hh - 173);
+        $('.mysd_list .sdlistcont').height(hh - 218);
     }
     widthCheck();
     heightCalcu();

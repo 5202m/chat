@@ -27,7 +27,8 @@ var indexJS ={
      * @param dom
      */
     setScrollStyle:function(dom){
-        dom.find(".mCSB_dragger_bar").css({background: "url(/hx/theme1/img/scroll.jpg) 5px 50% repeat-y",width: "12px"});
+        /*var skin = $('.skinbox ul li.on').attr('cs');
+        dom.find(".mCSB_dragger_bar").css({background: "url(/hx/theme1/img/"+skin+"/scroll.jpg) 5px 50% repeat-y",width: "12px"});*/
     },
     /**
      * 事件控制
@@ -148,6 +149,10 @@ var indexJS ={
             if (!$(e.target).parent().hasClass('roomctrl') && !$(e.target).parents().parents().hasClass('rbox') || $(e.target).hasClass('enterbtn')){
                 $('.changeroom').removeClass('open');
             }
+            var target = $(e.target);
+            if(target.closest(".skinbox").length == 0 && target.attr("id")!="skinbtn"){
+                $(".skinbox").fadeOut();
+            }
         });
         /**
          * 切换房间
@@ -192,16 +197,17 @@ var indexJS ={
             $(".mod_videolist .tabnav a").removeClass("on");
             $(this).addClass("on");
             $(".mod_videolist .listcont .list_tab").removeClass("on").eq(index).addClass("on");
-            if(index==0){
+            if(index==1){
                 var option = {downCss:'hq-down',upCss:'hq-up',down:'down'},
                     url ='http://news1.hx9999.com/datajson/ajaxchinesedatas',
                     symbolArr = ['GOLD','SILVER','XAUCNH','XAGCNH','USDX','CL'];
                 //每隔断时间调用下
                 setInterval(function(){getSymbolPriceDatas(url,option,symbolArr);},5000);
                 indexJS.setListScroll('#hangqing');
-            }
-            if(index==1){
+            }else if(index==2){
                 indexJS.setInformation();
+            }else if(index == 0){//晒单
+                videos.sd.initSD();
             }
         });
         $(".mod_videolist .tabnav a.on").trigger("click");
@@ -301,6 +307,39 @@ var indexJS ={
                 });
             }
             file.click();
+        });
+        /**
+         * 切换皮肤
+         */
+        $(".skin").click(function(){
+            $(".skinbox").fadeToggle();
+        });
+        $('.skinbox ul li').click(function(){
+            var theme = $(this).attr('theme'), style = $(this).attr('cs');
+            if(common.isValid(theme) && common.isValid(style)) {
+                $('.skinbox ul li').removeClass('on');
+                $('.skinbox ul li span').empty();
+                $(this).addClass('on');
+                $(this).find('span').text('(默认)');
+                var themeObj = {'theme': 'theme' + theme, 'style': style};
+                indexJS.setTheme(JSON.stringify(themeObj));
+            } else {
+                box.showTipBox('该皮肤暂未开放，敬请期待');
+            }
+        });
+        /**
+         * 分析师图片简介
+         */
+        //$("#teacherInfoId dt,.tradedata .close").click(function(){
+        $('.user-infbox').hover(function(){
+            if(common.isValid($('.tradedata img').attr('src'))) {
+                $(".tradedata").fadeToggle();
+            }
+        },
+        function(){
+            if(common.isValid($('.tradedata img').attr('src'))) {
+                $(".tradedata").fadeToggle();
+            }
         });
         this.placeholderSupport();//ie下输入框显示文字提示
         this.setBulletinSlide();
@@ -569,7 +608,7 @@ var indexJS ={
                     }
                     indexJS.setListScroll($(".mod_videolist .message_list .scrollbox"));//设置滚动
                     $('#newInfoCount').attr('pt', pubDateTime);
-                    if($(".mod_videolist .list_tab").eq(1).hasClass('on')){
+                    if($(".mod_videolist .list_tab").eq(2).hasClass('on')){
                         indexJS.infoNewCount = 0;
                         $('#newInfoCount').attr({'pt':pubDateTime,'t':indexJS.serverTime}).text(indexJS.infoNewCount).hide();
                     }
@@ -621,12 +660,15 @@ var indexJS ={
     setBulletinSlide:function(){
         indexJS.getArticleList("bulletin_slide_info",indexJS.userInfo.groupId,1,1,1,'{"createDate":"desc"}', '',function(dataList) {
             if(dataList && dataList.result==0 && dataList.data && dataList.data.length>0) {
+                $('#video_content .tabtxt').show();
+                $('#video_content .video-name').css('top','48px');
                 var bulletinSlideHtml = '',bulletinSlideFormat = indexJS.formatHtml('bulletinSlide');
                 $.each(dataList.data, function(key, row){
                     var detail = row.detailList[0];
                     bulletinSlideHtml += bulletinSlideFormat.formatStr(detail.title, detail.content);
                 });
                 $('#bulletinDomId').html(bulletinSlideHtml);
+                $("#bulletinPanel").slide({mainCell:".anouncelist" ,effect:"leftMarquee", autoPlay:true, interTime:50});
                 $('#bulletinDomId li a').each(function(){
                     var aDom = $(this);
                     aDom.text(aDom.next().text());
@@ -641,7 +683,9 @@ var indexJS ={
                         indexJS.setListScroll(".popAnnCont");
                     });
                 });
-                $("#bulletinPanel").slide({mainCell:".anouncelist" ,effect:"leftMarquee", autoPlay:true, interTime:50});
+            }else{
+                    $('#video_content .tabtxt').hide();
+                    $('#video_content .video-name').css('top','12px');
             }
         });
     },
@@ -744,6 +788,25 @@ var indexJS ={
             ga(gaArg1, gaArg2, gaArg3, gaArg4, gaArg5);
             _trackData.push(trackDataArg1);
         }
+    },
+    /**
+     * 设置皮肤
+     * @param theme
+     */
+    setTheme:function(theme){
+        var isD = $('#themeStyle').attr('d');
+        var themeJson = JSON.parse(theme);
+        if(common.isValid(indexJS.userInfo.userId) && indexJS.userInfo.isLogin) {
+            var params = {userId: indexJS.userInfo.userId, defTemplate: theme};
+            common.getJson('/hxstudio/setThemeStyle', {data: JSON.stringify(params)}, function (result) {
+                if (result.isOK) {
+                    $('#themeStyle').attr('href', '/hx/' + themeJson.theme + '/css/' + themeJson.style + (isD?'.min':'') + '.css?t=' + new Date().getTime());
+                }
+            });
+        } else {
+            $('#themeStyle').attr('href', '/hx/' + themeJson.theme + '/css/' + themeJson.style + (isD?'.min':'') + '.css?t=' + new Date().getTime());
+        }
+        //$(".mCSB_dragger_bar").css({background: "url(/hx/theme1/img/"+themeJson.style+"/scroll.jpg) 5px 50% repeat-y",width: "12px"});
     }
 };
 // 初始化

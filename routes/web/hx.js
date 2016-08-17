@@ -173,7 +173,8 @@ function saveLoginInfo(res,req,userSession,mobilePhone,accountNo,thirdId,clientS
             defGroupId: userInfo.defGroupId,
             clientGroup: userInfo.clientGroup,
             nickname: userInfo.nickname,
-            avatar:userInfo.avatar
+            avatar:userInfo.avatar,
+            defTemplate:userInfo.defTemplate
         };
         result.userInfo = {clientGroup: userInfo.clientGroup};
         callback(result);
@@ -219,6 +220,31 @@ router.post('/getTeacher',function(req, res){
     userService.getTeacherByUserId(params, function(result){
         res.json(result);
     });
+});
+
+/**
+ * 用户设置皮肤
+ */
+router.post('/setThemeStyle', function(req, res){
+    var params = req.body['data'];
+    if(common.isBlank(params)){
+        res.json(null);
+    }
+    if(typeof params == 'string'){
+        params = JSON.parse(params);
+    }
+    if(common.isBlank(params.userId) || common.isBlank(params.defTemplate)){
+        res.json({isOK:false,msg:'参数错误'});
+    }else{
+        studioService.setUserGroupThemeStyle(params,function(result){
+            if(result){
+                req.session.studioUserInfo.defTemplate = params.defTemplate;
+                res.json({isOK:true, msg:''});
+            }else{
+                res.json({isOK:false, msg:''});
+            }
+        });
+    }
 });
 
 module.exports = router;

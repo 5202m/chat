@@ -31,6 +31,7 @@ var mongoose = require('mongoose')
                 gagDate:String,//禁言时间
                 gagTips:String,//禁言提示语
                 gagRemark:String,//禁言备注
+                defTemplate:String,//用户自行设置页面的皮肤
                 rooms:[{
                     _id:String,//组id，与聊天室组对应，即是对应的房间
                     onlineStatus: {type:Number, default:0}, //在线状态：0 、下线 ；1、在线

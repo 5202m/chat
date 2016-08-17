@@ -1273,6 +1273,8 @@ var chat={
                         }, data.timeOut * 60 * 1000);
                     }else if(data.position==3){ //公聊框
                         chat.talkBoxPush.initTBP(data.infos);
+                    }else if(data.position==4){ //视频框
+                        videos.rollNews(data);
                     }
                     break;
                 }
@@ -1563,8 +1565,13 @@ var chat={
                 }else{
                     $('.user-infbox .user-code').attr('src', '').addClass('dn');
                 }
+                if(common.isValid(data.introductionImg)) {
+                    $('.user-infbox .tradedata img').attr('src', data.introductionImg).removeClass('dn');
+                }else{
+                    $('.user-infbox .tradedata img').attr('src', '').addClass('dn');
+                }
             }else{
-                $('.user-infbox .user-code').attr('src', '').addClass('dn');
+                $('.user-infbox .user-code,.user-infbox .tradedata img').attr('src', '').addClass('dn');
             }
         });
     }

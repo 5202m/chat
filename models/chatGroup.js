@@ -35,6 +35,7 @@ var mongoose = require('mongoose')
               clientGroup:{type:String}//客户组别
           }],
           clientGroup:String,//客户组（对应数据字典的客户组,多个逗号分隔）
-          remark:String //备注
+          remark:String, //备注
+          defTemplate:String //默认主题皮肤
         });
 module.exports =mongoose.model('chatGroup',chatGroupSchema,'chatGroup');

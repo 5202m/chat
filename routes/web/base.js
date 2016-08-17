@@ -211,7 +211,9 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
                         var syResult=data.syllabusResult;
                         viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:(common.isBlank(syResult.studioLink)?"":JSON.parse(syResult.studioLink)),courses:(common.isBlank(syResult.courses)?"":syllabusService.removeContext(JSON.parse(syResult.courses)))});
                     }
+                    viewDataObj.defTemplate = row.defTemplate;
                 }
+                rowTmp.defTemplate = row.defTemplate;
                 newStudioList.push(rowTmp);
             });
         }
@@ -241,7 +243,13 @@ function toStudioView(chatUser,groupId,clientGroup,isMobile,req,res){
             if(isThirdUsed && fromPlatform != config.studioThirdUsed.webui){
                 res.render(common.renderPath(req,constant.tempPlatform.mini),viewDataObj);
             }else{
-                res.render(common.renderPath(req,constant.tempPlatform.pc),viewDataObj);
+                var defTemplate = null;
+                try {
+                    defTemplate = common.isValid(viewDataObj.defTemplate) ? JSON.parse(viewDataObj.defTemplate).theme : null;
+                }catch(e){
+
+                }
+                res.render(common.renderPath(req, constant.tempPlatform.pc, null, defTemplate), viewDataObj);
             }
         }
     });

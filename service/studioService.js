@@ -81,7 +81,7 @@ var studioService = {
      * @param callback
      */
     getRoomList:function(groupType,callback){
-        chatGroup.find({valid:1,status:1,groupType:groupType}).select({clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
+        chatGroup.find({valid:1,status:1,groupType:groupType}).select({clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1,defTemplate:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
             if(err){
                 logger.error("getStudioList fail:"+err);
             }
@@ -235,6 +235,7 @@ var studioService = {
                         userInfo.userId=currRow.userId;
                         userInfo.nickname=currRow.nickname;
                         userInfo.avatar=currRow.avatar;
+                        userInfo.defTemplate=currRow.defTemplate;//用户设置的默认皮肤
                         if(currRow.vipUser){//如果是mis后台内部修改为vip，则以该值为准，
                             userInfo.clientGroup = constant.clientGroup.vip;
                         }else{
@@ -432,7 +433,7 @@ var studioService = {
             if(row && common.checkArrExist(row.loginPlatform.chatUserGroup)){
                 result.isOK=true;
                 var info=row.loginPlatform.chatUserGroup[0];
-                result.userInfo={mobilePhone:row.mobilePhone,userId:info.userId,nickname:info.nickname,avatar:info.avatar,groupType:info._id};
+                result.userInfo={mobilePhone:row.mobilePhone,userId:info.userId,nickname:info.nickname,avatar:info.avatar,groupType:info._id,defTemplate:info.defTemplate};
                 result.userInfo.clientGroup=info.vipUser?constant.clientGroup.vip:info.clientGroup;
                 result.userInfo.accountNo=info.accountNo;
                 if(type == 1 && userInfo.thirdId && !info.thirdId){ //微信直播间登录，绑定openId
@@ -599,6 +600,25 @@ var studioService = {
                 map.data = result;
                 callback(map);
             }
+        });
+    },
+    /**
+     * 用户修改皮肤样式
+     * @param params
+     * @param callback
+     */
+    setUserGroupThemeStyle: function(params, callback){
+        if(typeof params == 'string'){
+            params = JSON.parse(params);
+        }
+        var searchObj = { "status" : 1, "valid" : 1,"loginPlatform.chatUserGroup.userId" : params.userId };
+        var setObj = { "loginPlatform.chatUserGroup.$.defTemplate" : params.defTemplate };
+        member.findOneAndUpdate(searchObj, setObj, function(err, row){
+            var isSuccess=!err && row;
+            if(isSuccess){
+                logger.info('setUserGroupThemeStyle=>update UserGroupThemeStyle success!');
+            }
+            callback(isSuccess);
         });
     }
 };

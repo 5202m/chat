@@ -655,7 +655,7 @@ var userService = {
      */
     getTeacherByUserId:function(params, callback){
         var searchObj = {valid:1,status:0,userNo:params.userId};
-        boUser.findOne(searchObj, "userNo userName wechatCodeImg", function(err, row){
+        boUser.findOne(searchObj, "userNo userName wechatCodeImg introductionImg", function(err, row){
             if(err){
                 logger.error("getTeacherByUserId->get fail!"+err);
                 callback(null);
