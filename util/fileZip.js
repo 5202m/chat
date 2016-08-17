@@ -73,6 +73,13 @@ for(var key in config.defTemplate){
         prefixPath='template\\'+key+'\\theme'+i+'\\static\\';
         if(i==1){//pc版
             fileZip.zipCss([prefixPath+'css\\index.css'],prefixPath+'css\\index.min.css');
+            if(key=="hx"){
+                fileZip.zipCss([prefixPath+'css\\dark.css'],prefixPath+'css\\dark.min.css');
+                fileZip.zipCss([prefixPath+'css\\light.css'],prefixPath+'css\\light.min.css');
+                fileZip.zipCss([prefixPath+'css\\gold.css'],prefixPath+'css\\gold.min.css');
+                fileZip.zipCss([prefixPath+'css\\darkblue.css'],prefixPath+'css\\darkblue.min.css');
+                fileZip.zipCss([prefixPath+'css\\orange.css'],prefixPath+'css\\orange.min.css');
+            }
             jsArr = [];
             if(key!= "hx"){
                 jsArr.push("template\\base\\util\\chatAnalyze.js");
