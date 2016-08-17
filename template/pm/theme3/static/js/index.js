@@ -503,7 +503,7 @@ var StudioChatMini = {
      */
     formatMsgToLink: function (ptime) {
         $('#' + ptime + ' span[contt]:contains("http:"),#' + ptime + ' span[contt]:contains("https:")').each(function (index, el) {
-            var elHtml = $(el).html(), elArr = elHtml.split(/<img src="\S+">/g);
+            var elHtml = $(el).html(), elArr = elHtml.split(/<img[^>]*>|<a[^>]*>.*?<\/a>/g);
             var linkTxt = '';
             for (var i in elArr) {
                 linkTxt = elArr[i];
