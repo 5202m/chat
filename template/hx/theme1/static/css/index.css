@@ -1301,8 +1301,8 @@ a.skin:hover{border:0;}
 .sd_stat > i {
     display: block;
     background: url(../img/bubble.jpg) 0 0 no-repeat;
-    width: 84px;
-    height: 84px;
+    width: 112px;
+    height: 112px;
     margin: 40px auto 20px
 }
 
