@@ -25,7 +25,8 @@
 <% studioList.forEach(function(row,index){ %>
 <% if (row.isCurr) { %>
 	<input id="currStudioInfo" lgt='<%= row.loginBoxTime %>' spn="<%= row.speakNum%>" type="hidden" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>">
-<span id="setlogintip" style="display:none;"><%= row.loginBoxTip!=undefined?row.loginBoxTip:row.speakNumTip %></span>
+<span id="setlogintip" style="display:none;"><%= row.loginBoxTip %></span>
+<span id="speaktip" style="display:none;"><%= row.speakNumTip %></span>
 <% } %>
 <% }); %>
 <% } %>

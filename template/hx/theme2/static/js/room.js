@@ -96,8 +96,7 @@ var roomJS={
                         console.error("set login Time has error", e);
                     }
                 }
-            }
-            if(common.isValid(spn)){
+            }else if(common.isValid(spn)){
                 if(!this.currStudioAuth){
                     studioMbPop.popBox("login", {
                         groupId : roomJS.userInfo.groupId,
@@ -105,7 +104,8 @@ var roomJS={
                         clientStoreId : roomJS.userInfo.clientStoreId,
                         platform : roomJS.fromPlatform,
                         closeable:false,
-                        lgTime:spn
+                        lgTime:null,
+                        spn:spn
                     });
                 }else if(studioMbPop.Login.forceLogin()){
                     //之前已经发过言了。
@@ -116,7 +116,8 @@ var roomJS={
                         platform : roomJS.fromPlatform,
                         closeable:false,
                         showTip:true,
-                        lgTime:spn
+                        lgTime:null,
+                        spn:spn
                     });
                 }
             }
@@ -347,6 +348,7 @@ var roomJS={
                         $("#videosTab .boxcont li a.on").removeClass("on");
                         $(this).addClass("on");
                     }
+                    roomJS.video.change(false, true);
                     roomJS.video.play("studio", "mp4", $(this).attr("vUrl"), $(this).text());
                 });
             }
@@ -552,7 +554,9 @@ var roomJS={
                     clientStoreId: roomJS.userInfo.clientStoreId,
                     platform: roomJS.fromPlatform,
                     closeable: false,
-                    showTip: true
+                    showTip: true,
+                    lgtTime:null,
+                    spn:speakNum
                 });
                 return;
             }
@@ -844,6 +848,7 @@ var roomJS={
              if(!course||course.isNext||(course.courseType!=0 && common.isBlank(course.studioLink))||course.courseType==2||course.courseType==0){
                 if(isBack){
                 	studioMbPop.showMessage("目前还没有视频直播，详情请留意直播间的课程安排！");
+                    return;
                 }else if(course && !course.isNext && course.courseType==0){
                 	$(".videopart").hide().css({height:"0"});
                 }else{
@@ -2234,6 +2239,8 @@ var roomJS={
      */
     disableVideoSocket:function(){
         window.setInterval(function(){
+            roomJS.video.voiceWave(false);
+            roomJS.video.waveAudio.attr('src','');
             $("#tVideoDiv").empty();
             roomJS.socket.disconnect();
         }, 5000);

@@ -165,7 +165,7 @@ var box={
         $('#login_a').bind("click", function(e, ops){
             ops = ops || {};
             box.toRoomId = ops.groupId;
-            box.openLgBox(ops.closeable, ops.showTip,ops.loginTime);
+            box.openLgBox(ops.closeable, ops.showTip,ops.loginTime, ops.spn);
         });
         if(indexJS.userInfo.clientGroup=='visitor'){
             var lgt = $('#roomInfoId').attr("lgt");//后台控制登录弹框时间
@@ -190,12 +190,11 @@ var box={
                         }
                     }
                 }
-            }
-            if(common.isValid(spn)){
+            } else if(common.isValid(spn)){
                 if (!indexJS.currStudioAuth) {
-                    $("#login_a").trigger("click", {closeable: false, showTip: false, loginTime: spn}); //弹出登录框，隐藏关闭按钮
+                    $("#login_a").trigger("click", {closeable: false, showTip: false, loginTime: null, spn:spn}); //弹出登录框，隐藏关闭按钮
                 } else if (this.forceLogin()) {
-                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: spn}); //弹出登录框，不允许关闭
+                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: null, spn:spn}); //弹出登录框，不允许关闭
                 }
             }
         }
@@ -451,7 +450,7 @@ var box={
     /**
      * 弹出登录框
      */
-    openLgBox:function(closeable, showTip, lgTime){
+    openLgBox:function(closeable, showTip, lgTime, spn){
         if(closeable === false){
             $("#loginBox .pop_close").hide();
         }else{
@@ -459,10 +458,13 @@ var box={
         }
         if(showTip){
             $("#login_tip").show().text($('#setlogintip').text());
+            if(common.isValid(spn)){
+                $("#login_tip").show().text($('#speaktip').text());
+            }
         }else{
             $("#login_tip").hide();
         }
-        if(common.isValid(lgTime)){
+        if(common.isValid(lgTime) || common.isValid(spn)){
             box.disableVideoSocket();
         }
         $(".popup_box").hide();

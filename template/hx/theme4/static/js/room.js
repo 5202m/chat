@@ -96,8 +96,7 @@ var roomJS={
                         console.error("set login Time has error", e);
                     }
                 }
-            }
-            if(common.isValid(spn)){
+            } else if(common.isValid(spn)){
                 if(!this.currStudioAuth){
                     studioMbPop.popBox("login", {
                         groupId : roomJS.userInfo.groupId,
@@ -105,7 +104,8 @@ var roomJS={
                         clientStoreId : roomJS.userInfo.clientStoreId,
                         platform : roomJS.fromPlatform,
                         closeable:false,
-                        lgTime:spn
+                        lgTime:null,
+                        spn:spn
                     });
                 }else if(studioMbPop.Login.forceLogin()){
                     //之前已经看过3分钟了。
@@ -116,7 +116,8 @@ var roomJS={
                         platform : roomJS.fromPlatform,
                         closeable:false,
                         showTip:true,
-                        lgTime:spn
+                        lgTime:null,
+                        spn:spn
                     });
                 }
             }
@@ -551,7 +552,9 @@ var roomJS={
                     clientStoreId: roomJS.userInfo.clientStoreId,
                     platform: roomJS.fromPlatform,
                     closeable: false,
-                    showTip: true
+                    showTip: true,
+                    lgTime:null,
+                    spn:spn
                 });
                 return;
             }

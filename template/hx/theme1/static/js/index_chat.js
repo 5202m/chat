@@ -146,7 +146,7 @@ var chat={
             var isMeSend = $('[isme="true"]').size(), speakNum = $('#roomInfoId').attr('spn');
             if(common.isValid(speakNum) && isMeSend == speakNum) {//发言次数限制
                 box.forceLogin(true);
-                $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: speakNum}); //弹出登录框，不允许关闭
+                $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: null, spn:speakNum}); //弹出登录框，不允许关闭
                 return;
             }
             if(!chat.socket.connected){
