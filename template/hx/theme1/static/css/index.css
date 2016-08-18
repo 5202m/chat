@@ -1498,7 +1498,7 @@ a.skin:hover{border:0;}
 }
 
 .tabtxt .bulletinPanel {width:100%;overflow: hidden;}
-.tabtxt .anouncelist li a{word-break: keep-all; white-space: nowrap; color: #FF0000;font-weight: bolder;font-size: 12px;}
+.tabtxt .anouncelist li a{word-break: keep-all; white-space: nowrap; color: #fff;font-weight: bolder;font-size: 15px;}
 /*聊天内容*/
 .chat_content {
     position: relative;
