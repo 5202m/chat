@@ -687,6 +687,7 @@ var indexJS ={
                     $('#video_content .tabtxt').hide();
                     $('#video_content .video-name').css('top','12px');
             }
+            heightCalcu();
         });
     },
     /**
