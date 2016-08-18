@@ -1,7 +1,4 @@
 body {
-    min-width:1260px;
-    min-height:768px;
-    overflow: hidden;
     font: 12px/1.4 'Microsoft YaHei';
     color: #333;
     -webkit-text-size-adjust: none;
@@ -1545,8 +1542,8 @@ a.skin:hover{border:0;}
     *zoom: 1;
     padding: 5px 9px;
     color: #222;
-    line-height: 18pt;
-    font-size: 11pt;
+    line-height: 1.4em;
+    font-size: 14px;
     word-break: break-all;
 }
 
@@ -1772,7 +1769,7 @@ a.skin:hover{border:0;}
 }
 
 .dialog_reply span {
-    font-size: 15px
+    font-size: 14px
 }
 
 .txt_dia {
@@ -1805,7 +1802,7 @@ a.skin:hover{border:0;}
     margin: 0 35px 0 80px;
     color: #c83344;
     line-height: 24px;
-    font-size: 15px;
+    font-size: 14px;
     height: 24px;
     white-space: nowrap;
     word-break: keep-all;
@@ -5277,8 +5274,10 @@ a.skin:hover{border:0;}
     height: 436px;
     box-shadow: 0 0 8px rgba(0, 0, 0, .5);
     position: fixed;
-    left:0;
-    top:0;
+    right: 50%;
+    margin-right: -310px;
+    top: 50%;
+    margin-top: -218px;
     z-index: 20003;
     overflow: hidden
 }
@@ -5973,6 +5972,8 @@ a.skin:hover{border:0;}
     height: 46px;
 }
 
+.wid1 .mod_videolist .hangqing li{padding:14px 0;}
+
 
 /*无直播状态*/
 .live-notice {
@@ -6256,7 +6257,7 @@ a.skin:hover{border:0;}
 }
 .mod_videolist .hangqing li{
     display: inline-block;
-    padding: 22px 0;
+    padding: 12px 0;
     width: 33.33%;
     box-sizing: border-box;
     border-width: 0 1px 1px 0;
@@ -6278,7 +6279,7 @@ a.skin:hover{border:0;}
 }
 .mod_videolist .hangqing b{
     display: block;
-    font-size: 24px;
+    font-size: 18px;
     color: #2ba304;
 }
 .mod_videolist .hangqing .down{color:#f15f5f;}

@@ -78,6 +78,7 @@ body {
 .te_detail .support,.te_info .te_wx .wx-num{color:#999;}
 .sd_show .sd_tit span{color:#999;}
 .txt_dia{color:#257ccd;}
+.dialog .uname, .dialog.admin .uname, .dialog.analyst .uname{color:#fff;}
 
 
 /*background*/

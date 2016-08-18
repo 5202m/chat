@@ -463,12 +463,15 @@
         $('.main_tab .chat_content').height(hh-hh_banner-54-$('.chat_input').height()-$('.mymsg').height());
         $('.left2').height(hh-68);
         $('.left1').height(hh-68);
-        $('.mod_video').height(hh - 399);
+        $('.mod_video').height(hh - 305);//365
         $('.mod_videolist .listcont').height(hh-78-$('.mod_video').height()-$('.mod_videolist .tabnav').height());
         $('.message_list .scrollbox').css('max-height',(hh-65-$('.mod_video').height()-$('.mod_videolist .tabnav').height())+'px');
         $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
         $('.allsd_list .sdlistcont').height(hh - 173);
         $('.mysd_list .sdlistcont').height(hh - 218);
+        if($('#video_content .tabtxt').is(':visible')){
+            $('#lvVideoId').height(hh - $('.mod_videolist').height() - 111);
+        }
     }
     widthCheck();
     heightCalcu();
