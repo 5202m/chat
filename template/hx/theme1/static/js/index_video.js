@@ -744,7 +744,7 @@ var videos={
                 if(isPos){
                     html.push('持仓中');
                 }else{
-                    html.push('获利：');
+                    html.push('点数：');
                     html.push('<b' + (/^-/.test(trade.profit) ? ' class="fall"' : '') + '>' + trade.profit + '</b>');
                 }
                 html.push('</span>');
@@ -754,7 +754,7 @@ var videos={
                     html.push('<a href="javascript:videos.sd.showAuthBox()">');
                     html.push('<img src="/pm/theme1/img/sd_default.png"></a>');
                 }else{
-                    html.push('<a href="' + trade.tradeImg + '" data-lightbox="sd-img" data-title="' + (isPos ? "持仓中" : "获利：" + trade.profit) + '">');
+                    html.push('<a href="' + trade.tradeImg + '" data-lightbox="sd-img" data-title="' + (isPos ? "持仓中" : "点数：" + trade.profit) + '">');
                     html.push('<img src="' + trade.tradeImg + '"></a>');
                 }
                 html.push('<i></i></div></li>');

@@ -341,9 +341,10 @@ var tool={
                     var suffix = data[i].mediaUrl.substring(data[i].mediaUrl.lastIndexOf('.')+1).toLowerCase();
                     var name = row.title+'.'+suffix;
                     var publishDate = common.formatterDate(data[i].publishStartDate, '-').replace('-','/').replace('-','/');
-                    pptHtml += pptFormat.formatStr(cls,fileSuffix[suffix],row.title,(row.authorInfo?row.authorInfo.name:''),publishDate,data[i].mediaUrl,name, '');
+                    pptHtml += pptFormat.formatStr(cls,fileSuffix[suffix],row.title,(row.authorInfo?row.authorInfo.name:''),publishDate,data[i].mediaUrl,name, data[i]._id, '', common.isBlank(data[i].downloads)?0:data[i].downloads);
                 }
                 $('.dr6 .ppt_list ul').html(pptHtml);
+                tool.setDownloads();
                 indexJS.setListScroll('.ppt_list',{isCustom:false,scrollbarPosition:"outside"});/*设置滚动条*/
             }
             else{
@@ -534,6 +535,20 @@ var tool={
         $(obj).removeClass(cls);
     },
     /**
+     * 设置下载次数
+     */
+    setDownloads: function(){
+        $('.dr6 .ppt_list ul li a').click(function(){
+            var _this = $(this);
+            var data = {'q':{'_id':_this.attr('i')}, 'type':'downloads'};
+            common.getJson(indexJS.apiUrl+ '/common/modifyArticle', {data : JSON.stringify(data)}, function(result){
+                if(result.isOK){
+                    _this.next('.downloads').find('span').text(result.num);
+                }
+            });
+        });
+    },
+    /**
      * 根据传入的模块域标识返回待处理的html模板
      * @param region 模块域
      * @returns {string} html模板
@@ -583,7 +598,8 @@ var tool={
                 formatHtmlArr.push('   <div class="detail">');
                 formatHtmlArr.push('       <strong>{2}</strong>');
                 formatHtmlArr.push('       <span>{3}<b>{4}</b></span>');
-                formatHtmlArr.push('       <a href="{5}" target="download" download="{6}" class="downbtn"><i></i><span>下载<b>{7}</b></span></a>');
+                formatHtmlArr.push('       <a href="{5}" target="download" download="{6}" class="downbtn" i="{7}"><i></i><span>下载<b>{8}</b></span></a>');
+                formatHtmlArr.push('       <span class="downloads">已下载:<span>{9}</span></span>');
                 formatHtmlArr.push('   </div>');
                 formatHtmlArr.push('</li>');
                 break;

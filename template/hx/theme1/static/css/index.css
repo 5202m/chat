@@ -1120,7 +1120,6 @@ a.skin:hover{border:0;}
 
 .sd_show .sd_ul {
     padding-right: 15px;
-    text-align: right;
     font-size: 0;
     margin-top: -10px;
 }
@@ -2073,11 +2072,11 @@ a.skin:hover{border:0;}
 }
 
 .dialogbtn.bot a:hover {
-    border-color: #c49351
+    border-color: #d7b983
 }
 
 .dialogbtn.bot a:last-child:hover b {
-    border-color: #c49351 transparent transparent transparent;
+    border-color: #d7b983 transparent transparent transparent;
 }
 
 .dialogbtn.bot {
@@ -2096,7 +2095,7 @@ a.skin:hover{border:0;}
 }
 
 .dialogbtn.bot.one a.d1:hover b {
-    border-color: #c49351 transparent transparent transparent;
+    border-color: #d7b983 transparent transparent transparent;
 }
 
 .dialogbtn.bot a.d1 b {
@@ -2623,7 +2622,7 @@ a.skin:hover{border:0;}
     display: inline-block;
     *display: inline;
     *zoom: 1;
-    background: #c49351;
+    background: #d7b983;
     width: 80px;
     height: 26px;
     line-height: 26px;
@@ -3001,7 +3000,7 @@ a.skin:hover{border:0;}
 .rbox_top .rname i {display: inline-block;margin-left: 5px;width: 9pt;height: 20px;background-position: -90pt 0;margin-top: 2px;vertical-align: top;}
 
 
-.rbox_top .enterbtn {display: inline-block;background: #c49351;width: 5pc;height: 26px;line-height: 26px;border-radius: 2px;color: #fff;font-size: 14px;margin-left: 22px;vertical-align: top;}
+.rbox_top .enterbtn {display: inline-block;background: #d7b983;width: 5pc;height: 26px;line-height: 26px;border-radius: 2px;color: #fff;font-size: 14px;margin-left: 22px;vertical-align: top;}
 .rbox_top .rooms .rbox.last {border-bottom: 0;}
 
 .user-infbox{
@@ -3153,8 +3152,8 @@ a.skin:hover{border:0;}
 }
 
 .hqtabnav a.on {
-    border-color: #c49351;
-    background: #c49351;
+    border-color: #d7b983;
+    background: #d7b983;
     color: #fff;
 }
 
@@ -3183,7 +3182,7 @@ a.skin:hover{border:0;}
     margin-right: -5px;
     top: 24px;
     border-width: 5px;
-    border-color: #c49351 transparent transparent transparent;
+    border-color: #d7b983 transparent transparent transparent;
     border-style: solid;
 }
 
@@ -3258,8 +3257,8 @@ a.skin:hover{border:0;}
     margin: 20px auto 0;
     height: 32px;
     line-height: 32px;
-    border: 1px solid #c49351;
-    color: #c49351;
+    border: 1px solid #d7b983;
+    color: #d7b983;
     text-align: center;
     background: #fff;
     font-family: 'Microsoft YaHei';
@@ -3331,7 +3330,7 @@ a.skin:hover{border:0;}
     color: #fff;
     text-align: center;
     line-height: 32px;
-    background: #c49351;
+    background: #d7b983;
     border-radius: 3px
 }
 
@@ -3529,8 +3528,8 @@ a.skin:hover{border:0;}
 }
 
 .calc_tabnav a.on {
-    border-color: #c49351;
-    background: #c49351;
+    border-color: #d7b983;
+    background: #d7b983;
     color: #fff;
 }
 
@@ -3559,7 +3558,7 @@ a.skin:hover{border:0;}
     margin-right: -5px;
     top: 24px;
     border-width: 5px;
-    border-color: #c49351 transparent transparent transparent;
+    border-color: #d7b983 transparent transparent transparent;
     border-style: solid;
 }
 
@@ -3655,14 +3654,15 @@ a.skin:hover{border:0;}
 }
 
 .ppt_list li .downbtn {
-    display: block;
-    width: 142px;
+    display: inline-block;
+    width: 100px;
     height: 28px;
-    border: 1px solid #c49351;
-    color: #c49351;
+    border: 1px solid #d7b983;
+    color: #d7b983;
     text-align: center;
     font-size: 0;
     border-radius: 3px;
+	vertical-align:middle;
 }
 
 .ppt_list li .downbtn i {
@@ -3670,8 +3670,11 @@ a.skin:hover{border:0;}
     *display: inline;
     *zoom: 1;
     width: 26px;
-    height: 24px;
+    height: 22px;
     vertical-align: middle;
+	background:url("../img/download.jpg") no-repeat;
+	background-size:auto 18px;
+	vertical-align:middle;
 }
 
 .ppt_list li .downbtn span {
@@ -3680,7 +3683,10 @@ a.skin:hover{border:0;}
     *zoom: 1;
     font-size: 16px;
     line-height: 26px;
+	vertical-align:middle;
 }
+
+.ppt_list li .detail > span.downloads{display:inline-block;color:#999;font-size:12px;line-height:28px;padding:0 10px;vertical-align:middle;}
 
 .ppt_list li .downbtn span b {
     font-weight: normal;
@@ -3730,8 +3736,8 @@ a.skin:hover{border:0;}
 
 .plate_box .downbtn {
     display: block;
-    border: 1px solid #c5a34c;
-    color: #c5a34c;
+    border: 1px solid #d7b983;
+    color: #d7b983;
     text-align: center;
     font-size: 0;
     border-radius: 3px;
@@ -3844,6 +3850,9 @@ a.skin:hover{border:0;}
 .header-right li:hover .dropcont {
     display: block;
 }
+.header-right .weixin{width:200px;padding:20px;}
+.header-right .weixin .cont{font-size:14px;}
+
 .dropcont strong {
     color: #12a1e4;
     text-align: left;
@@ -4298,7 +4307,7 @@ a.skin:hover{border:0;}
 }
 
 .upg_result > h4 {
-    color: #c49351;
+    color: #d7b983;
     font-size: 20px;
     line-height: 44px;
     font-weight: normal
@@ -4318,10 +4327,10 @@ a.skin:hover{border:0;}
 .kh-btn a {
     display: block;
     width: 172px;
-    border: 1px solid #c49351;
+    border: 1px solid #d7b983;
     height: 37px;
     line-height: 35px;
-    color: #c49351;
+    color: #d7b983;
     font-size: 16px;
     text-align: center;
     position: relative;
@@ -4348,7 +4357,7 @@ a.skin:hover{border:0;}
 }
 
 .kh-btn a:hover {
-    background: #c49351;
+    background: #d7b983;
     color: #fff;
     text-decoration: none
 }
@@ -4373,7 +4382,7 @@ a.skin:hover{border:0;}
 }
 
 .reg_result > h4 {
-    color: #c49351;
+    color: #d7b983;
     font-size: 20px;
     line-height: 44px;
     font-weight: normal
@@ -4385,7 +4394,7 @@ a.skin:hover{border:0;}
 }
 
 .pop_msg > h4 {
-    color: #c49351;
+    color: #d7b983;
     font-size: 20px;
     line-height: 44px;
     font-weight: normal
@@ -4945,7 +4954,7 @@ a.skin:hover{border:0;}
     font-size: 15px;
     text-align: center;
     display: block;
-    color: #c49351;
+    color: #d7b983;
     margin-top: 10px;
     position: relative;
 }
@@ -6676,9 +6685,9 @@ div#teachVideoId {background: #222;}
 .usersd_list .support span{ padding: 0; display: inline; }
 .usersd_list .support i{ display: none; width: 30px;position: absolute; left: 20px; top: 0px; color: #666; font-size: 18px; line-height: 20px; height: 20px; font-weight: bold;  font-style: normal; z-index: 10}
 .userad_btnbar{ padding: 20px 0; }
-.userad_btnbar > a{ display: block; width: 45%; height: 30px; line-height: 30px; border: 1px solid #c49351; color: #c49351; font-size: 15px; float: right; text-align: center; border-radius: 2px }
-.userad_btnbar > a.fl{ color: #fff; background-color: #c49351; float: left; }
-.userad_btnbar > a:hover{  color: #fff; background-color: #c49351; text-decoration: none;}
+.userad_btnbar > a{ display: block; width: 45%; height: 30px; line-height: 30px; border: 1px solid #d7b983; color: #d7b983; font-size: 15px; float: right; text-align: center; border-radius: 2px }
+.userad_btnbar > a.fl{ color: #fff; background-color: #d7b983; float: left; }
+.userad_btnbar > a:hover{  color: #fff; background-color: #d7b983; text-decoration: none;}
 .userad_btnbar > a.fl:hover{ background-color: #c58735; }
 .usersd_list .s1 .sd_tit,.usersd_list .s2 .sd_tit{ margin-right: 50px; }
 .usersd_list .state{ display: none; width: 42px; height: 12px; position: absolute; right: 0; top: 0; margin-top: 4px; }
@@ -6700,7 +6709,7 @@ div#teachVideoId {background: #222;}
 .set_box .sdpic_upload:hover .sdpic_btn{ background: #e4cfa9; }
 .set_box .sdpic_file{position:absolute;top:0;right:-1px;font-size:100px;cursor:pointer;opacity:0;filter:alpha(opacity=0);}
 .sd_result .kh-btn{ margin-top: 15px; }
-.sd_result .kh-btn a.fl{ background: #c49351; color: #fff }
+.sd_result .kh-btn a.fl{ background: #d7b983; color: #fff }
 .sd_result .kh-btn a.fl:hover{ background-color: #c58735 }
 .popup_box.pop_addsd{ margin-top: -260px; }
 .loading_trade {position: absolute;z-index: 10010;top: 45%;left: 40%;}

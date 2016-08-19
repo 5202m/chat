@@ -240,10 +240,20 @@ var baseApiService = {
      */
     modifyArticle:function(query, field, updater, callback){
         if(typeof query != 'string'){
-            query = JSON.stringify(query);
+            try {
+                query = JSON.stringify(query);
+            }catch(e){
+                callback(null);
+                return;
+            }
         }
         if(typeof update != 'string'){
-            updater = JSON.stringify(updater);
+            try {
+                updater = JSON.stringify(updater);
+            }catch(e){
+                callback(null);
+                return;
+            }
         }
         request.post({url:this.formatApiUrl('/article/modify'), form:{query: query, field:field, data: updater} },function(err, response, result){
             if(err){
