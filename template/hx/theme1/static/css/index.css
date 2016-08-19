@@ -3645,6 +3645,7 @@ a.skin:hover{border:0;}
     color: #999;
     font-size: 14px;
     line-height: 32px;
+    display:block;
 }
 
 .ppt_list li .detail > span b {

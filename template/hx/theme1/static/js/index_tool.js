@@ -540,8 +540,7 @@ var tool={
     setDownloads: function(){
         $('.dr6 .ppt_list ul li a').click(function(){
             var _this = $(this);
-            var data = {'q':{'_id':_this.attr('i')}, 'type':'downloads'};
-            common.getJson(indexJS.apiUrl+ '/common/modifyArticle', {data : JSON.stringify(data)}, function(result){
+            common.getJson(indexJS.apiUrl+ '/common/modifyArticle', {id :_this.attr('i'), 'type':'downloads'}, function(result){
                 if(result.isOK){
                     _this.next('.downloads').find('span').text(result.num);
                 }
