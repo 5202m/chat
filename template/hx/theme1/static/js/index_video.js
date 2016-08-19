@@ -304,10 +304,10 @@ var videos={
          */
         $("#newscont1 a").live("click", function(){
             if($(this).attr('url')==='false') {
-                $("#popMsgTit").text($(this).attr("title"));
-                $("#popMsgTxt").html($(this).data("content") || "没有内容");
-                $("#popMsgBox,.blackbg").show();
-                indexJS.setListScroll(".popMsgBox");
+                $("#popAnnTit").text($(this).attr("title"));
+                $("#popAnnTxt").html($(this).data("content") || "没有内容");
+                $("#popAnnBox,.blackbg").show();
+                indexJS.setListScroll("#popAnnBox");
                 return false;
             }
         });
@@ -316,10 +316,7 @@ var videos={
          * 点击显示详细内容
          */
         $("#newscont2 a").live("click", function(){
-            if($(this).attr('url')==='false') {
-                $("#newscont1 a[tid='" + $(this).attr('tid') + "']").trigger("click");
-                return false;
-            }
+            $("#newscont1 a[tid='" + $(this).attr('tid') + "']").trigger("click");
         });
     },
     /**

@@ -1183,7 +1183,9 @@ a.skin:hover{border:0;}
 
 .sd_ul .cont > a img {
     width:100%;
-    Height:auto;
+    height:auto;
+    border:0;
+    display: block;
 }
 
 .sd_ul .cont > i {
@@ -6749,3 +6751,4 @@ div#teachVideoId {background: #222;}
 .input_area .text-min-img img {height: 30px;cursor: move;}
 .shadow-conut {position: absolute; left: 30px; bottom: 5px; width: 100%; max-width: 150px; display: block; text-align: center; font: 25px arial; color: #fff; text-shadow: 0 2px 0 #000; z-index: 10; text-decoration: none}
 
+.cont.nocont{background: none;}
