@@ -1182,6 +1182,7 @@ a.skin:hover{border:0;}
 }
 
 .sd_ul .cont > a img {
+    width:100%;
     Height:auto;
 }
 
@@ -5886,7 +5887,6 @@ a.skin:hover{border:0;}
 
 .wid1 .sd_show .sd_ul {
     padding-right: 5px;
-    padding-bottom:25px;
 }
 
 .wid1 .sd_show .sd_tit span {
@@ -6730,4 +6730,22 @@ div#teachVideoId {background: #222;}
 .mod_videolist .listcont .listcont {background:none;}
 
 .mCSB_dragger_bar{width:12px;background:url(../img/light/scroll.png) center 50% no-repeat;}
+
+.mod_scrollnews{ width: 100%; position: absolute; top: 0;overflow: hidden;}
+.newslist{width: 100%;/*background-color: rgba(31,35,47,.8);*/filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#CC1f232f,endColorstr=#CC1f232f);  overflow: hidden;float: right; padding-right: 27px; position: relative; padding-left: 10px;}
+.newslist .newsbox{  height: 30px; text-align: left; overflow: hidden;}
+.newsbox .innerbox{ width: 800%;float: left;  }
+.innerbox #newscont1,.innerbox #newscont2{ float: left;}
+.mod_scrollnews .newsbox a{ margin-right: 50px; margin-left:0; position: relative; color: #f0f0f0;font-size: 16px; line-height: 30px; padding-left: 22px; font-weight: bold; }
+.mod_scrollnews .newsbox a:hover{ color: #aad7ff }
+.mod_scrollnews .newsbox a i{ display: inline-block;*display: inline;*zoom: 1; width: 14px; height: 14px; background-position: -80px -290px;position: absolute; top: 4px; left: 0 }
+.mod_scrollnews .newsbox a:hover i{ background-position: -80px -310px }
+.mod_scrollnews .newsbtn{ display: none; padding-left: 15px; width: 50px; height: 30px; text-align: center; color: #fff; font-size: 12px; line-height: 30px; position: relative; float: right; z-index: 101; background: rgba(31,35,47,.9);;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#E61f232f,endColorstr=#E61f232f);}
+.mod_scrollnews .newsbtn.on{ display: block; }
+.mod_scrollnews .newsbtn i{ display: block; position: absolute; left: 7px; top:9px;background-position: -160px -300px; width: 12px; height: 12px }
+.mod_scrollnews .newsbtn:hover{ text-decoration: none; }
+.mod_scrollnews .newsclose{ display: block; width:10px; height: 10px; padding: 10px 8.5px; position: absolute; right: 0; top: 0  }
+.mod_scrollnews .newsclose i{ display: block;width:10px; height: 10px; background-position: -140px -300px; }
+.input_area .text-min-img img {height: 30px;cursor: move;}
+.shadow-conut {position: absolute; left: 30px; bottom: 5px; width: 100%; max-width: 150px; display: block; text-align: center; font: 25px arial; color: #fff; text-shadow: 0 2px 0 #000; z-index: 10; text-decoration: none}
 

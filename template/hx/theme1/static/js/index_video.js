@@ -349,11 +349,11 @@ var videos={
                             .html('<i></i><span>' + data.title + '</span>');
                     }else {
                         tids.attr({'title': data.title,'url':'false'})
-                            .html('<i></i><span>' + data.content + '</span>')
+                            .html('<i></i><span>' + data.title + '</span>')
                             .data('content', data.content);
                     }
                 }else{  //新增
-                    var title = $('<a href="javascript:void(0);" tid="' + data.id + '" title="' + data.title + '" target="_blank"><i></i><span>' + data.content + '</span></a>');
+                    var title = $('<a href="javascript:void(0);" tid="' + data.id + '" title="' + data.title + '" target="_blank"><i></i><span>' + data.title + '</span></a>');
                     if(common.isValid(data.url)) {
                         title.attr({'href':data.url,'url':'true'});
                         title.find('span').text(data.title);
@@ -375,9 +375,9 @@ var videos={
                         if(indexJS.userInfo.clientGroup && data.infos[i].clientGroup && $.inArray(indexJS.userInfo.clientGroup, data.infos[i].clientGroup)>-1){
                             if(data.infos[i].pushType == 1 && data.infos[i].contentId && data.infos[i].title){
                                 if(common.isValid(data.infos[i].url)){
-                                    title = $('<a href="'+data.infos[i].url+'" url="true" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank"><i></i><span>' + data.infos[i].content + '</span></a>');
+                                    title = $('<a href="'+data.infos[i].url+'" url="true" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank"><i></i><span>' + data.infos[i].title + '</span></a>');
                                 }else {
-                                    title = $('<a href="javascript:void(0);" url="false" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank"><i></i><span>' + data.infos[i].content + '</span></a>');
+                                    title = $('<a href="javascript:void(0);" url="false" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank"><i></i><span>' + data.infos[i].title + '</span></a>');
                                     title.data('content', data.infos[i].content);
                                 }
                                 newsPanel.append(title);
@@ -394,6 +394,7 @@ var videos={
             $('#video_content .tabtxt').show();
             $('#video_content .video-name').css('top','48px');
         }
+        heightCalcu();
         this.newsMarquee(true);
     },
     /**
@@ -762,7 +763,7 @@ var videos={
             if(i >= lenI - 1){
                 videos.sd.loadAll = true;
             }
-            $('#sdInfoId .sd_show').css({'max-height':'200px'});
+            $('#sdInfoId .sd_show').css({'max-height':'165px'});
             $("#sdInfoId .sd_ul").append(html.join(""));
             indexJS.setListScroll($("#sdInfoId .sd_show"), {callbacks : {onTotalScroll : videos.sd.showTradeList}});
         },

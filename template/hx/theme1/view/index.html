@@ -79,7 +79,7 @@
                 </li>
                 <li class="notice">
                     <a href="javascript:void(0)" class="toplink" onClick="indexJS.studioGA('send', 'event', 'click', 'gonggao', 'hxstudio_toplink', ['addaction','click', 'gg', 'hxstudio_toplink']);">
-                        <span>公告</span>
+                        <span>公告</span><b class="arr"></b>
                     </a>
                     <div class="dropcont" style="padding: 20px 30px;">
                         <div class="cont" id="bulletinTab">
@@ -471,7 +471,7 @@
         $('.mod_video').height(hh - 305);//365
         $('.mod_videolist .listcont').height(hh-78-$('.mod_video').height()-$('.mod_videolist .tabnav').height());
         $('.message_list .scrollbox').css('max-height',(hh-90-$('.mod_video').height()-$('.mod_videolist .tabnav').height())+'px');
-        $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
+        $('#teachVideoId div[t] ul').css("height",($('.mod_video').height()-150)+"px");
         $('.allsd_list .sdlistcont').height(hh - 173);
         $('.mysd_list .sdlistcont').height(hh - 218);
         if($('#video_content .tabtxt').is(':visible')){
