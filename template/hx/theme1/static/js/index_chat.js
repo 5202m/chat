@@ -1570,8 +1570,14 @@ var chat={
                 }else{
                     $('.user-infbox .tradedata img').attr('src', '').addClass('dn');
                 }
+                if(common.isValid(data.introductionImgLink)){
+                    $('.user-infbox .tradedata a').attr('href', data.introductionImgLink);
+                }else{
+                    $('.user-infbox .tradedata a').attr('href', 'javascript:void(0);');
+                }
             }else{
                 $('.user-infbox .user-code,.user-infbox .tradedata img').attr('src', '').addClass('dn');
+                $('.user-infbox .tradedata a').attr('href', 'javascript:void(0);');
             }
         });
     }
