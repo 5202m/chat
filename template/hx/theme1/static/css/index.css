@@ -1109,7 +1109,7 @@ a.skin:hover{border:0;}
     border-radius: 2px;
 	text-align:center;
 }
-.wx-qrcode img{background-color:#fff;border:3px solid #fff;}
+.wx-qrcode img{background-color:#fff;border:3px solid #fff;width:100%;box-sizing: border-box;}
 
 #sdInfoId{padding-top:15px;}
 .sd_show {
@@ -1182,10 +1182,7 @@ a.skin:hover{border:0;}
 }
 
 .sd_ul .cont > a img {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    display: block;
+    Height:auto;
 }
 
 .sd_ul .cont > i {
@@ -3008,7 +3005,14 @@ a.skin:hover{border:0;}
     padding: 14px 0;
     font-size: 0px;
     text-align: center;
+    animation:teach-flash 3s linear infinite;
 }
+@keyframes teach-flash{
+     0% {background-color:rgba(255,255,255,0.5); }
+     50% {background-color:rgba(255,255,255,0); }
+     100% {background-color:rgba(255,255,255,0.5); }
+ }
+
 .user-code{
     position: absolute;
     top: 50%;
@@ -5882,6 +5886,7 @@ a.skin:hover{border:0;}
 
 .wid1 .sd_show .sd_ul {
     padding-right: 5px;
+    padding-bottom:25px;
 }
 
 .wid1 .sd_show .sd_tit span {

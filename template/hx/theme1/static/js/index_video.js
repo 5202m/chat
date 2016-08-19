@@ -762,7 +762,7 @@ var videos={
             if(i >= lenI - 1){
                 videos.sd.loadAll = true;
             }
-            $('#sdInfoId .sd_show').css({'max-height':'230px'});
+            $('#sdInfoId .sd_show').css({'max-height':'200px'});
             $("#sdInfoId .sd_ul").append(html.join(""));
             indexJS.setListScroll($("#sdInfoId .sd_show"), {callbacks : {onTotalScroll : videos.sd.showTradeList}});
         },
