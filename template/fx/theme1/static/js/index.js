@@ -19,6 +19,7 @@ var indexJS ={
         this.serverTimeUp();
         this.setVisitStore();//设置访客存储
         this.setEvent();//设置各种事件
+        this.setTradeStrategyNote(null, true);
         this.setAdvertisement();
     },
     /**
@@ -160,7 +161,11 @@ var indexJS ={
             $(".mod_main .tabnav a").removeClass("on");
             $(this).addClass("on");
             $(".mod_main .tabcont .main_tab").removeClass("on").eq(index).addClass("on");
-            if(index==1){//快讯
+            if(index==0){//课堂笔记
+                $("#textLiveCount").data("cnt", 0).html("").hide();
+            }else if(index==1){//聊天
+                chat.setTalkListScroll(true);
+            }else if(index==2){//快讯
                 if (!store.enabled){
                     console.log('Local storage is not supported by your browser.');
                     return;
@@ -181,21 +186,13 @@ var indexJS ={
                     return;
                 }
                 indexJS.setInformation();
-            }
-            if(index==2){//课堂笔记
-                $("#textLiveCount").data("cnt", 0).html("").hide();
-                indexJS.setTradeStrategyNote(null, true);
-            }
-            if(index==3){//实盘策略
+            }else if(index==3){//实盘策略
                 indexJS.setTradeStrategy(currDom.find('.scrollbox'));
-            }
-            if(index==0){//聊天
-                chat.setTalkListScroll(true);
             }
         });
         /**课堂笔记加载更多*/
         $("#textliveMore").bind("click", function(){
-            if($(this).not(".all")){
+            if(!$(this).is(".all")){
                 var lastId = $("#textlivePanel li[aid]:last").attr("aid");
                 indexJS.setTradeStrategyNote(lastId, false);
             }
@@ -665,7 +662,7 @@ var indexJS ={
         }
         if(showNum){
             var $cnt = $("#textLiveCount");
-            if($cnt.parent().not(".on")){
+            if(!$cnt.parent().is(".on")){
                 var cnt = ($cnt.data("cnt") || 0) + 1;
                 $cnt.data("cnt", cnt).html(cnt).show();
             }

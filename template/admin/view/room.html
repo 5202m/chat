@@ -118,6 +118,10 @@
                                 <div>
                                     <input type="button" id="point_list" class="viewpoint dn btn" value="观点列表" />
                                 </div>
+                            <% }else if (userType=='3') { %>
+                                <div>
+                                    <input type="button" id="publish_note" class="viewpoint btn" value="课堂笔记" />
+                                </div>
                             <% } %>
                         </div>
                         <span style="display:none;" id="groupInfoId" aw="<%= groupInfo.allowWhisper %>" awr="<%= groupInfo.whisperRoles %>"></span>
@@ -149,6 +153,18 @@
                         </div>
                         <div class="point-list-content">
                             <ul><!-- 老师观点列表 --></ul>
+                        </div>
+                    </div>
+                    <div class="publish-note dn">
+                        <div class="publish-title">
+                            <strong>课堂笔记</strong>
+                            <a href="javascript:void(0);" class="publish-close"></a>
+                        </div>
+                        <div class="publish-content">
+                            <div id="publish_note_content">
+
+                            </div>
+                            <div class="publish-sub"><input type="button" class="publish-btn" value="提交" /></div>
                         </div>
                     </div>
                     <div class="rightTitle" style="margin-top:15px;">
@@ -237,6 +253,9 @@
     <script type="text/javascript" src="/base/lib/jquery.face.js"></script>
     <script type="text/javascript" src="/base/util/common<%=isDevTest? '.js' : ('.min.js?t=' + new Date().getTime())%>"></script>
     <script type="text/javascript" src="/admin/js/room<%=isDevTest? '.js' : ('.min.js?t=' + new Date().getTime())%>"></script>
+    <script type="text/javascript" src="/base/lib/ueditor/ueditor.config.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="/base/lib/ueditor/ueditor.all.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="/base/lib/ueditor/lang/zh-cn/zh-cn.js" charset="UTF-8"></script>
     <script type="text/javascript">
         room.filePath='<%= filePath%>';
         room.apiUrl='<%= apiUrl%>';

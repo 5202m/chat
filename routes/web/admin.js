@@ -116,18 +116,20 @@ router.post('/addArticle', function(req, res){
     var adminUserInfo = req.session.adminUserInfo;
     if(adminUserInfo) {
         var data = req.body['data'];
+        var isNotice = req.body['isNotice'] == "Y";
         if(common.isBlank(data)){
             res.json({isOK: false, msg: '参数错误'});
         }else{
             baseApiService.addArticle(data, function(result){
-                if (result) {
+                if (result && result.isOK) {
                     var dataObj=JSON.parse(data);
+                    dataObj.id = result.id;
+                    dataObj.createDate = result.createDate;
                     var bDateTime=new Date(dataObj.publishStartDate).getTime();
                     var eDateTime=new Date(dataObj.publishEndDate).getTime();
                     var currTime=new Date().getTime();
-                    if(currTime>=bDateTime && currTime<=eDateTime){
-                        var row=dataObj.detail[0];
-                        chatService.sendMsgToRoom(true,null,dataObj.platform,"notice",{type:chatService.noticeType.strategyInfo,data:{content:row.content,authorId:row.authorInfo.userId}},null);
+                    if(isNotice || (currTime>=bDateTime && currTime<=eDateTime)){
+                        chatService.sendMsgToRoom(true,null,dataObj.platform,"notice",{type:chatService.noticeType.articleInfo,data:dataObj},null);
                     }
                     res.json(result);
                 }else{

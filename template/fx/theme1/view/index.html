@@ -156,12 +156,23 @@
             </div>
             <div class="mod_main">
             	<div class="tabnav">
-                    <a href="javascript:" class="on">聊天</a>
+                    <a href="javascript:" class="on">直播精华<sup id="textLiveCount" style="display:none;" class="l2"></sup></a>
+                    <a href="javascript:">聊天</a>
                     <a href="javascript:">快讯<sup id="newInfoCount" style="display:none;"></sup></a>
-                    <a href="javascript:">直播精华<sup id="textLiveCount" style="display:none;" class="l2"></sup></a>
                     <a href="javascript:" style="display:none;">实盘策略</a>
                 </div>
                 <div class="tabcont">
+                    <!-- 课堂笔记 -->
+                    <div class="main_tab on">
+                        <div class="textlivelist">
+                            <div class="scrollbox">
+                                <div id="textlivePanel">
+                                </div>
+                                <a id="textliveMore" href="javascript:void(0)" class="loadmore">加载更多</a>
+                            </div>
+                            <div class="boxmask"></div>
+                        </div>
+                    </div>
                     <!-- 聊天模块 -->
                     <% include index_chat.html %>
                     <!-- 快讯 -->
@@ -172,17 +183,6 @@
                             </div>
                             <div class="boxmask"></div>
                     	</div>
-                    </div>
-                    <!-- 课堂笔记 -->
-                    <div class="main_tab">
-                        <div class="textlivelist">
-                            <div class="scrollbox">
-                                <div id="textlivePanel">
-                                </div>
-                                <a id="textliveMore" href="javascript:void(0)" class="loadmore">加载更多</a>
-                            </div>
-                            <div class="boxmask"></div>
-                        </div>
                     </div>
                     <!-- 实盘策略 -->
                     <div class="main_tab">
@@ -334,7 +334,8 @@
         $('.ppt_list').height(hh - 101);
         $('.allsd_list .sdlistcont').height(hh - 173);
         $('.mysd_list .sdlistcont').height(hh - 218);
-        $('.main_tab .scrollbox:gt(0)').height(hh - hh_banner - 115);
+        $('.main_tab .scrollbox:eq(0)').height(hh - hh_banner - 115);
+        $('.main_tab .scrollbox:gt(1)').height(hh - hh_banner - 115);
         $('#chatMsgContentDiv').height(hh - hh_banner - 115 - $(".chat_input").height());
         $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
     }

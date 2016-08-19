@@ -971,6 +971,97 @@ var room={
         $("#onlineSearchTxtBtn").click(function(){
             room.searchUser($("#onlineSearchTxt").val());
         });
+
+        //课堂笔记
+        room.articleNote.setArticleNoteEvent();
+    },
+
+    /**课堂笔记*/
+    articleNote : {
+        articleEditor:null, //文档编辑器
+        setArticleNoteEvent:function(){
+            var noteHandler = $('#publish_note');
+            if(noteHandler.size == 0){
+                return;
+            }
+            $("#publish_note_content").append('<script id="article_note_editor" name="content" type="text/plain" style="width:auto;height:auto;"></script>');
+            this.articleEditor = UE.getEditor("article_note_editor", {
+                serverUrl:room.apiUrl + '/upload/editorUpload',
+                customDomain:true,
+                initialFrameWidth : '100%',
+                initialFrameHeight : '200'
+            });
+
+            //课堂笔记
+            $('#publish_note').click(function(){
+                $('#userListId li').removeClass('zin');
+                room.articleNote.articleEditor.execCommand('cleardoc');
+                $('.right-teacher .publish-note').show();
+            });
+            //关闭
+            $('.right-teacher .publish-note .publish-close').click(function(){
+                $('.right-teacher .publish-note').hide();
+            });
+            //课堂笔记提交
+            $('.publish-note .publish-btn').click(function(){
+                $(this).prop('disabled',true);
+                room.articleNote.saveArticleNote();
+            });
+        },
+        /**保存课堂笔记*/
+        saveArticleNote:function(){
+            var articleContent = this.articleEditor.getContent();
+            if(!articleContent){
+                room.showTipBox("笔记内容为空！");
+                $('.publish-note .publish-btn').prop('disabled', false);
+                return;
+            }
+            var courseUrl = room.apiUrl + "/common/getCourse?flag=S&groupType=" + room.userInfo.groupType + "&groupId=" + room.userInfo.groupId;
+            $.getJSON(courseUrl,function(data){
+                if(data && data.result == "0" && data.data && data.data.length > 0 && !data.data[0].isNext){
+                    var course = data.data[0];
+                    var dateStr = common.formatterDate(course.date, "-");
+                    var articleInfo = {
+                        template:'note',
+                        category:'class_note',
+                        platform:room.userInfo.groupId,
+                        publishStartDate:dateStr + " " + course.startTime + ":00",
+                        publishEndDate:dateStr + " " + course.endTime + ":00",
+                        mediaUrl:'',
+                        mediaImgUrl:'',
+                        linkUrl:'',
+                        detailList:[{
+                            lang:'zh',
+                            title:course.title,
+                            content:articleContent,
+                            authorInfo:{
+                                userId:course.lecturerId,
+                                name:course.lecturer,
+                                avatar:course.avatar,
+                                position:''
+                            }
+                        }]
+                    };
+                    common.getJson('/admin/addArticle',{data:JSON.stringify(articleInfo),isNotice:"Y"},function(result){
+                        if(result.isOK){
+                            if(result.id>0){
+                                room.showTipBox("发布课堂笔记成功！");
+                                $('.right-teacher .publish-note .publish-close').click();
+                            }
+                            else{
+                                room.showTipBox("发布课堂笔记失败！");
+                            }
+                        }else{
+                            room.showTipBox(result.msg);
+                        }
+                        $('.publish-note .publish-btn').prop('disabled', false);
+                    });
+                }else{
+                    room.showTipBox("未找到相应课程信息！");
+                    $('.publish-note .publish-btn').prop('disabled', false);
+                }
+            });
+        }
     },
 
     /*openWin:function(){
@@ -1795,7 +1886,7 @@ var room={
             platform:room.userInfo.groupId,
             publishStartDate:publishStartDateStr,
             publishEndDate:publishEndDateStr,mediaUrl:'',mediaImgUrl:'',linkUrl:'',
-            detail:[{lang:'zh',title:title,content:content,
+            detailList:[{lang:'zh',title:title,content:content,
                 authorInfo:{userId:room.userInfo.userId,name:room.userInfo.nickname,avatar:room.userInfo.avatar,position:room.userInfo.position}
             }]
         };

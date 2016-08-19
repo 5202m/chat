@@ -1299,12 +1299,6 @@ var chat={
                         case 4://视频字幕
                             videos.rollNews(data);
                             break;
-                        case 5://课堂笔记
-                            if(data.platform && data.platform.indexOf(indexJS.userInfo.groupId) != -1){
-                                indexJS.appendTradeStrategyNote(data, true, true);
-                                indexJS.setListScroll($(".textlivelist>.scrollbox"));
-                            }
-                            break;
                     }
                     break;
                 }
@@ -1324,14 +1318,27 @@ var chat={
                     }
                     break;
                 }
-                case 'strategyInfo'://交易策略
+                case 'articleInfo'://交易策略
                 {
-                    if(result.data){
-                        if($("#lvInfoId .te_detail").attr("uid")==result.data.authorId){
-                            $("#lvInfoId .info2 p").text(result.data.content);
+                    var articleInfo = result.data;
+                    if (articleInfo) {
+                        switch (articleInfo.category){
+                            case "trade_strategy_article":
+                                var articleDetail=articleInfo.detailList && articleInfo.detailList[0];
+                                var authorId = articleDetail && articleDetail.authorInfo && articleDetail.authorInfo.userId;
+                                if (articleDetail && $("#lvInfoId .te_detail").attr("uid") == authorId) {
+                                    $("#lvInfoId .info2 p").text(articleDetail.content);
+                                }
+                                break;
+                            case "class_note":
+                                if(articleInfo.platform && articleInfo.platform.indexOf(indexJS.userInfo.groupId) != -1){
+                                    indexJS.appendTradeStrategyNote(articleInfo, true, true);
+                                    indexJS.setListScroll($(".textlivelist>.scrollbox"));
+                                }
+                                break;
                         }
                     }
-                   break;
+                    break;
                 }
             }
         });

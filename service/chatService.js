@@ -23,7 +23,7 @@ var chatService ={
         approvalResult:'approvalResult',//审核结果
         leaveRoom:'leaveRoom',//离开房间
         serverTime:'serverTime',//服务器时间
-        strategyInfo:'strategyInfo'//策略信息
+        articleInfo:'articleInfo'//文档信息
     },
     leaveRoomFlag:{//离开房间标志
         roomClose:'roomClose',//房间关闭或禁用或开放时间结束
@@ -765,10 +765,9 @@ var chatService ={
                 article.opType   = opType;//操作类型
                 var rmIds = article.platform.split(",");
                 for(var i in rmIds ){
-                    chatService.sendMsgToRoom(true,null,rmIds[i],"notice",{type:chatService.noticeType.pushInfo,data:article});
+                    chatService.sendMsgToRoom(true,null,rmIds[i],"notice",{type:chatService.noticeType.articleInfo,data:article});
                 }
             }
-
         }catch(e){
             logger.error("noticeArticle fail",e);
         }
