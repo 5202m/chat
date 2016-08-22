@@ -283,6 +283,7 @@ var videos={
         /**
          * 隐藏滚动文字
          */
+        $('.mod_scrollnews').hide();
         /*$('.mod_scrollnews .newsclose').click(function(){
             $('.mod_scrollnews .newslist').hide();
             $('.mod_scrollnews .newsbtn').show();
@@ -324,11 +325,6 @@ var videos={
      * @param data
      */
     rollNews : function(data){
-        if(common.isBlank(data)){
-            $('.mod_scrollnews').hide();
-        }else{
-            $('.mod_scrollnews').show();
-        }
         var newsPanel = $('#newscont1');
         if(data.delete){
             var ids = data.ids.split(',');
@@ -390,10 +386,10 @@ var videos={
             }
         }
         if(newsPanel.is(':empty')){
-            $('#video_content .tabtxt').hide();
+            $('#video_content .tabtxt,.mod_scrollnews').hide();
             $('#video_content .video-name').css('top','12px');
         } else {
-            $('#video_content .tabtxt').show();
+            $('#video_content .tabtxt,.mod_scrollnews').show();
             $('#video_content .video-name').css('top','48px');
         }
         heightCalcu();
