@@ -583,7 +583,7 @@ table.tableForm_C {background-color: #a5c2da;width: 99%;margin: 0px auto;}
 .ope-add {background: url('../img/add.png') no-repeat 3px 1px;}
 .not-talk .talk-content .talk-bottons {width:100%;height:30px;text-align: right;margin-top: 15px;}
 .not-talk .talk-content .talk-bottons input {width:80px; height:25px; line-height: 25px;margin-right:5px;}
-.tipsbox {position: fixed;top: 50%;width: 100%;left: 0;margin-top: -19px;height: 38px;font-size: 0;text-align: center;z-index: 100  }
+.tipsbox {position: fixed;top: 50%;width: 100%;left: 0;margin-top: -19px;height: 38px;font-size: 0;text-align: center;z-index: 9999  }
 .tipsbox .cont {display: inline-block;padding: 0 10px;height: 38px;background: #fff;color: #333;line-height: 38px;font-size: 14px;border-radius: 2px;}
 .point-list .mCSB_outside+.mCSB_scrollTools {
     right: -2px;

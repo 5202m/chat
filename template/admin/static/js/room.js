@@ -1044,11 +1044,10 @@ var room={
                     };
                     common.getJson('/admin/addArticle',{data:JSON.stringify(articleInfo),isNotice:"Y"},function(result){
                         if(result.isOK){
-                            if(result.id>0){
+                            if(result.id){
                                 room.showTipBox("发布课堂笔记成功！");
                                 $('.right-teacher .publish-note .publish-close').click();
-                            }
-                            else{
+                            }else{
                                 room.showTipBox("发布课堂笔记失败！");
                             }
                         }else{
