@@ -324,6 +324,11 @@ var videos={
      * @param data
      */
     rollNews : function(data){
+        if(common.isBlank(data)){
+            $('.mod_scrollnews').hide();
+        }else{
+            $('.mod_scrollnews').show();
+        }
         var newsPanel = $('#newscont1');
         if(data.delete){
             var ids = data.ids.split(',');
