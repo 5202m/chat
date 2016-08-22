@@ -498,6 +498,7 @@ var chat={
             if($(".scrollbtn").hasClass("on")){
                 chat.setTalkListScroll(true);
             }
+            chat.showChatMsgNumTip(false);
         }
         //对话事件
         $('#'+fromUser.publishTime+' .headimg').click(function(){
@@ -515,6 +516,18 @@ var chat={
             diaDom.attr("avs",$(this).parent().parent().find('.headimg img').attr("src"));
             chat.openDiaLog(diaDom);
         });
+    },
+    /**显示新消息数量角标*/
+    showChatMsgNumTip : function(isClear){
+        var $tip = $("#chatMsgCount");
+        if(isClear){
+            $tip.data("cnt", 0).html("").hide();
+        }else{
+            if(!$tip.parent().is(".on")){
+                var cnt = ($tip.data("cnt") || 0) + 1;
+                $tip.data("cnt", cnt).html(cnt).show();
+            }
+        }
     },
     /**
      * 打开对话框

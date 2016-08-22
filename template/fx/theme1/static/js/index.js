@@ -164,6 +164,7 @@ var indexJS ={
             if(index==0){//课堂笔记
                 $("#textLiveCount").data("cnt", 0).html("").hide();
             }else if(index==1){//聊天
+                chat.showChatMsgNumTip(true);
                 chat.setTalkListScroll(true);
             }else if(index==2){//快讯
                 if (!store.enabled){
