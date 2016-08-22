@@ -46,6 +46,7 @@
             'inserttable', 'deletetable', 'insertparagraphbeforetable', 'insertrow', 'deleterow', 'insertcol', 'deletecol', 'mergecells', 'mergeright', 'mergedown', 'splittocells', 'splittorows', 'splittocols', 'charts', '|',
             'print', 'preview', 'searchreplace', 'help', 'drafts'
         ]],
+        zIndex : 9200,
         autoHeightEnabled : false,
         maximumWords:30000,  //允许的最大字符数(不包含html)
         /* 上传配置项 */
