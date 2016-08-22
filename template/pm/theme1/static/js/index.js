@@ -573,7 +573,7 @@ var indexJS ={
                 pageKey : noteId || "",
                 pageLess : 1
             };
-            this.getArticleList("class_note",indexJS.userInfo.groupId,1,1,30,'{"publishStartDate":"desc","sequence":"asc","createDate":"desc"}',params,function(dataList){
+            this.getArticleList("class_note",indexJS.userInfo.groupId,1,1,30,'{"publishStartDate":"desc","createDate":"desc"}',params,function(dataList){
                 if(dataList && dataList.result==0){
                     var data=dataList.data;
                     for(var i in data){
