@@ -520,7 +520,7 @@ var indexJS ={
      * 加载快讯数据
      */
     setInformation: function(){
-        var scrollDom = $(".mod_main .tabcont .main_tab").eq(1).find('.scrollbox'), intervalTime = $('#newInfoCount').attr('t');
+        var scrollDom = $(".mod_main .tabcont .main_tab:eq(2)").find('.scrollbox'), intervalTime = $('#newInfoCount').attr('t');
         if(!common.isBlank(intervalTime) && indexJS.serverTime - intervalTime < 2*60*1000){
             return;
         }
@@ -548,7 +548,7 @@ var indexJS ={
                     }
                     indexJS.setListScroll(scrollDom);//设置滚动
                     $('#newInfoCount').attr('pt', pubDateTime);
-                    if($(".mod_main .tabcont .main_tab").eq(1).hasClass('on')){
+                    if($(".mod_main .tabcont .main_tab:eq(2)").hasClass('on')){
                         indexJS.infoNewCount = 0;
                         $('#newInfoCount').attr({'pt':pubDateTime,'t':indexJS.serverTime}).text(indexJS.infoNewCount).hide();
                     }

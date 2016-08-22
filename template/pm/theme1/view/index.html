@@ -335,7 +335,16 @@
         $('.mysd_list .sdlistcont').height(hh - 218);
         $('.main_tab .scrollbox:eq(0)').height(hh - hh_banner - 115);
         $('.main_tab .scrollbox:gt(1)').height(hh - hh_banner - 115);
-        $('#chatMsgContentDiv').height(hh - hh_banner - 115 - $(".chat_input").height());
+        var chatTab = $(".main_tab:eq(1)");
+        var chatInputHeight = 0;
+        if(chatTab.is(".on")){
+            chatInputHeight = $(".chat_input").height();
+        }else{
+            chatTab.addClass("on");
+            chatInputHeight = $(".chat_input").height();
+            chatTab.removeClass("on");
+        }
+        $('#chatMsgContentDiv').height(hh - hh_banner - 115 - chatInputHeight);
         $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
     }
     widthCheck();
