@@ -57,7 +57,9 @@ var constant={
     },
     gwApiInvoker:{//公司内存restful接口对应的invoker
         fx_website:{key:'fx_website',value:'2ac168bbb45d396a3315d95aa4215191'},//外汇
-        hx_website:{key:"hx_website",value:"7070e594b6e33cba86d99c8dd963dd81"}//恒信
+        fx_website_demo:{key:'fx_website_demo',value:'06639931e8e5f56c3572956f014882ba'},//外汇
+        hx_website:{key:"hx_website",value:"7070e594b6e33cba86d99c8dd963dd81"},//恒信
+        hx_website_demo:{key:"hx_website_demo",value:"4aa8e9b29196e52f7c3a073c3dc5ae56"}//恒信
     },
     chatGrout:{
         dict_chat_group_type: 'chat_group_type'//组类别

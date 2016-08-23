@@ -223,7 +223,7 @@ var fxApiService = {
             countryCode:86,
             mobilePhone:mobilePhone,
             args:'[]',
-            _principal_:{loginName:mobilePhone, remoteIpAddress:'', invoker:constant.gwApiInvoker.fx_website.key, companyId:2}
+            _principal_:{loginName:mobilePhone, remoteIpAddress:'', invoker:constant.gwApiInvoker.fx_website_demo.key, companyId:2}
         };
         var sg=this.getApiSignature(submitInfo);
         if(!sg){
@@ -237,7 +237,7 @@ var fxApiService = {
             try{
                 if (!error && common.isValid(tmpData)) {
                     var allData = JSON.parse(tmpData);
-                    isTrue=(allData.code == 'SUCCESS'&& allData.result);
+                    isTrue=(allData.code == 'SUCCESS' && typeof allData.result == "boolean" && allData.result);
                 } else {
                     logger.warn("checkSimulateClient by GTS2Api[" + mobilePhone + "]->error:" + error);
                 }
