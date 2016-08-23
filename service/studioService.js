@@ -255,8 +255,9 @@ var studioService = {
                         result.isOK=true;
                         callback(result);
                     }else{
-                        result.error=errorMessage.code_1004;
-                        callback(result);
+                        studioService.setClientInfo(row,userInfo,function(resultTmp){
+                            callback(resultTmp);
+                        });
                     }
                 }else{
                     studioService.setClientInfo(row,userInfo,function(resultTmp){
