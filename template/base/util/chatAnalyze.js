@@ -92,7 +92,7 @@ var chatAnalyze = {
                 this.initGA(type);
                 this.setGA();
                 this.setBaidu();
-                this.getUTMCookie();
+                window.setTimeout(chatAnalyze.sendUTM(),1000*10);
             }
         }
     },
