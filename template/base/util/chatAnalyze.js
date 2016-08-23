@@ -92,6 +92,7 @@ var chatAnalyze = {
                 this.initGA(type);
                 this.setGA();
                 this.setBaidu();
+                this.getUTMCookie();
             }
         }
     },
@@ -160,23 +161,6 @@ var chatAnalyze = {
         });
     },
     /**
-     * 设置utm cookie
-     * @param cval
-     * @param type
-     */
-    setUTMCookie : function(cval,type) {
-        if (common.isValid(cval)) {
-            var dm='127.0.0.1';
-            if(1==type){
-                dm='.gwfx.com';
-            }
-            if(2==type){
-                dm='.24k.hk';
-            }
-            document.cookie = this.utmStore.storeKey+ '='+ escape(cval)+ '; expires=Tue, 31 Dec 2030 00:00:00 UTC; path=/;domain='+dm;
-        }
-    },
-    /**
      * 获取utm cookie
      * @param cval
      * @param type
@@ -190,7 +174,15 @@ var chatAnalyze = {
                 return arr[1];
             }
         }
-        return '';
+        var dm='127.0.0.1';
+        if(chatAnalyze.localHref.indexOf("/studio")!=-1){
+            dm='.24k.hk';
+        }else if(chatAnalyze.localHref.indexOf("/fxstudio")!=-1){
+            dm='.gwfx.com';
+        }
+        var cval=UUID.prototype.createUUID(dm.indexOf("gwfx")!=-1?'':'G');
+        document.cookie = this.utmStore.storeKey+ '='+ escape(cval)+ '; expires=Tue, 31 Dec 2030 00:00:00 UTC; path=/;domain='+dm;
+        return cval;
     },
     /**
      * 设置utm系统所需行为
@@ -263,10 +255,6 @@ var chatAnalyze = {
             var bPlatform=tmpData.groupType.indexOf('fx')!=-1?1:2;
             var userId = this.getUTMCookie();
             var isLocal=this.isLocalHref();
-            if (common.isBlank(userId)) {
-                userId=UUID.prototype.createUUID(bPlatform==1?'':'G');
-                this.setUTMCookie(userId,isLocal?0:bPlatform);
-            }
             var sendData={
                 userId:userId,
                 customerType: tmpData.clientGroup,
