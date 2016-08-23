@@ -371,8 +371,11 @@ var chatService ={
                         if(allowWhisper){
                             pushInfoService.checkPushInfo(userInfo.groupType,userInfo.groupId,userInfo.clientGroup,constant.pushInfoPosition.whBox,true,function(pushInfos){
                                  if(pushInfos && pushInfos.length > 0){
-                                     var pushInfo = pushInfos[0];
-                                     var noticeInfo={type:chatService.noticeType.pushInfo,data:{publishTime:((new Date().getTime()+pushInfo.onlineMin*60*1000)+"_"+process.hrtime()[1]),contentId:pushInfo._id,position:pushInfo.position,timeOut:pushInfo.onlineMin,content:pushInfo.content}};
+                                     var pushInfo = null,  noticeInfo={type:chatService.noticeType.pushInfo,data:{position:constant.pushInfoPosition.whBox, infos : []}};
+                                     for(var i = 0, len = pushInfos.length; i < len; i++){
+                                         pushInfo = pushInfos[i];
+                                         noticeInfo.data.infos.push({serverTime:new Date().getTime(),publishTime:((new Date().getTime()+pushInfo.onlineMin*60*1000)+"_"+process.hrtime()[1]),contentId:pushInfo._id,timeOut:pushInfo.onlineMin,content:pushInfo.content});
+                                     }
                                      if(pushInfo.replyRepeat==0){
                                          messageService.existRecord({"toUser.talkStyle": 1,"toUser.userType":3,"toUser.questionId":pushInfo._id},function(hasRecord){
                                              if(!hasRecord){
@@ -391,7 +394,7 @@ var chatService ={
                                 var pushInfo = null, noticeInfo = {type:chatService.noticeType.pushInfo, data:{position:constant.pushInfoPosition.talkBox, infos : []}};
                                 for(var i = 0, lenI = pushInfos.length; i < lenI; i++){
                                     pushInfo = pushInfos[i];
-                                    noticeInfo.data.infos.push({contentId:pushInfo._id, pushDate:pushInfo.pushDate, intervalMin:pushInfo.intervalMin, onlineMin:pushInfo.onlineMin,content:pushInfo.content});
+                                    noticeInfo.data.infos.push({serverTime:new Date().getTime(),contentId:pushInfo._id, pushDate:pushInfo.pushDate, intervalMin:pushInfo.intervalMin, onlineMin:pushInfo.onlineMin,content:pushInfo.content});
                                 }
                                 socket.emit('notice',noticeInfo);
                             }

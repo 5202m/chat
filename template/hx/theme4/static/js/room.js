@@ -13,7 +13,8 @@ var roomJS={
     serverTime:0,//服务器时间
     pushObj:{
         talkPush : [], //聊推送消息
-        talkPushInterval : null
+        talkPushInterval : null,
+        whInfos:[]//私聊推送消息
     },
     //信息类型
     msgType:{
@@ -142,6 +143,7 @@ var roomJS={
     serverTimeUp: function () {
         setInterval(function () {
             roomJS.serverTime += 1000;
+            roomJS.setPushInfo();
         }, 1000);//每秒一次
     },
     /**
@@ -275,12 +277,12 @@ var roomJS={
                 case 'pushInfo':
                     var data=result.data;
                     if(data.position==1){//私聊框
-                        roomJS.whTalk.pushObj = {info:data.content,publishTime:data.publishTime,infoId:data.contentId};
-                        window.setTimeout(function(){//按推送结果提示私聊
-                            roomJS.whTalk.pushMsg();
-                        },data.timeOut*60*1000);
+                        roomJS.pushObj.whInfos = data.infos;
                     }else if(data.position==3){ //公聊框
-                        roomJS.talkBoxPush.initTBP(data.infos);
+                        roomJS.pushObj.talkPush = data.infos;
+                        for(var i = 0, len = roomJS.pushObj.talkPush.length; i < len; i++){
+                            roomJS.pushObj.talkPush[i].nextTm = roomJS.pushObj.talkPush[i].serverTime + roomJS.pushObj.talkPush[i].onlineMin * 60 * 1000;
+                        }
                     }
                     break;
                 case 'serverTime':
@@ -2193,5 +2195,38 @@ var roomJS={
             $("#tVideoDiv").empty();
             roomJS.socket.disconnect();
         }, 5000);
+    },
+    /**
+     * 加载推送消息
+     */
+    setPushInfo:function(){
+        var whInfo = null, whInfos = roomJS.pushObj.whInfos;
+        if(whInfos && whInfos.length > 0) {
+            for(var i = 0, len = whInfos.length; i < len; i++) {
+                whInfo = whInfos[i];
+                if(whInfo.pushed){
+                    continue;
+                }
+                if(whInfo && roomJS.serverTime >= (whInfo.serverTime+whInfo.timeOut * 60 * 1000)) {
+                    whInfo.pushed = true;
+                    roomJS.whTalk.pushObj = {info:whInfo.content,publishTime:whInfo.publishTime,infoId:whInfo.contentId};
+                    roomJS.whTalk.pushMsg();
+                }
+            }
+        }
+        var talkBoxInfo = null, talkBoxInfos = roomJS.pushObj.talkPush;
+        if(talkBoxInfos && talkBoxInfos.length > 0){
+            for(var i = 0, lenI = talkBoxInfos.length; i < lenI; i++){
+                talkBoxInfo = talkBoxInfos[i];
+                if(talkBoxInfo && talkBoxInfo.nextTm && roomJS.serverTime >= talkBoxInfo.nextTm && common.dateTimeWeekCheck(talkBoxInfo.pushDate, false, roomJS.serverTime)){
+                    if(talkBoxInfo.intervalMin && talkBoxInfo.intervalMin > 0){
+                        talkBoxInfo.nextTm = roomJS.serverTime + talkBoxInfo.intervalMin * 60 * 1000;
+                    }else{
+                        delete talkBoxInfo["nextTm"];
+                    }
+                    roomJS.talkBoxPush.showMsg(talkBoxInfo);
+                }
+            }
+        }
     }
 };

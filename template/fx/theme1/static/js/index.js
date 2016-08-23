@@ -374,6 +374,7 @@ var indexJS ={
                 videos.clientVideoTask();
                 indexJS.setInformation();
             }
+            chat.setPushInfo();
         },1000);//每秒一次
     },
     /**

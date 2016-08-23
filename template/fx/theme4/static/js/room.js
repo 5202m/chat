@@ -12,8 +12,9 @@ var studioChatMb={
     fromPlatform:null,//来源平台
     serverTime:0,//服务器时间
     pushObj:{
-        talkPush : [], //聊推送消息
-        talkPushInterval : null
+        talkPush : [], //公聊推送消息
+        talkPushInterval : null,
+        whInfos:[]//私聊推送消息
     },
     //信息类型
     msgType:{
@@ -115,6 +116,7 @@ var studioChatMb={
     serverTimeUp: function () {
         setInterval(function () {
             studioChatMb.serverTime += 1000;
+            studioChatMb.setPushInfo();
         }, 1000);//每秒一次
     },
     /**
@@ -256,12 +258,12 @@ var studioChatMb={
                 case 'pushInfo':
                     var data=result.data;
                     if(data.position==1){//私聊框
-                        studioChatMb.whTalk.pushObj = {info:data.content,publishTime:data.publishTime,infoId:data.contentId};
-                        window.setTimeout(function(){//按推送结果提示私聊
-                            studioChatMb.whTalk.pushMsg();
-                        },data.timeOut*60*1000);
+                        studioChatMb.pushObj.whInfos = data.infos;
                     }else if(data.position==3){ //公聊框
-                        studioChatMb.talkBoxPush.initTBP(data.infos);
+                        studioChatMb.pushObj.talkPush = data.infos;
+                        for(var i = 0, len = studioChatMb.pushObj.talkPush.length; i < len; i++){
+                            studioChatMb.pushObj.talkPush[i].nextTm = studioChatMb.pushObj.talkPush[i].serverTime + studioChatMb.pushObj.talkPush[i].onlineMin * 60 * 1000;
+                        }
                     }
                     break;
                 case 'serverTime':
@@ -2166,6 +2168,39 @@ var studioChatMb={
             studioChatMb.whTalk.receiveMsg(sendObj,true,false);//直接把数据填入内容栏
             if(sendObj.content.msgType != studioChatMb.msgType.img) {
                 studioChatMb.socket.emit('sendMsg', sendObj);//发送数据
+            }
+        }
+    },
+    /**
+     * 加载推送消息
+     */
+    setPushInfo:function(){
+        var whInfo = null, whInfos = studioChatMb.pushObj.whInfos;
+        if(whInfos && whInfos.length > 0) {
+            for(var i = 0, len = whInfos.length; i < len; i++) {
+                whInfo = whInfos[i];
+                if(whInfo.pushed){
+                    continue;
+                }
+                if(whInfo && studioChatMb.serverTime >= (whInfo.serverTime+whInfo.timeOut * 60 * 1000)) {
+                    whInfo.pushed = true;
+                    studioChatMb.whTalk.pushObj = {info:whInfo.content,publishTime:whInfo.publishTime,infoId:whInfo.contentId};
+                    studioChatMb.whTalk.pushMsg();
+                }
+            }
+        }
+        var talkBoxInfo = null, talkBoxInfos = studioChatMb.pushObj.talkPush;
+        if(talkBoxInfos && talkBoxInfos.length > 0){
+            for(var i = 0, lenI = talkBoxInfos.length; i < lenI; i++){
+                talkBoxInfo = talkBoxInfos[i];
+                if(talkBoxInfo && talkBoxInfo.nextTm && studioChatMb.serverTime >= talkBoxInfo.nextTm && common.dateTimeWeekCheck(talkBoxInfo.pushDate, false, studioChatMb.serverTime)){
+                    if(talkBoxInfo.intervalMin && talkBoxInfo.intervalMin > 0){
+                        talkBoxInfo.nextTm = studioChatMb.serverTime + talkBoxInfo.intervalMin * 60 * 1000;
+                    }else{
+                        delete talkBoxInfo["nextTm"];
+                    }
+                    studioChatMb.talkBoxPush.showMsg(talkBoxInfo);
+                }
             }
         }
     }

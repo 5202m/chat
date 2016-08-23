@@ -4,7 +4,11 @@
  */
 var chat={
     socket:null,//sccket对象
-    whPushObj:{},//私聊推送信息
+    msgPushObj:{
+        pbInfos : [], //公聊推送消息列表
+        whInfos:[],//私聊推送消息列表
+        whInfo:{}//私聊推送消息
+    },//推送信息
     whTipInterId:null,//私聊提示
     pushInfoTimeOutId:null,//延迟执行的ID
     initUserList:false,
@@ -1294,15 +1298,13 @@ var chat={
                     var data=result.data;
                     switch(data.position){
                         case 1://私聊框
-                            chat.whPushObj = {info: data.content,publishTime: data.publishTime,infoId: data.contentId};
-                            chat.pushInfoTimeOutId = window.setTimeout(function () {//按推送结果提示私聊
-                                var aDom = $("#userListId li[t=3] a .headimg:not(.have_op)");
-                                $(aDom.get(common.randomIndex(aDom.length))).parent().find('em').click();
-                                $('#main_ad_box .pop_close').click();
-                            }, data.timeOut * 60 * 1000);
+                            chat.msgPushObj.whInfos = data.infos;
                             break;
                         case 3://公聊框
-                            chat.talkBoxPush.initTBP(data.infos);
+                            chat.msgPushObj.pbInfos = data.infos;
+                            for(var i = 0, len = chat.msgPushObj.pbInfos.length; i < len; i++){
+                                chat.msgPushObj.pbInfos[i].nextTm = chat.msgPushObj.pbInfos[i].serverTime + chat.msgPushObj.pbInfos[i].onlineMin * 60 * 1000;
+                            }
                             break;
                         case 4://视频框字幕
                             videos.rollNews(data);
@@ -1352,6 +1354,7 @@ var chat={
         });
         //信息传输
         this.socket.on('loadMsg',function(data){
+            $('#dialog_list .push').hide();
             $(".img-loading[pf=chatMessage]").hide();
             var msgData=data.msgData;
             if(msgData && $.isArray(msgData)) {
@@ -1360,10 +1363,12 @@ var chat={
                     chat.formatUserToContent(msgData[i]);
                 }
             }
+            $('#dialog_list .push').appendTo($('#dialog_list')).show();
             chat.setTalkListScroll(true);
         });
         //加载私聊信息
         this.socket.on('loadWhMsg',function(result){
+            $('#wh_msg_'+result.toUserId+' .chat_content .dialoglist .dialog .whcls').parent().hide();
             var data=result.data;
             if(result.type=='offline'){//离线提示信息
                 if(data && !$.isEmptyObject(data)){
@@ -1379,17 +1384,12 @@ var chat={
                     var targetDom=$('.mult_dialog a[uid='+result.toUserId+']');
                     for (var i in data) {
                         row = data[i];
-                        if(row.userType==3 && chat.setWhPushInfo(targetDom,row.publishTime)){
-                            hasPushInfo++;
-                        }
                         chat.formatUserToContent(row,true,result.toUserId);
                         if(row.content.msgType==chat.msgType.img){
                             hasImg++;
                         }
                     }
-                    if(hasPushInfo==0){
-                        chat.setWhPushInfo(targetDom,null);
-                    }
+                    $('#wh_msg_'+result.toUserId+' .chat_content .dialoglist .dialog .whcls').parent().appendTo( $('#wh_msg_'+result.toUserId+' .chat_content .dialoglist')).show();
                     chat.setTalkListScroll(true,$('#wh_msg_'+result.toUserId+' .wh-content'),'dark');
                 }
             }
@@ -1417,19 +1417,13 @@ var chat={
      * @param dom
      */
     setWhPushInfo:function(dom,publishTime){
-        if($.isEmptyObject(chat.whPushObj)){
-            return false;
-        }
-        if(publishTime && publishTime<chat.whPushObj.publishTime){
-            return false;
-        }
         var uid=dom.attr("uid"),nk=dom.find("label").text().replace(/\s（助理）$/, "");
-        if($('#wh_msg_'+uid+' div[id='+chat.whPushObj.publishTime+']').length>0){
+        if($('#wh_msg_'+uid+' div[id='+chat.msgPushObj.whInfo.publishTime+']').length>0){
             return false;
         }
-        var sendObj={fromUser:{publishTime:chat.whPushObj.publishTime,userId:uid,nickname:nk,userType:3},content:{msgType:chat.msgType.text,value:chat.whPushObj.info,infoId:chat.whPushObj.infoId}};
+        var sendObj={fromUser:{publishTime:chat.msgPushObj.whInfo.publishTime,userId:uid,nickname:nk,userType:3},content:{msgType:chat.msgType.text,value:chat.msgPushObj.whInfo.info,infoId:chat.msgPushObj.whInfo.infoId}};
         chat.setWhContent(sendObj,false,false,true);//直接把数据填入内容栏
-        chat.whPushObj = {};//清空后台推送的消息
+        chat.msgPushObj.whInfo = {};//清空后台推送的消息
         window.clearTimeout(chat.pushInfoTimeOutId);
         return true;
     },
@@ -1570,6 +1564,42 @@ var chat={
             $("#dialog_list").append(html.join(""));
             if($(".scrollbtn").hasClass("on")) {
                 chat.setTalkListScroll(true);
+            }
+        }
+    },
+    /**
+     * 加载推送消息
+     */
+    setPushInfo:function(){
+        var whInfo = null, whInfos = chat.msgPushObj.whInfos;
+        if(whInfos && whInfos.length > 0) {
+            for(var i = 0, len = whInfos.length; i < len; i++) {
+                whInfo = whInfos[i];
+                if(whInfo.pushed){
+                    continue;
+                }
+                if(whInfo && indexJS.serverTime >= (whInfo.serverTime+whInfo.timeOut * 60 * 1000)) {
+                    whInfo.pushed = true;
+                    chat.msgPushObj.whInfo = {info: whInfo.content, publishTime: whInfo.publishTime, infoId: whInfo.contentId};
+                    var aDom = $("#userListId li[t=3] a .headimg:not(.have_op)");
+                    var anyDom=$(aDom.get(common.randomIndex(aDom.length))).parent();
+                    anyDom.dblclick();
+                    chat.setWhPushInfo($('.mult_dialog a[uid='+anyDom.parent().attr("id")+']'));
+                }
+            }
+        }
+        var talkBoxInfo = null, talkBoxInfos = chat.msgPushObj.pbInfos;
+        if(talkBoxInfos && talkBoxInfos.length > 0){
+            for(var i = 0, lenI = talkBoxInfos.length; i < lenI; i++){
+                talkBoxInfo = talkBoxInfos[i];
+                if(talkBoxInfo && talkBoxInfo.nextTm && indexJS.serverTime >= talkBoxInfo.nextTm && common.dateTimeWeekCheck(talkBoxInfo.pushDate, false, indexJS.serverTime)){
+                    if(talkBoxInfo.intervalMin && talkBoxInfo.intervalMin > 0){
+                        talkBoxInfo.nextTm = indexJS.serverTime + talkBoxInfo.intervalMin * 60 * 1000;
+                    }else{
+                        delete talkBoxInfo["nextTm"];
+                    }
+                    chat.talkBoxPush.showMsg(talkBoxInfo);
+                }
             }
         }
     }
