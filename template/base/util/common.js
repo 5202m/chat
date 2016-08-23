@@ -422,55 +422,59 @@ var common = {
         };
         var coursesObj=null;
         if(this.isValid(data.courses) && typeof data.courses !='object') {
-            coursesObj =JSON.parse(data.courses);
+            coursesObj = JSON.parse(data.courses);
         }else{
             coursesObj=data.courses;
         }
         var days=coursesObj.days,timeBuckets=coursesObj.timeBuckets;
-        var currDay=new Date(serverTime).getDay();
+        var currDay = (new Date(serverTime).getDay() + 6) % 7, tmpDay;
         var currTime=common.getHHMM(serverTime);
-        var tmBk=null,hasRow=false;
-        var validDayTmbk=null,courseObj=null;
+        var tmBk=null,courseObj=null;
         for(var i=0;i<days.length;i++){
             if(days[i].status==0){
                 continue;
             }
-            if(days[i].day>currDay){
+            tmpDay = (days[i].day + 6) % 7;
+            if(tmpDay>currDay){
                 for(var k in timeBuckets){
                     tmBk=timeBuckets[k];
                     courseObj=getCourses(tmBk,i,true);
-                    if(!courseObj){
-                        continue;
+                    if(courseObj){
+                        return courseObj;
                     }
-                    return courseObj;
                 }
-            }else if(days[i].day==currDay){
+            }else if(tmpDay==currDay){
                 for(var k in timeBuckets){
                     tmBk=timeBuckets[k];
                     if(tmBk.startTime<=currTime && (tmBk.endTime>=currTime||tmBk.endTime=="00:00")){
-                        hasRow=true;
-                        return getCourses(tmBk,i,false);
+                        courseObj=getCourses(tmBk,i,false);
+                    }else if(tmBk.startTime>currTime){
+                        courseObj=getCourses(tmBk,i,true);
                     }
-                    if(!hasRow && tmBk.startTime>currTime){
-                        hasRow=true;
-                        return getCourses(tmBk,i,true);
-                    }
-                }
-            }else{
-                if(!validDayTmbk){//筛选有效的课程
-                    for(var k=0;k<timeBuckets.length;k++) {
-                        courseObj=timeBuckets[k].course;
-                        if (!courseObj || courseObj[i].status==0 || common.isBlank(courseObj[i].lecturerId)) {
-                            continue;
-                        }
-                        validDayTmbk ={dayIndex:i,tmIndex:k};
-                        break;
+                    if(courseObj){
+                        return courseObj;
                     }
                 }
             }
         }
-        if(!hasRow && validDayTmbk){//如课程安排中设置的日期小于当前日期，则返回有效的课程
-            return getCourses(timeBuckets[validDayTmbk.tmIndex],validDayTmbk.dayIndex,true);
+        //课程安排跨周，返回首次课程
+        if(!data.publishEnd){ //没有发布结束时间，不提供跨周数据
+            return null;
+        }
+        for(var i=0;i<days.length;i++){
+            if(days[i].status==0){
+                continue;
+            }
+            tmpDay = (days[i].day + 6) % 7;
+            if(data.publishEnd < (tmpDay + 7 - currDay) * 86400000 + serverTime){
+                continue;
+            }
+            for(var k=0;k<timeBuckets.length;k++) {
+                courseObj=getCourses(timeBuckets[k],i,true);
+                if(courseObj){
+                    return courseObj;
+                }
+            }
         }
         return null;
     },
