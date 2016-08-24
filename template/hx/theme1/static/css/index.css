@@ -6845,44 +6845,10 @@ div#teachVideoId {background: #222;}
     border-radius: 10px;
     overflow: hidden;
 }
-.show-order-box > p.orders-test{
-    margin-top: 5px;
-    max-height: 48px;
-    font-size: 14px;
-    line-height: 24px;
-    overflow: hidden;
-}
-.show-order-box > .orders-btn a.showMore{
-    display: inline-block;
-    padding: 0 5px;
-    font-size: 12px;
-    color: #222;
-    text-align: center;
-    line-height: 1.5;
-    text-decoration: none;
-    border: 1px solid #222;
-    border-radius: 10px;
-}
-.show-order-box > .orders-btn a.showMore:hover{
-    color: #c1a062;
-    border-color: #c1a062;
-}
-.show-order-box a.support {
-    float: right;
-    color: #ccb054;
-    font-size: 13px;
-    line-height: 20px;
-    height: 20px;
-    display: inline-block;
-    background: url("../img/icon_recommend.png") 0 0 no-repeat;
-    padding-left: 23px;
-    position: relative;
-    float: right;
-}
-.show-order-box > a {
-    max-height: 50px;
-    overflow: hidden;
-    display: block;
-    width: 100%;
-    border-radius: 10px;
-}
+.show-order-box > p.orders-test{margin-top: 5px;max-height: 48px;font-size: 14px;line-height: 24px;overflow: hidden;}
+.show-order-box > .orders-btn a.showMore{display: inline-block;padding: 0 5px;font-size: 12px;color: #222;text-align: center;line-height: 1.5;text-decoration: none;border: 1px solid #222;border-radius: 10px;}
+.show-order-box > .orders-btn a.showMore:hover{color: #c1a062;border-color: #c1a062;}
+.show-order-box a.support {float: right;color: #ccb054;font-size: 13px;line-height: 20px;height: 20px;display: inline-block;background: url("../img/icon_recommend.png") 0 0 no-repeat;padding-left: 23px;position: relative;}
+.show-order-box > a {max-height: 50px;overflow: hidden;display: block;width: 100%;border-radius: 10px;}
+.show-order-box a.support{width:30px}
+.show-order-box .support i {display: none;line-height: 20px;height: 20px;font-weight: bold;font-style: normal;}

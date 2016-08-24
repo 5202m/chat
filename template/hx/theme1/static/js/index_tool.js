@@ -656,7 +656,7 @@ var tool={
                 formatHtmlArr.push('    </a>');
                 formatHtmlArr.push('    <p class="orders-test">{4}</p>');//晒单内容
                 formatHtmlArr.push('    <div class="orders-btn">');
-                formatHtmlArr.push('        <a href="javascript:void(0);" class="support" i="{5}">(<span>{6}</span>)<i>+1</i></a>');//id和点赞数
+                formatHtmlArr.push('        <a href="javascript:void(0);" class="support" i="{5}"><span>{6}</span><i>+1</i></a>');//id和点赞数
                 formatHtmlArr.push('        <a href="javascript:void(0);" class="showMore">查看全部</a>');
                 formatHtmlArr.push('    </div>');
                 formatHtmlArr.push('</div>');
@@ -680,7 +680,7 @@ var tool={
                 formatHtmlArr.push('    </a>');
                 formatHtmlArr.push('    <p class="orders-test">{3}</p>');//晒单内容
                 formatHtmlArr.push('    <div class="orders-btn">');
-                formatHtmlArr.push('        <a href="javascript:void(0);" class="support" i="{4}">(<span>{5}</span>)<i>+1</i></a>');//id和点赞数
+                formatHtmlArr.push('        <a href="javascript:void(0);" class="support" i="{4}"><span>{5}</span><i>+1</i></a>');//id和点赞数
                 formatHtmlArr.push('        <a href="javascript:void(0);" class="showMore">查看全部</a>');
                 formatHtmlArr.push('    </div>');
                 formatHtmlArr.push('</div>');
