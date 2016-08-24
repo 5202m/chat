@@ -6847,7 +6847,7 @@ div#teachVideoId {background: #222;}
 }
 .show-order-box > p.orders-test{
     margin-top: 5px;
-    height: 48px;
+    max-height: 48px;
     font-size: 14px;
     line-height: 24px;
     overflow: hidden;
@@ -6878,4 +6878,11 @@ div#teachVideoId {background: #222;}
     padding-left: 23px;
     position: relative;
     float: right;
+}
+.show-order-box > a {
+    max-height: 50px;
+    overflow: hidden;
+    display: block;
+    width: 100%;
+    border-radius: 10px;
 }

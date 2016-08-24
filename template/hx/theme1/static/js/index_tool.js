@@ -91,7 +91,7 @@ var tool={
         $("#all-orders .showMore").live("click", function () {
             if($(this).text() != "查看全部"){
                 $(this).text("查看全部");
-                $(this).parent().prev().css("height", "48px");
+                $(this).parent().prev().css("max-height", "48px");
             }else{
                 $(this).text("收起内容");
                 $(this).parent().prev().css("height", "auto");
