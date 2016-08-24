@@ -25,7 +25,7 @@ var tool={
             }
             $(this).addClass('on entered');
             $(this).find(".dropcont").show();
-            var gaqArgs = [null,'tool_market','tool_finance','tool_cftc','tool_pivot','tool_ppt','tool_gts','tool_studioMb'];
+            var gaqArgs = [null,'tool_showTrade','tool_market','tool_finance','tool_cftc','tool_pivot','tool_ppt','tool_gts','tool_studioMb'];
             var gaqIdx = $(this).index();
             if(gaqArgs[gaqIdx]){
             	_gaq.push(['_trackEvent', 'pmchat_studio',gaqArgs[gaqIdx],'content_right',1,true]);

@@ -31,11 +31,11 @@ var indexJS ={
             $(this).find(".dropcont").show();
             //课程显示
             if($(this).is(".cursor")){
+                _gaq.push(['_trackEvent', 'fx_studio','header_course','content_top',1,true]);
                 if($(this).attr("ck")==1||!indexJS.syllabusData){
                     return;
                 }
                 indexJS.fillCourse();
-                _gaq.push(['_trackEvent', 'fx_studio','header_course','content_top',1,true]);
             }
             //公告显示
             if($(this).is(".notice")){

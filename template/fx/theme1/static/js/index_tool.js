@@ -25,7 +25,7 @@ var tool={
             }
             $(this).addClass('on entered');
             $(this).find(".dropcont").show();
-            var gaqArgs = ['tool_market','tool_finance','tool_ppt','tool_gts2','tool_studioMb'];
+            var gaqArgs = ['tool_showTrade','tool_market','tool_finance','tool_ppt','tool_gts2','tool_studioMb'];
             var gaqIdx = $(this).index();
             if(gaqArgs[gaqIdx]){
                 _gaq.push(['_trackEvent', 'fx_studio',gaqArgs[gaqIdx],'content_right',1,true]);
