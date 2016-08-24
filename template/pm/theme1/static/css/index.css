@@ -1104,7 +1104,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .liveinfo .infocont{ padding-top:4px;  }
 .liveinfo .tname{ color: #fff; font-size: 15px;  }
 .liveinfo .livetime{ color: #e2e2e2; font-size: 14px;  padding-left: 10px;}
-.liveinfo .livetit{ color: #f2ce9d; font-size: 15px;}
+.liveinfo .livetit{ color: #f2ce9d; font-size: 15px; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 .textlive li b{ font-size: 12px; color: #fff; line-height: 17px; border: 1px solid #fff; display: inline-block;*display: inline;*zoom: 1; margin-top: 6px; padding: 0 4px; font-weight: normal; position: absolute; left: 10px; top:10px; border-radius: 2px}
 .textlive li .dot{  display:block; width:7px; height:7px; background-position:-130px -50px; position:absolute; left:-4px; top:22px;}
 .textlive li span{ font-size: 14px; color: #fff; line-height: 22px; word-break: break-all;}
