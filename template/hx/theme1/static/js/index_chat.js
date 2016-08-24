@@ -1315,7 +1315,7 @@ var chat={
         });
         //加载私聊信息
         this.socket.on('loadWhMsg',function(result){
-            $('#wh_msg_'+result.toUserId+' .chat_content .dialoglist .dialog .whcls').parent().hide();
+            //$('#wh_msg_'+result.toUserId+' .chat_content .dialoglist .dialog .whcls').parent().hide();
             var data=result.data;
             if(result.type=='offline'){//离线提示信息
                 if(data && !$.isEmptyObject(data)){
@@ -1336,7 +1336,7 @@ var chat={
                             hasImg++;
                         }
                     }
-                    $('#wh_msg_'+result.toUserId+' .chat_content .dialoglist .dialog .whcls').parent().appendTo( $('#wh_msg_'+result.toUserId+' .chat_content .dialoglist')).show();
+                    //$('#wh_msg_'+result.toUserId+' .chat_content .dialoglist .dialog .whcls').parent().appendTo( $('#wh_msg_'+result.toUserId+' .chat_content .dialoglist')).show();
                     chat.setTalkListScroll(true,$('#wh_msg_'+result.toUserId+' .wh-content'),'dark');
                 }
             }

@@ -110,3 +110,46 @@ body {
 
 
 .mCSB_dragger_bar{width:12px;background:url(../img/orange/scroll.png) center 50% no-repeat;}
+/*用户晒单样式*/
+.show-order-box{
+    background-color: rgba(255,255,255,.4);
+}
+.show-order-box > h5, .show-order-box > h6,
+.my-inftop  .my-inftop-right p{
+    color: #666;
+}
+
+.show-order-box > p.orders-test{
+    color: #333;
+}
+.my-infbtn a{
+    color: #fff;
+    background: #e67639;
+}
+.my-infbtn a.last{
+    color: #e67639;
+    border: 1px solid #e67639;
+}
+.my-infbtn a.last:hover{
+    color: #fff;
+    background: #e67639;
+}
+.my-infbtn a:hover{
+    color: #fff;
+    background: #dc6423;
+}
+.show-order-box a.support{
+    background: url(../img/orange/icon_recommend.png) no-repeat;
+}
+.show-order-box > p.time,
+.show-order-box a.support{
+    color: #e67639;
+}
+.show-order-box > .orders-btn a.showMore{
+    color: #666;
+    border-color: #666;
+}
+.show-order-box > .orders-btn a.showMore:hover{
+    color: #dc6423;
+    border-color: #dc6423;
+}

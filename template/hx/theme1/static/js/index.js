@@ -193,21 +193,23 @@ var indexJS ={
         });
         //行情快讯切换事件
         $(".mod_videolist .tabnav a").click(function(){
-            var index=$(this).index()-1;
+            var currT=$(this).attr('t'),index=$(this).index()-1;
             $(".mod_videolist .tabnav a").removeClass("on");
             $(this).addClass("on");
             $(".mod_videolist .listcont .list_tab").removeClass("on").eq(index).addClass("on");
-            if(index==1){
+            if(currT=='hq'){
                 var option = {downCss:'hq-down',upCss:'hq-up',down:'down'},
                     url ='http://news1.hx9999.com/datajson/ajaxchinesedatas',
                     symbolArr = ['GOLD','SILVER','XAUCNH','XAGCNH','USDX','CL'];
                 //每隔断时间调用下
                 setInterval(function(){getSymbolPriceDatas(url,option,symbolArr);},5000);
                 indexJS.setListScroll('#hangqing');
-            }else if(index==2){
+            }else if(currT=='kx'){
                 indexJS.setInformation();
-            }else if(index == 0){//晒单
+            }else if(currT == 'tsd'){//晒单
                 videos.sd.initSD();
+            }else if(currT == 'usd'){//用户晒单
+                $('#backShowTrade').click();
             }
         });
         $(".mod_videolist .tabnav a.on").trigger("click");
@@ -609,7 +611,7 @@ var indexJS ={
                     }
                     indexJS.setListScroll($(".mod_videolist .message_list .scrollbox"));//设置滚动
                     $('#newInfoCount').attr('pt', pubDateTime);
-                    if($(".mod_videolist .list_tab").eq(2).hasClass('on')){
+                    if($(".mod_videolist div[t='kx']").hasClass('on')){
                         indexJS.infoNewCount = 0;
                         $('#newInfoCount').attr({'pt':pubDateTime,'t':indexJS.serverTime}).text(indexJS.infoNewCount).hide();
                     }

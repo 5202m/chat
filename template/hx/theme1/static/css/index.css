@@ -888,7 +888,7 @@ a.skin:hover{border:0;}
     height: 48px;
     line-height: 48px;
     display: inline-block;
-    width: 33.33%;
+    width: 25%;
     color: #12a1e4;
     font-size: 18px;
 	transition:background-color 0.3s;
@@ -6752,3 +6752,130 @@ div#teachVideoId {background: #222;}
 .shadow-conut {position: absolute; left: 30px; bottom: 5px; width: 100%; max-width: 150px; display: block; text-align: center; font: 25px arial; color: #fff; text-shadow: 0 2px 0 #000; z-index: 10; text-decoration: none}
 
 .cont.nocont{background: none;}
+
+
+/*用户晒单样式调整*/
+.mod_videolist .tabnav a{
+    width: 25%;
+}
+
+.my-information{
+    float: left;
+    margin: 30px 0 0 3%;
+    width: 27%;
+}
+
+.my-inftop{
+    height: 62px;
+}
+.my-inftop img{
+    float: left;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+}
+.my-inftop  .my-inftop-right{
+    margin-left: 75px;
+    padding-top: 10px;
+}
+.my-inftop  .my-inftop-right p{
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.my-infbtn{
+    margin-top: 40px;
+    font-size: 0;
+}
+.my-infbtn a{
+    display: inline-block;
+    width: 45%;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    line-height: 2.3;
+    border-radius: 20px;
+    box-sizing: border-box;
+    background: #c1a062;
+}
+.my-infbtn a.last{
+    float: right;
+    color: #c1a062;
+    border: 1px solid #c1a062;
+    background: none;
+}
+.my-infbtn a.last:hover{
+    color: #fff;
+    background: #c1a062;
+}
+.my-infbtn a:hover{
+    color: #fff;
+    background: #a08147;
+    text-decoration: none;
+}
+
+.all-orders{
+    margin-left: 33%;
+    padding-left: 0;
+    width: 67%;
+}
+.show-order-box{
+    margin-bottom: 10px;
+    padding: 6px;
+    width: 90%;
+    color: #333;
+    background: rgba(255,255,255,.5);
+}
+.show-order-box > h5,
+.show-order-box > h6{
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.6;
+    width: 70%;
+    float: left;
+}
+.show-order-box > p.time{
+    float: right;
+    color: #ccb054;
+    font-size: 12px;
+}
+.show-order-box > a img{
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.show-order-box > p.orders-test{
+    margin-top: 5px;
+    height: 48px;
+    font-size: 14px;
+    line-height: 24px;
+    overflow: hidden;
+}
+.show-order-box > .orders-btn a.showMore{
+    display: inline-block;
+    padding: 0 5px;
+    font-size: 12px;
+    color: #222;
+    text-align: center;
+    line-height: 1.5;
+    text-decoration: none;
+    border: 1px solid #222;
+    border-radius: 10px;
+}
+.show-order-box > .orders-btn a.showMore:hover{
+    color: #c1a062;
+    border-color: #c1a062;
+}
+.show-order-box a.support {
+    float: right;
+    color: #ccb054;
+    font-size: 13px;
+    line-height: 20px;
+    height: 20px;
+    display: inline-block;
+    background: url("../img/icon_recommend.png") 0 0 no-repeat;
+    padding-left: 23px;
+    position: relative;
+    float: right;
+}

@@ -243,19 +243,20 @@
                     <div class="mod_videolist">
                         <div class="tabnav clearfix">
                             <div class="mod_menu_bg"></div>
-                            <a class="on" href="javascript:void(0)" onClick="indexJS.studioGA('send', 'event', 'click', 'message', 'hxstudio_rightlink', ['addaction','click', 'sd-techer', 'hxstudio_rightlink']);">
+                            <a class="on" href="javascript:void(0);" t="tsd" onClick="indexJS.studioGA('send', 'event', 'click', 'message', 'hxstudio_rightlink', ['addaction','click', 'sd-techer', 'hxstudio_rightlink']);">
                                 老师晒单
                             </a>
-                            <a class="" href="javascript:void(0)" onClick="indexJS.studioGA('send', 'event', 'click', 'hangqing', 'hxstudio_rightlink', ['addaction','click', 'hangqing', 'hxstudio_rightlink']);">
+                            <a href="javascript:void(0);" t="usd" onClick="indexJS.studioGA('send', 'event', 'click', 'message', 'hxstudio_rightlink', ['addaction','click', 'sd-user', 'hxstudio_rightlink']);">用户晒单</a>
+                            <a class="" href="javascript:void(0);" t="hq" onClick="indexJS.studioGA('send', 'event', 'click', 'hangqing', 'hxstudio_rightlink', ['addaction','click', 'hangqing', 'hxstudio_rightlink']);">
                                 行情
                             </a>
-                            <a class="" href="javascript:void(0)" onClick="indexJS.studioGA('send', 'event', 'click', 'message', 'hxstudio_rightlink', ['addaction','click', 'message', 'hxstudio_rightlink']);">
+                            <a class="" href="javascript:void(0);" t="kx" onClick="indexJS.studioGA('send', 'event', 'click', 'message', 'hxstudio_rightlink', ['addaction','click', 'message', 'hxstudio_rightlink']);">
                                 快讯<sup id="newInfoCount" style="display:none;"></sup>
                             </a>
                         </div>
                         <div class="listcont scrollbox">
                             <!--老师晒单-->
-                            <div id="sdInfoId" class="list_tab on clearfix">
+                            <div id="sdInfoId" t="tsd" class="list_tab on clearfix">
                                 <div class="nosd_tip" style="display: none;"><p>老师操作很稳健，暂时还没有做单，耐心等待吧，我们将第一时间更新提示。</p></div>
                                 <div class="te_info">
                                 </div>
@@ -266,7 +267,37 @@
                                 </div>
                             </div>
                             <!--//老师晒单-->
-                            <div class="list_tab listcont" id="hangqing">
+
+                            <!--用户晒单-->
+                            <div class="list_tab" t="usd">
+                                <div class="my-information">
+                                    <div class="my-inftop" id="showTradeInfo">
+                                        <img src="" alt="">
+                                        <div class="my-inftop-right">
+                                            <p>昵称：<b id="showTradeNk"></b></p>
+                                            <p>晒单数：<strong id="sdcount">0</strong></p>
+                                        </div>
+                                    </div>
+                                    <div class="my-infbtn">
+                                        <a href="javascript:void(0);" class="last" id="myShowTrade">我的晒单</a>
+                                        <a href="javascript:void(0);" id="wantShowTrade">我要晒单</a>
+                                        <a href="javascript:void(0);" class="last" id="backShowTrade" style="display:none;">返回用户晒单</a>
+                                    </div>
+                                </div>
+                                <div class="all-orders message_list" id="all-orders">
+                                    <div class="scrollbox">
+
+                                    </div>
+                                </div>
+                                <div class="all-orders message_list dn" id="my-orders">
+                                    <div class="scrollbox">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--用户晒单结束-->
+
+                            <div class="list_tab listcont" t="hq" id="hangqing">
                                 <div class="mod_menu_bg"></div>
                                 <ul class="hangqing">
                                     <li>
@@ -301,7 +332,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="list_tab">
+                            <div class="list_tab" t='kx'>
                                 <div class="message_list">
                                     <div class="scrollbox">
                                         <ul class="news"></ul>
@@ -470,7 +501,7 @@
         $('.left1').height(hh-68);
         $('.mod_video').height(hh - 305);//365
         $('.mod_videolist .listcont').height(hh-78-$('.mod_video').height()-$('.mod_videolist .tabnav').height());
-        $('.message_list .scrollbox').css('max-height',(hh-90-$('.mod_video').height()-$('.mod_videolist .tabnav').height())+'px');
+        $('.all-orders,.message_list .scrollbox').css('height',(hh-90-$('.mod_video').height()-$('.mod_videolist .tabnav').height())+'px');
         $('#teachVideoId div[t] ul').css("height",($('.mod_video').height()-150)+"px");
         $('.allsd_list .sdlistcont').height(hh - 173);
         $('.mysd_list .sdlistcont').height(hh - 218);

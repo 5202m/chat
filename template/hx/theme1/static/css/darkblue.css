@@ -136,3 +136,42 @@ body {
 .nosd_tip p {color:#bbcfe5;}
 
 .mCSB_dragger_bar{width:12px;background:url(../img/darkblue/scroll.png) center 50% no-repeat;}
+
+/*用户晒单样式*/
+.show-order-box{
+    background-color: rgba(78,123,170,.8);
+}
+.my-inftop  .my-inftop-right p,
+.show-order-box > p.orders-test,
+.show-order-box > p.time,
+.show-order-box a.support,
+.show-order-box > h5, .show-order-box > h6{
+    color: #bbcfe5;
+}
+.my-infbtn a{
+    color: #bbcfe5;
+    background: #375f9c;
+}
+.my-infbtn a.last{
+    color: #bbcfe5;
+    border: 1px solid #375f9c;
+}
+.my-infbtn a.last:hover{
+    color: #bbcfe5;
+    background: #375f9c;
+}
+.my-infbtn a:hover{
+    color: #bbcfe5;
+    background: #29589e;
+}
+.show-order-box a.support{
+    background: url(../img/darkblue/icon_recommend.png) no-repeat;
+}
+.show-order-box > .orders-btn a.showMore{
+    color: #bbcfe5;
+    border-color: #bbcfe5;
+}
+.show-order-box > .orders-btn a.showMore:hover{
+    color: #eee;
+    border-color: #eee;
+}

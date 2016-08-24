@@ -71,3 +71,32 @@ body {
 .te_detail .support {background:url("../img/light/icon_recommend.png") 0 0 no-repeat;}
 .te_detail .support.supported {background-position: 0 -30px;color:#87d4f1;}
 .nosd_tip p {color:#0099d3;}
+
+
+/*用户晒单样式*/
+.my-infbtn a{
+    background: #12a1e4;
+}
+.my-infbtn a.last{
+    color: #12a1e4;
+    border: 1px solid #12a1e4;
+}
+.my-infbtn a.last:hover{
+    color: #fff;
+    background: #12a1e4;
+}
+.my-infbtn a:hover{
+    color: #fff;
+    background: #0a72a2;
+}
+.show-order-box > p.time{
+    color: #12a1e4;
+}
+.show-order-box a.support{
+    color: #12a1e4;
+    background: url(../img/light/icon_recommend.png) no-repeat;
+}
+.show-order-box > .orders-btn a.showMore:hover{
+    color: #12a1e4;
+    border-color: #12a1e4;
+}

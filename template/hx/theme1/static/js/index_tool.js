@@ -60,7 +60,7 @@ var tool={
             $($('.calc_box .calc_tab')[$(this).index()]).addClass('on');
         });
         /*我要晒单按钮事件*/
-        $('.dr10 .dropcont .cont .userad_btnbar .fl').click(function(){
+        $('#wantShowTrade').click(function(){
             if(indexJS.userInfo.isLogin){
                 if(common.isBlank(indexJS.userInfo.isSetName) || indexJS.userInfo.isSetName) {
                     $('#userName').val(indexJS.userInfo.nickname).attr('readonly', 'readonly');
@@ -76,21 +76,35 @@ var tool={
             if(indexJS.userInfo.isLogin){
                 tool.tradeForUser = indexJS.userInfo.userId;
                 tool.initShowTrade();
-                $('.dr10 .mysd_list .sdinfo .sdinfo_cont .headimg img').attr('src',$('#avatarInfoId').attr('src'));
-                $('.dr10 .mysd_list .sdinfo .sdinfo_cont span b').text(indexJS.userInfo.nickname);
-                $('.dr10 .allsd_list').addClass('dn');
-                $('.dr10 .mysd_list').removeClass('dn');
+                /*$('.dr10 .mysd_list .sdinfo .sdinfo_cont .headimg img').attr('src',$('#avatarInfoId').attr('src'));
+                $('.dr10 .mysd_list .sdinfo .sdinfo_cont span b').text(indexJS.userInfo.nickname);*/
+                $('#all-orders').addClass('dn');
+                $('#my-orders').removeClass('dn');
+                $('#myShowTrade').hide();
+                $('#backShowTrade').show();
             }else{
                 var ops = {};
                 box.openLgBox(ops.closeable, ops.showTip);
+            }
+        });
+        //  晒单显示更多文字
+        $("#all-orders .showMore").live("click", function () {
+            if($(this).text() != "查看全部"){
+                $(this).text("查看全部");
+                $(this).parent().prev().css("height", "48px");
+            }else{
+                $(this).text("收起内容");
+                $(this).parent().prev().css("height", "auto");
             }
         });
         /*返回晒单墙按钮事件*/
         $('#backShowTrade').click(function(){
             tool.tradeForUser = null;
             tool.initShowTrade();
-            $('.dr10 .allsd_list').removeClass('dn');
-            $('.dr10 .mysd_list').addClass('dn');
+            $('#all-orders').removeClass('dn');
+            $('#my-orders').addClass('dn');
+            $('#myShowTrade').show();
+            $('#backShowTrade').hide();
         });
         /*上传晒单图片*/
         $("#flTradeImg").change(function (){
@@ -189,9 +203,9 @@ var tool={
             case 'dropitem dr6':
                 tool.setDownloadPPT();/*课件下载*/
                 break;
-            case 'dropitem dr10':
-                tool.initShowTrade();/*晒单墙*/
-                break;
+            //case 'dropitem dr10':
+                //tool.initShowTrade();/*晒单墙*/
+                //break;
         }
     },
     /**
@@ -382,7 +396,13 @@ var tool={
      * @param pageSize
      */
     initShowTrade:function(){
-        $('.loading_trade').removeClass('dn');
+        if(indexJS.userInfo.isLogin) {
+            $('#showTradeInfo img').attr('src', $('#avatarInfoId').attr('src'));
+            $('#showTradeNk').text(indexJS.userInfo.nickname);
+        }else{
+            $('#showTradeInfo img').attr('src', $('#visitorListId li .mynk').prev().children('img').attr('src'));
+            $('#showTradeNk').text($('#visitorListId li .mynk').text().replace('【我】',''));
+        }
         var params = {groupType:indexJS.userInfo.groupType};
         if(common.isValid(tool.tradeForUser)){
             params.userNo = tool.tradeForUser;
@@ -390,15 +410,25 @@ var tool={
         common.getJson('/hxstudio/getShowTrade',{data:JSON.stringify(params)},function(data){
             if(data.isOK && common.isValid(data.data)){
                 if(common.isBlank(tool.tradeForUser)) {
-                    $('.dr10 .allsd_list .sdlistcont ul').empty();
+                    $('#all-orders .scrollbox').empty();
                 }else{
-                    $('.dr10 .mysd_list .sdlistcont ul').empty();
+                    $('#my-orders .scrollbox').empty();
                 }
                 tool.tradeList = data.data.tradeList || [];
+                if(indexJS.userInfo.isLogin) {
+                    var row = null, num = 0;
+                    for(var i = 0, len = tool.tradeList.length; i < len; i++){
+                        row = tool.tradeList[i];
+                        if(row.user.userNo == indexJS.userInfo.userId){
+                            num++;
+                        };
+                    }
+                    $('#sdcount').text(num)
+                }
                 tool.tradeLoadAll = false;
                 tool.setShowTrade();
             }else{
-                $('.loading_trade').addClass('dn');
+
             }
         });
     },
@@ -408,18 +438,19 @@ var tool={
      */
     setShowTrade:function(){
         if(tool.tradeLoadAll){
-            $('.loading_trade').addClass('dn');
             return false;
         }
-        var start = common.isBlank(tool.tradeForUser) ? $(".dr10 .allsd_list .usersd_list li").size() : $(".dr10 .mysd_list .usersd_list li").size();
+        var start = common.isBlank(tool.tradeForUser) ? $("#all-orders .scrollbox div").size() : $("#my-orders .scrollbox div").size();
         var listData = tool.tradeList;
         var row = null;
         var length = listData.length;
-        $('#sdcount').text(common.isValid(tool.tradeForUser)?length:'0');
+        if(indexJS.userInfo.userId != tool.tradeForUser && common.isValid(tool.tradeForUser)) {
+            $('#sdcount').text(common.isValid(tool.tradeForUser) ? length : '0');
+        }
         var tradeHtml='',tradeFormat = common.isBlank(tool.tradeForUser) ? tool.formatHtml('showTradeAll') : tool.formatHtml('showTradeUser'),cls;
         for(var i = start; i < length && i < start + 20; i++){
             row = listData[i];
-            switch (row.status){
+            /*switch (row.status){
                 case 1:
                     cls = '';
                     break;
@@ -429,38 +460,39 @@ var tool={
                 case -1:
                     cls = ' class="s2"';
                     break;
-            }
+            }*/
             var showTradeDate = common.formatterDateTime(row.showDate,'/').substr(0,16);
             if(common.isBlank(tool.tradeForUser)){
-                tradeHtml += tradeFormat.formatStr(row.title, row.user.userName, showTradeDate, row.tradeImg, row.remark, common.isBlank(row.praise)?0:row.praise, row._id, row.user.userNo, row.user.avatar);
+                tradeHtml += tradeFormat.formatStr(row.title, row.user.userName, showTradeDate, row.tradeImg, row.remark, row._id, common.isBlank(row.praise)?0:row.praise, row.user.userNo, row.user.avatar);
             }else{
-                tradeHtml += tradeFormat.formatStr(cls, row.title, row.tradeImg, row.remark, showTradeDate, common.isBlank(row.praise)?0:row.praise, row._id);
+                tradeHtml += tradeFormat.formatStr(row.title, showTradeDate, row.tradeImg, row.remark, row._id, common.isBlank(row.praise)?0:row.praise);
             }
         }
         if(common.isBlank(tool.tradeForUser)) {
-            $('.dr10 .allsd_list .sdlistcont ul').append(tradeHtml);
+            $('#all-orders .scrollbox').append(tradeHtml);
         }else{
-            $('.dr10 .mysd_list .sdlistcont ul').append(tradeHtml);
+            $('#my-orders .scrollbox').append(tradeHtml);
         }
-        $('.loading_trade').addClass('dn');
         if(i >= length - 1){
             tool.tradeLoadAll = true;
         }
         tool.setUserShowTrade();
         tool.showTradePraise();
-        indexJS.setListScroll('.dr10 .sdlistcont',{isCustom:false, scrollbarPosition:"outside",theme:"dark-2", callbacks : {onTotalScroll : function(){$('.loading_trade').removeClass('dn');tool.setShowTrade();}}});/*设置滚动条*/
+        indexJS.setListScroll($(".all-orders"), {callbacks : {onTotalScroll : function(){tool.setShowTrade();}}});/*设置滚动条*/
     },
     /**
      * 用户晒单数据
      */
     setUserShowTrade:function(){
-        $('.dr10 .allsd_list .usersd_list li .sdinfo_bar .fl a').click(function(){
+        $('.all-orders .show-order-box h6 a').click(function(){
             tool.tradeForUser = $(this).attr('userId');
             tool.initShowTrade();
-            $('.dr10 .mysd_list .sdinfo .sdinfo_cont .headimg img').attr('src',$(this).attr('avatar'));
-            $('.dr10 .mysd_list .sdinfo .sdinfo_cont span b').text($(this).text());
-            $('.dr10 .allsd_list').addClass('dn');
-            $('.dr10 .mysd_list').removeClass('dn');
+            $('#showTradeInfo img').attr('src',$(this).attr('avatar'));
+            $('#showTradeNk').text($(this).text());
+            $('#all-orders').addClass('dn');
+            $('#my-orders').removeClass('dn');
+            $('#myShowTrade').hide();
+            $('#backShowTrade').show();
         });
     },
     /**
@@ -504,9 +536,9 @@ var tool={
      * 晒单墙点赞事件
      */
     showTradePraise:function(){
-        $('.dr10 .sdlistcont ul li .support').click(function(){
+        $('.all-orders .scrollbox .show-order-box .support').click(function(){
             var $this = $(this);
-            var params = {clientId:indexJS.userInfo.userId, praiseId:$(this).attr('id')};
+            var params = {clientId:indexJS.userInfo.userId, praiseId:$(this).attr('i')};
             common.getJson("/hxstudio/setTradePraise",{data:JSON.stringify(params)},function(result){
                 if(result.isOK) {
                     $this.find('i').fadeIn().delay(400).fadeOut();
@@ -615,7 +647,20 @@ var tool={
                 formatHtmlArr.push('</li>');
                 break;
             case 'showTradeAll':
-                formatHtmlArr.push('<li>');
+                formatHtmlArr.push('<div class="show-order-box">');
+                formatHtmlArr.push('    <h5>{0}</h5>');//标题
+                formatHtmlArr.push('    <h6>晒单人：<a href="javascript:void(0)" userId="{7}" avatar="{8}">{1}</a></h6>');//晒单人
+                formatHtmlArr.push('    <p class="time">{2}</p>');//时间
+                formatHtmlArr.push('    <a href="{3}" data-rel="usersd" data-title="{0}" data-lightbox="usersd-all-img">');
+                formatHtmlArr.push('        <img src="{3}" alt="{0}" class="mCS_img_loaded">');
+                formatHtmlArr.push('    </a>');
+                formatHtmlArr.push('    <p class="orders-test">{4}</p>');//晒单内容
+                formatHtmlArr.push('    <div class="orders-btn">');
+                formatHtmlArr.push('        <a href="javascript:void(0);" class="support" i="{5}">(<span>{6}</span>)<i>+1</i></a>');//id和点赞数
+                formatHtmlArr.push('        <a href="javascript:void(0);" class="showMore">查看全部</a>');
+                formatHtmlArr.push('    </div>');
+                formatHtmlArr.push('</div>');
+                /*formatHtmlArr.push('<li>');
                 formatHtmlArr.push('    <span class="sd_tit" title="{0}">{0}</span>');
                 formatHtmlArr.push('    <div class="sdinfo_bar">');
                 formatHtmlArr.push('        <span class="fl">晒单人：<a href="javascript:void(0)" userId="{7}" avatar="{8}">{1}</a></span>');
@@ -624,10 +669,22 @@ var tool={
                 formatHtmlArr.push('    <a href="{3}" data-rel="usersd" data-title="{0}" class="lightbox" data-lightbox="usersd-all-img"><img src="{3}" alt="{0}"><i></i></a>');
                 formatHtmlArr.push('    <p class="sd_skill">{4}</p>');
                 formatHtmlArr.push('    <a href="javascript:void(0)" class="support" id="{6}">(<span>{5}</span>)<i>+1</i></a>');
-                formatHtmlArr.push('</li>');
+                formatHtmlArr.push('</li>');*/
                 break;
             case 'showTradeUser':
-                formatHtmlArr.push('<li{0}>');
+                formatHtmlArr.push('<div class="show-order-box">');
+                formatHtmlArr.push('    <h5>{0}</h5>');//标题
+                formatHtmlArr.push('    <p class="time">{1}</p>');//时间
+                formatHtmlArr.push('    <a href="{2}" data-rel="usersd" data-title="{0}" data-lightbox="usersd-mime-img">');
+                formatHtmlArr.push('        <img src="{2}" alt="{0}" class="mCS_img_loaded">');
+                formatHtmlArr.push('    </a>');
+                formatHtmlArr.push('    <p class="orders-test">{3}</p>');//晒单内容
+                formatHtmlArr.push('    <div class="orders-btn">');
+                formatHtmlArr.push('        <a href="javascript:void(0);" class="support" i="{4}">(<span>{5}</span>)<i>+1</i></a>');//id和点赞数
+                formatHtmlArr.push('        <a href="javascript:void(0);" class="showMore">查看全部</a>');
+                formatHtmlArr.push('    </div>');
+                formatHtmlArr.push('</div>');
+                /*formatHtmlArr.push('<li{0}>');
                 formatHtmlArr.push('    <i class="state"></i>');
                 formatHtmlArr.push('    <span class="sd_tit" title="{1}">{1}</span>');
                 formatHtmlArr.push('    <a href="{2}" data-rel="usersd" data-title="{1}" class="lightbox" data-lightbox="usersd-mime-img"><img src="{2}" alt="{1}"><i></i></a>');
@@ -636,7 +693,7 @@ var tool={
                 formatHtmlArr.push('        <span class="sd_date">{4}</span>');
                 formatHtmlArr.push('        <a href="javascript:void(0)" class="support" id="{6}">(<span>{5}</span>)<i>+1</i></a>');
                 formatHtmlArr.push('    </div>');
-                formatHtmlArr.push('</li>');
+                formatHtmlArr.push('</li>');*/
                 break;
         }
         return formatHtmlArr.join("");
