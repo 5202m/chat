@@ -155,9 +155,15 @@
             </div>
             <div class="mod_main">
             	<div class="tabnav">
-                    <a href="javascript:" class="on">直播精华<sup id="textLiveCount" style="display:none;" class="l2"></sup></a>
-                    <a href="javascript:">聊天<sup id="chatMsgCount" style="display:none;"></sup></a>
-                    <a href="javascript:">快讯<sup id="newInfoCount" style="display:none;"></sup></a>
+                    <a href="javascript:" class="on" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_textLive', 'content_middle',1,true]);">
+                        直播精华<sup id="textLiveCount" style="display:none;" class="l2"></sup>
+                    </a>
+                    <a href="javascript:" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_chat', 'content_middle',1,true]);">
+                        聊天<sup id="chatMsgCount" style="display:none;"></sup>
+                    </a>
+                    <a href="javascript:" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_news', 'content_middle',1,true]);">
+                        快讯<sup id="newInfoCount" style="display:none;"></sup>
+                    </a>
                     <a href="javascript:" style="display:none;">实盘策略</a>
                 </div>
                 <div class="tabcont">
