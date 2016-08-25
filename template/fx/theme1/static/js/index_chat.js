@@ -1368,10 +1368,10 @@ var chat={
         });
         //加载私聊信息
         this.socket.on('loadWhMsg',function(result){
-            var pushMsgObj = $('#wh_msg_'+result.toUserId+' .chat_content .dialoglist .dialog .whcls').parent();
-            var nextSize = pushMsgObj.next().size(),prevSize = pushMsgObj.prev().size();
+            var pushMsgDom = $('#wh_msg_'+result.toUserId+' .chat_content .dialoglist .dialog .whcls').parent();
+            var nextSize = pushMsgDom.next().size(),prevSize = pushMsgDom.prev().size();
             if(nextSize==0 && prevSize == 0) {
-                pushMsgObj.hide();
+                pushMsgDom.hide();
             }
             var data=result.data;
             if(result.type=='offline'){//离线提示信息
@@ -1394,7 +1394,7 @@ var chat={
                         }
                     }
                     if(nextSize==0 && prevSize == 0) {
-                        pushMsgObj.appendTo($('#wh_msg_' + result.toUserId + ' .chat_content .dialoglist')).show();
+                        pushMsgDom.appendTo($('#wh_msg_' + result.toUserId + ' .chat_content .dialoglist')).show();
                     }
                     chat.setTalkListScroll(true,$('#wh_msg_'+result.toUserId+' .wh-content'),'dark');
                 }
