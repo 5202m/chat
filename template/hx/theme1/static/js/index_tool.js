@@ -94,7 +94,7 @@ var tool={
                 $(this).parent().prev().css("max-height", "48px");
             }else{
                 $(this).text("收起内容");
-                $(this).parent().prev().css("height", "auto");
+                $(this).parent().prev().css("max-height", "none");
             }
         });
         /*返回晒单墙按钮事件*/
