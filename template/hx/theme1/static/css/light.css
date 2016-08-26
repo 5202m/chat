@@ -100,3 +100,10 @@ body {
     color: #12a1e4;
     border-color: #12a1e4;
 }
+.show-order-box > h6,
+.show-order-box > p.time{
+    color: #333;
+}
+.show-order-box > h6 a{
+    color: #12a1e4;
+}

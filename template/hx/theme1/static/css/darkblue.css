@@ -175,3 +175,17 @@ body {
     color: #eee;
     border-color: #eee;
 }
+.show-order-box > h5{
+    font-size: 15px;
+    font-weight: bold;
+    color: #222;
+}
+.show-order-box > h6{
+    color: #333;
+}
+.show-order-box > p.time{
+    color: #333;
+}
+.show-order-box > h6 a{
+    color: #fff;
+}

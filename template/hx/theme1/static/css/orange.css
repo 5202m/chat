@@ -153,3 +153,10 @@ body {
     color: #dc6423;
     border-color: #dc6423;
 }
+.show-order-box > h6,
+.show-order-box > p.time{
+    color: #333;
+}
+.show-order-box > h6 a{
+    color: #e67639;
+}
