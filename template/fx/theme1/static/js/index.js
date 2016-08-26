@@ -32,7 +32,7 @@ var indexJS ={
             //课程显示
             if($(this).is(".cursor")){
                 _gaq.push(['_trackEvent', 'fx_studio','header_course','content_top',1,true]);
-                if($(this).attr("ck")==1||!indexJS.syllabusData){
+                if($(this).attr("ck")==1){
                     return;
                 }
                 indexJS.fillCourse();
@@ -364,6 +364,7 @@ var indexJS ={
      */
     serverTimeUp:function(){
         indexJS.fillCourse();//填充课程
+        indexJS.courseTick.tick();
         videos.init().clientVideoTask();
         indexJS.setInformation();
         this.towMinTime=this.serverTime;
@@ -371,10 +372,10 @@ var indexJS ={
             indexJS.serverTime+=1000;
             if(indexJS.serverTime-indexJS.towMinTime>=2*60*1000){
                 indexJS.towMinTime=indexJS.serverTime;
-                videos.clientVideoTask();
                 indexJS.setInformation();
             }
             chat.setPushInfo();
+            indexJS.courseTick.tick();
         },1000);//每秒一次
     },
     /**
@@ -802,6 +803,49 @@ var indexJS ={
                 break;
         }
         return formatHtmlArr.join("");
+    },
+    /**
+     * 课程表定时器
+     */
+    courseTick : {
+        //当前课程或下次课程
+        course : null,
+        //下次校验时间
+        nextTickTime : 0,
+        //初始化或者重新校验
+        tick : function(){
+            if(indexJS.serverTime <= this.nextTickTime){
+                return;
+            }
+            var currCourse = common.getSyllabusPlan(indexJS.syllabusData,indexJS.serverTime);
+            var nextTime = 0;
+            if(currCourse.isNext){ //下次课程开始作为下一次tick时间
+                //"17:51" eval("17*60*51")*60*1000
+                nextTime = eval(currCourse.startTime.replace(":", "*60+"))*60000 + indexJS.serverTime - indexJS.serverTime % 86400000 - 28800000;
+            }else{//本次课程结束后作为下一次tick时间
+                nextTime = eval(currCourse.endTime.replace(":", "*60+"))*60000 + indexJS.serverTime - indexJS.serverTime % 86400000 - 28800000 + 60000;
+            }
+            this.course = currCourse;
+            this.nextTickTime = nextTime;
+
+            //更新课程表样式
+            this.chgSyllabusCls(currCourse);
+            //更新视频
+            videos.clientVideoTask();
+            //更新晒单
+            videos.sd.initSD();
+        },
+
+        /**
+         * 调整课程表样式
+         * */
+        chgSyllabusCls : function(currCourse){
+            $('.course_tab li a.on').removeClass("on");
+            if(!currCourse.isNext){
+                $(".course_nav a[t='" + currCourse.day + "']").trigger("click");
+                $('.course_tab[d='+currCourse.day+']').find('li a[st="'+currCourse.startTime+'"][et="'+currCourse.endTime+'"]').addClass("on");
+            }
+        }
     }
 };
 // 初始化

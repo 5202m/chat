@@ -944,7 +944,7 @@ var roomJS={
                             rtmp: {
                                 proxyType: 'best',
                                 url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
-                                netConnectionUrl: "rtmps://5748416443938.streamlock.net/live"//urlGroupArr[1]
+                                netConnectionUrl: urlGroupArr[1]
                             }
                         },
                         onError: function (e) {

@@ -194,7 +194,9 @@ var videos={
      */
     clientVideoTask:function(){
         var exSrc=$("#lvDivId embed").attr("src");
-        if($("#lvVideoId").is(":visible")&&(exSrc && exSrc.indexOf("yy.com")==-1) && ($("#lvVideoId").find("object").length==0)){//如果非主直播的其他直播
+        if($("#nextCourse").is(":visible") //显示下次课程介绍
+            ||$("#lvVideoId").is(":visible")&&(exSrc && exSrc.indexOf("yy.com")==-1) && ($("#lvVideoId").find("object").length==0))//如果非主直播的其他直播
+        {
             videos.playVideoByDate(false);
         }
     },
@@ -203,7 +205,7 @@ var videos={
      * 备注：按时间点播放yy视频,不符合时间点直接播放视频
      */
     playVideoByDate:function(isInit){
-        var course=common.getSyllabusPlan(indexJS.syllabusData,indexJS.serverTime);
+        var course=indexJS.courseTick.course;
         if(!course||(course.courseType!=0 && common.isBlank(course.studioLink))||course.isNext|| course.courseType==0){
             if(isInit){
                 if(course && !course.isNext /*&& course.courseType==0*/){
@@ -213,7 +215,6 @@ var videos={
                 }else{
                     this.setVdTab(false);
                     this.playMp4Vd();
-                    this.synCourseStyle(null);
                 }
             }else{
                 this.setStudioInfo(course);
@@ -221,17 +222,6 @@ var videos={
         }else{//直播时间段，则播放直播
             this.setVdTab(true);
             this.setStudioVideoDiv(course.studioLink);
-            this.synCourseStyle(course);
-        }
-    },
-    /**
-     * 同步课程样式
-     * @param course
-     */
-    synCourseStyle:function(course){
-        $('.course_tab li a').removeClass("on");
-        if(course){
-            $('.course_tab[d='+course.day+']').find('li a[st="'+course.startTime+'"][et="'+course.endTime+'"]').addClass("on");
         }
     },
     /**
@@ -458,8 +448,11 @@ var videos={
      * @param url
      */
     setStudioVideoDiv:function(url){
+        if($("#lvVideoId").is(":visible") && $("#lvVideoId").data("url") == url){
+            return;
+        }
         $("#nextCourse").hide();
-        $("#lvVideoId").show().html("");
+        $("#lvVideoId").show().data("url", url).html("");
         if(url.indexOf("rtmp")!=-1){
             var urlGroupArr=/(.*)\/([0-9]+)$/g.exec(url);
             if(!urlGroupArr || urlGroupArr.length<3){
@@ -474,7 +467,7 @@ var videos={
                 plugins: {
                     rtmp: {
                         url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
-                        netConnectionUrl: "rtmps://5748416443938.streamlock.net/live"//urlGroupArr[1]
+                        netConnectionUrl: urlGroupArr[1]
                     }
                 },
                 onError:function(e){
@@ -651,7 +644,7 @@ var videos={
         },
         /**初始化晒单*/
         initSD : function(){
-            var course=common.getSyllabusPlan(indexJS.syllabusData,indexJS.serverTime);
+            var course=indexJS.courseTick.course;
             if(course && course.lecturerId && (!videos.sd.analyst || course.lecturerId.indexOf(videos.sd.analyst.userNo) == -1)){
                 $.getJSON('/hxstudio/getShowTradeInfo',{userNo: course.lecturerId},function(data){
                     if(data && data.analyst){
@@ -662,8 +655,10 @@ var videos={
                         videos.sd.showPraiseInfo();
                         videos.sd.showSDInfo();
                         $('#sdInfoId .nosd_tip').hide();
-                    } else {
-                        $('#sdInfoId .nosd_tip').show();
+                    }else{
+                        $("#sdInfoId .nosd_tip").show();
+                        $("#sdInfoId .te_info").empty();
+                        $("#sdInfoId .sd_show .sd_ul").empty();
                     }
                 });
             }
