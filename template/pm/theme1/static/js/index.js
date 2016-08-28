@@ -806,6 +806,9 @@ var indexJS ={
                 return;
             }
             var currCourse = common.getSyllabusPlan(indexJS.syllabusData,indexJS.serverTime);
+            if(!currCourse){
+                return;
+            }
             var nextTime = 0;
             if(currCourse.isNext){ //下次课程开始作为下一次tick时间
                 //"17:51" eval("17*60*51")*60*1000
