@@ -28,6 +28,10 @@ var room={
             turn:'on'
         }
     },
+    whHistoryUserObj:{
+        key:'whUsers',
+        whUserList:[]
+    },//历史会话记录
     init:function(){
         this.setSocket();
         this.setVideo();
@@ -470,6 +474,8 @@ var room={
         }else{
             if(!isLoadData){//如接收他人私信
                 room.tipSound();//私聊消息提示音
+                var whHistoryUserObj = {'userId':fromUser.userId,'utype':fromUser.userType,'nk':fromUser.nickname,'cg':fromUser.clientGroup,'dt':common.formatterDateTime(parseInt(fromUser.publishTime.replace(/_\d*$/,''), 10), '-'),'value':(data.content.msgType==room.msgType.img?'[图片]':data.content.value)};
+                this.setWhHistory(whHistoryUserObj);
                 var isFillWh=this.fillWhBox(fromUser.userType,fromUser.clientGroup,fromUser.userId,fromUser.nickname,true,true);
                 if($('.visitorDiv .wh_tab_ul li[uid='+fromUser.toWhUserId+']').length == 0) {//不存在则添加
                     $('.visitorDiv .wh_tab_ul').append($('.visitorDiv ul li[uid=' + fromUser.toWhUserId + ']'));//在左边列表的最后添加发送私信人
@@ -641,11 +647,13 @@ var room={
                 $(".open_wh_box .visitorDiv").append($(".wh_out_div"));
                 $(".open_wh_box .wh-middle").append($(".wh_msg_only"));
                 $(".open_wh_box,.wh_msg_only").show();
+                $('.wh-history').css('float','right');
             }else{
                 $(".local_box .visitorDiv").append($(".wh_out_div"));
                 $(".local_box .wh-middle").append($(".wh_msg_only"));
                 $(".open_wh_box").hide();
                 $(".local_box .openWhBoxBtn").show();
+                $('.wh-history').css('float','left');
             }
             room.widthCheck();
             room.heightCalcu();
@@ -974,6 +982,24 @@ var room={
 
         //课堂笔记
         room.articleNote.setArticleNoteEvent();
+        /**
+         * 会话记录
+         */
+        /*$('.wh-history').hover(function(){
+                room.fillWhHistory();
+                $('.wh_tab_history_div').removeClass('dn');
+            },
+            function(){
+                $('.wh_tab_history_div').addClass('dn');
+            });*/
+        $('.wh-history').click(function(){
+            room.fillWhHistory();
+            $('.wh_tab_history_div').removeClass('dn');
+        });
+        $('#wh_close').click(function(){
+            $('.wh_tab_history_div').addClass('dn');
+            return false;
+        });
     },
 
     /**课堂笔记*/
@@ -2173,6 +2199,83 @@ var room={
         }
     },
     /**
+     * 获取私聊人员历史记录
+     * @returns {*}
+     */
+    getWhHistory:function(){
+        if (!store.enabled){
+            console.log('Local storage is not supported by your browser.');
+            return;
+        }
+        return store.get(room.whHistoryUserObj.key+'_'+room.userInfo.groupId);
+    },
+    /**
+     * 设置私聊人员记录
+     * @param whUser json {}
+     */
+    setWhHistory:function(whUser){
+        if (!store.enabled){
+            console.log('Local storage is not supported by your browser.');
+            return;
+        }
+        room.whHistoryUserObj.whUserList = this.getWhHistory();
+        if(common.isBlank(room.whHistoryUserObj.whUserList)){
+            room.whHistoryUserObj.whUserList = [];
+        }
+        if(whUser) {
+            var len = room.whHistoryUserObj.whUserList.length;
+            for(var i=0;i<len;i++){
+                if(room.whHistoryUserObj.whUserList[i].userId == whUser.userId){
+                    room.whHistoryUserObj.whUserList.splice(i);
+                }
+            }
+            room.whHistoryUserObj.whUserList.unshift(whUser);
+            if(len>50){
+                room.whHistoryUserObj.whUserList.splice(50, len-50);
+            }
+            store.set(room.whHistoryUserObj.key+'_'+room.userInfo.groupId, room.whHistoryUserObj.whUserList);
+        }
+    },
+    /**
+     * 填充历史会话用户列表
+     */
+    fillWhHistory:function(){
+        room.whHistoryUserObj.whUserList = this.getWhHistory();
+        var html = '', formatHtmlStr = room.formatHtml('whHistory');
+        if(common.isBlank(room.whHistoryUserObj.whUserList)){
+            var params = {groupType:room.userInfo.groupType,groupId:room.userInfo.groupId,userId:room.userInfo.userId};
+            common.getJson('/admin/getLastTwoDaysMsg',{data:JSON.stringify(params)},function(result){
+                if(result){
+                    $.each(result, function (key, row) {
+                        var dTime = common.formatterDateTime(parseInt(row.value.publishTime.replace(/_\d*$/,''), 10), '-').substring(5,16);
+                        html += formatHtmlStr.formatStr(row.value.userId, ($("#userListId li[id='" + row.value.userId + "']").length > 0 ? '' : ' class="off"'), row.value.userType, row.value.nickname, dTime , (row.value.content.msgType==room.msgType.img?'[图片]':row.value.content.value));
+                    });
+                    room.setWhHistoryHtml(html);
+                }
+            });
+        } else {
+            $.each(room.whHistoryUserObj.whUserList, function (key, row) {
+                var dTime = row.dt.substring(5,16);
+                html += formatHtmlStr.formatStr(row.userId, ($("#userListId li[id='" + row.userId + "']").length > 0 ? '' : ' class="off"'), row.utype, row.nk, dTime, row.value);
+            });
+            room.setWhHistoryHtml(html);
+        }
+    },
+    /**
+     * 填充历史会话列表
+     * @param html
+     */
+    setWhHistoryHtml:function(html){
+        $('.wh-history .wh_tab_history_div .wh_tab_history_ul').html(html);
+        $('.wh-history .wh_tab_history_div .wh_tab_history_ul li').click(function () {
+            room.setWhVisitors($(this).attr('utype'), $(this).attr("cg"), $(this).attr('uid'), $(this).find("label").text(), !$(this).hasClass("off"));
+            $('.visitorDiv .wh_tab_ul li[uid=' + $(this).attr('uid') + ']').click();
+            $('.wh_tab_history_div').addClass('dn');
+            return false;
+        });
+        room.setListScroll($('.wh-history .wh_tab_history_div .wh_tab_history_list'));
+    },
+    /**
      * 计算宽度
      */
     widthCheck: function(resize){
@@ -2210,7 +2313,7 @@ var room={
     heightCalcu: function(resize){
         var prefixDom=".local_box";
         var  hh = $(window).height();
-        var disH=130;
+        var disH=130,hisH=95;
         if($(".open_wh_box").is(':hidden')||resize){
             if($('.onlineSearch').hasClass('dn')){
                 $('.user_box').height(hh-180).css('max-height',(hh-180)+'px');
@@ -2218,7 +2321,10 @@ var room={
                 $('.user_box').height(hh-205).css('max-height',(hh-205)+'px');
             }
             $('.right-teacher').height(hh-10);
+            $('.wh_tab_history_div').css({'top':'75px'});
         }else{
+            hisH = 20;
+            $('.wh_tab_history_div').css({'top':'27px'});
             hh =$(".open_wh_box").height()-25;
             prefixDom='.open_wh_box';
             disH=60;
@@ -2226,6 +2332,7 @@ var room={
         $(prefixDom+' .wh-left,'+prefixDom+' .wh-middle').height(hh-10);
         /*$(prefixDom+' .visitorDiv').height(hh-45).css('max-height',(hh-55)+'px');*/
         $(prefixDom+' .visitorDiv .wh_tab_div').height($(prefixDom+' .wh-left').height()-disH);
+        $(prefixDom+' .visitorDiv .wh_tab_history_list').height($(prefixDom+' .wh-left').height()-hisH);//会话历史记录高度
         $(prefixDom+' .wh-tab-msg').height(hh-80);
         $(prefixDom+' .wh-content').height(hh-230);
     },
@@ -2250,6 +2357,9 @@ var room={
                 formatHtmlArr.push('     <input type="button" value="提交" class="save-btn dn" />');
                 formatHtmlArr.push('     <input type="button" value="取消" class="cancel-btn dn" />');
                 formatHtmlArr.push('</li>');
+                break;
+            case 'whHistory':
+                formatHtmlArr.push('<li uid="{0}"{1} utype="{2}"><span class="user-row"><label>{3}</label><label>{4}</label></span><span>{5}</span></li>');
                 break;
         }
         return formatHtmlArr.join('');

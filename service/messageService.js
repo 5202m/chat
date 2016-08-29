@@ -1,4 +1,5 @@
 var chatMessage = require('../models/chatMessage');//引入chatMessage数据模型
+var logger=require('../resources/logConf').getLogger('messageService');//引入log4js
 var common = require('../util/common');//引入common类
 var constant = require('../constant/constant');//引入constant
 var visitorService=require('../service/visitorService');
@@ -253,6 +254,54 @@ var messageService ={
             }else{
                 callback(false);
             }
+        });
+    },
+    /**
+     * 查询两天内的聊天记录并分组
+     * @param params
+     * @param callback
+     */
+    getLastTwoDaysMsg:function(params, callback){
+        var dateStart = new Date().getTime();
+        var publishTime = dateStart - 86400000 * 2;
+        var searchObj={groupType:params.groupType, groupId:params.groupId,
+            $or: [{userId: params.userId}, {"toUser.userId": params.userId}],
+            status:1, valid:1,"toUser.talkStyle": 1,
+            publishTime:{"$gte":publishTime+'_'} };
+        var o = {
+            //映射方法
+            map : function () {
+                var userId = (this.userType == 0 || this.userType == -1 ? this.userId : this.toUser.userId);
+                emit(userId, this);
+            },
+            //查询条件
+            query : searchObj,
+            sort : {publishTime:-1},
+            //简化
+            reduce : function (k, doc) {
+                return doc.length>0?doc[0]:doc;
+            },
+            //将统计结果输出到articleDataMap集合中，如果存在则replace
+            out : {
+                replace: 'messageMap'
+            },
+            //是否产生更加详细的服务器日志
+            verbose : false
+        };
+        chatMessage.db().mapReduce(o, function (err, model, stats) {
+            if(err){
+                logger.error("消息分组异常！>>getLastTwoDaysMsg>>", err);
+                callback(null);
+                return;
+            }
+            model.find().sort({"value.publishTime":-1}).exec(function (err, docs) {
+                if(err){
+                    logger.error("消息分组查询异常！>>getLastTwoDaysMsg>>", err);
+                    callback(null);
+                    return;
+                }
+                callback(docs);
+            });
         });
     }
 };

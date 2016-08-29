@@ -294,4 +294,27 @@ router.post('/modifyArticle', function(req, res){
     }
 });
 
+/**
+ * 获取最近两天聊天记录
+ */
+router.post('/getLastTwoDaysMsg', function(req, res){
+    var params = req.body['data'];
+    if(typeof params == 'string'){
+        try {
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+    if(common.isBlank(params.groupType) || common.isBlank(params.groupId) || common.isBlank(params.userId)){
+        res.json(null);
+    }else{
+        messageService.getLastTwoDaysMsg(params, function(result){
+            res.json(result);
+        });
+    }
+});
+
+
 module.exports = router;
