@@ -2266,7 +2266,7 @@ body.keyboard:before { /*background:none*/
 .point_ul .detail span,
 .point_ul .detail p,
 .teach-ul li span{
-    color: #000;
+    color: #fff;
 }
 
 ul.message_list li{
@@ -2357,3 +2357,6 @@ ul.message_list li{
 .teach-ul li span{
 	color: #fff;
 }
+.mCS-dark-2.mCSB_scrollTools .mCSB_draggerRail,.mCS-dark-2.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,.mCS-dark-2.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar,.mCS-dark-2.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{
+	background: rgba(255,255,255,0);
+	}
