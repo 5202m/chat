@@ -598,5 +598,6 @@ table.tableForm_C {background-color: #a5c2da;width: 99%;margin: 0px auto;}
 .wh_tab_history_div  .wh_tab_history_list .wh_tab_history_ul li {width:190px;}
 .wh_tab_history_div  .wh_tab_history_list .wh_tab_history_ul .user-row {width:100%;}
 .wh_tab_history_div  .wh_tab_history_list .wh_tab_history_ul .user-row label {width:90px;}
+.wh_tab_history_div  .wh_tab_history_list .wh_tab_history_ul .user-msg {width:190px;overflow: hidden;text-overflow:ellipsis;}
 
 

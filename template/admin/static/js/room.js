@@ -2359,7 +2359,7 @@ var room={
                 formatHtmlArr.push('</li>');
                 break;
             case 'whHistory':
-                formatHtmlArr.push('<li uid="{0}"{1} utype="{2}"><span class="user-row"><label>{3}</label><label>{4}</label></span><span>{5}</span></li>');
+                formatHtmlArr.push('<li uid="{0}"{1} utype="{2}"><span class="user-row"><label>{3}</label><label>{4}</label></span><span class="user-msg">{5}</span></li>');
                 break;
         }
         return formatHtmlArr.join('');
