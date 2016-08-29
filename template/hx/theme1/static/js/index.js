@@ -251,7 +251,7 @@ var indexJS ={
                 fFrom.attr("hasEv","true");
                 file.change(function (){
                     var _this=$(this);
-                    var img = _this.files[0];
+                    var img = this.files[0];
                     // 判断是否图片
                     if(!img){
                         return false;
@@ -287,6 +287,7 @@ var indexJS ={
                                               $("#avatarInfoId").attr("src",result.avatar);
                                               $("#userListId li .mynk").prev().find("img").attr("src",result.avatar);
                                               indexJS.userInfo.avatar=result.avatar;
+                                                _this.val('');
                                             }
                                         },true,function(){
                                            alert("上传头像失败，请联系在线客服！");

@@ -125,8 +125,8 @@ var tool={
         });
         /*上传晒单图片*/
         $("#flTradeImg").change(function (){
-            var _this=this;
-            var img = _this.files[0];
+            var _this=$(this);
+            var img = this.files[0];
             // 判断是否图片
             if(!img){
                 return false;
@@ -156,6 +156,7 @@ var tool={
                             var data=dataRt.data?dataRt.data[0]:null;
                             if(data){
                                 $('#tradeImg').val(data.fileDomain+data.filePath);
+                                _this.val('');
                             }
                         }else{
                             alert("上传图片失败，请联系在线客服！");

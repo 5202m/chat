@@ -206,7 +206,7 @@ var indexJS ={
                 fFrom.attr("hasEv","true");
                 file.change(function (){
                     var _this=$(this);
-                    var img = _this.files[0];
+                    var img = this.files[0];
                     // 判断是否图片
                     if(!img){
                         return false;
