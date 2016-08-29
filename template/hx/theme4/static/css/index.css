@@ -2347,3 +2347,6 @@ ul.message_list li{
 .view_select .se_cont{
     background: rgba(255, 255, 255, 0.8);
 }
+.mCS-dark-2.mCSB_scrollTools .mCSB_draggerRail,.mCS-dark-2.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,.mCS-dark-2.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar,.mCS-dark-2.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{
+	background: rgba(0,0,0,0);
+	}

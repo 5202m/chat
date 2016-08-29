@@ -193,7 +193,7 @@ a:active {
 /* header */
 body {
     font-family: 'microsoft yahei', 'Arial';
-    background: #000
+    background: #fff
 }
 
 body:before {
@@ -888,7 +888,7 @@ body:before {
 
 .videopart .main-video {
     height: 100%;
-    background-color: #000;
+    background-color: #fff;
 }
 
 .videopart .main-video div {
@@ -1049,7 +1049,7 @@ body:before {
 
 .talk-infobox .uname strong {
     font-size: 14px;
-    color: #000;
+    color: #fff;
     font-weight: normal;
     font-style: normal;
     line-height: 12px;
@@ -1079,7 +1079,7 @@ body:before {
     border-top-left-radius: 0;
     padding: 6px 10px;
     position: relative;
-    color: #333;
+    color: #fff;
     font-size: 14px;
     text-align: left;
     font-style: normal;
@@ -1090,7 +1090,7 @@ body:before {
 }
 
 .talk-infobox .dialog a {
-    color: #0047c9;
+    color: #fff;
 }
 
 .talk-infobox .dialog em.ruleTipStyle {
@@ -1121,14 +1121,14 @@ body:before {
 }
 
 .talk-infobox .admin .dialog {
-    background: #cdd7e2;
-    color: #000;
+    background: #353739;
+    color: #fff;
 }
 .talk-infobox .admin .dialog p.question {
-    color: #000;
+    color: #fff;
 }
 .talk-infobox .admin .dialog p{
-    color: #0047c9;
+    color: #fff;
     font-style: normal;
 }
 
@@ -1137,7 +1137,7 @@ body:before {
 }
 
 .talk-infobox .analyst .dialog {
-    background: #cdd7e2;
+    background: #353739;
 }
 
 .talk-infobox .analyst .dialog::after {
@@ -1163,14 +1163,14 @@ body:before {
 }
 
 .talk-infobox .push p {
-    color: #000;
+    color: #fff;
     background-color: inherit;
     font-size: 14px;
     word-break: break-all;
 }
 
 .talk-infobox .push p a {
-    color: #0047c9;
+    color: #fff;
     text-decoration: underline;
 }
 
@@ -1198,12 +1198,12 @@ body:before {
 
 
 .talk-infobox .analyst .dialog .question {
-    color: #000;
+    color: #fff;
     border-bottom-color: #5a5a5a
 }
 
 .talk-infobox .analyst .dialog .reply {
-    color: #0047c9;
+    color: #fff;
 }
 
 .ss-tk-info {
@@ -1363,7 +1363,7 @@ body:before {
     width: 100%;
     height: 27px;
     overflow: hidden;
-    background: rgba(255, 255, 255, .4);
+    background:#353739;
     border-radius: 4px;
     position: absolute;
     left: 0;
@@ -1372,7 +1372,7 @@ body:before {
 
 .view_select.dw .se_cont {
     height: auto;
-    background: rgba(0, 0, 0, 0.9);
+    background:#353739;
 }
 
 .view_select .se_cont a {
@@ -1386,6 +1386,7 @@ body:before {
 
 .view_select .se_cont a.on {
     color: #fff;
+    background: #5a5d63;
 }
 
 .view_select .selected {
@@ -1520,7 +1521,7 @@ body:before {
 }
 
 .txt_dia {
-    color: #0047c9;
+    color: #fff;
     margin-right: 5px;
 }
 
