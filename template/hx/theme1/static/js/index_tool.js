@@ -438,13 +438,16 @@ var tool={
      * @returns {boolean}
      */
     setShowTrade:function(){
-        if(tool.tradeLoadAll){
-            return false;
-        }
         var start = common.isBlank(tool.tradeForUser) ? $("#all-orders .scrollbox div").size() : $("#my-orders .scrollbox div").size();
         var listData = tool.tradeList;
         var row = null;
         var length = listData.length;
+        if(start<length){
+            tool.tradeLoadAll = false;
+        }
+        if(tool.tradeLoadAll){
+            return false;
+        }
         if(indexJS.userInfo.userId != tool.tradeForUser && common.isValid(tool.tradeForUser)) {
             $('#sdcount').text(common.isValid(tool.tradeForUser) ? length : '0');
         }

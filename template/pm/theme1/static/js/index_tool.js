@@ -495,14 +495,17 @@ var tool={
      * @returns {boolean}
      */
     setShowTrade:function(){
-        if(tool.tradeLoadAll){
-            $('.loading_trade').addClass('dn');
-            return false;
-        }
         var start = common.isBlank(tool.tradeForUser) ? $(".dr9 .allsd_list .usersd_list li").size() : $(".dr9 .mysd_list .usersd_list li").size();
         var listData = tool.tradeList;
         var row = null;
         var length = listData.length;
+        if(start<length){
+            tool.tradeLoadAll = false;
+        }
+        if(tool.tradeLoadAll){
+            $('.loading_trade').addClass('dn');
+            return false;
+        }
         $('#sdcount').text(common.isValid(tool.tradeForUser)?length:'0');
         var tradeHtml='',tradeFormat = common.isBlank(tool.tradeForUser) ? tool.formatHtml('showTradeAll') : tool.formatHtml('showTradeUser'),cls;
         for(var i = start; i < length && i < start + 20; i++){
