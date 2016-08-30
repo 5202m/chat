@@ -371,7 +371,7 @@ var indexJS ={
                     ons='';
                 }
                 dateStr = common.formatterDate(new Date(startDateTime + ((days[i].day + 6) % 7) * 86400000)).substring(5);
-                nva.append('<a href="javascript:" class="'+als+ons+'" t="'+i+'" style="width:'+awidth+'%;"><span>'+common.daysCN[days[i].day+""]+'<b>' + dateStr + '</b></span><i></i></a>');
+                nva.append('<a href="javascript:" class="'+als+ons+'" t="'+i+'" d="'+days[i].day + '" style="width:'+awidth+'%;"><span>'+common.daysCN[days[i].day+""]+'<b>' + dateStr + '</b></span><i></i></a>');
                 $(".cursor .dropcont .cont").append('<div class="course_tab'+ons+'" t="'+i+'" d="'+days[i].day+'"><ul></ul></div>');
                 als='';
                 var lsTab=$(".cursor .course_tab:last ul"),courseObj=null;
@@ -853,7 +853,7 @@ var indexJS ={
         chgSyllabusCls : function(currCourse){
             $('.course_tab li a.on').removeClass("on");
             if(!currCourse.isNext){
-                $(".course_nav a[t='" + currCourse.day + "']").trigger("click");
+                $(".course_nav a[d='" + currCourse.day + "']").trigger("click");
                 $('.course_tab[d='+currCourse.day+']').find('li a[st="'+currCourse.startTime+'"][et="'+currCourse.endTime+'"]').addClass("on");
             }
         }
