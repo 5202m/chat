@@ -1102,7 +1102,7 @@ var roomJS={
                 + "&videoType=" + this.videoType
                 + "&url=" + this.videoUrl
                 + "&title=" + this.videoTitle;
-            window.open("/studio/gotoVideo?" + params,'studioVideoWindow'
+            window.open("/hxstudio/gotoVideo?" + params,'studioVideoWindow'
                 ,'height=600,width=800,top=0,right=0,toolbar=no,menubar=no,scrollbars=no,location=no,status=no');
         }
     },
