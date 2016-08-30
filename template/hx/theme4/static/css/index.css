@@ -350,12 +350,13 @@ body:before {
     text-align: center;
     font-size: .3rem;
     float: left;
-    color: #9e7847;
+    color: #333;
+    border-bottom: 1px solid #ccc;
 }
 
 .cen-ulist li.on {
     background: none;
-    color: #55413c;
+    color: #9e7847;
     height: 42px;
     border-bottom: 1px solid #9e7847;
 }
@@ -1122,7 +1123,7 @@ body:before {
 }
 
 .talk-infobox .admin .dialog {
-    background: #cdd7e2;
+    background: #f6f2e8;
     color: #000;
 }
 .talk-infobox .admin .dialog p.question {
@@ -1138,7 +1139,7 @@ body:before {
 }
 
 .talk-infobox .analyst .dialog {
-    background: #cdd7e2;
+    background: #f6f2e8;
 }
 
 .talk-infobox .analyst .dialog::after {
@@ -1146,7 +1147,7 @@ body:before {
 }
 
 .talk-infobox .me-li .dialog {
-    background: #fff;
+    background:#f6f2e8;
     border-top-left-radius: 5px;
     border-top-right-radius: 0;
     float: right;
@@ -1368,7 +1369,8 @@ body:before {
     border-radius: 4px;
     position: absolute;
     left: 0;
-    top: 0
+    top: 0;
+    border:1px #cecfd8 solid;
 }
 
 .view_select.dw .se_cont {
@@ -1489,6 +1491,8 @@ body:before {
     outline: none;
     border-radius: 4px;
     overflow-y: scroll;
+    padding-left:4px;
+    box-sizing:border-box;
 }
 
 .face-btn {
