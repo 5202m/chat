@@ -1012,7 +1012,7 @@ body:before {
 }
 
 .talk-infobox li {
-    padding: 5px 38px;
+    padding: 5px 0 5px 38px;
     position: relative;
     margin-bottom: 5px
 }
@@ -2353,4 +2353,7 @@ ul.message_list li{
 }
 .mCS-dark-2.mCSB_scrollTools .mCSB_draggerRail,.mCS-dark-2.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,.mCS-dark-2.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar,.mCS-dark-2.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{
 	background: rgba(0,0,0,0);
-	}
+}
+.mCSB_inside > .mCSB_container{
+    margin-right: 0px !important;
+}
