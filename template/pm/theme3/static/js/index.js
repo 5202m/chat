@@ -12,9 +12,7 @@ var StudioChatMini = {
     syllabusData:null,//课程数据
     serverTime: 0,//服务器时间
     pushObj:{
-        whPush : {},   //私聊推送信息
-        talkPush : [], //聊推送消息
-        talkPushInterval : null
+        talkPush : []//公聊推送消息
     },
     //信息类型
     msgType: {
@@ -47,6 +45,7 @@ var StudioChatMini = {
         StudioChatMini.clientVideoTask();
         setInterval(function () {
             StudioChatMini.serverTime += 1000;
+            StudioChatMini.setPushInfo();
             StudioChatMini.clientVideoTask();
         }, 1000);//每秒一次
     },
@@ -601,7 +600,10 @@ var StudioChatMini = {
                 case 'pushInfo':
                     var data=result.data;
                     if(data.position==3){ //公聊框
-                        StudioChatMini.talkBoxPush.initTBP(data.infos);
+                        StudioChatMini.pushObj.talkPush = data.infos;
+                        for(var i = 0, len = studioChatMb.pushObj.talkPush.length; i < len; i++){
+                            StudioChatMini.pushObj.talkPush[i].nextTm = StudioChatMini.pushObj.talkPush[i].serverTime + StudioChatMini.pushObj.talkPush[i].onlineMin * 60 * 1000;
+                        }
                     }
                     break;
             }
@@ -622,6 +624,7 @@ var StudioChatMini = {
             StudioChatMini.setTalkListScroll(true);
         });
     },
+
     /**
      * 聊天记录数据转换
      * @param row
@@ -641,112 +644,35 @@ var StudioChatMini = {
         };
         StudioChatMini.setContent({fromUser: fromUser, content: row.content}, false, true);
     },
-
     /**
-     * 公聊推送
+     * 将消息显示在公聊框
+     * @param info
      */
-    talkBoxPush : {
-        /**
-         * 初始化
-         * @param infos
-         */
-        initTBP : function(infos){
-            this.clear();
-            StudioChatMini.pushObj.talkPush = infos;
-            this.start();
-        },
-
-        /**
-         * 清空定时器，在服务器重启的时候，会重新触发notice，此时需要清空之前所有的定时器
-         */
-        clear : function(){
-            if(StudioChatMini.pushObj.talkPushInterval){
-                window.clearInterval(StudioChatMini.pushObj.talkPushInterval);
-                StudioChatMini.pushObj.talkPushInterval = null;
-            }
-            var loc_infos = StudioChatMini.pushObj.talkPush;
-            var loc_info = null;
-            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
-                loc_info = loc_infos[i];
-                if(loc_info.timeoutId){
-                    window.clearTimeout(loc_info.timeoutId);
-                }
-                if(loc_info.intervalId){
-                    window.clearInterval(loc_info.intervalId);
+    showTalkPushMsg : function(info){
+        var html = [];
+        html.push('<div class="dialog push">');
+        html.push(info.content);
+        html.push('</div>');
+        $("#dialog_list").append(html.join(""));
+        StudioChatMini.setTalkListScroll(true);
+    },
+    /**
+     * 加载推送消息
+     */
+    setPushInfo:function(){
+        var talkBoxInfo = null, talkBoxInfos = this.pushObj.talkPush;
+        if(talkBoxInfos && talkBoxInfos.length > 0){
+            for(var i = 0, lenI = talkBoxInfos.length; i < lenI; i++){
+                talkBoxInfo = talkBoxInfos[i];
+                if(talkBoxInfo && talkBoxInfo.nextTm && this.serverTime >= talkBoxInfo.nextTm && common.dateTimeWeekCheck(talkBoxInfo.pushDate, false, this.serverTime)){
+                    if(talkBoxInfo.intervalMin && talkBoxInfo.intervalMin > 0){
+                        talkBoxInfo.nextTm = this.serverTime + talkBoxInfo.intervalMin * 60 * 1000;
+                    }else{
+                        delete talkBoxInfo["nextTm"];
+                    }
+                    this.showTalkPushMsg(talkBoxInfo);
                 }
             }
-        },
-
-        /**
-         * 启动检查定时器
-         */
-        start : function(){
-            var loc_infos = StudioChatMini.pushObj.talkPush;
-            if(loc_infos && loc_infos.length > 0){
-                window.setInterval(function(){
-                    StudioChatMini.talkBoxPush.check();
-                },10000);
-            }
-        },
-
-        /**
-         * 检查所有推送任务
-         */
-        check : function(){
-            var loc_infos = StudioChatMini.pushObj.talkPush;
-            var loc_info = null;
-            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
-                loc_info = loc_infos[i];
-                if(loc_info.startFlag){
-                    continue;
-                }
-                if(common.dateTimeWeekCheck(loc_info.pushDate, false, StudioChatMini.serverTime)){
-                    loc_info.startFlag = true;
-                    window.setTimeout(StudioChatMini.talkBoxPush.delayStartTask(loc_info), (loc_info.onlineMin || 0) * 60 * 1000);
-                }
-            }
-        },
-
-        /**
-         * 延迟启动单个定时任务
-         * @param info
-         */
-        delayStartTask : function(info){
-            return function(){
-                StudioChatMini.talkBoxPush.showMsg(info);
-                if(info.intervalMin && info.intervalMin > 0){
-                    info.intervalId = window.setInterval(StudioChatMini.talkBoxPush.startTask(info), info.intervalMin * 60 * 1000);
-                }
-            };
-        },
-
-        /**
-         * 启动单个推送任务
-         * @param info
-         * @returns {Function}
-         */
-        startTask : function(info){
-            return function(){
-                if(common.dateTimeWeekCheck(info.pushDate, false, StudioChatMini.serverTime)){
-                    StudioChatMini.talkBoxPush.showMsg(info);
-                }else{
-                    window.clearInterval(info.intervalId);
-                    info.startFlag = false;
-                }
-            };
-        },
-
-        /**
-         * 将消息显示在公聊框
-         * @param info
-         */
-        showMsg : function(info){
-            var html = [];
-            html.push('<div class="dialog push">');
-            html.push(info.content);
-            html.push('</div>');
-            $("#dialog_list").append(html.join(""));
-            StudioChatMini.setTalkListScroll(true);
         }
     }
 };

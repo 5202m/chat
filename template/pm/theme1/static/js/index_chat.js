@@ -1464,118 +1464,18 @@ var chat={
             chat.setContent({fromUser: fromUser,content:row.content},false,true);
         }
     },
-
     /**
-     * 公聊推送
+     * 将消息显示在公聊框
+     * @param info
      */
-    talkBoxPush : {
-        /**推送消息对象*/
-        talkPushList : [], //公聊推送消息
-        talkPushInterval : null,
-
-        /**
-         * 初始化
-         * @param infos
-         */
-        initTBP : function(infos){
-            this.clear();
-            this.talkPushList = infos;
-            this.start();
-        },
-
-        /**
-         * 清空定时器，在服务器重启的时候，会重新触发notice，此时需要清空之前所有的定时器
-         */
-        clear : function(){
-            if(chat.talkBoxPush.talkPushInterval){
-                window.clearInterval(chat.talkBoxPush.talkPushInterval);
-                chat.talkBoxPush.talkPushInterval = null;
-            }
-            var loc_infos = chat.talkBoxPush.talkPushList;
-            var loc_info = null;
-            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
-                loc_info = loc_infos[i];
-                if(loc_info.timeoutId){
-                    window.clearTimeout(loc_info.timeoutId);
-                }
-                if(loc_info.intervalId){
-                    window.clearInterval(loc_info.intervalId);
-                }
-            }
-        },
-
-        /**
-         * 启动检查定时器
-         */
-        start : function(){
-            var loc_infos = chat.talkBoxPush.talkPushList;
-            if(loc_infos && loc_infos.length > 0){
-                chat.talkBoxPush.talkPushInterval = window.setInterval(function(){
-                    chat.talkBoxPush.check();
-                }, 10000);
-            }
-        },
-
-        /**
-         * 检查所有推送任务
-         */
-        check : function(){
-            var loc_infos = chat.talkBoxPush.talkPushList;
-            var loc_info = null;
-            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
-                loc_info = loc_infos[i];
-                if(loc_info.startFlag){
-                    continue;
-                }
-                if(common.dateTimeWeekCheck(loc_info.pushDate, false, indexJS.serverTime)){
-                    loc_info.startFlag = true;
-                    loc_info.timeoutId = window.setTimeout(chat.talkBoxPush.delayStartTask(loc_info), (loc_info.onlineMin || 0) * 60 * 1000);
-                }
-            }
-        },
-
-        /**
-         * 延迟启动单个定时任务
-         * @param info
-         */
-        delayStartTask : function(info){
-            return function(){
-                chat.talkBoxPush.showMsg(info);
-                if(info.intervalMin && info.intervalMin > 0){
-                    info.intervalId = window.setInterval(chat.talkBoxPush.startTask(info), info.intervalMin * 60 * 1000);
-                }
-            };
-        },
-
-        /**
-         * 启动单个推送任务
-         * @param info
-         * @returns {Function}
-         */
-        startTask : function(info){
-            return function(){
-                if(common.dateTimeWeekCheck(info.pushDate, false, indexJS.serverTime)){
-                    chat.talkBoxPush.showMsg(info);
-                }else{
-                    window.clearInterval(info.intervalId);
-                    info.startFlag = false;
-                }
-            };
-        },
-
-        /**
-         * 将消息显示在公聊框
-         * @param info
-         */
-        showMsg : function(info){
-            var html = [];
-            html.push('<div class="dialog push">');
-            html.push(info.content);
-            html.push('</div>');
-            $("#dialog_list").append(html.join(""));
-            if($(".scrollbtn").hasClass("on")) {
-                chat.setTalkListScroll(true);
-            }
+    showTalkPushMsg : function(info){
+        var html = [];
+        html.push('<div class="dialog push">');
+        html.push(info.content);
+        html.push('</div>');
+        $("#dialog_list").append(html.join(""));
+        if($(".scrollbtn").hasClass("on")) {
+            chat.setTalkListScroll(true);
         }
     },
     /**
@@ -1609,7 +1509,7 @@ var chat={
                     }else{
                         delete talkBoxInfo["nextTm"];
                     }
-                    chat.talkBoxPush.showMsg(talkBoxInfo);
+                    chat.showTalkPushMsg(talkBoxInfo);
                 }
             }
         }

@@ -13,7 +13,6 @@ var roomJS={
     serverTime:0,//服务器时间
     pushObj:{
         talkPush : [], //公聊推送消息
-        talkPushInterval : null,
         whInfos:[]//私聊推送消息
     },
     //信息类型
@@ -1703,128 +1702,32 @@ var roomJS={
             roomJS.setContent({fromUser: fromUser,content:row.content},false,true);
         }
     },
-
     /**
-     * 公聊推送
+     * 将消息显示在公聊框
+     * @param info
      */
-    talkBoxPush : {
-        /**
-         * 初始化
-         * @param infos
-         */
-        initTBP : function(infos){
-            this.clear();
-            roomJS.pushObj.talkPush = infos;
-            this.start();
-        },
-
-        /**
-         * 清空定时器，在服务器重启的时候，会重新触发notice，此时需要清空之前所有的定时器
-         */
-        clear : function(){
-            if(roomJS.pushObj.talkPushInterval){
-                window.clearInterval(roomJS.pushObj.talkPushInterval);
-                roomJS.pushObj.talkPushInterval = null;
-            }
-            var loc_infos = roomJS.pushObj.talkPush;
-            var loc_info = null;
-            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
-                loc_info = loc_infos[i];
-                if(loc_info.timeoutId){
-                    window.clearTimeout(loc_info.timeoutId);
-                }
-                if(loc_info.intervalId){
-                    window.clearInterval(loc_info.intervalId);
-                }
-            }
-        },
-
-        /**
-         * 启动检查定时器
-         */
-        start : function(){
-            var loc_infos = roomJS.pushObj.talkPush;
-            if(loc_infos && loc_infos.length > 0){
-                window.setInterval(function(){
-                    roomJS.talkBoxPush.check();
-                },10000);
-            }
-        },
-
-        /**
-         * 检查所有推送任务
-         */
-        check : function(){
-            var loc_infos = roomJS.pushObj.talkPush;
-            var loc_info = null;
-            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
-                loc_info = loc_infos[i];
-                if(loc_info.startFlag){
-                    continue;
-                }
-                if(common.dateTimeWeekCheck(loc_info.pushDate, false, roomJS.serverTime)){
-                    loc_info.startFlag = true;
-                    window.setTimeout(roomJS.talkBoxPush.delayStartTask(loc_info), (loc_info.onlineMin || 0) * 60 * 1000);
-                }
-            }
-        },
-
-        /**
-         * 延迟启动单个定时任务
-         * @param info
-         */
-        delayStartTask : function(info){
-            return function(){
-                roomJS.talkBoxPush.showMsg(info);
-                if(info.intervalMin && info.intervalMin > 0){
-                    info.intervalId = window.setInterval(roomJS.talkBoxPush.startTask(info), info.intervalMin * 60 * 1000);
-                }
-            };
-        },
-
-        /**
-         * 启动单个推送任务
-         * @param info
-         * @returns {Function}
-         */
-        startTask : function(info){
-            return function(){
-                if(common.dateTimeWeekCheck(info.pushDate, false, roomJS.serverTime)){
-                    roomJS.talkBoxPush.showMsg(info);
-                }else{
-                    window.clearInterval(info.intervalId);
-                    info.startFlag = false;
-                }
-            };
-        },
-
-        /**
-         * 将消息显示在公聊框
-         * @param info
-         */
-        showMsg : function(info){
-            var html = [];
-            html.push('<li class="clearfix push">');
-            if(info.content.indexOf('img') > -1){
-                var imgSrc = $(info.content).find('img').attr('src');
-                html.push('<a href="'+imgSrc+'" data-lightbox="dialog-img">');
-                html.push('<p><img src="'+imgSrc+'" style="width:90%;height:auto;" /></p>');
-                html.push('</a>');
-            }else {
-                html.push(info.content);
-            }
-            html.push('</div>');
-            var talkPanel = $("#talkPanel");
-            var isScroll = talkPanel.scrollTop() + talkPanel.height() + 30 >= talkPanel.get(0).scrollHeight;
-            $("#dialog_list").append(html.join(""));
-            var img=$("#dialog_list").find(".dialog.push img");
-            if(img.length>0){
-                img.width("100%");
-                img.height("auto");
-            }
-            if(isScroll){
-                roomJS.setTalkListScroll();
-            }
+    showTalkPushMsg : function(info){
+        var html = [];
+        html.push('<li class="clearfix push">');
+        if(info.content.indexOf('img') > -1){
+            var imgSrc = $(info.content).find('img').attr('src');
+            html.push('<a href="'+imgSrc+'" data-lightbox="dialog-img">');
+            html.push('<p><img src="'+imgSrc+'" style="width:90%;height:auto;" /></p>');
+            html.push('</a>');
+        }else {
+            html.push(info.content);
+        }
+        html.push('</div>');
+        var talkPanel = $("#talkPanel");
+        var isScroll = talkPanel.scrollTop() + talkPanel.height() + 30 >= talkPanel.get(0).scrollHeight;
+        $("#dialog_list").append(html.join(""));
+        var img=$("#dialog_list").find(".dialog.push img");
+        if(img.length>0){
+            img.width("100%");
+            img.height("auto");
+        }
+        if(isScroll){
+            roomJS.setTalkListScroll();
         }
     },
 
@@ -2275,7 +2178,7 @@ var roomJS={
                     }else{
                         delete talkBoxInfo["nextTm"];
                     }
-                    roomJS.talkBoxPush.showMsg(talkBoxInfo);
+                    roomJS.showTalkPushMsg(talkBoxInfo);
                 }
             }
         }

@@ -13,7 +13,6 @@ var studioChatMb={
     serverTime:0,//服务器时间
     pushObj:{
         talkPush : [], //公聊推送消息
-        talkPushInterval : null,
         whInfos:[]//私聊推送消息
     },
     //信息类型
@@ -1706,117 +1705,21 @@ var studioChatMb={
     },
 
     /**
-     * 公聊推送
+     * 将消息显示在公聊框
+     * @param info
      */
-    talkBoxPush : {
-        /**
-         * 初始化
-         * @param infos
-         */
-        initTBP : function(infos){
-            this.clear();
-            studioChatMb.pushObj.talkPush = infos;
-            this.start();
-        },
-
-        /**
-         * 清空定时器，在服务器重启的时候，会重新触发notice，此时需要清空之前所有的定时器
-         */
-        clear : function(){
-            if(studioChatMb.pushObj.talkPushInterval){
-                window.clearInterval(studioChatMb.pushObj.talkPushInterval);
-                studioChatMb.pushObj.talkPushInterval = null;
-            }
-            var loc_infos = studioChatMb.pushObj.talkPush;
-            var loc_info = null;
-            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
-                loc_info = loc_infos[i];
-                if(loc_info.timeoutId){
-                    window.clearTimeout(loc_info.timeoutId);
-                }
-                if(loc_info.intervalId){
-                    window.clearInterval(loc_info.intervalId);
-                }
-            }
-        },
-
-        /**
-         * 启动检查定时器
-         */
-        start : function(){
-            var loc_infos = studioChatMb.pushObj.talkPush;
-            if(loc_infos && loc_infos.length > 0){
-                window.setInterval(function(){
-                    studioChatMb.talkBoxPush.check();
-                },10000);
-            }
-        },
-
-        /**
-         * 检查所有推送任务
-         */
-        check : function(){
-            var loc_infos = studioChatMb.pushObj.talkPush;
-            var loc_info = null;
-            for(var i = 0, lenI = loc_infos.length; i < lenI; i++){
-                loc_info = loc_infos[i];
-                if(loc_info.startFlag){
-                    continue;
-                }
-                if(common.dateTimeWeekCheck(loc_info.pushDate, false, studioChatMb.serverTime)){
-                    loc_info.startFlag = true;
-                    window.setTimeout(studioChatMb.talkBoxPush.delayStartTask(loc_info), (loc_info.onlineMin || 0) * 60 * 1000);
-                }
-            }
-        },
-
-        /**
-         * 延迟启动单个定时任务
-         * @param info
-         */
-        delayStartTask : function(info){
-            return function(){
-                studioChatMb.talkBoxPush.showMsg(info);
-                if(info.intervalMin && info.intervalMin > 0){
-                    info.intervalId = window.setInterval(studioChatMb.talkBoxPush.startTask(info), info.intervalMin * 60 * 1000);
-                }
-            };
-        },
-
-        /**
-         * 启动单个推送任务
-         * @param info
-         * @returns {Function}
-         */
-        startTask : function(info){
-            return function(){
-                if(common.dateTimeWeekCheck(info.pushDate, false, studioChatMb.serverTime)){
-                    studioChatMb.talkBoxPush.showMsg(info);
-                }else{
-                    window.clearInterval(info.intervalId);
-                    info.startFlag = false;
-                }
-            };
-        },
-
-        /**
-         * 将消息显示在公聊框
-         * @param info
-         */
-        showMsg : function(info){
-            var html = [];
-            html.push('<li class="clearfix push">');
-            html.push(info.content);
-            html.push('</div>');
-            var talkPanel = $("#talkPanel");
-            var isScroll = talkPanel.scrollTop() + talkPanel.height() + 30 >= talkPanel.get(0).scrollHeight;
-            $("#dialog_list").append(html.join(""));
-            if(isScroll){
-                studioChatMb.setTalkListScroll();
-            }
+    showTalkPushMsg : function(info){
+        var html = [];
+        html.push('<li class="clearfix push">');
+        html.push(info.content);
+        html.push('</div>');
+        var talkPanel = $("#talkPanel");
+        var isScroll = talkPanel.scrollTop() + talkPanel.height() + 30 >= talkPanel.get(0).scrollHeight;
+        $("#dialog_list").append(html.join(""));
+        if(isScroll){
+            studioChatMb.setTalkListScroll();
         }
     },
-
     /**
      * 浏览器状态
      */
@@ -2253,7 +2156,7 @@ var studioChatMb={
                     }else{
                         delete talkBoxInfo["nextTm"];
                     }
-                    studioChatMb.talkBoxPush.showMsg(talkBoxInfo);
+                    studioChatMb.showTalkPushMsg(talkBoxInfo);
                 }
             }
         }
