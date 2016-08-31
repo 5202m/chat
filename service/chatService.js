@@ -14,7 +14,6 @@ var async = require('async');//引入async
  */
 var chatService ={
     oRoomId:'oRoomId',//自定义房间外的房间，用于房间外的socket通讯，目前只用于微解盘
-    socketSpaceArr:["studio","fxstudio","hxstudio"],//组空间,与房间大类groupType保持一致
     socket:null,//socket对象
     noticeType:{ //通知客户端类型
         pushInfo:'pushInfo',//推送信息
@@ -34,8 +33,9 @@ var chatService ={
      * 初始化
      */
     init:function(){
-        for(var i in this.socketSpaceArr){
-            this.setSocket(this.socketSpaceArr[i]);
+        //根据配置文件初始化socket命名空间
+        for(var key in config.defTemplate){
+            this.setSocket(config.defTemplate[key].routeKey.replace("/",""));
         }
     },
     /**

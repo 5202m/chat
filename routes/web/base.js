@@ -635,25 +635,36 @@ router.get('/getBigImg', function(req, res) {
 router.post('/uploadData', function(req, res) {
     var data = req.body;
     if(data!=null && process.platform.indexOf("win")==-1){
-        var imgUtil=require('../../util/imgUtil');//引入imgUtil
-        var val=data.content.value,needMax=data.content.needMax;
-        if(data.content.msgType=="img" && common.isValid(val)){
-            imgUtil.zipImg(val,100,60,function(minResult){
-                data.content.value=minResult.data;
-                if(needMax==1){
-                    imgUtil.zipImg(val,0,60,function(maxResult){
-                        data.content.maxValue=maxResult.data;
-                        chatService.acceptMsg(data,null);
-                        res.json({success:true});
-                    });
-                }else{
-                    chatService.acceptMsg(data,null);
-                    res.json({success:true});
+        //创建异常监控
+        var domain = require('domain').create();
+        domain.on('error', function(er){
+            logger.error("uploadImg fail,please check it",er);
+            res.send(500);
+        });
+        domain.run(function() {
+            //执行进程监控
+            process.nextTick(function() {
+                var imgUtil = require('../../util/imgUtil');//引入imgUtil
+                var val = data.content.value, needMax = data.content.needMax;
+                if (data.content.msgType == "img" && common.isValid(val)) {
+                        imgUtil.zipImg(val, 100, 60, function (minResult) {
+                            data.content.value = minResult.data;
+                            if (needMax == 1) {
+                                imgUtil.zipImg(val, 0, 60, function (maxResult) {
+                                    data.content.maxValue = maxResult.data;
+                                    chatService.acceptMsg(data, null);
+                                    res.json({success: true});
+                                });
+                            } else {
+                                chatService.acceptMsg(data, null);
+                                res.json({success: true});
+                            }
+                        });
+                } else {
+                    res.json({success: false});
                 }
             });
-        }else{
-            res.json({success:false});
-        }
+        });
     }else{
         logger.warn("warn:please upload img by linux server!");
         res.json({success:false});
