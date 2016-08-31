@@ -600,7 +600,7 @@ var studioChatMb={
         $(".file-img").click(function () {
             if (!FileReader) {
                 alert("发送图片功能目前只支持Chrome、Firefox、IE10或以上版本的浏览器！");
-                return;
+                return false;
             }
             if(!studioChatMb.whTalk.tabCheck && !studioChatMb.visitorSpeak && studioChatMb.userInfo.clientGroup=='visitor'){
             	studioMbPop.popBox("login", {
@@ -609,11 +609,11 @@ var studioChatMb={
                     clientStoreId : studioChatMb.userInfo.clientStoreId,
                     platform : studioChatMb.fromPlatform
                 });
-            	return;
+            	return false;
             }
             if(studioChatMb.userInfo.isSetName === false){
                 studioMbPop.popBox("set", {studioChatObj : studioChatMb});
-                return;
+                return false;
             }
         });
         //发送图片

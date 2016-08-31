@@ -610,7 +610,7 @@ var roomJS={
         $(".file-img").click(function () {
             if (!FileReader) {
                 alert("发送图片功能目前只支持Chrome、Firefox、IE10或以上版本的浏览器！");
-                return;
+                return false;
             }
             if(!roomJS.whTalk.tabCheck && !roomJS.visitorSpeak && roomJS.userInfo.clientGroup=='visitor'){
             	studioMbPop.popBox("login", {
@@ -619,11 +619,11 @@ var roomJS={
                     clientStoreId : roomJS.userInfo.clientStoreId,
                     platform : roomJS.fromPlatform
                 });
-            	return;
+            	return false;
             }
             if(roomJS.userInfo.isSetName === false){
                 studioMbPop.popBox("set", {studioChatObj : roomJS});
-                return;
+                return false;
             }
         });
         //发送图片
@@ -681,7 +681,7 @@ var roomJS={
                 return false;
             }
             var aObj=$("#"+result.uiId+" span[contt='a'] a");//[contt='a']
-            aObj.attr("href", value)
+            aObj.attr("url", value)
                 .children("img").attr("src",value).attr("needMax",result.content.needMax);
             roomJS.dataUpload(result);
         });
