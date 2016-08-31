@@ -182,6 +182,8 @@ var room={
     sendWhMsg:function(txtObj){
         //发送剪切图片
         var toUser = room.getWhToUser();
+        var sendObj={uiId:room.getUiId(),fromUser:room.userInfo,content:{}};
+        sendObj.fromUser.toUser=toUser;
         var imgObj = txtObj.find(".text-min-img img");
         if(imgObj.size() > 0){
             var imgData = imgObj.attr("src");
@@ -194,12 +196,14 @@ var room={
         }
         var msg = room.getSendMsg(txtObj);
         if(msg === false){
+            sendObj.content = {msgType:room.msgType.msg,value:""};
+            room.setWhHistory(sendObj);
             txtObj.html("");//清空内容
             return false;
         }
-        var sendObj={uiId:room.getUiId(),fromUser:room.userInfo,content:{msgType:room.msgType.text,value:msg}};
-        sendObj.fromUser.toUser=this.getWhToUser();
+        sendObj.content = {msgType:room.msgType.text,value:msg};
         room.socket.emit('sendMsg',sendObj);//发送数据
+        room.setWhHistory(sendObj);
         room.setWhContent(sendObj,true,false);//直接把数据填入内容栏
         txtObj.html("");//清空内容
     },
@@ -474,8 +478,7 @@ var room={
         }else{
             if(!isLoadData){//如接收他人私信
                 room.tipSound();//私聊消息提示音
-                var whHistoryUserObj = {'userId':fromUser.userId,'utype':fromUser.userType,'nk':fromUser.nickname,'cg':fromUser.clientGroup,'dt':common.formatterDateTime(parseInt(fromUser.publishTime.replace(/_\d*$/,''), 10), '-'),'value':(data.content.msgType==room.msgType.img?'[图片]':data.content.value)};
-                this.setWhHistory(whHistoryUserObj);
+                room.setWhHistory(data);
                 var isFillWh=this.fillWhBox(fromUser.userType,fromUser.clientGroup,fromUser.userId,fromUser.nickname,true,true);
                 if($('.visitorDiv .wh_tab_ul li[uid='+fromUser.toWhUserId+']').length == 0) {//不存在则添加
                     $('.visitorDiv .wh_tab_ul').append($('.visitorDiv ul li[uid=' + fromUser.toWhUserId + ']'));//在左边列表的最后添加发送私信人
@@ -544,6 +547,7 @@ var room={
         formUser.toUser=toUser;
         var sendObj={uiId:uiId,fromUser:formUser,content:{msgType:room.msgType.img,value:'',needMax:0,maxValue:''}};
         if(isWh){
+            room.setWhHistory(sendObj);
             room.setWhContent(sendObj, true, false);
         }else {
             room.setContent(sendObj, true, false);
@@ -2213,50 +2217,85 @@ var room={
      * 设置私聊人员记录
      * @param whUser json {}
      */
-    setWhHistory:function(whUser){
+    setWhHistory:function(data){
         if (!store.enabled){
             console.log('Local storage is not supported by your browser.');
             return;
         }
-        room.whHistoryUserObj.whUserList = this.getWhHistory();
-        if(common.isBlank(room.whHistoryUserObj.whUserList)){
+        room.whHistoryUserObj.whUserList = room.getWhHistory();
+        if(!$.isArray(room.whHistoryUserObj.whUserList)){
             room.whHistoryUserObj.whUserList = [];
         }
-        if(whUser) {
+        if(data) {
+            var whHistoryUserObj = {};
+            if(room.userInfo.userId==data.fromUser.userId) {
+                whHistoryUserObj.userId=data.fromUser.toUser.userId;
+                whHistoryUserObj.utype=data.fromUser.toUser.userType;
+                whHistoryUserObj.nk=data.fromUser.toUser.nickname;
+                whHistoryUserObj.dt=common.formatterDateTime(parseInt(data.uiId.replace(/_\d*$/,''), 10), '-');
+            }else {
+                whHistoryUserObj.userId = data.fromUser.userId;
+                whHistoryUserObj.utype = data.fromUser.userType;
+                whHistoryUserObj.nk = data.fromUser.nickname;
+                whHistoryUserObj.dt=common.formatterDateTime(parseInt(data.fromUser.publishTime.replace(/_\d*$/,''), 10), '-');
+            }
+            whHistoryUserObj.cg=data.fromUser.clientGroup;
+            whHistoryUserObj.value = data.content.value;
+            if(data.content.msgType==room.msgType.img){
+                whHistoryUserObj.value = '[图片]';
+            }
             var len = room.whHistoryUserObj.whUserList.length;
-            for(var i=0;i<len;i++){
-                if(room.whHistoryUserObj.whUserList[i].userId == whUser.userId){
-                    room.whHistoryUserObj.whUserList.splice(i);
+            if(len > 0) {
+                for (var i = 0; i < len; i++) {
+                    var row = room.whHistoryUserObj.whUserList[i];
+                    if (row.userId == whHistoryUserObj.userId) {
+                        room.whHistoryUserObj.whUserList[i] = {};
+                    }
+                    if(common.isBlank(row.userId)){
+                        break;
+                    }
                 }
+                room.whHistoryUserObj.whUserList.unshift(whHistoryUserObj);
+                if (len > 50) {
+                    room.whHistoryUserObj.whUserList.splice(50, len - 50);
+                }
+                store.set(room.whHistoryUserObj.key + '_' + room.userInfo.groupId, room.whHistoryUserObj.whUserList);
             }
-            room.whHistoryUserObj.whUserList.unshift(whUser);
-            if(len>50){
-                room.whHistoryUserObj.whUserList.splice(50, len-50);
-            }
-            store.set(room.whHistoryUserObj.key+'_'+room.userInfo.groupId, room.whHistoryUserObj.whUserList);
         }
     },
     /**
      * 填充历史会话用户列表
      */
     fillWhHistory:function(){
-        room.whHistoryUserObj.whUserList = this.getWhHistory();
+        room.whHistoryUserObj.whUserList = room.getWhHistory();
         var html = '', formatHtmlStr = room.formatHtml('whHistory');
-        if(common.isBlank(room.whHistoryUserObj.whUserList)){
+        if(!$.isArray(room.whHistoryUserObj.whUserList)){
             var params = {groupType:room.userInfo.groupType,groupId:room.userInfo.groupId,userId:room.userInfo.userId};
             common.getJson('/admin/getLastTwoDaysMsg',{data:JSON.stringify(params)},function(result){
                 if(result){
                     $.each(result, function (key, row) {
                         var dTime = common.formatterDateTime(parseInt(row.value.publishTime.replace(/_\d*$/,''), 10), '-').substring(5,16);
-                        html += formatHtmlStr.formatStr(row.value.userId, ($("#userListId li[id='" + row.value.userId + "']").length > 0 ? '' : ' class="off"'), row.value.userType, row.value.nickname, dTime , (row.value.content.msgType==room.msgType.img?'[图片]':row.value.content.value));
+                        var nickName='',userId='',userType=0;
+                        if(row.value.userId==room.userInfo.userId){
+                            nickName = row.value.toUser.nickname;
+                            userId = row.value.toUser.userId;
+                            userType = row.value.toUser.userType;
+                        }else{
+                            nickName = row.value.nickname;
+                            userId = row.value.userId;
+                            userType = row.value.userType;
+                        }
+                        html += formatHtmlStr.formatStr(userId, ($("#userListId li[id='" + userId + "']").length > 0 ? '' : ' class="off"'), userType, nickName, dTime , (row.value.content.msgType==room.msgType.img?'[图片]':row.value.content.value));
                     });
                     room.setWhHistoryHtml(html);
                 }
             });
         } else {
             $.each(room.whHistoryUserObj.whUserList, function (key, row) {
-                var dTime = row.dt.substring(5,16);
-                html += formatHtmlStr.formatStr(row.userId, ($("#userListId li[id='" + row.userId + "']").length > 0 ? '' : ' class="off"'), row.utype, row.nk, dTime, row.value);
+                if(common.isValid(row.userId)) {
+                    var dTime = row.dt.substring(5, 16);
+                    html += formatHtmlStr.formatStr(row.userId, ($("#userListId li[id='" + row.userId + "']").length > 0 ? '' : ' class="off"'), row.utype, row.nk, dTime, row.value);
+                }
             });
             room.setWhHistoryHtml(html);
         }
@@ -2268,7 +2307,7 @@ var room={
     setWhHistoryHtml:function(html){
         $('.wh-history .wh_tab_history_div .wh_tab_history_ul').html(html);
         $('.wh-history .wh_tab_history_div .wh_tab_history_ul li').click(function () {
-            room.setWhVisitors($(this).attr('utype'), $(this).attr("cg"), $(this).attr('uid'), $(this).find("label").text(), !$(this).hasClass("off"));
+            room.setWhVisitors($(this).attr('utype'), $(this).attr("cg"), $(this).attr('uid'), $(this).find("label:first").text(), !$(this).hasClass("off"));
             $('.visitorDiv .wh_tab_ul li[uid=' + $(this).attr('uid') + ']').click();
             $('.wh_tab_history_div').addClass('dn');
             return false;

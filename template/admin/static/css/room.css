@@ -595,7 +595,7 @@ table.tableForm_C {background-color: #a5c2da;width: 99%;margin: 0px auto;}
 .wh_tab_history_div .wh_tab_history_div_top{height:20px;}
 .wh-history .wh_close {background: url(../img/u87.png);width: 17px;height: 15px;display: inline-block;float:right;margin: 3px;}
 .wh_tab_history_div  .wh_tab_history_list{width:230px;margin-left: 5px;}
-.wh_tab_history_div  .wh_tab_history_list .wh_tab_history_ul li {width:190px;}
+.wh_tab_history_div  .wh_tab_history_list .wh_tab_history_ul li {width:190px;height: 55px;}
 .wh_tab_history_div  .wh_tab_history_list .wh_tab_history_ul .user-row {width:100%;}
 .wh_tab_history_div  .wh_tab_history_list .wh_tab_history_ul .user-row label {width:90px;}
 .wh_tab_history_div  .wh_tab_history_list .wh_tab_history_ul .user-msg {display:block;width:180px;overflow: hidden;text-overflow:ellipsis;}
