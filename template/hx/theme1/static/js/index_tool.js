@@ -438,7 +438,7 @@ var tool={
      * @returns {boolean}
      */
     setShowTrade:function(){
-        var start = common.isBlank(tool.tradeForUser) ? $("#all-orders .scrollbox div").size() : $("#my-orders .scrollbox div").size();
+        var start = common.isBlank(tool.tradeForUser) ? $("#all-orders .scrollbox div.show-order-box").size() : $("#my-orders .scrollbox div.show-order-box").size();
         var listData = tool.tradeList;
         var row = null;
         var length = listData.length;
