@@ -185,7 +185,7 @@ a:active {
 }
 
 /* img */
-.rightbar .qq i, .room-main .tit .st i, .popupbox .pop-close, .ss-tk-info i, .face-btn, .view_select i, .ctrlblock .ctrlbtn a, .teach-ul li i, .collect-tip b, .collect-tip i, .collect-tip .c_close, .inp i, .resultbox i, .c-menu li i,.addpic-btn,.select-img i {
+.rightbar .qq i, .room-main .tit .st i, .popupbox .pop-close, .ss-tk-info i, .face-btn, .view_select i, .ctrlblock .ctrlbtn a, .video-pop .play, .teach-ul li i, .collect-tip b, .collect-tip i, .collect-tip .c_close, .inp i, .resultbox i, .c-menu li i,.addpic-btn,.select-img i {
     background: url(../img/img_css.png) no-repeat;
     background-size: 100px auto;
     -moz-background-size: 100px auto;
