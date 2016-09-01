@@ -158,6 +158,9 @@ var studioService = {
      */
      studioRegister:function(userInfo,clientGroup,callback){
         var result={isOK:false,error:errorMessage.code_10};
+        if(userInfo.pwd){
+        	userInfo.pwd = common.getMD5(constant.pwdKey+userInfo.pwd)
+        }
         if(userInfo.nickname){
             //判断昵称唯一
             studioService.checkNickName(userInfo, function(err, isValid){
@@ -193,15 +196,7 @@ var studioService = {
                     for(var i in userGroup){
                         currRow=userGroup[i];
                         if(currRow._id==userInfo.groupType){
-                            if(userInfo.isPwdLogin){
-                                userInfo.userId=currRow.userId;
-                                userInfo.nickname=currRow.nickname;
-                                userInfo.avatar=currRow.avatar;
-                                userInfo.clientGroup = currRow.vipUser ? constant.clientGroup.vip : clientGroup;
-                                result.userId=currRow.userId;
-                            }else{
-                                result.error=errorMessage.code_1004;
-                            }
+                        	result.error=errorMessage.code_1004;
                             callback(result);
                             return;
                         }
