@@ -87,7 +87,7 @@ StudioChatMini.serverTime=Number('<%= serverTime %>');
 StudioChatMini.socketUrl=JSON.parse('<%- socketUrl %>');
 StudioChatMini.syllabusData=common.formatToJson('<%- syllabusData%>');
 StudioChatMini.currStudioAuth=('<%- currStudioAuth%>'=='true');
-StudioChatMini.fromPlatform='<%- fromPlatform%>';
+StudioChatMini.options=JSON.parse('<%- options%>');
 $(function(){
     $(window).resize(function(){
         var hh = $(window).height();

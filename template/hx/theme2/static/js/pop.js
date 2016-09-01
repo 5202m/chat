@@ -5,7 +5,7 @@ var studioMbPerson = {
     /**
      * 初始化（页面加载）
      */
-    load : function(userInfo, platform){
+    load : function(userInfo, options){
         if(userInfo && userInfo.isLogin){
             this.refreshNickname(userInfo.nickname);
             $("#person_hp").attr("src", studioMbPerson.getUserLevelIco(userInfo.clientGroup, userInfo.avatar));
@@ -74,9 +74,9 @@ var studioMbPerson = {
             /**
              * 注销事件
              */
-            $(".logoutbtn").bind("click", platform, function(e){
+            $(".logoutbtn").bind("click", function(){
                 LoginAuto.setAutoLogin(false);
-                window.location.href="/hxstudio/logout?platform=" + e.data;
+                window.location.href="/hxstudio/logout";
             });
         }
     },
@@ -202,7 +202,7 @@ var studioMbLogin = {
                 }else{
                     studioMbLogin.clientGroup = result.userInfo.clientGroup;
                     if(studioMbLogin.groupId){
-                        common.getJson("/hxstudio/checkGroupAuth",{redirectDef:1},function(result){
+                        common.getJson("/hxstudio/checkGroupAuth",{groupId:studioMbLogin.groupId},function(result){
                             if(!result.isOK){
                                 if(result.error && result.error.errcode === "1000"){
                                     studioMbPop.showMessage("您长时间未操作，请刷新页面后重试！");
@@ -213,18 +213,7 @@ var studioMbLogin = {
                                 }*/
                             }else{
                                 studioMbPop.loadingBlock($("#loginPop"), true);
-                                if(studioMbLogin.groupId == result.groupId){//默认房间就是要进入的房间
-                                    studioMbPop.reload();
-                                }else{
-                                    /*if(studioMbLogin.checkClientGroup("vip")){
-                                        studioMbPop.showMessage("您已具备进入Vip专场的条件，我们将为您自动进入VIP专场。");
-                                    }else{
-                                        studioMbPop.showMessage("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。我们将为您自动进入新手专场。");
-                                    }*/
-                                    window.setTimeout(function(){
-                                        studioMbPop.reload();
-                                    }, 2200);
-                                }
+                                studioMbPop.reload();
                             }
                         },true,function(err){
                             studioMbPop.loadingBlock($("#loginPop"), true);
@@ -476,6 +465,7 @@ var studioMbSet = {
     load : function(){
         this.setEvent();
     },
+
     /**
      * 初始化（页面初始化）
      */
@@ -499,7 +489,7 @@ var studioMbSet = {
                     studioMbPop.showMessage(result.msg?result.msg:"修改失败，请联系客服！");
                     return false;
                 }else{
-                    $("#pmInfoSetBox .pop_close").trigger("click");
+                    $("#setPop .pop_close").trigger("click");
                     studioMbSet.studioChatObj.refreshNickname(true, result.nickname);
                     $("#sendBtn").trigger("click");
                 }
@@ -587,13 +577,13 @@ var studioMbPop = {
      */
     reload : function(){
         var url = window.location.href;
-        var param = "t=" + new Date().getTime();
+        var param = "ko=1&t=" + new Date().getTime();
         if(url.indexOf("?") == -1){
             url = url + "?" + param;
         }else{
-            url = url.replace(/&t=\d*(?=&|$)/g, "");
-            if(/\?t=\d*(?=&|$)/.test(url)){
-                url = url.replace(/\?t=\d*(?=&|$)/, "?" + param);
+            url = url.replace(/&(t|ko)=\d*(?=&|$)/g, "");
+            if(/\?(t|ko)=\d*(?=&|$)/.test(url)){
+                url = url.replace(/\?(t|ko)=\d*(?=&|$)/, "?" + param);
             }else{
                 url = url + "&" + param;
             }
@@ -603,12 +593,12 @@ var studioMbPop = {
     /**
      * 初始化（页面加载）
      */
-    load : function(userInfo, platform, events){
+    load : function(userInfo, options, events){
         if(events){
             this.onShow = typeof events.onShow == "function" ? events.onShow : null;
             this.onHide = typeof events.onHide == "function" ? events.onHide : null;
         }
-        this.Person.load(userInfo, platform);
+        this.Person.load(userInfo, options);
         this.Login.load();
         this.Set.load();
         this.Msg.load();

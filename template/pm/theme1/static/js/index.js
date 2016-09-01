@@ -3,7 +3,7 @@
  * author Alan.wu
  */
 var indexJS ={
-    fromPlatform:null,//来源平台
+    options:null,//附加参数
     isNeverLogin:false,//是否首次访问
     serverTime:0,//服务器时间
     towMinTime:0,//2分钟间隔时间
@@ -27,11 +27,11 @@ var indexJS ={
      */
     setEvent:function(){
         //隐藏广告
-        if($("#roomInfoId").attr("av")=='true'){
+        /*if($("#roomInfoId").attr("av")=='true'){
             $(".mod_menu .menu_ad").show();
         }else{
             $(".mod_menu .menu_ad").hide();
-        }
+        }*/
         //头部框事件
         $(".header-right li").hover(function(){
             $(this).find(".dropcont").show();
@@ -264,6 +264,9 @@ var indexJS ={
             }
             file.click();
         });
+        $("#resetPasswordBtn").bind("click", function(){
+            box.openSettingBox("password1");
+        });
         this.placeholderSupport();//ie下输入框显示文字提示
     },
     /**
@@ -292,7 +295,7 @@ var indexJS ={
                     ons='';
                 }
                 dateStr = common.formatterDate(new Date(startDateTime + ((days[i].day + 6) % 7) * 86400000)).substring(5);
-                nva.append('<a href="javascript:" class="'+als+ons+'" t="'+i+'" style="width:'+awidth+'%;"><span>'+common.daysCN[days[i].day+""]+'<b>' + dateStr + '</b></span><i></i></a>');
+                nva.append('<a href="javascript:" class="'+als+ons+'" t="'+i+'" d="'+days[i].day+'" style="width:'+awidth+'%;"><span>'+common.daysCN[days[i].day+""]+'<b>' + dateStr + '</b></span><i></i></a>');
                 $(".cursor .dropcont .cont").append('<div class="course_tab'+ons+'" t="'+i+'" d="'+days[i].day+'"><ul></ul></div>');
                 als='';
                 var lsTab=$(".cursor .course_tab:last ul"),courseObj=null;
@@ -696,7 +699,8 @@ var indexJS ={
             }
             indexJS.setListScroll(scrollDom);//设置滚动
         });
-    },/**
+    },
+    /**
      * placeholder IE支持
      */
     placeholderSupport : function(){
@@ -833,7 +837,7 @@ var indexJS ={
         chgSyllabusCls : function(currCourse){
             $('.course_tab li a.on').removeClass("on");
             if(!currCourse.isNext){
-                $(".course_nav a[t='" + currCourse.day + "']").trigger("click");
+                $(".course_nav a[d='" + currCourse.day + "']").trigger("click");
                 $('.course_tab[d='+currCourse.day+']').find('li a[st="'+currCourse.startTime+'"][et="'+currCourse.endTime+'"]').addClass("on");
             }
         }

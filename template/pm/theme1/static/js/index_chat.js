@@ -140,7 +140,7 @@ var chat={
                 return;
             }
             if (indexJS.userInfo.isSetName === false) {
-                box.openSetNameBox();
+                box.openSettingBox("nickname");
                 return;
             }
             var toUser = chat.getToUser();
@@ -190,7 +190,7 @@ var chat={
                 return;
             }
             if (indexJS.userInfo.isSetName === false) {
-                box.openSetNameBox(true);
+                box.openSettingBox("nickname");
                 return;
             }
             $("#sendImgInp").trigger("click");

@@ -211,7 +211,7 @@
         studioChatMb.syllabusData=common.formatToJson('<%- syllabusData%>');
         studioChatMb.currStudioAuth=('<%- currStudioAuth%>'=='true');
         studioChatMb.visitorSpeak=('<%- visitorSpeak%>'=='true');
-        studioChatMb.fromPlatform='<%- fromPlatform%>';
+        studioChatMb.options=JSON.parse('<%- options %>');
         studioChatMb.init();
         chatAnalyze.setUTM(true,$.extend({userTel:'<%= userSession.mobilePhone %>'}, studioChatMb.userInfo));
     });

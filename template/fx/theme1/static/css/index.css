@@ -33,6 +33,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 
 /*images*/
 .header-btn a i,.te_detail .support,.dialog > p i,.dialog .headimg b,.toolbar .tbtn,.mymsg .closebtn i,.input_area .sendbtn i,.view_select i,.message_list li i,.guideli .support,.tag i,.mod_room .titbar > span i,.roomctrl i,.mod_userlist .headimg b,.rbox_top .rname i,.rbox_top .peo_num i,.hqbox li i,.votebox a,.notebtn.on i,.calendar_table .stars span,.ppt_list li .downbtn i,.plate_box .downbtn i,.course_tab li i,.noticebtn.on i,.pop_close i,.error i,.per_item .level i,.per_item .tipbtn i,.upg_box .level,.upg_tip i,.kh-btn a i,.mult_dialog .close,.mult_dialog .num,.mult_dialog .headimg b,.pletter_win .pl_close,.pletter_win .pl_small,.tec_videolist .list-icon i,.tec_videolist .v_name i,.tec_videolist .refresh-icon i,.cate_box .cate_name i,.cate_box li a i,.nextbox .live_time i,.pletter_win .whcls > i,.pop_small i,.sd_ul .cont > i,.sd_pages .arr i,.sd_stat p i,.usersd_list .lightbox > i,.usersd_list .support,.usersd_list .state,.mod_scrollnews a i,.mod_scrollnews .newsbtn i,.mod_scrollnews .newsclose i,.textlive li .dot{ background-image:url(../img/img_css.png); background-repeat:no-repeat;}
+.login_option .option i,.social_icon{ background-image:url(../img/icons.png); background-repeat:no-repeat;}
 .img-loading{position:absolute;bottom:0;display:block;width:25px;height:25px;border-radius:4px;background:url(../img/loading2.gif) no-repeat center;background-size:40px 40px;z-index:9}
 .mod_menu .dropitem > a i{ background-image:url(../img/menu-icon.png); background-repeat:no-repeat;}
 
@@ -687,12 +688,12 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .time_select.dw .selectlist{display:block;background:#fff;}
 .time_select.dw .selected,.time_select.dw .se_cont a.on{}
 .time_select .se_cont a:hover { background:#f1f1f1;}
-.error{ text-align:center; color:#dd333d; font-size:14px; height:18px;line-height:18px; padding-top: 20px;}
-.error i{ background-position:-150px -140px; width:15px; height:15px; display:inline-block; *display:inline; *zoom:1; margin-right:5px; margin-top:2px; vertical-align:top}
+.error{ float: left; width: 100%; text-align:center; color:#dd333d; font-size:14px; height:40px;line-height:40px;}
+.error i{ background-position:-150px -140px; width:15px; height:15px; display:inline-block; *display:inline; *zoom:1; margin-right:5px; margin-top:12px;*margin-top:4px; vertical-align:top}
 
-.formcont{ padding-top:10px}
+.formcont{ padding-top:10px ;margin-top: -10px;}
 .formcont.formcont2{ width:300px;font-family:'Microsoft YaHei','Microsoft JhengHei','SimSun';background:#fff; border:1px solid #dde2e4; padding:0 30px;}
-.formcont .in_line { margin-bottom:10px; height:43px; position:relative; /* border:1px solid #e2e2e2; */ }
+.formcont .in_line { margin-top:10px; height:43px; position:relative; /* border:1px solid #e2e2e2; */ }
 .formcont .in_line .placeholder{ position: absolute;padding-left: 39px;font-size: 130%;line-height: 34px;color: #A9A9A9;left: 0;top: 0}
 .formcont.formcont2 .in_line{ border-bottom:1px solid #e2e2e2;height:42px; line-height:42px; background:#fff; margin-bottom:0}
 .in_line .in1{height:43px; padding-left:39px; width:364px; color:#333; font-size:14px; line-height:43px;font-family:'Microsoft YaHei'; background:none; border: 1px solid #e2e2e2;}
@@ -726,14 +727,29 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .login_tab{ display:none}
 .login_tab.on{display:block}
 #login_tip{font-size: 15px; text-align: center; display: block; color: #c49351; margin-top: -5px; position: relative; margin-bottom: 5px;}
+.login_option{ font-size: 0; height: 20px; padding: 12px 0 3px }
+.login_option .option{ display: inline-block;*display: inline;*zoom: 1; font-size: 14px;color: #666; line-height: 20px; margin-right: 11px; text-decoration: none;}
+.login_option .option i{ display: inline-block;*display: inline;*zoom: 1; width: 20px; height: 20px; background-position: -70px 0 ;vertical-align: middle; margin: 0 8px}
+.login_option .option.selected i,.login_option .option:hover i{ background-position: -70px -30px }
+.social_login{ text-align: right; font-size: 0; padding-top: 20px; float: right; padding-bottom: 30px}
+.social_login span{ color: #999;font-size: 14px;  display: inline-block;*display: inline;*zoom: 1; line-height: 20px; vertical-align: middle;}
+.social_icon{ display: inline-block;*display: inline;*zoom: 1;vertical-align: middle; width: 20px;height: 20px;transition: background 0.3s cubic-bezier(.17, .67, .88, 1.25), color 0.2s linear;	-o-transition: background 0.3s cubic-bezier(.17, .67, .88, 1.25), color 0.2s linear;	-webkit-transition: background 0.3s cubic-bezier(.17, .67, .88, 1.25), color 0.2s linear;	-moz-transition: background 0.3s cubic-bezier(.17, .67, .88, 1.25), color 0.2s linear; margin: 0 0 0 17px}
+.social_icon.wx{ background-position: -100px 0 }
+.social_icon.wx:hover{ background-position: -100px -30px }
+.social_icon.wb{ background-position: -130px 0 }
+.social_icon.wb:hover{ background-position: -130px -30px }
+.social_icon.qq{ background-position: -160px 0 }
+.social_icon.qq:hover{ background-position: -160px -30px }
 
-.btnbar { padding-top:10px;}
+.btnbar { padding-top:40px;}
 .btnbar .formbtn{ display:inline-block; *display:inline; *zoom:1; width:205px;height:40px; background:#b59030; text-align:center;border-radius:2px; text-decoration:none; font-size:14pt;  color:#fff; line-height:40px; margin:0 7px;letter-spacing:normal;word-spacing:normal;}
 .btnbar .formbtn span { letter-spacing:8px; padding-left:8px}
 .btnbar.btn2 .formbtn{ width:165px;}
-.botbar{ text-align:center; color:#999;line-height:18px; font-size:14px; height:18px; padding:15px 0 0; }
-.botbar span {}
+.botbar{ text-align:center; color:#999;line-height:30px; font-size:14px;}
+.botbar.lh50{line-height: 50px;}
+.botbar.lh40{line-height: 40px;}
 .botbar a{color:#2980d1; }
+.auto-login{ vertical-align: top; margin-top: 5px; margin-right: 3px; }
 .resultbar{ text-align:center;}
 .resultbar i{ display:inline-block; *display:inline; *zoom:1; width:38px; height:38px; background-position:-30px -190px; margin-right:10px;}
 .resultbar span {text-align:left; color:#b59030;line-height:38px; font-size:12pt;display:inline-block; *display:inline; *zoom:1; height:38px; vertical-align:top;}
@@ -1009,7 +1025,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .btn-part a{  border:1px solid #e1806d; height:28px; line-height:28px; font-size:18px; color:#d94528; padding:0 21px; font-family:'Microsoft YaHei'; margin:0 6px; border-radius:2px; vertical-align:middle}
 .btn-part a:hover{ color:#fff; background:#e1806d; text-decoration:none; }
 .popbanner.ban_act .act_link{ display:block; width:100%; height:400px;}
-.tipsbox{ position:fixed; top:50%; width:100%; left:0; margin-top:-19px; height:38px; font-size:0; text-align:center; z-index:100}
+.tipsbox{ position:fixed; top:50%; width:100%; left:0; margin-top:-19px; height:38px; font-size:0; text-align:center; z-index:20004}
 .tipsbox .cont{ display:inline-block; padding:0 10px; height:38px;background: #fff; color: #333; line-height:38px; font-size:14px; border-radius:2px;}
 
 /* ad 20160624 */

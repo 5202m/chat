@@ -3,10 +3,8 @@
  * author Alan.wu
  */
 var box={
-    verifyCodeIntId:null,
+    verifyCodeIntMap:{},
     toRoomId:null,
-    enable : true, //是否使用store
-    storeInfoKey : "storeInfo_VerifyCodeTime",
     /**
      * 方法入口
      */
@@ -25,8 +23,6 @@ var box={
                 this.reset();
             });
         });
-        //继续上一次的获取验证码间隔时间，防刷新，先注销
-        //this.contVerifyCodeTime();
         //登录相关事件
         this.loginEvent();
         //账号升级事件
@@ -140,6 +136,141 @@ var box={
      * 登录相关事件
      */
     loginEvent:function(){
+        //登录界面控制
+        $("#loginForm .login_option a").bind("click", function(){
+            var type = $(this).attr("lt");
+            $("#loginForm .login_option a.selected").removeClass("selected");
+            $(this).addClass("selected");
+            $("#loginForm .in_line[lt]").hide();
+            $("#loginForm .in_line[lt='" + type + "']").show();
+            $("#loginForm .fr[lt]").hide();
+            $("#loginForm .fr[lt='" + type + "']").show();
+            $("#loginType").val(type);
+        });
+        //忘记密码
+        $("#preSetPwdBtn,#preSetPwdBtn2").bind("click", function(){
+            box.openSettingBox("password2");
+        });
+
+        /**
+         * 忘记密码1
+         */
+        $("#popBoxPassword1 .set_submit").click(function(){
+            if($(this).prop("disabled") || !box.checkFormInput($("#popBoxPassword1"))){
+                return;
+            }
+            $(this).prop('disabled',true);
+            $('#popBoxPassword1 .img-loading').show();
+            var _this=this;
+            common.getJson("/fxstudio/resetPwd", $("#popBoxPassword1 form").serialize(),function(result){
+                box.showBoxError($("#popBoxPassword1"));
+                $(_this).prop('disabled',false);
+                $('#popBoxPassword1 .img-loading').hide();
+                if(!result.isOK){
+                    box.showBoxError($("#popBoxPassword1"), "<i></i>"+result.msg);
+                    return false;
+                }else{
+                    box.showTipBox("修改密码成功，请使用新密码登录！");
+                    box.openLgBox();
+                }
+            },true,function(err){
+                $(_this).prop('disabled',false);
+                $('#popBoxPassword3 .img-loading').hide();
+            });
+        });
+
+        /**
+         * 忘记密码2
+         */
+        $("#popBoxPassword2 .set_submit").click(function(){
+            if($(this).prop("disabled") || !box.checkFormInput($("#popBoxPassword2"))){
+                return;
+            }
+            $(this).prop('disabled',true);
+            $('#popBoxPassword2 .img-loading').show();
+            var _this=this;
+            common.getJson("/fxstudio/resetPwd", $("#popBoxPassword2 form").serialize(),function(result){
+                box.showBoxError($("#popBoxPassword2"));
+                $(_this).prop('disabled',false);
+                $('#popBoxPassword2 .img-loading').hide();
+                if(!result.isOK){
+                    box.showBoxError($("#popBoxPassword2"), "<i></i>"+result.msg);
+                    return false;
+                }else{
+                    $("#popBoxPassword3_mb").val(result.mobilePhone);
+                    box.openSettingBox("password3");
+                }
+            },true,function(err){
+                $(_this).prop('disabled',false);
+                $('#popBoxPassword2 .img-loading').hide();
+            });
+        });
+
+        /**
+         * 忘记密码3
+         */
+        $("#popBoxPassword3 .set_submit").click(function(){
+            if($(this).prop("disabled") || !box.checkFormInput($("#popBoxPassword3"))){
+                return;
+            }
+            $(this).prop('disabled',true);
+            $('#popBoxPassword3 .img-loading').show();
+            var _this=this;
+            common.getJson("/fxstudio/resetPwd", $("#popBoxPassword3 form").serialize(),function(result){
+                box.showBoxError($("#popBoxPassword3"));
+                $(_this).prop('disabled',false);
+                $('#popBoxPassword3 .img-loading').hide();
+                if(!result.isOK){
+                    box.showBoxError($("#popBoxPassword3"), "<i></i>"+result.msg);
+                    return false;
+                }else{
+                    box.showTipBox("重置密码成功，请使用新密码登录！");
+                    box.openLgBox();
+                }
+            },true,function(err){
+                $(_this).prop('disabled',false);
+                $('#popBoxPassword3 .img-loading').hide();
+            });
+        });
+
+        //用户注册
+        $("#preRegBtn").bind("click", function(){
+            box.openSettingBox("reg");
+        });
+        //注册页面登录按钮
+        $("#reg_login").bind("click", function(){
+            box.openLgBox();
+        });
+        /**
+         * 用户注册
+         */
+        $("#popBoxRegister .set_submit").click(function(){
+            if($(this).prop("disabled") || !box.checkFormInput($("#popBoxRegister"))){
+                return;
+            }
+            $(this).prop('disabled',true);
+            $('#popBoxRegister .img-loading').show();
+            var _this=this;
+            common.getJson("/fxstudio/reg", $("#popBoxRegister form").serialize(),function(result){
+                box.showBoxError($("#popBoxRegister"));
+                $(_this).prop('disabled',false);
+                $('#popBoxRegister .img-loading').hide();
+                if(!result.isOK){
+                    box.showBoxError($("#popBoxRegister"), "<i></i>"+result.msg);
+                    return false;
+                }else{
+                    $(".blackbg,#popBoxRegister").hide();
+                    $(".register_result").show();
+                }
+            },true,function(err){
+                $(_this).prop('disabled',false);
+                $('#popBoxRegister .img-loading').hide();
+            });
+        });
+        //注册成功
+        $(".register_result .pop_close").bind("click", function(){
+            indexJS.toRefreshView();
+        });
         // 弹出登录框
         $('#login_a').bind("click", function(e, ops){
             ops = ops || {};
@@ -173,7 +304,7 @@ var box={
          */
         $(".logout").bind("click", function(){
             LoginAuto.setAutoLogin(false);
-            window.location.href="/fxstudio/logout?platform=" + indexJS.fromPlatform;
+            window.location.href="/fxstudio/logout";
         });
         //手机号码输入控制
         $("#loginForm input[name=mobilePhone],#loginForm input[name=verifyCode],#setNkForm input[name=nickname]").bind("input propertychange", function() {
@@ -182,13 +313,14 @@ var box={
             }
         });
         //验证码事件
-        $('#loginForm .rbtn').click(function(){
+        $('#loginForm .rbtn,#popBoxPassword2 .rbtn,#popBoxRegister .rbtn').click(function(){
             if($(this).hasClass("pressed")){
                 return;
             }
-            var mobile=$("#loginForm input[name=mobilePhone]").val();
+            var boxPanel = $(this).parents(".popup_box:first");
+            var mobile=boxPanel.find("input[name=mobilePhone]").val();
             if(!common.isMobilePhone(mobile)){
-                $("#loginForm .error").html("手机号码有误，请重新输入！").show();
+                box.showBoxError(boxPanel, "<i></i>手机号码有误，请重新输入！");
                 return;
             }
             $(this).addClass("pressed").html("发送中...");
@@ -196,25 +328,25 @@ var box={
                 $.getJSON('/fxstudio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:$(this).attr("ut")},function(data){
                     if(!data || data.result != 0){
                         if(data.errcode == "1005"){
-                            $("#loginForm .error").html("<i></i>"+data.errmsg).show();
+                            box.showBoxError(boxPanel, "<i></i>"+data.errmsg);
                         }else{
                             console.error("提取数据有误！");
                         }
-                        box.resetVerifyCode();
+                        box.resetVerifyCode(boxPanel);
                     }else{
-                        $("#loginForm .error").hide();
-                        box.setVerifyCodeTime('#loginForm .rbtn');
+                        box.showBoxError(boxPanel);
+                        box.setVerifyCodeTime(boxPanel.attr("id"));
                     }
                 });
             }catch (e){
-                box.resetVerifyCode();
+                box.resetVerifyCode(boxPanel);
                 console.error("setMobileVerifyCode->"+e);
             }
         });
         /**
          * 按钮按回车键事件
          */
-        $("#loginForm input[name=verifyCode],#setNkForm input[name=nickname]").keydown(function(e){
+        $("#loginForm input[name='verifyCode'],#setNkForm input[name='nickname'],#popBoxRegister input[name='password1']").keydown(function(e){
             if(e.keyCode==13){
                 $(this).parents("form").find(".set_submit").click();
                 return false;
@@ -224,17 +356,20 @@ var box={
          * 登录按钮事件
          */
         $("#logBtnSub").click(function(){
-            $('#loginForm input[name=clientStoreId]').val(indexJS.userInfo.clientStoreId);
-            if(!box.checkFormInput("#loginForm")){
+            if($(this).prop("disabled")){
                 return;
             }
-            $(this).attr('disabled',true);
+            $('#loginForm input[name=clientStoreId]').val(indexJS.userInfo.clientStoreId);
+            if(!box.checkFormInput($("#loginForm"))){
+                return;
+            }
+            $(this).prop('disabled',true);
             var _this=this;
             $('#formBtnLoad').show();
             common.getJson("/fxstudio/login",$("#loginForm").serialize(),function(result){
                 console.log("lgresult",result);
                 $("#loginForm .error").hide();
-                $(_this).attr('disabled',false);
+                $(_this).prop('disabled',false);
                 $('#formBtnLoad').hide();
                 if(!result.isOK){
                     $("#loginForm .error").html("<i></i>"+result.error.errmsg).show();
@@ -246,7 +381,7 @@ var box={
                     indexJS.toRefreshView();
                 }
             },true,function(err){
-                $(_this).attr('disabled',false);
+                $(_this).prop('disabled',false);
                 $('#formBtnLoad').hide();
             });
         });
@@ -254,7 +389,7 @@ var box={
          * 设置昵称信息
          */
         $("#setNkBtn").click(function(){
-            if(!box.checkFormInput("#setNkForm")){
+            if(!box.checkFormInput($("#setNkForm"))){
                 return;
             }
             $(this).prop('disabled',true);
@@ -311,22 +446,31 @@ var box={
     /**
      * 检查页面输入
      */
-    checkFormInput:function(formDom,$error){
+    checkFormInput:function(formDom){
         var isTrue=true;
-        if(!$error){
-            $error=$(formDom+" .error");
-        }
-        $error.attr("tId","").hide();
-        $(formDom+" input").each(function(){
+        box.showBoxError(formDom);
+        formDom.find("input").each(function(){
+            if(!$(this).is(":visible")){
+                return;
+            }
             if(common.isBlank($(this).val())){
-                if(this.name=='mobilePhone'){
-                    $error.attr("tId",this.name).html("<i></i>手机号码不能为空！").show();
+                if(this.name=='mobilePhone' || this.name=='userId'){
+                    box.showBoxError(formDom, "<i></i>手机号码不能为空！");
                 }
                 if(this.name=='verifyCode'){
-                    $error.attr("tId",this.name).html("<i></i>验证码不能为空！").show();
+                    box.showBoxError(formDom, "<i></i>验证码不能为空！");
                 }
                 if(this.name=='nickname'){
-                    $error.attr("tId",this.name).html("<i></i>昵称不能为空！").show();
+                    box.showBoxError(formDom, "<i></i>昵称不能为空！");
+                }
+                if(this.name=='password0'){
+                    box.showBoxError(formDom, "<i></i>原始密码不能为空！");
+                }
+                if(this.name=='password'){
+                    box.showBoxError(formDom, "<i></i>密码不能为空！");
+                }
+                if(this.name=='password1'){
+                    box.showBoxError(formDom, "<i></i>确认密码不能为空！");
                 }
                 isTrue=false;
                 return isTrue;
@@ -334,18 +478,35 @@ var box={
                 if(this.name=='mobilePhone') {
                     $(this).val($.trim($(this).val()));
                     if(!common.isMobilePhone(this.value)){
-                        $error.attr("tId",this.name).html("<i></i>手机号码输入有误！").show();
+                        box.showBoxError(formDom, "<i></i>手机号码输入有误！");
                         isTrue=false;
                         return isTrue;
                     }
                 }
                 if(this.name=='nickname'&& !common.isRightName(this.value)) {
-                    $error.attr("tId",this.name).html("<i></i>昵称为2至10位字符(数字/英文/中文/下划线)，不能全数字!").show();
+                    box.showBoxError(formDom, "<i></i>昵称为2至10位字符(数字/英文/中文/下划线)，不能全数字!");
                     isTrue=false;
                     return isTrue;
                 }
+                if(this.name=="password"){
+                    if(!/^.{6,20}$/.test(this.value) && formDom.attr("id") != "loginForm"){
+                        box.showBoxError(formDom, "<i></i>密码由6至20数字、字母、符号组成！");
+                        isTrue=false;
+                        return isTrue;
+                    }
+                }
             }
         });
+        if(!isTrue){
+            return isTrue;
+        }
+        var pwdInputs = formDom.find("input[type='password']");
+        var size = pwdInputs.size();
+        if(size == 2 && pwdInputs.eq(size-2).val() != pwdInputs.eq(size-1).val()){
+            box.showBoxError(formDom, "<i></i>两次密码输入不一致！");
+            isTrue=false;
+            return isTrue;
+        }
         return isTrue;
     },
     /**
@@ -353,29 +514,29 @@ var box={
      * @param tId
      */
     setVerifyCodeTime:function(tId){
-        var t=parseInt($(tId).attr("t"))||120;
-        var key = this.storeInfoKey + $("#loginForm input[name=mobilePhone]").val();
-        this.enable && store.set(key , t-1);
-        if(!this.verifyCodeIntId){
-            this.verifyCodeIntId=setInterval("box.setVerifyCodeTime('"+tId+"')",1000);
+        var rbtn = $("#" + tId + " .rbtn");
+        var t=parseInt(rbtn.attr("t"))||120;
+        if(!this.verifyCodeIntMap[tId]){
+            this.verifyCodeIntMap[tId]=setInterval("box.setVerifyCodeTime('"+tId+"')",1000)
         }
         if(t>1){
-            $(tId).attr("t",t-1).html("重新获取(" + (t-1) + ")");
+            rbtn.attr("t",t-1).html("重新获取(" + (t-1) + ")");
         }else{
-            clearInterval(this.verifyCodeIntId);
-            this.verifyCodeIntId="";
-            $(tId).attr("t",120).html("获取验证码").removeClass("pressed");
+            clearInterval(this.verifyCodeIntMap[tId]);
+            this.verifyCodeIntMap[tId] = null;
+            rbtn.attr("t",120).html("获取验证码").removeClass("pressed");
         }
     },
     /**
      * 重置验证码
      */
-    resetVerifyCode:function(){
-        if(this.verifyCodeIntId) {
-            clearInterval(this.verifyCodeIntId);
-            this.verifyCodeIntId='';
+    resetVerifyCode:function(boxPanel){
+        var tId = boxPanel.attr("id");
+        if(this.verifyCodeIntMap[tId]) {
+            clearInterval(this.verifyCodeIntMap[tId]);
+            this.verifyCodeIntMap[tId]=null;
         }
-        $("#loginForm .rbtn").attr("t",120).html("获取验证码").removeClass("pressed");
+        boxPanel.find(".rbtn").attr("t",120).html("获取验证码").removeClass("pressed");
     },
     /**
      * 弹出登录框
@@ -396,10 +557,49 @@ var box={
         $("#loginBox,.blackbg").show();
     },
     /**
-     * 打开昵称设置框
+     * 打开用户相关设置框（注册框、重设密码）
+     * @param type reg password1 password2 password3 nickname
      */
-    openSetNameBox:function(){
-        $(".nk_box,.blackbg").show();
+    openSettingBox:function(type){
+        $(".popup_box").hide();
+        var boxPanel = null;
+        switch(type){
+            case "reg":
+                boxPanel = $("#popBoxRegister");
+                break;
+            case "password1":
+                boxPanel = $("#popBoxPassword1");
+                break;
+            case "password2":
+                boxPanel = $("#popBoxPassword2");
+                break;
+            case "password3":
+                boxPanel = $("#popBoxPassword3");
+                break;
+            case "nickname":
+                boxPanel = $("#popBoxNickname");
+                break;
+        }
+        if(box){
+            box.showBoxError(boxPanel);
+            boxPanel.find("input[type='text'],input[type='password']").each(function(){
+                $(this).val("");
+            });
+            boxPanel.show();
+            $(".blackbg").show();
+        }
+    },
+    /**
+     * 显示错误消息
+     * @param panel
+     * @param [message]
+     */
+    showBoxError : function(panel, message){
+        if(message){
+            panel.find(".error").html(message).show();
+        }else{
+            panel.find(".error").html("").hide();
+        }
     },
     /**
      * 提取验证码
@@ -521,21 +721,6 @@ var box={
      */
     showTipBox:function(msg){
         $(".tipsbox").fadeIn().delay(1000).fadeOut(200).find(".cont").text(msg);
-    },
-    /**
-     * 防止刷新获取手机验证码
-     */
-    contVerifyCodeTime:function(){
-        var mobile =  $("#loginForm input[name=mobilePhone]").val();
-        if(mobile && this.enable){
-            var key = this.storeInfoKey + mobile;
-            var t = store.get(key);
-            if(t>1){
-                var tId = "#loginForm .rbtn";
-                $(tId).attr("t",t).addClass("pressed");
-                box.setVerifyCodeTime(tId);
-            }
-        }
     }
 };
 // 初始化

@@ -173,7 +173,7 @@
 $(function(){
     studioChatMbIdx.userInfo=JSON.parse('<%- userInfo %>');
     studioChatMbIdx.apiUrl='<%= apiUrl %>';
-    studioChatMbIdx.fromPlatform='<%- fromPlatform%>';
+    studioChatMbIdx.options=JSON.parse('<%- options %>');
     studioChatMbIdx.init();
 });
 </script>

@@ -23,7 +23,7 @@ a:active{noOutline:expression(this.onFocus=this.blur())}
 .p0-non{font-size:0;height:0;overflow:hidden}
 
 /* img */
-.rightbar .qq i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.video-pop .play,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i,.addpic-btn,.select-img i{background:url(../img/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
+.rightbar .qq i,.room-main .tit .st i,.popupbox .pop-close,.ss-tk-info i,.face-btn,.view_select i,.ctrlblock .ctrlbtn a,.video-pop .play,.teach-ul li i,.collect-tip b,.collect-tip i,.collect-tip .c_close,.inp i,.resultbox i,.c-menu li i,.addpic-btn,.select-img i, .auto-login s{background:url(../img/img_css.png) no-repeat;background-size:100px auto;-moz-background-size:100px auto;}
 
 /* header */
 body{font-family:'microsoft yahei','Arial'}
@@ -310,6 +310,7 @@ input:-ms-input-placeholder,textarea:-ms-input-placeholder{color:#b4b4b4}
 .per_info li:last-child{border-bottom:1px solid #efefef;}
 .per_info li span{ color:#7c7c7c; font-size:15px; line-height:33px; float:left;}
 .per_info li b{ color:#333; font-size:15px; line-height:33px; float:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-weight:normal;}
+.per_info li .btn{ color:#009dcc; font-size:14px; line-height:33px; margin-left: 7px; float:right;font-weight:normal;}
 .per_info li img{ float:right;  border:0; width:22px; padding-top:5px; height:auto; vertical-align:bottom;margin-left: 10px;}
 .per_p{ padding:0 15px; color:#7c7c7c; font-size:12px; line-height:20px; padding-bottom:5px}
 .level-table th{ color:#7c7c7c; background:#fff; height:25px; border-top:1px solid #efefef;border-bottom:1px solid #efefef; font-weight:normal; box-sizing:border-box;}
@@ -389,3 +390,52 @@ body.keyboard:before { /*background:none*/}
     text-decoration: none
 }
 #login_tip {color: #444;font-size: 12px;display: block;text-align: center;padding-top: 11px;}
+
+
+/* 修改弹出层 by terry 2016.9.1 */
+.mtit{margin-bottom:20px}
+.mtit .line{padding-right:77px}
+.mtit .line:last-child{padding-left:77px}
+.mtit span{font-size:26px;width:200px;margin-left:-100px}
+.mform{margin-top:30px}
+.sel-con-box{font-size:0}
+.sel-con-box li{display:inline-block;margin:0 10px;height:20px;font-size:15px;color:#666;line-height:1.2}
+.sel-fon-xz{position:relative;display:inline-block;margin-right:10px;width:16px;height:16px;border:solid #E8E3D5 1px;border-radius:16px;text-align:center;vertical-align:top}
+.sel-con-box  .li-on .sel-fon-xz s{position:absolute;top:50%;left:50%;display:inline-block;margin:-5px 0 0 -5px;width:10px;height:10px;border-radius:16px;background:#3B96D5}
+.inp i.pwd-nicon{background-position:-83px -97px}
+.auto-login{position:relative;margin:12px 0 0 11px;color:#9d9d9d;font-size:15px;line-height:1}
+.auto-login s{display:inline-block;margin-right:5px;width:16px;height:16px;border:solid #E8DFCB 1px;border-radius:3px;overflow:hidden;vertical-align:middle;background-position:-999px -999px}
+.auto-login .sel-on{background-position:-33px -17px}
+.new-btn-mar{margin:30px 0 0}
+.no-acc-pfon{text-align:right;font-size:15px;color:#999}
+.no-acc-pfon a,.inp-tip .alink{color:#2980d1}
+.get-dt-code{position:absolute;right:15px;top:50%;margin-top:-14px;height:28px;line-height:28px;font-size:15px;color:#b1b1b1;padding-left:15px;border-left:solid #E8DFCB 1px}
+.get-dt-code.pressed{color:#2980d1;}
+.resultbox a{color:#2980d1}
+.reg-bot-ca{margin-bottom:0}
+.reg-bot-ma{margin-bottom:0;padding-bottom:20px}
+.new-btn-mar{margin-bottom:0;padding-bottom:15px}
+.new-btn-mar2{margin:30px 0 0}
+.pop-post-fon1{margin-top:-202px}
+.pop-post-fon2{margin-top:-240px}
+.pop-post-fon3{margin-top:-172px}
+.popupbox.pob-blank-pad .cont{padding:50px 15px 30px}
+
+/*Responsive*/
+@media(max-width:399px){
+    .auto-login,.no-acc-pfon,.no-acc-pfon a{font-size:13px}
+}
+@media(max-width:359px){
+    .logobar{width:100px;}
+    .rightbar .qq i{margin:0 10px}
+    .room.cen-ulist li{font-size:14px}
+    .vc_tip,.inp.auto_login,.auto-login,.no-acc-pfon,.no-acc-pfon a{font-size:11px}
+
+    .popupbox.pob-blank-pad .cont{padding:34px 15px 15px}
+    .new-btn-mar{padding:25px 0 0}
+    .new-btn-mar2{margin-top:15px}
+    .inp
+    .pop-post-fon1{margin-top:-182px}
+    .pop-post-fon2{margin-top:-240px}
+    .pop-post-fon3{margin-top:-172px}
+}

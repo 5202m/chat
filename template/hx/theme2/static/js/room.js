@@ -9,7 +9,7 @@ var roomJS={
     apiUrl:'',
     currStudioAuth:false,//当前房间是否授权
     visitorSpeak:false,//游客是否允许发言
-    fromPlatform:null,//来源平台
+    options:null,//附加参数
     serverTime:0,//服务器时间
     pushObj:{
         talkPush : [], //公聊推送消息
@@ -31,7 +31,7 @@ var roomJS={
         this.setSocket();//设置socket连接
         this.setEvent();//设置各种事件
         this.setVideoList();
-        studioMbPop.load(this.userInfo, this.fromPlatform,{
+        studioMbPop.load(this.userInfo, this.options, {
             onShow : function(){
                 $("#tVideoDiv video").hide();
             },
@@ -60,7 +60,7 @@ var roomJS={
                         groupId : roomJS.userInfo.groupId,
                         clientGroup : roomJS.userInfo.clientGroup,
                         clientStoreId : roomJS.userInfo.clientStoreId,
-                        platform : roomJS.fromPlatform,
+                        platform : roomJS.options.platform,
                         closeable:false,
                         lgTime:lgt
                     });
@@ -70,7 +70,7 @@ var roomJS={
                         groupId : roomJS.userInfo.groupId,
                         clientGroup : roomJS.userInfo.clientGroup,
                         clientStoreId : roomJS.userInfo.clientStoreId,
-                        platform : roomJS.fromPlatform,
+                        platform : roomJS.options.platform,
                         closeable:false,
                         showTip:true,
                         lgTime:lgt
@@ -85,7 +85,7 @@ var roomJS={
                                     groupId: roomJS.userInfo.groupId,
                                     clientGroup: roomJS.userInfo.clientGroup,
                                     clientStoreId: roomJS.userInfo.clientStoreId,
-                                    platform: roomJS.fromPlatform,
+                                    platform: roomJS.options.platform,
                                     closeable: false,
                                     showTip: true,
                                     lgTime:lgt
@@ -102,7 +102,7 @@ var roomJS={
                         groupId : roomJS.userInfo.groupId,
                         clientGroup : roomJS.userInfo.clientGroup,
                         clientStoreId : roomJS.userInfo.clientStoreId,
-                        platform : roomJS.fromPlatform,
+                        platform : roomJS.options.platform,
                         closeable:false,
                         lgTime:null,
                         spn:spn
@@ -113,7 +113,7 @@ var roomJS={
                         groupId : roomJS.userInfo.groupId,
                         clientGroup : roomJS.userInfo.clientGroup,
                         clientStoreId : roomJS.userInfo.clientStoreId,
-                        platform : roomJS.fromPlatform,
+                        platform : roomJS.options.platform,
                         closeable:false,
                         showTip:true,
                         lgTime:null,
@@ -180,7 +180,7 @@ var roomJS={
                     studioMbPop.popBox("login", {
                         groupId: roomJS.userInfo.groupId,
                         clientStoreId: roomJS.userInfo.clientStoreId,
-                        platform : roomJS.fromPlatform
+                        platform : roomJS.options.platform
                     });
                 });
             }
@@ -203,7 +203,7 @@ var roomJS={
             roomJS.socket.emit('login',{
                     userInfo:roomJS.userInfo,
                     lastPublishTime:$("#dialog_list>li:last").attr("id"),
-                    fromPlatform : roomJS.fromPlatform,
+                    fromPlatform : roomJS.options.platform,
                     allowWhisper : roomJS.whTalk.enable
                 },
                 navigator.userAgent);
@@ -430,7 +430,7 @@ var roomJS={
                     groupId : roomJS.userInfo.groupId,
                     clientGroup : roomJS.userInfo.clientGroup,
                     clientStoreId : roomJS.userInfo.clientStoreId,
-                    platform : roomJS.fromPlatform
+                    platform : roomJS.options.platform
                 });
             }
         });
@@ -538,7 +538,7 @@ var roomJS={
                     groupId : roomJS.userInfo.groupId,
                     clientGroup : roomJS.userInfo.clientGroup,
                     clientStoreId : roomJS.userInfo.clientStoreId,
-                    platform : roomJS.fromPlatform
+                    platform : roomJS.options.platform
                 });
             	return;
             }
@@ -553,7 +553,7 @@ var roomJS={
                     groupId: roomJS.userInfo.groupId,
                     clientGroup: roomJS.userInfo.clientGroup,
                     clientStoreId: roomJS.userInfo.clientStoreId,
-                    platform: roomJS.fromPlatform,
+                    platform: roomJS.options.platform,
                     closeable: false,
                     showTip: true,
                     lgtTime:null,
@@ -616,7 +616,7 @@ var roomJS={
                     groupId : roomJS.userInfo.groupId,
                     clientGroup : roomJS.userInfo.clientGroup,
                     clientStoreId : roomJS.userInfo.clientStoreId,
-                    platform : roomJS.fromPlatform
+                    platform : roomJS.options.platform
                 });
             	return false;
             }
@@ -1640,7 +1640,7 @@ var roomJS={
             }else{
                 window.setTimeout(function(){//3秒钟后登出
                     LoginAuto.setAutoLogin(false);
-                    window.location.href="/hxstudio/logout?platform="+roomJS.fromPlatform;
+                    window.location.href="/hxstudio/logout";
                 },2000);
             }
         }else if(flag=="otherLogin"){

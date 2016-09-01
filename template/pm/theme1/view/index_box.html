@@ -66,43 +66,50 @@
 </div>
 
 <!-- 直播间注册 -->
-<div class="popup_box register dn">
+<div class="popup_box register dn" id="popBoxRegister">
 	<div class="cont">
     	<div class="pop_tit">直播间注册</div>   
     	<form method="post" action="">
             <div class="formcont">
             	<div class="in_line">
                 	<i class="ic_phone"></i>
-                	<input type="text" placeholder="手机号" class="in1">
-                </div>
-                <div class="in_line clearfix">
-                	<i class="ic_msg"></i>
-                	<input type="text" placeholder="短信验证码" class="in1 in2">
-                    <a href="" class="rbtn">获取验证码</a><!--<a href="" class="rbtn pressed">60s...</a>按钮点击后的样式-->
-                </div>
-                <div class="in_line">
-                	<i class="ic_user"></i>
-                	<input type="text" placeholder="用户昵称" class="in1">
+                	<input type="text" name="mobilePhone" placeholder="手机号" class="in1">
                 </div>
                 <div class="in_line">
                 	<i class="ic_psw"></i>
-                	<input type="password" placeholder="设置密码" class="in1">
+                	<input type="password" name="password" placeholder="设置密码" class="in1" maxlength="20">
                 </div>
                 <div class="in_line">
                  	<i class="ic_psw"></i>
-                	<input type="password" placeholder="再次输入密码" class="in1">
+                	<input type="password" name="password1" placeholder="再次输入密码" class="in1" maxlength="20">
                 </div>
-                
-            </div>    
-            <div class="error"><i></i>输入内容有误，请重新输入！</div>
+                <div class="in_line clearfix">
+                    <i class="ic_msg"></i>
+                    <input type="text" name="verifyCode" placeholder="短信验证码" class="in1 in2">
+                    <a href="javascript:void(0)" class="rbtn" ut="studio_reg" t="120">获取验证码</a><!--<a href="" class="rbtn pressed">60s...</a>按钮点击后的样式-->
+                </div>
+            </div>
+            <div class="botbar" style="line-height:20px; padding-top:10px; padding-bottom: 10px;">
+                <span class="fr">
+                    如未收到验证码，请咨询
+                    <a onclick="openLive800Chat();_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_live800', 'content_reg', 1, true]);" href="javascript:void(0);">
+                        在线客服
+                    </a>
+                </span>
+            </div>
+            <div class="error dn"><i></i></div>
             <div class="btnbar"><input type="button" class="set_submit" value="提交"></div>
+            <div class="botbar lh50">
+                <span class="fr">已有账号，我要<a href="javascript:void(0)" id="reg_login">登录</a></span>
+            </div>
         </form>
     	<a class="pop_close" href="javascript:"><i>关闭</i></a>
     </div>
+    <i class="img-loading" style="top: 50%;right: 50%;display:none;"></i>
 </div>
 
 <!-- 昵称设置 -->
-<div class="popup_box reset_psw nk_box dn">
+<div class="popup_box dn" id="popBoxNickname">
 	<div class="cont">
     	<div class="pop_tit">设置昵称</div>
     	<form method="post" action="" id="setNkForm">
@@ -120,51 +127,87 @@
     <i class="img-loading" style="top: 50%;right: 50%;display:none;" id="setNkLoad"></i>
 </div>
 
-<!-- 忘记密码第一步 -->
-<div class="popup_box forget_psw1 dn">
+<!-- 修改密码 -->
+<div class="popup_box dn" id="popBoxPassword1">
+    <div class="cont">
+        <div class="pop_tit">修改密码</div>
+        <form method="post" action="">
+            <input type="hidden" name="type" value="1">
+            <div class="formcont">
+                <div class="in_line">
+                    <i class="ic_psw"></i>
+                    <input type="password" name="password0" placeholder="原始密码" class="in1" maxlength="20">
+                </div>
+                <div class="in_line">
+                    <i class="ic_psw"></i>
+                    <input type="password" name="password" placeholder="新的密码" class="in1" maxlength="20">
+                </div>
+                <div class="in_line clearfix">
+                    <i class="ic_psw"></i>
+                    <input type="password" name="password1" placeholder="确认新的密码" class="in1" maxlength="20">
+                </div>
+            </div>
+            <div class="error dn"><i></i></div>
+            <div class="btnbar"><input type="button" class="set_submit" value="确定"></div>
+            <div class="botbar clearfix">
+                <a id="preSetPwdBtn2" href="javascript:void(0);" class="fl">
+                    忘记密码？
+                </a>
+            </div>
+        </form>
+        <a class="pop_close" href="javascript:"><i>关闭</i></a>
+    </div>
+    <i class="img-loading" style="top: 50%;right: 50%;display:none;"></i>
+</div>
+
+<!-- 忘记密码 -->
+<div class="popup_box dn" id="popBoxPassword2">
 	<div class="cont">
-    	<div class="pop_tit">重设密码</div>   
+    	<div class="pop_tit">忘记密码</div>
     	<form method="post" action="">
+            <input type="hidden" name="type" value="2">
             <div class="formcont">
             	<div class="in_line">
                 	<i class="ic_phone"></i>
-                	<input type="text" placeholder="手机号" class="in1">
+                	<input type="text" name="mobilePhone" placeholder="手机号" class="in1">
                 </div>
-                <div class="in_line clearfix">
+                <div class="in_line">
                 	<i class="ic_msg"></i>
-                	<input type="text" placeholder="短信验证码" class="in1 in2">
-                    <a href="" class="rbtn">获取验证码</a><!--<a href="" class="rbtn pressed">60s...</a>按钮点击后的样式-->
+                	<input type="text" name="verifyCode" placeholder="短信验证码" class="in1 in2">
+                    <a href="javascript:void(0)" class="rbtn" ut="studio_resetPWD" t="120">获取验证码</a><!--<a href="" class="rbtn pressed">60s...</a>按钮点击后的样式-->
                 </div>
-        
-            </div>    
-            <div class="error"><i></i>输入内容有误，请重新输入！</div>
+            </div>
+            <div class="error dn"><i></i></div>
             <div class="btnbar"><input type="button" class="set_submit" value="下一步"></div>
         </form>
     	<a class="pop_close" href="javascript:"><i>关闭</i></a>
     </div>
+    <i class="img-loading" style="top: 50%;right: 50%;display:none;"></i>
 </div>
 
-<!-- 忘记密码第二步 -->
-<div class="popup_box forget_psw2 dn">
+<!-- 忘记密码 -->
+<div class="popup_box dn" id="popBoxPassword3">
 	<div class="cont">
-    	<div class="pop_tit">重设密码</div>   
+    	<div class="pop_tit">重设密码</div>
     	<form method="post" action="">
+            <input type="hidden" name="type" value="3">
+            <input type="hidden" name="mobilePhone" id="popBoxPassword3_mb">
             <div class="formcont">
-            	<div class="in_line">
-                	<i class="ic_psw"></i>
-                	<input type="password" placeholder="新的密码" class="in1">
-                </div>
                 <div class="in_line">
-                 	<i class="ic_psw"></i>
-                	<input type="password" placeholder="确认新的密码" class="in1">
+                    <i class="ic_psw"></i>
+                    <input type="password" name="password" placeholder="新的密码" class="in1" maxlength="20">
                 </div>
-        
-            </div>    
-            <div class="error"><i></i>输入内容有误，请重新输入！</div>
+                <div class="in_line clearfix">
+                    <i class="ic_psw"></i>
+                    <input type="password" name="password1" placeholder="确认新的密码" class="in1" maxlength="20">
+                </div>
+            </div>
+            <div class="error dn"><i></i></div>
             <div class="btnbar"><input type="button" class="set_submit" value="确定"></div>
         </form>
     	<a class="pop_close" href="javascript:"><i>关闭</i></a>
     </div>
+    <i class="img-loading" style="top: 50%;right: 50%;display:none;"></i>
 </div>
 
 <!-- 直播间登录 -->
@@ -174,47 +217,58 @@
         <span id="login_tip" style="display: none;">您已经观看了3分钟，赶紧登录再继续观看吧</span>
     	<form method="post" action="" id="loginForm">
             <input type="hidden" name="clientStoreId"/>
-            <!--<div class="login_nav">
-            	<a href="javascript:" class="a1">用户登录<i></i></a>
-            	<a href="javascript:" class="on a2">验证码登录<i></i></a>
+            <input type="hidden" name="loginType" id="loginType" value="pwd"/>
+            <div class="formcont">
+                <div class="in_line">
+                    <i class="ic_phone"></i>
+                    <input type="text" name="mobilePhone" placeholder="手机号码" class="in1" maxlength="11">
+                </div>
+                <div class="login_option">
+                    <a href="javascript:void(0)" class="option selected" lt="pwd"><i></i>客户密码</a>
+                    <a href="javascript:void(0)" class="option" lt="verify"><i></i>动态密码</a>
+                </div>
+                <div class="in_line" lt="pwd">
+                    <i class="ic_psw"></i>
+                    <input type="password" name="password" placeholder="密码" class="in1" maxlength="20">
+                </div>
+                <div class="in_line clearfix" lt="verify" style="display: none;">
+                    <i class="ic_msg"></i>
+                    <input type="text"  name="verifyCode" placeholder="短信验证码" class="in1 in2"/>
+                    <a href="javascript:void(0)" class="rbtn" ut="studio_login" t="120">获取验证码</a>
+                </div>
             </div>
-            <div class="login_tab">
-                <div class="formcont">
-                    <div class="in_line">
-                        <i class="ic_phone"></i>
-                        <input type="password" placeholder="手机号码" class="in1">
-                    </div>
-                    <div class="in_line">
-                        <i class="ic_psw"></i>
-                        <input type="password" placeholder="密码" class="in1">
-                    </div>
-                </div>    
-            </div>-->
-            <div class="login_tab on">
-                <div class="formcont">
-                    <div class="in_line">
-                        <i class="ic_phone"></i>
-                        <input type="text" name="mobilePhone" placeholder="手机号码" class="in1" maxlength="11">
-                    </div>
-                    <div class="in_line clearfix">
-                        <i class="ic_msg"></i>
-                        <input type="text"  name="verifyCode" placeholder="短信验证码" class="in1 in2"/>
-                        <a href="javascript:" class="rbtn" ut="studio_login" t="120">获取验证码</a>
-                    </div>
-                </div>    
-            </div>
-            <div class="in_line clearfix" style="color: #999;line-height: 18px;font-size: 14px; margin-bottom: 10px;">
+            <div class="botbar" style="line-height:20px; padding-top:10px; padding-bottom: 10px;">
                 <div class="fl<%if(fromPlatform == 'wechat'){%> dn<%}%>">
-                    <input type="checkbox" id="autoLogin" checked="checked">
+                    <input type="checkbox" id="autoLogin" checked="checked" class="auto-login">
                     <label for="autoLogin">下次自动登录</label>
                 </div>
-                <span class="fr">如未收到验证码，请咨询<a onclick="openLive800Chat();_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_live800', 'content_login', 1, true]);" href="javascript:void(0);" style="color:#2980d1;">在线客服</a></span>
+                <span class="fr dn" lt="verify">
+                    如未收到验证码，请咨询
+                    <a onclick="openLive800Chat();_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_live800', 'content_login', 1, true]);" href="javascript:void(0);">
+                        在线客服
+                    </a>
+                </span>
+                <span class="fr" lt="pwd">
+                    <a id="preSetPwdBtn" href="javascript:void(0);">
+                        忘记密码？
+                    </a>
+                </span>
             </div>
             <div class="error dn"></div>
             <div class="btnbar"><input type="button" class="set_submit" value="登录" id="logBtnSub"></div>
-           <!-- <div class="botbar">
-            	&lt;!&ndash;<a href="" class="fl">忘记密码？</a>&ndash;&gt;
-                &lt;!&ndash;<span class="fr">如未收到验证码，请咨询<a onclick="openLive800Chat();_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_live800', 'content_login', 1, true]);" href="javascript:void(0);">在线客服</a></span>&ndash;&gt;
+            <div class="botbar clearfix">
+                <span class="fr">
+                    还没有直播间账号？
+                    <a id="preRegBtn" href="javascript:void(0);" class="fr">
+                        免费注册
+                    </a>
+                </span>
+            </div>
+            <!--<div class="social_login">
+                <span>社交账号登录：</span>
+                <a href="" class="social_icon wx"></a>
+                <a href="" class="social_icon wb"></a>
+                <a href="" class="social_icon qq"></a>
             </div>-->
         </form>
     	<a class="pop_close" href="javascript:"><i>关闭</i></a>
@@ -243,7 +297,6 @@
     	<a class="pop_close" href="javascript:"><i>关闭</i></a>
     </div>
 </div>
-
 
 <!-- 升级成功或失败 -->
 <div class="popup_box upgrade_result dn" style="width:580px;">
@@ -276,6 +329,10 @@
     	<div class="reg_result">
         	<i></i>
             <h4>恭喜您注册直播间成功！ </h4>
+            <!--<p style="font-size:14px">
+                <a href="javascript:void(0)" id="regLpBtn" target="_blank" style="color:#2980d1">立即参与抽奖</a>
+                ，领2G流量！
+            </p>-->
         </div>
     	<a class="pop_close" href="javascript:"><i>关闭</i></a>
     </div>
@@ -391,8 +448,8 @@
             <div class="set_box b2 clearfix">
                 <textarea placeholder="给大家简单说两句交易心得~~" id="remark" name="remark" class="set_textaera"></textarea>
             </div>
-            <div class="btnbar"><input type="button" class="set_submit" id="tradeSubmit" value="提交" /></div>
             <div class="error" id="trade_error"><i></i>输入内容有误，请重新输入！</div>
+            <div class="btnbar"><input type="button" class="set_submit" id="tradeSubmit" value="提交" /></div>
         </div>
         <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
     </div>

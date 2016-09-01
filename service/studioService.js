@@ -395,6 +395,7 @@ var studioService = {
      *          1-手机登录,匹配手机号
      *          2-自动登录,匹配userId
      *          3-第三方平台自动登录,匹配thirdId
+     *          4-手机号码+密码登录
      * @param callback
      */
     login:function(userInfo,type,callback){
@@ -422,6 +423,16 @@ var studioService = {
                     "loginPlatform.chatUserGroup" : {$elemMatch : {
                         "_id" : userInfo.groupType,
                         "thirdId" : userInfo.thirdId
+                    }}
+                };
+                break;
+            case 4: //手机号+密码登录
+                searchObj={
+                    mobilePhone : userInfo.mobilePhone,
+                    valid : 1,
+                    "loginPlatform.chatUserGroup" : {$elemMatch : {
+                        "_id" : userInfo.groupType,
+                        "pwd" : common.getMD5(constant.pwdKey+userInfo.password)
                     }}
                 };
                 break;

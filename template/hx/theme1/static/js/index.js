@@ -3,7 +3,7 @@
  * author Alan.wu
  */
 var indexJS ={
-    fromPlatform:null,//来源平台
+    options:null,//附加参数
     isNeverLogin:false,//是否首次访问
     serverTime:0,//服务器时间
     towMinTime:0,//2分钟间隔时间

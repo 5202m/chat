@@ -5,7 +5,7 @@ var studioMbPerson = {
     /**
      * 初始化（页面加载）
      */
-    load : function(userInfo, platform){
+    load : function(userInfo, options){
         if(userInfo && userInfo.isLogin){
             this.refreshNickname(userInfo.nickname);
             $("#person_hp").attr("src", studioMbPerson.getUserLevelIco(userInfo.clientGroup, userInfo.avatar));
@@ -74,9 +74,20 @@ var studioMbPerson = {
             /**
              * 注销事件
              */
-            $(".logoutbtn").bind("click", platform, function(e){
+            $(".logoutbtn").bind("click", function(){
                 LoginAuto.setAutoLogin(false);
-                window.location.href="/fxstudio/logout?platform=" + e.data;
+                window.location.href="/fxstudio/logout";
+            });
+
+            /**
+             * 修改密码
+             */
+            $("#personPop_repwd").bind("click", {
+                clientStoreId : userInfo.clientStoreId,
+                groupId : userInfo.groupId,
+                platform : options.platform
+            }, function(e){
+                studioMbPop.popBox("pwd1", e.data);
             });
         }
     },
@@ -126,6 +137,114 @@ var studioMbPerson = {
 };
 
 /**
+ * 验证码控制
+ */
+var studioMbVC = {
+    defaultTime : 120,
+    /**配置信息：{$btn : $obj, $input : $obj, intervalId : Id, time : 120}*/
+    verifyCodeMap : {}, //{reg:{useType : "studio_login", $btn : $obj, $input : $obj, intervalId : Id, time : 120}}
+
+    /**
+     * 初始化
+     * @param key
+     * @param useType
+     * @param $btn
+     * @param $input
+     */
+    init : function(key, useType, $btn, $input){
+        if(studioMbVC.verifyCodeMap[key]){
+            return;
+        }else{
+            studioMbVC.verifyCodeMap[key] = {
+                useType : useType,
+                $btn : $btn,
+                $input : $input,
+                intervalId : null,
+                time : studioMbVC.defaultTime
+            };
+
+            //手机号输入
+
+            //手机校验
+            $input.bind("input propertychange", key, function(e){
+                var config = studioMbVC.verifyCodeMap[e.data];
+                if(!config || config.intervalId){
+                    return;
+                }
+                if(common.isMobilePhone(this.value)){
+                    config.$btn.addClass("pressed");
+                }else{
+                    config.$btn.removeClass("pressed");
+                }
+            });
+
+            //获取验证码
+            $btn.bind("click", key, function(e){
+                var vcKey = e.data;
+                var config = studioMbVC.verifyCodeMap[vcKey];
+                if(!config || !$(this).hasClass("pressed")){
+                    return;
+                }
+                $(this).removeClass("pressed").text("发送中...");
+                var mobile=config.$input.val();
+                var useType=config.useType;
+                try{
+                    $.getJSON('/fxstudio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:useType},function(data){
+                        if(!data || data.result != 0){
+                            if(data.errcode == "1005"){
+                                studioMbPop.showMessage(data.errmsg);
+                            }else{
+                                console.error("提取数据有误！");
+                            }
+                            studioMbVC.resetVerifyCode(vcKey);
+                        }else{
+                            studioMbVC.setVerifyCodeTime(vcKey);
+                        }
+                    });
+                }catch (e){
+                    studioMbVC.resetVerifyCode();
+                    console.error("getMobileVerifyCode->"+e);
+                }
+            });
+        }
+    },
+
+    /**
+     * 重置验证码
+     */
+    resetVerifyCode:function(key){
+        if(studioMbVC.verifyCodeMap[key]) {
+            var config = studioMbVC.verifyCodeMap[key];
+            if(config.intervalId){
+                clearInterval(config.intervalId);
+                config.intervalId = null;
+            }
+            config.time = studioMbVC.defaultTime;
+            config.$btn.text("获取验证码");
+            config.$input.trigger("input");
+        }
+    },
+
+    /**
+     * 验证码倒计时
+     */
+    setVerifyCodeTime:function(key){
+        if(studioMbVC.verifyCodeMap[key]) {
+            var config = studioMbVC.verifyCodeMap[key];
+            if(!config.intervalId){
+                config.intervalId=window.setInterval('studioMbVC.setVerifyCodeTime("'+key+'")', 1000);
+            }
+            if(config.time > 1){
+                config.time--;
+                config.$btn.text("重新获取(" + (config.time-1) + ")");
+            }else{
+                studioMbVC.resetVerifyCode(key);
+            }
+        }
+    }
+};
+
+/**
  * 登录
  */
 var studioMbLogin = {
@@ -133,6 +252,7 @@ var studioMbLogin = {
     groupId : null,
     clientStoreId : null,
     clientGroup : null,
+    platform : null,
 
     /**
      * 初始化（页面加载）
@@ -144,6 +264,7 @@ var studioMbLogin = {
      * 初始化（页面初始化）
      */
     init : function(platform, groupId, clientStoreId, clientGroup, closeable, showTip){
+        this.platform = platform;
         this.groupId = groupId;
         this.clientStoreId = clientStoreId;
         this.clientGroup = clientGroup;
@@ -181,7 +302,7 @@ var studioMbLogin = {
                 }else{
                     studioMbLogin.clientGroup = result.userInfo.clientGroup;
                     if(studioMbLogin.groupId){
-                        common.getJson("/fxstudio/checkGroupAuth",{redirectDef:1},function(result){
+                        common.getJson("/fxstudio/checkGroupAuth",{groupId:studioMbLogin.groupId},function(result){
                             if(!result.isOK){
                                 if(result.error && result.error.errcode === "1000"){
                                     studioMbPop.showMessage("您长时间未操作，请刷新页面后重试！");
@@ -192,18 +313,7 @@ var studioMbLogin = {
                                 }
                             }else{
                                 studioMbPop.loadingBlock($("#loginPop"), true);
-                                if(studioMbLogin.groupId == result.groupId){//默认房间就是要进入的房间
-                                    studioMbPop.reload();
-                                }else{
-                                    if(studioMbLogin.checkClientGroup("vip")){
-                                        studioMbPop.showMessage("您已具备进入Vip专场的条件，我们将为您自动进入VIP专场。");
-                                    }else{
-                                        studioMbPop.showMessage("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。我们将为您自动进入新手专场。");
-                                    }
-                                    window.setTimeout(function(){
-                                        studioMbPop.reload();
-                                    }, 2200);
-                                }
+                                studioMbPop.reload();
                             }
                         },true,function(err){
                             studioMbPop.loadingBlock($("#loginPop"), true);
@@ -223,47 +333,49 @@ var studioMbLogin = {
             });
         });
 
-        //手机校验
-        $("#loginForm_mb").bind("input propertychange", function(){
-            var domBtn=$("#loginForm_vcb");
-            if(parseInt(domBtn.attr("t")) < 120 && domBtn.is(".pressed") == false)
-            {
-                //倒计时状态不修改样式
-                return;
-            }
-            if(common.isMobilePhone(this.value)){
-                domBtn.addClass("pressed");
+        //登录方式切换
+        $("#loginForm_tab li").bind("click", function(){
+            var type = $(this).attr("lt");
+            $("#loginForm_tab li.li-on").removeClass("li-on");
+            $(this).addClass("li-on");
+            $("#loginForm .inp[lt]").hide();
+            $("#loginForm .inp[lt='" + type + "']").show();
+            $("#loginForm .fr[lt]").hide();
+            $("#loginForm .fr[lt='" + type + "']").show();
+            $("#loginForm_lt").val(type);
+        });
+
+        //记住我
+        $("#loginForm_alBtn").bind("click", function(){
+            var isChecked = $("#loginForm_al").prop("checked");
+            $("#loginForm_al").prop("checked", !isChecked);
+            if(isChecked){
+                $(this).children("s").removeClass("sel-on");
             }else{
-                domBtn.removeClass("pressed");
+                $(this).children("s").addClass("sel-on");
             }
         });
 
-        //获取验证码
-        $("#loginForm_vcb").bind("click", function(){
-            $("#loginForm_vc").blur();
-            if(!$(this).hasClass("pressed")){
-                return;
-            }
-            $(this).removeClass("pressed").val("发送中...");
-            var mobile=$("#loginForm_mb").val();
-            try{
-                $.getJSON('/fxstudio/getMobileVerifyCode?t=' + new Date().getTime(),{mobilePhone:mobile, useType:"fxstudio_login"},function(data){
-                    if(!data || data.result != 0){
-                        if(data.errcode == "1005"){
-                            studioMbPop.showMessage(data.errmsg);
-                        }else{
-                            console.error("提取数据有误！");
-                        }
-                        studioMbLogin.resetVerifyCode();
-                    }else{
-                        studioMbLogin.setVerifyCodeTime();
-                    }
-                });
-            }catch (e){
-                studioMbLogin.resetVerifyCode();
-                console.error("getMobileVerifyCode->"+e);
-            }
+        //忘记密码
+        $("#loginForm_pwdBtn").bind("click", function(){
+            studioMbPop.popBox("pwd2", {
+                groupId : studioMbLogin.groupId,
+                clientStoreId : studioMbLogin.clientStoreId,
+                platform : studioMbLogin.platform
+            });
         });
+
+        //注册
+        $("#loginForm_reg").bind("click", function(){
+            studioMbPop.popBox("reg", {
+                groupId : studioMbLogin.groupId,
+                clientStoreId : studioMbLogin.clientStoreId,
+                platform : studioMbLogin.platform
+            });
+        });
+
+        //登录页面验证码功能
+        studioMbVC.init("login", "fxstudio_login", $("#loginForm_vcb"), $("#loginForm_mb"));
     },
     /**
      * 重置页面
@@ -277,47 +389,27 @@ var studioMbLogin = {
      */
     checkFormInput:function(){
         var isTrue=true,message="";
-        var mobilePhone,verifyCode;
-        mobilePhone = $("#loginForm_mb").val();
-        verifyCode = $("#loginForm_vc").val();
-        if(common.isBlank(mobilePhone)){
+        var params = {
+            loginType : $("#loginForm_lt").val(),
+            mobilePhone : $("#loginForm_mb").val(),
+            verifyCode : $("#loginForm_vc").val(),
+            password : $("#loginForm_pwd").val()
+        };
+        if(common.isBlank(params.mobilePhone)){
             isTrue = false;
             message="手机号码不能为空！";
-        }else if(common.isBlank(verifyCode)){
-            isTrue = false;
-            message="手机验证码不能为空！";
-        }else if(!common.isMobilePhone(mobilePhone)){
+        }else if(!common.isMobilePhone(params.mobilePhone)){
             isTrue = false;
             message="手机号码输入有误！";
+        }else if(params.verifyCode == "verify" && common.isBlank(params.verifyCode)){
+            isTrue = false;
+            message="手机验证码不能为空！";
+        }else if(params.verifyCode == "pwd" && common.isBlank(params.password)){
+            isTrue = false;
+            message="密码不能为空！";
         }
         studioMbPop.showMessage(message);
         return isTrue;
-    },
-    /**
-     * 重置验证码
-     */
-    resetVerifyCode:function(){
-        if(studioMbLogin.verifyCodeIntervalId) {
-            clearInterval(studioMbLogin.verifyCodeIntervalId);
-            studioMbLogin.verifyCodeIntervalId=null;
-        }
-        $("#loginForm_vcb").attr("t",120).val("获取验证码");
-        $("#loginForm_mb").trigger("input");
-    },
-    /**
-     * 验证码倒计时
-     */
-    setVerifyCodeTime:function(){
-        var item = $("#loginForm_vcb");
-        var t=parseInt(item.attr("t"))||120;
-        if(!studioMbLogin.verifyCodeIntervalId){
-            studioMbLogin.verifyCodeIntervalId=window.setInterval(studioMbLogin.setVerifyCodeTime,1000);
-        }
-        if(t>1){
-            item.attr("t",t-1).val("重新获取(" + (t-1) + ")");
-        }else{
-            studioMbLogin.resetVerifyCode();
-        }
     },
     /**
      * 检查客户组别
@@ -407,6 +499,7 @@ var studioMbSet = {
     load : function(){
         this.setEvent();
     },
+
     /**
      * 初始化（页面初始化）
      */
@@ -430,7 +523,7 @@ var studioMbSet = {
                     studioMbPop.showMessage(result.msg?result.msg:"修改失败，请联系客服！");
                     return false;
                 }else{
-                    $("#pmInfoSetBox .pop_close").trigger("click");
+                    $("#setPop .pop_close").trigger("click");
                     studioMbSet.studioChatObj.refreshNickname(true, result.nickname);
                     $("#sendBtn").trigger("click");
                 }
@@ -458,12 +551,376 @@ var studioMbSet = {
 };
 
 /**
+ * 直播间注册
+ */
+var studioMbReg = {
+    groupId : null,
+    clientStoreId : null,
+    platform : null,
+
+    /**
+     * 初始化（页面加载）
+     */
+    load : function(){
+        this.setEvent();
+    },
+
+    /**
+     * 初始化（页面初始化）
+     */
+    init : function(groupId, clientStoreId, platform){
+        this.groupId = groupId;
+        this.clientStoreId = clientStoreId;
+        this.platform = platform;
+        $("#regForm").trigger("reset");
+        $("#regForm_mb").trigger("input");
+    },
+
+    /**
+     * 绑定事件
+     */
+    setEvent : function(){
+        $("#regForm_sub").bind("click", function(){
+            if(!studioMbReg.checkFormInput()){
+                return;
+            }
+            studioMbPop.loadingBlock($("#regPop"));
+            common.getJson("/fxstudio/reg",$("#regForm").serialize(),function(result){
+                studioMbPop.loadingBlock($("#regPop"), true);
+                if(!result.isOK){
+                    studioMbPop.showMessage(result.msg?result.msg:"注册失败，请联系客服！");
+                    return false;
+                }else{
+                    studioMbPop.showMessage("注册成功");
+                    $("#reg1Form_lpBtn").attr("href", "");//TODO result.userId
+                    studioMbPop.popShow($("#reg1Pop"));
+                }
+            },true,function(){
+                studioMbPop.loadingBlock($("#setPop"), true);
+            });
+        });
+
+        //登录
+        $("#regForm_login").bind("click", function(){
+            studioMbPop.popBox("login", {
+                groupId: studioMbReg.groupId,
+                clientStoreId: studioMbReg.clientStoreId,
+                platform : studioMbReg.platform
+            });
+        });
+
+        //注册成功页面关闭
+        $("#reg1Pop .pop-close, #reg1Form_sub").bind("click", function(){
+            studioMbPop.reload();
+        });
+
+        //注册页面验证码功能
+        studioMbVC.init("reg", "fxstudio_reg", $("#regForm_vcb"), $("#regForm_mb"));
+    },
+    /**
+     * 检查页面输入
+     */
+    checkFormInput:function(){
+        var isTrue=true,message="";
+        var params = {
+            mobilePhone : $("#regForm_mb").val(),
+            password : $("#regForm_pwd").val(),
+            password1 : $("#regForm_pwd1").val(),
+            verifyCode : $("#regForm_vc").val()
+        };
+        if(common.isBlank(params.mobilePhone)){
+            isTrue = false;
+            message="手机号码不能为空！";
+        }else if(common.isBlank(params.password)){
+            isTrue = false;
+            message="密码不能为空！";
+        }else if(common.isBlank(params.password1)){
+            isTrue = false;
+            message="确认密码不能为空！";
+        }else if(common.isBlank(params.verifyCode)){
+            isTrue = false;
+            message="验证码不能为空！";
+        }else if(!common.isMobilePhone(params.mobilePhone)){
+            isTrue = false;
+            message="手机号码输入有误！";
+        }else if(!/^.{6,20}$/.test(params.password)){
+            isTrue = false;
+            message="密码由6至20数字、字母、符号组成！";
+        }else if(params.password != params.password1){
+            isTrue = false;
+            message="两次密码输入不一致！";
+        }
+        studioMbPop.showMessage(message);
+        return isTrue;
+    }
+};
+
+/**
+ * 直播间修改密码
+ */
+var studioMbPwd1 = {
+    groupId : null,
+    clientStoreId : null,
+    platform : null,
+
+    /**
+     * 初始化（页面加载）
+     */
+    load : function(){
+        this.setEvent();
+    },
+
+    /**
+     * 初始化（页面初始化）
+     */
+    init : function(groupId, clientStoreId, platform){
+        this.groupId = groupId;
+        this.clientStoreId = clientStoreId;
+        this.platform = platform;
+        $("#pwd1Form input[type='password']").val("");
+    },
+
+    /**
+     * 绑定事件
+     */
+    setEvent : function(){
+        $("#pwd1Form_sub").bind("click", function(){
+            if(!studioMbPwd1.checkFormInput()){
+                return;
+            }
+            studioMbPop.loadingBlock($("#pwd1Pop"));
+            common.getJson("/fxstudio/resetPwd",$("#pwd1Form").serialize(),function(result){
+                studioMbPop.loadingBlock($("#pwd1Pop"), true);
+                if(!result.isOK){
+                    studioMbPop.showMessage(result.msg?result.msg:"修改密码失败，请联系客服！");
+                    return false;
+                }else{
+                    studioMbPop.showMessage("修改密码成功，请使用新密码登录！");
+                    studioMbPop.popBox("login", {
+                        groupId: studioMbPwd1.groupId,
+                        clientStoreId: studioMbPwd1.clientStoreId,
+                        platform : studioMbPwd1.platform
+                    });
+                }
+            },true,function(){
+                studioMbPop.loadingBlock($("#pwd1Pop"), true);
+            });
+        });
+
+        //忘记密码
+        $("#pwd1Form_pwdBtn").bind("click", function(){
+            studioMbPop.popBox("pwd2", {
+                groupId : studioMbPwd1.groupId,
+                clientStoreId : studioMbPwd1.clientStoreId,
+                platform : studioMbPwd1.platform
+            });
+        });
+    },
+
+    /**
+     * 检查页面输入
+     */
+    checkFormInput:function(){
+        var isTrue=true,message="";
+        var params = {
+            password0 : $("#pwd1Form_pwd0").val(),
+            password : $("#pwd1Form_pwd").val(),
+            password1 : $("#pwd1Form_pwd1").val()
+        };
+        if(common.isBlank(params.password0)){
+            isTrue = false;
+            message="原始密码不能为空！";
+        }else if(common.isBlank(params.password)){
+            isTrue = false;
+            message="新的密码不能为空！";
+        }else if(common.isBlank(params.password1)){
+            isTrue = false;
+            message="确认密码不能为空！";
+        }else if(!/^.{6,20}$/.test(params.password)){
+            isTrue = false;
+            message="密码由6至20数字、字母、符号组成！";
+        }else if(params.password != params.password1){
+            isTrue = false;
+            message="两次密码输入不一致！";
+        }
+        studioMbPop.showMessage(message);
+        return isTrue;
+    }
+};
+
+/**
+ * 直播间忘记密码
+ */
+var studioMbPwd2 = {
+    groupId : null,
+    clientStoreId : null,
+    platform : null,
+
+    /**
+     * 初始化（页面加载）
+     */
+    load : function(){
+        this.setEvent();
+    },
+
+    /**
+     * 初始化（页面初始化）
+     */
+    init : function(groupId, clientStoreId, platform){
+        this.groupId = groupId;
+        this.clientStoreId = clientStoreId;
+        this.platform = platform;
+        $("#pwd2Form input[type='text']").val("");
+        $("#pwd2Form_mb").trigger("input");
+    },
+
+    /**
+     * 绑定事件
+     */
+    setEvent : function(){
+        $("#pwd2Form_sub").bind("click", function(){
+            if(!studioMbPwd2.checkFormInput()){
+                return;
+            }
+            studioMbPop.loadingBlock($("#pwd2Pop"));
+            common.getJson("/fxstudio/resetPwd",$("#pwd2Form").serialize(),function(result){
+                studioMbPop.loadingBlock($("#pwd2Pop"), true);
+                if(!result.isOK){
+                    studioMbPop.showMessage(result.msg?result.msg:"验证手机号失败，请联系客服！");
+                    return false;
+                }else{
+                    studioMbPop.popBox("pwd3", {
+                        groupId: studioMbPwd2.groupId,
+                        clientStoreId: studioMbPwd2.clientStoreId,
+                        platform : studioMbPwd2.platform,
+                        mobilePhone : result.mobilePhone
+                    });
+                }
+            },true,function(){
+                studioMbPop.loadingBlock($("#pwd2Pop"), true);
+            });
+        });
+
+        //登录页面验证码功能
+        studioMbVC.init("pwd", "fxstudio_resetPWD", $("#pwd2Form_vcb"), $("#pwd2Form_mb"));
+    },
+
+    /**
+     * 检查页面输入
+     */
+    checkFormInput:function(){
+        var isTrue=true,message="";
+        var params = {
+            mobilePhone : $("#pwd2Form_mb").val(),
+            verifyCode : $("#pwd2Form_vc").val()
+        };
+        if(common.isBlank(params.mobilePhone)){
+            isTrue = false;
+            message="手机号码不能为空！";
+        }else if(common.isBlank(params.verifyCode)){
+            isTrue = false;
+            message="验证码不能为空！";
+        }else if(!common.isMobilePhone(params.mobilePhone)){
+            isTrue = false;
+            message="手机号码输入有误！";
+        }
+        studioMbPop.showMessage(message);
+        return isTrue;
+    }
+};
+
+/**
+ * 直播间重置密码
+ */
+var studioMbPwd3 = {
+    groupId : null,
+    clientStoreId : null,
+    platform : null,
+
+    /**
+     * 初始化（页面加载）
+     */
+    load : function(){
+        this.setEvent();
+    },
+
+    /**
+     * 初始化（页面初始化）
+     */
+    init : function(groupId, clientStoreId, platform, mobilePhone){
+        this.groupId = groupId;
+        this.clientStoreId = clientStoreId;
+        this.platform = platform;
+        $("#pwd3Form_mb").val(mobilePhone);
+        $("#pwd3Form input[type='password']").val("");
+    },
+
+    /**
+     * 绑定事件
+     */
+    setEvent : function(){
+        $("#pwd3Form_sub").bind("click", function(){
+            if(!studioMbPwd3.checkFormInput()){
+                return;
+            }
+            studioMbPop.loadingBlock($("#pwd3Pop"));
+            common.getJson("/fxstudio/resetPwd",$("#pwd3Form").serialize(),function(result){
+                studioMbPop.loadingBlock($("#pwd3Pop"), true);
+                if(!result.isOK){
+                    studioMbPop.showMessage(result.msg?result.msg:"重置密码失败，请联系客服！");
+                    return false;
+                }else{
+                    studioMbPop.showMessage("重置密码成功，请使用新密码登录！");
+                    studioMbPop.popBox("login", {
+                        groupId: studioMbPwd3.groupId,
+                        clientStoreId: studioMbPwd3.clientStoreId,
+                        platform : studioMbPwd3.platform
+                    });
+                }
+            },true,function(){
+                studioMbPop.loadingBlock($("#pwd3Pop"), true);
+            });
+        });
+    },
+
+    /**
+     * 检查页面输入
+     */
+    checkFormInput:function(){
+        var isTrue=true,message="";
+        var params = {
+            password : $("#pwd3Form_pwd").val(),
+            password1 : $("#pwd3Form_pwd1").val()
+        };
+        if(common.isBlank(params.password)){
+            isTrue = false;
+            message="密码不能为空！";
+        }else if(common.isBlank(params.password1)){
+            isTrue = false;
+            message="确认密码不能为空！";
+        }else if(!/^.{6,20}$/.test(params.password)){
+            isTrue = false;
+            message="密码由6至20数字、字母、符号组成！";
+        }else if(params.password != params.password1){
+            isTrue = false;
+            message="两次密码输入不一致！";
+        }
+        studioMbPop.showMessage(message);
+        return isTrue;
+    }
+};
+
+/**
  * 弹出层控制类
  */
 var studioMbPop = {
     Person : studioMbPerson,
     Login : studioMbLogin,
     Set : studioMbSet,
+    Reg : studioMbReg,
+    Pwd1 : studioMbPwd1,
+    Pwd2 : studioMbPwd2,
+    Pwd3 : studioMbPwd3,
     Msg : studioMbMsg,
     onShow : null,
     onHide : null,
@@ -518,13 +975,13 @@ var studioMbPop = {
      */
     reload : function(){
         var url = window.location.href;
-        var param = "t=" + new Date().getTime();
+        var param = "ko=1&t=" + new Date().getTime();
         if(url.indexOf("?") == -1){
             url = url + "?" + param;
         }else{
-            url = url.replace(/&t=\d*(?=&|$)/g, "");
-            if(/\?t=\d*(?=&|$)/.test(url)){
-                url = url.replace(/\?t=\d*(?=&|$)/, "?" + param);
+            url = url.replace(/&(t|ko)=\d*(?=&|$)/g, "");
+            if(/\?(t|ko)=\d*(?=&|$)/.test(url)){
+                url = url.replace(/\?(t|ko)=\d*(?=&|$)/, "?" + param);
             }else{
                 url = url + "&" + param;
             }
@@ -534,14 +991,18 @@ var studioMbPop = {
     /**
      * 初始化（页面加载）
      */
-    load : function(userInfo, platform, events){
+    load : function(userInfo, options, events){
         if(events){
             this.onShow = typeof events.onShow == "function" ? events.onShow : null;
             this.onHide = typeof events.onHide == "function" ? events.onHide : null;
         }
-        this.Person.load(userInfo, platform);
+        this.Person.load(userInfo, options);
         this.Login.load();
         this.Set.load();
+        this.Reg.load();
+        this.Pwd1.load();
+        this.Pwd2.load();
+        this.Pwd3.load();
         this.Msg.load();
 
         /*弹出框关闭*/
@@ -569,6 +1030,26 @@ var studioMbPop = {
             case "set" :
                 this.popShow($("#setPop"));
                 this.Set.init(ops.studioChatObj);
+                break;
+
+            case "reg" :
+                this.popShow($("#regPop"));
+                this.Reg.init(ops.groupId, ops.clientStoreId, ops.platform);
+                break;
+
+            case "pwd1" :
+                this.popShow($("#pwd1Pop"));
+                this.Pwd1.init(ops.groupId, ops.clientStoreId, ops.platform);
+                break;
+
+            case "pwd2" :
+                this.popShow($("#pwd2Pop"));
+                this.Pwd2.init(ops.groupId, ops.clientStoreId, ops.platform);
+                break;
+
+            case "pwd3" :
+                this.popShow($("#pwd3Pop"));
+                this.Pwd3.init(ops.groupId, ops.clientStoreId, ops.platform, ops.mobilePhone);
                 break;
 
             case "msg" :

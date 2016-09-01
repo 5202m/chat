@@ -217,7 +217,7 @@
         roomJS.syllabusData=common.formatToJson('<%- syllabusData%>');
         roomJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
         roomJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
-        roomJS.fromPlatform='<%- fromPlatform%>';
+        roomJS.options=JSON.parse('<%- options%>');
         roomJS.init();
     });
     lightbox.option({

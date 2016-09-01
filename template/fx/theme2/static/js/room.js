@@ -9,7 +9,7 @@ var studioChatMb={
     apiUrl:'',
     currStudioAuth:false,//当前房间是否授权
     visitorSpeak:false,//游客是否允许发言
-    fromPlatform:null,//来源平台
+    options:null,//附加参数
     serverTime:0,//服务器时间
     pushObj:{
         talkPush : [], //公聊推送消息
@@ -31,7 +31,7 @@ var studioChatMb={
         this.setSocket();//设置socket连接
         this.setEvent();//设置各种事件
         this.setVideoList();
-        studioMbPop.load(this.userInfo, this.fromPlatform,{
+        studioMbPop.load(this.userInfo, this.options, {
             onShow : function(){
                 $("#tVideoDiv video").hide();
             },
@@ -60,7 +60,7 @@ var studioChatMb={
                         groupId: studioChatMb.userInfo.groupId,
                         clientGroup: studioChatMb.userInfo.clientGroup,
                         clientStoreId: studioChatMb.userInfo.clientStoreId,
-                        platform: studioChatMb.fromPlatform,
+                        platform: studioChatMb.options.platform,
                         closeable: false
                     });
                 } else if (studioMbPop.Login.forceLogin()) {
@@ -69,7 +69,7 @@ var studioChatMb={
                         groupId: studioChatMb.userInfo.groupId,
                         clientGroup: studioChatMb.userInfo.clientGroup,
                         clientStoreId: studioChatMb.userInfo.clientStoreId,
-                        platform: studioChatMb.fromPlatform,
+                        platform: studioChatMb.options.platform,
                         closeable: false,
                         showTip: true
                     });
@@ -83,7 +83,7 @@ var studioChatMb={
                                     groupId: studioChatMb.userInfo.groupId,
                                     clientGroup: studioChatMb.userInfo.clientGroup,
                                     clientStoreId: studioChatMb.userInfo.clientStoreId,
-                                    platform: studioChatMb.fromPlatform,
+                                    platform: studioChatMb.options.platform,
                                     closeable: false,
                                     showTip: true
                                 });
@@ -153,7 +153,7 @@ var studioChatMb={
                     studioMbPop.popBox("login", {
                         groupId: studioChatMb.userInfo.groupId,
                         clientStoreId: studioChatMb.userInfo.clientStoreId,
-                        platform : studioChatMb.fromPlatform
+                        platform : studioChatMb.options.platform
                     });
                 });
             }
@@ -176,7 +176,7 @@ var studioChatMb={
             studioChatMb.socket.emit('login',{
                     userInfo:studioChatMb.userInfo,
                     lastPublishTime:$("#dialog_list>li:last").attr("id"),
-                    fromPlatform : studioChatMb.fromPlatform,
+                    fromPlatform : studioChatMb.options.platform,
                     allowWhisper : studioChatMb.whTalk.enable
                 },
                 navigator.userAgent);
@@ -441,7 +441,7 @@ var studioChatMb={
                     groupId : studioChatMb.userInfo.groupId,
                     clientGroup : studioChatMb.userInfo.clientGroup,
                     clientStoreId : studioChatMb.userInfo.clientStoreId,
-                    platform : studioChatMb.fromPlatform
+                    platform : studioChatMb.options.platform
                 });
             }
         });
@@ -552,7 +552,7 @@ var studioChatMb={
                     groupId : studioChatMb.userInfo.groupId,
                     clientGroup : studioChatMb.userInfo.clientGroup,
                     clientStoreId : studioChatMb.userInfo.clientStoreId,
-                    platform : studioChatMb.fromPlatform
+                    platform : studioChatMb.options.platform
                 });
             	return;
             }
@@ -612,7 +612,7 @@ var studioChatMb={
                     groupId : studioChatMb.userInfo.groupId,
                     clientGroup : studioChatMb.userInfo.clientGroup,
                     clientStoreId : studioChatMb.userInfo.clientStoreId,
-                    platform : studioChatMb.fromPlatform
+                    platform : studioChatMb.options.platform
                 });
             	return false;
             }
@@ -1641,7 +1641,7 @@ var studioChatMb={
             }else{
                 window.setTimeout(function(){//3秒钟后登出
                     LoginAuto.setAutoLogin(false);
-                    window.location.href="/fxstudio/logout?platform="+studioChatMb.fromPlatform;
+                    window.location.href="/fxstudio/logout";
                 },2000);
             }
         }else if(flag=="otherLogin"){

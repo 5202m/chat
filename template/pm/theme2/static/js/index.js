@@ -3,7 +3,7 @@
  * author Dick.guo
  */
 var studioChatMbIdx={
-    fromPlatform:null,//来源平台
+    options:null,//附加参数
     userInfo:null,
     mobile24kPath:'',
     apiUrl:'',
@@ -12,7 +12,7 @@ var studioChatMbIdx={
         this.setClientGroupAuth();
         this.setAdvertisement();
         this.setEvent();
-        studioMbPop.load(this.userInfo, this.fromPlatform, {
+        studioMbPop.load(this.userInfo, this.options, {
             onShow : function(){
                 $('.boxcont').height($(window).height()-$('.sroll-box').height()-$('#header').height()-$('.cen-ulist').height()-$('.fob_open').height());
             },
@@ -37,7 +37,7 @@ var studioChatMbIdx={
                     groupId : "",
                     clientGroup : studioChatMbIdx.userInfo.clientGroup,
                     clientStoreId : studioChatMbIdx.userInfo.clientStoreId,
-                    platform : studioChatMbIdx.fromPlatform,
+                    platform : studioChatMbIdx.options.platform,
                     closeable:false,
                     showTip:true
                 });
@@ -50,7 +50,7 @@ var studioChatMbIdx={
                             groupId : "",
                             clientGroup : studioChatMbIdx.userInfo.clientGroup,
                             clientStoreId : studioChatMbIdx.userInfo.clientStoreId,
-                            platform : studioChatMbIdx.fromPlatform,
+                            platform : studioChatMbIdx.options.platform,
                             closeable:false,
                             showTip:true
                         });
@@ -113,7 +113,7 @@ var studioChatMbIdx={
             obj.userType=-1;
             store.set(key,obj);
             //首次显示收藏提示
-            if(this.fromPlatform != "wechat"){
+            if(this.options.platform != "wechat"){
                 $(".collect-tip").fadeIn().delay(60000).fadeOut();
             }
         }else{
@@ -248,7 +248,7 @@ var studioChatMbIdx={
                     groupId : "",
                     clientGroup : studioChatMbIdx.userInfo.clientGroup,
                     clientStoreId : studioChatMbIdx.userInfo.clientStoreId,
-                    platform : studioChatMbIdx.fromPlatform
+                    platform : studioChatMbIdx.options.platform
                 });
             }
         });
@@ -322,7 +322,7 @@ var studioChatMbIdx={
                         groupId : loc_groupId,
                         clientGroup : studioChatMbIdx.userInfo.clientGroup,
                         clientStoreId : studioChatMbIdx.userInfo.clientStoreId,
-                        platform : studioChatMbIdx.fromPlatform
+                        platform : studioChatMbIdx.options.platform
                     });
                 }else if(studioChatMbIdx.checkClientGroup("vip")){
                     studioMbPop.showMessage("该房间仅对新客户开放。");

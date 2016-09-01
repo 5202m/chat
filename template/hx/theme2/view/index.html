@@ -172,7 +172,7 @@
         indexJS.userInfo=JSON.parse('<%- userInfo %>');
         indexJS.mobile24kPath='<%= mobile24kPath %>';
         indexJS.apiUrl='<%= apiUrl %>';
-        indexJS.fromPlatform='<%- fromPlatform%>';
+        indexJS.options=JSON.parse('<%- options%>');
         indexJS.init();
     });
 </script>

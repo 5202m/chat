@@ -203,7 +203,7 @@ var box={
          */
         $(".logout").bind("click", function(){
             LoginAuto.setAutoLogin(false);
-            window.location.href=indexJS.fromPlatform?("/hxstudio/logout?platform=" + indexJS.fromPlatform):"/hxstudio/logout";
+            window.location.href="/hxstudio/logout";
         });
         //手机号码输入控制
         $("#loginForm input[name=mobilePhone],#loginForm input[name=verifyCode],#setNkForm input[name=nickname]").bind("input propertychange", function() {
@@ -275,13 +275,6 @@ var box={
                     indexJS.userInfo.clientGroup = result.userInfo.clientGroup;
                     if(box.toRoomId){
                         common.getJson("/hxstudio/checkGroupAuth",{groupId:box.toRoomId},function(checkGroupRes){
-                            if(!checkGroupRes.isOK){
-                                /*if(indexJS.checkClientGroup("vip")){
-                                    alert("您已具备进入Vip专场的条件，我们将为您自动进入VIP专场。");
-                                }else{
-                                    alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。我们将为您自动进入新手专场。");
-                                }*/
-                            }
                             indexJS.toRefreshView();
                         },true,function(err){
                             if("success"!=err) {
@@ -290,9 +283,6 @@ var box={
                             }
                         });
                     }else{
-                        if(indexJS.checkClientGroup("vip")){
-                            //alert("您已具备进入Vip专场的条件，我们将为您自动进入VIP专场。");
-                        }
                         indexJS.toRefreshView();
                     }
                 }
