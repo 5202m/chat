@@ -28,6 +28,7 @@ var studioChatMb={
         this.serverTimeUp();
         this.setVisitStore();
         this.whTalk.initWH(); //初始化私聊
+        this.initTimezone();//初始化时区
         this.setSocket();//设置socket连接
         this.setEvent();//设置各种事件
         this.setVideoList();
@@ -95,6 +96,19 @@ var studioChatMb={
                 }
             }
         }
+    },
+    /**
+     * 初始化时区
+     */
+    initTimezone : function(){
+        var timezone = studioChatMb.options.timezone;
+        try{
+            timezone = parseInt(timezone, 10) || 0;
+        }catch(e){
+            timezone = 0;
+        }
+        studioChatMb.options.timezone = timezone;
+        studioChatMb.options.timezoneLs = (timezone - 8) * 3600000;
     },
     /**
      * 刷新昵称
@@ -1312,7 +1326,7 @@ var studioChatMb={
             return "";
         }
         var timeLS = Number(time.replace(/_.+/g,""));
-        timeLS -= 28800000; //时区转换28800000 = 8*60*60*1000;
+        timeLS += studioChatMb.options.timezoneLs; //时区转换
         return common.getHHMM(timeLS);
     },
     /**

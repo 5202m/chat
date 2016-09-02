@@ -28,6 +28,7 @@ var roomJS={
         this.serverTimeUp();
         this.setVisitStore();
         this.whTalk.initWH(); //初始化私聊
+        this.initTimezone();//初始化时区
         this.setSocket();//设置socket连接
         this.setEvent();//设置各种事件
         this.setVideoList();
@@ -122,6 +123,19 @@ var roomJS={
                 }
             }
         }
+    },
+    /**
+     * 初始化时区
+     */
+    initTimezone : function(){
+        var timezone = studioChatMb.options.timezone;
+        try{
+            timezone = parseInt(timezone, 10) || 0;
+        }catch(e){
+            timezone = 0;
+        }
+        studioChatMb.options.timezone = timezone;
+        studioChatMb.options.timezoneLs = (timezone - 8) * 3600000;
     },
     /**
      * 刷新昵称
@@ -1316,7 +1330,12 @@ var roomJS={
      * 格式发布日期
      */
     formatPublishTime:function(time){
-        return common.isBlank(time)?'':common.getHHMM(Number(time.replace(/_.+/g,"")));
+        if(common.isBlank(time)){
+            return "";
+        }
+        var timeLS = Number(time.replace(/_.+/g,""));
+        timeLS += studioChatMb.options.timezoneLs; //时区转换
+        return common.getHHMM(timeLS);
     },
     /**
      * 设置对话
