@@ -1489,9 +1489,11 @@ var chat={
                     whInfo.pushed = true;
                     chat.msgPushObj.whInfo = {info: whInfo.content, publishTime: whInfo.publishTime, infoId: whInfo.contentId};
                     var aDom = $("#userListId li[t=3] a .headimg:not(.have_op)");
-                    var anyDom=$(aDom.get(common.randomIndex(aDom.length))).parent();
-                    anyDom.dblclick();
-                    chat.setWhPushInfo($('.mult_dialog a[uid='+anyDom.parent().attr("id")+']'));
+                    if(aDom.length>0) {
+                        var anyDom = $(aDom.get(common.randomIndex(aDom.length))).parent();
+                        anyDom.dblclick();
+                        chat.setWhPushInfo($('.mult_dialog a[uid=' + anyDom.parent().attr("id") + ']'));
+                    }
                 }
             }
         }
