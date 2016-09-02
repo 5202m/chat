@@ -10,7 +10,7 @@ var box={
      */
     init:function(){
         this.setEvent();
-        if(indexJS.options.preReg){
+        if(indexJS.checkClientGroup('visitor') && indexJS.options.preReg){
             box.openSettingBox("reg");
         }
     },

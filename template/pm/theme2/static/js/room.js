@@ -94,6 +94,14 @@ var studioChatMb={
                 }
             }
         }
+        //直接弹出注册框
+        if(this.userInfo.clientGroup=='visitor' && this.options.preReg){
+            studioMbPop.popBox("reg", {
+                groupId : studioChatMb.userInfo.groupId,
+                clientStoreId : studioChatMb.userInfo.clientStoreId,
+                platform : studioChatMb.options.platform
+            });
+        }
     },
     /**
      * 刷新昵称
