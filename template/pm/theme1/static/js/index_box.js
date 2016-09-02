@@ -9,7 +9,10 @@ var box={
      * 方法入口
      */
     init:function(){
-       this.setEvent();
+        this.setEvent();
+        if(indexJS.options.preReg){
+            box.openSettingBox("reg");
+        }
     },
     /**
      * 设置事件

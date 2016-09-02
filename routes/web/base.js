@@ -56,7 +56,7 @@ router.get('/', function(req, res) {
             platform : req.query["platform"] || "",
             theme : req.query["theme"] || "",
             timezone : req.query["tz"] || 8,
-            preReg : req.query["preReg"] == 1
+            preReg : req.query["pr"] == 1
         };
         req.session.studioOptions = options;
     }

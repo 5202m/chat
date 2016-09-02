@@ -264,9 +264,11 @@ var indexJS ={
             }
             file.click();
         });
+        //修改密码
         $("#resetPasswordBtn").bind("click", function(){
             box.openSettingBox("password1");
         });
+        //placeholder IE支持
         this.placeholderSupport();//ie下输入框显示文字提示
     },
     /**
