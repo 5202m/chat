@@ -128,14 +128,14 @@ var roomJS={
      * 初始化时区
      */
     initTimezone : function(){
-        var timezone = studioChatMb.options.timezone;
+        var timezone = roomJS.options.timezone;
         try{
             timezone = parseInt(timezone, 10) || 0;
         }catch(e){
             timezone = 0;
         }
-        studioChatMb.options.timezone = timezone;
-        studioChatMb.options.timezoneLs = (timezone - 8) * 3600000;
+        roomJS.options.timezone = timezone;
+        roomJS.options.timezoneLs = (timezone - 8) * 3600000;
     },
     /**
      * 刷新昵称
@@ -1334,7 +1334,7 @@ var roomJS={
             return "";
         }
         var timeLS = Number(time.replace(/_.+/g,""));
-        timeLS += studioChatMb.options.timezoneLs; //时区转换
+        timeLS += roomJS.options.timezoneLs; //时区转换
         return common.getHHMM(timeLS);
     },
     /**
