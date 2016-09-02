@@ -1070,12 +1070,13 @@ body:before {
 
 .talk-infobox .me-li .uname {
     clear: both;
-    float: right
+    float: right;
+    padding-right:35px
 }
 
 .talk-infobox .dialog {
     clear: both;
-    background: #fff;
+    background:#f6f2e8;
     line-height: 20px;
     border-radius: 5px;
     border-top-left-radius: 0;
@@ -1151,6 +1152,7 @@ body:before {
     border-top-left-radius: 5px;
     border-top-right-radius: 0;
     float: right;
+    margin-right:32px;
 }
 
 .talk-infobox .me-li .dialog::after {
@@ -1493,6 +1495,7 @@ body:before {
     overflow-y: scroll;
     padding-left:4px;
     box-sizing:border-box;
+    word-wrap:break-word;
 }
 
 .face-btn {
