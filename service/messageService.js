@@ -79,8 +79,8 @@ var messageService ={
      * @param selectRows
      */
     findMessageList:function(userInfo,searchObj,selectSQL,selectRows,callback){
-        chatMessage.db().find(searchObj).select(selectSQL).limit(selectRows).sort({'publishTime':'desc'}).exec(function (err,approvalList) {
-            messageService.getUnApprovalList(approvalList,userInfo,selectSQL,function(resultList){
+        chatMessage.db().find(searchObj).select(selectSQL).limit(selectRows).sort({'publishTime':'desc'}).exec(function (err,currList) {
+            /*messageService.getUnApprovalList(currList,userInfo,selectSQL,function(resultList){
                 var diffLength=selectRows-resultList.length;
                 if(diffLength>0){//往上一年查询
                     var year=new Date().getFullYear();
@@ -90,7 +90,16 @@ var messageService ={
                 }else{
                     callback(resultList);
                 }
-            });
+            });*/
+            var diffLength=selectRows-currList.length;
+            if(diffLength>0){//往上一年查询
+                var year=new Date().getFullYear();
+                chatMessage.db(year<=2015?2015:year-1).find(searchObj).select(selectSQL).limit(diffLength).sort({'publishTime':'desc'}).exec(function (err,oldList) {
+                    callback(currList.concat(oldList));
+                });
+            }else{
+                callback(currList);
+            }
         });
     },
     /**
