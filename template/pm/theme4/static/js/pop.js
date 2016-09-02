@@ -595,7 +595,7 @@ var studioMbReg = {
                     return false;
                 }else{
                     studioMbPop.showMessage("注册成功");
-                    $("#reg1Form_lpBtn").attr("href", "");//TODO result.userId
+                    $("#reg1Form_lpBtn").attr("href", "http://testweb1.24k.hk:8090/activity/live_luckydraw/index.html?userId=" + result.userId);
                     studioMbPop.popShow($("#reg1Pop"));
                 }
             },true,function(){

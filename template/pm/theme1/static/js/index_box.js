@@ -263,7 +263,7 @@ var box={
                     return false;
                 }else{
                     $(".blackbg,#popBoxRegister").hide();
-                    $("#regLpBtn").attr("href", "");//TODO result.userId
+                    $("#regLpBtn").attr("href", "http://testweb1.24k.hk:8090/activity/live_luckydraw/index.html?userId=" + result.userId);
                     $(".register_result").show();
                 }
             },true,function(err){
