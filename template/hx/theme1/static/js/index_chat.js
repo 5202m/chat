@@ -1301,7 +1301,10 @@ var chat={
         });
         //信息传输
         this.socket.on('loadMsg',function(data){
-            $('#dialog_list .push').hide();
+            var pushMsgDom = $('#dialog_list .push');
+            if(pushMsgDom.size() > 0) {
+                pushMsgDom.hide();
+            }
             $(".img-loading[pf=chatMessage]").hide();
             var msgData=data.msgData;
             if(msgData && $.isArray(msgData)) {
@@ -1310,14 +1313,16 @@ var chat={
                     typeof msgData[i] == "object" &&  chat.formatUserToContent(msgData[i]);//空返回function
                 }
             }
-            $('#dialog_list .push').appendTo($('#dialog_list')).show();
+            if(pushMsgDom.size() > 0) {
+                pushMsgDom.appendTo($('#dialog_list')).show();
+            }
             chat.setTalkListScroll(true);
         });
         //加载私聊信息
         this.socket.on('loadWhMsg',function(result){
             var pushMsgDom = $('#wh_msg_'+result.toUserId+' .chat_content .dialoglist .dialog .whcls').parent();
             var nextSize = pushMsgDom.next().size(),prevSize = pushMsgDom.prev().size();
-            if(nextSize==0 && prevSize == 0) {
+            if(nextSize==0 && prevSize == 0 && pushMsgDom.size() > 0) {
                 pushMsgDom.hide();
             }
             var data=result.data;
@@ -1340,7 +1345,7 @@ var chat={
                             hasImg++;
                         }
                     }
-                    if(nextSize==0 && prevSize == 0) {
+                    if(nextSize==0 && prevSize == 0 && pushMsgDom.size() > 0) {
                         pushMsgDom.appendTo($('#wh_msg_' + result.toUserId + ' .chat_content .dialoglist')).show();
                     }
                     chat.setTalkListScroll(true,$('#wh_msg_'+result.toUserId+' .wh-content'),'dark');
