@@ -263,7 +263,7 @@ var box={
                     return false;
                 }else{
                     $(".blackbg,#popBoxRegister").hide();
-                    $("#regLpBtn").attr("href", "http://testweb1.24k.hk:8090/activity/live_luckydraw/index.html?userId=" + result.userId + "#ba");
+                    $("#regLpBtn").attr("href", "http://testweb1.24k.hk:8090/activity/studioLottery/index.html?userId=" + result.userId + "#ba");
                     $(".register_result").show();
                 }
             },true,function(err){
