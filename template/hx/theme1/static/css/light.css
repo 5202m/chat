@@ -8,6 +8,11 @@ body {
     background: #b59030;
     color: #fff;
 }
+
+.header-right .toplink.vipenter {
+    color: #efe906;
+}
+
 .header-right li:hover .toplink {
     color: yellow;
 }

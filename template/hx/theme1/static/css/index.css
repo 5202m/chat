@@ -337,6 +337,10 @@ a.skin:hover {
     text-decoration: none;
 }
 
+.header-right .toplink.vipenter {
+    color: #f53520;
+}
+
 .header-right .toplink.last span, .header-right .toplink.on span, .header-right li:hover .toplink span {
     /*border-color: #315999;
 	color:#c7e8f6;*/

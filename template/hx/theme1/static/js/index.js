@@ -497,6 +497,23 @@ var indexJS ={
         if(common.isBlank(this.userInfo.nickname) && this.userInfo.clientGroup!='visitor'){
             this.refreshNickname(false, "匿名_" + this.userInfo.userId.substring(8,12));
         }
+        //创建VIP房间快速入口
+        if($("#roomInfoId").attr("av") == "true"){
+            var room = $(".rooms>div[rid]");
+            if(room.size() == 1 && room.find(".enterbtn").attr("av") == "false"){
+                var roomName = room.find(".rname").text().replace(/恒信贵金属/, "");
+                var html = [];
+                html.push('<li class="cursor" ck="1">');
+                html.push('<a href="javascript:" class="toplink vipenter"><span>' + roomName + '</span></a>');
+                html.push('</li>');
+                html = $(html.join(""));
+                html.bind("click", function(){
+                    $('.changeroom').click();
+                    $('.rooms .rbox[rid] .enterbtn').click();
+                });
+                $(".header-right>ul").prepend(html);
+            }
+        }
     },
 
     /**
@@ -804,11 +821,11 @@ var indexJS ={
             var params = {userId: indexJS.userInfo.userId, defTemplate: theme};
             common.getJson('/hxstudio/setThemeStyle', {data: JSON.stringify(params)}, function (result) {
                 if (result.isOK) {
-                    $('#themeStyle').attr('href', '/hx/' + themeJson.theme + '/css/' + themeJson.style + (isD?'.min':'') + '.css?t=' + new Date().getTime());
+                    $('#themeStyle').attr('href', '/hx/' + themeJson.theme + '/css/' + themeJson.style + (isD=="true"?'':'.min') + '.css?t=' + new Date().getTime());
                 }
             });
         } else {
-            $('#themeStyle').attr('href', '/hx/' + themeJson.theme + '/css/' + themeJson.style + (isD?'.min':'') + '.css?t=' + new Date().getTime());
+            $('#themeStyle').attr('href', '/hx/' + themeJson.theme + '/css/' + themeJson.style + (isD=="true"?'':'.min') + '.css?t=' + new Date().getTime());
         }
         //$(".mCSB_dragger_bar").css({background: "url(/hx/theme1/img/"+themeJson.style+"/scroll.jpg) 5px 50% repeat-y",width: "12px"});
     },

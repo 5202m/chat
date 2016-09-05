@@ -9,6 +9,11 @@ body {
     background: #b59030;
     color: #fff;
 }
+
+.header-right .toplink.vipenter {
+    color: #f53520;
+}
+
 .header-right li:hover .toplink {
     color: #c6a974;
 }

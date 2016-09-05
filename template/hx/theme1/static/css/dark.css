@@ -16,6 +16,10 @@ body {
     color: #fff
 }
 
+.header-right .toplink.vipenter {
+    color: #f53520;
+}
+
 .header-right li:hover .toplink {
     color: #d3b472
 }
