@@ -146,7 +146,7 @@ var indexJS ={
                 if(indexJS.checkClientGroup("vip")){
                     alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
                 }else{
-                    alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
+                    alert("已有真实账户并激活的客户方可进入【特别专场】，您还不满足条件。如有疑问，请联系老师助理。");
                 }
                 return false;
             }
@@ -155,7 +155,7 @@ var indexJS ={
                     if(indexJS.checkClientGroup("vip")){
                         alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
                     }else{
-                        alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
+                        alert("已有真实账户并激活的客户方可进入【特别专场】，您还不满足条件。如有疑问，请联系老师助理。");
                     }
                 }else{
                     indexJS.toRefreshView();

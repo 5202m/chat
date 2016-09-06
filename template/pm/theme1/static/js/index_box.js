@@ -386,7 +386,7 @@ var box={
                                 if(indexJS.checkClientGroup("vip")){
                                     alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
                                 }else{
-                                    alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。我们将为您自动进入新手专场。");
+                                    alert("已有真实账户并激活的客户方可进入【特别专场】，您还不满足条件。我们将为您自动进入直播大厅。");
                                 }
                             }
                             indexJS.toRefreshView();

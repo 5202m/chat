@@ -309,7 +309,7 @@ var studioMbLogin = {
                                 }else if(studioMbLogin.checkClientGroup("vip")){
                                     studioMbPop.showMessage("该房间仅对新客户开放。");
                                 }else{
-                                    studioMbPop.showMessage("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。");
+                                    studioMbPop.showMessage("已有真实账户并激活的客户方可进入【特别专场】，您还不满足条件。");
                                 }
                             }else{
                                 studioMbPop.loadingBlock($("#loginPop"), true);
