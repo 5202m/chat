@@ -623,6 +623,7 @@ var indexJS ={
             if(articleDetail.authorInfo){
                 author = articleDetail.authorInfo.name || "";
                 avatar = articleDetail.authorInfo.avatar || "";
+                avatar = avatar.replace(/,.*$/, "");
             }
             var publishTimeStr = common.formatterDateTime(publishTime, '-').substring(0, 16)
                 + "-" + common.formatterDateTime(articleInfo.publishEndDate, '-').substring(11, 16);
