@@ -26,6 +26,12 @@ var indexJS ={
      * 事件控制
      */
     setEvent:function(){
+        //创建专场房间快速入口
+        var vipRoom = $(".rooms .rname:contains('专场')");
+        if(vipRoom.size() == 1){
+            $(".roomctrl i").addClass("hot");
+            $(".roomctrl span").text(vipRoom.text());
+        }
         //头部框事件
         $(".header-right li").hover(function(){
             $(this).find(".dropcont").show();

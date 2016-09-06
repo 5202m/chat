@@ -356,6 +356,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .mod_room .changeroom{ display:inline-block; *display:inline; *zoom:1; height:40px; float:right; position:relative}
 .mod_room .changeroom .roomctrl{display:inline-block; *display:inline; *zoom:1;  vertical-align:top; height:40px; color:#fff; font-size:14px; line-height:40px; padding:0 12px; text-decoration:none}
 .mod_room .changeroom .roomctrl:hover{color:#ffe39c; background-color:#3e67b3;}
+.mod_room .changeroom .roomctrl i.hot{background-image: url("../img/hot.gif"); background-position: 0; width: 22px; height: 11px; margin-top: 15px;}
 .mod_room .changeroom.open .roomctrl{ color:#ffe39c; background-color:#3e67b3;}
 .roomctrl i{display:inline-block; *display:inline; *zoom:1; margin-top:14px;background-position:-180px 0; width:14px; height:12px; margin-right:5px; vertical-align:top ; *margin-top:5px;}
 .changeroom.open .roomctrl i,.changeroom .roomctrl:hover i{background-position:-180px -15px;}
