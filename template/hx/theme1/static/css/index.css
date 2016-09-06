@@ -1635,7 +1635,8 @@ a.skin:hover {
 
 .dialog.analyst > p {
     background: #cdd7e2;
-    color: #000
+    color: red;
+    font-weight: bold;
 }
 
 .dialog_top {
@@ -1838,7 +1839,7 @@ a.skin:hover {
 .dialog_reply {
     display: block;
     border-top: 1px solid #76C030;
-    color: #0047c9;
+    color: blue;
     font-size: 14px;
     margin-top: 4px;
 }
