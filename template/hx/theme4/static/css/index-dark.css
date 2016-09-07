@@ -433,7 +433,7 @@ body:before {
     border-radius: 12px;
     height: 13px;
     color: #FFFFFF;
-    right: 0;
+    right: -6px;
     font-size: 12px;
     line-height: 12px;
     text-indent: 0;
