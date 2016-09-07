@@ -98,7 +98,7 @@
                 </span>
             </div>
             <div class="error dn"><i></i></div>
-            <div class="btnbar"><input type="button" class="set_submit" value="提交"></div>
+            <div class="btnbar"><input type="button" class="set_submit" value="提交" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'Login_tijiao', 'content_top']);"></div>
             <div class="botbar lh50">
                 <span class="fr">已有账号，我要<a href="javascript:void(0)" id="reg_login">登录</a></span>
             </div>
@@ -330,11 +330,14 @@
         	<i></i>
             <h4>恭喜您注册直播间成功！ </h4>
             <p style="font-size:21px">
-                <a href="javascript:void(0)" id="regLpBtn" target="_blank" style="color:#2980d1; text-decoration: underline;">立即参与抽奖</a>
-                ，领2G手机流量！
+                <a href="javascript:void(0)" id="regLpBtn" target="_blank" style="color:#2980d1; text-decoration: underline;" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'activity_choujiang', 'content_middle']);">
+                    立即参与抽奖
+                </a>，领2G手机流量！
             </p>
         </div>
-    	<a class="pop_close" href="javascript:"><i>关闭</i></a>
+    	<a class="pop_close" href="javascript:" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'activity_guanbi', 'content_middle']);">
+            <i>关闭</i>
+        </a>
     </div>
 </div>
 
