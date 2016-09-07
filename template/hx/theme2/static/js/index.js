@@ -30,34 +30,6 @@ var indexJS={
         if(!this.userInfo.nickname){
             this.refreshNickname(false, "匿名_" + this.userInfo.userId.substring(8,12));
         }
-        if(this.userInfo.clientGroup=='visitor'){
-            /*if(studioMbPop.Login.forceLogin()){
-                //之前已经看过3分钟了。
-                studioMbPop.popBox("login", {
-                    groupId : "",
-                    clientGroup : indexJS.userInfo.clientGroup,
-                    clientStoreId : indexJS.userInfo.clientStoreId,
-                    platform : indexJS.options.platform,
-                    closeable:false,
-                    showTip:true
-                });
-            }else{
-                //3分钟后强制要求登录
-                window.setTimeout(function(){
-                    if(indexJS.userInfo.clientGroup=='visitor'){
-                        studioMbPop.Login.forceLogin(true);
-                        studioMbPop.popBox("login", {
-                            groupId : "",
-                            clientGroup : indexJS.userInfo.clientGroup,
-                            clientStoreId : indexJS.userInfo.clientStoreId,
-                            platform : indexJS.options.platform,
-                            closeable:false,
-                            showTip:true
-                        });
-                    }
-                }, 180000);
-            }*/
-        }
     },
     /**
      * 检查客户组别
