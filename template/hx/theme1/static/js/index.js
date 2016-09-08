@@ -185,21 +185,11 @@ var indexJS ={
             }
             if(!common.containSplitStr(cgs,indexJS.userInfo.clientGroup)){
                 alert("您没有进入该房间的权限，如有疑问，请联系客服。");
-                /*if(indexJS.checkClientGroup("vip")){
-                    alert("该房间仅对新客户开放，如有疑问，请联系客服。");
-                }else{
-                    alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系客服。");
-                }*/
                 return false;
             }
             common.getJson("/hxstudio/checkGroupAuth",{groupId:thiz.attr("rid")},function(result){
                 if(!result.isOK){
                     alert("您没有进入该房间的权限，如有疑问，请联系客服。");
-                    /*if(indexJS.checkClientGroup("vip")){
-                        alert("该房间仅对新客户开放，如有疑问，请联系客服。");
-                    }else{
-                        alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系客服。");
-                    }*/
                 }else{
                     indexJS.toRefreshView();
                 }

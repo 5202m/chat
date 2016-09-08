@@ -324,8 +324,8 @@ var studioMbLogin = {
                     }else{
                         studioMbPop.loadingBlock($("#loginPop"), true);
                         LoginAuto.setAutoLogin($("#loginForm_al").prop("checked"));
-                    	if(studioMbLogin.checkClientGroup("vip")){
-                            alert("您已具备进入Vip专场的条件，请关注VIP专场的课程安排。");
+                        if(studioMbPop.onWelcome){
+                            studioMbPop.onWelcome(result.userInfo.clientGroup);
                         }
                         studioMbPop.reload();
                     }
@@ -927,6 +927,7 @@ var studioMbPop = {
     Msg : studioMbMsg,
     onShow : null,
     onHide : null,
+    onWelcome : null,
     /**
      * 显示提示信息
      */
@@ -998,6 +999,7 @@ var studioMbPop = {
         if(events){
             this.onShow = typeof events.onShow == "function" ? events.onShow : null;
             this.onHide = typeof events.onHide == "function" ? events.onHide : null;
+            this.onWelcome = typeof events.onWelcome == "function" ? events.onWelcome : null;
         }
         this.Person.load(userInfo, options);
         this.Login.load();

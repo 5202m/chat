@@ -397,9 +397,7 @@ var box={
                             }
                         });
                     }else{
-                        if(indexJS.checkClientGroup("vip")){
-                            alert("您已具备进入Vip专场的条件，请关注VIP专场的课程安排。");
-                        }
+                        indexJS.showWelcomeMsg();
                         indexJS.toRefreshView();
                     }
                 }

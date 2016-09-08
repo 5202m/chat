@@ -31,6 +31,12 @@ var indexJS ={
         if(vipRoom.size() == 1){
             $(".roomctrl i").addClass("hot");
             $(".roomctrl span").text(vipRoom.text());
+            var rid = vipRoom.siblings(".enterbtn").attr("rid");
+            var vipLink = $("#VIPRoomLink");
+            vipLink.show();
+            vipLink.bind("click", rid, function(e){
+                $(".rooms .enterbtn[rid='" + e.data + "']").trigger("click");
+            });
         }
         //隐藏广告
         /*if($("#roomInfoId").attr("av")=='true'){
@@ -276,6 +282,20 @@ var indexJS ={
         });
         //placeholder IE支持
         this.placeholderSupport();//ie下输入框显示文字提示
+    },
+    /**
+     * 显示欢迎语
+     */
+    showWelcomeMsg:function(){
+        //创建专场房间快速入口
+        var vipRoom = $(".rooms .rname:contains('专场')");
+        if(vipRoom.size() == 1){
+            var cgs = vipRoom.siblings(".enterbtn").attr("cgs");
+            var roomName = vipRoom.text();
+            if(common.containSplitStr(cgs,indexJS.userInfo.clientGroup)){
+                alert("您已具备进入“" + roomName + "”的条件，请关注" + roomName + "的课程安排。");
+            }
+        }
     },
     /**
      * 填充课程

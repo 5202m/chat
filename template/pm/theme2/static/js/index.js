@@ -18,6 +18,16 @@ var studioChatMbIdx={
             },
             onHide : function(){
                 $('.boxcont').height('auto');
+            },
+            onWelcome : function(clientGroup){
+                var vipRoom = $(".videoroom-ul .tit b:contains('专场')");
+                if(vipRoom.size() == 1){
+                    var cgs = vipRoom.siblings("span[aw]").attr("aw");
+                    var roomName = vipRoom.text();
+                    if(common.containSplitStr(cgs, clientGroup)){
+                        alert("您已具备进入“" + roomName + "”的条件，请关注" + roomName + "的课程安排。");
+                    }
+                }
             }
         });
         this.initRoom();
