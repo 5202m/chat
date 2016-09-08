@@ -35,6 +35,7 @@ var indexJS ={
             var vipLink = $("#VIPRoomLink");
             vipLink.show();
             vipLink.bind("click", rid, function(e){
+                $(".roomctrl").trigger("click");
                 $(".rooms .enterbtn[rid='" + e.data + "']").trigger("click");
             });
         }
