@@ -42,6 +42,10 @@ var box={
                 $(".blackbg").hide();
             });
         });
+        var paramIsVip = common.getUrlParam('p');
+        if(common.isValid(paramIsVip) && paramIsVip=='vip'){
+            $(".rooms .rbox[rid] .enterbtn").trigger("click");
+        }
     },
     /**
      * 账号升级事件
