@@ -313,7 +313,7 @@ var indexJS={
             });
             return false;
         });
-        $(".btns .enter:first").click();
+        //$(".btns .enter:first").click();
     },
     /**
      * 课程表相关事件
