@@ -115,6 +115,7 @@ var chatService ={
                 var cacheUserInfo={
                     clientGroup:userInfo.clientGroup,
                     isMobile:userInfo.isMobile,
+                    avatar:userInfo.avatar,
                     nickname:userInfo.nickname,
                     socketId:userInfo.socketId,
                     userId:userInfo.userId,
