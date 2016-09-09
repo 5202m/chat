@@ -289,8 +289,8 @@
             {url: "/base/lib/flowplayer/flowplayer.min.js"},
             {url: "/base/lib/paste.js"},
     <% if(isDevTest) { %>
-        {url:"/base/lib/newquote.js"},{url:"/base/lib/jquery.face.js"},{url:"/base/util/common.js"},{url:"/base/util/chatAnalyze.js"},
-        {url:"/pm/theme1/js/index.js"},{url:"/pm/theme1/js/index_chat.js"},{url:"/pm/theme1/js/index_video.js"},{url:"/pm/theme1/js/index_box.js"},{url:"/pm/theme1/js/index_tool.js"}
+        {url:"/base/lib/newquote.js",skipCache:true},{url:"/base/lib/jquery.face.js",skipCache:true},{url:"/base/util/common.js",skipCache:true},{url:"/base/util/chatAnalyze.js",skipCache:true},
+        {url:"/pm/theme1/js/index.js",skipCache:true},{url:"/pm/theme1/js/index_chat.js",skipCache:true},{url:"/pm/theme1/js/index_video.js",skipCache:true},{url:"/pm/theme1/js/index_box.js",skipCache:true},{url:"/pm/theme1/js/index_tool.js",skipCache:true}
     <% }else{ %>{url:"/pm/theme1/js/index.min.js"}<% }%>,function () {//ie版本不做本地缓存操作
         pageFun();
         indexJS.init();//初始化

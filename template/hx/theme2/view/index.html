@@ -162,7 +162,7 @@
     basket.require(
             {url: "/base/lib/jquery-1.7.min.js"},
             {url: "/base/lib/swipe/swiper.min.js"},
-             <% if(isDevTest) { %>{url:"/base/util/common.js"},{url:"/hx/theme2/js/index.js"}<% }else{ %>{url:"/hx/theme2/js/index.min.js"}<% }%>,null).then(function () {
+             <% if(isDevTest) { %>{url:"/base/util/common.js",skipCache:true},{url:"/hx/theme2/js/index.js",skipCache:true}<% }else{ %>{url:"/hx/theme2/js/index.min.js",skipCache:true}<% }%>,null).then(function () {
             indexJS.userInfo=JSON.parse('<%- userInfo %>');
             indexJS.mobile24kPath='<%= mobile24kPath %>';
             indexJS.apiUrl='<%= apiUrl %>';

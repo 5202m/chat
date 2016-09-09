@@ -163,7 +163,7 @@
     basket.require(
             {url: "/base/lib/jquery-1.7.min.js"},
             {url: "/base/lib/swipe/swiper.min.js"},
-            <% if(isDevTest) { %>{url:"/base/util/common.js"},{url:"/base/util/chatAnalyze.js"},{url:"/pm/theme2/js/index.js"}<% }else{ %>{url:"/pm/theme2/js/index.min.js"}<% }%>,null).then(function () {
+            <% if(isDevTest) { %>{url:"/base/util/common.js",skipCache:true},{url:"/base/util/chatAnalyze.js",skipCache:true},{url:"/pm/theme2/js/index.js",skipCache:true}<% }else{ %>{url:"/pm/theme2/js/index.min.js"}<% }%>,null).then(function () {
             studioChatMbIdx.userInfo=JSON.parse('<%- userInfo %>');
             studioChatMbIdx.mobile24kPath='<%= mobile24kPath %>';
             studioChatMbIdx.apiUrl='<%= apiUrl %>';

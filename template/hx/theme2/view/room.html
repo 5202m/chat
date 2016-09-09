@@ -201,7 +201,7 @@
             {url: "/base/lib/lightbox/lightbox.min.js"},
             {url: "/base/lib/toucher.js"},
             {url: "/base/lib/iphone-inline-video.browser.js"},
-            <% if(isDevTest) { %>{url:"/base/util/common.js"},{url:"/hx/theme2/js/room.js"}<% }else{ %>{url:"/hx/theme2/js/room.min.js"}<% }%>,null).then(function () {
+            <% if(isDevTest) { %>{url:"/base/util/common.js",skipCache:true},{url:"/hx/theme2/js/room.js",skipCache:true}<% }else{ %>{url:"/hx/theme2/js/room.min.js",skipCache:true}<% }%>,null).then(function () {
                 roomJS.web24kPath = '<%= web24kPath %>';
                 roomJS.apiUrl = '<%= apiUrl %>';
                 roomJS.filePath = '<%= filePath %>';

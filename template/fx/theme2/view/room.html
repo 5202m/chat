@@ -197,7 +197,7 @@
             {url: "/base/lib/lightbox/lightbox.min.js"},
             {url: "/base/lib/toucher.js"},
             {url: "/base/lib/iphone-inline-video.browser.js"},
-            <% if(isDevTest) { %>{url:"/base/util/common.js"},{url:"/base/util/chatAnalyze.js"},{url:"/fx/theme2/js/room.js"}<% }else{ %>{url:"/fx/theme2/js/room.min.js"}<% }%>,null).then(function () {
+            <% if(isDevTest) { %>{url:"/base/util/common.js",skipCache:true},{url:"/base/util/chatAnalyze.js",skipCache:true},{url:"/fx/theme2/js/room.js",skipCache:true}<% }else{ %>{url:"/fx/theme2/js/room.min.js"}<% }%>,null).then(function () {
                 studioChatMb.apiUrl = '<%= apiUrl %>';
                 studioChatMb.filePath = '<%= filePath %>';
                 studioChatMb.userInfo = JSON.parse('<%- userInfo %>');
