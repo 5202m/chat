@@ -194,7 +194,13 @@ var indexJS ={
                 if(!result.isOK){
                     alert("您没有进入该房间的权限，如有疑问，请联系客服。");
                 }else{
-                    indexJS.toRefreshView();
+                    var paramIsVip = common.getUrlParam('p');
+                    if(common.isValid(paramIsVip) && paramIsVip=='vip' && $('#roomInfoId').text().indexOf('VIP') > 0) {
+                        var url = window.location.href;
+                        window.location.href = url.substring(0,url.indexOf('?'));
+                    }else{
+                        indexJS.toRefreshView();
+                    }
                 }
             },true,function(err){
                 if("success"!=err) {

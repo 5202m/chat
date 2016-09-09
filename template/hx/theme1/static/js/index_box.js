@@ -42,11 +42,13 @@ var box={
                 $(".blackbg").hide();
             });
         });
-        var paramIsVip = common.getUrlParam('p');
-        if(common.isValid(paramIsVip) && paramIsVip=='vip' && !indexJS.userInfo.isLogin){
-            $(".rooms .rbox[rid] .enterbtn").trigger("click");
-        }else if(common.isValid(paramIsVip) && paramIsVip=='vip' && indexJS.userInfo.isLogin){
-            $('.vipenter').trigger('click');
+        if($('#roomInfoId').text().indexOf('VIP')==-1) {
+            var paramIsVip = common.getUrlParam('p');
+            if (common.isValid(paramIsVip) && paramIsVip == 'vip' && !indexJS.userInfo.isLogin) {
+                $(".rooms .rbox[rid] .enterbtn").trigger("click");
+            } else if (common.isValid(paramIsVip) && paramIsVip == 'vip' && indexJS.userInfo.isLogin) {
+                $('.vipenter').trigger('click');
+            }
         }
     },
     /**
