@@ -408,13 +408,7 @@ var indexJS ={
      * 通过默认房间刷新对应页面
      */
     toRefreshView:function(){
-        var paramIsVip = common.getUrlParam('p');
-        var url = window.location.href;
-        if(common.isValid(paramIsVip) && paramIsVip=='vip') {
-            window.location.href = url.substring(0, url.indexOf('?'));
-        } else {
-            window.location.reload();
-        }
+        window.location.reload();
     },
     /**
      * 检查客户组别

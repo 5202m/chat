@@ -43,8 +43,10 @@ var box={
             });
         });
         var paramIsVip = common.getUrlParam('p');
-        if(common.isValid(paramIsVip) && paramIsVip=='vip'){
+        if(common.isValid(paramIsVip) && paramIsVip=='vip' && !indexJS.userInfo.isLogin){
             $(".rooms .rbox[rid] .enterbtn").trigger("click");
+        }else if(common.isValid(paramIsVip) && paramIsVip=='vip' && indexJS.userInfo.isLogin){
+            $('.vipenter').trigger('click');
         }
     },
     /**
