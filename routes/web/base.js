@@ -8,6 +8,7 @@ var request = require('request');
 var constant = require('../../constant/constant');//引入constant
 var config = require('../../resources/config');//引入config
 var common = require('../../util/common');//引入common
+var versionUtil = require('../../util/versionUtil');//引入async
 var errorMessage = require('../../util/errorMessage');
 var messageService = require('../../service/messageService');//引入messageService
 var userService = require('../../service/userService');//引入userService
@@ -234,6 +235,7 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
         }
         viewDataObj.options=JSON.stringify(options);
         viewDataObj.fromPlatform=options.platform;
+        viewDataObj.version=versionUtil.getVersion();
         if(!isMobile && fromPlatform == config.studioThirdUsed.webui && chatUser.groupType != constant.fromPlatform.studio){
             res.render(common.renderPath(req,constant.tempPlatform.webui,"room"),viewDataObj);
             return;

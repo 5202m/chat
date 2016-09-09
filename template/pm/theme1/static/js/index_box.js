@@ -743,7 +743,3 @@ var box={
         $(".tipsbox").fadeIn().delay(1000).fadeOut(200).find(".cont").text(msg);
     }
 };
-// 初始化
-$(function() {
-    box.init();
-});

@@ -21,6 +21,9 @@ var indexJS ={
         this.setEvent();//设置各种事件
         this.setTradeStrategyNote(null, true);
         this.setAdvertisement();
+        chat.init();
+        box.init();
+        tool.init();
     },
     /**
      * 事件控制

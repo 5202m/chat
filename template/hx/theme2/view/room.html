@@ -6,7 +6,6 @@
     <meta name="keywords" content="手机视频直播" />
     <meta name="description" content="手机视频直播" />
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
-    <script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
     <script type="text/javascript" src="/base/lib/store.min.js"></script>
     <!-- 自动登录 begin -->
     <script type="text/javascript" src="/hx/theme2/js/loginAuto.js"></script>
@@ -192,41 +191,37 @@
 <section class="errorbox dn">
     <div class="cont"></div>
 </section>
-
-<script type="text/javascript" src="/base/lib/swipe/swiper.min.js"></script>
-<script type="text/javascript" src="/base/lib/lightbox/lightbox.min.js"></script>
-<script type="text/javascript" src="/base/lib/socket.io.js"></script>
-<script type="text/javascript" src="/base/lib/toucher.js"></script>
-<script type="text/javascript" src="/base/lib/iphone-inline-video.browser.js"></script>
-<% if(isDevTest) { %>
-<script type="text/javascript" src="/base/util/common.js"></script>
-<script type="text/javascript" src="/base/util/chatAnalyze.js"></script>
-<script type="text/javascript" src="/hx/theme2/js/room.js"></script>
-<% }else{ %>
-<script type="text/javascript" src="/hx/theme2/js/room.min.js?t=<%=new Date().getTime()%>"></script>
-<% }%>
-<script type="text/javascript" src="http://images.hx9999.com/scripts/analytics.js"></script>
+<script type="text/javascript" src="/base/lib/basket.min.js"></script>
 <script type="text/javascript">
-    $(function() {
-        roomJS.web24kPath = '<%= web24kPath %>';
-        roomJS.apiUrl = '<%= apiUrl %>';
-        roomJS.filePath = '<%= filePath %>';
-        roomJS.userInfo = JSON.parse('<%- userInfo %>');
-        roomJS.socketUrl = JSON.parse('<%- socketUrl %>');
-        roomJS.serverTime=Number('<%= serverTime %>');
-        roomJS.syllabusData=common.formatToJson('<%- syllabusData%>');
-        roomJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
-        roomJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
-        roomJS.options=JSON.parse('<%- options%>');
-        roomJS.init();
-    });
-    lightbox.option({
-        'resizeDuration': 200,
-        'wrapAround': true,
-        'disableScrolling':true,
-        'positionFromTop':200,
-        'showImageNumberLabel' : false
-    });
+    basket.version='<%=version%>';
+    basket.require(
+            {url: "/base/lib/jquery-1.7.min.js"},
+            {url: "/base/lib/socket.io.js"},
+            {url: "/base/lib/swipe/swiper.min.js"},
+            {url: "/base/lib/lightbox/lightbox.min.js"},
+            {url: "/base/lib/toucher.js"},
+            {url: "/base/lib/iphone-inline-video.browser.js"},
+            <% if(isDevTest) { %>{url:"/base/util/common.js"},{url:"/hx/theme2/js/room.js"}<% }else{ %>{url:"/hx/theme2/js/room.min.js"}<% }%>,null).then(function () {
+                roomJS.web24kPath = '<%= web24kPath %>';
+                roomJS.apiUrl = '<%= apiUrl %>';
+                roomJS.filePath = '<%= filePath %>';
+                roomJS.userInfo = JSON.parse('<%- userInfo %>');
+                roomJS.socketUrl = JSON.parse('<%- socketUrl %>');
+                roomJS.serverTime=Number('<%= serverTime %>');
+                roomJS.syllabusData=common.formatToJson('<%- syllabusData%>');
+                roomJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
+                roomJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
+                roomJS.options=JSON.parse('<%- options%>');
+                roomJS.init();
+                lightbox.option({
+                    'resizeDuration': 200,
+                    'wrapAround': true,
+                    'disableScrolling':true,
+                    'positionFromTop':200,
+                    'showImageNumberLabel' : false
+                });
+            });
 </script>
+<script type="text/javascript" src="http://images.hx9999.com/scripts/analytics.js"></script>
 </body>
 </html>

@@ -735,8 +735,3 @@ var tool={
         return html;
     }
 };
-
-// 初始化
-$(function() {
-    tool.init();
-});

@@ -1526,7 +1526,3 @@ var chat={
         }
     }
 };
-// 初始化
-$(function() {
-    chat.init();
-});

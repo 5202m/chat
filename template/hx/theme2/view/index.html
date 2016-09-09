@@ -8,7 +8,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta content="telephone=no" name="format-detection">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
-    <script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
     <script type="text/javascript" src="/base/lib/store.min.js"></script>
     <!-- 自动登录 begin -->
     <script type="text/javascript" src="/hx/theme2/js/loginAuto.js"></script>
@@ -157,24 +156,20 @@
     <div class="cont"></div>
 </section>
 <!-- 弹出层end -->
-
-<script type="text/javascript" src="/base/lib/swipe/swiper.min.js"></script>
-<% if(isDevTest) { %>
-<script type="text/javascript" src="/base/util/common.js"></script>
-<script type="text/javascript" src="/base/util/chatAnalyze.js"></script>
-<script type="text/javascript" src="/hx/theme2/js/index.js"></script>
-<% }else{ %>
-<script type="text/javascript" src="/hx/theme2/js/index.min.js?t=<%=new Date().getTime()%>"></script>
-<% }%>
-<script type="text/javascript" src="http://images.hx9999.com/scripts/analytics.js"></script>
+<script type="text/javascript" src="/base/lib/basket.min.js"></script>
 <script type="text/javascript">
-    $(function(){
-        indexJS.userInfo=JSON.parse('<%- userInfo %>');
-        indexJS.mobile24kPath='<%= mobile24kPath %>';
-        indexJS.apiUrl='<%= apiUrl %>';
-        indexJS.options=JSON.parse('<%- options%>');
-        indexJS.init();
-    });
+    basket.version='<%=version%>';
+    basket.require(
+            {url: "/base/lib/jquery-1.7.min.js"},
+            {url: "/base/lib/swipe/swiper.min.js"},
+             <% if(isDevTest) { %>{url:"/base/util/common.js"},{url:"/hx/theme2/js/index.js"}<% }else{ %>{url:"/hx/theme2/js/index.min.js"}<% }%>,null).then(function () {
+            indexJS.userInfo=JSON.parse('<%- userInfo %>');
+            indexJS.mobile24kPath='<%= mobile24kPath %>';
+            indexJS.apiUrl='<%= apiUrl %>';
+            indexJS.options=JSON.parse('<%- options%>');
+            indexJS.init();
+         });
 </script>
+<script type="text/javascript" src="http://images.hx9999.com/scripts/analytics.js"></script>
 </body>
 </html>

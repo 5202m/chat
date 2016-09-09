@@ -21,6 +21,9 @@ var indexJS ={
         this.setVisitStore();//设置访客存储
         this.setEvent();//设置各种事件
         this.setAdvertisement();
+        chat.init();
+        box.init();
+        tool.init();
     },
     /**
      * 设置滚动条样式
@@ -867,7 +870,3 @@ var indexJS ={
         }
     }
 };
-// 初始化
-$(function() {
-    indexJS.init();
-});

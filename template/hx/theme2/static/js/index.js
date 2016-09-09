@@ -313,9 +313,7 @@ var indexJS={
             });
             return false;
         });
-        if(common.isBlank(common.getUrlParam('t'))) {
-            $(".btns .enter:first").trigger('click');
-        }
+        $(".btns .enter:first").click();
     },
     /**
      * 课程表相关事件

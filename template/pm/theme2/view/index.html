@@ -8,7 +8,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta content="telephone=no" name="format-detection">
 <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
-<script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="/base/lib/store.min.js"></script>
 <!-- 自动登录 begin -->
 <script type="text/javascript" src="/pm/theme2/js/loginAuto.js"></script>
@@ -158,23 +157,19 @@
     <div class="cont"></div>
 </section>
 <!-- 弹出层end -->
-
-<script type="text/javascript" src="/base/lib/swipe/swiper.min.js"></script>
-<% if(isDevTest) { %>
-<script type="text/javascript" src="/base/util/common.js"></script>
-<script type="text/javascript" src="/base/util/chatAnalyze.js"></script>
-<script type="text/javascript" src="/pm/theme2/js/index.js"></script>
-<% }else{ %>
-<script type="text/javascript" src="/pm/theme2/js/index.min.js?t=<%=new Date().getTime()%>"></script>
-<% }%>
+<script type="text/javascript" src="/base/lib/basket.min.js"></script>
 <script type="text/javascript">
-$(function(){
-    studioChatMbIdx.userInfo=JSON.parse('<%- userInfo %>');
-    studioChatMbIdx.mobile24kPath='<%= mobile24kPath %>';
-    studioChatMbIdx.apiUrl='<%= apiUrl %>';
-    studioChatMbIdx.options=JSON.parse('<%- options%>');
-    studioChatMbIdx.init();
-});
+    basket.version='<%=version%>';
+    basket.require(
+            {url: "/base/lib/jquery-1.7.min.js"},
+            {url: "/base/lib/swipe/swiper.min.js"},
+            <% if(isDevTest) { %>{url:"/base/util/common.js"},{url:"/base/util/chatAnalyze.js"},{url:"/pm/theme2/js/index.js"}<% }else{ %>{url:"/pm/theme2/js/index.min.js"}<% }%>,null).then(function () {
+            studioChatMbIdx.userInfo=JSON.parse('<%- userInfo %>');
+            studioChatMbIdx.mobile24kPath='<%= mobile24kPath %>';
+            studioChatMbIdx.apiUrl='<%= apiUrl %>';
+            studioChatMbIdx.options=JSON.parse('<%- options%>');
+            studioChatMbIdx.init();
+    });
 </script>
 </body>
 </html>

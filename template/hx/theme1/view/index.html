@@ -29,7 +29,6 @@
     <% }else{%>
     <link id="themeStyle" d="<%=isDevTest%>" href="/hx/theme1/css/light<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" type="text/css" rel="stylesheet" />
     <% }%>
-    <script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
     <script type="text/javascript" src="/base/lib/store.min.js"></script>
     <!-- 自动登录 begin -->
     <script type="text/javascript" src="/hx/theme1/js/loginAuto.js"></script>
@@ -37,6 +36,8 @@
         LoginAuto.sessionUser = JSON.parse('<%- userInfo %>');
         LoginAuto.init();
     </script>
+    <script type="text/javascript" src="/base/lib/lazyload/lazyload.min.js"></script>
+    <script type="text/javascript" src="/base/lib/basket.min.js"></script>
 </head>
 <body class="">
 <div class="box-header">
@@ -439,55 +440,67 @@
 <!-- wrapper end -->
 <!-- 各种弹窗 -->
 <% include index_box.html %>
-<script type="text/javascript" src="/base/lib/socket.io.js"></script>
-<script type="text/javascript" src="/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
-<script type="text/javascript" src="/base/lib/lightbox/lightbox.min.js"></script>
-<script type="text/javascript" src="/base/lib/jqueryUI/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/base/lib/swipe/swiper.min.js"></script>
-<script type="text/javascript" src="/base/lib/jquery.superslide.2.1.1.js"></script>
-<script type="text/javascript" src="/base/lib/websocket.min.js"></script>
-<script type="text/javascript" src="/base/lib/jquery.xdomainrequest.min.js"></script>
-<script type="text/javascript" src="/base/lib/lazyload/lazyload.min.js"></script>
-<script type="text/javascript" src="/base/lib/flowplayer/flowplayer.min.js"></script>
-<script type="text/javascript" src="/base/lib/paste.js"></script>
-<% if(isDevTest) { %>
-<script type="text/javascript" src="/base/lib/newquote.js"></script>
-<script type="text/javascript" src="/base/lib/face/jquery.face.js"></script>
-<script type="text/javascript" src="/base/util/common.js"></script>
-<script type="text/javascript" src="/hx/theme1/js/index.js"></script>
-<script type="text/javascript" src="/hx/theme1/js/index_chat.js"></script>
-<script type="text/javascript" src="/hx/theme1/js/index_video.js"></script>
-<script type="text/javascript" src="/hx/theme1/js/index_box.js"></script>
-<script type="text/javascript" src="/hx/theme1/js/index_tool.js"></script>
-<% }else{ %>
-<script type="text/javascript" src="/hx/theme1/js/index.min.js?t=<%=new Date().getTime()%>"></script>
-<% }%>
-<script type="text/javascript" src="http://images.hx9999.com/scripts/analytics.js"></script>
 <script type="text/javascript">
-    indexJS.apiUrl='<%= apiUrl %>';
-    indexJS.userInfo=JSON.parse('<%- userInfo %>');
-    indexJS.serverTime=Number('<%= serverTime %>');
-    indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
-    indexJS.filePath='<%= filePath %>';
-    indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
-    indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
-    indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
+    basket.version='<%=version%>';
+    basket.require(
+            {url: "/base/lib/jquery-1.7.min.js"},
+            {url: "/base/lib/socket.io.js"},
+            {url: "/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"},
+            {url: "/base/lib/lightbox/lightbox.min.js"},
+            {url: "/base/lib/jqueryUI/jquery-ui.min.js"},
+            {url: "/base/lib/swipe/swiper.min.js"},
+            {url: "/base/lib/jquery.superslide.2.1.1.js"},
+            {url: "/base/lib/websocket.min.js"},
+            {url: "/base/lib/jquery.xdomainrequest.min.js"},
+            {url: "/base/lib/flowplayer/flowplayer.min.js"},
+            {url: "/base/lib/paste.js"},
+    <% if(isDevTest) { %>
+        {url:"/base/lib/newquote.js"},{url:"/base/lib/jquery.face.js"},{url:"/base/util/common.js"},{url:"/hx/theme1/js/index.js"},{url:"/hx/theme1/js/index_chat.js"},{url:"/hx/theme1/js/index_video.js"},{url:"/hx/theme1/js/index_box.js"},{url:"/hx/theme1/js/index_tool.js"}
+    <% }else{ %>{url:"/hx/theme1/js/index.min.js"}<% }%>,function () {//ie版本不做本地缓存操作
+        pageFun();
+        indexJS.init();//初始化
+    }).then(function () {
+        pageFun();
+        indexJS.init();//初始化
+    });
+    function pageFun(){
+        indexJS.apiUrl='<%= apiUrl %>';
+        indexJS.userInfo=JSON.parse('<%- userInfo %>');
+        indexJS.serverTime=Number('<%= serverTime %>');
+        indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
+        indexJS.filePath='<%= filePath %>';
+        indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
+        indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
+        indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
 
-    function widthCheck(){
-        var ww = $(window).width();
-        if(ww <= 1600 ){
-            $('body').addClass('wid1 wid2');
-            if(ww < 1209 ){
-                $('body').addClass('wid3');
+        function widthCheck(){
+            var ww = $(window).width();
+            if(ww <= 1600 ){
+                $('body').addClass('wid1 wid2');
+                if(ww < 1209 ){
+                    $('body').addClass('wid3');
+                }
+            }
+            if(ww >1600){
+                $('body').removeClass('wid1');
+                $('body').removeClass('wid2');
+                $('body').removeClass('wid3');
             }
         }
-        if(ww >1600){
-            $('body').removeClass('wid1');
-            $('body').removeClass('wid2');
-            $('body').removeClass('wid3');
-        }
+        widthCheck();
+        heightCalcu();
+        $(window).resize(function (e) {
+            widthCheck();
+            heightCalcu();
+        });
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'disableScrolling':true,
+            'positionFromTop':50,
+            'albumLabel':"%1 of %2"
+        });
     }
-
     function heightCalcu(){
         var hh = $(window).height();
         var hh_banner = $('.mod_banner').height();
@@ -513,21 +526,8 @@
             $('#lvVideoId').height(hh - $('.mod_videolist').height() - 111);
         }
     }
-    widthCheck();
-    heightCalcu();
-    $(function() {
-        $(window).resize(function (e) {
-            widthCheck();
-            heightCalcu();
-        });
-        lightbox.option({
-            'resizeDuration': 200,
-            'wrapAround': true,
-            'disableScrolling':true,
-            'positionFromTop':50,
-            'albumLabel':"%1 of %2"
-        });
-    });
+    var _gaq=[];
+    LazyLoad.js(["http://images.hx9999.com/scripts/analytics.js"]);
 </script>
 </body>
 </html>

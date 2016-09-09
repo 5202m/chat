@@ -102,23 +102,33 @@ var chatService ={
     },
     /**
      * 设置在线用户人数
-     * @param socket
-     * @param groupId
+     * @param userInfo
+     * @param isAdd
+     * @param serverSocketId
      */
-    setRoomOnlineUser:function(userInfo,isAdd,callback){
+    setRoomOnlineUser:function(userInfo,isAdd,serverSocketId,callback){
         this.getRoomOnlineUser(userInfo.groupId,function(roomUserArr){
             if(isAdd){
                 if(!roomUserArr){
                     roomUserArr={};
                 }
+                var cacheUserInfo={
+                    clientGroup:userInfo.clientGroup,
+                    isMobile:userInfo.isMobile,
+                    nickname:userInfo.nickname,
+                    socketId:userInfo.socketId,
+                    userId:userInfo.userId,
+                    sequence:userInfo.sequence,
+                    userType:userInfo.userType
+                };
                 if(roomUserArr.hasOwnProperty(userInfo.userId)){
                     var oldUserInfo=roomUserArr[userInfo.userId];
                     if(oldUserInfo.socketId && oldUserInfo.socketId!=userInfo.socketId){//如果存在旧的在线记录，通知旧的socket离开房间或登出
-                        userInfo.prevSocketId=oldUserInfo.socketId;
-                        chatService.leaveRoomBySocketId(oldUserInfo.groupType,oldUserInfo.socketId,chatService.leaveRoomFlag.otherLogin);
+                        cacheUserInfo.prevSocketId=oldUserInfo.socketId;
+                        chatService.leaveRoomBySocketId(userInfo.groupType,oldUserInfo.socketId,chatService.leaveRoomFlag.otherLogin);
                     }
                 }
-                roomUserArr[userInfo.userId]=userInfo;
+                roomUserArr[cacheUserInfo.userId]=cacheUserInfo;
                 chatService.setRoomOnlineUserStore(userInfo.groupId,roomUserArr);
                 callback(roomUserArr);
             }else{
@@ -133,6 +143,16 @@ var chatService ={
                         }
                         if(tmpUserInfo.prevSocketId){
                             noticeClient=false;
+                        }
+                    }else{
+                        if(serverSocketId){//服务端监控对应socketId下线，则同步更新在线用户的缓存数据
+                            for(var k in roomUserArr){
+                                if(serverSocketId==roomUserArr[k].socketId){
+                                    delete roomUserArr[k];
+                                    chatService.setRoomOnlineUserStore(userInfo.groupId,roomUserArr);
+                                    break;
+                                }
+                            }
                         }
                     }
                     //!chatService.getRoomSockets(userInfo.groupType,userInfo.groupId,false).connected.hasOwnProperty(userInfo.socketId)
@@ -203,45 +223,6 @@ var chatService ={
         });
     },
     /**
-     * 设置在线人数
-     * @param groupType
-     * @param groupId
-     * @param isAdd
-     * @param callback
-     */
-    setRoomOnlineNum:function(groupType,groupId,isAdd,callback){
-        this.getRoomOnlineNum(groupType,groupId,function(val){
-            var unitVal=isAdd?1: -1;
-            if(!val){
-                val=0;
-            }
-            val+=unitVal;
-            val=val<0?0:val;
-            global.memored.store(("onlineNum_"+groupType+"_"+groupId),val,function(err){
-                if(err){
-                    logger.error("setRoomOnlineNum[memored.store]->err:"+err);
-                }
-                callback(val);
-            });
-        });
-    },
-    /**
-     * 提取房间在线人数
-     * @param groupType 房间大类
-     * @param groupId
-     * @param callback
-     */
-    getRoomOnlineNum:function(groupType,groupId,callback){
-        global.memored.read(("onlineNum_"+groupType+"_"+groupId), function(err, val) {
-            if(err){
-                logger.error("getRoomOnlineNum[memored.read]->err:"+err);
-                callback(0);
-            }else{
-                callback(val?val:0);
-            }
-        });
-    },
-    /**
      * 提取房间在线总人数
      * @param groupId
      * @param callback
@@ -274,14 +255,6 @@ var chatService ={
         }
     },
     /**
-     * 提取房间外的id
-     * @param groupType
-     * @returns {string}
-     */
-    getOutRoomId:function(groupType){
-        return groupType+"_"+chatService.oRoomId;
-    },
-    /**
      * 设置socket连接相关信息
      * @param spaceName 命名空间对应的名称
      */
@@ -297,31 +270,6 @@ var chatService ={
              }));
          }*/
         spaceObj.on('connection', function(socket){
-            //房间外的socket登录
-            socket.on('outRoomLogin',function(data){
-                socket.isOutRoom=true;//区分是房间里面的socket还是房间外的socket，true表示房间外的socket
-                var outRoomId=chatService.getOutRoomId(data.groupType);
-                socket.join(outRoomId);
-                chatService.setRoomOnlineNum(data.groupType,chatService.oRoomId,true,function(val){
-                    var sendData = {
-                        type: chatService.noticeType.onlineNum,
-                        data: {groupId:outRoomId,onlineUserNum: val}
-                    };
-                    socket.broadcast.to(outRoomId).emit('notice', sendData);
-                    socket.emit('notice', sendData);
-                });
-            });
-            socket.on('outRoomGet',function(data){//提取在线人数
-                var groupIdArr=data.groupIds,rOnlineSizeArr={};
-                async.each(groupIdArr, function (groupId, callbackTmp) {
-                    chatService.getRoomOnlineNum(data.groupType,groupId,function(val){
-                        rOnlineSizeArr[groupId]=val;
-                        callbackTmp(null);
-                    });
-                }, function (err) {
-                    socket.emit('notice', {type: chatService.noticeType.onlineNum,data: {rOnlineSizeArr: rOnlineSizeArr}});
-                });
-            });
             //登录则加入房间,groupId作为唯一的房间号
             socket.on('login',function(data,webUserAgent){
                 var userInfo=data.userInfo,lastPublishTime=data.lastPublishTime, allowWhisper = data.allowWhisper,fUserTypeStr=data.fUserTypeStr;
@@ -329,7 +277,6 @@ var chatService ={
                 if(common.isBlank(userInfo.groupType)){
                     return false;
                 }
-                socket.isOutRoom=false;
                 //更新在线状态
                 userInfo.onlineStatus=1;
                 userInfo.onlineDate=new Date();
@@ -340,10 +287,15 @@ var chatService ={
                     socket.userInfo.sendMsgCount=sendMsgCount;
                     userInfo.isMobile=common.isMobile(userAgent);
                     socket.join(userInfo.groupId);
-                    chatService.setRoomOnlineUser(userInfo,true,function(roomUserArr){
+                    chatService.setRoomOnlineUser(userInfo,true,null,function(roomUserArr){
                         if(common.isStudio(userInfo.groupType)){//如果是直播间网页版聊天室,需要显示在线用户
                             socket.emit('onlineUserList',roomUserArr,Object.getOwnPropertyNames(roomUserArr).length);//给自己加载所有在线用户
                         }
+                    });
+                    //加载已有内容
+                    messageService.loadMsg(userInfo,lastPublishTime,false,function(msgData){
+                        //同步数据到客户端
+                        socket.emit('loadMsg', {msgData:msgData,isAdd:common.isValid(lastPublishTime)?true:false});
                     });
                     //通知客户端在线人数
                     if(common.isStudio(userInfo.groupType)){//如果是直播间网页版聊天室,则追加在线用户的输出
@@ -412,12 +364,6 @@ var chatService ={
                         });
                     }
                 });
-                //加载已有内容
-                messageService.loadMsg(userInfo,lastPublishTime,false,function(msgData){
-                    //同步数据到客户端
-                    socket.emit('loadMsg', {msgData:msgData,isAdd:common.isValid(lastPublishTime)?true:false});
-                });
-
                 //服务器时间
                 socket.emit('notice',{type:chatService.noticeType.serverTime, data:new Date().getTime()});
             });
@@ -425,7 +371,7 @@ var chatService ={
             socket.on('disconnect',function(data){
                 var userInfo=socket.userInfo;
                 if(userInfo){ //移除在线用户,客户端断线处理逻辑
-                    chatService.setRoomOnlineUser(userInfo,false,function(isRemove,noticeClient){//移除缓存在线用户
+                    chatService.setRoomOnlineUser(userInfo,false,null,function(isRemove,noticeClient){//移除缓存在线用户
                         userService.removeOnlineUser(userInfo,isRemove,function(){
                             var logRemoveTip="disconnect";
                             if(!isRemove){
@@ -444,30 +390,23 @@ var chatService ={
                             logger.info('setSocket['+logRemoveTip+']=>client['+(userInfo.accountNo||userInfo.userId)+'] disconnect!');
                         });
                     });
-                }else{//房间外socket的客户端断开对应的处理逻辑
+                }else{//监听从服务端断开的客户socket连接
                     if(socket.nsp) {
-                        var nsp=socket.nsp,socketArr = nsp.sockets, socketTmp = null;
-                        if(socket.isOutRoom){//如果是房间外的socket断开，则通知客户端,目前只是微解盘使用
-                            var groupType=nsp.name.replace(/\//g,"");
-                            chatService.setRoomOnlineNum(groupType,chatService.oRoomId,false,function(outRoomNum){
-                                var outRoomId=chatService.getOutRoomId(groupType);
-                                socket.broadcast.to(outRoomId).emit('notice',{type:chatService.noticeType.onlineNum,data:{groupId:outRoomId,onlineUserNum:outRoomNum}});
-                                socket.leave(outRoomId);
-                                if(socket){
-                                    delete socket;
+                        /*try{
+                            var nspRooms=socket.nsp.adapter.rooms;
+                            if(socket.id && nspRooms) {
+                                for(var rmKey in nspRooms){
+                                    if(common.isStudio(rmKey)){
+                                        //移除从服务端断开的客户socket连接
+                                        chatService.setRoomOnlineUser({groupId:rmKey}, false, socket.id);
+                                        break;
+                                    }
                                 }
-                                logger.error('setSocket[disconnect]=>out of room client disconnect,please check!');
-                            });
-                        }else{//服务端断开,则需更新在线状态为下线
-                            logger.error('setSocket[disconnect]=>server disconnect,please check!');
-                            /*for (var i in socketArr) {
-                             socketTmp = socketArr[i];
-                             userInfo = socketTmp.userInfo;
-                             if (userInfo) {//存在用户信息，记录用户下线状态
-                             userService.removeOnlineUser(userInfo,function () {});
-                             }
-                             }*/
-                        }
+                            }
+                        }catch(e){
+                            logger.error('disconnect server nspRooms fail!');
+                        }*/
+                        logger.error('setSocket[disconnect]=>server disconnect,please check!');
                     }
                 }
             });
@@ -482,73 +421,15 @@ var chatService ={
             //提取私聊信息
             socket.on('getWhMsg',function(userInfo){
                 messageService.loadMsg(userInfo,null,true, function(result){
-                    socket.emit('loadWhMsg',{type:'online',data:result,toUserId:userInfo.toUser.userId});
+                    if(result && result.length>0){
+                        socket.emit('loadWhMsg',{type:'online',data:result,toUserId:userInfo.toUser.userId});
+                    }
                 });
             });
             //提取服务器时间
             socket.on('serverTime',function(){
                 socket.emit('notice',{type:chatService.noticeType.serverTime, data:new Date().getTime()});
             });
-        });
-    },
-    /**
-     * 选择客服并发送信息
-     * 备注：如果csUserId有值表示已选择客服，无需再次随机选择；否则随机选择客服发送信息
-     * @param sendSocket
-     * @param userInfo
-     * @param csUserId
-     * @param data
-     */
-    toOnlineCS:function(sendSocket,userInfo,data,callback){
-        var csUserId=constant.roleUserType.cs==userInfo.toUser.userId?null:userInfo.toUser.userId;
-        if(csUserId){//非首次@客服，直接发送信息给他
-            chatService.sendMsgToUser(false,userInfo.groupType,userInfo.groupId,csUserId,data,function(){
-                callback({userId:csUserId,nickname:userInfo.toUser.nickname});
-            });
-        }else{//如果首次@客服，则随机分配客服
-            chatService.getRoomOnlineCsUserArr(userInfo.groupId,function(csArr){
-                if(csArr.length>0){//如果客服在线，随机给某个客服留言
-                    var csArrIndex=parseInt(Math.round(Math.random()*csArr.length));
-                    if(csArrIndex>csArr.length-1){
-                        csArrIndex=csArr.length-1;
-                    }
-                    var csUserInfo=csArr[csArrIndex],csUserId=csUserInfo.userId,nickname=csUserInfo.nickname;
-                    sendSocket.emit('targetCS',{userId:csUserId,nickname:nickname});//通知客户端目前所选客服，确定客户与客服之间的信息交换
-                    logger.info("First toOnlineCS->csUserInfo:"+JSON.stringify(csUserInfo));
-                    if(csUserInfo.socketId){//发送信息到客服
-                        data.fromUser.toUser.userId=csUserId;
-                        chatService.getSpaceSocket(csUserInfo.groupType,false).to(csUserInfo.socketId).emit('sendMsg',data);
-                    }
-                    callback({userId:csUserId,nickname:nickname});
-                }else{//如果客服不在线，直接找某个客服留言
-                    userService.getRoomCsUser(userInfo.groupId,function(info){
-                        if(info) {
-                            sendSocket.emit('targetCS', {userId: info.userNo, nickname: info.userName});//通知客户端目前所选客服，确定客户与客服之间的信息交换
-                            callback({userId:info.userNo,nickname:info.userName,msgStatus:0});
-                        }else{
-                            callback(null);
-                        }
-                    });
-                }
-            });
-        }
-    },
-    /**
-     * 提取房间在线cs用户集
-     * @param groupType
-     * @param roomId
-     * @param callback
-     */
-    getRoomOnlineCsUserArr:function(roomId,callback){
-        this.getRoomOnlineUser(roomId,function(roomUserArr){
-            var csArr=[],userInfoTmp=null;
-            for(var i in roomUserArr){
-                userInfoTmp = roomUserArr[i];
-                if(constant.roleUserType.cs==userInfoTmp.userType){
-                    csArr.push(userInfoTmp);
-                }
-            }
-            callback(csArr);
         });
     },
     /**
@@ -662,35 +543,22 @@ var chatService ={
                             myMsg.value = resultVal;
                         }
                         chatService.sendMsgToSelf(socket,userInfo,myMsg);
-                        var isToCSUser=!common.isStudio(userInfo.groupType) && toUser && common.isValid(toUser.userId) && (constant.roleUserType.cs==userInfo.toUser.userType || constant.roleUserType.cs==userInfo.toUser.userId);//判断是否客服
                         var imgMaxValue=data.content.maxValue;
                         //发送给除自己之外的用户
-                        if(isToCSUser && socket){//判断是否发送信息给客服
-                            chatService.toOnlineCS(socket,userInfo,{fromUser:userInfo,content:data.content},function(newUserInfo){
-                                if(newUserInfo) {
-                                    userSaveInfo.toUser.nickname = newUserInfo.nickname;
-                                    userSaveInfo.toUser.userId = newUserInfo.userId;
-                                    userSaveInfo.toUser.talkStyle = 1;
-                                    console.log("userSaveInfo.toUser:" + JSON.stringify(userSaveInfo.toUser));
-                                    messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
-                                }
+                        if(isWh){//私聊
+                            data.content.maxValue="";
+                            chatService.sendMsgToUser(socket?false:true,userInfo.groupType,groupId,toUser.userId,{fromUser:userInfo,content:data.content},function(isOnline){
+                                data.content.msgStatus=isOnline?1:0;//判断信息是否离线或在线
+                                data.content.maxValue=imgMaxValue;
+                                messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
                             });
                         }else{
-                            if(isWh){//私聊
-                                data.content.maxValue="";
-                                chatService.sendMsgToUser(socket?false:true,userInfo.groupType,groupId,toUser.userId,{fromUser:userInfo,content:data.content},function(isOnline){
-                                    data.content.msgStatus=isOnline?1:0;//判断信息是否离线或在线
-                                    data.content.maxValue=imgMaxValue;
-                                    messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
-                                });
-                            }else{
-                                messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
-                                data.content.maxValue="";
-                                if(socket) {
-                                    socket.broadcast.to(groupId).emit('sendMsg', {fromUser:userInfo,content:data.content});
-                                }else{//如果是外部发送信息，即socket不存在，比如发送图片，直接使用sendMsgToRoom方法
-                                    chatService.sendMsgToRoom(true,userInfo.groupType,groupId,'sendMsg',{fromUser:userInfo,content:data.content},null);
-                                }
+                            messageService.saveMsg({fromUser: userSaveInfo, content: data.content});
+                            data.content.maxValue="";
+                            if(socket) {
+                                socket.to(groupId).emit('sendMsg', {fromUser:userInfo,content:data.content});
+                            }else{//如果是外部发送信息，即socket不存在，比如发送图片，直接使用sendMsgToRoom方法
+                                chatService.sendMsgToRoom(true,userInfo.groupType,groupId,'sendMsg',{fromUser:userInfo,content:data.content},null);
                             }
                         }
                         if(socket) {

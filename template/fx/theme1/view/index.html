@@ -10,7 +10,7 @@
     <title>视频在线 - 金道环球投资实盘在线教育，投资之旅在此起航！</title>
     <meta content="在线教育,金道环球投资实盘在线教育,金道环球投资实盘在线,金道环球投资" name="keywords">
     <meta content="在线教育,金道环球投资实盘在线教育,金道环球投资实盘在线,金道环球投资！" name="description">
-    <link href="/base/lib/mScroll/jquery.mCustomScrollbar.min.css" type="text/css" rel="stylesheet" />
+    <link href="/base/lib/mScroll/jquery.mCustomScrollbar.min.css" type="text/css" rel="stylesheet"/>
     <link href="/base/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
     <link href="/base/lib/lightbox/lightbox.css" type="text/css" rel="stylesheet"/>
     <link href="/base/lib/swipe/swiper.min.css"  type="text/css" rel="stylesheet" />
@@ -20,7 +20,6 @@
     <!--[if lt IE 9]>
     <link href="/fx/theme1/css/studioIE.css" rel="stylesheet" type="text/css">
     <![endif]-->
-    <script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
     <script type="text/javascript" src="/base/lib/store.min.js"></script>
     <!-- 自动登录 begin -->
     <script type="text/javascript" src="/fx/theme1/js/loginAuto.js"></script>
@@ -28,6 +27,8 @@
         LoginAuto.sessionUser = JSON.parse('<%- userInfo %>');
         LoginAuto.init();
     </script>
+    <script type="text/javascript" src="/base/lib/lazyload/lazyload.min.js"></script>
+    <script type="text/javascript" src="/base/lib/basket.min.js"></script>
 </head>
 <body class="">
 <!-- header begin -->
@@ -275,88 +276,88 @@
 <!-- wrapper end -->
 <!-- 各种弹窗 -->
 <% include index_box.html %>
-<script type="text/javascript" src="/base/lib/socket.io.js"></script>
-<script type="text/javascript" src="/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
-<script type="text/javascript" src="/base/lib/lightbox/lightbox.min.js"></script>
-<script type="text/javascript" src="/base/lib/jqueryUI/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/base/lib/swipe/swiper.min.js"></script>
-<script type="text/javascript" src="/base/lib/websocket.min.js"></script>
-<script type="text/javascript" src="/base/lib/jquery.xdomainrequest.min.js"></script>
-<script type="text/javascript" src="/base/lib/lazyload/lazyload.min.js"></script>
-<script type="text/javascript" src="/base/lib/flowplayer/flowplayer.min.js"></script>
-<script type="text/javascript" src="/base/lib/paste.js"></script>
-<% if(isDevTest) { %>
-<script type="text/javascript" src="/base/lib/newquote.js"></script>
-<script type="text/javascript" src="/base/lib/jquery.face.js"></script>
-<script type="text/javascript" src="/base/util/common.js"></script>
-<script type="text/javascript" src="/base/util/chatAnalyze.js"></script>
-<script type="text/javascript" src="/fx/theme1/js/index.js"></script>
-<script type="text/javascript" src="/fx/theme1/js/index_chat.js"></script>
-<script type="text/javascript" src="/fx/theme1/js/index_video.js"></script>
-<script type="text/javascript" src="/fx/theme1/js/index_box.js"></script>
-<script type="text/javascript" src="/fx/theme1/js/index_tool.js"></script>
-<% }else{ %>
-<script type="text/javascript" src="/fx/theme1/js/index.min.js"></script>
-<% }%>
 <script type="text/javascript">
-    indexJS.options=JSON.parse('<%- options%>');
-    indexJS.apiUrl='<%= apiUrl %>';
-    indexJS.userInfo=JSON.parse('<%- userInfo %>');
-    indexJS.serverTime=Number('<%= serverTime %>');
-    indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
-    indexJS.filePath='<%= filePath %>';
-    indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
-    indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
-    indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
-    chatAnalyze.setUTM(true,$.extend({userTel:'<%= userSession.mobilePhone %>'}, indexJS.userInfo));
-    function widthCheck(){
-    	var ww = $(window).width();
-        if(ww <= 1680 ){
-            $('body').addClass('wid1');
-            if(ww < 1440 ){
-                $('body').addClass('wid2');
-                if(ww < 1281 ){
-                    $('body').addClass('wid3')
+    basket.version='<%=version%>';
+    basket.require(
+            {url: "/base/lib/jquery-1.7.min.js"},
+            {url: "/base/lib/socket.io.js"},
+            {url: "/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"},
+            {url: "/base/lib/lightbox/lightbox.min.js"},
+            {url: "/base/lib/jqueryUI/jquery-ui.min.js"},
+            {url: "/base/lib/swipe/swiper.min.js"},
+            {url: "/base/lib/websocket.min.js"},
+            {url: "/base/lib/jquery.xdomainrequest.min.js"},
+            {url: "/base/lib/flowplayer/flowplayer.min.js"},
+            {url: "/base/lib/paste.js"},
+            <% if(isDevTest) { %>
+                 {url:"/base/lib/newquote.js"},{url:"/base/lib/jquery.face.js"},{url:"/base/util/common.js"},{url:"/base/util/chatAnalyze.js"},
+                 {url:"/fx/theme1/js/index.js"},{url:"/fx/theme1/js/index_chat.js"},{url:"/fx/theme1/js/index_video.js"},{url:"/fx/theme1/js/index_box.js"},{url:"/fx/theme1/js/index_tool.js"}
+                 <% }else{ %>{url:"/fx/theme1/js/index.min.js"}<% }%>,function () {//ie版本不做本地缓存操作
+                pageFun();
+                indexJS.init();//初始化
+            }).then(function () {
+                pageFun();
+                indexJS.init();//初始化
+            });
+    //页面方法
+    function pageFun(){
+        indexJS.options=JSON.parse('<%- options%>');
+        indexJS.apiUrl='<%= apiUrl %>';
+        indexJS.userInfo=JSON.parse('<%- userInfo %>');
+        indexJS.serverTime=Number('<%= serverTime %>');
+        indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
+        indexJS.filePath='<%= filePath %>';
+        indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
+        indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
+        indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
+        chatAnalyze.setUTM(true,$.extend({userTel:'<%= userSession.mobilePhone %>'}, indexJS.userInfo));
+        function widthCheck(){
+            var ww = $(window).width();
+            if(ww <= 1680 ){
+                $('body').addClass('wid1');
+                if(ww < 1440 ){
+                    $('body').addClass('wid2');
+                    if(ww < 1281 ){
+                        $('body').addClass('wid3');
+                    }
                 }
             }
+            if(ww >1680){
+                $('body').removeClass('wid1');
+                $('body').removeClass('wid2');
+                $('body').removeClass('wid3');
+            }
         }
-        if(ww >1680){
-            $('body').removeClass('wid1');
-            $('body').removeClass('wid2');
-            $('body').removeClass('wid3');
+        function heightCalcu() {
+            var hh = $(window).height(), hh_banner = $('.mod_banner').height();
+            var hh_room = $('.mod_room').height();
+            $('.mod_main .tabcont').height(hh - hh_banner - 115);
+            $('.mod_video').height(hh - $(".mod_videolist").height() - 70);
+            var hTmp = $(".mod_videolist .listcont").height();
+            $('.mod_videolist .list_tab').height(hTmp - 30);
+            $('.mod_videolist .sd_show').height(hTmp - 40);
+            $('.mod_userlist .scrollbox').height(hh - hh_room - 115);
+            $('.mod_menu').height(hh - 70);
+            $('.calendar_ul.scrollbox2').height(hh - 165);
+            $('.ppt_list').height(hh - 101);
+            $('.allsd_list .sdlistcont').height(hh - 173);
+            $('.mysd_list .sdlistcont').height(hh - 218);
+            $('.main_tab .scrollbox:eq(0)').height(hh - hh_banner - 115);
+            $('.main_tab .scrollbox:gt(1)').height(hh - hh_banner - 115);
+            var chatTab = $(".main_tab:eq(1)");
+            var chatInputHeight = 0;
+            if(chatTab.is(".on")){
+                chatInputHeight = $(".chat_input").height();
+            }else{
+                chatTab.addClass("on");
+                chatInputHeight = $(".chat_input").height();
+                chatTab.removeClass("on");
+            }
+            $('#chatMsgContentDiv').height(hh - hh_banner - 115 - chatInputHeight);
+            $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
         }
-    }
-    function heightCalcu() {
-    	var hh = $(window).height(), hh_banner = $('.mod_banner').height();
-        var hh_room = $('.mod_room').height();
-        $('.mod_main .tabcont').height(hh - hh_banner - 115);
-        $('.mod_video').height(hh - $(".mod_videolist").height() - 70);
-        var hTmp = $(".mod_videolist .listcont").height();
-        $('.mod_videolist .list_tab').height(hTmp - 30);
-        $('.mod_videolist .sd_show').height(hTmp - 40);
-        $('.mod_userlist .scrollbox').height(hh - hh_room - 115);
-        $('.mod_menu').height(hh - 70);
-        $('.calendar_ul.scrollbox2').height(hh - 165);
-        $('.ppt_list').height(hh - 101);
-        $('.allsd_list .sdlistcont').height(hh - 173);
-        $('.mysd_list .sdlistcont').height(hh - 218);
-        $('.main_tab .scrollbox:eq(0)').height(hh - hh_banner - 115);
-        $('.main_tab .scrollbox:gt(1)').height(hh - hh_banner - 115);
-        var chatTab = $(".main_tab:eq(1)");
-        var chatInputHeight = 0;
-        if(chatTab.is(".on")){
-            chatInputHeight = $(".chat_input").height();
-        }else{
-            chatTab.addClass("on");
-            chatInputHeight = $(".chat_input").height();
-            chatTab.removeClass("on");
-        }
-        $('#chatMsgContentDiv').height(hh - hh_banner - 115 - chatInputHeight);
-        $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
-    }
-    widthCheck();
-    heightCalcu();
-    $(function() {
+        widthCheck();
+        heightCalcu();
         $(window).resize(function (e) {
             widthCheck();
             heightCalcu();
@@ -368,7 +369,7 @@
             'positionFromTop':50,
             'albumLabel':"%1 of %2"
         });
-    });
+    }
 </script>
 </body>
 </html>

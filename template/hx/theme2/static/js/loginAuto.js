@@ -70,26 +70,26 @@ var LoginAuto = {
                 userId : storeObj.loginId,
                 clientStoreId : storeObj.clientStoreId
             };
-            var loginRes = null;
-            $.ajax({
-                url: "/hxstudio/hxLogin",
-                type: "POST",
-                timeout : 30000,
-                cache: false,
-                async: false,
-                dataType: "json",
-                data: params,
-                success: function (data) {
-                    loginRes = data;
-                },
-                error: function (obj) {
-                    if (common.isValid(obj.responseText) && obj.statusText != "OK") {
-                        alert(obj.responseText);
+            var loginRes ={};
+            var xhr = new XMLHttpRequest();
+            xhr.open('post','/hxstudio/hxLogin',false);
+            xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+            xhr.onreadystatechange = function(){
+                if(xhr.readyState==4){
+                    if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+                        try{
+                            loginRes=JSON.parse(xhr.responseText);
+                        }catch(e){
+                            loginRes={};
+                        }
                     }else{
-                        alert("请求超时,请重试!");
+                        console.log('检查自动登录无效，请联系客服！');
                     }
+                }else{
+                    console.log('检查自动登录无效，请联系客服！');
                 }
-            });
+            };
+            xhr.send('userId='+storeObj.loginId+'&clientStoreId='+storeObj.clientStoreId);
             if(loginRes.isOK){//自动登录成功
                 this.stopLoad();
                 storeObj.doLogin=true;
