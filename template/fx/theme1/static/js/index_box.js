@@ -367,7 +367,6 @@ var box={
             var _this=this;
             $('#formBtnLoad').show();
             common.getJson("/fxstudio/login",$("#loginForm").serialize(),function(result){
-                console.log("lgresult",result);
                 $("#loginForm .error").hide();
                 $(_this).prop('disabled',false);
                 $('#formBtnLoad').hide();

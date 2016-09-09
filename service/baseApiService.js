@@ -21,8 +21,6 @@ var baseApiService = {
      * @param isAllowPass
      */
     destroyHomeToken:function(val,isAllowPass,callback){
-        callback(true);
-        return;
         if(isAllowPass){
             callback(true);
             return;

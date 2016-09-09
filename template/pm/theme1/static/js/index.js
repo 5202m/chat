@@ -876,7 +876,3 @@ var indexJS ={
         }
     }
 };
-// 初始化
-$(function() {
-    indexJS.init();
-});
