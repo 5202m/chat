@@ -61,7 +61,11 @@ var messageService ={
                 }
             }else{
                 if(userInfo.userType<=0){
-                    searchObj.userType={$in:[1,2,3]};
+                    if(groupType=='hxstudio'){
+                        searchObj.userType=2;
+                    }else{
+                        searchObj.userType={$in:[1,2,3]};
+                    }
                     searchObj["toUser.talkStyle"] = 0;
                 }else{
                     searchObj["toUser.talkStyle"] = 0;
