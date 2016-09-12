@@ -210,15 +210,18 @@ body {
     background: url(../img/dark/iconbox.png) -259px -34px no-repeat
 }
 
-.input-toolbar a {
-    background: url(../img/dark/iconbox.png) -75pt -34px no-repeat
+.input-toolbar {
+    font-size: 0;
+    margin: 0 0 8px 5px;
 }
 
-.input-toolbar a.inp-bar4 {
-    background: url(../img/dark/s.png) 1px 0 no-repeat;
-    width: 22px;
-    border-radius: 50%;
-    animation: largesse-flash 1s linear infinite
+.input-toolbar a.inp-bar1,a.inp-bar2, a.inp-bar3,a.inp-bar4,a.inp-bar5{
+    margin-right: 10px;
+    display: inline-block;
+    width: 20px;
+    height: 22px;
+    overflow: hidden;
+    background: url("../img/dark/iconbox.png") no-repeat -100px -34px;
 }
 
 @keyframes largesse-flash {
@@ -230,8 +233,31 @@ body {
     }
 }
 
+.input-toolbar a.inp-bar3 {
+    background: url(../img/dark/icon-i1.png) no-repeat
+}
+
+.input-toolbar a.inp-bar4 {
+    background: url(../img/dark/s.png) 1px 0 no-repeat;
+    width: 22px;
+    border-radius: 50%;
+    animation: largesse-flash 1s linear infinite
+}
+
 .input-toolbar a.inp-bar5 {
     background: url(../img/dark/i.png) no-repeat
+}
+
+.input-toolbar a.inp-bar6 {
+    margin-right: 10px;
+    display: inline-block;
+    width: 80px;
+    height: 22px;
+    overflow: hidden;
+    color:#ff0000;
+    font-size:16px;
+    font-weight:bold;
+    text-decoration: none;
 }
 
 .dropitem.dr9 i.i9 {
@@ -240,10 +266,6 @@ body {
 
 .user-inftop .toggle-room i {
     background: url(../img/dark/iconbox.png) -229px -33px no-repeat
-}
-
-.input-toolbar a.inp-bar3 {
-    background: url(../img/dark/icon-i1.png) no-repeat
 }
 
 .mod_videolist .hangqing li:hover {
@@ -341,4 +363,30 @@ body {
 
 .show-order-box > h6 a {
     color: #b59030
+}
+
+.input-toolbar a{
+    width: 22px;
+}
+.input-toolbar a.serbtn{
+    float: right;
+    width: 85px;
+    height: 25px;
+    background: url("../img/dark/serbtn.png") no-repeat 0 -26px;
+
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
+    transition: all .2s;
+}
+.input-toolbar a.serbtn:hover{
+    background-position: 0 0;
+}
+.input-toolbar a.inp-bar3{
+    border-radius: 50%;
+    background: url("../img/dark/icon-i1-on.png") #c5a155 no-repeat 0 0;
+}
+.input-toolbar a.inp-bar3.on {
+    background: url(../img/dark/icon-i1.png) no-repeat 1px 0;
 }

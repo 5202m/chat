@@ -1736,7 +1736,7 @@ a.skin:hover {
     margin: 0 0 8px 5px;
 }
 
-.input-toolbar a {
+.input-toolbar a.inp-bar1,a.inp-bar2, a.inp-bar3,a.inp-bar4,a.inp-bar5{
     margin-right: 10px;
     display: inline-block;
     width: 20px;
@@ -1753,12 +1753,24 @@ a.skin:hover {
     background: url("../img/light/icon-i1.png") no-repeat;
 }
 
-.input-toolbar a.inp-bar4 {
-    background: url("../img/light/s.png") no-repeat;
-}
-
 .input-toolbar a.inp-bar5 {
     background: url("../img/light/i.png") no-repeat;
+}
+
+.input-toolbar a.inp-bar4 {
+background: url("../img/light/s.png") no-repeat;
+}
+
+.input-toolbar a.inp-bar6 {
+    margin-right: 10px;
+    display: inline-block;
+    width: 80px;
+    height: 22px;
+    overflow: hidden;
+    color:#ff0000;
+    font-size:16px;
+    font-weight:bold;
+    text-decoration: none;
 }
 
 .level1 .headimg b {
@@ -7850,4 +7862,30 @@ div#teachVideoId {
 
 .show-order-box > h6 a {
     color: #c6a974;
+}
+
+.input-toolbar a{
+    width: 22px;
+}
+.input-toolbar a.serbtn{
+    float: right;
+    width: 85px;
+    height: 25px;
+    background: url("../img/light/serbtn.png") no-repeat 0 -26px;
+
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
+    transition: all .2s;
+}
+.input-toolbar a.serbtn:hover{
+    background-position: 0 0;
+}
+.input-toolbar a.inp-bar3{
+    border-radius: 50%;
+    background: url("../img/light/icon-i1-on.png") #33addc no-repeat 0 0;
+}
+.input-toolbar a.inp-bar3.on {
+    background: url(../img/light/icon-i1.png) no-repeat 1px 0;
 }

@@ -91,19 +91,47 @@ body {
 .mod_videolist .hangqing li{border-color:#dfc9a1;}
 .news li em{background: url("../img/gold/time-bg.png") no-repeat;background-size: 100% 100%;color:#ab8554;}
 .mod_menu .dropitem > a i{background:url("../img/gold/iconbox.png") no-repeat scroll -259px -34px;}
-.input-toolbar a{background: url("../img/gold/iconbox.png") no-repeat -100px -34px;}
-.input-toolbar a.inp-bar4{background: url("../img/gold/s.png") 1px 0 no-repeat;width:22px;border-radius:50%;animation:largesse-flash 1s linear infinite;}
-@keyframes largesse-flash{
-  0% {background-color:yellow; }
-  50% {background-color:#f60; }
-  100% {background-color:yellow; }
+
+.input-toolbar {
+    font-size: 0;
+    margin: 0 0 8px 5px;
 }
-.input-toolbar a.inp-bar5{background: url("../img/gold/i.png") no-repeat;}
-.dropitem.dr9 i.i9{background: url(../img/gold/left-icon.png) no-repeat;}
-.user-inftop .toggle-room i{background: url("../img/gold/iconbox.png") no-repeat -229px -33px;}
+
+.input-toolbar a.inp-bar1,a.inp-bar2, a.inp-bar3,a.inp-bar4,a.inp-bar5{
+    margin-right: 10px;
+    display: inline-block;
+    width: 20px;
+    height: 22px;
+    overflow: hidden;
+    background: url("../img/gold/iconbox.png") no-repeat -100px -34px;
+}
+
+@keyframes largesse-flash{
+    0% {background-color:yellow; }
+    50% {background-color:#f60; }
+    100% {background-color:yellow; }
+}
+
 .input-toolbar a.inp-bar3{
     background:url("../img/gold/icon-i1.png") no-repeat;
 }
+.input-toolbar a.inp-bar4{background: url("../img/gold/s.png") 1px 0 no-repeat;width:22px;border-radius:50%;animation:largesse-flash 1s linear infinite;}
+.input-toolbar a.inp-bar5{background: url("../img/gold/i.png") no-repeat;}
+.input-toolbar a.inp-bar6 {
+    margin-right: 10px;
+    display: inline-block;
+    width: 80px;
+    height: 22px;
+    overflow: hidden;
+    color:#ff0000;
+    font-size:16px;
+    font-weight:bold;
+    text-decoration: none;
+}
+
+.dropitem.dr9 i.i9{background: url(../img/gold/left-icon.png) no-repeat;}
+.user-inftop .toggle-room i{background: url("../img/gold/iconbox.png") no-repeat -229px -33px;}
+
 
 /*晒单*/
 .usersd_list .sdinfo_bar a{ color: #a67a42 }
@@ -112,3 +140,29 @@ body {
 .nosd_tip p {color:#ab8554;}
 
 .mCSB_dragger_bar{width:12px;background:url(../img/gold/scroll.png) center 50% no-repeat;}
+
+.input-toolbar a{
+    width: 22px;
+}
+.input-toolbar a.serbtn{
+    float: right;
+    width: 85px;
+    height: 25px;
+    background: url("../img/gold/serbtn.png") no-repeat 0 -26px;
+
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
+    transition: all .2s;
+}
+.input-toolbar a.serbtn:hover{
+    background-position: 0 0;
+}
+.input-toolbar a.inp-bar3{
+    border-radius: 50%;
+    background: url("../img/gold/icon-i1-on.png") #ab8554 no-repeat 0 0;
+}
+.input-toolbar a.inp-bar3.on {
+    background: url(../img/gold/icon-i1.png) no-repeat 1px 0;
+}

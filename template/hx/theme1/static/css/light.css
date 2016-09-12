@@ -112,3 +112,29 @@ body {
 .show-order-box > h6 a{
     color: #12a1e4;
 }
+
+.input-toolbar a{
+    width: 22px;
+}
+.input-toolbar a.serbtn{
+    float: right;
+    width: 85px;
+    height: 25px;
+    background: url("../img/light/serbtn.png") no-repeat 0 -26px;
+
+    -webkit-transition: all .2s;
+    -moz-transition: all .2s;
+    -ms-transition: all .2s;
+    -o-transition: all .2s;
+    transition: all .2s;
+}
+.input-toolbar a.serbtn:hover{
+    background-position: 0 0;
+}
+.input-toolbar a.inp-bar3{
+    border-radius: 50%;
+    background: url("../img/light/icon-i1-on.png") #33addc no-repeat 0 0;
+}
+.input-toolbar a.inp-bar3.on {
+    background: url(../img/light/icon-i1.png) no-repeat 1px 0;
+}
