@@ -226,7 +226,6 @@
         },
 		require: function() {
             if(store.enabled){
-                store.remove('basket-local');
                 if(store.get('web_vs')!=this.version){
                     store.set('web_vs',this.version);
                     basket.clear();
@@ -249,7 +248,7 @@
                 });
                 return {then:function(){}};
             }
-            arguments[tmpArg.length-1]={'url':'local'};
+            arguments[tmpArg.length-1]={'url':'local',execute:false};
 			var promise = fetch.apply( null, arguments ).then( performActions );
 			promise.thenRequire = thenRequire;
 			return promise;
