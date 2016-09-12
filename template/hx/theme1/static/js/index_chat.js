@@ -1297,8 +1297,19 @@ var chat={
                     }
                     break;
                 }
+                case 'showTrade':
+                {
+                    var data=result.data;
+                    var userName = data.userName;//晒单人
+                    var tradeImg = data.tradeImg;//晒单图片
+                    var content = '<div ><div><span style="font-weight:bold;color:red;">提示：有小伙伴晒单啦！</span></div><div><span style="font-weight:bold;color:red;">晒单人：<label>'+userName+'</label></span></div><div><a href="'+tradeImg+'" data-lightbox="dialog-img"><img src="'+tradeImg+'"></img></a></div>';
+                    data.content = content;
+                    chat.showTradePushMsg(data);
+                    break;
+                }
             }
         });
+
         //信息传输
         this.socket.on('loadMsg',function(data){
             var pushMsgDom = $('#dialog_list .push');
@@ -1436,11 +1447,32 @@ var chat={
             chat.setTalkListScroll(true);
         }
     },
+
+    /**
+     * 将晒单消息显示在公聊框
+     * @param info
+     */
+    showTradePushMsg : function(info){
+        var html = [];
+        html.push('<div class="dialog push">');
+        html.push(info.content);
+        html.push('</div>');
+        $("#dialog_list").append(html.join(""));
+        var img=$("#dialog_list").find(".dialog.push img");
+        if(img.length>0){
+            img.width("100%");
+            img.height("auto");
+        }
+        if($(".scrollbtn").hasClass("on")) {
+            chat.setTalkListScroll(true);
+        }
+    },
+
     /**
      * 打赏
      */
     reward: function(){
-        if($('.inp-bar4').hasClass('clicked')){
+        if($('#sendReward').hasClass('clicked')){
             $('.envelope-reward').removeClass('dn');
         }else {
             /*var data = {groupId: indexJS.userInfo.groupId, hasQRCode:true};
@@ -1452,7 +1484,7 @@ var chat={
                         $('#js-reward-user').append('<option value="' + row.userNo + '">' + row.userName + '</option>');
                         //$('#rewardQRCode').append('<img id="js-'+row.userNo+'" src="'+row.wechatCodeImg+'" class="img-responsive" style="display:none;">');
                     });*/
-                    $('.inp-bar4').addClass('clicked');
+                    $('#sendReward').addClass('clicked');
                     $('.envelope-reward').removeClass('dn');
                 /*}
             });*/
