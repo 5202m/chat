@@ -1137,6 +1137,9 @@ router.post('/addShowTrade', function(req, res){
     }else{
         showTradeService.addShowTrade(params, function(result){
             res.json(result);
+            if(params.tradeType == 2){ //客户晒单
+               chatService.sendMsgToRoom(true,params.groupType,params.groupId,"notice",{type:chatService.noticeType.showTrade,data:params});
+            }
         });
     }
 });
