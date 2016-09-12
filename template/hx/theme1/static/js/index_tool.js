@@ -521,7 +521,9 @@ var tool={
                 tradeImg:tradeImg,
                 remark:remark,
                 title:title,
-                tradeType:2
+                tradeType:2,
+                groupId:indexJS.userInfo.groupId,
+
             };
             common.getJson('/hxstudio/addShowTrade',{data:JSON.stringify(params)},function(data){
                 if(data.isOK){
