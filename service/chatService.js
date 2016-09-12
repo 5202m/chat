@@ -22,7 +22,8 @@ var chatService ={
         approvalResult:'approvalResult',//审核结果
         leaveRoom:'leaveRoom',//离开房间
         serverTime:'serverTime',//服务器时间
-        articleInfo:'articleInfo'//文档信息
+        articleInfo:'articleInfo',//文档信息
+        showTrade:'showTrade'//推送晒单信息
     },
     leaveRoomFlag:{//离开房间标志
         roomClose:'roomClose',//房间关闭或禁用或开放时间结束
