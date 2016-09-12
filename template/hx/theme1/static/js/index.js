@@ -47,6 +47,13 @@ var indexJS ={
                 html.push('<a href="javascript:" class="toplink vipenter"><span>' + roomName + '</span></a>');
                 html.push('</li>');
                 html = $(html.join(""));
+
+                 html.bind("mouseover",function(){
+                     $(".changeroom").addClass("open");
+                });
+                html.bind("mouseout ",function(){
+                    $('.changeroom').removeClass("open");
+                });
                 html.bind("click", function(){
                     $('.changeroom').click();
                     $('.rooms .rbox[rid] .enterbtn').click();
@@ -104,6 +111,7 @@ var indexJS ={
                     $(this).addClass('hover-in');
                 }
             }
+
         },function(){
             $(this).find(".dropcont").hide();
         });
@@ -248,6 +256,18 @@ var indexJS ={
                 //box.openCSBox();
             }
         );
+
+        /**设置客服系统*/
+        $('#onlineConsulting').click(function(){
+                if(indexJS.userInfo.groupId == "hxstudio_4"){
+                    indexJS.connectOnlineCs();
+                }else{
+                    openQQChatByCommonv3('&utm_source=hxstudio&utm_medium=yy&utm_content=TOP&utm_campaign=qqzx_hx','800025930');
+                }
+                //box.openCSBox();
+            }
+        );
+
         /**添加到桌面*/
         $("#saveToDesktop").click(function(){
             if(common.saveToDesktop(window.location.href, "视频直播间-恒信贵金属")){
