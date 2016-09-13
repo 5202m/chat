@@ -36,11 +36,14 @@ var indexJS ={
             $(".roomctrl span").text(vipRoom.text());
             var rid = vipRoom.siblings(".enterbtn").attr("rid");
             var vipLink = $("#VIPRoomLink");
-            vipLink.show();
+            //2016-09-16之后使用CPI专场图片图片
+            var imgSrc = indexJS.serverTime > 1473955200000 ? "/pm/theme1/img/menu_ad22.png" : "/pm/theme1/img/menu_ad2.png";
+            vipLink.find("img").attr("src", imgSrc);
             vipLink.bind("click", rid, function(e){
                 $(".roomctrl").trigger("click");
                 $(".rooms .enterbtn[rid='" + e.data + "']").trigger("click");
             });
+            vipLink.show();
         }
         //隐藏广告
         /*if($("#roomInfoId").attr("av")=='true'){
@@ -868,6 +871,7 @@ var indexJS ={
          * 调整课程表样式
          * */
         chgSyllabusCls : function(currCourse){
+            $('.course_tab li a.on').each()
             $('.course_tab li a.on').removeClass("on");
             if(!currCourse.isNext){
                 $(".course_nav a[d='" + currCourse.day + "']").trigger("click");
