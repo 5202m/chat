@@ -599,7 +599,7 @@ var indexJS ={
             if(dataList && dataList.result==0){
                 var data=dataList.data;
                 for(var i in data){
-                    $(".ban_ul").append('<li class="swiper-slide"><a href="'+(common.isBlank(data[i].linkUrl)?"javascript:":data[i].linkUrl)+'" target="_blank"><img width="100%" alt="" src="'+data[i].mediaUrl+'"></a></li>');
+                    $(".ban_ul").append('<li class="swiper-slide"><a href="'+(common.isBlank(data[i].linkUrl)?"javascript:":data[i].linkUrl)+'"' + (common.isBlank(data[i].linkUrl)?'':' target="_blank"') + '><img width="100%" alt="" src="'+data[i].mediaUrl+'"></a></li>');
                     if(data.length>1){
                         $("#mod_position").append('<span class="'+(parseInt(i)==0?'p-click':'')+'"></span>');
                     }
