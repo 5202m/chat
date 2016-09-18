@@ -36,9 +36,6 @@ var indexJS ={
             $(".roomctrl span").text(vipRoom.text());
             var rid = vipRoom.siblings(".enterbtn").attr("rid");
             var vipLink = $("#VIPRoomLink");
-            //2016-09-16之后使用CPI专场图片图片
-            var imgSrc = indexJS.serverTime > 1473955200000 ? "/pm/theme1/img/menu_ad22.png" : "/pm/theme1/img/menu_ad2.png";
-            vipLink.find("img").attr("src", imgSrc);
             vipLink.bind("click", rid, function(e){
                 $(".roomctrl").trigger("click");
                 $(".rooms .enterbtn[rid='" + e.data + "']").trigger("click");
