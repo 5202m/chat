@@ -732,8 +732,7 @@ var chat={
             if(gIdDom.attr("aw")=="true" && common.containSplitStr(gIdDom.attr("awr"), row.userType)){
                 csHtml='<em>私聊</em>';
             }
-            //isMeHtml = "&nbsp;（客服）";
-            isMeHtml = "";
+            isMeHtml = "&nbsp;（客服）";
         }
         var lav=chat.getAImgOrLevel(row.userId, row.clientGroup,row.userType,row.avatar);
         var lis=$(userListDomId+" li"),
