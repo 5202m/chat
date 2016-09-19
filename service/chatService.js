@@ -710,6 +710,18 @@ var chatService ={
         }
     },
     /**
+     * 发送信息到命名空间
+     * @param isFromRedis
+     * @param groupType 房间类别
+     * @param roomId 房间id
+     * @param eventKey 事件关键字
+     * @param data 发送的内容
+     * @param  excludeUserId 排除用户
+     */
+    sendMsgToSpace:function(groupType,eventKey,data){
+        chatService.getSpaceSocket(groupType,true).emit(eventKey,data);
+    },
+    /**
      * 发送给对应的用户组
      * @param isFromRedis
      * @param userInfo
