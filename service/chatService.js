@@ -274,31 +274,42 @@ var chatService ={
         spaceObj.on('connection', function(socket){
             //登录则加入房间,groupId作为唯一的房间号
             socket.on('login',function(data,webUserAgent){
+                var userAgent=webUserAgent?webUserAgent:socket.client.request.headers["user-agent"];
                 var userInfo=data.userInfo,lastPublishTime=data.lastPublishTime, allowWhisper = data.allowWhisper,fUserTypeStr=data.fUserTypeStr;
+                userInfo.isMobile=common.isMobile(userAgent);
                 var fromPlatform = data.fromPlatform;
                 if(common.isBlank(userInfo.groupType)){
                     return false;
                 }
+                if(!userInfo.isMobile){
+                    //设置客户序列
+                    chatService.setClientSequence(userInfo);
+                    //加载用户列表数据
+                    chatService.setRoomOnlineUser(userInfo,true,null,function(roomUserArr){
+                        var keys=Object.keys(roomUserArr).sort(function(a,b){return roomUserArr[a].sequence>=roomUserArr[b].sequence?roomUserArr[a].nickname>=roomUserArr[b].nickname:false;});
+                        var newUserArr=[],onlineUserObj=null,visitorNum=0;
+                        for(var i in keys){
+                            onlineUserObj=roomUserArr[keys[i]];
+                            newUserArr.push(onlineUserObj);
+                            if(onlineUserObj.clientGroup == constant.clientGroup.visitor){
+                                visitorNum++;//取出真实游客数量
+                            }
+                        }
+                        socket.emit('onlineUserList',newUserArr,keys.length,visitorNum);//给自己加载所有在线用户
+                    });
+                }
+                //加载已有内容
+                messageService.loadMsg(userInfo,lastPublishTime,false,function(msgData){
+                    //同步数据到客户端
+                    socket.emit('loadMsg', {msgData:msgData,isAdd:common.isValid(lastPublishTime)?true:false});
+                });
                 //更新在线状态
                 userInfo.onlineStatus=1;
                 userInfo.onlineDate=new Date();
-                chatService.setClientSequence(userInfo);
                 socket.userInfo=userInfo;//缓存用户信息
                 userService.updateMemberInfo(userInfo,function(sendMsgCount,dbMobile,offlineDate){
-                    var userAgent=webUserAgent?webUserAgent:socket.client.request.headers["user-agent"];
                     socket.userInfo.sendMsgCount=sendMsgCount;
-                    userInfo.isMobile=common.isMobile(userAgent);
                     socket.join(userInfo.groupId);
-                    chatService.setRoomOnlineUser(userInfo,true,null,function(roomUserArr){
-                        if(common.isStudio(userInfo.groupType)){//如果是直播间网页版聊天室,需要显示在线用户
-                            socket.emit('onlineUserList',roomUserArr,Object.getOwnPropertyNames(roomUserArr).length);//给自己加载所有在线用户
-                        }
-                    });
-                    //加载已有内容
-                    messageService.loadMsg(userInfo,lastPublishTime,false,function(msgData){
-                        //同步数据到客户端
-                        socket.emit('loadMsg', {msgData:msgData,isAdd:common.isValid(lastPublishTime)?true:false});
-                    });
                     //通知客户端在线人数
                     if(common.isStudio(userInfo.groupType)){//如果是直播间网页版聊天室,则追加在线用户的输出
                         //广播自己的在线信息

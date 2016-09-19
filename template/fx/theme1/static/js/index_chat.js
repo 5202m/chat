@@ -727,12 +727,11 @@ var chat={
         }
     },
     /**
-     * 设置在线用户
+     * 提取在线用户的dom
      * @param row
-     * @returns {boolean}
+     * @returns {{seq: number, dom: string}}
      */
-    setOnlineUser:function(row){
-        $("#userListId li[id='"+row.userId+"']").remove();//存在则移除旧的记录
+    getOnlineUserDom:function(row){
         var dialogHtml=chat.getDialogHtml(row.userId,row.nickname,row.userType),isMeHtml="",csHtml='',seq=row.sequence,meCls='';
         if(indexJS.userInfo.userId==row.userId){
             isMeHtml = "【我】";
@@ -750,9 +749,17 @@ var chat={
             meCls='csoffline';
         }
         var lav=chat.getAImgOrLevel(row.userId, row.clientGroup,row.userType,row.avatar);
-        var lis=$("#userListId li"),
-            liDom='<li id="'+row.userId+'" cg="'+(common.isBlank(row.clientGroup)?'':row.clientGroup)+'" t="'+seq+'" utype="'+row.userType+'" class="'+lav.level+'" >'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+lav.aImg+'<b></b></div><span class="'+meCls+'">'+row.nickname+isMeHtml+'<i></i></span>'+csHtml+'</a></li>';
-         if(seq=="0"){
+        return {hasDg:common.isValid(dialogHtml),seq:seq,dom:'<li id="'+row.userId+'" cg="'+(common.isBlank(row.clientGroup)?'':row.clientGroup)+'" t="'+seq+'" utype="'+row.userType+'" class="'+lav.level+'" >'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+lav.aImg+'<b></b></div><span class="'+meCls+'">'+row.nickname+isMeHtml+'<i></i></span>'+csHtml+'</a></li>'};
+    },
+    /**
+     * 设置在线用户
+     * @param row
+     * @returns {boolean}
+     */
+    setOnlineUser:function(row){
+        $("#userListId li[id='"+row.userId+"']").remove();//存在则移除旧的记录
+        var lis=$("#userListId li"),onlineUserDom=this.getOnlineUserDom(row),liDom=onlineUserDom.dom;
+        if(onlineUserDom.seq=="0"){
             lis.first().before(liDom);
         }else{
             var isInsert=false,seqTmp= 0,nickTmp='';//按用户级别顺序插入
@@ -764,8 +771,7 @@ var chat={
                     return false;
                 }else if(row.sequence==seqTmp){
                     //在线客服显示在前面
-                    nickCsTmp=$(this).find("span[class='csoffline']").size();
-                    if(nickCsTmp){
+                    if($(this).find("span[class='csoffline']").size()){
                         $(this).before(liDom);
                         isInsert=true;
                         return false;
@@ -782,30 +788,37 @@ var chat={
                 $("#userListId").append(liDom);
             }
         }
-        if(common.isValid(dialogHtml)){
+        if(onlineUserDom.hasDg){
             $("#userListId").contextmenu(function(){
                 return false;
             });
-            $("#userListId li[id="+row.userId+"] a[t=header]").click(function(e){
-                if($(this).attr('t') == '0'){
-                    $('.user_box li').removeClass('zin');
-                }else {
-                    $('.user_box li').removeClass('zin');
-                    $(this).parent().addClass('zin');
-                    var pv = $(this).prev();
-                    pv.attr("avs", $(this).find(".headimg img").attr("src"));
-                    chat.openDiaLog(pv);
-                }
-            }).dblclick(function(){
-                $(this).find("em").trigger("click");
-            }).find("em").click(function(e){
-                var pDom=$(this).parents("[utype]");
-                var userId=pDom.attr("id");
-                chat.closeWhTip(userId);
-                chat.fillWhBox(pDom.attr("cg"),pDom.find(".headimg img").attr("src"),pDom.attr("utype"),userId,pDom.find(".uname span").text(),false,false);
-                return false;
-            });
+            this.setUserListClick($("#userListId li[id="+row.userId+"] a[t=header]"));
         }
+    },
+    /**
+     * 设置点击事件
+     * @param dom
+     */
+    setUserListClick:function(dom){
+        dom.click(function(e){
+            if($(this).attr('t') == '0'){
+                $('.user_box li').removeClass('zin');
+            }else {
+                $('.user_box li').removeClass('zin');
+                $(this).parent().addClass('zin');
+                var pv = $(this).prev();
+                pv.attr("avs", $(this).find(".headimg img").attr("src"));
+                chat.openDiaLog(pv);
+            }
+        }).dblclick(function(){
+            $(this).find("em").trigger("click");
+        }).find("em").click(function(e){
+            var pDom=$(this).parents("[utype]");
+            var userId=pDom.attr("id");
+            chat.closeWhTip(userId);
+            chat.fillWhBox(pDom.attr("cg"),pDom.find(".headimg img").attr("src"),pDom.attr("utype"),userId,pDom.find(".uname span").text(),false,false);
+            return false;
+        });
     },
     /**
      * 离开房间提示
@@ -1220,7 +1233,6 @@ var chat={
         });
         //进入聊天室加载的在线用户
         this.socket.on('onlineUserList',function(data,dataLength){
-            //$('#userListId').html("");放到this.setUserListIdEmpty()方法中
             //如客户数小于200，则追加额外游客数
             if($("#roomInfoId").attr("av")=="true" && !chat.initUserList){
                 var randId= 0,size=0;
@@ -1231,14 +1243,16 @@ var chat={
                 }
                 for(var i=0;i<size;i++){
                     randId=common.randomNumber(6);
-                    data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:15,userType:-1});
+                    data.push({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:15,userType:-1});
                 }
+                chat.initUserList = true;
             }
-            var row=null;
+            var userArr=[];
             for(var i in data){
-                row=data[i];
-                chat.setOnlineUser(row);//设置在线用户
+                userArr.push(chat.getOnlineUserDom(data[i]).dom);//设置在线用户
             }
+            $('#userListId').append(userArr.join(""));
+            chat.setUserListClick($("#userListId li a[t=header]"));
             chat.setOnlineNum();//设置在线人数
             indexJS.setListScroll(".user_box");
         });

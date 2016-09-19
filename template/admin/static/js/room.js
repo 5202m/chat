@@ -737,7 +737,7 @@ var room={
                 $(this).removeClass("on");
             }else{
                 $(this).addClass("on");
-                chat.setTalkListScroll(true);
+                room.setTalkListScroll(true);
             }
         });
         //审核操作类事件
@@ -1552,6 +1552,22 @@ var room={
         }
     },
     /**
+     * 提取在线用户的dom
+     * @param row
+     * @returns {{hasDg: boolean, dom: string}}
+     */
+    getOnlineUserDom:function(row){
+        var clientGroup = {'notActive':'(N)','active':'(A)'};
+        var dialogHtml=room.getDialogHtml(row.clientGroup,row.userId,row.nickname,row.userType,row.isMobile, false),isMeHtml="",seq=row.sequence;
+        var an = common.isBlank(clientGroup[row.clientGroup])?'':clientGroup[row.clientGroup];
+        var mbEm=row.isMobile?'<em class="mb-cls">(mb)'+an+'</em>':'<em class="mb-cls">'+an+'</em>';
+        if(room.userInfo.userId == row.userId){
+            isMeHtml = "【我】";
+            seq = 0;
+        }
+        return {isMe:common.isValid(isMeHtml),hasDg:common.isValid(dialogHtml),dom:'<li id="'+row.userId+'" t="'+seq+'" utype="'+row.userType+'"  ismb="'+row.isMobile+'">'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+room.getUserAImgCls(row.clientGroup,row.userType,row.avatar)+'</div><label class="nk-lb">'+row.nickname+isMeHtml+'</label>'+mbEm+'</a></li>'};
+    },
+    /**
      * 设置在线用户
      * @param row
      * @returns {boolean}
@@ -1563,20 +1579,11 @@ var room={
             $('.teacher .te_l div span').text(row.nickname);
             $('.teacher .btn').removeClass('dn');
         }
-        var clientGroup = {'notActive':'(N)','active':'(A)'};
         $("#userListId li[id='"+row.userId+"']").remove();//存在则移除旧的记录
-        var dialogHtml=room.getDialogHtml(row.clientGroup,row.userId,row.nickname,row.userType,row.isMobile, false),isMeHtml="",seq=row.sequence;
-        var an = common.isBlank(clientGroup[row.clientGroup])?'':clientGroup[row.clientGroup];
-        var mbEm=row.isMobile?'<em class="mb-cls">(mb)'+an+'</em>':'<em class="mb-cls">'+an+'</em>';
-        if(room.userInfo.userId == row.userId){
-            isMeHtml = "【我】";
-            seq = 0;
-        }
-        var lis=$("#userListId li"),
-            liDom='<li id="'+row.userId+'" t="'+seq+'" utype="'+row.userType+'"  ismb="'+row.isMobile+'">'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+room.getUserAImgCls(row.clientGroup,row.userType,row.avatar)+'</div><label class="nk-lb">'+row.nickname+isMeHtml+'</label>'+mbEm+'</a></li>';
+        var lis=$("#userListId li"),onlineUserDom=this.getOnlineUserDom(row),liDom=onlineUserDom.dom;
         if(lis.length==0){
             $("#userListId").append(liDom);
-        }else if(isMeHtml!=""){
+        }else if(onlineUserDom.isMe){
             lis.first().before(liDom);
         }else{
             var isInsert=false,seqTmp= 0,nickTmp='';//按用户级别顺序插入
@@ -1599,24 +1606,31 @@ var room={
                 $("#userListId").append(liDom);
             }
         }
-        if(common.isValid(dialogHtml)){
-            $("#userListId li[id="+row.userId+"] a[t=header]").click(function(){
-                if($(this).parent().attr('t') == '0'){
-                    $('#userListId li').removeClass('zin');
-                    $('.dialogbtn').hide();
-                }else {
-                    var pt = $(this).parent();
-                    $('.dialogbtn').hide();
-                    $('#userListId li').removeClass('zin');
-                    pt.addClass('zin');
-                    room.openDiaLog($(this).prev());
-                    $('.dialogbtn', $(this).parent()).css('left', '7px');
-                }
-            }).dblclick(function(){
-                $(this).prev('.dialogbtn').find("a[t=1]").trigger("click");
-            });
+        if(onlineUserDom.hasDg){
+            this.setUserListClick($("#userListId li[id="+row.userId+"] a[t=header]"));
         }
         return true;
+    },
+    /**
+     * 设置点击事件
+     * @param dom
+     */
+    setUserListClick:function(dom){
+        dom.click(function(){
+            if($(this).parent().attr('t') == '0'){
+                $('#userListId li').removeClass('zin');
+                $('.dialogbtn').hide();
+            }else {
+                var pt = $(this).parent();
+                $('.dialogbtn').hide();
+                $('#userListId li').removeClass('zin');
+                pt.addClass('zin');
+                room.openDiaLog($(this).prev());
+                $('.dialogbtn', $(this).parent()).css('left', '7px');
+            }
+        }).dblclick(function(){
+            $(this).prev('.dialogbtn').find("a[t=1]").trigger("click");
+        });
     },
     /**
      * 离开房间提示
@@ -1656,13 +1670,18 @@ var room={
         });
         //进入聊天室加载的在线用户
         this.socket.on('onlineUserList',function(data,dataSize){
-            $('#userListId').html("");
-            var row=null;
+            var row=null,userArr=[];
             for(var i in data){
                 row=data[i];
-                room.setOnlineUser(row);
+                if(row.userType==2){
+                    room.setOnlineUser(row);
+                }else{
+                    userArr.push(room.getOnlineUserDom(row).dom);//设置在线用户
+                }
             }
-            $("#onLineSizeNum").text((dataSize));
+            $('#userListId').append(userArr.join(""));
+            room.setUserListClick($("#userListId li a[t=header]"));
+            $("#onLineSizeNum").text($('#userListId li').length);
             room.setListScroll(".user_box");
         });
         //断开连接

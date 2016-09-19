@@ -703,6 +703,28 @@ var chat={
         }
     },
     /**
+     * 提取在线用户的dom
+     * @param row
+     * @returns {{hasDg: boolean, dom: string}}
+     */
+    getOnlineUserDom:function(row){
+        var dialogHtml=chat.getDialogHtml(row.userId,row.nickname,row.userType),isMeHtml="",csHtml='',seq=row.sequence,meCls='';
+        if(indexJS.userInfo.userId==row.userId){
+            isMeHtml = "【我】";
+            seq = "0";
+            meCls='mynk';
+        }
+        if(row.userType==3){
+            var gIdDom=$("#roomInfoId");
+            if(gIdDom.attr("aw")=="true" && common.containSplitStr(gIdDom.attr("awr"), row.userType)){
+                csHtml='<em>私聊</em>';
+            }
+            isMeHtml = "";
+        }
+        var lav=chat.getAImgOrLevel(row.userId, row.clientGroup,row.userType,row.avatar);
+        return {hasDg:common.isValid(dialogHtml),dom:'<li id="'+row.userId+'" cg="'+(common.isBlank(row.clientGroup)?'':row.clientGroup)+'" t="'+seq+'" utype="'+row.userType+'" class="'+lav.level+'" >'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+lav.aImg+'<b></b></div><span class="'+meCls+'">'+row.nickname+isMeHtml+'<i></i></span>'+csHtml+'</a></li>'};
+    },
+    /**
      * 设置在线用户
      * @param row
      * @returns {boolean}
@@ -721,26 +743,9 @@ var chat={
         }
         var userListDomId=row.userType>=0?'#userListId':'#visitorListId';
         $(userListDomId+" li[id='"+row.userId+"']").remove();//存在则移除旧的记录
-        var dialogHtml=chat.getDialogHtml(row.userId,row.nickname,row.userType),isMeHtml="",csHtml='',seq=row.sequence,meCls='';
-        if(indexJS.userInfo.userId==row.userId){
-            isMeHtml = "【我】";
-            seq = "0";
-            meCls='mynk';
-        }
-        if(row.userType==3){
-            var gIdDom=$("#roomInfoId");
-            if(gIdDom.attr("aw")=="true" && common.containSplitStr(gIdDom.attr("awr"), row.userType)){
-                csHtml='<em>私聊</em>';
-            }
-            isMeHtml = "&nbsp;（客服）";
-        }
-        var lav=chat.getAImgOrLevel(row.userId, row.clientGroup,row.userType,row.avatar);
-        var lis=$(userListDomId+" li"),
-            liDom='<li id="'+row.userId+'" cg="'+(common.isBlank(row.clientGroup)?'':row.clientGroup)+'" t="'+seq+'" utype="'+row.userType+'" class="'+lav.level+'" >'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+lav.aImg+'<b></b></div><span class="'+meCls+'">'+row.nickname+isMeHtml+'<i></i></span>'+csHtml+'</a></li>';
+        var lis=$(userListDomId+" li"),onlineUserDom=this.getOnlineUserDom(row),liDom=onlineUserDom.dom;
         if(lis.length==0){
             $(userListDomId).append(liDom);
-        }else if(seq=="0"){
-            lis.first().before(liDom);
         }else{
             var isInsert=false,seqTmp= 0,nickTmp='';//按用户级别顺序插入
             lis.each(function(){
@@ -762,31 +767,38 @@ var chat={
                 $(userListDomId).append(liDom);
             }
         }
-        if(common.isValid(dialogHtml)){
-            $(userListDomId+" li[id="+row.userId+"] a[t=header]").click(function(e){
-                if($(this).attr('t') == '0'){
-                    $('.user_box li').removeClass('zin');
-                }else {
-                    $('.user_box li').removeClass('zin');
-                    $(this).parent().addClass('zin');
-                    var pv = $(this).prev();
-                    pv.attr("avs", $(this).find(".headimg img").attr("src"));
-                    chat.openDiaLog(pv);
-                }
-            }).dblclick(function(){
-                $(this).find("em").trigger("click");
-            }).find("em").click(function(e){
-                var pDom=$(this).parents("[utype]");
-                var userType=pDom.attr("utype");
-                if(userType!=3){
-                    return false;
-                }
-                var userId=pDom.attr("id");
-                chat.closeWhTip(userId);
-                chat.fillWhBox(pDom.attr("cg"),pDom.find(".headimg img").attr("src"),pDom.attr("utype"),userId,pDom.find(".uname span").text(),false,false);
-                return false;
-            });
+        if(onlineUserDom.hasDg){
+            this.setUserListClick($(userListDomId+" li[id="+row.userId+"] a[t=header]"));
         }
+    },
+    /**
+     * 设置点击事件
+     * @param dom
+     */
+    setUserListClick:function(dom){
+        dom.click(function(e){
+            if($(this).attr('t') == '0'){
+                $('.user_box li').removeClass('zin');
+            }else {
+                $('.user_box li').removeClass('zin');
+                $(this).parent().addClass('zin');
+                var pv = $(this).prev();
+                pv.attr("avs", $(this).find(".headimg img").attr("src"));
+                chat.openDiaLog(pv);
+            }
+        }).dblclick(function(){
+            $(this).find("em").trigger("click");
+        }).find("em").click(function(e){
+            var pDom=$(this).parents("[utype]");
+            var userType=pDom.attr("utype");
+            if(userType!=3){
+                return false;
+            }
+            var userId=pDom.attr("id");
+            chat.closeWhTip(userId);
+            chat.fillWhBox(pDom.attr("cg"),pDom.find(".headimg img").attr("src"),pDom.attr("utype"),userId,pDom.find(".uname span").text(),false,false);
+            return false;
+        });
     },
     /**
      * 离开房间提示
@@ -1191,26 +1203,17 @@ var chat={
             $(".img-loading[pf=chatMessage]").show();
         });
         //进入聊天室加载的在线用户
-        this.socket.on('onlineUserList',function(data,dataLength){
-            $('#userListId').html("");
+        this.socket.on('onlineUserList',function(data,dataLength,visitorNum){
             //如客户数小于500，则追加额外游客数
             if($("#roomInfoId").attr("av")=="true" && !chat.initUserList && dataLength < 500){
-                var visitorNum = 0;
-                for(var i in data){
-                    if(data[i].clientGroup == 'visitor'){
-                        visitorNum++;//取出真实游客数量
-                    }
-                }
-                var randId= 0,size = visitorNum < 10 ? (560 - dataLength) : (500 - dataLength + 3 * (200 / (visitorNum)) + 10); //dataLength<=10?60:(200/dataLength)*3+10;
+                var randId= 0,size = visitorNum < 10 ? (560 - dataLength) : (500 - dataLength + 3 * (200 / (visitorNum)) + 10);
                 for(var i=0;i<size;i++){
                     randId=common.randomNumber(6);
-                    data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:-1});
+                    data.push({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:-1});
                 }
-               // chat.initUserList = true;
+                chat.initUserList = true;
             }
-
             var vipSize = 0;
-            var userRandId = 0;
             var roomInfoId = $("#roomInfoId").text();
             var type = "";
             if(roomInfoId.match("VIP")!=null){
@@ -1229,26 +1232,26 @@ var chat={
             var dataArr =  common.randomString(type,vipSize);
             for(var i=0;i<dataArr.length;i++){
                 nickname=dataArr[i];
-                data[("uservip_"+i)]=({userId:("uservip_"+i),clientGroup:'uservip',nickname:nickname,sequence:14+i,userType:0});
+                data.push({userId:("uservip_"+i),clientGroup:'uservip',nickname:nickname,sequence:14+i,userType:0});
             }
-
-            var arrayObj = new Array();
+            var row=null,currDom=null,visitorArr=[],userArr=[];
             for(var i in data){
-                arrayObj.push(data[i]);
+                row=data[i];
+                if(row.userType==2){
+                    chat.setOnlineUser(row);
+                }else{
+                    currDom=chat.getOnlineUserDom(row).dom;
+                    if(row.userType>=0){
+                        userArr.push(currDom);//设置在线用户
+                    }else{
+                        visitorArr.push(currDom);//设置在线访客
+                    }
+                }
             }
-            arrayObj=arrayObj.sort(common.keysrt('nickname',true));
-
-            chat.initUserList = true;
-
-            var row=null;
-           // for(var i in data){
-               // row=data[i];
-               // chat.setOnlineUser(row);//设置在线用户
-           // }
-            for(var i=0;i<arrayObj.length;i++){
-                row=arrayObj[i];
-                chat.setOnlineUser(row);//设置在线用户
-            }
+            $('#userListId').html(userArr.join(""));
+            $('#visitorListId').html(visitorArr.join(""));
+            chat.setUserListClick($("#userListId li a[t=header]"));
+            chat.setUserListClick($("#visitorListId li a[t=header]"));
             chat.setOnlineNum();//设置在线人数
             indexJS.setListScroll(".user_box");
         });
@@ -1341,7 +1344,6 @@ var chat={
                     var tradeImg = data.tradeImg;//晒单图片
                     var showId = data.id;
                    // var content = '<div ><div><span style="font-weight:bold;color:red;">提示：有小伙伴晒单啦！</span></div><div><span style="font-weight:bold;color:red;">晒单人：<label>'+userName+'</label></span></div><div><a href="'+tradeImg+'" data-lightbox="dialog-img"><img src="'+tradeImg+'"></img></a></div>';
-
                     chat.showTradeDictionary[showId] = data;console.log(chat.showTradeDictionary);
                     var  html = "";
                     html+= '<div class="show-order-box sd-push">';
@@ -1349,16 +1351,12 @@ var chat={
                     html+='<a href='+tradeImg+' data-rel="usersd" data-title="" data-lightbox="usersd-all-img">';
                     html+='<img src='+tradeImg+' alt="" class="mCS_img_loaded"></a>';
                     html+='</div>';
-
                     data.content = html;
                     chat.showTradePushMsg(data);
-
                     break;
                 }
             }
         });
-
-
 
         //信息传输
         this.socket.on('loadMsg',function(data){
@@ -1414,13 +1412,11 @@ var chat={
             }
         });
     },
-
     setPushShowTrade:function(obj) {
         var key = $(obj).attr("key");
         var value = chat.showTradeDictionary[key];
         tool.setPushShowTrade(value);
-    }
-    ,
+    },
     /**
      * 设置聊天列表滚动条
      * @param toBottom
