@@ -87,6 +87,7 @@ for(var key in config.defTemplate){
             jsArr.push("template\\base\\util\\common.js","template\\base\\lib\\newquote.js","template\\base\\lib\\jquery.face.js",
                 prefixPath+"js\\index.js",prefixPath+"js\\index_video.js",prefixPath+"js\\index_chat.js",prefixPath+"js\\index_box.js",prefixPath+"js\\index_tool.js");
             fileZip.zipJs(jsArr,prefixPath+"js\\index.min.js");
+            fileZip.zipJs([prefixPath+"js\\loginAuto.js"],prefixPath+"js\\lg.min.js");
         }
         if(i==2 || i==4){//移动版与或webui
         	fileZip.zipCss([prefixPath+'css\\index.css'],prefixPath+'css\\index.min.css');
@@ -107,6 +108,7 @@ for(var key in config.defTemplate){
             jsArr.push("template\\base\\util\\common.js",prefixPath+"js\\room.js");
             fileZip.zipJs(jsArr,prefixPath+"js\\room.min.js");
             fileZip.zipJs([prefixPath+"js\\pop.js"],prefixPath+"js\\pop.min.js");
+            fileZip.zipJs([prefixPath+"js\\loginAuto.js"],prefixPath+"js\\lg.min.js");
         }
         if(i==3 && key=='pm'){//pc嵌入直播间
             fileZip.zipCss([prefixPath+'css\\index.css'],prefixPath+'css\\index.min.css');

@@ -15,14 +15,14 @@
     <link href="/base/lib/lightbox/lightbox.css" type="text/css" rel="stylesheet"/>
     <link href="/base/lib/swipe/swiper.min.css"  type="text/css" rel="stylesheet" />
     <link href="/base/lib/face/face.css" type="text/css" rel="stylesheet" />
-    <link href="/fx/theme1/css/index<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" type="text/css" rel="stylesheet" />
+    <link href="/fx/theme1/css/index<%=isDevTest? '.css' : ('.min.css?v=' + version)%>" type="text/css" rel="stylesheet" />
     <link href="/base/lib/pikaday/pikaday.min.css" type="text/css" rel="stylesheet" />
     <!--[if lt IE 9]>
     <link href="/fx/theme1/css/studioIE.css" rel="stylesheet" type="text/css">
     <![endif]-->
     <script type="text/javascript" src="/base/lib/store.min.js"></script>
     <!-- 自动登录 begin -->
-    <script type="text/javascript" src="/fx/theme1/js/loginAuto.js"></script>
+    <script type="text/javascript" src="/fx/theme1/js/lg.min.js?v=<%=version%>"></script>
     <script>
         LoginAuto.sessionUser = JSON.parse('<%- userInfo %>');
         LoginAuto.init();
@@ -292,7 +292,7 @@
             <% if(isDevTest) { %>
                  {url:"/base/lib/newquote.js",skipCache:true},{url:"/base/lib/jquery.face.js",skipCache:true},{url:"/base/util/common.js",skipCache:true},{url:"/base/util/chatAnalyze.js",skipCache:true},
                  {url:"/fx/theme1/js/index.js",skipCache:true},{url:"/fx/theme1/js/index_chat.js",skipCache:true},{url:"/fx/theme1/js/index_video.js",skipCache:true},{url:"/fx/theme1/js/index_box.js",skipCache:true},{url:"/fx/theme1/js/index_tool.js",skipCache:true}
-                 <% }else{ %>{url:"/fx/theme1/js/index.min.js"}<% }%>,function () {//ie版本不做本地缓存操作
+                 <% }else{ %>{url:"/fx/theme1/js/index.min.js?v=<%=version%>"}<% }%>,function () {//ie版本不做本地缓存操作
                 pageFun();
                 indexJS.init();//初始化
             }).then(function () {

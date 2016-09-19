@@ -8,13 +8,13 @@
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
     <script type="text/javascript" src="/base/lib/store.min.js"></script>
     <!-- 自动登录 begin -->
-    <script type="text/javascript" src="/hx/theme2/js/loginAuto.js"></script>
+    <script type="text/javascript" src="/hx/theme2/js/lg.min.js?v=<%=version%>"></script>
     <script>
         LoginAuto.sessionUser = JSON.parse('<%- userInfo %>');
         LoginAuto.init();
     </script>
     <!-- 自动登录 end -->
-    <link rel="stylesheet" media="screen" href="/hx/theme2/css/index<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" />
+    <link rel="stylesheet" media="screen" href="/hx/theme2/css/index<%=isDevTest? '.css' : ('.min.css?v=' + version)%>" />
     <link rel="stylesheet" media="screen" href="/base/lib/swipe/swiper.min.css" />
     <link rel="stylesheet" media="screen" href="/base/lib/lightbox/lightbox.css"/>
 </head>
@@ -201,7 +201,7 @@
             {url: "/base/lib/lightbox/lightbox.min.js"},
             {url: "/base/lib/toucher.js"},
             {url: "/base/lib/iphone-inline-video.browser.js"},
-            <% if(isDevTest) { %>{url:"/base/util/common.js",skipCache:true},{url:"/hx/theme2/js/room.js",skipCache:true}<% }else{ %>{url:"/hx/theme2/js/room.min.js",skipCache:true}<% }%>,null).then(function () {
+            <% if(isDevTest) { %>{url:"/base/util/common.js",skipCache:true},{url:"/hx/theme2/js/room.js",skipCache:true}<% }else{ %>{url:"/hx/theme2/js/room.min.js?v=<%=version%>"}<% }%>,null).then(function () {
                 roomJS.web24kPath = '<%= web24kPath %>';
                 roomJS.apiUrl = '<%= apiUrl %>';
                 roomJS.filePath = '<%= filePath %>';
