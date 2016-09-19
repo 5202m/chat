@@ -110,7 +110,7 @@ body {
     margin: 0 0 8px 5px;
 }
 
-.input-toolbar a.inp-bar1,a.inp-bar2, a.inp-bar3,a.inp-bar4,a.inp-bar5{
+.input-toolbar a{
     margin-right: 10px;
     display: inline-block;
     width: 20px;
@@ -128,20 +128,9 @@ body {
     background:url("../img/darkblue/icon-i1.png") no-repeat;
 }
 
-.input-toolbar a.inp-bar4{background: url("../img/darkblue/s.png") 1px 0 no-repeat;width:22px;border-radius:50%;animation:largesse-flash 1s linear infinite;
+.input-toolbar a.inp-bar4{background: url("../img/darkblue/s.png") 1px 0 no-repeat;width:22px;border-radius:50%;animation:largesse-flash 1s linear infinite;}
 .input-toolbar a.inp-bar5{background: url("../img/darkblue/i.png") no-repeat;}
 
-.input-toolbar a.inp-bar6 {
-    margin-right: 10px;
-    display: inline-block;
-    width: 80px;
-    height: 22px;
-    overflow: hidden;
-    color:#ff0000;
-    font-size:16px;
-    font-weight:bold;
-    text-decoration: none;
-}
 
 .dropitem.dr9 i.i9{background: url(../img/darkblue/left-icon.png) no-repeat;}
 .user-inftop .toggle-room i{background: url("../img/darkblue/iconbox.png") no-repeat -229px -33px;}
@@ -246,3 +235,5 @@ body {
 .input-toolbar a.inp-bar3.on {
     background: url(../img/darkblue/icon-i1.png) no-repeat 1px 0;
 }
+
+.sd-push .see{background-color:#23375e;}

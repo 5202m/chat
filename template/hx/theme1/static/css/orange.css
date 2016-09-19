@@ -167,7 +167,7 @@ body {
     margin: 0 0 8px 5px;
 }
 
-.input-toolbar a.inp-bar1,a.inp-bar2, a.inp-bar3,a.inp-bar4,a.inp-bar5{
+.input-toolbar a{
     margin-right: 10px;
     display: inline-block;
     width: 20px;
@@ -201,18 +201,6 @@ body {
 
 .input-toolbar a.inp-bar5 {
     background: url(../img/orange/i.png) no-repeat
-}
-
-.input-toolbar a.inp-bar6 {
-    margin-right: 10px;
-    display: inline-block;
-    width: 80px;
-    height: 22px;
-    overflow: hidden;
-    color:#ff0000;
-    font-size:16px;
-    font-weight:bold;
-    text-decoration: none;
 }
 
 .dropitem.dr9 i.i9 {
@@ -328,3 +316,5 @@ body {
 .input-toolbar a.inp-bar3.on {
     background: url(../img/orange/icon-i1.png) no-repeat 1px 0;
 }
+
+.sd-push .see{background-color:#e67639;}

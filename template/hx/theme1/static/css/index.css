@@ -1736,7 +1736,7 @@ a.skin:hover {
     margin: 0 0 8px 5px;
 }
 
-.input-toolbar a.inp-bar1,a.inp-bar2, a.inp-bar3,a.inp-bar4,a.inp-bar5{
+.input-toolbar a{
     margin-right: 10px;
     display: inline-block;
     width: 20px;
@@ -1759,18 +1759,6 @@ a.skin:hover {
 
 .input-toolbar a.inp-bar4 {
 background: url("../img/light/s.png") no-repeat;
-}
-
-.input-toolbar a.inp-bar6 {
-    margin-right: 10px;
-    display: inline-block;
-    width: 80px;
-    height: 22px;
-    overflow: hidden;
-    color:#ff0000;
-    font-size:16px;
-    font-weight:bold;
-    text-decoration: none;
 }
 
 .level1 .headimg b {
@@ -7888,4 +7876,15 @@ div#teachVideoId {
 }
 .input-toolbar a.inp-bar3.on {
     background: url(../img/light/icon-i1.png) no-repeat 1px 0;
+}
+
+.sd-push{width:98%;border-radius:10px;}
+.sd-push h6{margin-bottom:5px;width:100%;}
+.sd-push .see{
+    border-radius: 20px;
+    color: #fff;
+    float: right;
+    font-size: 12px;
+    line-height: 1.8em;
+    padding: 0 8px;
 }

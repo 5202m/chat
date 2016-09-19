@@ -138,3 +138,7 @@ body {
 .input-toolbar a.inp-bar3.on {
     background: url(../img/light/icon-i1.png) no-repeat 1px 0;
 }
+
+.sd-push{width:98%;border-radius:10px;}
+.sd-push h6{margin-bottom:5px;width:100%;}
+.sd-push .see{background-color:#12a1e4;}
