@@ -12,6 +12,7 @@ var chat={
     whTipInterId:null,//私聊提示
     pushInfoTimeOutId:null,//延迟执行的ID
     initUserList: false,
+    showTradeDictionary : [],
     msgType:{ //信息类型
         text:'text' ,
         img:'img',
@@ -731,7 +732,8 @@ var chat={
             if(gIdDom.attr("aw")=="true" && common.containSplitStr(gIdDom.attr("awr"), row.userType)){
                 csHtml='<em>私聊</em>';
             }
-            isMeHtml = "&nbsp;（客服）";
+            //isMeHtml = "&nbsp;（客服）";
+            isMeHtml = "";
         }
         var lav=chat.getAImgOrLevel(row.userId, row.clientGroup,row.userType,row.avatar);
         var lis=$(userListDomId+" li"),
@@ -1205,11 +1207,47 @@ var chat={
                     randId=common.randomNumber(6);
                     data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:-1});
                 }
-                chat.initUserList = true;
+               // chat.initUserList = true;
             }
-            var row=null;
+
+            var vipSize = 0;
+            var userRandId = 0;
+            var roomInfoId = $("#roomInfoId").text();
+            var type = "";
+            if(roomInfoId.match("VIP")!=null){
+                vipSize = parseInt(Math.random()*(10-5+1)+5,10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
+                if(isNaN(vipSize)){
+                    vipSize = 5;
+                }
+                type = "vip"
+            }else{
+                vipSize = parseInt(Math.random()*(80-40+1)+40,10);//直播室普通房间：会员人数每天递增人数（40-80人）
+                if(isNaN(vipSize)){
+                    vipSize = 40;
+                }
+            }
+            var nickname = "";
+            var dataArr =  common.randomString(type,vipSize);
+            for(var i=0;i<dataArr.length;i++){
+                nickname=dataArr[i];
+                data[("uservip_"+i)]=({userId:("uservip_"+i),clientGroup:'uservip',nickname:nickname,sequence:14+i,userType:0});
+            }
+
+            var arrayObj = new Array();
             for(var i in data){
-                row=data[i];
+                arrayObj.push(data[i]);
+            }
+            arrayObj=arrayObj.sort(common.keysrt('nickname',true));
+
+            chat.initUserList = true;
+
+            var row=null;
+           // for(var i in data){
+               // row=data[i];
+               // chat.setOnlineUser(row);//设置在线用户
+           // }
+            for(var i=0;i<arrayObj.length;i++){
+                row=arrayObj[i];
                 chat.setOnlineUser(row);//设置在线用户
             }
             chat.setOnlineNum();//设置在线人数
@@ -1300,15 +1338,28 @@ var chat={
                 case 'showTrade':
                 {
                     var data=result.data;
-                    var userName = data.userName;//晒单人
+                    var userName = data.boUser.userName;//晒单人
                     var tradeImg = data.tradeImg;//晒单图片
-                    var content = '<div ><div><span style="font-weight:bold;color:red;">提示：有小伙伴晒单啦！</span></div><div><span style="font-weight:bold;color:red;">晒单人：<label>'+userName+'</label></span></div><div><a href="'+tradeImg+'" data-lightbox="dialog-img"><img src="'+tradeImg+'"></img></a></div>';
-                    data.content = content;
+                    var showId = data.id;
+                   // var content = '<div ><div><span style="font-weight:bold;color:red;">提示：有小伙伴晒单啦！</span></div><div><span style="font-weight:bold;color:red;">晒单人：<label>'+userName+'</label></span></div><div><a href="'+tradeImg+'" data-lightbox="dialog-img"><img src="'+tradeImg+'"></img></a></div>';
+
+                    chat.showTradeDictionary[showId] = data;console.log(chat.showTradeDictionary);
+                    var  html = "";
+                    html+= '<div class="show-order-box sd-push">';
+                    html+='<h6>系统：用户'+userName+'推送了一条新的晒单<a href="javascript:void(0);" class="see" onClick="chat.setPushShowTrade(this)" id="seeShowTrade" key='+showId+'>去看看</a></h6>';
+                    html+='<a href='+tradeImg+' data-rel="usersd" data-title="" data-lightbox="usersd-all-img">';
+                    html+='<img src='+tradeImg+' alt="" class="mCS_img_loaded"></a>';
+                    html+='</div>';
+
+                    data.content = html;
                     chat.showTradePushMsg(data);
+
                     break;
                 }
             }
         });
+
+
 
         //信息传输
         this.socket.on('loadMsg',function(data){
@@ -1364,6 +1415,13 @@ var chat={
             }
         });
     },
+
+    setPushShowTrade:function(obj) {
+        var key = $(obj).attr("key");
+        var value = chat.showTradeDictionary[key];
+        tool.setPushShowTrade(value);
+    }
+    ,
     /**
      * 设置聊天列表滚动条
      * @param toBottom
