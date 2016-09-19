@@ -731,5 +731,121 @@ var tool={
                 break;
         }
         return html;
+    },
+    /**
+     * 设置晒单墙数据显示
+     * @returns {boolean}
+     */
+    setPushShowTrade:function(data){
+
+        var index=$("#showTrade").index()-1;
+        $(".mod_videolist .tabnav a").removeClass("on");
+        $(this).addClass("on");
+        $(".mod_videolist .listcont .list_tab").removeClass("on").eq(index).addClass("on");
+
+        $('#all-orders').removeClass('dn');
+        $('#my-orders').addClass('dn');
+        $('#myShowTrade').show();
+        $('#backShowTrade').hide();
+
+        tool.initPushShowTrade(function(){
+            var row = data;
+
+            var tradeHtml='',tradeFormat = tool.pushShowTradehtml();
+
+            var showTradeDate = common.formatterDateTime(row.showDate,'/').substr(0,16);
+            if(common.isBlank(tool.tradeForUser)){
+                tradeHtml += tradeFormat.formatStr(row.title, row.boUser.userName, showTradeDate, row.tradeImg, row.remark, row.id, common.isBlank(row.praise)?0:row.praise, row.boUser.userNo, row.boUser.avatar,row.id);
+            }else{
+                tradeHtml += tradeFormat.formatStr(row.title, showTradeDate, row.tradeImg, row.remark, row.id, common.isBlank(row.praise)?0:row.praise,row.id);
+            }
+
+            $('#all-orders .scrollbox').prepend(tradeHtml);
+
+            tool.setUserShowTrade();
+            tool.showTradePraise();
+            indexJS.setListScroll($(".all-orders"), {callbacks : {onTotalScroll : function(){tool.setShowTrade();}}});/*设置滚动条*/
+
+            tool.setShowTradeStyle(row.id);
+        });
+
+    },
+
+    setShowTradeStyle:function(id){
+        var i = 0;
+        var t = setInterval(function(){
+            i++;
+            if(i%2==0){
+                $("#"+id).css("border","2px solid red");
+            }else{
+                $("#"+id).css("border","0px");
+            }
+            if(i == 10){
+                clearInterval(t);
+                $("#"+id).css("border","0px");
+            }
+        },500);
+    },
+
+    pushShowTradehtml:function(){
+        var formatHtmlArr = [];
+        formatHtmlArr.push('<div class="show-order-box"  id="{9}">');
+        formatHtmlArr.push('    <h5>{0}</h5>');//标题
+        formatHtmlArr.push('    <h6>晒单人：<a href="javascript:void(0)" userId="{7}" avatar="{8}">{1}</a></h6>');//晒单人
+        formatHtmlArr.push('    <p class="time">{2}</p>');//时间
+        formatHtmlArr.push('    <a href="{3}" data-rel="usersd" data-title="{0}" data-lightbox="usersd-all-img">');
+        formatHtmlArr.push('        <img src="{3}" alt="{0}" class="mCS_img_loaded">');
+        formatHtmlArr.push('    </a>');
+        formatHtmlArr.push('    <p class="orders-test">{4}</p>');//晒单内容
+        formatHtmlArr.push('    <div class="orders-btn">');
+        formatHtmlArr.push('        <a href="javascript:void(0);" class="support" i="{5}"><span>{6}</span><i>+1</i></a>');//id和点赞数
+        formatHtmlArr.push('        <a href="javascript:void(0);" class="showMore">查看全部</a>');
+        formatHtmlArr.push('    </div>');
+        formatHtmlArr.push('</div>');
+        return formatHtmlArr.join("");
+    },
+    /**
+     * 晒单数据初始化
+     * @param pageNo
+     * @param pageSize
+     */
+    initPushShowTrade:function(callback){
+        if(indexJS.userInfo.isLogin) {
+            $('#showTradeInfo img').attr('src', $('#avatarInfoId').attr('src'));
+            $('#showTradeNk').text(indexJS.userInfo.nickname);
+        }else{
+            $('#showTradeInfo img').attr('src', $('#visitorListId li .mynk').prev().children('img').attr('src'));
+            $('#showTradeNk').text($('#visitorListId li .mynk').text().replace('【我】',''));
+        }
+        var params = {groupType:indexJS.userInfo.groupType};
+        if(common.isValid(tool.tradeForUser)){
+            params.userNo = tool.tradeForUser;
+        }
+        common.getJson('/hxstudio/getShowTrade',{data:JSON.stringify(params)},function(data){
+            if(data.isOK && common.isValid(data.data)){
+                if(common.isBlank(tool.tradeForUser)) {
+                    $('#all-orders .scrollbox').empty();
+                }else{
+                    $('#my-orders .scrollbox').empty();
+                }
+                tool.tradeList = data.data.tradeList || [];
+                if(indexJS.userInfo.isLogin) {
+                    var row = null, num = 0;
+                    for(var i = 0, len = tool.tradeList.length; i < len; i++){
+                        row = tool.tradeList[i];
+                        if(row.user.userNo == indexJS.userInfo.userId){
+                            num++;
+                        };
+                    }
+                    $('#sdcount').text(num)
+                }
+                tool.tradeLoadAll = false;
+                tool.setShowTrade();
+                callback();
+            }else{
+                callback();
+            }
+        });
     }
+
 };
