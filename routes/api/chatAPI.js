@@ -115,4 +115,26 @@ router.post('/noticeArticle', function(req, res) {
     }
     res.json(result);
 });
+
+/**
+ * 更新文档推送信息
+ */
+router.post('/showTradeNotice', function(req, res) {
+    var tradeInfoJSON=req.body["tradeInfo"];
+    var result={isOK:false,error:null };
+    var tradeInfoArray;
+    if(common.isBlank(tradeInfoJSON)){
+        result.error=errorMessage.code_1000;
+    }else{
+        tradeInfoArray = JSON.parse(tradeInfoJSON);
+        for(var i = 0;i<tradeInfoArray.length;i++){
+            var tradeInfo = tradeInfoArray[i];
+            if(tradeInfo.tradeType == 2){ //客户晒单
+                chatService.sendMsgToSpace(tradeInfo.groupType,"notice",{type:chatService.noticeType.showTrade,data:tradeInfo});
+            }
+        }
+        result.isOK=true;
+    }
+    res.json(result);
+});
 module.exports = router;
