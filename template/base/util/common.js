@@ -391,7 +391,7 @@ var common = {
                     }else if(isHttps) {
                         if(studioType==1 && linkTmp.code==3){
                             var urlTmp = linkTmp.url || "";
-                            urlTmp = urlTmp.replace(/^http:/, "rtmps:").replace(/\/playlist\.m3u8$/, "");
+                            urlTmp = urlTmp.replace(/^http:/, "rtmps:").replace(/\/index\.m3u8$/, "");
                             return urlTmp;
                         }
                     }else{
