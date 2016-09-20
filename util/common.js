@@ -454,6 +454,15 @@ var common = {
             res.header("X-Powered-By",' 3.2.1');
             res.header("P3P","CP=CAO PSA OUR");//处理ie跨域问题
         }
+    },
+    /**
+     * 对象数组排序
+     * @param key 对象的key值
+     * @param desc true 为降序，false升序
+     * @returns {Function}
+     */
+    arraySort:function (key,desc) {
+        return function(a,b){return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);}
     }
 };
 //导出类
