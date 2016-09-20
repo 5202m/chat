@@ -328,7 +328,6 @@ var roomJS={
                     roomJS.formatUserToContent(row, true, result.toUserId);
                 }
             }
-            studioMbPop.loadingBlock($("#whTalkBoxTab"), true);
         });
     },
     /**
@@ -957,7 +956,7 @@ var roomJS={
                             rtmp: {
                                 proxyType: 'best',
                                 url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
-                                netConnectionUrl: urlGroupArr[1]
+                                netConnectionUrl: "rtmps://5748416443938.streamlock.net/live"//urlGroupArr[1]
                             }
                         },
                         onError: function (e) {
@@ -1817,7 +1816,6 @@ var roomJS={
             var csTmp = this.CSMap[csId];
             csTmp.load = true;
             //加载私聊信息
-            studioMbPop.loadingBlock($("#whTalkBoxTab"));
             roomJS.socket.emit("getWhMsg",{
                 clientStoreId:roomJS.userInfo.clientStoreId,
                 userType:roomJS.userInfo.userType,

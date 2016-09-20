@@ -317,7 +317,6 @@ var roomJS={
                     roomJS.formatUserToContent(row, true, result.toUserId);
                 }
             }
-            studioMbPop.loadingBlock($("#whTalkBoxTab"), true);
         });
     },
     /**
@@ -1846,7 +1845,6 @@ var roomJS={
             var csTmp = this.CSMap[csId];
             csTmp.load = true;
             //加载私聊信息
-            studioMbPop.loadingBlock($("#whTalkBoxTab"));
             roomJS.socket.emit("getWhMsg",{
                 clientStoreId:roomJS.userInfo.clientStoreId,
                 userType:roomJS.userInfo.userType,

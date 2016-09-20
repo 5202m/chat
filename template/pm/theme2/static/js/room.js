@@ -305,7 +305,6 @@ var studioChatMb={
                     studioChatMb.formatUserToContent(row, true, result.toUserId);
                 }
             }
-            studioMbPop.loadingBlock($("#whTalkBoxTab"), true);
         });
     },
     /**
@@ -1839,7 +1838,6 @@ var studioChatMb={
             var csTmp = this.CSMap[csId];
             csTmp.load = true;
             //加载私聊信息
-            studioMbPop.loadingBlock($("#whTalkBoxTab"));
             studioChatMb.socket.emit("getWhMsg",{
                 clientStoreId:studioChatMb.userInfo.clientStoreId,
                 userType:studioChatMb.userInfo.userType,

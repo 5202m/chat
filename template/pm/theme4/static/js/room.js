@@ -308,7 +308,6 @@ var studioChatMb={
                     studioChatMb.formatUserToContent(row, true, result.toUserId);
                 }
             }
-            studioMbPop.loadingBlock($("#whTalkBoxTab"), true);
         });
     },
     /**
@@ -949,7 +948,7 @@ var studioChatMb={
                             rtmp: {
                                 proxyType: 'best',
                                 url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
-                                netConnectionUrl: urlGroupArr[1]
+                                netConnectionUrl: "rtmps://5748416443938.streamlock.net/live"//urlGroupArr[1]
                             }
                         },
                         onError: function (e) {
@@ -1795,7 +1794,6 @@ var studioChatMb={
             var csTmp = this.CSMap[csId];
             csTmp.load = true;
             //加载私聊信息
-            studioMbPop.loadingBlock($("#whTalkBoxTab"));
             studioChatMb.socket.emit("getWhMsg",{
                 clientStoreId:studioChatMb.userInfo.clientStoreId,
                 userType:studioChatMb.userInfo.userType,
