@@ -1238,7 +1238,7 @@ var chat={
         //进入聊天室加载的在线用户
         this.socket.on('onlineUserList',function(data,dataLength){
             //如客户数小于200，则追加额外游客数
-            if($("#roomInfoId").attr("av")=="true" && !chat.initUserList){
+            if($("#roomInfoId").attr("av")=="true"){
                 var randId= 0,size=0;
                 if(dataLength>100){
                     size = Math.ceil(Math.random()*50)+275;
@@ -1249,13 +1249,12 @@ var chat={
                     randId=common.randomNumber(6);
                     data.push({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:15,userType:-1});
                 }
-                chat.initUserList = true;
             }
             var userArr=[];
             for(var i in data){
                 userArr.push(chat.getOnlineUserDom(data[i]).dom);//设置在线用户
             }
-            $('#userListId').append(userArr.join(""));
+            $('#userListId').html(userArr.join(""));
             chat.setUserListClick($("#userListId li a[t=header]"));
             chat.setOnlineNum();//设置在线人数
             indexJS.setListScroll(".user_box");

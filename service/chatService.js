@@ -281,23 +281,41 @@ var chatService ={
                 if(common.isBlank(userInfo.groupType)){
                     return false;
                 }
-                if(!userInfo.isMobile){
-                    //设置客户序列
-                    chatService.setClientSequence(userInfo);
-                    //加载用户列表数据
-                    chatService.setRoomOnlineUser(userInfo,true,null,function(roomUserArr){
-                        var keys=Object.keys(roomUserArr).sort(function(a,b){return roomUserArr[a].sequence>=roomUserArr[b].sequence?roomUserArr[a].nickname>=roomUserArr[b].nickname:false;});
-                        var newUserArr=[],onlineUserObj=null,visitorNum=0;
-                        for(var i in keys){
-                            onlineUserObj=roomUserArr[keys[i]];
+                //设置客户序列
+                chatService.setClientSequence(userInfo);
+                //加载用户列表数据
+                chatService.setRoomOnlineUser(userInfo,true,null,function(roomUserArr){
+                    var newUserArr=[],onlineUserObj=null,visitorNum=0;
+                    var sysArr=[],notActiveArr=[],activeArr=[],simulateArr=[],vipArr=[],registerArr=[],visitorArr=[];
+                    for(var i in roomUserArr){
+                        onlineUserObj=roomUserArr[i];
+                        if(onlineUserObj.userId==userInfo.userId){
                             newUserArr.push(onlineUserObj);
-                            if(onlineUserObj.clientGroup == constant.clientGroup.visitor){
-                                visitorNum++;//取出真实游客数量
-                            }
+                            continue;
                         }
-                        socket.emit('onlineUserList',newUserArr,keys.length,visitorNum);//给自己加载所有在线用户
-                    });
-                }
+                        if(onlineUserObj.userType>0){
+                            sysArr.push(onlineUserObj);
+                            continue;
+                        }
+                        if(onlineUserObj.clientGroup == constant.clientGroup.vip){
+                            vipArr.push(onlineUserObj);
+                        }else if(onlineUserObj.clientGroup == constant.clientGroup.active) {
+                            activeArr.push(onlineUserObj);
+                        }else if(onlineUserObj.clientGroup == constant.clientGroup.notActive) {
+                            notActiveArr.push(onlineUserObj);
+                        }else if(onlineUserObj.clientGroup == constant.clientGroup.simulate) {
+                            simulateArr.push(onlineUserObj);
+                        }else if(onlineUserObj.clientGroup == constant.clientGroup.register) {
+                            registerArr.push(onlineUserObj);
+                        }else{
+                            visitorArr.push(onlineUserObj);
+                            visitorNum++;//取出真实游客数量
+                        }
+                    }
+                    sysArr.sort(common.arraySort("userType",true));
+                    newUserArr=newUserArr.concat(sysArr,vipArr,activeArr,notActiveArr,simulateArr,registerArr,visitorArr);
+                    socket.emit('onlineUserList',newUserArr,newUserArr.length,visitorNum);//给自己加载所有在线用户
+                });
                 //加载已有内容
                 messageService.loadMsg(userInfo,lastPublishTime,false,function(msgData){
                     //同步数据到客户端
