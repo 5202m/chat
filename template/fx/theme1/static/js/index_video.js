@@ -194,7 +194,7 @@ var videos={
         /**滚动字幕事件*/
         this.bindEventRollNews();
         
-        /**问卷调查广告*/
+        /**注册抽奖广告*/
         $('.video_ad .ad_closebtn').click(function() {
             $('.video_ad').hide();
         });
