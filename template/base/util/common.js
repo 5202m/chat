@@ -376,9 +376,7 @@ var common = {
         }
         //提取链接
         var getSLink=function(studioLinkTmp,studioType){
-            if(studioType != 3){
-                return "fx678";
-            }else if(studioLinkTmp){
+            if(studioLinkTmp && studioType != 3){
                 var isMb=common.isMobile();
                 var linkTmp;
                 if(typeof studioLinkTmp !='object'){

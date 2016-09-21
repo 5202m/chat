@@ -738,7 +738,7 @@ var indexJS ={
         switch (indexJS.onlineCsStatus){
             case 0:
                 indexJS.onlineCsStatus = 1;
-                var csScriptUrl = 'http://jms.phgsa.cn/chat.php?pid=P001&tln=' + indexJS.userInfo.userId + '&tnn=' + indexJS.userInfo.nickname + '&tul=' + indexJS.userInfo.clientGroup;
+                var csScriptUrl = 'http://jms.phgsa.cn/chat.php?pid=P001&tln=' + indexJS.userInfo.userId + '&tnn=' + indexJS.userInfo.nickname + '&tul=' + indexJS.userInfo.clientGroup + '&tmb=' + $("#personInfoMb").text();
                 LazyLoad.js(csScriptUrl, function(){
                     indexJS.onlineCsStatus = 2;
                     $("#welive_info").trigger("click");

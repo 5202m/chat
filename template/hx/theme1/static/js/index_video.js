@@ -206,7 +206,7 @@ var videos={
      */
     playVideoByDate:function(isInit){
         var course=indexJS.courseTick.course;
-        if(!course||(course.courseType!=0 && common.isBlank(course.studioLink))||course.isNext|| course.courseType==0){
+        if(!course||(course.courseType!=0 && course.courseType!=3 && common.isBlank(course.studioLink))||course.isNext|| course.courseType==0){
             if(isInit){
                 if(course && !course.isNext /*&& course.courseType==0*/){
                     this.setVdTab(true);

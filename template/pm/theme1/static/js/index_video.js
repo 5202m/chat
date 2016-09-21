@@ -216,7 +216,7 @@ var videos={
      */
     playVideoByDate:function(isInit){
         var course=indexJS.courseTick.course;
-        if(!course||(course.courseType!=0 && common.isBlank(course.studioLink))||course.isNext|| course.courseType==0){
+        if(!course||(course.courseType!=0 && course.courseType!=3 && common.isBlank(course.studioLink))||course.isNext|| course.courseType==0){
             if(isInit){
                 if(course && !course.isNext && course.courseType==0){
                     this.setVdTab(true);
@@ -235,7 +235,7 @@ var videos={
             this.setVdTab(true);
             this.setStudioVideoDiv(course.studioLink,course.courseType);
             this.setStudioInfo(course);
-            this.setStudioTip(course.courseType!=2);
+            this.setStudioTip(course.courseType!=2 && course.courseType!=3);
             //新闻滚动
             this.newsMarquee(1==course.courseType);
         }
@@ -284,12 +284,15 @@ var videos={
      * @param courseType
      */
     setStudioVideoDiv:function(url,courseType){
-        if($("#lvVideoId").is(":visible") && $("#lvVideoId").data("url") == url){
+        if($("#lvVideoId").is(":visible") && url != null && $("#lvVideoId").data("url") == url){
             return;
         }
         $("#nextCourse").hide();
         $("#lvVideoId").show().data("url", url).html("");
-        if(url.indexOf("rtmp")!=-1){
+        if(courseType == "3"){
+            $("#lvVideoId .img-loading").fadeIn(0).delay(2000).fadeOut(200);
+            $('<iframe frameborder=0 width="100%" height="100%" src="/pm/theme1/html/fx678.html" allowfullscreen></iframe>').appendTo('#lvVideoId');
+        }else if(url.indexOf("rtmp")!=-1){
             var urlGroupArr=/(.*)\/([0-9]+)$/g.exec(url);
             if(!urlGroupArr || urlGroupArr.length<3){
                 return;
@@ -319,9 +322,6 @@ var videos={
                 '</object>'+
                 '</div>';
             $("#lvVideoId").html(sdHtml);*/
-        }else if(courseType == "3"){
-            $("#lvVideoId .img-loading").fadeIn(0).delay(2000).fadeOut(200);
-            $('<iframe frameborder=0 width="100%" height="100%" src="/pm/theme1/html/fx678.html" allowfullscreen></iframe>').appendTo('#lvVideoId');
         }else{
             $("#lvVideoId .img-loading").fadeIn(0).delay(2000).fadeOut(200);
             $(videos.getEmbedDom(url)).appendTo('#lvVideoId');
