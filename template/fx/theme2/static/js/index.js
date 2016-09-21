@@ -30,6 +30,14 @@ var studioChatMbIdx={
         if(!this.userInfo.nickname){
             this.refreshNickname(false, "匿名_" + this.userInfo.userId.substring(8,12));
         }
+        //直接弹出注册框
+        if(this.userInfo.clientGroup=='visitor' && this.options.preReg){
+            studioMbPop.popBox("reg", {
+                groupId : "",
+                clientStoreId : studioChatMbIdx.userInfo.clientStoreId,
+                platform : studioChatMbIdx.options.platform
+            });
+        }
     },
     /**
      * 检查客户组别

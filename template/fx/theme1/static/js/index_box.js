@@ -9,7 +9,10 @@ var box={
      * 方法入口
      */
     init:function(){
-       this.setEvent();
+        this.setEvent();
+        if (indexJS.checkClientGroup('visitor') && indexJS.options.preReg) {
+            box.openSettingBox("reg");
+        }
     },
     /**
      * 设置事件
@@ -260,6 +263,7 @@ var box={
                     return false;
                 }else{
                     $(".blackbg,#popBoxRegister").hide();
+                    $("#regLpBtn").attr("href", "http://testweb.gwfx.com/activity/studioLottery/index.html?userId=" + result.userId + "#ba");
                     $(".register_result").show();
                 }
             },true,function(err){
