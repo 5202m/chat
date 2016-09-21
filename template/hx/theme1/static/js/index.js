@@ -38,28 +38,29 @@ var indexJS ={
      */
     setEvent:function(){
         //创建VIP房间快速入口
-        if($("#roomInfoId").attr("av") == "true"){
-            var room = $(".rooms>div[rid]");
-            if(room.size() == 1 && room.find(".enterbtn").attr("av") == "false"){
-                var roomName = room.find(".rname").text().replace(/恒信贵金属/, "");
-                var html = [];
-                html.push('<li class="cursor" ck="1">');
-                html.push('<a href="javascript:" class="toplink vipenter"><span>' + roomName + '</span></a>');
-                html.push('</li>');
-                html = $(html.join(""));
-
-                 html.bind("mouseover",function(){
-                     $(".changeroom").addClass("open");
-                });
-                html.bind("mouseout ",function(){
-                    $('.changeroom').removeClass("open");
-                });
-                html.bind("click", function(){
+        if($('#roomInfoId:contains("VIP")').length==0){
+            var html = [];
+            html.push('<li class="cursor" ck="1" id="vipBtn">');
+            html.push('<a href="javascript:" class="toplink vipenter"><span>VIP直播室</span></a><div class="dropcont" style="padding: 20px 30px;"></div>');
+            html.push('</li>');
+            html = $(html.join(""));
+            html.hover(function(){
+                $('.changeroom').removeClass("open");
+                var rm=$(this).find(".rooms");
+                if(rm.length>0){
+                    rm.show();
+                }else{
                     $('.changeroom').click();
-                    $('.rooms .rbox[rid] .enterbtn').click();
-                });
-                $(".header-right .cursor:first").before(html);
-            }
+                    $(this).find(".dropcont").append($('.changeroom .rooms .rname:contains("VIP")').parents(".rooms").clone());
+                    $("#vipBtn,#vipBtn .enterbtn").click(function(){
+                        var rid=$("#vipBtn").find(".enterbtn").attr("rid");
+                        $('.changeroom .rooms .rbox[rid='+rid+'] .enterbtn').click();
+                    });
+                }
+            },function(){
+                $(this).find(".rooms").hide();
+            });
+            $(".header-right .cursor:first").before(html);
         }
         //用户信息
         $(".ul-info li").hover(function(){

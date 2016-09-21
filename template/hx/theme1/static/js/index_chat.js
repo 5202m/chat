@@ -1215,24 +1215,25 @@ var chat={
             }
             var vipSize = 0;
             var roomInfoId = $("#roomInfoId").text();
-            var type = "";
+            var clientGroup = "";
             if(roomInfoId.match("VIP")!=null){
                 vipSize = parseInt(Math.random()*(10-5+1)+5,10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
                 if(isNaN(vipSize)){
                     vipSize = 5;
                 }
-                type = "vip"
+                clientGroup = "vip"
             }else{
                 vipSize = parseInt(Math.random()*(80-40+1)+40,10);//直播室普通房间：会员人数每天递增人数（40-80人）
                 if(isNaN(vipSize)){
                     vipSize = 40;
                 }
+                clientGroup = "active";
             }
             var nickname = "";
-            var dataArr =  common.randomString(type,vipSize);
+            var dataArr =  common.randomString(clientGroup,vipSize);
             for(var i=0;i<dataArr.length;i++){
                 nickname=dataArr[i];
-                data.push({userId:("uservip_"+i),clientGroup:'uservip',nickname:nickname,sequence:14+i,userType:0});
+                data.push({userId:("uservip_"+i),clientGroup:clientGroup,nickname:nickname,sequence:14+i,userType:0});
             }
             var row=null,currDom=null,visitorArr=[],userArr=[];
             for(var i in data){
