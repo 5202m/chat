@@ -1190,6 +1190,43 @@ var chat={
         return userList;
     },
     /**
+     * 随机生成名称
+     * @param clientGroup
+     * @returns {Array}
+     */
+     getRdC:function(clientGroup){
+        var rdNum = 0,seq=11,listStr =null;
+        if(clientGroup == "vip"){
+            rdNum = parseInt(Math.random()*(10-5+1)+5,10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
+            if(isNaN(rdNum)){
+                rdNum = 5;
+            }
+            seq=10;
+            listStr =["炼金道士","Dil","金石为开","Hal","爱笑大叔","Ada","黄金泰坦","SKY","指点为金","我为金狂"];
+        }else{
+            rdNum = parseInt(Math.random()*(80-40+1)+40,10);//直播室普通房间：会员人数每天递增人数（40-80人）
+            if(isNaN(rdNum)){
+                rdNum = 40;
+            }
+            listStr =["宝马金鞍","Abi","福寿荣贵","Sun","Sam","金玉婉婷","Evi","金玛丽娜","金可新瑞","Rob","金银珠宝","金戈铁马","Len","金光闪闪","Ben","笑傲点金","Zoe","市外风光","Amy",
+                "年前买今","Ava","小心买坚","Jan","彩旗飘飘","Liv","一路飙红","先河论市","Alf","Kay","瘦羊看盘","Asa","不喜欢输","Tim","顺风起航","金银合肥","黄金小杨","Eva",
+                "金市赢家","Jon","金金得鑫","Oma","我爱赚钱","试试看看","起起伏伏","Joe","稳中求胜","半个灵魂","Ian","时时小时","十年魔一","Pam","Fay","金市翱翔",
+                "思金念银","Kla","金过无痕","金海求生","May","Bob","险中求胜","Kim","亮金金","Pat","博弈高手","Ted","Wyn","金成万千","有茶有戏","Sue","看准前方","Ysa","淡看跌涨",
+                "涨停兄","Pal","唯美小金","Ski","一起交流","Kim","一路高歌","Leo"];
+        }
+        var data = [],arrIndex=0;
+        for (var i = 0; i<rdNum; i++) {
+            if (listStr.length>0) {
+                arrIndex = Math.floor(Math.random()*listStr.length);
+                data.push(chat.getOnlineUserDom({userId:("userRcd_"+i),clientGroup:clientGroup,nickname:listStr[arrIndex],sequence:seq,userType:0}).dom);
+                listStr.splice(arrIndex, 1);
+            } else {
+                break;
+            }
+        }
+        return data;
+    },
+    /**
      * 设置socket
      */
     setSocket:function(){
@@ -1213,30 +1250,9 @@ var chat={
                 }
                 chat.initUserList = true;
             }
-            var vipSize = 0,seq=10;
-            var roomInfoId = $("#roomInfoId").text();
-            var clientGroup = "";
-            if(roomInfoId.match("VIP")!=null){
-                vipSize = parseInt(Math.random()*(10-5+1)+5,10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
-                if(isNaN(vipSize)){
-                    vipSize = 5;
-                }
-                clientGroup = "vip"
-            }else{
-                vipSize = parseInt(Math.random()*(80-40+1)+40,10);//直播室普通房间：会员人数每天递增人数（40-80人）
-                if(isNaN(vipSize)){
-                    vipSize = 40;
-                }
-                clientGroup = "active";
-                seq=11;
-            }
-            var nickname = "";
-            var dataArr =  common.randomString(clientGroup,vipSize);
-            for(var i=0;i<dataArr.length;i++){
-                nickname=dataArr[i];
-                data.push({userId:("uservip_"+i),clientGroup:clientGroup,nickname:nickname,sequence:seq,userType:0});
-            }
+            var clientGroup = $("#roomInfoId").text().match("VIP")!=null?"vip":"active";
             var row=null,currDom=null,visitorArr=[],userArr=[];
+            var fR= 0,fV=0;//自动生成的客户的数据索引
             for(var i in data){
                 row=data[i];
                 if(row.userType==2){
@@ -1245,12 +1261,22 @@ var chat={
                     currDom=chat.getOnlineUserDom(row).dom;
                     if(row.userType>=0){
                         userArr.push(currDom);//设置在线用户
+                        if(row.sequence<=11){
+                            fR++;
+                        }
+                        if(row.sequence<=10){
+                            fV++;
+                        }
                     }else{
                         visitorArr.push(currDom);//设置在线访客
                     }
                 }
             }
             $('#userListId').html(userArr.join(""));
+            var targetDom=$('#userListId li:eq('+((clientGroup=="vip"?fV:fR)-1)+')');
+            if(targetDom.length>0){
+                targetDom.after(chat.getRdC(clientGroup).join(''));
+            }
             $('#visitorListId').html(visitorArr.join(""));
             chat.setUserListClick($("#userListId li a[t=header]"));
             chat.setUserListClick($("#visitorListId li a[t=header]"));

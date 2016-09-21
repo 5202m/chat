@@ -782,63 +782,6 @@ var common = {
         if (r!=null){ return unescape(r[2]);}
         return null; //返回参数值
     },
-
-    /**
-     * 随机生成名称
-     * @param name
-     * @returns Array
-     */
-    randomString:function(type,size){
-        var arryListStr =["宝马金鞍","Abi","福寿荣贵","Sun","Sam","金玉婉婷","Evi","金玛丽娜","金可新瑞","Rob","金银珠宝","金戈铁马","Len","金光闪闪","Ben","笑傲点金","Zoe","市外风光","Amy",
-            "年前买今","Ava","小心买坚","Jan","彩旗飘飘","Liv","一路飙红","先河论市","Alf","Kay","瘦羊看盘","Asa","不喜欢输","Tim","顺风起航","金银合肥","黄金小杨","Eva",
-            "金市赢家","Jon","金金得鑫","Oma","我爱赚钱","试试看看","起起伏伏","Joe","稳中求胜","半个灵魂","Ian","时时小时","十年魔一","Pam","Fay","金市翱翔",
-            "思金念银","Kla","金过无痕","金海求生","May","Bob","险中求胜","Kim","亮金金","Pat","博弈高手","Ted","Wyn","金成万千","有茶有戏","Sue","看准前方","Ysa","淡看跌涨",
-            "涨停兄","Pal","唯美小金","Ski","一起交流","Kim","一路高歌","Leo"];
-
-        var vipArryListStr =["炼金道士","Dil","金石为开","Hal","爱笑大叔","Ada","黄金泰坦","SKY","指点为金","我为金狂"];
-
-        var data = [];
-        for(var i=0;i<size;i++){
-            var num = 0;
-            var nickname;
-            if(type == "vip"){
-                num = Math.random();
-                num = Math.ceil(num * 10);
-                if(isNaN(num)){
-                    num = Math.random();
-                    num = num*10;
-                    num = Math.ceil(num);
-                }
-                nickname = vipArryListStr[num];
-            }else{
-                num = Math.random();
-                num = Math.ceil(num * 80);
-                if(isNaN(num)){
-                    num = Math.random();
-                    num = num*10;
-                    num = Math.ceil(num);
-                }
-                nickname = arryListStr[num];
-            }
-
-            var flag = false;
-            for(var i = 0;i<data.length;i++){
-                var str = data[i];
-                if(nickname == str){
-                    flag = true;
-                }
-            }
-            if(flag){
-                continue;
-            }else{
-                if(typeof(nickname)!="undefined"){
-                    data.push(nickname);
-                }
-            }
-        }
-    return data;
-},
-
     /**
      * 排序
      * @param key 排序字段
