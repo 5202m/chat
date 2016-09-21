@@ -592,7 +592,7 @@ var studioMbReg = {
                     return false;
                 }else{
                     studioMbPop.showMessage("注册成功");
-                    $("#reg1Form_lpBtn").attr("href", "http://testweb.gwfx.com/activity/studioLottery/index.html?userId=" + result.userId + "#ba");
+                    $("#reg1Form_lpBtn").attr("href", "http://www.gwfx.com/activity/studioLottery/index.html?userId=" + result.userId + "#ba");
                     studioMbPop.popShow($("#reg1Pop"));
                 }
             },true,function(){
