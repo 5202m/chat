@@ -41,24 +41,24 @@ var indexJS ={
         if($('#roomInfoId:contains("VIP")').length==0){
             var html = [];
             html.push('<li class="cursor" ck="1" id="vipBtn">');
-            html.push('<a href="javascript:" class="toplink vipenter"><span>VIP直播室</span></a><div class="dropcont" style="padding: 20px 30px;"></div>');
+            html.push('<a href="javascript:" class="toplink vipenter"><span>VIP直播室</span><b class="arr"></b></a><div class="dropcont" style="padding: 20px 30px;display:none;"><div class="rooms"></div></div>');
             html.push('</li>');
             html = $(html.join(""));
             html.hover(function(){
                 $('.changeroom').removeClass("open");
-                var rm=$(this).find(".rooms");
+                var rm=$(this).find(".rbox");
                 if(rm.length>0){
-                    rm.show();
+                    rm.parents(".dropcont").show();
                 }else{
                     $('.changeroom').click();
-                    $(this).find(".dropcont").append($('.changeroom .rooms .rname:contains("VIP")').parents(".rooms").clone());
+                    $(this).find(".rooms").append($('.changeroom .rooms .rname:contains("VIP")').parents(".rbox[rid]").clone());
                     $("#vipBtn,#vipBtn .enterbtn").click(function(){
                         var rid=$("#vipBtn").find(".enterbtn").attr("rid");
                         $('.changeroom .rooms .rbox[rid='+rid+'] .enterbtn').click();
                     });
                 }
             },function(){
-                $(this).find(".rooms").hide();
+                $(this).parents(".dropcont").hide();
             });
             $(".header-right .cursor:first").before(html);
         }

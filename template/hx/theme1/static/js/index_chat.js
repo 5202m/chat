@@ -1213,7 +1213,7 @@ var chat={
                 }
                 chat.initUserList = true;
             }
-            var vipSize = 0;
+            var vipSize = 0,seq=10;
             var roomInfoId = $("#roomInfoId").text();
             var clientGroup = "";
             if(roomInfoId.match("VIP")!=null){
@@ -1228,12 +1228,13 @@ var chat={
                     vipSize = 40;
                 }
                 clientGroup = "active";
+                seq=11;
             }
             var nickname = "";
             var dataArr =  common.randomString(clientGroup,vipSize);
             for(var i=0;i<dataArr.length;i++){
                 nickname=dataArr[i];
-                data.push({userId:("uservip_"+i),clientGroup:clientGroup,nickname:nickname,sequence:14+i,userType:0});
+                data.push({userId:("uservip_"+i),clientGroup:clientGroup,nickname:nickname,sequence:seq,userType:0});
             }
             var row=null,currDom=null,visitorArr=[],userArr=[];
             for(var i in data){
