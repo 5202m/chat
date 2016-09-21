@@ -319,6 +319,9 @@ var videos={
                 '</object>'+
                 '</div>';
             $("#lvVideoId").html(sdHtml);*/
+        }else if(courseType == "3"){
+            $("#lvVideoId .img-loading").fadeIn(0).delay(2000).fadeOut(200);
+            $('<iframe frameborder=0 width="100%" height="100%" src="/fx/theme1/html/fx678.html" allowfullscreen></iframe>').appendTo('#lvVideoId');
         }else{
             $("#lvVideoId .img-loading").fadeIn(0).delay(2000).fadeOut(200);
             $(videos.getEmbedDom(url)).appendTo('#lvVideoId');

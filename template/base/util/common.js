@@ -376,7 +376,9 @@ var common = {
         }
         //提取链接
         var getSLink=function(studioLinkTmp,studioType){
-            if(studioLinkTmp){
+            if(studioType != 3){
+                return "fx678";
+            }else if(studioLinkTmp){
                 var isMb=common.isMobile();
                 var linkTmp;
                 if(typeof studioLinkTmp !='object'){
@@ -401,6 +403,7 @@ var common = {
                     }
                 }
             }
+            return null;
         };
         //提取课程
         var getCourses=function(tmBkTmp,i,isNext){

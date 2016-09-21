@@ -307,7 +307,7 @@ var indexJS ={
     fillCourse:function(){
         var courses=indexJS.syllabusData && indexJS.syllabusData.courses;
         if(courses){
-            var courseType = {'0':'文字直播','1':'视频直播','2':'oneTV直播'};
+            var courseType = {'0':'文字直播','1':'视频直播','2':'oneTV直播','3':'汇通视讯'};
             var days=courses.days,tmk=courses.timeBuckets;
             var nva=$(".course_nav").html("");
             var als='',ons='',curDay=new Date(indexJS.serverTime).getDay();

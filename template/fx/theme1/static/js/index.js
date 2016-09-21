@@ -298,7 +298,7 @@ var indexJS ={
     fillCourse:function(){
         var courses=indexJS.syllabusData && indexJS.syllabusData.courses;
         if(courses){
-            var courseType = {'0':'文字在线','1':'视频在线','2':'oneTV在线'};
+            var courseType = {'0':'文字在线','1':'视频在线','2':'oneTV在线','3':'汇通视讯'};
             var days=courses.days,tmk=courses.timeBuckets;
             var nva=$(".course_nav").html("");
             var als='',ons='',curDay=new Date(indexJS.serverTime).getDay();
