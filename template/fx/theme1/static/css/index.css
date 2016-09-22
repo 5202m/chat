@@ -419,6 +419,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .mod_menu .dropitem > a i.i7{ background-position:0 -180px;}
 .mod_menu .dropitem > a i.i8{ background-position:0 -210px;margin-top:10px}
 .mod_menu .dropitem > a i.i9{ background-position: 0 -240px;}
+.mod_menu .dropitem > a i.i10{ background-position: 0 -270px;}
 .mod_menu .dropitem.on > a i.i1{ background-position:-30px 0px;}
 .mod_menu .dropitem.on > a i.i2{ background-position:-30px -30px;}
 .mod_menu .dropitem.on > a i.i3{ background-position:-30px -60px;}
@@ -428,6 +429,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .mod_menu .dropitem.on > a i.i7{ background-position:-30px -180px;}
 .mod_menu .dropitem.on > a i.i8{ background-position:-30px -210px;}
 .mod_menu .dropitem.on > a i.i9{ background-position:-30px -240px;}
+.mod_menu .dropitem.on > a i.i10{ background-position:-30px -270px;}
 .mod_menu .dropitem .arr{  display:none; position:absolute; width:0; height:0; left:0; top:50%; margin-top: -8px; border-width:8px; border-color: transparent transparent transparent #fff ; border-style:solid; }
 .mod_menu .dropitem.on .arr{ display: block;z-index:10002;  }
 .dropcont .arr{ display:block; position:absolute; width:0; height:0; right:-16px; top:auto; border-width:8px; border-color: transparent transparent transparent #fff ; border-style:solid;}
@@ -1138,6 +1140,21 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .textlivelist .loadmore.all{ color: #468cfc; cursor:default; }
 .textlivelist .loadmore.all:hover{  background: #2a508d;background: rgba(58,103,166,.5); }
 
+/* fx央行动态 */
+.mod_menu .dr10 .dropcont{ height: auto; top:35%; }
+.wid2 .mod_menu .dr10 .dropcont{ top:35% }
+.yxlist{ padding: 30px }
+.yxlist ul{ margin-top: -10px; }
+.yxlist li{ height: 52px; line-height: 52px; font-size: 21px; text-align: center;  border-radius: 3px; overflow: hidden; margin-top: 10px; }
+.wid2 .yxlist li{ font-size: 18px;  }
+.yxlist li a{ display: block; text-decoration: none; color: #fff;background: #d55959;padding-left: 65px; position: relative; }
+.yxlist li.c2 a{ background: #5b7bbc; }
+.yxlist li a:hover{ background: #f06464 }
+.yxlist li.c2 a:hover{ background: #678bd4 }
+.yxlist li i{ display: block; width: 65px; height: 52px; position: absolute; left: 0; top: 0;background:url(../img/yxicons.png) 0 0 no-repeat }
+.yxlist li i.i2{ background-position:0 -65px }
+.yxlist li i.i3{ background-position:0 -130px }
+.yxlist li i.i4{ background-position:0 -195px }
 
 .mCSB_outside + .mCSB_scrollTools{ right: -20px }
 .mCS-light-thick.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,.mCS-light-thick.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar, .mCS-light-thick.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{background: url(../img/scroll.png) -10px center no-repeat #527bac; }
