@@ -35,7 +35,7 @@ function getGroupType(req,isBase){
  */
 function getRredirctUrl(req){
     var paramArr = ["ko=1"];
-    var argKeys = ["utm_source", "utm_medium", "utm_campaign"],argKey;
+    var argKeys = ["utm_source", "utm_medium", "utm_content", "utm_campaign"],argKey;
     for(var i = 0, lenI = argKeys.length; i < lenI; i++){
         argKey = argKeys[i];
         if(req.query[argKey]){
