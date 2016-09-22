@@ -263,7 +263,7 @@ var box={
                     return false;
                 }else{
                     $(".blackbg,#popBoxRegister").hide();
-                    $("#regLpBtn").attr("href", "http://testweb.gwfx.com/activity/studioLottery/index.html?userId=" + result.userId + "#ba");
+                    $("#regLpBtn").attr("href", "http://www.gwfx.com/activity/studioLottery/index.html?userId=" + result.userId + "#ba");
                     $(".register_result").show();
                 }
             },true,function(err){
