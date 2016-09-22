@@ -468,7 +468,7 @@ var studioMbMsg = {
     load : function(){
         $("#resultForm_sub").bind("click", function(){
             if(studioMbMsg.type == "logout"){
-                studioMbPop.reload();
+                window.location.href="/studio";
             }else{
                 studioMbPop.popHide();
             }

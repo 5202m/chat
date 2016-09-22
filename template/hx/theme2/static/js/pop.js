@@ -427,7 +427,7 @@ var studioMbMsg = {
     load : function(){
         $("#resultForm_sub").bind("click", function(){
             if(studioMbMsg.type == "logout"){
-                studioMbPop.reload();
+                window.location.href="/hxstudio";
             }else{
                 studioMbPop.popHide();
             }

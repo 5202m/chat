@@ -837,7 +837,7 @@ var chat={
                 btns : [{
                     txt : "重新登录",
                     fn : function(){
-                        indexJS.toRefreshView();
+                    	window.location.href = "/hxstudio";
                     }
                 },{
                     txt : "确定",
