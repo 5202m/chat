@@ -815,7 +815,7 @@ router.post('/uploadData', function(req, res) {
         var domain = require('domain').create();
         domain.on('error', function(er){
             logger.error("uploadImg fail,please check it",er);
-            res.send(500);
+            res.json({success: false});
         });
         domain.run(function() {
             //执行进程监控
