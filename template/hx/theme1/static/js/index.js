@@ -145,11 +145,7 @@ var indexJS ={
                                 var roomId=$(this).attr("rid");
                                 if(data.hasOwnProperty(roomId)){
                                     var rda=data[roomId];
-                                    var size = 0;
-                                    if($(this).find(".enterbtn").attr("av")=="true" && rda.onlineNum<=200){
-                                        size=rda.onlineNum<=10?60:(200/rda.onlineNum)*3+10;
-                                        size=Math.round(size);
-                                    }
+                                    var size =chat.getRandCNum(/VIP/g.test($(this).find(".rname").text())?"vip":"active",$(this).find(".enterbtn").attr("av")=="true",rda.onlineNum);
                                     $(this).find(".peo_num label").text(rda.onlineNum + size);
                                     $(this).find(".info .nk").text(rda.name);
                                     if(!rda.isNext){

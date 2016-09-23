@@ -1190,24 +1190,40 @@ var chat={
         return userList;
     },
     /**
+     * 提取随机客户数
+     * @param clientGroup
+     * @returns {number}
+     */
+    getRandCNum:function(clientGroup,isAv,dataLength){
+        var rdNum=0;
+        if("vip"==clientGroup){
+            rdNum = parseInt(Math.random()*(10-5+1)+5,10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
+            if(isNaN(rdNum)){
+                rdNum = 5;
+            }
+            return rdNum;
+        }else if("active"==clientGroup){
+            rdNum = parseInt(Math.random()*(80-40+1)+40,10);//直播室普通房间：会员人数每天递增人数（40-80人）
+            if(isNaN(rdNum)){
+                rdNum = 40;
+            }
+        }
+        if(isAv && dataLength < 500) {
+            rdNum+=parseInt(dataLength<=10?560:(400/dataLength)*3+10);
+        }
+        return rdNum;
+    },
+    /**
      * 随机生成名称
      * @param clientGroup
      * @returns {Array}
      */
      getRdC:function(clientGroup){
-        var rdNum = 0,seq=11,listStr =null;
+        var rdNum =this.getRandCNum(clientGroup),seq=11,listStr =null;
         if(clientGroup == "vip"){
-            rdNum = parseInt(Math.random()*(10-5+1)+5,10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
-            if(isNaN(rdNum)){
-                rdNum = 5;
-            }
             seq=10;
             listStr =["炼金道士","Dil","金石为开","Hal","爱笑大叔","Ada","黄金泰坦","SKY","指点为金","我为金狂"];
         }else{
-            rdNum = parseInt(Math.random()*(80-40+1)+40,10);//直播室普通房间：会员人数每天递增人数（40-80人）
-            if(isNaN(rdNum)){
-                rdNum = 40;
-            }
             listStr =["宝马金鞍","Abi","福寿荣贵","Sun","Sam","金玉婉婷","Evi","金玛丽娜","金可新瑞","Rob","金银珠宝","金戈铁马","Len","金光闪闪","Ben","笑傲点金","Zoe","市外风光","Amy",
                 "年前买今","Ava","小心买坚","Jan","彩旗飘飘","Liv","一路飙红","先河论市","Alf","Kay","瘦羊看盘","Asa","不喜欢输","Tim","顺风起航","金银合肥","黄金小杨","Eva",
                 "金市赢家","Jon","金金得鑫","Oma","我爱赚钱","试试看看","起起伏伏","Joe","稳中求胜","半个灵魂","Ian","时时小时","十年魔一","Pam","Fay","金市翱翔",
@@ -1242,13 +1258,13 @@ var chat={
         //进入聊天室加载的在线用户
         this.socket.on('onlineUserList',function(data,dataLength,visitorNum){
             //如客户数小于500，则追加额外游客数
-            if($("#roomInfoId").attr("av")=="true" && !chat.initUserList && dataLength < 500){
-                var randId= 0,size = visitorNum < 10 ? (560 - dataLength) : (500 - dataLength + 3 * (200 / (visitorNum)) + 10);
+            var size=chat.getRandCNum(null,$("#roomInfoId").attr("av")=="true",dataLength);
+            if(size>0){
+                var randId= 0;
                 for(var i=0;i<size;i++){
                     randId=common.randomNumber(6);
                     data.push({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:-1});
                 }
-                chat.initUserList = true;
             }
             var clientGroup = $("#roomInfoId").text().match("VIP")!=null?"vip":"active";
             var row=null,currDom=null,visitorArr=[],userArr=[];
