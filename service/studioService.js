@@ -63,6 +63,7 @@ var studioService = {
                                     userInfo.avatar = group.avatar;
                                     userInfo.clientGroup = group.vipUser ? constant.clientGroup.vip:group.clientGroup;
                                     userInfo.nickname = group.nickname;
+                                    userInfo.accountNo=group.accountNo;
                                 }
                             }
                             callback(null, userInfo);
