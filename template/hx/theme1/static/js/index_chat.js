@@ -1087,9 +1087,21 @@ var chat={
             }
         }
         //恒信私聊直接弹出
-        $(".pletter_win").show();
+/*        $(".pletter_win").show();
         $('.mult_dialog a[uid='+userId+']').click();
-        return !isTip;
+
+        return !isTip;*/
+
+        //添加闪动提示
+        if(!isTip){
+            $(".pletter_win").show();
+            $('.mult_dialog a[uid='+userId+']').click();
+            return true;
+        }else{
+            this.setWhTip(userId);
+            return false;
+        }
+
     },
     /**
      * 填充私聊内容框
