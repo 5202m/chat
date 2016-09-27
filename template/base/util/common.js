@@ -327,15 +327,6 @@ var common = {
         }
     },
     /**
-     * 刷新session
-     * 每隔15分钟
-     */
-    refreshSession:function(){
-        setInterval(function(){
-            $.get("/refreshSession?t="+new Date(),function(){});
-        },1000*60*15);//每间隔15分钟刷新下报价信息*/
-    },
-    /**
      * 随机生成数字
      * @param _idx  位数
      * @returns {string}

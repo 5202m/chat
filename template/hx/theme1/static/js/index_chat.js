@@ -1087,12 +1087,10 @@ var chat={
             }
         }
         //恒信私聊直接弹出
-/*        $(".pletter_win").show();
+        $(".pletter_win").show();
         $('.mult_dialog a[uid='+userId+']').click();
-
-        return !isTip;*/
-
-        //添加闪动提示
+        return !isTip;
+       /* //添加闪动提示
         if(!isTip){
             $(".pletter_win").show();
             $('.mult_dialog a[uid='+userId+']').click();
@@ -1100,8 +1098,7 @@ var chat={
         }else{
             this.setWhTip(userId);
             return false;
-        }
-
+        }*/
     },
     /**
      * 填充私聊内容框
@@ -1221,7 +1218,7 @@ var chat={
             }
         }
         if(isAv && dataLength < 500) {
-            rdNum+=parseInt(dataLength<=10?560:(400/dataLength)*3+10);
+            rdNum+=(dataLength<=10?500:(500 - dataLength));
         }
         return rdNum;
     },

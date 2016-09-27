@@ -99,7 +99,7 @@ router.get('/', function(req, res) {
     }
     chatUser.groupType=targetGType;
     chatUser.userType=chatUser.userType||constant.roleUserType.member;//没有userType则默认为会员
-    logger.info("chatUser:"+JSON.stringify(chatUser));
+    logger.info("chatUser:"+JSON.stringify(chatUser)+";ip:"+common.getClientIp(req));
     var isMobile = common.isMobile(req);
     var fromPlatform=options.platform;
     if(fromPlatform && !chatUser.toGroup && !chatUser.groupId && common.containSplitStr(config.studioThirdUsed.platfrom,fromPlatform)){

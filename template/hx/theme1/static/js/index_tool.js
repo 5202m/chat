@@ -422,7 +422,7 @@ var tool={
                         row = tool.tradeList[i];
                         if(row.user.userNo == indexJS.userInfo.userId){
                             num++;
-                        };
+                        }
                     }
                     $('#sdcount').text(num)
                 }

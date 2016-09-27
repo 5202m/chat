@@ -38,6 +38,7 @@ exports.init = function(app,express){
         var useSession=req.session.studioUserInfo;
         var currGroupType=req.path.replace(/\/(.*studio)(\/.*)?/g,"$1");
         if(useSession && useSession.groupType && currGroupType!=useSession.groupType){//请求访问的直播间类别有变化，清除session
+            console.log("req.path:"+req.path);
             req.session.studioUserInfo=null;
             if(req.query["platform"]){
                 next();

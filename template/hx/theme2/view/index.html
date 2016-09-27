@@ -57,7 +57,7 @@
                 <div class="boxcont">
                     <ul class="videoroom-ul">
                         <% if (studioList!='[]') { %>
-                        <% studioList.forEach(function(row,index){ %>
+                        <% studioList.forEach(function(row,index){ if (row.id!='hxstudio_4'){%>
                         <li class="<%=((!row.disable || !userSession.isLogin) && row.isOpen ? 'live' : '')%>" ga="<%=!row.disable%>" go="<%=row.isOpen%>" gi="<%= row.id %>">
                             <section class="room-main clearfix">
                                 <div class="room-left">
@@ -83,7 +83,7 @@
                                 </table>
                             </div>
                         </li>
-                        <% }); %>
+                        <%} }); %>
                         <% } %>
                     </ul>
                 </div>
