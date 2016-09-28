@@ -36,6 +36,16 @@ var indexJS ={
             $(".roomctrl span").text(vipRoom.text());
             var rid = vipRoom.siblings(".enterbtn").attr("rid");
             var vipLink = $("#VIPRoomLink");
+            var imgSrc = "/pm/theme1/img/menu_ad27.png"; //默认 GDP
+            if(indexJS.serverTime >= 1475683200000){ //>=2016-10-06 00:00 非农
+            	imgSrc = "/pm/theme1/img/menu_ad30.png";
+            }else if(indexJS.serverTime >= 1475251200000){ //>=2016-10-01 00:00 ADP
+            	imgSrc = "/pm/theme1/img/menu_ad29.png";
+            }else if(indexJS.serverTime >= 1475164800000){ //>=2016-09-30 00:00 PCE
+            	imgSrc = "/pm/theme1/img/menu_ad28.png";
+            }
+            vipLink.find("img").attr("src", imgSrc);
+            
             vipLink.bind("click", rid, function(e){
                 $(".roomctrl").trigger("click");
                 $(".rooms .enterbtn[rid='" + e.data + "']").trigger("click");
