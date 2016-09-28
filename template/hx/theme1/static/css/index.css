@@ -7045,6 +7045,7 @@ img {
 }
 
 .tec_listcont .cate_box {
+    max-height: 480px;
     height: 30px;
     overflow: hidden;
     position: relative;

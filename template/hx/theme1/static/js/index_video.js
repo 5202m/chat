@@ -648,6 +648,8 @@ var videos={
             if(course && course.lecturerId && (!videos.sd.analyst || course.lecturerId.indexOf(videos.sd.analyst.userNo) == -1)){
                 $.getJSON('/hxstudio/getShowTradeInfo',{userNo: course.lecturerId},function(data){
                     if(data && data.analyst){
+                        var date=new Date(),m=date.getMonth()+ 1,d=date.getDate();
+                        data.analyst.praiseNum+=(m+d*2);//虚增点赞数
                         videos.sd.analyst = data.analyst;
                         videos.sd.tradeList = data.tradeList || [];
                         videos.sd.loadAll = false;

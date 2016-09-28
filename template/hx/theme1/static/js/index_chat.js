@@ -408,7 +408,6 @@ var chat={
      */
     setDialog:function(userId,nickname,talkStyle,userType,avatar){
         if(talkStyle==1){//私聊,则直接弹私聊框
-            chat.closeWhTip(userId);
             chat.fillWhBox(null,avatar,userType,userId,nickname,false,false);
         }else{
             if(!indexJS.visitorSpeak && indexJS.checkClientGroup("visitor")){
@@ -788,15 +787,14 @@ var chat={
             }
         }).dblclick(function(){
             $(this).find("em").trigger("click");
-        }).find("em").click(function(e){
+        }).find("em").click(function(e,domData){
             var pDom=$(this).parents("[utype]");
             var userType=pDom.attr("utype");
             if(userType!=3){
                 return false;
             }
             var userId=pDom.attr("id");
-            chat.closeWhTip(userId);
-            chat.fillWhBox(pDom.attr("cg"),pDom.find(".headimg img").attr("src"),pDom.attr("utype"),userId,pDom.find(".uname span").text(),false,false);
+            chat.fillWhBox(pDom.attr("cg"),pDom.find(".headimg img").attr("src"),pDom.attr("utype"),userId,pDom.find(".uname span").text(),(domData&&domData.keepTip),false);
             return false;
         });
     },
@@ -942,7 +940,7 @@ var chat={
                 $(this).addClass('on');
                 $(this).find(".num").attr("t",0).text("").hide();
                 var userId=$(this).attr("uid"),whId='wh_msg_'+userId,userType=$(this).attr("utype");
-                chat.closeWhTip(userId);
+                /*chat.closeWhTip(userId);*/
                 $(".pletter_win .cont[id]").hide();
                 if($("#"+whId).length==0){
                     var whTxtId='whTxt_'+userId;
@@ -1086,19 +1084,14 @@ var chat={
                 numDom.attr("t",num).text(num).show();
             }
         }
-        //恒信私聊直接弹出
-        $(".pletter_win").show();
-        $('.mult_dialog a[uid='+userId+']').click();
-        return !isTip;
-       /* //添加闪动提示
         if(!isTip){
-            $(".pletter_win").show();
-            $('.mult_dialog a[uid='+userId+']').click();
-            return true;
+            chat.closeWhTip(userId);
+            $(".pletter_win").show(); //恒信私聊直接弹出
         }else{
-            this.setWhTip(userId);
-            return false;
-        }*/
+            $(".pletter_win").hide(); //恒信私聊直接弹出
+        }
+        $('.mult_dialog a[uid='+userId+']').click();
+        return false;
     },
     /**
      * 填充私聊内容框
@@ -1136,7 +1129,7 @@ var chat={
             nkTitle='<span class="dtime">'+chat.formatPublishTime(fromUser.publishTime, isLoadData, '/')+'</span><a href="javascript:" class="uname">我</a>';
         }else{
             if(!isLoadData && !isOnlyFill){//如接收他人私信
-                var isFillWh=this.fillWhBox(fromUser.clientGroup,fromUser.avatar,fromUser.userType,fromUser.userId,fromUser.nickname,true,true);
+                var isFillWh=this.fillWhBox(fromUser.clientGroup,fromUser.avatar,fromUser.userType,fromUser.userId,fromUser.nickname,false,true);
                 if(isFillWh){
                     return;
                 }
@@ -1639,11 +1632,17 @@ var chat={
                 if(whInfo && indexJS.serverTime >= (whInfo.serverTime+whInfo.timeOut * 60 * 1000)) {
                     whInfo.pushed = true;
                     chat.msgPushObj.whInfo = {info: whInfo.content, publishTime: whInfo.publishTime, infoId: whInfo.contentId};
-                    var aDom = $("#userListId li[t=3] a .headimg:not(.have_op)");
+                    var aDom = $("#userListId li[t=3] a .headimg");
                     if(aDom.length>0){
                         var anyDom=$(aDom.get(common.randomIndex(aDom.length))).parent();
-                        anyDom.dblclick();
-                        chat.setWhPushInfo($('.mult_dialog a[uid='+anyDom.parent().attr("id")+']'));
+                        var userId=anyDom.parent().attr("id");
+                        chat.setWhTip(userId);
+                        var isHd=$('.pletter_win').is(':hidden');
+                        anyDom.find("em").trigger("click",{keepTip:isHd});//保持闪动
+                        if(isHd){
+                            $(".pletter_win").hide();
+                        }
+                        chat.setWhPushInfo($('.mult_dialog a[uid='+userId+']'));
                     }
                 }
             }
