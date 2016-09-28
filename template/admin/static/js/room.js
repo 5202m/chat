@@ -1670,6 +1670,7 @@ var room={
         });
         //进入聊天室加载的在线用户
         this.socket.on('onlineUserList',function(data,dataSize){
+            $('#userListId').html("");
             var row=null,userArr=[];
             for(var i in data){
                 row=data[i];

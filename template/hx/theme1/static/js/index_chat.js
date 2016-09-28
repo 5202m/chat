@@ -707,6 +707,7 @@ var chat={
      * @returns {{hasDg: boolean, dom: string}}
      */
     getOnlineUserDom:function(row){
+        $("#userListId li[id='"+row.userId+"']").remove();//存在则移除旧的记录
         var dialogHtml=chat.getDialogHtml(row.userId,row.nickname,row.userType),isMeHtml="",csHtml='',seq=row.sequence,meCls='';
         if(indexJS.userInfo.userId==row.userId){
             isMeHtml = "【我】";
