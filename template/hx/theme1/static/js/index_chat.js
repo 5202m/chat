@@ -1387,19 +1387,24 @@ var chat={
                 case 'showTrade':
                 {
                     var data=result.data;
-                    var userName = data.boUser.userName;//晒单人
-                    var tradeImg = data.tradeImg;//晒单图片
-                    var showId = data.id;
-                   // var content = '<div ><div><span style="font-weight:bold;color:red;">提示：有小伙伴晒单啦！</span></div><div><span style="font-weight:bold;color:red;">晒单人：<label>'+userName+'</label></span></div><div><a href="'+tradeImg+'" data-lightbox="dialog-img"><img src="'+tradeImg+'"></img></a></div>';
-                    chat.showTradeDictionary[showId] = data;console.log(chat.showTradeDictionary);
-                    var  html = "";
-                    html+= '<div class="show-order-box sd-push">';
-                    html+='<h6>系统：用户'+userName+'推送了一条新的晒单<a href="javascript:void(0);" class="see" onClick="chat.setPushShowTrade(this)" id="seeShowTrade" key='+showId+'>去看看</a></h6>';
-                    html+='<a href='+tradeImg+' data-rel="usersd" data-title="" data-lightbox="usersd-all-img">';
-                    html+='<img src='+tradeImg+' alt="" class="mCS_img_loaded"></a>';
-                    html+='</div>';
-                    data.content = html;
-                    chat.showTradePushMsg(data);
+                    if(data != null){
+                        for(var i = 0; i < data.length; i++){
+                            var tradeInfo = data[i];
+                            var userName = tradeInfo.boUser.userName;//晒单人
+                            var tradeImg = tradeInfo.tradeImg;//晒单图片
+                            var showId = tradeInfo.id;
+                            // var content = '<div ><div><span style="font-weight:bold;color:red;">提示：有小伙伴晒单啦！</span></div><div><span style="font-weight:bold;color:red;">晒单人：<label>'+userName+'</label></span></div><div><a href="'+tradeImg+'" data-lightbox="dialog-img"><img src="'+tradeImg+'"></img></a></div>';
+                            chat.showTradeDictionary[showId] = tradeInfo;console.log(chat.showTradeDictionary);
+                            var  html = "";
+                            html+= '<div class="show-order-box sd-push">';
+                            html+='<h6>系统：用户'+userName+'推送了一条新的晒单<a href="javascript:void(0);" class="see" onClick="chat.setPushShowTrade(this)" id="seeShowTrade" key='+showId+'>去看看</a></h6>';
+                            html+='<a href='+tradeImg+' data-rel="usersd" data-title="" data-lightbox="usersd-all-img">';
+                            html+='<img src='+tradeImg+' alt="" class="mCS_img_loaded"></a>';
+                            html+='</div>';
+                            tradeInfo.content = html;
+                            chat.showTradePushMsg(tradeInfo);
+                        }
+                    }
                     break;
                 }
             }
