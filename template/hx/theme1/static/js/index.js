@@ -9,6 +9,7 @@ var indexJS ={
     towMinTime:0,//2分钟间隔时间
     socketUrl:'',//socket路径
     userInfo:null,
+    lgBoxTipInfo:null,//登录框弹出对象
     filePath:'',//文件路径
     apiUrl:'',//api路径
     currStudioAuth:false,//当前房间是否授权
@@ -476,6 +477,11 @@ var indexJS ={
             }
             chat.setPushInfo();
             indexJS.courseTick.tick();
+            if(indexJS.lgBoxTipInfo && $(".loginbox").is(':hidden')){
+                if(common.dateTimeWeekCheck(indexJS.lgBoxTipInfo.periodDate,true,indexJS.serverTime)){
+                     box.setLgBoxTip();
+                }
+            }
         },1000);//每秒一次
     },
     /**

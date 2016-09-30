@@ -117,7 +117,7 @@ router.post('/noticeArticle', function(req, res) {
 });
 
 /**
- * 更新文档推送信息
+ * 客户晒单推送信息
  */
 router.post('/showTradeNotice', function(req, res) {
     var tradeInfoJSON=req.body["tradeInfo"];
@@ -141,6 +141,32 @@ router.post('/showTradeNotice', function(req, res) {
             }
         }
         chatService.sendMsgToSpace(tradeInfo.groupType,"notice",{type:chatService.noticeType.showTrade,data:tradeInfoResult});
+        result.isOK=true;
+    }
+    res.json(result);
+});
+
+/**
+ * 更新规则提示
+ */
+router.post('/modifyRuleNotice', function(req, res) {
+    var ruleInfo=req.body["ruleInfo"];
+    var roomIds=req.body["roomIds"];
+    var result={isOK:false,error:null };
+    if(common.isBlank(ruleInfo)){
+        result.error=errorMessage.code_1000;
+    }else{
+        try{
+            ruleInfo=JSON.parse(ruleInfo);
+        }catch (e){
+            result.error=errorMessage.code_10;
+            res.json(result);
+            return;
+        }
+        roomIds=roomIds.split(",");
+        for(var i in roomIds){
+            chatService.sendMsgToRoom(true,null,roomIds[i],"notice",{type:"modifyRule",data:ruleInfo},null);
+        }
         result.isOK=true;
     }
     res.json(result);

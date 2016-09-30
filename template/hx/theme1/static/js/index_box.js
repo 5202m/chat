@@ -154,6 +154,34 @@ var box={
         return false;
     },
     /**
+     * 设置规则登录弹框提示
+     */
+    setLgBoxTip:function(){
+        if(indexJS.userInfo.clientGroup=='visitor'){
+            var lgt = indexJS.lgBoxTipInfo.beforeRuleVal;//后台控制登录弹框时间
+            if(common.isValid(lgt)) {
+                $('#setlogintip').text(indexJS.lgBoxTipInfo.afterRuleTips);
+                if (!indexJS.currStudioAuth) {
+                    $("#login_a").trigger("click", {closeable: false, showTip: false, loginTime: lgt}); //弹出登录框，隐藏关闭按钮
+                } else if (this.forceLogin()) {
+                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt}); //弹出登录框，不允许关闭
+                } else {
+                    if (common.isValid(lgt) && !isNaN(lgt)) {
+                        try {
+                            lgt = Number(lgt);
+                            setTimeout(function () {
+                                box.forceLogin(true);
+                                $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt});
+                            }, lgt * 60 * 1000);
+                        } catch (e) {
+                            console.error("set login Time has error", e);
+                        }
+                    }
+                }
+            }
+        }
+    },
+    /**
      * 登录相关事件
      */
     loginEvent:function(){
@@ -175,37 +203,6 @@ var box={
             box.toRoomId = ops.groupId;
             box.openLgBox(ops.closeable, ops.showTip,ops.loginTime, ops.spn);
         });
-        if(indexJS.userInfo.clientGroup=='visitor'){
-            var lgt = $('#roomInfoId').attr("lgt");//后台控制登录弹框时间
-            var spn = $('#roomInfoId').attr('spn');//发言次数限制
-            if(common.isValid(lgt)) {
-                if (!indexJS.currStudioAuth) {
-                    $("#login_a").trigger("click", {closeable: false, showTip: false, loginTime: lgt}); //弹出登录框，隐藏关闭按钮
-                } else if (this.forceLogin()) {
-                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt}); //弹出登录框，不允许关闭
-                } else {
-                    if (common.isValid(lgt) && !isNaN(lgt)) {
-                        try {
-                            lgt = parseInt(lgt);
-                            setTimeout(function () {
-                                //if(indexJS.userInfo.clientGroup=='visitor') {
-                                box.forceLogin(true);
-                                $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: lgt});
-                                //}
-                            }, lgt * 60 * 1000);
-                        } catch (e) {
-                            console.error("set login Time has error", e);
-                        }
-                    }
-                }
-            } else if(common.isValid(spn)){
-                if (!indexJS.currStudioAuth) {
-                    $("#login_a").trigger("click", {closeable: false, showTip: false, loginTime: null, spn:spn}); //弹出登录框，隐藏关闭按钮
-                } else if (this.forceLogin()) {
-                    $("#login_a").trigger("click", {closeable: false, showTip: true, loginTime: null, spn:spn}); //弹出登录框，不允许关闭
-                }
-            }
-        }
         /**
          * 注销
          */

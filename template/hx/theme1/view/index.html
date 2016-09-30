@@ -365,8 +365,8 @@
             <% studioList.forEach(function(row,index){  if(row.isCurr) {%>
             <div class="user-inftop">
                 <div class="mod_menu_bg"></div>
-                <span id="roomInfoId" lgt='<%= row.loginBoxTime %>' spn="<%= row.speakNum%>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>"><%= row.name %><i class="off"></i></span>
-                <span id="setlogintip" style="display:none;"><%= row.loginBoxTip %></span>
+                <span id="roomInfoId" spn="<%= row.speakNum%>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>"><%= row.name %><i class="off"></i></span>
+                <span id="setlogintip" style="display:none;"></span>
                 <span id="speaktip" style="display:none;"><%= row.speakNumTip %></span>
                 <!--<a class="toggle-room" href="javascript:;">切换房间 <i></i></a>-->
                 <div class="changeroom">
@@ -473,7 +473,8 @@
         indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
         indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
         indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
-
+        var lgBoxTipInfo='<%- lgBoxTipInfo %>';
+        indexJS.lgBoxTipInfo=common.isBlank(lgBoxTipInfo)?null:JSON.parse(lgBoxTipInfo);
         function widthCheck(){
             var ww = $(window).width();
             if(ww <= 1600 ){

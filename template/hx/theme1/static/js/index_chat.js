@@ -1407,6 +1407,14 @@ var chat={
                     }
                     break;
                 }
+                case 'modifyRule'://规则修改通知，目前暂处理登录弹框
+                {
+                    var data=result.data;
+                    if(data && 'login_time_set'==data.type){
+                        indexJS.lgBoxTipInfo=result.data;
+                    }
+                    break;
+                }
             }
         });
 

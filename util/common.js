@@ -149,11 +149,11 @@ var common = {
      *          1）对于禁言设置，空值表示没有设置禁言，即当前时间不包含在其中。传值false
      *          2）对于聊天规则设置，空值表示永久生效，即当前时间包含在其中。传值true
      */
-    dateTimeWeekCheck:function(dateTime, nullResult){
-        if(this.isBlank(dateTime)){
+    dateTimeWeekCheck:function(srcDateTime, nullResult){
+        if(this.isBlank(srcDateTime)){
             return !!nullResult;
         }
-        dateTime=JSON.parse(dateTime);
+        var dateTime=JSON.parse(srcDateTime);
         var currDate=new Date(),isPass=false,currDateStr = this.formatterDate(currDate);
         isPass=this.isBlank(dateTime.beginDate)||currDateStr>=dateTime.beginDate;
         if(isPass){

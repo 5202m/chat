@@ -176,6 +176,7 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
                 viewDataObj.syllabusData=JSON.stringify({courseType:syResult.courseType,studioLink:(common.isBlank(syResult.studioLink)?"":JSON.parse(syResult.studioLink)),courses:(common.isBlank(syResult.courses)?"":syllabusService.removeContext(JSON.parse(syResult.courses)))});
             }
         }else{
+            viewDataObj.lgBoxTipInfo="";
             data.studioList.forEach(function(row){
                 rowTmp={};
                 rowTmp.id=row._id;
@@ -200,9 +201,15 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
                         if(rowTmp.isCurr && rowTmp.allowVisitor && isPass){
                             viewDataObj.visitorSpeak = true;
                         }
-                    }else if(ruleRow.type == 'login_time_set'&& isPass){
-                        rowTmp.loginBoxTime=ruleRow.beforeRuleVal;
-                        rowTmp.loginBoxTip = ruleRow.afterRuleTips;
+                    }else if(ruleRow.type == 'login_time_set'){
+                        if(rowTmp.isCurr){
+                        	var periodDate=common.isBlank(ruleRow.periodDate)?"":JSON.parse(ruleRow.periodDate);
+                        	viewDataObj.lgBoxTipInfo=JSON.stringify({type:ruleRow.type,periodDate:periodDate,beforeRuleVal:ruleRow.beforeRuleVal,afterRuleTips:ruleRow.afterRuleTips});
+                        }
+                        if(isPass){
+                           rowTmp.loginBoxTime=ruleRow.beforeRuleVal;
+                           rowTmp.loginBoxTip = ruleRow.afterRuleTips;
+                        }
                     }else if(ruleRow.type == 'speak_num_set'&& isPass){
                         rowTmp.speakNum=ruleRow.beforeRuleVal;
                         rowTmp.speakNumTip = ruleRow.afterRuleTips;
