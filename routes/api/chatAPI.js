@@ -126,13 +126,21 @@ router.post('/showTradeNotice', function(req, res) {
     if(common.isBlank(tradeInfoJSON)){
         result.error=errorMessage.code_1000;
     }else{
-        tradeInfoArray = JSON.parse(tradeInfoJSON);
+        try {
+            tradeInfoArray = JSON.parse(tradeInfoJSON);
+        } catch (e) {
+            result.error=errorMessage.code_10;
+            res.json(result);
+            return;
+        }
+        var tradeInfoResult = [];
         for(var i = 0;i<tradeInfoArray.length;i++){
             var tradeInfo = tradeInfoArray[i];
             if(tradeInfo.tradeType == 2){ //客户晒单
-                chatService.sendMsgToSpace(tradeInfo.groupType,"notice",{type:chatService.noticeType.showTrade,data:tradeInfo});
+                tradeInfoResult.push(tradeInfo);
             }
         }
+        chatService.sendMsgToSpace(tradeInfo.groupType,"notice",{type:chatService.noticeType.showTrade,data:tradeInfoResult});
         result.isOK=true;
     }
     res.json(result);
