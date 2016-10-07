@@ -13,12 +13,16 @@ var imgUtil = {
      */
     zipImg:function(base64Data,maxWidthOrHeight,quality,callback){
         try{
-            console.log("base64Data",base64Data.substr(0,100));
             var img = new Canvas.Image;
             img.onload = function(){
                 try{
-                    var w = img.width;
-                    var h = img.height;
+                	var w = Number(img.width);//防止图片宽度为字符串
+                    var h = Number(img.height);//防止图片高度为字符串
+                    if(isNaN(w)||isNaN(h)){//转换后为NaN,则直接返回
+                     	 console.error("zipImg->fail:image width or height is not number!");
+                     	 callback({isOK:false,data:''});
+                          return;
+                    }
                     if(w<=0||h<=0){
                         console.error("zipImg->fail:image width or height is zero!");
                         callback({isOK:false,data:''});
@@ -33,8 +37,6 @@ var imgUtil = {
                                 h = (maxWidthOrHeight / w) * h;
                                 w = maxWidthOrHeight;
                             }
-                            img.height = h;
-                            img.width = w;
                         }
                     }else{
                         if(h>=800 && w>=800){

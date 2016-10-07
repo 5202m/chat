@@ -831,16 +831,22 @@ router.post('/uploadData', function(req, res) {
                 var val = data.content.value, needMax = data.content.needMax;
                 if (data.content.msgType == "img" && common.isValid(val)) {
                         imgUtil.zipImg(val, 100, 60, function (minResult) {
-                            data.content.value = minResult.data;
-                            if (needMax == 1) {
-                                imgUtil.zipImg(val, 0, 60, function (maxResult) {
-                                    data.content.maxValue = maxResult.data;
+                            if(minResult.isOK){
+                                data.content.value = minResult.data;
+                                if (needMax == 1) {
+                                    imgUtil.zipImg(val, 0, 60, function (maxResult) {
+                                        if(maxResult.isOK){
+                                            data.content.maxValue = maxResult.data;
+                                            chatService.acceptMsg(data, null);
+                                        }
+                                        res.json({success: maxResult.isOK});
+                                    });
+                                } else {
                                     chatService.acceptMsg(data, null);
-                                    res.json({success: true});
-                                });
-                            } else {
-                                chatService.acceptMsg(data, null);
-                                res.json({success: true});
+                                    res.json({success: minResult.isOK});
+                                }
+                            }else{
+                                res.json({success: minResult.isOK});
                             }
                         });
                 } else {
