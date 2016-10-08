@@ -176,9 +176,9 @@ var hxApiService = {
             }
             hxApiService.getLoginSid(function(sid) {
                 request.post({url: (config.hxMT4ApiUrl + '/members/realLogin'),form: {sid: sid,login: params.accountNo,password: params.password,platform: platform,ip: params.ip}}, function (error, response, tmpData) {
-                    /*logger.info("tmpData:" + tmpData);*/
-                    if (!error && common.isValid(tmpData)) {
-                        try {
+                    try {
+                        logger.info("realLogin->tmpData:"+tmpData);
+                        if (!error && common.isValid(tmpData)) {
                             tmpData = JSON.parse(tmpData);
                             if(0==tmpData.status && tmpData.data && tmpData.data.mobile){
                                 flagResult.flag=(tmpData.data.isActivate=='Y')?3:2;
@@ -190,11 +190,11 @@ var hxApiService = {
                             if('API1015'==tmpData.status ||'API1017'==tmpData.status){
                                 flagResult.error=errorMessage.code_1016;
                             }
-                        } catch (e) {
-                            logger.error("checkHxAClient by GTS2Api[" + params.accountNo + "]->e:" + e);
+                        } else {
+                            logger.error("checkHxAClient by GTS2Api[" + params.accountNo + "]->error:" + error);
                         }
-                    } else {
-                        logger.error("checkHxAClient by GTS2Api[" + params.accountNo + "]->error:" + error);
+                    } catch (e) {
+                        logger.error("checkHxAClient by GTS2Api[" + params.accountNo + "]->e:" + e);
                     }
                     callback(flagResult);
                 });

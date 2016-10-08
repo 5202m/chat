@@ -15,6 +15,7 @@ var baseApiService = require('../../service/baseApiService.js');//baseApiService
 var messageService = require('../../service/messageService');//引入messageService
 var chatService = require('../../service/chatService');//引入chatService
 var logger=require('../../resources/logConf').getLogger('admin');//引入log4js
+var versionUtil = require('../../util/versionUtil');//引入versionUtil
 
 /**
  * 聊天室后台页面入口
@@ -67,6 +68,8 @@ router.get('/room',function(req, res){
     var viewDataObj = {apiUrl: config.pmApiUrl, filePath: config.filesDomain};
     viewDataObj.isNw = isNw?isNw:false;
     viewDataObj.roomName = roomName;
+    viewDataObj.version=versionUtil.getVersion();
+    viewDataObj.isDevTest=config.isDevTest;
     if(adminUserInfo) {
         var userInfo={};
         common.copyObject(userInfo,adminUserInfo,true);

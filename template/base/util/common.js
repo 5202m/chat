@@ -195,7 +195,7 @@ var common = {
             type: "POST",
             timeout : 100000, //超时时间设置，单位毫秒
             cache: false,
-            async: async!=undefined?async:false,
+            async: (async!=undefined?async:(callback?true:false)),//默认为异步(true),false则为同步
             dataType: "json",
             data: params,
             success: typeof (callback) == "function" ? callback : function (data) {

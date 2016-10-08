@@ -2424,7 +2424,3 @@ var room={
         return formatHtmlArr.join('');
     }
 };
-// 初始化
-$(function() {
-    room.init();
-});
