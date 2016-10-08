@@ -195,13 +195,9 @@ var videos={
         this.bindEventRollNews();
         
         /**注册抽奖广告*/
-        if(indexJS.serverTime >= 1475251200000){ //10-01 00:00下线
-        	$('.video_ad').remove();
-        }else{
-        	$('.video_ad .ad_closebtn').click(function() {
-        		$('.video_ad').hide();
-        	});
-        }
+        /*$('.video_ad .ad_closebtn').click(function() {
+            $('.video_ad').hide();
+        });*/
     },
     /**
      * 客户端视频任务

@@ -263,7 +263,6 @@ var box={
                     return false;
                 }else{
                     $(".blackbg,#popBoxRegister").hide();
-                    $("#regLpBtn").attr("href", "http://www.24k.hk/activity/studioLottery/index.html?userId=" + result.userId + "#ba");
                     $(".register_result").show();
                 }
             },true,function(err){
