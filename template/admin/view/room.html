@@ -11,6 +11,7 @@
       <link rel="stylesheet" type="text/css" href="/base/lib/pnotify/pnotify.custom.min.css" />
       <link rel="stylesheet" type="text/css" href="/base/lib/dateTimeWeek/dateTimeWeek.css"/>
       <link rel="stylesheet" type="text/css" href="/admin/css/room<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" />
+      <script type="text/javascript" src="/base/lib/My97DatePicker/WdatePicker.js"></script>
   </head>
   <body>
   <audio id="tipsound" src="/admin/audio/2.mp3">您的浏览器不支持 audio 标签。</audio>
@@ -264,7 +265,6 @@
                 {url: "/base/lib/ueditor/ueditor.config.js"},
                 {url: "/base/lib/ueditor/ueditor.all.min.js"},
                 {url: "/base/lib/ueditor/lang/zh-cn/zh-cn.js"},
-                {url: "/base/lib/My97DatePicker/WdatePicker.js"},
                 {url: "/base/lib/dateTimeWeek/dateTimeWeek.js"},
                 <% if(isDevTest) { %>{url:"/base/util/common.js",skipCache:true},{url:"/admin/js/room.js",skipCache:true}<% }else{ %>{url:"/base/util/common.min.js"},{url:"/admin/js/room.min.js?v=<%=version%>"}<%}%>,function() {//ie版本不做本地缓存操作
                  pageFun();
