@@ -939,7 +939,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .wid3 .mod_userlist li .headimg,.wid3 .mod_userlist li .headimg img { width: 28px;height: 28px; vertical-align: top;  }
 .wid3 .mod_userlist li .uname{ padding-left: 10px; font-size: 12px; height: 28px;line-height: 28px;}
 .wid3 .mod_userlist li span{ max-width: 75px; }
-.wid3 .mod_room .changeroom .roomctrl{ font-size: 12px; }
+.wid3 .mod_room .changeroom .roomctrl{ font-size: 12px; padding: 0 5px;}
 .wid3 .mod_room .changeroom .roomctrl i{ display: none; }
 .wid3 .header-right .notice .dropcont{width: 400px;}
 .wid3 .wrapper{ padding-right: 65px; }
@@ -1117,12 +1117,12 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .textlive ul{ padding-left: 9px; }
 .textlive li{ position: relative; border-left: 1px dashed #666; padding-left: 8px }
 .textlive li .cont{ border-top: 1px solid #1b3a7b; padding-left:70px ; padding-top: 13px; padding-bottom: 10px  }
-.textlive .liveinfo { background: #1b3366; border-radius: 3px; height: 66px; padding: 9px 14px;line-height: 28px; margin-top: 15px; }
+.textlive .liveinfo { background: #1b3366; border-radius: 3px; height: 66px; padding: 9px 14px;line-height: 21px; margin-top: 15px; }
 .liveinfo .himg{ width: 66px; height: 66px; float: left; margin-right: 10px; border-radius: 3px; overflow: hidden;}
 .liveinfo .himg img{ width: 100%; height: 100%; }
-.liveinfo .infocont{ padding-top:4px;  }
+.liveinfo .infocont{ padding-top:0px;  }
 .liveinfo .tname{ color: #fff; font-size: 15px;  }
-.liveinfo .livetime{ color: #e2e2e2; font-size: 14px;  padding-left: 10px;}
+.liveinfo .livetime{ color: #e2e2e2; font-size: 14px; display: block;}
 .liveinfo .livetit{ color: #f2ce9d; font-size: 15px; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
 .textlive li b{ font-size: 12px; color: #fff; line-height: 17px; border: 1px solid #fff; display: inline-block;*display: inline;*zoom: 1; margin-top: 6px; padding: 0 4px; font-weight: normal; position: absolute; left: 10px; top:10px; border-radius: 2px}
 .textlive li .dot{  display:block; width:7px; height:7px; background-position:-130px -50px; position:absolute; left:-4px; top:22px;}
