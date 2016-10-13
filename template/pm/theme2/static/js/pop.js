@@ -404,10 +404,10 @@ var studioMbLogin = {
         }else if(!common.isMobilePhone(params.mobilePhone)){
             isTrue = false;
             message="手机号码输入有误！";
-        }else if(params.verifyCode == "verify" && common.isBlank(params.verifyCode)){
+        }else if(params.loginType == "verify" && common.isBlank(params.verifyCode)){
             isTrue = false;
             message="手机验证码不能为空！";
-        }else if(params.verifyCode == "pwd" && common.isBlank(params.password)){
+        }else if(params.loginType == "pwd" && common.isBlank(params.password)){
             isTrue = false;
             message="密码不能为空！";
         }

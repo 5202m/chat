@@ -324,7 +324,7 @@ router.post('/login',function(req, res){
     if(!isAutoLogin){
         if("pwd" == loginType){
             if(common.isBlank(mobilePhone)||common.isBlank(password)){
-                result.error=errorMessage.code_1013;
+                result.error=errorMessage.code_1005;
             }
         }else{
             if(common.isBlank(mobilePhone)||common.isBlank(verifyCode)){
