@@ -854,14 +854,14 @@ var chat={
             box.showMsg({
                 closeable : false,
                 title : "登出提示",
-                msg : "注意：您的账号已在其他地方登陆，被踢出！",
+                msg : "注意：您的账号已在其他页面或手机端登陆，此处被登出！",
                 btns : [{
                     txt : "重新登录",
                     fn : function(){
                     	window.location.href = "/fxstudio";
                     }
                 },{
-                    txt : "注销",
+                    txt : "登出",
                     fn : function(){
                         $(".logout").trigger("click");
                     }

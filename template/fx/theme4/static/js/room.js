@@ -1619,7 +1619,7 @@ var studioChatMb={
             }
             studioChatMb.socket.disconnect();
             studioMbPop.popBox("msg", {
-                msg : "注意：您的账号已在其他地方登陆，被踢出！",
+                msg : "注意：您的账号已在其他页面或手机端登陆，此处被登出！",
                 type : "logout"
             });
         }

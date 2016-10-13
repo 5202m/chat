@@ -302,7 +302,7 @@ var box={
             }
         }
         /**
-         * 注销
+         * 登出
          */
         $(".logout").bind("click", function(){
             LoginAuto.setAutoLogin(false);

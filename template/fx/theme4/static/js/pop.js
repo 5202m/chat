@@ -72,7 +72,7 @@ var studioMbPerson = {
             });
 
             /**
-             * 注销事件
+             * 登出事件
              */
             $(".logoutbtn").bind("click", function(){
                 LoginAuto.setAutoLogin(false);
