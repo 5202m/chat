@@ -1,5 +1,5 @@
 /**
- * 直播间前台客户端入口
+ * 直播间前台客户端入口test
  * author Alan.wu
  */
 var indexJS ={
