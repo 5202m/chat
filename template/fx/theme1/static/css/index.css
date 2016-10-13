@@ -1156,6 +1156,20 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .yxlist li i.i3{ background-position:0 -130px }
 .yxlist li i.i4{ background-position:0 -195px }
 
+/* fx分析师专栏 */
+.header-right li.analystzl .dropcont{ width: 160px; left: 50%; margin-left: -80px; }
+.analystzl{}
+.analystzl_list{ padding: 15px 0 3px }
+.analystzl_list li{ margin-bottom: 13px;  }
+.analystzl_list li > a{ display: block;height: 36px; border-bottom: 1px solid #e6ceac; color: #555; position: relative; padding-left: 45px; text-align: center; font-size: 18px; line-height: 36px; }
+.analystzl_list li > a:hover{ border-color: #e6ceac; color: #b48c53; text-decoration: none; }
+.analystzl_list li i{ display: block; position: absolute; width: 45px; height: 36px; background: url(../img/analystzl.png) center 0 no-repeat; left: 0; top: 0; }
+.analystzl_list li i.any1{ background-position: center 0; }
+.analystzl_list li i.any2{ background-position: center -40px; }
+.analystzl_list li i.any3{ background-position: center -80px; }
+.analystzl_list li i.any4{ background-position: center -120px; }
+.analystzl_list li i.any5{ background-position: center -160px; }
+
 .mCSB_outside + .mCSB_scrollTools{ right: -20px }
 .mCS-light-thick.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,.mCS-light-thick.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar, .mCS-light-thick.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{background: url(../img/scroll.png) -10px center no-repeat #527bac; }
 .mCS-light-thick.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{ background-position: right center; background-color: #4b7eba }

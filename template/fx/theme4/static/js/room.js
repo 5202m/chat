@@ -939,6 +939,12 @@ var studioChatMb={
                     if (!urlGroupArr || urlGroupArr.length < 3) {
                         return;
                     }
+                    var netConnectionUrl = null;
+                    if(url.indexOf("sz6") != -1){
+                    	netConnectionUrl = "rtmps://5748416443938.streamlock.net/live";
+                    }else{
+                    	netConnectionUrl = "rtmps://57721dbe47de5.streamlock.net/live";
+                    }
                     flowplayer(panelVideo[0], "/base/lib/flowplayer/flowplayer.swf", {
                         clip: {
                             url: urlGroupArr[2],
@@ -949,7 +955,7 @@ var studioChatMb={
                             rtmp: {
                                 proxyType: 'best',
                                 url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
-                                netConnectionUrl: "rtmps://5748416443938.streamlock.net/live"//urlGroupArr[1]
+                                netConnectionUrl: netConnectionUrl//urlGroupArr[1]
                             }
                         },
                         onError: function (e) {
