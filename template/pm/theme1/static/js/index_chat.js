@@ -20,7 +20,6 @@ var chat={
     init:function(){
         this.setEvent();//设置各种事件
         this.setUserListIdEmpty();//清空用户列表
-        this.getCSList();//设置所有客服
         this.setSocket();//设置socket连接
         this.setTalkListScroll(true);
     },
@@ -1257,6 +1256,7 @@ var chat={
             }
             $('#userListId').html(userArr.join(""));
             chat.setUserListClick($("#userListId li a[t=header]"));
+            chat.getCSList();//设置所有客服
             chat.setOnlineNum();//设置在线人数
             indexJS.setListScroll(".user_box");
         });
