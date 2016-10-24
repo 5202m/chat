@@ -115,7 +115,7 @@ var chatPride = {
                 }
                 var publishTimeStr = common.formatterDateTime(publishTime, '-').substring(0, 16)
                     + "-" + common.formatterDateTime(articleInfo.publishEndDate, '-').substring(11, 16);
-                var tradeStrategySupportHtml = [], tradeStrategySupportDivHtml = [];
+                var tradeStrategySupportHtml = [];
                 if (common.isValid(articleDetail.tag) && articleDetail.tag == 'trading_strategy') {
                     var remarkArr = common.isValid(articleDetail.remark) ? JSON.parse(articleDetail.remark) : [];
                     var remarkMap = {};
@@ -130,6 +130,7 @@ var chatPride = {
                         style = ' style="display:none;"';
                         var idx = 0;
                         $.each(remarkMap, function (i, row) {
+                            var tradeStrategySupportDivHtml = [];
                             $.each(row, function(j, r){
                                 tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
                             });
@@ -140,8 +141,9 @@ var chatPride = {
                         if (remarkArr.length == 0) {
                             style = ' style="display:none;"';
                         }
-                        var idx = 0;
+                        var idx = 0;console.log(remarkMap);
                         $.each(remarkMap, function (i, row) {
+                            var tradeStrategySupportDivHtml = [];
                             $.each(row, function(j, r){
                                 tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, 'dim'));
                             });
@@ -196,6 +198,7 @@ var chatPride = {
                      if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip') {
                          var idx = 0;
                          $.each(remarkMap, function (i, row) {
+                             var tradeStrategySupportDivHtml = [];
                              $.each(row, function(j, r){
                                  tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
                              });
@@ -208,6 +211,7 @@ var chatPride = {
                          }
                          var idx = 0;
                          $.each(remarkMap, function (i, row) {
+                             var tradeStrategySupportDivHtml = [];
                              $.each(row, function(j, r){
                                  tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, 'dim'));
                              });
@@ -375,7 +379,7 @@ var chatPride = {
                 indexJS.getArticleInfo(dom.attr('_id'), function (data) {
                     if (data) {
                         var articleInfo = data.detailList && data.detailList[0];
-                        var remarkArr = JSON.parse(articleInfo.remark),tradeStrategyHdDetailHtml = [],tradeStrategySupportHtml = [], tradeStrategySupportDivHtml = [], tradeStrategyHdDetail = chatPride.formatHtml('tradeStrategyHdDetail');
+                        var remarkArr = JSON.parse(articleInfo.remark),tradeStrategyHdDetailHtml = [],tradeStrategySupportHtml = [], tradeStrategyHdDetail = chatPride.formatHtml('tradeStrategyHdDetail');
                         if(articleInfo.tag == 'shout_single'){
                             $.each(remarkArr, function (i, row) {
                                 tradeStrategyHdDetailHtml.push(tradeStrategyHdDetail.formatStr(row.name, (row.longshort == 'long' ? '看涨' : '看跌'), row.point, row.profit, row.loss,''));
@@ -395,6 +399,7 @@ var chatPride = {
                             });
                             var idx = 0;
                             $.each(remarkMap, function (i, row) {
+                                var tradeStrategySupportDivHtml = [];
                                 $.each(row, function(j, r){
                                     tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
                                 });
