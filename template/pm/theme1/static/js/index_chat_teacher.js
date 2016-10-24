@@ -270,7 +270,7 @@ var chatTeacher = {
                 $('.main_tab .teacherlist .teacherbox  .intro span').text(userInfo.introduction);
 
                 $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").empty();
-                $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").append('<a href="javascript:void(0)" class="support" uid="'+userInfo.userNo+'" onclick="chatTeacher.showAnalystPraiseInfo(this)"><i class="i6"></i></a><b>('+userInfo.praiseNum+')</b><span>赞</span>');
+                $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").append('<a href="javascript:void(0)" class="support" uid="'+userInfo.userNo+'" onclick="chatTeacher.showAnalystPraiseInfo(this)"><i class="i6"></i></a><b>(<label>'+userInfo.praiseNum+'</label>)</b><span>赞</span>');
             }
 
             if(null != analystList){
@@ -381,8 +381,8 @@ var chatTeacher = {
             try{
                 common.getJson("/studio/setUserPraise",{clientId:indexJS.userInfo.userId,praiseId:_this.attr("uid")},function(result){
                     if(result.isOK) {
-                        _this.find('i').fadeIn().delay(400).fadeOut();
-                        var lb= _this.find("label");
+                       // _this.find('i').fadeIn().delay(400).fadeOut();
+                        var lb= _this.next().find("label");
                         lb.text(common.isValid(lb.text())?(parseInt(lb.text())+1):0);
                     }else{
                         box.showTipBox('亲，已点赞，当天只能点赞一次！');
