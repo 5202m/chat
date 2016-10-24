@@ -1426,8 +1426,9 @@ var chat={
                                     }else{
                                         chatPride.appendClassNoteInfo(articleInfo, true, true, true);
                                     }
+                                    chatPride.setAdvertisement();//设置广告
                                     chatPride.pushShoutSingleInfo(articleInfo);
-                                    indexJS.setListScroll($(".tabcont .main_tab .livebrief_list .scrollbox"));
+                                    indexJS.setListScroll($(".tabcont .main_tab .livebrief_list .scrollbox"));//直播精华
                                 }
                                 break;
                         }

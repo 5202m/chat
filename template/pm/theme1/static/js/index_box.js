@@ -987,7 +987,7 @@ var box={
                     var suffix = data[i].mediaUrl.substring(data[i].mediaUrl.lastIndexOf('.')+1).toLowerCase();
                     var name = row.title+'.'+suffix;
                     var publishDate = common.formatterDate(data[i].publishStartDate, '-').replace('-','/').replace('-','/');
-                    pptHtml.push(pptFormat.formatStr(suffix,row.title,(row.authorInfo?row.authorInfo.name:''),publishDate, data[i].point, (common.isBlank(data[i].downloads)?0:data[i].downloads), name,data[i]._id, row.remark));
+                    pptHtml.push(pptFormat.formatStr(suffix,row.title,(row.authorInfo?row.authorInfo.name:''),publishDate, data[i].point, (common.isBlank(data[i].downloads)?0:data[i].downloads), name,data[i]._id, row.remark,(common.isBlank(row.remark)?' style="display:none;"':'')));
                     pptHtml = $(pptHtml.join(""));
                     $(pptHtml).find('a.downbtn').data("file_url", data[i].mediaUrl);
                     $panel.append(pptHtml);
@@ -1048,8 +1048,8 @@ var box={
                 formatHtmlArr.push('<tr>');
                 formatHtmlArr.push('    <td>{0}</td>');
                 formatHtmlArr.push('    <td class="sname">{1}');
-                formatHtmlArr.push('        <div class="arr"><i></i><i class="i2"></i></div>');
-                formatHtmlArr.push('        <div class="cmbox">');
+                formatHtmlArr.push('        <div class="arr"{9}><i></i><i class="i2"></i></div>');
+                formatHtmlArr.push('        <div class="cmbox"{9}>');
                 formatHtmlArr.push('            <div class="cont">');
                 formatHtmlArr.push('                <b>推荐理由：</b>');
                 formatHtmlArr.push('                <p>{8}</p>');

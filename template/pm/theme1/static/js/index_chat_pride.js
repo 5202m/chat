@@ -31,6 +31,7 @@ var chatPride = {
             indexJS.getArticleList("advertisement", indexJS.userInfo.groupId, "0", 1, 5, '{"sequence":"desc","publishStartDate":"desc"}', null, function (dataList) {
                 if (dataList && dataList.result == 0) {
                     var data = dataList.data;
+                    $(".ban_ul").empty();
                     for (var i in data) {
                         $(".ban_ul:first").append('<li><a href="' + (common.isBlank(data[i].linkUrl) ? "javascript:" : data[i].linkUrl) + '" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'banner_img\', \'' + data[i].detailList[0].title + '\']);" target="_blank"><img width="100%" alt="" src="' + data[i].mediaUrl + '"></a></li>');
                     }
@@ -235,8 +236,9 @@ var chatPride = {
                  $panelUL.find('div.te_info>div.teinfo1>span.brieftit').text(articleDetail.title || "");
                  $panelUL.find('div.te_info>div.teinfo>div.taglist').html(tagHtml.join(''));
                  $panelUL.find('div.hdbox>div.skill').html('<span><i class="dot"></i>当前交易策略：</span>'+contentHtml);
-                 $panelUL.find('div.hdbox>div.skilldata').html(tradeStrategySupportHtml.join(''));
-                 if(remarkArr.length>0 && indexJS.userInfo.isLogin){
+                 $panelUL.find('div.hdbox>div.skilldata').remove();
+                 $panelUL.find('div.hdbox>div.skill').after(tradeStrategySupportHtml.join(''));
+                 if(remarkArr.length>0 && indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip'){
                     $panelUL.find('div.hdbox>div.skilldata>a').hide();
                  }else{
                     $panelUL.find('div.hdbox>div.skilldata>a').show();
