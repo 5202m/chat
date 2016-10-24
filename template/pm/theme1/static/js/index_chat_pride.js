@@ -408,8 +408,9 @@ var chatPride = {
                                 tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata" style="display:none;" _id="'+data._id+'" item="prerogative_strategy">查看数据</a>':'')));
                                 idx++;
                             });
-                            dom.parent('div.skilldata').prev('div.skill').after(tradeStrategySupportHtml.join(''));
-                            dom.parent('div.skilldata').remove();
+                            var hdBoxDom = dom.parent('div.skilldata').parent('div.hdbox');
+                            hdBoxDom.find('div.skilldata').remove();
+                            hdBoxDom.children('div.skill').after(tradeStrategySupportHtml.join(''));
                         }
                     }
                 });
