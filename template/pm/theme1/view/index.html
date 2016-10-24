@@ -1,0 +1,286 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta content="always" name="referrer">
+    <meta charset="utf-8"/>
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="no-cache" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>视频直播间 - 金道贵金属打造在线贵金属实盘直播室，掘金之旅在此起航！</title>
+    <meta content="实盘直播,贵金属实盘直播室,金道贵金属实盘直播,金道贵金属" name="keywords">
+    <meta content="金道贵金属打造在线贵金属实盘直播室，金道研究院名家观点即时播报，让您的掘金之旅在此起航！携手金道，生金有道！" name="description">
+    <link href="/base/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+    <link href="/base/lib/jqueryUI/jquery-ui.min.css" type="text/css" rel="stylesheet"/>
+    <link href="/base/lib/lightbox/lightbox.css" type="text/css" rel="stylesheet"/>
+    <link href="/base/lib/swipe/swiper.min.css"  type="text/css" rel="stylesheet" />
+    <link href="/base/lib/face/face.css" type="text/css" rel="stylesheet" />
+    <link href="/pm/theme1/css/index<%=isDevTest? '.css' : ('.min.css?t=' + new Date().getTime())%>" type="text/css" rel="stylesheet" />
+    <link href="/base/lib/pikaday/pikaday.min.css" type="text/css" rel="stylesheet" />
+    <!--[if lt IE 9]>
+    <link href="/pm/theme1/css/studioIE.css" rel="stylesheet" type="text/css">
+    <![endif]-->
+    <script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="/base/lib/store.min.js"></script>
+    <!-- 自动登录 begin -->
+    <script type="text/javascript" src="/pm/theme1/js/loginAuto.js"></script>
+    <script>
+        LoginAuto.sessionUser = JSON.parse('<%- userInfo %>');
+        LoginAuto.init();
+    </script>
+    <script type="text/javascript" src="/base/lib/lazyload/lazyload.min.js"></script>
+    <script type="text/javascript" src="/base/lib/basket.min.js"></script>
+</head>
+<body class="">
+<!-- header begin -->
+<div class="box-header">
+    <div class="box-header-in clearfix">
+        <h1 class="fl hide-t">视频直播间</h1>
+        <div class="header_ad fl">
+            <a href="javascript:void(0);" target="_blank"><img src="/pm/theme1/img/header_ad0927.gif"></a>
+        </div>
+        <!--div class="header-btn fl">
+            <a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','open_real_account', 'content_top',1,true]);"><i class="real"></i><span>开立真实账户</span></a>
+            <a href="http://oa.24k.hk/zh/account_02.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','open_demo_account', 'content_top',1,true]);"><i class="mn"></i><span>开立模拟账户</span></a>
+        </div-->
+        <div class="header-right fr clearfix">
+            <div class="h_menu1">
+                <%if(userSession.isLogin){%>
+                <span class="welcome">嗨！欢迎<span><%= userSession.nickname || "匿名_xxx" %></span>进入金道直播间</span>
+                <a href="javascript:void(0)" id="logout" class="topbtn">注销</a>
+                <%} else {%>
+                <span class="welcome">嗨！欢迎进入金道直播间</span>
+                <a href="javascript:void(0)" onclick="" id="login_a" class="topbtn">登录</a>
+                <a href="javascript:void(0)" onclick="" id="register_a" class="topbtn">免费注册</a>
+                <%}%>
+                <a href="https://ui.24k.hk/" target="_webui" class="topbtn">在线交易</a>
+            </div>
+            <div class="h_menu2">
+                <a href="javascript:void(0)" id="personal_center" onclick="">我的账户</a>
+                <span>|</span>
+                <a href="javascript:void(0)" id="vipbenefit" onclick="">会员权益</a>
+                <span>|</span>
+                <a href="javascript:void(0)" id="infodown" onclick="">资料下载</a>
+                <span>|</span>
+                <a href="javascript:void(0)" id="live_preview" onclick="">直播预告</a>
+                <span>|</span>
+                <a href="http://www.24k.hk/special/video_live_publicity/index.html" target="_blank">关于直播</a>
+                <span>|</span>
+                <a href="javascript:void(0);" id="qqcs" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_QQ', 'contest_top',1,true]);">QQ客服</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- header end -->
+
+<!-- wrapper begin -->
+<div class="wrapper clearfix">
+    <% include index_video.html %>
+    <% include index_chat.html %>
+</div>
+<!-- wrapper end -->
+
+<!-- 各种弹框 -->
+<% include index_box.html %>
+<script type="text/javascript" src="/base/lib/sewise/sewise.player.min.js"></script>
+<%if(isDevTest) {%>
+    <script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="/base/lib/socket.io.js"></script>
+    <script type="text/javascript" src="/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script type="text/javascript" src="/base/lib/lightbox/lightbox.min.js"></script>
+    <script type="text/javascript" src="/base/lib/jqueryUI/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/base/lib/swipe/swiper.min.js"></script>
+    <script type="text/javascript" src="/base/lib/websocket.min.js"></script>
+    <script type="text/javascript" src="/base/lib/jquery.xdomainrequest.min.js"></script>
+    <script type="text/javascript" src="/base/lib/flowplayer/flowplayer.min.js"></script>
+    <script type="text/javascript" src="/base/lib/paste.js"></script>
+    <script type="text/javascript" src="/base/lib/jquery.superslide.2.1.1.js"></script>
+    <script type="text/javascript" src="/base/lib/newquote.js"></script>
+    <script type="text/javascript" src="/base/lib/jquery.face.js"></script>
+    <script type="text/javascript" src="/base/util/common.js"></script>
+    <script type="text/javascript" src="/base/util/chatAnalyze.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/index.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/index_box.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/index_video.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/index_video_live.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/index_video_teach.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/index_video_subscribe.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/index_video_train.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/index_chat_pride.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/index_chat.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/index_chat_teacher.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/index_chat_showtrade.js"></script>
+<%}%>
+<script type="text/javascript">
+    basket.version='<%=version%>';
+    /*basket.require(
+            {url: "/base/lib/jquery-1.7.min.js"},
+            {url: "/base/lib/socket.io.js"},
+            {url: "/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"},
+            {url: "/base/lib/lightbox/lightbox.min.js"},
+            {url: "/base/lib/jqueryUI/jquery-ui.min.js"},
+            {url: "/base/lib/swipe/swiper.min.js"},
+            {url: "/base/lib/websocket.min.js"},
+            {url: "/base/lib/jquery.xdomainrequest.min.js"},
+            {url: "/base/lib/flowplayer/flowplayer.min.js"},
+            {url: "/base/lib/paste.js"},
+            {url: "/base/lib/jquery.superslide.2.1.1.js"}
+    <% if(isDevTest) { %>
+        ,{url:"/base/lib/newquote.js",skipCache:true}
+        ,{url:"/base/lib/jquery.face.js",skipCache:true}
+        ,{url:"/base/util/common.js",skipCache:true}
+        ,{url:"/base/util/chatAnalyze.js",skipCache:true}
+        ,{url:"/pm/theme1/js/index.js",skipCache:true}
+        ,{url:"/pm/theme1/js/index_box.js",skipCache:true}
+        ,{url:"/pm/theme1/js/index_video.js",skipCache:true}
+        ,{url:"/pm/theme1/js/index_video_live.js",skipCache:true}
+        ,{url:"/pm/theme1/js/index_video_teach.js",skipCache:true}
+        ,{url:"/pm/theme1/js/index_video_subscribe.js",skipCache:true}
+        ,{url:"/pm/theme1/js/index_video_train.js",skipCache:true}
+        ,{url:"/pm/theme1/js/index_chat_pride.js",skipCache:true}
+        ,{url:"/pm/theme1/js/index_chat.js",skipCache:true}
+        ,{url:"/pm/theme1/js/index_chat_teacher.js",skipCache:true}
+        ,{url:"/pm/theme1/js/index_chat_showtrade.js",skipCache:true}
+    <% }else{ %>,{url:"/pm/theme1/js/index.min.js"}<% }%>,function () {//ie版本不做本地缓存操作
+        pageFun();
+        indexJS.init();//初始化
+    }).then(function () {
+        pageFun();
+        indexJS.init();//初始化
+    });*/
+    pageFun();
+    indexJS.init();//初始化
+    function pageFun() {
+         indexJS.fromPlatform='<%- fromPlatform%>';
+         indexJS.apiUrl='<%= apiUrl %>';
+         indexJS.userInfo=JSON.parse('<%- userInfo %>');
+         indexJS.serverTime=Number('<%= serverTime %>');
+         indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
+         indexJS.filePath='<%= filePath %>';
+         indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
+         indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
+         indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
+         chatAnalyze.setUTM(true,$.extend({userTel:'<%= userSession.mobilePhone %>'}, indexJS.userInfo));
+
+        $(function () {
+            /*晒单图片*/
+            //$('.lightbox').lightbox();
+
+            /**/
+            $('.skilldata .viewdata').click(function () {
+                $(this).parent().find('.support span').removeClass('dim')
+            });
+
+            $('.te_list li').click(function () {
+                $('.dialogbtn').hide();
+                var ind = $(this).attr('class').substr(2, 1);
+                //alert(ind)
+                var mydialog = $($('.te_dialoglist .dialogbtn')[ind - 1]);
+                mydialog.css('left', $(this).offset().left - $('.chat').offset().left + 5).show();
+            });
+            $('.te_list .jt_btn').click(function () {
+                $('.te_dialoglist .dialogbtn').hide();
+            });
+
+            /*聊天屏蔽下拉框*/
+            /*$('.view_select').hover(function () {
+                $(this).addClass('dw')
+            }, function () {
+                $(this).removeClass('dw')
+            });*/
+
+
+            /*私聊窗口关闭*/
+            $('.pletter_win .pop_close').click(function () {
+                $('.pletter_win').hide();
+                $('.blackbg').hide();
+            });
+
+            /*点赞+1*/
+            /*$('.support').live('click', function () {
+                if (!$(this).hasClass('supported')) {
+                    $(this).find('i').fadeIn().delay(400).fadeOut();
+                    $(this).find('span').html(parseInt($(this).find('span').html()) + 1);
+                    $(this).addClass('supported');
+                    $(this).attr('title', '已点赞')
+                }
+            });*/
+        });
+
+    }
+
+</script>
+<script type="text/javascript">
+    /*indexJS.fromPlatform='<%- fromPlatform%>';
+    indexJS.apiUrl='<%= apiUrl %>';
+    indexJS.userInfo=JSON.parse('<%- userInfo %>');
+    indexJS.serverTime=Number('<%= serverTime %>');
+    indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
+    indexJS.filePath='<%= filePath %>';
+    indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
+    indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
+    indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
+    chatAnalyze.setUTM(true,$.extend({userTel:'<%= userSession.mobilePhone %>'}, indexJS.userInfo));*/
+    /*function widthCheck(){
+        var ww = $(window).width();
+        if(ww <= 1680 ){
+            $('body').addClass('wid1');
+            if(ww < 1440 ){
+                $('body').addClass('wid2');
+                if(ww < 1281 ){
+                    $('body').addClass('wid3');
+                }
+            }
+        }
+        if(ww >1680){
+            $('body').removeClass('wid1');
+            $('body').removeClass('wid2');
+            $('body').removeClass('wid3');
+        }
+    }
+    function heightCalcu() {
+        var hh = $(window).height(), hh_banner = $('.mod_banner').height();
+        var hh_room = $('.mod_room').height();
+        $('.mod_main .tabcont').height(hh - hh_banner - 115);
+        $('.mod_video').height(hh - $(".mod_videolist").height() - 70);
+        var hTmp = $(".mod_videolist .listcont").height();
+        $('.mod_videolist .list_tab').height(hTmp - 30);
+        $('.mod_videolist .sd_show').height(hTmp - 40);
+        $('.mod_userlist .scrollbox').height(hh - hh_room - 115);
+        $('.mod_menu').height(hh - 70);
+        $('.calendar_ul.scrollbox2').height(hh - 165);
+        $('.ppt_list').height(hh - 101);
+        $('.allsd_list .sdlistcont').height(hh - 173);
+        $('.mysd_list .sdlistcont').height(hh - 218);
+        $('.main_tab .scrollbox:eq(0)').height(hh - hh_banner - 115);
+        $('.main_tab .scrollbox:gt(1)').height(hh - hh_banner - 115);
+        var chatTab = $(".main_tab:eq(1)");
+        var chatInputHeight = 0;
+        if(chatTab.is(".on")){
+            chatInputHeight = $(".chat_input").height();
+        }else{
+            chatTab.addClass("on");
+            chatInputHeight = $(".chat_input").height();
+            chatTab.removeClass("on");
+        }
+        $('#chatMsgContentDiv').height(hh - hh_banner - 115 - chatInputHeight);
+        $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
+    }
+    widthCheck();
+    heightCalcu();*/
+    /*$(function() {
+        $(window).resize(function (e) {
+            widthCheck();
+            heightCalcu();
+        });
+        lightbox.option({
+            'resizeDuration': 200,
+            'wrapAround': true,
+            'disableScrolling':true,
+            'positionFromTop':50,
+            'albumLabel':"%1 of %2"
+        });
+    });*/
+</script>
+</body>
+</html>

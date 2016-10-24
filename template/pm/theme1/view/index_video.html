@@ -1,0 +1,196 @@
+<div class="left_row clearfix">
+    <div class="left_cont">
+        <div class="mod_video">
+            <div class="live-notice dn" id="nextCourse">
+                <div class="cont">
+                    <div class="ntext">当前暂无直播</div>
+                    <div class="nextbox dn">
+                        <div class="tec_head">
+                            <img src=""/>
+                        </div>
+                        <span class="t_name"></span>
+                        <p class="live_name"></p>
+                        <span class="live_time"><i></i><span>直播时间：<label class="time" style="margin-left:5px;"></label></span></span>
+                    </div>
+                </div>
+                <i class="botlogo"></i>
+            </div>
+            <div id="videoPlayerPanel" style="width: 100%; height: 100%"></div>
+            <div class="ctrlblock dn">
+                <div class="vcenter">
+                    <div class="ctrlbtn replay"><a href=""></a><span>重播</span></div>
+                    <div class="ctrlbtn nextbtn"><a href=""></a><span>下一集</span></div>
+                </div>
+                <!-- <a href="" class="vbackbtn">返回</a> -->
+            </div>
+
+            <!-- 滚动新闻 -->
+            <div class="mod_scrollnews dn">
+                <div class="newslist">
+                    <div class="newsbox" id="scrollnews_demo">
+                        <div class="innerbox">
+                            <div id="newscont1"></div>
+                            <div id="newscont2"></div>
+                        </div>
+                    </div>
+                    <a href="javascript:void(0)" class="newsclose"><i></i></a>
+                </div>
+                <a href="javascript:void(0)" class="newsbtn"><i></i>NEW</a>
+            </div>
+
+            <div class="mod_livelist">
+                <div class="cont">
+                    <div class="minbox dn" id="playlist_min"><a href="javascript:void(0)" id="playlist_show"><i></i></a></div>
+                    <div class="maxbox" id="playlist_max">
+                        <div class="livetabnav" id="playlist_nav">
+                            <a href="javascript:void(0)" class="on" t="today">今日直播</a>
+                            <a href="javascript:void(0)" class="fr" t="yesterday" style="display: none;">昨日回顾</a>
+                        </div>
+                        <div class="livetab" id="playlist_panel">
+                            <ul t="today">
+                            </ul>
+                            <ul t="yesterday" style="display: none;">
+                            </ul>
+                        </div>
+                        <a href="javascript:void(0)" class="hidebtn" id="playlist_hide"><i></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mod_infotab">
+            <div class="tabnav clearfix">
+                <a href="javascript:void(0)" class="nav-a tablink on live"><span class="hoverbox">直播</span></a>
+                <a href="javascript:void(0)" class="nav-a tablink teach"><span class="hoverbox">教学</span></a>
+                <a href="javascript:void(0)" id="subscribe" class="nav-a"><span class="hoverbox">订阅</span></a>
+                <a href="javascript:void(0)" id="trains" class="nav-a"><span class="hoverbox"><span>培训班<i class="num" id="trainsnum">8</i></span></span></a>
+                <a href="javascript:void(0)" class="myaid" onclick=""><i></i><span>联系助理</span></a>
+                <div class="khbtn">
+                    <i></i><span>立即开户</span>
+                    <div class="khbtns">
+                        <div class="box">
+                            <a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','open_real_account', 'content_top',1,true]);"><i></i><span>真实交易开户</span></a>
+                            <a href="http://oa.24k.hk/zh/account_02.html" target="_blank" class="mn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','open_demo_account', 'content_top',1,true]);"><i></i><span>模拟交易开户</span></a>
+                        </div>
+                        <i class="arr"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="tabcont">
+                <div class="main_tab on">
+                    <div class="sub-tabnav s1" id="roomList_panel">
+                        <% if (studioList!='[]') { %>
+                        <% studioList.forEach(function(row,index){  %>
+                        <%if(row.isCurr){%><span id="roomInfoId" lgt='<%= row.loginBoxTime %>' cgs="<%= row.clientGroup %>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>" style="display:none;"><%= row.name %><i class="off"></i></span><%}%>
+                        <a href="javascript:void(0);"<%if(row.isCurr) {%> class="on" lgt='<%= row.loginBoxTime %>'<%}else{%> rid="<%= row.id %>"<%}%> cgs="<%= row.clientGroup %>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>" rt="<%= row.roomType %>"><span><b><%= row.name %></b></span><i<% if(row.roomType!='train'){ %> class="living"<% } %>></i></a>
+                        <% });%>
+                        <% } %>
+                        <!--a href="" class="on"><span><b>直播大厅</b></span><i class="living"></i></a>
+                        <a href=""><span>VIP<b>专场</b></span><i class="living"></i></a>
+                        <a href=""><span><b>老易培训班</b></span><i></i></a-->
+                    </div>
+                    <div class="infocont clearfix">
+                        <div class="infobox fl">
+                            <div class="cont">
+                                <div class="infotit"><span><i></i>行情</span></div>
+                                <div class="qhlist">
+                                    <ul>
+                                        <li>
+                                            <div class="qhitem">
+                                                <span>伦敦金</span><span class="value" id="price_XAUUSD"></span>
+                                            </div>
+                                            <div class="trend" id="deltaPercent_XAUUSD">
+
+                                            </div>
+                                        </li>
+                                        <li class="r">
+                                            <div class="qhitem">
+                                                <span>伦敦银</span><span class="value" id="price_XAGUSD"></span>
+                                            </div>
+                                            <div class="trend" id="deltaPercent_XAGUSD">
+
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="qhitem">
+                                                <span>美元指数</span><span class="value" id="price_USDX"></span>
+                                            </div>
+                                            <div class="trend" id="deltaPercent_USDX">
+
+                                            </div>
+                                        </li>
+                                        <li class="r">
+                                            <div class="qhitem">
+                                                <span>纽约原油</span><span class="value" id="price_CLWTI"></span>
+                                            </div>
+                                            <div class="trend" id="deltaPercent_CLWTI">
+
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rbox fr">
+                            <div class="scrollbox">
+                                <div class="infobox wl">
+                                    <div class="cont">
+                                        <div class="infotit">
+                                            <span><i></i>多头与空头比例</span>
+                                            <div class="legend">
+                                                <span><i></i>多头</span>
+                                                <span class="c2"><i></i>空头</span>
+                                            </div>
+                                        </div>
+                                        <div class="ratioInfo">
+                                        </div>
+                                        <span class="updatetip" id="ratioInfoUpdateTime"></span>
+                                    </div>
+                                </div>
+                                <div class="infobox wr">
+                                    <div class="cont">
+                                        <div class="infotit"><span><i></i>未平仓品种比率</span></div>
+                                        <div class="percentInfo">
+                                        </div>
+                                        <span class="updatetip" id="percentInfoUpdateTime"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="main_tab">
+                    <div class="sub-tabnav s2" id="teachVideoId">
+                        <a href="javascript:void(0);" t="teach_video_base"><span>基础教学</span></a>
+                        <a href="javascript:void(0);" t="teach_video_gw"><span>谈金论道</span></a>
+                        <a href="javascript:void(0);" t="teach_video_expert"><span>专家锦囊</span></a>
+                        <!--a href="javascript:void(0);" t=""><span>软件操作</span></a-->
+                    </div>
+                    <div class="sub-tabcont" id="teachVideoPanel">
+                        <div class="sub_tab on">
+                            <div class="courseNum">
+                                <a href="javascript:void(0)" class="numctrl disabled"><i></i></a>
+                                <a href="javascript:void(0)" class="numctrl n2"><i class="next"></i></a>
+                                <div class="numbox">
+                                    <div class="inner">
+                                        <!--选集列表-->
+                                    </div>
+                                </div>
+                                <i class="wshadow l"></i>
+                                <i class="wshadow r"></i>
+                            </div>
+
+                            <div class="courseintro" id="tvInfoId">
+                                <div class="cpic"><img src="/pm/theme1/img/coursepic.jpg" alt=""></div>
+                                <div class="introtext">
+                                    <div class="infotit"><span><i></i>本集介绍：</span></div>
+                                    <p><!--简介内容--></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

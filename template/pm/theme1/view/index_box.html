@@ -1,0 +1,1213 @@
+<div class="blackbg dn"></div>
+
+<!-- 直播间注册 -->
+<div class="popup_box register dn" id="popBoxRegister">
+    <div class="cont">
+        <div class="pop_tit">直播间注册</div>
+        <form method="post" action="">
+            <input type="hidden" name="item" value="register_reg" />
+            <div class="formcont">
+                <div class="in_line">
+                    <i class="ic_phone"></i>
+                    <input type="text" name="mobilePhone" placeholder="手机号" class="in1">
+                </div>
+                <div class="in_line">
+                    <i class="ic_psw"></i>
+                    <input type="password" name="password" placeholder="设置密码" class="in1" maxlength="20">
+                </div>
+                <div class="in_line">
+                    <i class="ic_psw"></i>
+                    <input type="password" name="password1" placeholder="再次输入密码" class="in1" maxlength="20">
+                </div>
+                <div class="in_line clearfix">
+                    <i class="ic_msg"></i>
+                    <input type="text" name="verifyCode" placeholder="短信验证码" class="in1 in2">
+                    <a href="javascript:void(0)" class="rbtn" ut="studio_reg" t="120">获取验证码</a><!--<a href="" class="rbtn pressed">60s...</a>按钮点击后的样式-->
+                </div>
+            </div>
+            <div class="error dn"><i></i></div>
+            <div class="btnbar"><input type="button" class="set_submit" value="提交" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'Login_tijiao', 'content_top']);"></div>
+            <div class="botbar lh50">
+                <span class="fr">已有账号，我要<a href="javascript:void(0)" id="reg_login">登录</a></span>
+            </div>
+        </form>
+        <a class="pop_close" href="javascript:"><i>关闭</i></a>
+    </div>
+    <i class="img-loading" style="top: 50%;right: 50%;display:none;"></i>
+</div>
+
+<!-- 直播间登录 -->
+<div class="popup_box login dn " id="loginBox">
+    <div class="cont">
+        <div class="pop_tit"><span><i class="fr"></i></span>直播间登录<span><i></i></span></div>
+        <span id="login_tip" style="display: none;">您已经观看了3分钟，赶紧登录再继续观看吧</span>
+        <form method="post" action="" id="loginForm">
+            <input type="hidden" name="clientStoreId"/>
+            <input type="hidden" name="loginType" id="loginType" value="pwd"/>
+            <div class="formcont">
+                <div class="in_line">
+                    <i class="ic_phone"></i>
+                    <input type="text" name="mobilePhone" id="mobilePhone" placeholder="用户名/手机号/邮箱" class="in1">
+                </div>
+                <div class="login_option">
+                    <a href="javascript:void(0)" class="option selected" lt="pwd"><i></i>客户密码</a>
+                    <a href="javascript:void(0)" class="option" lt="verify"><i></i>动态密码</a>
+                </div>
+                <div class="in_line" lt="pwd">
+                    <i class="ic_psw"></i>
+                    <input type="password" name="password" id="password" placeholder="密码" class="in1">
+                </div>
+                <div class="in_line clearfix dn" lt="verify">
+                    <i class="ic_msg"></i>
+                    <input type="text" name="verifyCode" id="verifyCode" placeholder="动态密码" class="in1 in2">
+                    <a href="javascript:void(0);" class="rbtn" ut="studio_login" t="120">获取动态码</a>
+                    <!--<a href="" class="rbtn pressed">60s...</a>按钮点击后的样式-->
+                </div>
+            </div>
+            <div class="botbar" style="line-height:20px; padding-top:10px; padding-bottom: 10px;">
+                <div class="fl<%if(fromPlatform == 'wechat'){%> dn<%}%>">
+                    <input type="checkbox" id="autoLogin" checked="checked" class="auto-login" />
+                    <span>下次自动登录</span>
+                </div>
+                <!-- <span class="fr">如未收到验证码，请咨询 <a href="">在线客服</a></span> -->
+                <a href="javascript:void(0);" class="fr" id="preSetPwdBtn">找回密码？</a>
+            </div>
+            <div class="error dn"><i></i>输入内容有误，请重新输入！</div>
+            <div class="btnbar"><input type="button" class="set_submit" value="登录" id="logBtnSub" /></div>
+            <div class="botbar clearfix">
+
+                <span class="fr">您还没有金道直播间账号？<a href="javascript:void(0);" id="preRegBtn">免费注册</a></span>
+            </div>
+            <!--div class="social_login">
+                <span>社交账号登录：</span>
+                <a href="javascript:void(0);" class="social_icon wx"></a>
+                <a href="javascript:void(0);" class="social_icon wb"></a>
+                <a href="javascript:void(0);" class="social_icon qq"></a>
+            </div-->
+
+        </form>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+    <i class="img-loading" style="top: 50%;right: 50%;display:none;" id="formBtnLoad"></i>
+</div>
+
+<!-- 找回密码第一步 -->
+<div class="popup_box forget_psw1 dn" id="popBoxPassword2">
+    <div class="cont">
+        <div class="pop_tit"><span><i class="fr"></i></span>找回密码<span><i></i></span></div>
+        <form method="post" action="">
+            <input type="hidden" name="type" value="2">
+            <div class="formcont">
+                <div class="in_line">
+                    <i class="ic_phone"></i>
+                    <input type="text" name="mobilePhone" placeholder="请输入注册时的手机号码" maxlength="11" class="in1">
+                </div>
+                <div class="in_line clearfix">
+                    <i class="ic_msg"></i>
+                    <input type="text" name="verifyCode" placeholder="验证码" class="in1 in2">
+                    <a href="javascript:void(0)" class="rbtn" ut="studio_resetPWD" t="120">获取验证码</a>
+                    <!-- <a href="" class="rbtn pressed">60s...</a> -->
+                </div>
+
+            </div>
+            <div class="error dn"><i></i></div>
+            <div class="btnbar"><input type="button" class="set_submit" value="下一步"></div>
+        </form>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 找回密码第二步 -->
+<div class="popup_box forget_psw2 dn" id="popBoxPassword3">
+    <div class="cont">
+        <div class="pop_tit"><span><i class="fr"></i></span>找回密码<span><i></i></span></div>
+        <form method="post" action="">
+            <input type="hidden" name="type" value="3">
+            <input type="hidden" name="mobilePhone" id="popBoxPassword3_mb">
+            <div class="formcont">
+                <div class="in_line">
+                    <i class="ic_psw"></i>
+                    <input type="password" name="password" placeholder="新密码设置" class="in1">
+                </div>
+                <div class="in_line">
+                    <i class="ic_psw"></i>
+                    <input type="password" name="password1" placeholder="确认新密码" class="in1">
+                </div>
+
+            </div>
+            <div class="error dn"><i></i></div>
+            <div class="btnbar"><input type="button" class="set_submit" value="确定"></div>
+        </form>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 注册成功 -->
+<div class="popup_box register_result dn">
+    <div class="cont">
+        <div class="reg_result">
+            <i></i>
+            <h4>恭喜您注册直播间成功！ </h4>
+        </div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 个人中心 -->
+<div class="popup_box mbox personal_center dn">
+    <div class="cont">
+        <div class="personal_info">
+            <div class="headimg"><img width="120" height="120" src="<%if(userSession.isLogin){%><%= userSession.avatar || '/pm/theme1/img/user.png' %><%}%>" id="avatarInfoId" alt=""></div>
+            <a href="javascript:void(0);" id="modifyAvatar">修改头像</a>
+            <form method="post" enctype='multipart/form-data' id="fileForm" name="fileForm" style="display: none;">
+                <input type="file" name="file" />
+                <input type="hidden" name="fileDir" value="pic/header/chat/front"/>
+            </form>
+            <h4 class="username"><%if(userSession.isLogin){%><%= userSession.nickname||"匿名_xxx" %><%}%></h4>
+            <div class="infobar">
+                <div class="item">
+                    <span class="in_name">等级：</span>
+                    <b class="in_b" id="myLevel">L0</b>
+                    <div class="levelbar">
+                        <div class="progress"><b style="width:0%"></b></div>
+                        <span class="le_detail">0/10000</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <span class="in_name">积分：</span>
+                    <b class="in_b" id="mypoints">0</b>
+                </div>
+                <div class="item">
+                    <span class="in_name">身份：</span>
+                    <b class="in_b">
+                        <%if(userSession.isLogin){%>
+                        <%if('vip'==userSession.clientGroup){%>
+                        VIP
+                        <%} else if('active'==userSession.clientGroup) {%>
+                        真实[A]
+                        <%} else if('notActive'==userSession.clientGroup) {%>
+                        真实[N]
+                        <%} else if('simulate'==userSession.clientGroup) {%>
+                        模拟
+                        <%} else if('register'==userSession.clientGroup) {%>
+                        注册
+                        <%} else {%>
+                        游客
+                        <%}%>
+                        <%}%>
+                    </b>
+                </div>
+            </div>
+        </div>
+        <div class="main_tabnav" id="infotab">
+            <a href="javascript:void(0)" class="on" t="accountInfo">账户资料<i></i></a>
+            <a href="javascript:void(0)" t="myPoint">我的积分<i></i></a>
+            <a href="javascript:void(0)" t="mySubscribe">我的订阅<i></i></a>
+        </div>
+        <div class="tabcont">
+            <div class="main_tab on" t="accountInfo">
+                <div class="cont">
+                    <div class="pinfo_form">
+                        <div class="item">
+                            <span class="iname">用户名</span>
+                            <div class="inp_div">
+                                <input type="text" id="myUserName" placeholder="<%if(userSession.isLogin){%><%= userSession.userName||'未设置' %><%}%>" disabled="disabled" />
+                            </div>
+                            <div class="edit_div">
+                                <a href="javascript:void(0);" id="setUserName">设置</a>
+                                <a href="javascript:void(0);" id="saveUserName" class="dn">保存</a>
+                            </div>
+                            <span class="itip">（设置之后可使用用户名+密码方式登录直播间)</span>
+                        </div>
+                        <div class="item">
+                            <span class="iname">手机号</span>
+                            <div class="inp_div">
+                                <input type="text" id="myMobilePhone" value="<%if(userSession.isLogin){%><%= userSession.mobilePhone ? (userSession.mobilePhone.substring(0,3)+'****'+userSession.mobilePhone.substring(8,11)) : '未绑定' %><%}%>" disabled="disabled" />
+                            </div>
+                            <div class="edit_div">
+                                <!--a href="javascript:void(0);" id="modifyMobilePhone">更换</a>
+                                <a href="javascript:void(0);" id="saveMobilePhone" class="dn">保存</a-->
+                            </div>
+                            <span class="itip">（手机号可快捷登录和找回密码）</span>
+                        </div>
+
+                        <div class="item">
+                            <span class="iname">邮箱</span>
+                            <div class="inp_div">
+                                <input type="text" id="myEmail" placeholder="<%if(userSession.isLogin){%><%= userSession.email ? (userSession.email.substring(0,3)+'*****'+userSession.email.substring(userSession.email.lastIndexOf('.')+1)) : '未绑定' %><%}%>" disabled="disabled">
+                            </div>
+                            <div class="edit_div">
+                                <a href="javascript:void(0);" id="bindEmail">绑定</a>
+                                <a href="javascript:void(0);" id="saveEmail" class="dn">保存</a>
+                            </div>
+                            <span class="itip">（验证邮箱可使用邮箱+密码方式登录、订阅邮件服务等）</span>
+                        </div>
+
+                        <div class="item">
+                            <span class="iname">昵称</span>
+                            <div class="inp_div">
+                                <input type="text" id="myNickName" placeholder="<%if(userSession.isLogin){%><%= userSession.nickname||'匿名_xxx' %><%}%>" disabled="disabled">
+                            </div>
+                            <div class="edit_div">
+                                <a href="javascript:void(0);" id="modifyNk">修改</a>
+                                <a href="javascript:void(0);" id="setNkBtn" class="dn">保存</a>
+                            </div>
+                            <span class="itip dn">（可使用户名+密码方式登录直播间）</span>
+                        </div>
+
+                        <div class="item">
+                            <span class="iname">密码</span>
+                            <div class="inp_div">
+                                <input type="password" id="myPwd" placeholder="<%if(userSession.isLogin){%><%= userSession.password?'*******':'未设置' %><%}%>" disabled="disabled">
+                            </div>
+                            <div class="edit_div">
+                                <a href="javascript:void(0);" id="modifyPwd">修改</a>
+                                <!--a href="javascript:void(0);" id="savePwd" class="dn">保存</a-->
+                            </div>
+                            <span class="itip">（设置之后可使用用户名+密码方式登录直播间)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main_tab" t="myPoint">
+                <div class="cont" id="myPointsDetail">
+                    <div class="point_table get">
+                        <p>积分获得：</p>
+                        <div class="borbox">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <thead>
+                                <tr>
+                                    <th width="13%">日期</th>
+                                    <th>积分明细</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="point_table consume">
+                        <p>积分消费：</p>
+                        <div class="borbox">
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                <thead>
+                                <tr>
+                                    <th width="13%">日期</th>
+                                    <th>积分明细</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="main_tab " t="mySubscribe">
+                <div class="scrollbox" id="dy-scbox">
+                    <div class="dytable dn">
+                        <p>我的订阅：</p>
+                        <table cellspacing="0" cellpadding="0" width="100%" border="0" id="mySubscribe">
+                            <thead>
+                                <tr>
+                                    <th>序号</th>
+                                    <th width="18%">订阅日期</th>
+                                    <th width="18%">订阅服务</th>
+                                    <th width="18%">订阅老师</th>
+                                    <th width="18%">订阅有效期</th>
+                                    <th width="18%">订阅方式</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                            <tr>
+                                <td><span class="fz12">1</span></td>
+                                <td><span class="fz12">2016.08.15</span></td>
+                                <td>课堂提醒</td>
+                                <td>李呱呱</td>
+                                <td>1周</td>
+                                <td>短信</td>
+                            </tr>
+                            <tr>
+                                <td><span class="fz12">2</span></td>
+                                <td><span class="fz12">2016.08.15</span></td>
+                                <td>交易策略</td>
+                                <td>李呱呱</td>
+                                <td>1周</td>
+                                <td>短信</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="dytable pb20">
+                        <p>我要订阅：</p>
+                        <table cellspacing="0" cellpadding="0" width="100%" border="0" class="tody">
+                            <thead>
+                                <tr>
+                                    <th width="10%">订阅服务</th>
+                                    <th>订阅老师</th>
+                                    <th width="18%">订阅方式</th>
+                                    <th width="18%">订阅周期</th>
+                                    <th width="22%">积分消费</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="scbox-shadow"></div>
+            </div>
+        </div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 修改密码 -->
+<div class="popup_box change_psw parentShow dn">
+    <div class="cont">
+        <div class="pop_tit"><span><i class="fr"></i></span>修改密码<span><i></i></span></div>
+        <form method="post" action="">
+            <div class="formcont">
+                <div class="in_line">
+                    <i class="ic_psw"></i>
+                    <input type="password" id="oPwd" name="password" placeholder="原始密码" class="in1" s="<%if(userSession.isLogin){%><%= userSession.password?true:false %><%}%>" />
+                </div>
+                <div class="in_line">
+                    <i class="ic_psw"></i>
+                    <input type="password" id="newPwd" name="newPwd" placeholder="新的密码" class="in1" />
+                </div>
+                <div class="in_line">
+                    <i class="ic_psw"></i>
+                    <input type="password" id="newPwd1" name="newPwd1" placeholder="确认新的密码" class="in1" />
+                </div>
+            </div>
+            <div class="error dn"><i></i>新密码输入不一致，请重新输入！</div>
+            <div class="btnbar"><input type="button" id="savePwd" class="set_submit" value="确定" /></div>
+        </form>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 老师培训班 -->
+<div class="popup_box bbox pop_train dn">
+    <div class="cont">
+        <div class="pop_tit"><span><i class="fr"></i></span>老师培训班<span><i></i></span></div>
+        <div class="scrollbox">
+            <div class="trainlist">
+                <ul>
+
+                  <!-- <li>
+                        <div class="headimg"><img src="/pm/theme1/img/timg1.jpg" alt=""></div>
+                        <div class="train_name">老易培训班<span>（第6期）</span></div>
+                        <span class="slogan">一夜暴富不是梦导师老易</span>
+                        <p>国内黄金外汇行业资深分析师领军人物，曾任职于多家知名黄金外汇投资机构...</p>
+                        <a href="javascript:void(0)" class="trainbtn" id="trainRegis">报名</a><a href="javascript:void(0)" onclick="common.openPopup('.blackbg,.train_detail')" class="trainbtn">详情</a>
+                    </li>
+                    <li>
+                        <div class="headimg"><img src="/pm/theme1/img/timg1.jpg" alt=""></div>
+                        <div class="train_name">老易培训班<span>（第6期）</span></div>
+                        <span class="slogan">一夜暴富不是梦导师老易</span>
+                        <p>国内黄金外汇行业资深分析师领军人物，曾任职于多家知名黄金外汇投资机构...</p>
+                        <a href="" class="trainbtn">报名</a><a href="javascript:void(0)" onclick="common.openPopup('.blackbg,.train_detail')" class="trainbtn">详情</a>
+                    </li>
+                    <li>
+                        <div class="headimg"><img src="/pm/theme1/img/timg1.jpg" alt=""></div>
+                        <div class="train_name">老易培训班<span>（第6期）</span></div>
+                        <span class="slogan">一夜暴富不是梦导师老易</span>
+                        <p>国内黄金外汇行业资深分析师领军人物，曾任职于多家知名黄金外汇投资机构...</p>
+                        <a href="" class="trainbtn">报名</a><a href="javascript:void(0)" onclick="common.openPopup('.blackbg,.train_detail')" class="trainbtn">详情</a>
+                    </li>
+                    <li>
+                        <div class="headimg"><img src="/pm/theme1/img/timg1.jpg" alt=""></div>
+                        <div class="train_name">老易培训班<span>（第6期）</span></div>
+                        <span class="slogan">一夜暴富不是梦导师老易</span>
+                        <p>国内黄金外汇行业资深分析师领军人物，曾任职于多家知名黄金外汇投资机构...</p>
+                        <a href="" class="trainbtn">报名</a><a href="javascript:void(0)" onclick="common.openPopup('.blackbg,.train_detail')" class="trainbtn">详情</a>
+                    </li>
+                    <li>
+                        <div class="headimg"><img src="/pm/theme1/img/timg1.jpg" alt=""></div>
+                        <div class="train_name">老易培训班<span>（第6期）</span></div>
+                        <span class="slogan">一夜暴富不是梦导师老易</span>
+                        <p>国内黄金外汇行业资深分析师领军人物，曾任职于多家知名黄金外汇投资机构...</p>
+                        <a href="" class="trainbtn">报名</a><a href="javascript:void(0)" onclick="common.openPopup('.blackbg,.train_detail')" class="trainbtn">详情</a>
+                    </li>-->
+                </ul>
+            </div>
+        </div>
+        <div class="scbox-shadow"></div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 老师培训班详情 -->
+<div class="popup_box bbox train_detail parentShow dn">
+    <div class="cont">
+        <div class="pop_tit"><span><i class="fr"></i></span>陈丞的培训班<span><i></i></span></div>
+        <div class="scrollbox">
+            <div class="teacherbox">
+                <div class="te_top">
+                    <div class="himg"><img src="../static/img/timg3.jpg" alt=""></div>
+                    <div class="info1 clearfix">
+                        <div class="info-l">
+                            <span class="te_name">陈丞</span><br>
+                            <span class="te_org">大数据挖掘师</span>
+                        </div>
+                        <div class="stateshow">
+                            <div class="item">
+                                <i class="i1"></i>
+                                <b>90%</b>
+                                <span>胜率</span>
+                            </div>
+                            <div class="item">
+                                <i class="i2"></i>
+                                <b>50%</b>
+                                <span>月收益</span>
+                            </div>
+                            <div class="item">
+                                <i class="i3"></i>
+                                <b>200h</b>
+                                <span>讲课时长</span>
+                            </div>
+                            <div class="item">
+                                <i class="i6"></i>
+                                <b>(6558)</b>
+                                <span>赞</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info2">
+                        <div class="memo" title="遵守止损止盈交易基本纪律，财富是一个积少成多的过程。"><span><i></i>投资箴言：</span>
+                            遵守止损止盈交易基本纪律，财富是一个积少成多的过程。</div>
+                        <div class="taglist">
+                            <div class="tag"><span>激进</span><i></i></div>
+                            <div class="tag"><span>数据控</span><i></i></div>
+                            <div class="tag"><span>女神</span><i></i></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="detail_ph">
+                <div class="ph_tit"><span><i></i>老师简介</span></div>
+                <div class="ph_cont">
+                    <p>专注基本面分析多年 ，掌握第一手各类央行政策财经消息解读，熟悉各大交易规则与报价机制，对于现货黄金白银投资有独到见解，独创“陈氏超短线指标交易参数修正法”。能为客户探索“大多数人”看到大多数人看不到的短线投资机会。通晓美股，港股及A股趋势之间联系，将多年期货交易经验编入现货黄金白银交易之中，为广大投资者提供客观，犀利，精确交易策略。</p>
+                </div>
+            </div>
+            <div class="detail_ph">
+                <div class="ph_tit"><span><i></i>本期培训班介绍</span></div>
+                <div class="ph_cont">
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0" class="detail_tab">
+                        <tr>
+                            <th width="75">主题：</th>
+                            <td>
+                                <span class="topic">陈丞教您做数据！</span>
+                                <ul class="apply_info">
+                                    <li><span>报名时间</span><b>10.17-10.21</b></li>
+                                    <li class="m"><span>开课时间</span><b>10.17-10.21</b></li>
+                                    <li><span>报名人数</span><b>限额50名</b></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>课程介绍：</th>
+                            <td>
+                                <ul class="t_list">
+                                    <li><i>1</i><span>如何辨识主要数据对黄金白银影响的大小</span></li>
+                                    <li><i>2</i><span>美联储利率决议预期主导金价</span></li>
+                                    <li><i>3</i><span>欧元区数据/日本央行政策/全球第二经济体（中国）对黄金白银影响</span></li>
+                                    <li><i>4</i><span>如何大胆预测美国各大五星级数据</span></li>
+                                    <li><i>5</i><span>终极一班：短线/超短线数据参数修正法</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>报名条件：</th>
+                            <td>
+                                <ul class="t_list w2">
+                                    <li><i>1</i><span>注册直播间</span></li>
+                                    <li><i>2</i><span>报名期间净入金满500美元</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>报名流程：</th>
+                            <td>
+                                <ul class="t_list w2">
+                                    <li><i>1</i><span>在直播间“我的助理”处报名</span></li>
+                                    <li><i>2</i><span>提交报名所需个人信息，完成报名</span></li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="detail_ph">
+                <div class="ph_tit"><span><i></i>老师经典案例</span></div>
+                <div class="ph_cont">
+                    <p>9月非农前夕策略验证“阴谋论”之说，<b>做多</b>，盈利<b class="sz">3800</b>美元/手</p>
+                    <div class="imgdiv"><img src="../static/img/teacher_exp.jpg" alt=""></div>
+                </div>
+            </div>
+            <a href="" class="applybtn">马上报名</a>
+            <div class="train_ad"><img src="../static/img/train_ad.jpg" alt=""></div>
+        </div>
+        <div class="scbox-shadow"></div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 金道直播间签到 -->
+<div class="popup_box signin dn">
+    <div class="cont">
+        <div class="signinbox">
+            <div class="signinbtn"><i></i><span>今日签到</span></div>
+            <!-- <div class="signinbtn signed"><i></i><span>已签到</span></div> -->
+            <b class="signintit">金道直播间签到</b>
+            <span>连续签到，赢取特权奖励！</span>
+            <div class="progressbar">
+                <div class="barcont">
+                    <div class="bar" style="width:30%">
+                        <span><b class="current">7天</b></span>
+                    </div>
+                    <div class="rewardpoint" style="left:45%">
+                        <p>签到15天送1000积分<i class="arr"></i></p>
+                        <i></i>
+                        <span><em>15</em>天</span>
+                    </div>
+                </div>
+            </div>
+            <div class="sign_vistor">
+                <span class="vtit"><i></i>他们刚来过：</span>
+                <div id="sign_vistor">
+                    <ul>
+                        <!--<li>
+                            <div class="himg"><img src="/pm/theme1/img/user.jpg" alt=""></div>
+                            <span>4分钟前</span>
+                        </li>
+                        <li>
+                            <div class="himg"><img src="/pm/theme1/img/user.jpg" alt=""></div>
+                            <span>4分钟前</span>
+                        </li>
+                        <li>
+                            <div class="himg"><img src="/pm/theme1/img/user.jpg" alt=""></div>
+                            <span>6分钟前</span>
+                        </li>
+                        <li>
+                            <div class="himg"><img src="/pm/theme1/img/user.jpg" alt=""></div>
+                            <span>8分钟前</span>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 会员权益说明 -->
+<div class="popup_box mbox vipbenefit dn">
+    <div class="cont">
+        <div class="pop_tit longt"><span><i class="fr"></i></span>金道贵金属视频直播间会员权益说明<span><i></i></span></div>
+        <div class="main_tabnav">
+            <a href="javascript:void(0)" class="on">活动特权<i></i></a>
+            <a href="javascript:void(0)">产品特权<i></i></a>
+            <a href="javascript:void(0)">服务特权<i></i></a>
+            <a href="javascript:void(0)">功能特权<i></i></a>
+        </div>
+        <div class="tabcont">
+            <div class="main_tab on">
+                <div class="benefit_table">
+                    <table cellpadding="0" cellspacing="0" width="100%" border="0">
+                        <tr>
+                            <th>会员权益</th>
+                            <th width="14%">积分明细</th>
+                            <th width="14%">直播老师<br>大礼赠送</th>
+                            <th width="14%">线下讲座<br>优先参加</th>
+                            <th width="14%">商城兑换</th>
+                            <th width="14%">享受注资<br>打折优惠</th>
+                            <th width="14%">尊享生日好礼</th>
+                        </tr>
+                        <tr>
+                            <td>游客</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>注册客户</td>
+                            <td>积分</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>模拟开户客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>真实开户客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>激活客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                        </tr>
+                        <tr>
+                            <td>激活VIP客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="main_tab">
+                <div class="benefit_table">
+                    <table cellpadding="0" cellspacing="0" width="100%" border="0">
+                        <tr>
+                            <th>会员权益</th>
+                            <th width="14%">积分明细</th>
+                            <th width="14%">直播老师<br>大礼赠送</th>
+                            <th width="14%">线下讲座<br>优先参加</th>
+                            <th width="14%">商城兑换</th>
+                            <th width="14%">享受注资<br>打折优惠</th>
+                            <th width="14%">尊享生日好礼</th>
+                        </tr>
+                        <tr>
+                            <td>游客</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>注册客户</td>
+                            <td>积分</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>模拟开户客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>真实开户客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>激活客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                        </tr>
+                        <tr>
+                            <td>激活VIP客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="main_tab">
+                <div class="benefit_table">
+                    <table cellpadding="0" cellspacing="0" width="100%" border="0">
+                        <tr>
+                            <th>会员权益</th>
+                            <th width="14%">积分明细</th>
+                            <th width="14%">xxx服务</th>
+                            <th width="14%">xxx服务</th>
+                            <th width="14%">xxx服务</th>
+                            <th width="14%">xxx服务</th>
+                            <th width="14%">xxx服务</th>
+                        </tr>
+                        <tr>
+                            <td>游客</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>注册客户</td>
+                            <td>积分</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>模拟开户客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>真实开户客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>激活客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                        </tr>
+                        <tr>
+                            <td>激活VIP客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class="main_tab">
+                <div class="benefit_table">
+                    <table cellpadding="0" cellspacing="0" width="100%" border="0">
+                        <tr>
+                            <th>会员权益</th>
+                            <th width="14%">积分明细</th>
+                            <th width="14%">xxx功能</th>
+                            <th width="14%">xxx功能</th>
+                            <th width="14%">xxx功能</th>
+                            <th width="14%">xxx功能</th>
+                            <th width="14%">xxx功能</th>
+                        </tr>
+                        <tr>
+                            <td>游客</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>注册客户</td>
+                            <td>积分</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>模拟开户客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>真实开户客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><span class="none">——</span></td>
+                            <td><span class="none">——</span></td>
+                        </tr>
+                        <tr>
+                            <td>激活客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                        </tr>
+                        <tr>
+                            <td>激活VIP客户</td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                            <td>积分5折</td>
+                            <td><i class="tick"></i></td>
+                            <td><i class="tick"></i></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 直播预告 -->
+<div class="popup_box live_preview dn">
+    <div class="cont">
+        <div class="pop_tit"><span><i class="fr"></i></span>直播预告<span><i></i></span></div>
+        <div class="main_tabnav">
+        </div>
+        <div class="tabcont" id="course_panel">
+        </div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 资料下载 -->
+<div class="popup_box mbox infodown dn">
+    <div class="cont">
+        <div class="pop_tit"><span><i class="fr"></i></span>资料下载<span><i></i></span></div>
+        <div class="ranknavbar">
+            <span>排序：</span>
+            <a href="javascript:void(0);" class="rankbtn on" sort="default">默认排序<b></b></a>
+            <a href="javascript:void(0);" class="rankbtn" sort="point">积分<i>↓</i><b></b></a>
+            <a href="javascript:void(0);" class="rankbtn" sort="uptime">上传时间<i>↓</i><b></b></a>
+            <div class="search_bar">
+                <input type="text" class="sinp" placeholder="在结果中搜索" />
+                <input type="button" class="sbtn" value="搜索" />
+            </div>
+            <div class="page_bar">
+                <span id="totalRecords">共</span>
+                <a href="javascript:void(0);" class="pbtn" id="prev"><i></i></a>
+                <span id="page"><b></b>/<span></span></span>
+                <a href="javascript:void(0);" class="pbtn" id="next"><i class="next"></i></a>
+            </div>
+        </div>
+        <div class="downtable">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <thead>
+                <tr>
+                    <th width="16%">课件类型</th>
+                    <th>课件/书名</th>
+                    <th width="13%">作者/推荐人</th>
+                    <th width="13%">上传日期</th>
+                    <th width="12%">消耗积分</th>
+                    <th width="11%">下载量</th>
+                    <th width="12%">下载</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 私聊窗口 -->
+<div class="pletter_win clearfix dn">
+    <div class="mult_dialog">
+        <!-- 私聊用户列表 -->
+    </div>
+    <!-- 私聊内容区 -->
+</div>
+<div id="wh_content_tmp">
+    <div class="cont dn">
+        <div class="tit wh_drag"><label class="wh_nk"></label><label class="tit">【<strong></strong>】</label></div>
+        <div class="chat_content">
+            <div class="wh-content" style="height:269px">
+                <div class="dialoglist clearfix"></div>
+            </div>
+        </div>
+        <div class="input_box">
+            <div class="toolbar">
+                <a href="javascript:void(0);" class="tbtn facebtn" title="添加表情"></a>
+                <a href="javascript:void(0);" class="tbtn imgbtn" title="发送图片"></a>
+                <input type="file" class="imginp" style="display: none;">
+            </div>
+            <div class="input_area">
+                <div class="adiv">
+                    <!--<textarea class="ctextarea" placeholder="按回车发送私信"></textarea>-->
+                    <div contenteditable="true" class="ctextarea"></div>
+                </div>
+                <a href="javascript:void(0);" class="sendbtn"><i></i><span>发送</span></a>
+            </div>
+        </div>
+        <a class="pop_small" href="javascript:void(0);" title="最小化"><i>最小化</i></a>
+        <a class="pop_close" href="javascript:void(0);" title="关闭"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 用户晒单 -->
+<div class="popup_box pop_addsd dn">
+    <div class="cont">
+        <div class="pop_tit">我要晒单</div>
+        <div class="expert_box">
+            <div class="set_box b2 clearfix">
+                <div class="set_name">标&nbsp;&nbsp;&nbsp;题 <em class="require">*</em></div>
+                <input type="text" id="title" name="title" class="set_inp" placeholder="如6月21日，黄金空仓1手，盈利500美元" >
+            </div>
+            <div class="set_box b2 clearfix">
+                <div class="set_name s1">晒单人 <em class="require">*</em></div>
+                <input type="text" id="userName" name="userName" class="set_inp" placeholder="您在直播间的昵称" >
+            </div>
+            <div class="set_box b2 clearfix">
+                <div class="set_name s1">图&nbsp;&nbsp;&nbsp;片 <em class="require">*</em></div>
+                <input type="text" name="tradeImg" id="tradeImg" value="xxxxx.jpg" class="set_inp" disabled="disabled">
+                <div class="sdpic_upload">
+                    <span class="sdpic_btn">+ 上传图片</span>
+                    <form method="post" enctype='multipart/form-data' id="showTradeForm" name="showTradeForm">
+                        <input class="sdpic_file" name="flTradeImg" id="flTradeImg" type="file" />
+                        <input type="hidden" name="fileDir" value="pic/trade/chat/front" />
+                    </form>
+                </div>
+            </div>
+            <div class="set_box b2 clearfix">
+                <textarea placeholder="给大家简单说两句交易心得~~" id="remark" name="remark" class="set_textaera"></textarea>
+            </div>
+            <div class="btnbar"><input type="button" class="set_submit" id="tradeSubmit" value="提交"></div>
+            <div class="error dn" id="trade_error"><i></i>输入内容有误，请重新输入！</div>
+        </div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 我的晒单 -->
+<div class="popup_box mbox pop_mysd dn">
+    <div class="cont">
+        <div class="personal_info">
+            <div class="headimg"><img width="120" height="120" src="<%if(userSession.isLogin){%><%= userSession.avatar || '/pm/theme1/img/user.png' %><%}%>" alt=""></div>
+            <h4 class="username"><%if(userSession.isLogin){%><%= userSession.nickname||"匿名_xxx" %><%}%></h4>
+            <div class="infobar">
+                <div class="item">
+                    <span class="in_name">等级：</span>
+                    <b class="in_b" id="sdLevel"></b>
+                    <div class="levelbar">
+                        <div class="progress"><b style="width:0%"></b></div>
+                        <span class="le_detail">0/0</span>
+                    </div>
+                </div>
+                <div class="item">
+                    <span class="in_name">积分：</span>
+                    <b class="in_b" id="sdPoints"></b>
+                </div>
+                <div class="item">
+                    <span class="in_name">身份：</span>
+                    <b class="in_b">
+                        <%if(userSession.isLogin){%>
+                        <%if('vip'==userSession.clientGroup){%>
+                        VIP
+                        <%} else if('active'==userSession.clientGroup) {%>
+                        真实[A]
+                        <%} else if('notActive'==userSession.clientGroup) {%>
+                        真实[N]
+                        <%} else if('simulate'==userSession.clientGroup) {%>
+                        模拟
+                        <%} else if('register'==userSession.clientGroup) {%>
+                        注册
+                        <%} else {%>
+                        游客
+                        <%}%>
+                        <%}%>
+                    </b>
+                </div>
+            </div>
+        </div>
+        <div class="sd_show sd_list">
+            <div class="scrollbox">
+                <ul class="sd_ul">
+                    <!--li>
+                        <div class="cont">
+                            <div class="sd_summary">不要太固执了，跟着趋势走，一单有好的心态灰常重要</div>
+                            <div class="sd_tit"><span class="sdtime">晒单时间: 06/14 13:26</span></div>
+                            <a href="../static/img/sd_pic.jpg" data-rel="sd-img" data-title="持仓中" class="lightbox"><img src="../static/img/sd_thumb.jpg" alt="晒单" class="mCS_img_loaded"><i class="i-zoom"></i></a>
+                            <p class="sd_p">输赢很平常，只要不放弃，希望还是有的。</p>
+                            <div class="sd_bot">
+                                <span class="from">来自<b>GOLDWAY</b></span>
+                                <a href="javascript:void(0)" class="support"><i></i><span>(65528)</span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="r">
+                        <div class="cont">
+                            <div class="sd_summary">不要太固执了，跟着趋势走，一单有好的心态灰常重要</div>
+                            <div class="sd_tit"><span class="sdtime">晒单时间: 06/14 13:26</span></div>
+                            <a href="../static/img/sd_pic.jpg" data-rel="sd-img" data-title="持仓中" class="lightbox"><img src="../static/img/sd_thumb.jpg" alt="晒单" class="mCS_img_loaded"><i class="i-zoom"></i></a>
+                            <p class="sd_p">输赢很平常，只要不放弃，希望还是有的。</p>
+                            <div class="sd_bot">
+                                <span class="from">来自<b>GOLDWAY</b></span>
+                                <a href="javascript:void(0)" class="support supported" title="已点赞"><i></i><span>(65528)</span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="cont">
+                            <div class="sd_summary">不要太固执了，跟着趋势走，一单有好的心态灰常重要</div>
+                            <div class="sd_tit"><span class="sdtime">晒单时间: 06/14 13:26</span></div>
+                            <a href="../static/img/sd_pic.jpg" data-rel="sd-img" data-title="持仓中" class="lightbox"><img src="../static/img/sd_thumb.jpg" alt="晒单" class="mCS_img_loaded"><i class="i-zoom"></i></a>
+                            <p class="sd_p">输赢很平常，只要不放弃，希望还是有的。</p>
+                            <div class="sd_bot">
+                                <span class="from">来自<b>GOLDWAY</b></span>
+                                <a href="javascript:void(0)" class="support"><i></i><span>(65528)</span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="r">
+                        <div class="cont">
+                            <div class="sd_summary">不要太固执了，跟着趋势走，一单有好的心态灰常重要</div>
+                            <div class="sd_tit"><span class="sdtime">晒单时间: 06/14 13:26</span></div>
+                            <a href="../static/img/sd_pic.jpg" data-rel="sd-img" data-title="持仓中" class="lightbox"><img src="../static/img/sd_thumb.jpg" alt="晒单" class="mCS_img_loaded"><i class="i-zoom"></i></a>
+                            <p class="sd_p">输赢很平常，只要不放弃，希望还是有的。</p>
+                            <div class="sd_bot">
+                                <span class="from">来自<b>GOLDWAY</b></span>
+                                <a href="javascript:void(0)" class="support"><i></i><span>(65528)</span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="cont">
+                            <div class="sd_summary">不要太固执了，跟着趋势走，一单有好的心态灰常重要</div>
+                            <div class="sd_tit"><span class="sdtime">晒单时间: 06/14 13:26</span></div>
+                            <a href="../static/img/sd_pic.jpg" data-rel="sd-img" data-title="持仓中" class="lightbox"><img src="../static/img/sd_thumb.jpg" alt="晒单" class="mCS_img_loaded"><i class="i-zoom"></i></a>
+                            <p class="sd_p">输赢很平常，只要不放弃，希望还是有的。</p>
+                            <div class="sd_bot">
+                                <span class="from">来自<b>GOLDWAY</b></span>
+                                <a href="javascript:void(0)" class="support"><i></i><span>(65528)</span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="r">
+                        <div class="cont">
+                            <div class="sd_summary">不要太固执了，跟着趋势走，一单有好的心态灰常重要</div>
+                            <div class="sd_tit"><span class="sdtime">晒单时间: 06/14 13:26</span></div>
+                            <a href="../static/img/sd_pic.jpg" data-rel="sd-img" data-title="持仓中" class="lightbox"><img src="../static/img/sd_thumb.jpg" alt="晒单" class="mCS_img_loaded"><i class="i-zoom"></i></a>
+                            <p class="sd_p">输赢很平常，只要不放弃，希望还是有的。</p>
+                            <div class="sd_bot">
+                                <span class="from">来自<b>GOLDWAY</b></span>
+                                <a href="javascript:void(0)" class="support"><i></i><span>(65528)</span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="cont">
+                            <div class="sd_summary">不要太固执了，跟着趋势走，一单有好的心态灰常重要</div>
+                            <div class="sd_tit"><span class="sdtime">晒单时间: 06/14 13:26</span></div>
+                            <a href="../static/img/sd_pic.jpg" data-rel="sd-img" data-title="持仓中" class="lightbox"><img src="../static/img/sd_thumb.jpg" alt="晒单" class="mCS_img_loaded"><i class="i-zoom"></i></a>
+                            <p class="sd_p">输赢很平常，只要不放弃，希望还是有的。</p>
+                            <div class="sd_bot">
+                                <span class="from">来自<b>GOLDWAY</b></span>
+                                <a href="javascript:void(0)" class="support"><i></i><span>(65528)</span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="r">
+                        <div class="cont">
+                            <div class="sd_summary">不要太固执了，跟着趋势走，一单有好的心态灰常重要</div>
+                            <div class="sd_tit"><span class="sdtime">晒单时间: 06/14 13:26</span></div>
+                            <a href="../static/img/sd_pic.jpg" data-rel="sd-img" data-title="持仓中" class="lightbox"><img src="../static/img/sd_thumb.jpg" alt="晒单" class="mCS_img_loaded"><i class="i-zoom"></i></a>
+                            <p class="sd_p">输赢很平常，只要不放弃，希望还是有的。</p>
+                            <div class="sd_bot">
+                                <span class="from">来自<b>GOLDWAY</b></span>
+                                <a href="javascript:void(0)" class="support"><i></i><span>(65528)</span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="cont">
+                            <div class="sd_summary">不要太固执了，跟着趋势走，一单有好的心态灰常重要</div>
+                            <div class="sd_tit"><span class="sdtime">晒单时间: 06/14 13:26</span></div>
+                            <a href="../static/img/sd_pic.jpg" data-rel="sd-img" data-title="持仓中" class="lightbox"><img src="../static/img/sd_thumb.jpg" alt="晒单" class="mCS_img_loaded"><i class="i-zoom"></i></a>
+                            <p class="sd_p">输赢很平常，只要不放弃，希望还是有的。</p>
+                            <div class="sd_bot">
+                                <span class="from">来自<b>GOLDWAY</b></span>
+                                <a href="javascript:void(0)" class="support"><i></i><span>(65528)</span></a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="r">
+                        <div class="cont">
+                            <div class="sd_summary">不要太固执了，跟着趋势走，一单有好的心态灰常重要</div>
+                            <div class="sd_tit"><span class="sdtime">晒单时间: 06/14 13:26</span></div>
+                            <a href="../static/img/sd_pic.jpg" data-rel="sd-img" data-title="持仓中" class="lightbox"><img src="../static/img/sd_thumb.jpg" alt="晒单" class="mCS_img_loaded"><i class="i-zoom"></i></a>
+                            <p class="sd_p">输赢很平常，只要不放弃，希望还是有的。</p>
+                            <div class="sd_bot">
+                                <span class="from">来自<b>GOLDWAY</b></span>
+                                <a href="javascript:void(0)" class="support"><i></i><span>(65528)</span></a>
+                            </div>
+                        </div>
+                    </li-->
+                </ul>
+            </div>
+            <div class="scbox-shadow"></div>
+        </div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 通用提示框 -->
+<div class="popup_box pub_hint dn" id="popMsgBox">
+    <div class="cont" id="popMsgCont">
+        <h4 id="popMsgTit"></h4>
+        <p id="popMsgTxt"></p>
+        <a id="popMsgClo" class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
+
+<!-- 通用自动关闭提示框 -->
+<section class="tipsbox dn">
+    <div class="cont"></div>
+</section>
+
+<!-- 晒单权限弹窗 -->
+<div class="popup_box pop_sd dn" id="sdNoAuthBox">
+    <div class="cont">
+        <div class="sd_stat">
+            <i></i>
+            <h4>持仓晒单仅限已入金的真实客户查看</h4>
+            <p class="sdzl"><span>如需查看，<a class="contactContact" style="color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer"><b>请联系老师助理</b></a></span></p>
+        </div>
+        <a class="pop_close" href="javascript:void(0)"><i>关闭</i></a>
+    </div>
+</div>
