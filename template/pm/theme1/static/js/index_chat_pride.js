@@ -141,7 +141,7 @@ var chatPride = {
                         if (remarkArr.length == 0) {
                             style = ' style="display:none;"';
                         }
-                        var idx = 0;console.log(remarkMap);
+                        var idx = 0;
                         $.each(remarkMap, function (i, row) {
                             var tradeStrategySupportDivHtml = [];
                             $.each(row, function(j, r){

@@ -444,8 +444,12 @@ var chat={
      */
     setDialog:function(userId,nickname,talkStyle,userType,avatar){
         if(talkStyle==1){//私聊,则直接弹私聊框
-            chat.closeWhTip(userId);
-            chat.fillWhBox(null,avatar,userType,userId,nickname,false,false);
+            if($('#roomInfoId').attr('rt')=='vip'){
+                indexJS.connectOnlineCs();
+            }else {
+                chat.closeWhTip(userId);
+                chat.fillWhBox(null, avatar, userType, userId, nickname, false, false);
+            }
         }else{
             if(!indexJS.visitorSpeak && indexJS.checkClientGroup("visitor")){
                 box.openLgBox();

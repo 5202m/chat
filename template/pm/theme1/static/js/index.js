@@ -15,6 +15,7 @@ var indexJS ={
     visitorSpeak:false,//游客是否允许发言
     syllabusData:null,//课程数据
     infoNewCount:0,//快讯新条数
+    onlineCsStatus:0,//在线客服链接状态：0-未连接 1-正在连接 2-已连接
     pointLevel: [{points:0, name:'L1'},
         {points:10000, name:'L2'},
         {points:30000, name:'L3'},
@@ -164,13 +165,17 @@ var indexJS ={
          * 联系助理按钮事件
          */
         $('.mod_infotab .tabnav .myaid').click(function(){
-            if($(".pletter_win .mult_dialog a[utype=3]").length==0) {
-                chat.getCSList();//设置所有客服
-            }
-            if($(this).hasClass('nocs')){
-                box.showTipBox('助理失联中');
+            if($('#roomInfoId').attr('rt')=='vip'){
+                indexJS.connectOnlineCs();
             }else {
-                common.openPopup('.blackbg,.pletter_win');
+                if ($(".pletter_win .mult_dialog a[utype=3]").length == 0) {
+                    chat.getCSList();//设置所有客服
+                }
+                if ($(this).hasClass('nocs')) {
+                    box.showTipBox('助理失联中');
+                } else {
+                    common.openPopup('.blackbg,.pletter_win');
+                }
             }
         });
         common.placeholderSupport(".formcont .in_line input[placeholder]");//ie下输入框显示文字提示
@@ -524,7 +529,29 @@ var indexJS ={
             indexJS.setListScroll(scrollDom);//设置滚动
         });
     },
+    /**
+     * 链接客服系统
+     * */
+    connectOnlineCs : function(){
+        switch (indexJS.onlineCsStatus){
+            case 0:
+                indexJS.onlineCsStatus = 1;
+                var csScriptUrl = 'http://jms.phgsa.cn/chat.php?pid=PM01&tln=' + indexJS.userInfo.userId + '&tnn=' + indexJS.userInfo.nickname + '&tul=' + indexJS.userInfo.clientGroup + '&tp=' + $("#myMobilePhone").attr('t')+ '&ta=' + $("#myMobilePhone").attr("ta");
+                LazyLoad.js(csScriptUrl, function(){
+                    indexJS.onlineCsStatus = 2;
+                    $("#welive_info").trigger("click");
+                });
+                break;
 
+            case 2:
+                $("#welive_info").trigger("click");
+                break;
+
+            case 1:
+            default :
+                break;
+        }
+    },
     /**
      * 根据内容域模块名返回内容模板
      * @param region 内容域模块名

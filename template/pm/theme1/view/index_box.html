@@ -222,7 +222,7 @@
                         <div class="item">
                             <span class="iname">手机号</span>
                             <div class="inp_div">
-                                <input type="text" id="myMobilePhone" value="<%if(userSession.isLogin){%><%= userSession.mobilePhone ? (userSession.mobilePhone.substring(0,3)+'****'+userSession.mobilePhone.substring(8,11)) : '未绑定' %><%}%>" disabled="disabled" />
+                                <input type="text" id="myMobilePhone" t="<%= userSession.mobilePhone%>" value="<%if(userSession.isLogin){%><%= userSession.mobilePhone ? (userSession.mobilePhone.substring(0,3)+'****'+userSession.mobilePhone.substring(8,11)) : '未绑定' %><%}%>" disabled="disabled" />
                             </div>
                             <div class="edit_div">
                                 <!--a href="javascript:void(0);" id="modifyMobilePhone">更换</a>
