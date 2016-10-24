@@ -1505,9 +1505,6 @@ var chat={
      * @param dom
      */
     setWhPushInfo:function(dom,publishTime){
-        if($('#roomInfoId').attr('rt')=='vip'){
-            return false;
-        }
         var uid=dom.attr("uid"),nk=dom.text().replace(/\s（助理）$/, "");
         if($('#wh_msg_'+uid+' div[id='+chat.msgPushObj.whInfo.publishTime+']').length>0){
             return false;
@@ -1570,7 +1567,7 @@ var chat={
      */
     setPushInfo:function(){
         var whInfo = null, whInfos = chat.msgPushObj.whInfos;
-        if(whInfos && whInfos.length > 0) {
+        if(whInfos && whInfos.length > 0 && $('#roomInfoId').attr('rt')!='vip') {
             if($(".pletter_win .mult_dialog a[utype=3]").length==0){
                 //chat.getCSList();
             }
