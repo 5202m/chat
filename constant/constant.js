@@ -65,7 +65,19 @@ var constant={
         dict_chat_group_type: 'chat_group_type'//组类别
     },
     md5Key : "GOLDENWAY",
-    emailKey : 'chat_email'//绑定邮箱加密key
+    emailKey : 'chat_email',//绑定邮箱加密key
+    //积分折扣
+    pointsRate : {
+        studio : {
+            vip:0,
+            active : 0.1,
+            notActive : 0.7,
+            real:0.7,
+            simulate:0.8
+            //register:1,
+            //visitor:1
+        }
+    }
 };
 //导出常量类
 module.exports =constant;

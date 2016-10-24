@@ -11,9 +11,9 @@
  * </p>
  */
 var logger = require('../resources/logConf').getLogger("chatPointsService");
-var Common = require('../util/common');
 var ChatPoints = require('../models/chatPoints.js');
 var ChatPointsConfig = require('../models/chatPointsConfig.js');
+var Constant = require('../constant/constant.js');
 var ErrorMessage = require('../util/errorMessage');
 var ObjectId = require('mongoose').Types.ObjectId;
 
@@ -103,7 +103,7 @@ var chatPointsService = {
 
     /**
      * 添加积分
-     * @param params {{groupType:String, userId:String, item:String, val:Number, isGlobal:Boolean, remark:String, opUser:String, opIp:String}}
+     * @param params {{groupType:String, clientGroup:String, userId:String, item:String, val:Number, isGlobal:Boolean, remark:String, opUser:String, opIp:String}}
      * @param callback
      */
     add : function(params, callback){
@@ -169,7 +169,13 @@ var chatPointsService = {
             "remark" : params.remark,
             "isDeleted" : 0
         };
-        var chkResult = chatPointsService.checkLimit(config, pointsInfo, journal);
+        var rate = 1;
+        if(params.clientGroup
+            && Constant.pointsRate.hasOwnProperty(params.groupType)
+            && Constant.pointsRate[params.groupType].hasOwnProperty(params.clientGroup)){
+            rate = Constant.pointsRate[params.groupType][params.clientGroup];
+        }
+        var chkResult = chatPointsService.checkLimit(config, pointsInfo, journal, rate);
         if(!chkResult){
             journal.before = pointsInfo.points;
             if(params.isGlobal || journal.change > 0){
@@ -200,8 +206,9 @@ var chatPointsService = {
      * @param config
      * @param pointsInfo
      * @param journal
+     * @param rate
      */
-    checkLimit : function(config, pointsInfo, journal){
+    checkLimit : function(config, pointsInfo, journal, rate){
         if(!config){//积分配置不存在
             if(journal.change){
                 if(journal.change + pointsInfo.points > 0){
@@ -215,6 +222,9 @@ var chatPointsService = {
         }
         var result = null;
         var loc_val = journal.change || config.val;
+        if(loc_val < 0){
+            loc_val = Math.round(loc_val * rate);
+        }
         if(loc_val + pointsInfo.points < 0){ //有效积分不足
             result = ErrorMessage.code_3004;
         }else if(!config.limitUnit){ //无上限

@@ -1529,6 +1529,7 @@ router.post('/addPointsInfo', function(req, res){
         return;
     }else{
         params.userId = userInfo.mobilePhone;
+        params.clientGroup = userInfo.clientGroup;
         params.item = common.isBlank(params.item)?'':params.item;
         params.tag = params.tag || "";
         params.isGlobal = false;
