@@ -22,6 +22,7 @@ var chatShowTradeSchema = new Schema({
         userNo : {type:String,index:true},//userNo
         avatar : String,//头像
         userName : String,//分析师姓名
+        telephone : String,//手机号
         wechatCode : String,//分析师微信号
         wechatCodeImg : String,//分析师微信二维码
         winRate : String//分析师胜率

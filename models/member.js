@@ -19,6 +19,11 @@ var mongoose = require('mongoose')
                 _id:String,//组的大类别，区分是微信组、直播间
                 userId:{type:String,index:true},//用户id
                 thirdId:{type:String,index:true},//第三方id（微信openId）
+                email:{type:String,index:true},//邮箱地址
+                weChatId:{type:String,index:true},//微信登录ID
+                weiboId:{type:String,index:true},//微博登陆ID
+                qqId:{type:String,index:true},//QQ登录ID
+                userName:{type:String,index:true},//用户名
                 avatar:String,//头像
                 nickname:String,//昵称
                 accountNo:{type:String,index:true}, //账号

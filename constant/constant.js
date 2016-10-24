@@ -64,7 +64,8 @@ var constant={
     chatGrout:{
         dict_chat_group_type: 'chat_group_type'//组类别
     },
-    md5Key : "GOLDENWAY"
+    md5Key : "GOLDENWAY",
+    emailKey : 'chat_email'//绑定邮箱加密key
 };
 //导出常量类
 module.exports =constant;

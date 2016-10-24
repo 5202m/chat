@@ -16,6 +16,7 @@ var mongoose = require('mongoose')
         remark:String ,
         valid: {type:Number, default:1}, //是否删除：0 、删除；1、正常
         status: {type:Number, default:0},
+        tag : String,  //标签
         role : {
             _id :String,
             roleNo : String,
