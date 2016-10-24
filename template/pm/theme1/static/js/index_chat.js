@@ -1505,6 +1505,9 @@ var chat={
      * @param dom
      */
     setWhPushInfo:function(dom,publishTime){
+        if($('#roomInfoId').attr('rt')=='vip'){
+            return false;
+        }
         var uid=dom.attr("uid"),nk=dom.text().replace(/\s（助理）$/, "");
         if($('#wh_msg_'+uid+' div[id='+chat.msgPushObj.whInfo.publishTime+']').length>0){
             return false;
@@ -1514,6 +1517,7 @@ var chat={
         chat.msgPushObj.whInfo = {};//清空后台推送的消息
         window.clearTimeout(chat.pushInfoTimeOutId);
         return true;
+
     },
     /**
      * 聊天记录数据转换
