@@ -463,7 +463,81 @@ var common = {
      */
     arraySort:function (key,desc) {
         return function(a,b){return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);}
-    }
+    },
+    /**
+     * 是否邮箱
+     * @param val
+     * @returns {boolean|*}
+     */
+    isEmail: function(val){
+        return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(val);
+    },
+    /*
+     *   功能:实现VBScript的DateAdd功能.
+     *   参数:interval,字符串表达式，表示要添加的时间间隔.
+     *   参数:number,数值表达式，表示要添加的时间间隔的个数.
+     *   参数:date,时间对象.
+     *   返回:新的时间对象.
+     *   var   now   =   new   Date();
+     *   var   newDate   =   DateAdd( "d ",5,now);
+     *---------------   DateAdd(interval,number,date)   -----------------
+     */
+    DateAdd: function(interval,number,date){
+        switch(interval){
+            case "y"://年
+                date.setFullYear(date.getFullYear() + number);
+                break;
+            case "q"://季度
+                date.setMonth(date.getMonth() + number * 3);
+                break;
+            case "M"://月
+                date.setMonth(date.getMonth() + number);
+                break;
+            case "w"://周
+                date.setDate(date.getDate() + number * 7);
+                break;
+            case "d"://天
+                date.setDate(date.getDate() + number);
+                break;
+            case "h"://小时
+                date.setHours(date.getHours() + number);
+                break;
+            case "m"://分钟
+                date.setMinutes(date.getMinutes() + number);
+                break;
+            case "s"://秒
+                date.setSeconds(date.getSeconds() + number);
+                break;
+            default ://默认增加天
+                date.setDate(date.getDate() + number);
+                break;
+        }
+        return date;
+    },
+
+    /**
+     * 获取两个日期之间相差的天数
+     * @param startDate
+     * @param endDate
+     * @returns {number}
+     */
+    getDateDiff:function(startDate, endDate) {
+        var startTime = new Date(startDate).getTime();
+        var endTime = new Date(endDate).getTime();
+        var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+        dates = Math.floor(dates);
+        return  dates;
+    },
+    /**
+     * 判断是否数字
+     * @param obj
+     * @returns {boolean}
+     */
+    isNumber:function(obj) {
+        return typeof obj === 'number' && !isNaN(obj)
+    },
+/**组类型**/
+    groupType : {active:'真实[A]',notActive:'真实[N]',simulate:'模拟',register:'注册','visitor':'游客'}
 };
 //导出类
 module.exports = common;

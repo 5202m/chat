@@ -111,6 +111,7 @@ var showTradeService = {
                 userNo : params.userNo,//userNo
                 avatar : params.avatar,//头像
                 userName : params.userName,//分析师姓名
+                telephone : params.telePhone,//手机号
                 wechatCode : '',//分析师微信号
                 wechatCodeImg : '',//分析师微信二维码
                 winRate : ''//分析师胜率
@@ -164,6 +165,22 @@ var showTradeService = {
                         callback({isOK: true, msg: ''});
                     }
                 });
+            }
+        });
+    },
+    /**
+     * 根据晒单id查询晒单数据
+     * @param tradeIds
+     * @param callback
+     */
+    getShowTradeByIds:function(tradeIds, callback){
+        var searchObj = {_id:{$in:tradeIds}};
+        chatShowTrade.find(searchObj,function(err, row){
+            if(err){
+                logger.error('查询数据失败！>>getShowTradeByIds:',err);
+                callback(null);
+            }else{
+                callback(row);
             }
         });
     }

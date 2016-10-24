@@ -122,6 +122,37 @@ var syllabusService = {
                 }
                 outCallback(result);
             });
+    },
+
+    /**
+     * 查询聊天室课程安排历史记录
+     * @param groupType
+     * @param groupId
+     * @param date
+     * @param callback
+     */
+    getSyllabusHis : function(groupType, groupId, date, callback){
+        groupId = groupId || "";
+        var timezoneOffset = new Date().getTimezoneOffset() * 60000;
+        if(!date){
+            date = new Date().getTime();
+            date = new Date(date - (date % 86400000) - 86400000 + timezoneOffset);
+        }else{
+            date = new Date(date);
+            date = new Date(date - (date % 86400000) + timezoneOffset);
+        }
+        chatSyllabusHis.find({
+            groupType : groupType,
+            groupId : groupId,
+            date : date
+        }).sort({startTime:1}).exec("find", function(err, rows){
+            if(err){
+                logger.error("查询聊天室课程安排历史记录失败!", err);
+                callback(null);
+            }else{
+                callback(rows);
+            }
+        });
     }
 };
 //导出服务类

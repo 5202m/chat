@@ -9,6 +9,10 @@ var common = {
      */
     daysCN:{"0":"星期天","1":"星期一","2":"星期二","3":"星期三","4":"星期四","5":"星期五","6":"星期六"},
     /**
+     * 组类型
+     */
+    groupType : {vip:'VIP用户',active:'真实[A]',notActive:'真实[N]',simulate:'模拟',register:'注册','visitor':'游客'},
+    /**
      * 功能：删除数组中某个下标的元素
      */
     remove:function (arr,index) {
@@ -780,10 +784,140 @@ var common = {
      * @returns {string}
      */
     keysrt:function (key,desc) {
-    return function(a,b){
+       return function(a,b){
         return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key]);
+       };
+    },
+    /**
+     * 新闻滚动
+     * @param intervalId 定时器ID
+     * @param speed 速度
+     * @param domPanel 父容器
+     * @param domContainerId 内容容器ID
+     * @param domChildId1 内容1容器ID
+     * @param domChildId2 内容2容器ID
+     * @param isShow 是否显示
+     */
+    newsMarquee: function(intervalId, speed, domPanel, domContainerId, domChildId1, domChildId2, isShow) {
+        if(intervalId){
+            clearInterval(intervalId);
+            intervalId=null;
+        }
+        //var speed=30;
+        var newsPanel = (typeof domPanel=='object')?domPanel:$(domPanel);//$(".mod_scrollnews");
+        var tab = (typeof domContainerId=='object')?domContainerId[0]:$(domContainerId)[0];//$("#scrollnews_demo")[0];
+        var tab1 = (typeof domChildId1=='object')?domChildId1:$(domChildId1);//$("#newscont1");
+        var tab2 = (typeof domChildId2=='object')?domChildId2:$(domChildId2);//$("#newscont2");
+        if(isShow && tab1.children().size() > 0){
+            newsPanel.show();
+        }else{
+            newsPanel.hide();
+        }
+        tab2.html("");
+        $(tab).unbind("mouseover mouseout");
+        if(isShow){
+            tab1.css("width", "auto");
+            tab2.css("width", "auto");
+            var widthTmp = newsPanel.width() - 27;
+            if(tab1.width() < widthTmp){
+                tab1.css("width", widthTmp);
+                tab2.css("width", widthTmp);
+            }
+            //需要滚动
+            tab2.html(tab1.html());
+            /**滚动*/
+            var marqueeFunc = function(){
+                if(tab1.width()-tab.scrollLeft<=0) {
+                    tab.scrollLeft -= tab1.width();
+                 }else{
+                    tab.scrollLeft++;
+                 }
+            };
+            intervalId=window.setInterval(marqueeFunc,speed);
+            $(tab).bind("mouseover", function() {
+                window.clearInterval(intervalId);
+                intervalId=null;
+            }).bind("mouseout", function() {
+                if(intervalId){
+                    window.clearInterval(intervalId);
+                    intervalId=null;
+                }
+                intervalId=window.setInterval(marqueeFunc,speed);
+            });
+        }
+    },
+    /**
+     * placeholder IE支持
+     */
+    placeholderSupport : function(dom){
+        dom=(typeof dom=='object')?dom:$(dom);
+        var supportPlaceholder = 'placeholder' in document.createElement('input');
+        if(!supportPlaceholder){
+            dom.each(function(){
+                var loc_placeholder = $(this).attr("placeholder");
+                if(!!loc_placeholder){
+                    var loc_this = $(this);
+                    var loc_span = $('<span class="placeholder">' + loc_placeholder + '</span>');
+                    loc_this.before(loc_span);
+                    loc_span.bind("click", function(){
+                        $(this).hide();
+                        $(this).next().focus();
+                    });
+                    loc_this.bind("focus", function(){
+                        $(this).prev().hide();
+                    });
+                    loc_this.bind("blur", function(){
+                        if($(this).val() === "")
+                        {
+                            $(this).prev().show();
+                        }
+                    });
+                    if(loc_this[0].defaultValue!=''){
+                        loc_this.prev().hide();
+                    }
+                    $(this).attr("placeholder", "");
+                }
+            });
+        }
+    },
+    /* 打开弹窗 */
+    openPopup: function(dom) {
+        dom=(typeof dom=='object')?dom:$(dom);
+        dom.show();
+    },
+    /**
+     * 是否邮箱
+     * @param val
+     * @returns {boolean|*}
+     */
+    isEmail: function(val){
+        return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(val);
+    },
+    /**
+     * 获取两个日期之间相差的天数
+     * @param startDate
+     * @param endDate
+     * @returns {number}
+     */
+    getDateDiff:function(startDate, endDate) {
+        var startTime = new Date(startDate).getTime();
+        var endTime = new Date(endDate).getTime();
+        var dates = Math.abs((startTime - endTime))/(1000*60*60*24);
+        return  dates;
+    },
+    /**
+     * 获取两个日期之间相差的分钟
+     * @param startDate
+     * @param endDate
+     * @returns {number}
+     */
+    getMinuteDiff:function(startDate, endDate) {
+        var startTime = new Date(startDate).getTime();
+        var endTime = new Date(endDate).getTime();
+        var dates = Math.abs((startTime - endTime))/(1000*60);
+        dates = Math.floor(dates);
+        return  dates;
     }
-}
 };
 /**
  * 打开客户界面

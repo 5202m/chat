@@ -115,7 +115,20 @@ router.post('/noticeArticle', function(req, res) {
     }
     res.json(result);
 });
-
+/**
+ * 更新晒单状态推送消息
+ */
+router.post('/noticeShowTrade', function(req, res){
+    var tradeIds = req.body['tradeIds'];
+    var result={isOK:false,error:null };
+    if(common.isBlank(tradeIds)){
+        result.error=errorMessage.code_1000;
+    }else{
+        chatService.noticeShowTrade(tradeIds);
+        result.isOK=true;
+    }
+    res.json(result);
+});
 /**
  * 客户晒单推送信息
  */

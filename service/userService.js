@@ -11,6 +11,7 @@ var common = require('../util/common');//引入common类
 var request = require('request');
 var visitorService=require('../service/visitorService');
 var logger=require('../resources/logConf').getLogger('userService');//引入log4js
+var chatPointsService=require('../service/chatPointsService');
 /**
  * 定义用户服务类
  * @type {{getMemberList: Function, updateMemberInfo: Function}}
@@ -615,13 +616,19 @@ var userService = {
      * @param groupType
      * @param callback
      */
-    modifyAvatar:function(mobilePhone,groupType,avatar,callback){
-        member.update({valid:1,'mobilePhone':mobilePhone,'loginPlatform.chatUserGroup._id':groupType},{$set:{ "loginPlatform.chatUserGroup.$.avatar": avatar}},function(err,row){
+    modifyAvatar:function(params,callback){
+        member.update({valid:1,'mobilePhone':params.mobilePhone,'loginPlatform.chatUserGroup._id':params.groupType},{$set:{ "loginPlatform.chatUserGroup.$.avatar": params.avatar}},function(err,row){
             if(err){
                 logger.error("modifyAvatar->update fail!"+err);
                 callback({isOK:false,msg:"修改失败，请联系客服！"});
             }else{
                 callback({isOK:true});
+                if(common.isValid(params.item)) {
+                    var pointsParams = {change: 'avatar',groupType: params.groupType,userId: params.mobilePhone, item: params.item, val: 0,isGlobal: false,remark: '',opUser: params.userId,opIp: params.ip};
+                    userService.pointsChange(pointsParams,function(result){
+
+                    });
+                }
             }
         });
     },
@@ -661,6 +668,145 @@ var userService = {
                 callback(null);
             }else{
                 callback(row);
+            }
+        });
+    },
+    /**
+     * 修改用户名
+     * @param mobilePhone
+     * @param groupType
+     * @param callback
+     */
+    modifyUserName:function(userInfo,params,callback){
+        member.find({mobilePhone: {$ne : userInfo.mobilePhone},valid: 1,"loginPlatform.chatUserGroup" : {$elemMatch : {_id :userInfo.groupType,userName :params.userName,userType : 0}}}).count(function (err,count){
+            if(count>0){
+                callback({isOK:false,msg:"该用户名已被占用，请使用其他用户名！"});
+            }else{
+                member.update({valid:1,'mobilePhone':userInfo.mobilePhone,'loginPlatform.chatUserGroup._id':userInfo.groupType},{$set:{ "loginPlatform.chatUserGroup.$.userName": params.userName}},function(err,row){
+                    if(err){
+                        logger.error("modifyUserName->update fail!"+err);
+                        callback({isOK:false,msg:"修改失败，请联系客服！"});
+                    }else{
+                        callback({isOK:true});
+                        if(common.isValid(params.item)) {
+                            var pointsParams = {change: 'username',groupType: userInfo.groupType,userId: userInfo.mobilePhone, item: params.item, val: 0,isGlobal: false,remark: '',opUser: userInfo.userId,opIp: params.ip};
+                            userService.pointsChange(pointsParams,function(result){
+
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    },
+    /**
+     * 修改邮箱
+     * @param mobilePhone
+     * @param groupType
+     * @param callback
+     */
+    modifyEmail:function(params,callback){
+        member.find({valid: 1,"loginPlatform.chatUserGroup" : {$elemMatch : {_id :params.groupType,email :params.email,userType : 0}}}).count(function (err,count){
+            if(count>0){
+                callback({isOK:false,msg:"该邮箱地址已存在，请使用其他邮箱！"});
+            }else{
+                member.findOne({valid: 1,"loginPlatform.chatUserGroup" : {$elemMatch : {_id :params.groupType, userId :params.userId, userType : 0}}},'mobilePhone loginPlatform.chatUserGroup.$',function(err, row){
+                    if(err){
+                        logger.error("modifyEmail->update fail!"+err);
+                        callback({isOK:false,msg:"修改失败，请联系客服！"});
+                    }else{
+                        member.update({valid:1,'mobilePhone':row.mobilePhone,'loginPlatform.chatUserGroup._id':params.groupType},{$set:{ "loginPlatform.chatUserGroup.$.email": params.email}},function(err,row1){
+                            if(err){
+                                logger.error("modifyEmail->update fail!"+err);
+                                callback({isOK:false,msg:"修改失败，请联系客服！"});
+                            }else{
+                                callback({isOK:true});
+                                if(common.isValid(params.item)) {
+                                    var pointsParams = {change: 'email',groupType: params.groupType,userId: row.mobilePhone, item: params.item, val: 0,isGlobal: false,remark: '',opUser: params.userId,opIp: params.ip};
+                                    userService.pointsChange(pointsParams,function(result){
+
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    },
+    /**
+     * 修改密码
+     * @param mobilePhone
+     * @param groupType
+     * @param callback
+     */
+    modifyPwd:function(userInfo,params,callback){
+        member.findOne({valid:1,'mobilePhone':userInfo.mobilePhone,'loginPlatform.chatUserGroup._id':userInfo.groupType}, function(err, row){
+            if(err && !row){
+                logger.error("modifyPwd->update fail!"+err);
+                callback({isOK:false,msg:"修改失败，请联系客服！"});
+            } else if(row && common.checkArrExist(row.loginPlatform.chatUserGroup)) {
+                var chatUserGroup = row.loginPlatform.chatUserGroup.id(userInfo.groupType);
+                var pwd = common.getMD5(constant.pwdKey + params.password);
+                if (common.isValid(chatUserGroup.pwd) && chatUserGroup.pwd != pwd) {
+                    callback({isOK: false, msg: "输入的原始密码错误！"});
+                } else {
+                    chatUserGroup.pwd = common.getMD5(constant.pwdKey + params.newPwd);
+                    row.save(function(err1, rowTmp){
+                        if (err1) {
+                            logger.error("modifyPwd->update fail!" + err1);
+                            callback({isOK: false, msg: "修改失败，请联系客服！"});
+                        } else {
+                            callback({isOK: true});
+                            if (common.isValid(params.item)) {
+                                var pointsParams = {
+                                    change: 'pwd',
+                                    groupType: userInfo.groupType,
+                                    userId: userInfo.mobilePhone,
+                                    item: params.item,
+                                    val: 0,
+                                    isGlobal: false,
+                                    remark: '',
+                                    opUser: userInfo.userId,
+                                    opIp: params.ip
+                                };
+                                userService.pointsChange(pointsParams, function (result) {
+
+                                });
+                            }
+                        }
+                    });
+                }
+            } else {
+                callback({isOK: false, msg: "修改失败，请联系客服！"});
+            }
+        });
+    },
+    /**
+     * 完善资料积分变化
+     * @param mobilePhone
+     * @param groupType
+     * @param callback
+     */
+    pointsChange:function(params, callback){
+        var isChange = false;
+        member.findOne({mobilePhone: {$ne : params.mobilePhone},valid: 1,"loginPlatform.chatUserGroup" : {$elemMatch : {_id :params.groupType}}}, "loginPlatform.chatUserGroup.$", function(err, result){
+            if(!err && result){
+                if(params.change=='username' && common.isBlank(result.userName)){
+                    isChange = true;
+                }else if(params.change=='email' && common.isBlank(result.email)){
+                    isChange = true;
+                }else if(params.change=='pwd' && common.isBlank(result.pwd)){
+                    isChange = true;
+                }else if(params.change=='avatar' && common.isBlank(result.avatar)){
+                    isChange = true;
+                }
+                if(isChange){
+                    var pointsParam = {groupType:params.groupType, userId:params.userId, item:params.item, val:params.val, isGlobal:false, remark:params.remark, opUser:params.opUser, opIp:params.ip};
+                    chatPointsService.add(pointsParam, function(err, res){
+                        callback(res);
+                    });
+                }
             }
         });
     }

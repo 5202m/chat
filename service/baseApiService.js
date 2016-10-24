@@ -266,6 +266,20 @@ var baseApiService = {
                 }
             }
         });
+    },
+    /**
+     * 获取未平仓品种比率
+     * @param callback
+     */
+    getSymbolOpenPositionRatios:function(callback){
+        request(config.goldApiUrl+"/goldadmin/findSymbolOpenPositionRatios",function(err, response, data){
+            if (!err && response.statusCode == 200) {
+                callback(data);
+            }else{
+                logger.error("getSymbolOpenPositionRatios>>>error:"+err);
+                callback(null);
+            }
+        });
     }
 };
 

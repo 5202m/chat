@@ -12,6 +12,11 @@ var errorMessage = require('../util/errorMessage');//引入errorMessage类
 var logger=require('../resources/logConf').getLogger('studioService');//引入log4js
 var userService = require('../service/userService');//引入userService
 var syllabusService = require('../service/syllabusService');//引入syllabusService
+var chatPointsService = require('../service/chatPointsService');//引入chatPointsService
+var boUser = require('../models/boUser');//引入boUser数据模型
+var chatShowTrade = require('../models/chatShowTrade');//引入chatShowTrade数据模型
+var baseApiService = require('../service/baseApiService');//引入baseApiService
+var chatPraiseService = require('../service/chatPraiseService');//引入chatPraiseService
 /**
  * 定义直播服务类
  * @type {{}}
@@ -82,7 +87,7 @@ var studioService = {
      * @param callback
      */
     getRoomList:function(groupType,callback){
-        chatGroup.find({valid:1,status:1,groupType:groupType}).select({clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1,defTemplate:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
+        chatGroup.find({valid:1,status:1,groupType:groupType}).select({clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1,defTemplate:1,roomType:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
             if(err){
                 logger.error("getStudioList fail:"+err);
             }
@@ -135,8 +140,11 @@ var studioService = {
     /**
      * 检查用户组权限
      */
-    checkGroupAuth:function(groupId,clientGroup,callback){
-        chatGroup.find({'_id':groupId,valid:1,'clientGroup':common.getSplitMatchReg(clientGroup)}).count(function (err,rowNum) {
+    checkGroupAuth:function(groupId,clientGroup,userId,callback){
+        var searchObj = {'_id':groupId, valid:1,
+                $or : [{'clientGroup':common.getSplitMatchReg(clientGroup), roomType : {$ne : "train"}},
+                    {'clientGroup':common.getSplitMatchReg(clientGroup), roomType : "train", "traninClient" : {$elemMatch : {isAuth : 1, clientId : userId}}}]};
+        chatGroup.find(searchObj).count(function (err,rowNum) {
             if(err){
                 logger.warn("checkGroupAuth->not auth:"+err);
             }
@@ -159,9 +167,6 @@ var studioService = {
      */
      studioRegister:function(userInfo,clientGroup,callback){
         var result={isOK:false,error:errorMessage.code_10};
-        if(userInfo.pwd){
-        	userInfo.pwd = common.getMD5(constant.pwdKey+userInfo.pwd)
-        }
         if(userInfo.nickname){
             //判断昵称唯一
             studioService.checkNickName(userInfo, function(err, isValid){
@@ -207,6 +212,12 @@ var studioService = {
             studioService.setClientInfo(row,userInfo,function(resultTmp){
                 callback(resultTmp);
             });
+            if(common.isValid(userInfo.item)) {
+                var pointsParams = {groupType: userInfo.groupType,userId: userInfo.mobilePhone, item: userInfo.item, val: 0,isGlobal: false,remark: '',opUser: userInfo.userId,opIp: userInfo.ip};
+                chatPointsService.add(pointsParams,function(result){
+
+                });
+            }
         });
     },
     /**
@@ -423,13 +434,12 @@ var studioService = {
                 };
                 break;
             case 4: //手机号+密码登录
+                var pwd = common.getMD5(constant.pwdKey+userInfo.password);
                 searchObj={
-                    mobilePhone : userInfo.mobilePhone,
-                    valid : 1,
-                    "loginPlatform.chatUserGroup" : {$elemMatch : {
-                        "_id" : userInfo.groupType,
-                        "pwd" : common.getMD5(constant.pwdKey+userInfo.password)
-                    }}
+                    $or:[{mobilePhone:userInfo.mobilePhone, 'loginPlatform.chatUserGroup':{$elemMatch : {"_id" : userInfo.groupType,"pwd" : pwd}}},
+                        {'loginPlatform.chatUserGroup': {$elemMatch : {email:userInfo.mobilePhone, _id:userInfo.groupType,"pwd" : pwd}}},
+                        {'loginPlatform.chatUserGroup': {$elemMatch : {userName:userInfo.mobilePhone, _id:userInfo.groupType,"pwd" : pwd}}}] ,
+                    'loginPlatform.chatUserGroup._id':userInfo.groupType, valid : 1
                 };
                 break;
             default :
@@ -444,6 +454,9 @@ var studioService = {
                 result.userInfo={mobilePhone:row.mobilePhone,userId:info.userId,nickname:info.nickname,avatar:info.avatar,groupType:info._id,defTemplate:info.defTemplate};
                 result.userInfo.clientGroup=info.vipUser?constant.clientGroup.vip:info.clientGroup;
                 result.userInfo.accountNo=info.accountNo;
+                result.userInfo.email=common.isBlank(info.email)?'':info.email;
+                result.userInfo.userName=common.isBlank(info.userName)?'':info.userName;
+                result.userInfo.password=common.isBlank(info.pwd)?'':'已设置';
                 if(type == 1 && userInfo.thirdId && !info.thirdId){ //微信直播间登录，绑定openId
                     member.update(searchObj, {
                         $set : {"loginPlatform.chatUserGroup.$.thirdId" : userInfo.thirdId}
@@ -628,7 +641,122 @@ var studioService = {
             }
             callback(isSuccess);
         });
+    },
+    /**
+     * 提取培训班列表
+     * @param callback
+     */
+    getTrainRoomList:function(groupType,callback){
+        chatGroup.find({valid:1,status:1,groupType:groupType, "defaultAnalyst._id":{$ne:null}}).select({clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1,defTemplate:1,defaultAnalyst:1,openDate:1,students:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
+            if(err){
+                logger.error("getStudioList fail:"+err);
+            }
+            callback(rows);
+        });
+    },
+
+
+    /**
+     * 初始直播老师列表
+     * @param params
+     * @param callback
+     */
+    initShowTeacher: function(params,baseApiParams,dataCallback){
+        async.parallel({
+                userInfo: function (callback) {
+                    boUser.findOne({userNo:params.authorId},"userNo userName position avatar introduction winRate",function(err,rows) {
+                        if(err){
+                            logger.error("查询直播老师数据失败!:", err);
+                            callback(err,null);
+                        }else{
+                            if(rows){
+                                var result =  rows.toObject();
+                                chatPraiseService.getPraiseNum(result.userNo,constant.chatPraiseType.user,params.groupType,function(data){
+                                    if(data && data.length > 0){
+                                        result.praiseNum = data[0].praiseNum;
+                                    }else{
+                                        result.praiseNum = 0;
+                                    }
+                                    callback(err,result);
+                                });
+                            }else{
+                                callback(err,null);
+                            }
+                        }
+                    });
+               },
+                analystList: function (callback) {
+                    chatGroup.findById(params.groupId,"authUsers",function(err,row){
+                        if(!row || err){
+                            callback(null);
+                        }else{
+                            boUser.find({userNo:{"$in":row.authUsers},"role.roleNo":common.getPrefixReg("analyst")},"userNo userName avatar position",function(err,rowList){
+                                if(!rowList || err){
+                                    callback(err,null);
+                                }else{
+                                    callback(err,rowList);
+                                }
+                            });
+                        }
+                    });
+                },
+
+                chatShowTrade: function (callback) {
+                    chatShowTrade.find({
+                        "boUser.userNo": params.authorId,
+                        "groupType": params.groupType,
+                        "valid": 1,
+                        "tradeType": 1
+                    }).sort({"showDate": -1}).exec("find", function (err, data) {
+                        if (err) {
+                            logger.error("查询直播老师晒单数据失败!:", err);
+                            callback(err,result);
+                            return;
+                        }
+                        var result = null;
+                        if(data && data.length > 0){
+                            result = {
+                                analyst : data[0].toObject().boUser,
+                                tradeList : []
+                            };
+                            var tradeInfo = null;
+                            for(var i = 0,lenI = data.length; i < lenI;i++){
+                                tradeInfo = data[i].toObject();
+                                delete tradeInfo["boUser"];
+                                result.tradeList.push(tradeInfo);
+                            }
+                            callback(err,result);
+                            return;
+                        }
+                        callback(err,result);
+                    });
+                  },
+                    chatGroupInfo: function (callback) {
+                    chatGroup.find({"groupType":params.groupType,"defaultAnalyst":{$ne:[null],$exists:true},"defaultAnalyst._id":{$ne:""}},"",function(err,rooms){
+                        if(err){
+                            logger.error("获取直播老师房间列表失败!:", err);
+                            callback(err,null);
+                        }else{
+                            callback(err,rooms);
+                        }
+                    });
+              },
+                articleList: function (callback) {
+                baseApiService.getArticleList(baseApiParams,function(err,data){
+                if(err){
+                    logger.error("提取文档接口失败!:", err);
+                    callback(err,null);
+                }else{
+                    callback(err,data);
+                }
+              });
+            }
+        },
+         function (error, result) {
+             dataCallback(result);
+        })
     }
+
 };
 
 //导出服务类

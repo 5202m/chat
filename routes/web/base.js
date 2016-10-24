@@ -20,6 +20,10 @@ var visitorService = require('../../service/visitorService');//引入visitorServ
 var logger=require('../../resources/logConf').getLogger('base');//引入log4js
 var chatPraiseService = require('../../service/chatPraiseService');//引入chatPraiseService
 var showTradeService = require('../../service/showTradeService');//引入chatPraiseService
+var chatSubscribeTypeService = require('../../service/chatSubscribeTypeService');//引入chatSubscribeTypeService
+var chatSubscribeService = require('../../service/chatSubscribeService');//引入chatSubscribeService
+var chatPointsService = require('../../service/chatPointsService');//引入chatPointsService
+var clientTrainService = require('../../service/clientTrainService');//引入chatTeacherService
 /**
  * 从基本路径提取groupType
  * 备注：route的基本路径配置的字符基本是与groupType保持一致的，所以可以直接从baseUrl中提取
@@ -188,6 +192,7 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
                 rowTmp.whisperRoles=row.whisperRoles;
                 rowTmp.disable=(!common.containSplitStr(row.clientGroup,clientGroup));
                 rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.clientGroup,constant.clientGroup.visitor);
+                rowTmp.roomType = row.roomType;
                 var ruleArr=row.chatRules,isPass=true,ruleRow=null;
                 for(var i in ruleArr) {
                 	ruleRow=ruleArr[i];
@@ -528,6 +533,18 @@ router.get('/getSyllabus', function(req, res) {
 });
 
 /**
+ * 提取课程安排（历史记录）
+ */
+router.get('/getSyllabusHis', function(req, res) {
+    var groupType=req.query["groupType"];
+    var groupId=req.query["groupId"];
+    var date=req.query["date"];
+    syllabusService.getSyllabusHis(groupType, groupId, date, function(datas){
+        res.json(datas);
+    });
+});
+
+/**
  * 检查聊天组权限
  */
 router.post('/checkGroupAuth',function(req, res){
@@ -550,7 +567,7 @@ router.post('/checkGroupAuth',function(req, res){
                 res.json(result);
             });
         }else{
-            studioService.checkGroupAuth(groupId,chatUser.clientGroup,function(isOK){
+            studioService.checkGroupAuth(groupId,chatUser.clientGroup,chatUser.userId,function(isOK){
                 if(isOK){
                     req.session.studioUserInfo.toGroup=groupId;
                     result.groupId=groupId;
@@ -667,7 +684,8 @@ router.post('/reg',function(req, res){
         mobilePhone : req.body["mobilePhone"],
         verifyCode : req.body["verifyCode"],
         password : req.body["password"],
-        password1 : req.body["password1"]
+        password1 : req.body["password1"],
+        item: req.body['item']
     };
     if(!userSession || common.isBlank(userSession.groupType)){
         res.json({isOK:false,msg:'注册失败，请刷新后重试！'});
@@ -693,7 +711,7 @@ router.post('/reg',function(req, res){
                 //验证码通过校验
                 studioService.checkClientGroup(params.mobilePhone,null,common.getTempPlatformKey(userSession.groupType),function(clientGroup, accountNo){
                     var thirdId = userSession.thirdId || null;
-                    var userInfo={mobilePhone:params.mobilePhone, ip:common.getClientIp(req), groupType:userSession.groupType, accountNo: accountNo, thirdId:thirdId, pwd:params.password};
+                    var userInfo={mobilePhone:params.mobilePhone, ip:common.getClientIp(req), groupType:userSession.groupType, accountNo: accountNo, thirdId:thirdId, pwd:params.password,item:params.item,userId:userSession.userId};
                     studioService.studioRegister(userInfo,clientGroup,function(result){
                         if(result.isOK){
                             req.session.studioUserInfo={groupType:userSession.groupType,clientStoreId:userSession.clientStoreId,firstLogin:true,isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
@@ -1020,13 +1038,30 @@ router.post('/getFinancData', function(req, res){
  * 更新用户头像
  */
 router.post('/modifyAvatar',function(req, res){
-    var userInfo=req.session.studioUserInfo,avatar=req.body["avatar"];
+    var userInfo=req.session.studioUserInfo,avatar=req.body["avatar"],params=req.body["params"];
+    if(common.isBlank(params)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }
+    if(typeof params == 'string'){
+        try{
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+    params.ip = common.getClientIp(req);
     if(!userInfo || common.isBlank(userInfo.mobilePhone)){
         res.json({isOK:false,msg:'请重新登录后再修改！'});
     }else if(common.isBlank(avatar)){
         res.json({isOK:false,msg:'头像不能为空！'});
     }else{
-        userService.modifyAvatar(userInfo.mobilePhone,getGroupType(req),avatar,function(result){
+        params.avatar = avatar;
+        params.groupType = getGroupType(req);
+        params.mobilePhone = userInfo.mobilePhone;
+        params.userId = userInfo.userId;
+        userService.modifyAvatar(params,function(result){
             if(result.isOK){
                 req.session.studioUserInfo.avatar=avatar;
                 result.avatar=avatar;
@@ -1129,7 +1164,7 @@ router.post('/getShowTrade', function(req, res){
  * 新增晒单
  */
 router.post('/addShowTrade', function(req, res){
-    var params = req.body['data'];
+    var userInfo=req.session.studioUserInfo,params = req.body['data'];
     if(typeof params == 'string'){
         try {
             params = JSON.parse(params);
@@ -1148,6 +1183,7 @@ router.post('/addShowTrade', function(req, res){
     }else if(common.isBlank(params.groupType) || common.isBlank(params.userNo) || common.isBlank(params.avatar) || common.isBlank(params.tradeType)){
         res.json({'isOK':false, 'msg':'参数错误'});
     }else{
+        params.telePhone = userInfo.mobilePhone;
         showTradeService.addShowTrade(params, function(result){
             res.json(result);
         });
@@ -1178,4 +1214,416 @@ router.post('/setTradePraise', function(req, res) {
     }
 });
 
+/**
+ * 获取未平仓品种比率
+ */
+router.get('/getSymbolOpenPositionRatios', function(req, res){
+    baseApiService.getSymbolOpenPositionRatios(function(result){
+        res.json(JSON.parse(result));
+    });
+});
+
+/**
+ * 修改用户名
+ */
+router.post('/modifyUName',function(req, res){
+    var userInfo=req.session.studioUserInfo,params=req.body["params"];
+    if(common.isBlank(params)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }
+    if(typeof params == 'string'){
+        try{
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+    params.ip = common.getClientIp(req);
+    if(!userInfo || common.isBlank(userInfo.mobilePhone)){
+        res.json({isOK:false,msg:'请重新登录后再修改！'});
+    }else if(common.isBlank(params.userName)){
+        res.json({isOK:false,msg:'用户名不能为空！'});
+    }else{
+        userService.modifyUserName(userInfo,params,function(result){
+            if(result.isOK){
+                req.session.studioUserInfo.userName=params.userName;
+                result.userName=params.userName;
+            }
+            res.json(result);
+        });
+    }
+});
+
+/**
+ * 修改邮箱，发送验证邮件
+ */
+router.post('/modifyEmail',function(req, res){
+    var userInfo=req.session.studioUserInfo,params=req.body["params"];
+    if(common.isBlank(params)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }
+    if(typeof params == 'string'){
+        try{
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+    //params.ip = common.getClientIp(req);
+    if(!userInfo || common.isBlank(userInfo.mobilePhone)){
+        res.json({isOK:false,msg:'请重新登录后再修改！'});
+    }else if(common.isBlank(params.email)){
+        res.json({isOK:false,msg:'邮箱地址不能为空！'});
+    }else if(!common.isEmail(params.email)){
+        res.json({isOK:false,msg:'邮箱地址有误！'});
+    }else{
+        params.groupType = userInfo.groupType;
+        params.userId = userInfo.userId;
+        params.key = common.getMD5(constant.emailKey+params.email+params.userId);
+        params.to = params.email;
+        baseApiService.sendEmail('studioEmail', params, function(result){console.log(result);
+            if(result.result==0){
+                res.json({isOK:true, msg: '已发送验证邮件至'+params.email+'！'});
+            }
+            else{
+                res.json({isOK:false,msg:result.msg});
+            }
+        });
+    }
+});
+
+/**
+ * 修改邮箱
+ */
+router.get('/confirmMail',function(req, res){
+    var params={};
+    params.groupType = req.query['grouptype'];
+    params.userId = req.query['userid'];
+    params.email = decodeURI(req.query['email']);
+    params.key = req.query['key'];
+    params.ip = common.getClientIp(req);
+    params.item = 'register_email';
+    if(common.isBlank(params.email)){
+        res.render("error",{error: '邮箱地址不能为空！'});
+    }else if(!common.isEmail(params.email)){
+        res.render("error",{error: '邮箱地址有误！'});
+    }else if(common.getMD5(constant.emailKey+params.email+params.userId) != params.key) {
+        res.render("error",{error: '校验码错误！'});
+    }else{
+        userService.modifyEmail(params,function(result){
+             if(result.isOK){
+                 try {
+                     req.session.studioUserInfo.email = params.email;
+                     result.email = params.email;
+                 }catch(e){
+                     result.email = params.email;
+                 }
+             }
+            res.render("tip",{tip: '邮箱验证通过！'});
+         });
+    }
+});
+
+/**
+ * 修改密码
+ */
+router.post('/modifyPwd',function(req, res){
+    var userInfo=req.session.studioUserInfo,params=req.body["params"];
+    if(common.isBlank(params)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }
+    if(typeof params == 'string'){
+        try{
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+
+    params.ip = common.getClientIp(req);
+    if(!userInfo || common.isBlank(userInfo.mobilePhone)){
+        res.json({isOK:false,msg:'请重新登录后再修改！'});
+    }else if(common.isBlank(userInfo.password) && common.isBlank(params.password)){
+        res.json({isOK:false,msg:'请输入原始密码！'});
+    }else if(common.isBlank(params.newPwd)){
+        res.json({isOK:false,msg:'请输入新密码！'});
+    }else if(common.isBlank(params.newPwd1)){
+        res.json({isOK:false,msg:'请输入确认新的密码！'});
+    }else if(params.newPwd != params.newPwd1){
+        res.json({isOK:false,msg:'新密码输入不一致，请重新输入！'});
+    }else{
+        userService.modifyPwd(userInfo,params,function(result){
+            if(result.isOK){
+                req.session.studioUserInfo.password = '已设置';
+            }
+            res.json(result);
+        });
+    }
+});
+
+/**
+ * 获取可订阅服务类型列表
+ */
+router.post('/getSubscribeType',function(req, res){
+    var params = req.body['params'];
+    if(common.isBlank(params)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }
+    if(typeof params == 'string'){
+        try{
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+    if(common.isBlank(params.groupType)){
+        res.json({isOK:false,msg:'参数错误'});
+    }else{
+        chatSubscribeTypeService.getSubscribeTypeList(params,function(result){
+            /*var row = null;
+            for(var i in result){
+                row = result[i];
+            }*/
+            res.json(result);
+        });
+    }
+});
+
+/**
+ * 获取用户订阅列表
+ */
+router.post('/getSubscribe',function(req, res){
+    var userInfo=req.session.studioUserInfo,params = req.body['params'];
+    if(common.isBlank(params)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }
+    if(typeof params == 'string'){
+        try{
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+    if(common.isBlank(params.groupType)){
+        res.json({isOK:false,msg:'参数错误'});
+    }else{
+        params.userId = userInfo.mobilePhone;
+        chatSubscribeService.getSubscribeList(params,function(result){
+            res.json(result);
+        });
+    }
+});
+
+/**
+ * 保存/更新订阅数据
+ */
+router.post('/subscribe', function(req, res){
+    var userInfo=req.session.studioUserInfo,params=req.body['params'];
+    if(common.isBlank(params)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }
+    if(typeof params == 'string'){
+        try{
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+    params.Ip = common.getClientIp(req);
+    params.userId = userInfo.mobilePhone;
+    params.pointsId = '';//消费积分ID
+    params.userName = userInfo.userName;
+    params.startDate = new Date();//common.DateAdd('d', 1, new Date());//开始时间默认从订阅第二天开始
+    if(params.noticeCycle=='week') {
+        params.endDate = common.DateAdd('w', 1, new Date(params.startDate));//结束时间，1周
+    }else if(params.noticeCycle=='month'){
+        params.endDate = common.DateAdd('M', 1, new Date(params.startDate));//极速时间，1月
+    }
+    if(common.isBlank(params.groupType) || common.isBlank(params.userId) || common.isBlank(params.type) || !common.isNumber(params.point)){
+        res.json({'isOK':false, 'msg':'参数错误'});
+    }else{
+        if(common.isBlank(params.id)) {
+            chatSubscribeService.saveSubscribe(params, function (result) {
+                res.json(result);
+            });
+        }else{
+            chatSubscribeService.modifySubscribe(params, function(result){
+                res.json(result);
+            });
+        }
+    }
+});
+
+/**
+ * 获取积分信息
+ */
+router.post('/getPointsInfo', function(req, res){
+    var userInfo=req.session.studioUserInfo,params = req.body['params'];
+    if(common.isBlank(params)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }
+    if(typeof params == 'string'){
+        try{
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+    if(common.isBlank(params.groupType)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }else{
+        chatPointsService.getPointsInfo(params.groupType, userInfo.mobilePhone, true, function(result){
+            res.json(result);
+        });
+    }
+});
+
+/**
+ * 添加积分获得或消费记录
+ * {groupType:String, userId:String, item:String, tag:String, val:Number, isGlobal:Boolean, remark:String, opUser:String, opIp:String}
+ * params:{groupType:Number, remark:String, val:Number, tag:String}
+ */
+router.post('/addPointsInfo', function(req, res){
+    var userInfo=req.session.studioUserInfo,params = req.body['params'];
+    if(common.isBlank(params)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }
+    if(typeof params == 'string'){
+        try{
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+    if(common.isBlank(params.groupType) /*|| common.isBlank(params.remark) || common.isBlank(params.val) || common.isBlank(params.tag)*/){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }else{
+        params.userId = userInfo.mobilePhone;
+        params.item = common.isBlank(params.item)?'':params.item;
+        params.tag = params.tag || "";
+        params.isGlobal = false;
+        params.opUser = userInfo.userId;
+        params.opIp = common.getClientIp(req);
+        chatPointsService.add(params, function(err, result){
+            if(err && err.errcode != '3001'){
+                res.json({isOK:false,msg:err.errmsg});
+            } else {
+                res.json({isOK:true,msg:''});
+            }
+        });
+    }
+});
+
+/**
+ * 获取培训班列表
+ */
+router.post('/getTrainRoomList', function(req, res){
+    var userInfo=req.session.studioUserInfo;
+    if(!userInfo){
+        res.json(null);
+        return;
+    }
+    var groupType = userInfo.groupType;
+    clientTrainService.getChatGroupList(userInfo,function(result){
+        res.json(result);
+    });
+
+});
+
+/**
+ * 添加报名培训
+ */
+router.post('/addClientTrain', function(req, res){
+    var params = req.body['data'];
+    if(typeof params == 'string') {
+        try {
+            params = JSON.parse(params);
+        } catch (e) {
+            res.json(null);
+            return;
+        }
+    }
+    var userInfo=req.session.studioUserInfo;
+    if(params.clientGroup.indexOf(userInfo.clientGroup) > 0){
+        if(userInfo.clientGroup == 'register' || userInfo.clientGroup == 'simulate'){
+            clientTrainService.addClientTrain(params,userInfo, function(result){
+                res.json(result);
+            });
+        }
+    }else{
+        var msg = "客户为:"+common.groupType[userInfo.clientGroup]+",培训班只对"+params.clientGroup+"客户开放";
+        res.json({train:'fail', msg:msg});
+    }
+});
+
+/**
+ * 初始化直播老师
+ */
+router.post('/initShowTeacher', function(req, res){
+    var params = req.body['data'];
+    if(typeof params == 'string'){
+        try {
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+        var chatUser=req.session.studioUserInfo;
+        if(!chatUser){
+            res.json(null);
+            return;
+        }
+        params.groupType = chatUser.groupType;
+        var baseApiParams={};
+        baseApiParams.code=params.code;
+        baseApiParams.platform=chatUser.groupId;
+        baseApiParams.authorId=params.authorId;
+        baseApiParams.hasContent=params.hasContent;
+        baseApiParams.pageNo = common.isBlank(params.pageNo) ? 1 : params.pageNo;
+        baseApiParams.pageSize = common.isBlank(params.pageSize) ? 15 : params.pageSize;
+        baseApiParams.orderByStr = common.isBlank(params.orderByStr) ? "" : params.orderByStr;
+        studioService.initShowTeacher(params, baseApiParams,function(result){
+            res.json(result);
+        });
+    }
+});
+
+/**
+ * 添加签到
+ */
+router.post('/addSignin', function(req, res){
+    var userInfo=req.session.studioUserInfo;
+    var clientip = common.getClientIp(req);
+    clientTrainService.addSignin(userInfo,clientip, function(result){
+        res.json(result);
+    });
+});
+
+/**
+ * 查询签到
+ */
+router.post('/getSignin', function(req, res){
+    var userInfo=req.session.studioUserInfo;
+    clientTrainService.getSignin(userInfo, function(result){
+        res.json(result);
+    });
+});
 module.exports = router;

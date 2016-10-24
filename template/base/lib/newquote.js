@@ -415,6 +415,16 @@ function parseMarketpriceIndex(data,selfOptions) {
                 $("#price_" + symbol).parent().removeClass("up");
             }
             $("#deltaPrice_" +symbol).html(parseFloat(deltaPrice).toFixed(_index_price_type));
+        }else if(selfOptions.from == 'studio'){//pm3.0版
+            var priceFormat = parseFloat(price).toFixed(_index_price_type);
+            priceFormat = priceFormat.toString().substring(0,priceFormat.indexOf('.'))+'<b>.'+priceFormat.toString().substring(priceFormat.indexOf('.')+1)+'</b>';
+            priceDom.html(priceFormat);
+            percentDom.html('<span>' + deltaPrice + "</span><span>" + (deltaPercent * 100).toFixed(2) + "%</span>");
+            if (deltaPrice > 0) {
+                percentDom.removeClass(selfOptions.fall);
+            } else {
+                percentDom.addClass(selfOptions.fall);
+            }
         }else{
             var priceFormat = parseFloat(price).toFixed(_index_price_type);
             priceFormat = priceFormat.toString().substring(0,priceFormat.indexOf('.'))+'<span>.'+priceFormat.toString().substring(priceFormat.indexOf('.')+1)+'</span>';
