@@ -309,7 +309,8 @@ var chatTeacher = {
                     html.push('<span class="sdtime">晒单时间: ' + common.formatterDateTime(chatTrade.showDate).substring(5, 16) + '</span>');
                     html.push('</div>');
                     if(isNotAuth && isPos){
-                        html.push('<a href="javascript:chatTeacher.sd.showAuthBox()">');
+                       // html.push('<a href="javascript:chatTeacher.sd.showAuthBox()">');
+                        html.push('<a href="' + chatTrade.tradeImg + '" data-lightbox="sd-img" data-title="' + (isPos ? "持仓中" : "获利：" + chatTrade.profit) + '" onclick="chatTeacher.deductionIntegralShowTrade(this)" tradeId="'+chatTrade._id+'">');
                         html.push('<i class="i-zoom"></i><img src="/pm/theme1/img/sd_default.png"></a>');
                     }else{
                         html.push('<a href="' + chatTrade.tradeImg + '" data-lightbox="sd-img" data-title="' + (isPos ? "持仓中" : "获利：" + chatTrade.profit) + '">');
@@ -393,6 +394,21 @@ var chatTeacher = {
             }catch(e){
                 console.error("setPraise->"+e);
             }
+    },
+    /**
+     * 扣积分查看晒单数据
+     * @param dom
+     */
+    deductionIntegralShowTrade:function(obj){
+        var _this=$(obj);
+        if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup != 'vip') {
+            var params = {groupType:indexJS.userInfo.groupType,item:"prerogative_position",tag:'trade_'+_this.attr('tradeId')};
+            common.getJson('/studio/addPointsInfo',{params:JSON.stringify(params)}, function(result) {
+                if (result.isOK) {
+                    
+                }
+            })
+        }
     }
 
 };
