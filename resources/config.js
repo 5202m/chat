@@ -18,6 +18,19 @@ var config = {
         fx:{usedNum:4,pc:'theme1',mb:'theme2',mini:'',webui:'theme4',routeKey:'/fxstudio',host:'chat.gwfx.com'},
         hx:{usedNum:4,pc:'theme1',mb:'theme2',mini:'',webui:'theme4',routeKey:'/hxstudio',host:'handan.hx9999.com'}
     },//默认模板设置,//默认模板设置
+    utm : {
+        smsUrl : "http://testweboa.gwfx.com:8088/GwUserTrackingManager_NEW/smsTemplate/send", //http://das.gwfx.com/smsTemplate/send
+        emailUrl : "http://testweboa.gwfx.com:8088/GwUserTrackingManager_NEW/emailTemplate/send", //http://das.gwfx.com/emailTemplate/send
+        cstGroupUrl : "http://testweboa.gwfx.com:8088/GwUserTrackingManager_NEW/customerGroup/updateCustomer", //http://das.gwfx.com/customerGroup/updateCustomer
+        fxstudio : {
+            sid : "fa573c78eaa8402cb6c84dabfcce7158",
+            token : "8867af2616da47d7927ff0df7ea60668"
+        },
+        studio : {
+            sid : "fa573c78eaa8402cb6c84dabfcce7159",
+            token : "8867af2616da47d7927ff0df7ea60669"
+        }
+    },//UTM系统信息
     isDevTest:true,//是否开发或测试环境
     clusterWorkCount:2,//开启多线程个数，如果该参数大于系统内核个数，默认是开启(cpu核数-1)个线程
     sessionConfig:{key:'connect.sid',secret:'pm@chat'},//session 对应key,secret

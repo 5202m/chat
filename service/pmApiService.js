@@ -93,6 +93,52 @@ var pmApiService = {
             }
             callback(isTrue);
         });
+    },
+
+    /**
+     * 发送邮件
+     * @param params
+     * @param templateCode
+     * @param emails
+     * @param groupType
+     * @param callback ({{isOK : boolean, msg : String}})
+     */
+    sendEmailByUTM : function(params, templateCode, emails, groupType, callback) {
+        if (!emails || !templateCode || !groupType || !config.utm.hasOwnProperty(groupType)){
+            callback({isOK : false, msg : "参数错误！"});
+            return;
+        }
+        var utmConfig = config.utm[groupType];
+        var emailData = {
+            timestamp: common.formatDate(new Date(), "yyyyMMddHHmmss"),
+            accountSid: utmConfig.sid,
+            sign: "",
+            emails: emails,
+            templateCode: templateCode,
+            templateParam: JSON.stringify(params)
+        };
+        emailData.sign = common.getMD5(emailData.accountSid + utmConfig.token + emailData.timestamp);
+
+        logger.info("<<sendEmailByUTM:发送邮件：content=[%s]", JSON.stringify(emailData));
+        request.post(config.utm.emailUrl, function (error, response, data) {
+            if (error || response.statusCode != 200 || !data) {
+                logger.error("<<sendEmailByUTM:发送邮件异常，errMessage:", error);
+                callback({isOK : false, msg : "发送邮件错误！"});
+            } else {
+                try {
+                    data = JSON.parse(data);
+                    if (data.respCode != "Success") {
+                        logger.error("<<sendEmailByUTM:发送邮件失败，[errMessage:%s]", data.respMsg);
+                        callback({isOK : false, msg : "发送邮件错误:" + data.respMsg + "!"});
+                    }else{
+                        callback({isOK : true, msg : ""});
+                    }
+                } catch (e) {
+                    logger.error("<<sendEmailByUTM:发送邮件出错，[response:%s]", data);
+                    callback({isOK : false, msg : "发送邮件错误！"});
+                }
+            }
+        }).form(emailData);
     }
 };
 

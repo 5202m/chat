@@ -13,6 +13,7 @@ var errorMessage = require('../../util/errorMessage');
 var messageService = require('../../service/messageService');//引入messageService
 var userService = require('../../service/userService');//引入userService
 var baseApiService = require('../../service/baseApiService');//引入baseApiService
+var pmApiService = require('../../service/pmApiService');//引入pmApiService
 var syllabusService = require('../../service/syllabusService');//引入syllabusService
 var studioService = require('../../service/studioService');//引入studioService
 var chatService = require('../../service/chatService');//引入chatService
@@ -1281,17 +1282,28 @@ router.post('/modifyEmail',function(req, res){
     }else if(!common.isEmail(params.email)){
         res.json({isOK:false,msg:'邮箱地址有误！'});
     }else{
-        params.groupType = userInfo.groupType;
-        params.userId = userInfo.userId;
-        params.key = common.getMD5(constant.emailKey+params.email+params.userId);
-        params.to = params.email;
-        baseApiService.sendEmail('studioEmail', params, function(result){console.log(result);
-            if(result.result==0){
-                res.json({isOK:true, msg: '已发送验证邮件至'+params.email+'！'});
+        //http:192.168.35.91:3006/studio/confirmMail?grouptype=<%= groupType %>&userid=<%= userId %>&email=<%= encodeURI(email) %>&key=<%= key %>
+        var urls = [req.headers.referer];
+        urls.push("/confirmMail?grouptype=");
+        urls.push(userInfo.groupType);
+        urls.push("&userid=");
+        urls.push(userInfo.userId);
+        urls.push("&email=");
+        urls.push(encodeURI(params.email));
+        urls.push("&key=");
+        urls.push(common.getMD5(constant.emailKey+params.email+userInfo.userId));
+        var emailParams = {
+            time : common.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss"),
+            userName : userInfo.nickname,
+            email : params.email,
+            url : urls.join("")
+        };
+
+        pmApiService.sendEmailByUTM(emailParams, "VerityEmail", params.email, userInfo.groupType, function(result){
+            if(result.isOK){
+                result.msg = "已发送验证邮件至" + params.email + "！";
             }
-            else{
-                res.json({isOK:false,msg:result.msg});
-            }
+            res.json(result);
         });
     }
 });

@@ -528,6 +528,109 @@ var common = {
         dates = Math.floor(dates);
         return  dates;
     },
+
+    /**
+     * 时间对象的格式化;
+     * eg:common.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss:SSS")
+     *      ==>2015-04-30 14:11:52:037
+     * @param date
+     * @param format
+     * @returns {String}
+     */
+    formatDate : function (date, format) {
+        if(!format){
+            format = "yyyy-MM-dd HH:mm:ss:SSS";
+        }
+        //获取日期指定部分
+        var getPart = function(date, pattern){
+            var loc_result = null;
+            switch(pattern){
+                case "yyyy":
+                    loc_result = date.getFullYear().toString();
+                    break;
+                case "yy":
+                    loc_result = date.getFullYear().toString().substring(2);
+                    break;
+                case "MM":
+                    loc_result  = date.getMonth() + 1;
+                    if(loc_result < 10){
+                        loc_result = "0" + loc_result;
+                    }
+                    break;
+                case "M":
+                    loc_result = (date.getMonth() + 1).toString();
+                    break;
+                case "dd":
+                    loc_result  = date.getDate();
+                    if(loc_result < 10){
+                        loc_result = "0" + loc_result;
+                    }
+                    break;
+                case "d":
+                    loc_result = (date.getDate()).toString();
+                    break;
+                case "HH":
+                    loc_result  = date.getHours();
+                    if(loc_result < 10){
+                        loc_result = "0" + loc_result;
+                    }
+                    break;
+                case "H":
+                    loc_result = date.getHours().toString();
+                    break;
+                case "hh":
+                    loc_result  = date.getHours() % 12;
+                    if(loc_result < 10){
+                        loc_result = "0" + loc_result;
+                    }
+                    break;
+                case "h":
+                    loc_result = (date.getHours() % 12).toString();
+                    break;
+                case "mm":
+                    loc_result  = date.getMinutes();
+                    if(loc_result < 10){
+                        loc_result = "0" + loc_result;
+                    }
+                    break;
+                case "m":
+                    loc_result = date.getMinutes().toString();
+                    break;
+                case "ss":
+                    loc_result  = date.getSeconds();
+                    if(loc_result < 10){
+                        loc_result = "0" + loc_result;
+                    }
+                    break;
+                case "s":
+                    loc_result = date.getSeconds().toString();
+                    break;
+                case "SSS":
+                    loc_result  = date.getMilliseconds();
+                    if(loc_result < 10){
+                        loc_result = "00" + loc_result;
+                    }else if(loc_result < 100){
+                        loc_result = "0" + loc_result;
+                    }
+                    break;
+                case "S":
+                    loc_result = date.getMilliseconds().toString();
+                    break;
+                case "q":
+                    loc_result = Math.floor((date.getMonth() + 3) / 3).toString();
+                    break;
+            }
+            return loc_result;
+        };
+        var loc_result = format;
+        var loc_patterns = ['yyyy', 'yy', 'MM', 'M', 'dd', 'd', 'HH', 'H', 'hh', 'h', 'mm', 'm', 'ss', 's', 'SSS', 'S', 'q'];
+        for(var i = 0, lenI = loc_patterns.length; i < lenI; i++){
+            if(new RegExp(loc_patterns[i]).test(loc_result)){
+                loc_result = loc_result.replace(new RegExp(loc_patterns[i], "gm"), getPart(date, loc_patterns[i]));
+            }
+        }
+        return loc_result;
+    },
     /**
      * 判断是否数字
      * @param obj

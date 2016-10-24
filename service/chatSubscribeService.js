@@ -1,7 +1,9 @@
 var chatSubscribe = require('../models/chatSubscribe');//引入chatSubscribe数据模型
+var Member = require('../models/member');
 var logger=require('../resources/logConf').getLogger('chatSubscribeService');//引入log4js
 var constant = require('../constant/constant');//引入constant
 var common = require('../util/common');//引入common类
+var Config = require('../resources/config');
 var chatPointsService = require('../service/chatPointsService');//引入chatPointsService
 
 /**
@@ -59,7 +61,7 @@ var chatSubscribeService = {
                             logger.error("保存订阅数据失败! >>saveSubscribe:", err);
                             callback({isOK: false, msg: '订阅失败'});
                         } else {
-                            callback({isOK: true, msg: ''});
+                            chatSubscribeService.saveSubscribe4UTM(params.groupType, params.userId, params.type, !!params.analyst, callback);
                         }
                     });
                 } else {
@@ -72,7 +74,7 @@ var chatSubscribeService = {
                     logger.error("保存订阅数据失败! >>saveSubscribe:", err);
                     callback({isOK: false, msg: '订阅失败'});
                 } else {
-                    callback({isOK: true, msg: ''});
+                    chatSubscribeService.saveSubscribe4UTM(params.groupType, params.userId, params.type, !!params.analyst, callback);
                 }
             });
         }
@@ -105,7 +107,7 @@ var chatSubscribeService = {
                                     logger.error('modifySubscribe=>fail!' + err1);
                                     callback({isOK: false, msg: '修改订阅失败'});
                                 } else {
-                                    callback({isOK: true, msg: ''});
+                                    chatSubscribeService.saveSubscribe4UTM(params.groupType, params.userId, row.type, !!params.analyst, callback);
                                 }
                             });
                         } else {
@@ -118,11 +120,71 @@ var chatSubscribeService = {
                             logger.error('modifySubscribe=>fail!' + err1);
                             callback({isOK: false, msg: '修改订阅失败'});
                         } else {
-                            callback({isOK: true, msg: ''});
+                            chatSubscribeService.saveSubscribe4UTM(params.groupType, params.userId, row.type, !!params.analyst, callback);
                         }
                     });
                 }
             }
+        });
+    },
+
+    /**
+     * 保存客户分组到UTM
+     * @param groupType
+     * @param userId
+     * @param subscribeType
+     * @param isAdd
+     * @param callback ({{isOK : boolean, msg : String}})
+     */
+    saveSubscribe4UTM : function(groupType, userId, subscribeType, isAdd, callback){
+        if(!groupType || Config.utm.hasOwnProperty(groupType) || !userId){
+            callback({isOK : false, msg : "参数错误！"});
+            return ;
+        }
+        Member.findOne({
+            "mobilePhone" : userId,
+            "valid": 1,
+            "status": 1,
+            "loginPlatform.chatUserGroup._id" : groupType
+        }, "loginPlatform.chatUserGroup.$.email", function(err, row){
+            if(err){
+                logger.error("<<saveSubscribe4UTM:提取用户邮箱失败，[errMessage:%s]", err);
+                callback({isOK : false, msg : "提取用户邮箱失败！"});
+                return;
+            }
+            var config = Config.utm[groupType];
+            var params = {
+                timestamp : common.formatDate(new Date(), "yyyyMMddHHmmss"),
+                accountSid: config.sid,
+                sign: "",
+                groupCode : subscribeType,
+                type : isAdd ? "add" : "remove",
+                phones : userId,
+                emails : null
+            };
+            var email = row.loginPlatform.chatUserGroup[0].email;
+            if(email){
+                params.emails = email;
+            }
+            Request.post(Config.utm.cstGroupUrl, function (error, response, data) {
+                if (error || response.statusCode != 200 || !data) {
+                    logger.error("<<saveSubscribe4UTM:保存客户分组异常，errMessage:", error);
+                    callback({isOK : false, msg : "保存客户分组失败！"});
+                } else{
+                    try{
+                        data = JSON.parse(data);
+                        if(data.respCode != "Success"){
+                            logger.error("<<saveSubscribe4UTM:保存客户分组失败，[errMessage:%s]", data.respMsg);
+                            callback({isOK : false, msg : "保存客户分组失败:" + data.respMsg + "！"});
+                        }else{
+                            callback({isOK : true, msg : ""});
+                        }
+                    }catch(e){
+                        logger.error("<<saveSubscribe4UTM:发送通知邮件出错，[response:%s]", data);
+                        callback({isOK : false, msg : "保存客户分组失败！"});
+                    }
+                }
+            }).form(params);
         });
     }
 };
