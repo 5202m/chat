@@ -369,7 +369,7 @@ var chatPride = {
      * @param dom
      */
     viewData:function(dom){
-        var params = {groupType:indexJS.userInfo.groupType,item:dom.attr('item')};
+        var params = {groupType:indexJS.userInfo.groupType,item:dom.attr('item'),tag:'viewdata_'+dom.attr('_id')};
         common.getJson('/studio/addPointsInfo',{params:JSON.stringify(params)}, function(result) {
             if (result.isOK) {
                 indexJS.getArticleInfo(dom.attr('_id'), function (data) {
