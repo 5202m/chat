@@ -827,7 +827,7 @@ var box={
             if(common.isBlank(nickName)){
                 box.showTipBox('请输入昵称');
                 return;
-            }else if(common.isRightName(nickName)){
+            }else if(!common.isRightName(nickName)){
                 box.showTipBox('昵称必须由中文、英文、不超过连续4个数字并且长度不超过8个字符');
                 return;
             } else {
