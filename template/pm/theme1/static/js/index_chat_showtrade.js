@@ -125,7 +125,7 @@ var chatShowTrade = {
         var tradeHtml='',tradeFormat = common.isBlank(chatShowTrade.tradeForUser) ? chatShowTrade.formatHtml('showTradeAll') : chatShowTrade.formatHtml('showTradeUser');
         for(var i = start; i < length && i < start + 20; i++){
             row = listData[i];
-            if($('#showTradeDiv .sd_ul li[sid="'+row._id+'"]').length>0){
+            if($('#showTradeDiv .sd_ul li[sid="'+row._id+'"]').length>0 && common.isBlank(chatShowTrade.tradeForUser)){
                 continue;
             }
             var showTradeDate = common.formatterDateTime(row.showDate,'/').substr(5,11);
