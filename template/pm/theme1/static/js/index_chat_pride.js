@@ -100,6 +100,7 @@ var chatPride = {
         var imgReg = /<img\s+[^>]*src=['"]([^'"]+)['"][^>]*>/,matches;
         articleDetail=articleInfo.detailList && articleInfo.detailList[0];
         var aid = articleInfo._id || articleInfo.id;
+        var storeViewData = chatPride.getStoreViewData(aid);
         if (common.isValid(articleDetail.tag) && articleDetail.tag == 'trading_strategy') {
             publishTime = new Date(articleInfo.publishStartDate).getTime();
             //课程信息
@@ -127,7 +128,7 @@ var chatPride = {
                             remarkMap[row.symbol] = [row];
                         }
                     });
-                    if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip') {
+                    if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' || common.isValid(storeViewData)) {
                         style = ' style="display:none;"';
                         var idx = 0;
                         $.each(remarkMap, function (i, row) {
@@ -196,7 +197,7 @@ var chatPride = {
                      }
                  });
                  if (common.isValid(articleDetail.tag) && articleDetail.tag == 'trading_strategy') {
-                     if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip') {
+                     if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' || common.isValid(storeViewData)) {
                          var idx = 0;
                          $.each(remarkMap, function (i, row) {
                              var tradeStrategySupportDivHtml = [];
@@ -214,7 +215,7 @@ var chatPride = {
                          $.each(remarkMap, function (i, row) {
                              var tradeStrategySupportDivHtml = [];
                              $.each(row, function(j, r){
-                                 tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, 'dim'));
+                                 tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), '****', 'dim'));
                              });
                              tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy">查看数据</a>':'')));
                              idx++;
@@ -288,6 +289,7 @@ var chatPride = {
         publishTime = new Date(articleInfo.publishStartDate).getTime();
         //课程信息
         var aid = articleInfo._id || articleInfo.id;
+        var storeViewData = chatPride.getStoreViewData(aid);
         if(isPush){
             $panel.find("li[aid='" + aid + "']").remove();
         }
@@ -302,7 +304,7 @@ var chatPride = {
         }
         if (common.isValid(articleDetail.tag) && common.isValid(articleDetail.remark) && articleDetail.tag == 'shout_single') {
             var tradeStrategyHdDetailHtml = [], remarkArr = JSON.parse(articleDetail.remark),style='';
-            if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip') {
+            if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' || common.isValid(storeViewData)) {
                 style=' style="display:none;"';
                 $.each(remarkArr, function (i, row) {
                     tradeStrategyHdDetailHtml.push(tradeStrategyHdDetail.formatStr(row.name, (row.longshort == 'long' ? '看涨' : '看跌'), row.point, row.profit, row.loss,''));
@@ -371,51 +373,77 @@ var chatPride = {
         }
     },
     /**
+     * 获取交易策略或喊单store数据
+     * @param id
+     * @returns {*}
+     */
+    getStoreViewData:function(id){
+        if (!store.enabled){
+            console.log('Local storage is not supported by your browser.');
+            return;
+        }
+        return store.get(indexJS.userInfo.userId + '_' + id);
+    },
+    /**
      * 扣积分查看数据
      * @param dom
      */
     viewData:function(dom){
-        var params = {groupType:indexJS.userInfo.groupType,item:dom.attr('item'),tag:'viewdata_'+dom.attr('_id')};
-        common.getJson('/studio/addPointsInfo',{params:JSON.stringify(params)}, function(result) {
-            if (result.isOK) {
-                indexJS.getArticleInfo(dom.attr('_id'), function (data) {
-                    if (data) {
-                        var articleInfo = data.detailList && data.detailList[0];
-                        var remarkArr = JSON.parse(articleInfo.remark),tradeStrategyHdDetailHtml = [],tradeStrategySupportHtml = [], tradeStrategyHdDetail = chatPride.formatHtml('tradeStrategyHdDetail');
-                        if(articleInfo.tag == 'shout_single'){
-                            $.each(remarkArr, function (i, row) {
-                                tradeStrategyHdDetailHtml.push(tradeStrategyHdDetail.formatStr(row.name, (row.longshort == 'long' ? '看涨' : '看跌'), row.point, row.profit, row.loss,''));
-                            });
-                            dom.next('table').children('tbody').html(tradeStrategyHdDetailHtml.join(''));
-                            dom.hide();
-                        }else if(articleInfo.tag == 'trading_strategy'){
-                            var tradeStrategySupport = chatPride.formatHtml('tradeStrategySupport'); //交易支撑位信息
-                            var tradeStrategySupportDiv = chatPride.formatHtml('tradeStrategySupportDiv');//交易支撑位支撑值
-                            var remarkMap = {};
-                            $.each(remarkArr, function(i, row){
-                                if(remarkMap.hasOwnProperty(row.symbol)){
-                                    remarkMap[row.symbol].push(row);
-                                }else{
-                                    remarkMap[row.symbol] = [row];
-                                }
-                            });
-                            var idx = 0;
-                            $.each(remarkMap, function (i, row) {
-                                var tradeStrategySupportDivHtml = [];
-                                $.each(row, function(j, r){
-                                    tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
-                                });
-                                tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata" style="display:none;" _id="'+data._id+'" item="prerogative_strategy">查看数据</a>':'')));
-                                idx++;
-                            });
-                            var hdBoxDom = dom.parent('div.skilldata').parent('div.hdbox');
-                            hdBoxDom.find('div.skilldata').remove();
-                            hdBoxDom.children('div.skill').after(tradeStrategySupportHtml.join(''));
+        var storeData = chatPride.getStoreViewData(dom.attr('_id'));
+        if(common.isBlank(storeData)) {
+            var params = {groupType: indexJS.userInfo.groupType,item: dom.attr('item'),tag: 'viewdata_' + dom.attr('_id')};
+            common.getJson('/studio/addPointsInfo', {params: JSON.stringify(params)}, function (result) {
+                if (result.isOK) {
+                    indexJS.getArticleInfo(dom.attr('_id'), function (data) {
+                        if (data) {
+                            chatPride.setViewDataHtml(dom, data);
+                            store.set(indexJS.userInfo.userId + '_' + data._id, data);
                         }
-                    }
+                    });
+                }
+            });
+        }else{
+            chatPride.setViewDataHtml(dom, storeData);
+        }
+    },
+    /**
+     * 设置查看数据的html
+     * @param dom
+     * @param data
+     */
+    setViewDataHtml:function(dom, data){
+        var articleInfo = data.detailList && data.detailList[0];
+        var remarkArr = JSON.parse(articleInfo.remark),tradeStrategyHdDetailHtml = [],tradeStrategySupportHtml = [], tradeStrategyHdDetail = chatPride.formatHtml('tradeStrategyHdDetail');
+        if(articleInfo.tag == 'shout_single'){
+            $.each(remarkArr, function (i, row) {
+                tradeStrategyHdDetailHtml.push(tradeStrategyHdDetail.formatStr(row.name, (row.longshort == 'long' ? '看涨' : '看跌'), row.point, row.profit, row.loss,''));
+            });
+            dom.next('table').children('tbody').html(tradeStrategyHdDetailHtml.join(''));
+            dom.hide();
+        }else if(articleInfo.tag == 'trading_strategy'){
+            var tradeStrategySupport = chatPride.formatHtml('tradeStrategySupport'); //交易支撑位信息
+            var tradeStrategySupportDiv = chatPride.formatHtml('tradeStrategySupportDiv');//交易支撑位支撑值
+            var remarkMap = {};
+            $.each(remarkArr, function(i, row){
+                if(remarkMap.hasOwnProperty(row.symbol)){
+                    remarkMap[row.symbol].push(row);
+                }else{
+                    remarkMap[row.symbol] = [row];
+                }
+            });
+            var idx = 0;
+            $.each(remarkMap, function (i, row) {
+                var tradeStrategySupportDivHtml = [];
+                $.each(row, function(j, r){
+                    tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
                 });
-            }
-        });
+                tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata" style="display:none;" _id="'+data._id+'" item="prerogative_strategy">查看数据</a>':'')));
+                idx++;
+            });
+            var hdBoxDom = dom.parent('div.skilldata').parent('div.hdbox');
+            hdBoxDom.find('div.skilldata').remove();
+            hdBoxDom.children('div.skill').after(tradeStrategySupportHtml.join(''));
+        }
     },
     /**
      * 根据内容域模块名返回内容模板

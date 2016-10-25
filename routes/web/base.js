@@ -460,7 +460,7 @@ router.get('/logout', function(req, res) {
     visitorService.saveVisitorRecord("logout",{roomId:snUser.groupId,clientStoreId:snUser.clientStoreId,groupType:snUser.groupType,ip:common.getClientIp(req)});
     req.session.studioUserInfo=null;
     //注销之后检查当前房间是否给游客授权，若授权则以游客身份再次进入当前房间
-    studioService.checkGroupAuth(snUser.groupId,constant.clientGroup.visitor,function(isOK){
+    studioService.checkGroupAuth(snUser.groupId,constant.clientGroup.visitor,null,function(isOK){
         if(isOK){
             req.session.logoutToGroup=snUser.groupId;
         }
