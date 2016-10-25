@@ -404,8 +404,8 @@ var chatTeacher = {
         if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup != 'vip') {
             var params = {groupType:indexJS.userInfo.groupType,item:"prerogative_position",tag:'trade_'+_this.attr('tradeId')};
             common.getJson('/studio/addPointsInfo',{params:JSON.stringify(params)}, function(result) {
-                if (result.isOK) {
-                    
+                if (!result.isOK) {
+                    box.showTipBox(result.msg);
                 }
             })
         }
