@@ -167,6 +167,7 @@ var chatSubscribeService = {
             if(email){
                 params.emails = email;
             }
+            params.sign = common.getMD5(params.accountSid + config.token + params.timestamp);
             Request.post(Config.utm.cstGroupUrl, function (error, response, data) {
                 if (error || response.statusCode != 200 || !data) {
                     logger.error("<<saveSubscribe4UTM:保存客户分组异常，errMessage:", error);

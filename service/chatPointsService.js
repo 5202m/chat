@@ -176,7 +176,10 @@ var chatPointsService = {
             rate = Constant.pointsRate[params.groupType][params.clientGroup];
         }
         var chkResult = chatPointsService.checkLimit(config, pointsInfo, journal, rate);
-        if(!chkResult){
+        if(journal.change != 0){
+            //积分变化为0不记录积分流水
+            callback(null, journal);
+        }else if(!chkResult){
             journal.before = pointsInfo.points;
             if(params.isGlobal || journal.change > 0){
                 pointsInfo.pointsGlobal += journal.change;
@@ -210,7 +213,7 @@ var chatPointsService = {
      */
     checkLimit : function(config, pointsInfo, journal, rate){
         if(!config){//积分配置不存在
-            if(journal.change){
+            if(typeof journal.change == "number"){
                 if(journal.change + pointsInfo.points > 0){
                     return null;
                 }else{
