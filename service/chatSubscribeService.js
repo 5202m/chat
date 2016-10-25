@@ -1,3 +1,4 @@
+var Request = require('request');
 var chatSubscribe = require('../models/chatSubscribe');//引入chatSubscribe数据模型
 var Member = require('../models/member');
 var logger=require('../resources/logConf').getLogger('chatSubscribeService');//引入log4js
@@ -17,7 +18,7 @@ var chatSubscribeService = {
      * @param callback
      */
     getSubscribeList: function(params, callback){
-        var searchObj = {groupType:params.groupType,userId:params.userId,valid:1,status:1};
+        var searchObj = {groupType:params.groupType,userId:params.userId,valid:1,status:1,$or:[{analyst:{$ne:''},noticeType:{$ne:''}}]};
         chatSubscribe.find(searchObj,"type analyst noticeType startDate endDate point",function(err, result){
             if(err){
                 logger.error("查询数据失败! >>getSubscribeTypeList:", err);
@@ -137,7 +138,7 @@ var chatSubscribeService = {
      * @param callback ({{isOK : boolean, msg : String}})
      */
     saveSubscribe4UTM : function(groupType, userId, subscribeType, isAdd, callback){
-        if(!groupType || Config.utm.hasOwnProperty(groupType) || !userId){
+        if(!groupType || !Config.utm.hasOwnProperty(groupType) || !userId){
             callback({isOK : false, msg : "参数错误！"});
             return ;
         }

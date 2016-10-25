@@ -3,7 +3,7 @@
  * author Alan.wu
  */
 var box={
-    verifyCodeIntId:null,
+    verifyCodeIntMap:{},
     toRoomId:null,
     enable : true, //是否使用store
     storeInfoKey : "storeInfo_VerifyCodeTime",
@@ -574,7 +574,7 @@ var box={
         var rbtn = $("#" + tId + " .rbtn");
         var t=parseInt(rbtn.attr("t"))||120;
         if(!this.verifyCodeIntMap[tId]){
-            this.verifyCodeIntMap[tId]=setInterval("box.setVerifyCodeTime('"+tId+"')",1000)
+            this.verifyCodeIntMap[tId]=setInterval("box.setVerifyCodeTime('"+tId+"')",1000);
         }
         if(t>1){
             rbtn.attr("t",t-1).html("重新获取(" + (t-1) + ")");
