@@ -752,7 +752,7 @@ var box={
         $("#saveUserName").click(function(){
             var userName = $('#myUserName').val();
             if(common.isBlank(userName)){
-                box.showTipBox('请输入用户名');
+                box.showMsg('请输入用户名');
                 return;
             }
             $(this).prop('disabled',true);
@@ -760,10 +760,10 @@ var box={
             common.getJson("/studio/modifyUName",{params:JSON.stringify({userName:userName,item:''})},function(result){
                 $(_this).attr('disabled',false);
                 if(!result.isOK){
-                    box.showTipBox((result.msg?result.msg:"修改失败，请联系客服！"));
+                    box.showMsg((result.msg?result.msg:"修改失败，请联系客服！"));
                     return false;
                 }else{
-                    box.showTipBox("修改成功");
+                    box.showMsg("修改成功");
                     $('#myUserName').prop('disabled',true);
                     $('#saveUserName').addClass('dn');
                     $('#setUserName').removeClass('dn');
@@ -785,10 +785,10 @@ var box={
         $('#saveEmail').click(function(){
             var email = $('#myEmail').val();
             if(common.isBlank(email)){
-                box.showTipBox('请输入邮箱地址');
+                box.showMsg('请输入邮箱地址');
                 return;
             }else if(!common.isEmail(email)){
-                box.showTipBox('邮箱地址有误');
+                box.showMsg('邮箱地址有误');
                 return;
             }else{
                 $(this).prop('disabled',true);
@@ -825,10 +825,10 @@ var box={
         $("#setNkBtn").click(function(){
             var nickName = $('#myNickName').val();
             if(common.isBlank(nickName)){
-                box.showTipBox('请输入昵称');
+                box.showMsg('请输入昵称');
                 return;
             }else if(!common.isRightName(nickName)){
-                box.showTipBox('昵称必须由中文、英文、不超过连续4个数字并且长度不超过8个字符');
+                box.showMsg('昵称必须由中文、英文、不超过连续4个数字并且长度不超过8个字符');
                 return;
             } else {
                 $(this).prop('disabled', true);
