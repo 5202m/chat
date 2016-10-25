@@ -106,7 +106,7 @@ var box={
             }else{
                 $('.infodown .downtable table tbody tr').hide();
                 $('.infodown .downtable table tbody tr').each(function(){
-                    if($(this).find('td.name').text().indexOf(keyword)!=-1){
+                    if($(this).find('td.sname').text().indexOf(keyword)!=-1){
                         $(this).show();
                     }
                 });
@@ -790,23 +790,24 @@ var box={
             }else if(!common.isEmail(email)){
                 box.showTipBox('邮箱地址有误');
                 return;
+            }else{
+                $(this).prop('disabled',true);
+                var _this=this;
+                common.getJson("/studio/modifyEmail",{params:JSON.stringify({email:email})},function(result){
+                    $(_this).attr('disabled',false);
+                    if(!result.isOK){
+                        box.showMsg((result.msg?result.msg:"修改失败，请联系客服！"));
+                        return false;
+                    }else{
+                        box.showMsg(result.msg);
+                        $('#myEmail').prop('disabled',true);
+                        $('#saveEmail').addClass('dn');
+                        $('#bindEmail').removeClass('dn');
+                    }
+                },true,function(err){
+                    $(_this).attr('disabled',false);
+                });
             }
-            $(this).prop('disabled',true);
-            var _this=this;
-            common.getJson("/studio/modifyEmail",{params:JSON.stringify({email:email})},function(result){
-                $(_this).attr('disabled',false);
-                if(!result.isOK){
-                    box.showMsg((result.msg?result.msg:"修改失败，请联系客服！"));
-                    return false;
-                }else{
-                    box.showMsg(result.msg);
-                    $('#myEmail').prop('disabled',true);
-                    $('#saveEmail').addClass('dn');
-                    $('#bindEmail').removeClass('dn');
-                }
-            },true,function(err){
-                $(_this).attr('disabled',false);
-            });
         });
     },
     /**
@@ -826,23 +827,28 @@ var box={
             if(common.isBlank(nickName)){
                 box.showTipBox('请输入昵称');
                 return;
+            }else if(common.isRightName(nickName)){
+                box.showTipBox('昵称不合法');
+                return;
+            } else {
+                $(this).prop('disabled', true);
+                var _this = this;
+                common.getJson("/studio/modifyName", {nickname: nickName}, function (result) {
+                    $(_this).attr('disabled', false);
+                    if (!result.isOK) {
+                        box.showTipBox((result.msg ? result.msg : "修改失败，请联系客服！"));
+                        return false;
+                    } else {
+                        indexJS.refreshNickname(true, result.nickname);
+                        $('#myNickName').prop('disabled', true);
+                        $('#setNkBtn').addClass('dn');
+                        $('#modifyNk').removeClass('dn');
+                        $('.nickNameTip').addClass('dn');
+                    }
+                }, true, function (err) {
+                    $(_this).attr('disabled', false);
+                });
             }
-            $(this).prop('disabled',true);
-            var _this=this;
-            common.getJson("/studio/modifyName",{nickname:nickName},function(result){
-                $(_this).attr('disabled',false);
-                if(!result.isOK){
-                    box.showTipBox((result.msg?result.msg:"修改失败，请联系客服！"));
-                    return false;
-                }else{
-                    indexJS.refreshNickname(true, result.nickname);
-                    $('#myNickName').prop('disabled',true);
-                    $('#setNkBtn').addClass('dn');
-                    $('#modifyNk').removeClass('dn');
-                }
-            },true,function(err){
-                $(_this).attr('disabled',false);
-            });
         });
     },
     /**
@@ -1007,12 +1013,19 @@ var box={
             var params = {groupType:indexJS.userInfo.groupType,item:'used_download',remark:'下载'+_this.attr('dn'),val:-parseInt(_this.attr('p')),tag:'download_'+_this.attr('_id')};
             common.getJson('/studio/addPointsInfo',{params:JSON.stringify(params)}, function(result){
                 if(result.isOK) {
-                    common.getJson(indexJS.apiUrl + '/common/modifyArticle', {id: _this.attr('_id'), 'type': 'downloads'}, function (result) {
-                        if (result.isOK) {
-                            _this.parent().prev().text(result.num);
+                    common.getJson(indexJS.apiUrl + '/common/modifyArticle', {id: _this.attr('_id'), 'type': 'downloads'}, function (data) {
+                        if (data.isOK) {
+                            if(typeof result.msg.change == 'number') {
+                                box.showMsg('消费' + (-result.msg.change) + '积分');
+                            }
+                            _this.parent().prev().text(data.num);
                         }
                     });
-                    window.location.href = _this.data("file_url");
+                    if(_this.attr('sufix')=='pdf') {
+                        window.open(_this.data("file_url"));
+                    }else {
+                        window.location.href = _this.data("file_url");
+                    }
                 }else{
                     box.showMsg(result.msg);
                     return false;
@@ -1060,7 +1073,7 @@ var box={
                 formatHtmlArr.push('    <td>{3}</td>');
                 formatHtmlArr.push('    <td>{4}积分</td>');
                 formatHtmlArr.push('    <td>{5}</td>');
-                formatHtmlArr.push('    <td><a href="javascript:void(0);" target="download" dn="{6}" p="{4}" _id="{7}" class="downbtn" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'file_download\',\'{1}\']);">下载</a></td>');
+                formatHtmlArr.push('    <td><a href="javascript:void(0);" target="download" dn="{6}" p="{4}" _id="{7}" class="downbtn" sufix="{0}" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'file_download\',\'{1}\']);">下载</a></td>');
                 formatHtmlArr.push('</tr>');
                 break;
             case 'signin':

@@ -396,6 +396,7 @@ var chatPride = {
                 if (result.isOK) {
                     indexJS.getArticleInfo(dom.attr('_id'), function (data) {
                         if (data) {
+                            box.showMsg('消费'+Math.abs(result.msg.change)+'积分');
                             chatPride.setViewDataHtml(dom, data);
                             store.set(indexJS.userInfo.userId + '_' + data._id, data);
                         }

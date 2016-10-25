@@ -1184,6 +1184,7 @@ router.post('/addShowTrade', function(req, res){
     }else if(common.isBlank(params.groupType) || common.isBlank(params.userNo) || common.isBlank(params.avatar) || common.isBlank(params.tradeType)){
         res.json({'isOK':false, 'msg':'参数错误'});
     }else{
+        params.groupId = common.isBlank(params.groupId)?'':params.groupId;
         params.telePhone = userInfo.mobilePhone;
         showTradeService.addShowTrade(params, function(result){
             res.json(result);
@@ -1539,7 +1540,7 @@ router.post('/addPointsInfo', function(req, res){
             if(err && err.errcode != '3001'){
                 res.json({isOK:false,msg:err.errmsg});
             } else {
-                res.json({isOK:true,msg:''});
+                res.json({isOK:true,msg:result});
             }
         });
     }

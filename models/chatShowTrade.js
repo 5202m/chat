@@ -17,6 +17,7 @@ var mongoose = require('mongoose')
 var chatShowTradeSchema = new Schema({
     _id : ObjectId,
     groupType : {type:String,index:true}, //聊天室组别
+    groupId: {type:String,index:true}, //房间
     boUser : {
         _id : String,   //userId
         userNo : {type:String,index:true},//userNo

@@ -234,7 +234,7 @@
                         <div class="item">
                             <span class="iname">邮箱</span>
                             <div class="inp_div">
-                                <input type="text" id="myEmail" placeholder="<%if(userSession.isLogin){%><%= userSession.email ? (userSession.email.substring(0,3)+'*****'+userSession.email.substring(userSession.email.lastIndexOf('.')+1)) : '未绑定' %><%}%>" disabled="disabled">
+                                <input type="email" id="myEmail" placeholder="<%if(userSession.isLogin){%><%= userSession.email ? (userSession.email.substring(0,3)+'*****'+userSession.email.substring(userSession.email.lastIndexOf('.')+1)) : '未绑定' %><%}%>" disabled="disabled">
                             </div>
                             <div class="edit_div">
                                 <a href="javascript:void(0);" id="bindEmail">绑定</a>
@@ -252,7 +252,7 @@
                                 <a href="javascript:void(0);" id="modifyNk">修改</a>
                                 <a href="javascript:void(0);" id="setNkBtn" class="dn">保存</a>
                             </div>
-                            <span class="itip dn">（可使用户名+密码方式登录直播间）</span>
+                            <span class="itip dn nickNameTip">（先设置个好听的昵称吧）</span>
                         </div>
 
                         <div class="item">

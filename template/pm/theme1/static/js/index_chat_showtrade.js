@@ -185,6 +185,7 @@ var chatShowTrade = {
             $('#trade_error').text('请上传晒单图片').show();
         }else{
             var params = {groupType:indexJS.userInfo.groupType,
+                groupId:indexJS.userInfo.groupId,
                 userNo:indexJS.userInfo.userId,
                 avatar:$('#avatarInfoId').attr('src'),
                 userName:userName,

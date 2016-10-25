@@ -734,7 +734,7 @@ var common = {
      * @returns {boolean}
      */
     isRightName:function(name){
-        return !(/^([0-9]{2,20})$/g.test(name)) && /^([\w\u4e00-\u9fa5]{2,20})$/g.test(name);
+        return !(/[0-9]{4}/g.test(name)) && /^([\w\u4e00-\u9fa5]{2,8})$/g.test(name);
     },
     /**
      * 返回随机索引数

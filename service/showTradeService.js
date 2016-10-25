@@ -106,6 +106,7 @@ var showTradeService = {
         var insertModel = {
             _id : null,
             groupType : params.groupType, //聊天室组别
+            groupId: params.groupId,// 房间
             boUser : {
                 _id : null,   //userId
                 userNo : params.userNo,//userNo

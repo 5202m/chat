@@ -140,7 +140,10 @@ var chat={
                 return;
             }
             if (indexJS.userInfo.isSetName === false) {
-                box.openSetNameBox();
+                $('#personal_center').click();
+                $('#modifyNk').click();
+                $('.nickNameTip').removeClass('dn').css('color','red');
+                $('#myNickName').focus();
                 return;
             }
             var toUser = chat.getToUser();
