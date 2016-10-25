@@ -493,7 +493,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1f51abff', e
 .te_top .info-l{ display: inline-block;*display: inline;*zoom: 1; vertical-align: top; }
 .teacherbox .te_name{ color: #46484d; font-size: 18px; line-height: 24px; font-weight: bold; }
 .teacherbox .te_org{ color: #939599; font-size: 14px; }
-.teacherbox .stateshow{ display: inline-block;*display: inline;*zoom: 1; font-size: 0; vertical-align: top; padding-top: 5px; text-align: center; width: 77%;}
+.teacherbox .stateshow{ display: inline-block;*display: inline;*zoom: 1; font-size: 0; vertical-align: top; padding-top: 5px; text-align: center; width: 66%;}
 .stateshow .item{ display: inline-block;*display: inline;*zoom: 1; vertical-align: top; width: 16%;}
 .stateshow .item i{ display: block; width: 23px; height: 23px; margin: 0 auto; }
 .stateshow .item i.i1{ background-position: 0 -190px }
