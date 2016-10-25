@@ -66,18 +66,27 @@ var videosLive = {
                                box.showMsg({title:thiz.find("b").text(),msg:"您未报名培训班或者未通过审核，是否消耗"+result.point+"积分直接进入房间？"});
                                $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher()'>如有疑问请联系老师助理</a>。");
                                $("#popMsgCont .yesbtn").bind("click", function(){
-                                   var params = {groupType:indexJS.userInfo.groupType,item:"prerogative_room",tag:'user_'+indexJS.userInfo.userId,val:-result.point,groupId:thiz.attr("rid")};
-                                   common.getJson('/studio/addPointsInfo',{params:JSON.stringify(params)}, function(result) {
-                                       if (!result.isOK) {
-                                           box.showTipBox(result.msg);
-                                       }else{
-                                           common.getJson('/studio/updateSession',{params:JSON.stringify(params)}, function(result) {
-                                               if(result.isOK){
-                                                   indexJS.toRefreshView();
-                                               }
-                                           });
-                                       }
-                                   })
+                                   var point = result.point;
+                                   if(point != 0){
+                                       var params = {groupType:indexJS.userInfo.groupType,item:"prerogative_room",tag:'user_'+indexJS.userInfo.userId,val:-result.point,groupId:thiz.attr("rid")};
+                                       common.getJson('/studio/addPointsInfo',{params:JSON.stringify(params)}, function(result) {
+                                           if (!result.isOK) {
+                                               box.showTipBox(result.msg);
+                                           }else{
+                                               common.getJson('/studio/updateSession',{params:JSON.stringify(params)}, function(result) {
+                                                   if(result.isOK){
+                                                       indexJS.toRefreshView();
+                                                   }
+                                               });
+                                           }
+                                       })
+                                   }else{
+                                       common.getJson('/studio/updateSession',{params:JSON.stringify(params)}, function(result) {
+                                           if(result.isOK){
+                                               indexJS.toRefreshView();
+                                           }
+                                       });
+                                   }
                                });
                            }
                         });
