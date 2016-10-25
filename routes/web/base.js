@@ -1639,4 +1639,36 @@ router.post('/getSignin', function(req, res){
         res.json(result);
     });
 });
+
+/**
+ * 查询签到
+ */
+router.post('/getchatGroupByGroupId', function(req, res){
+    var groupId=req.body["groupId"];
+    studioService.getStudioByGroupId(groupId, function(result){
+        res.json(result);
+    });
+});
+
+/**
+ * 更新session
+ */
+router.post('/updateSession', function(req, res){
+    var params = req.body['params'];
+    if(common.isBlank(params)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }
+    if(typeof params == 'string'){
+        try{
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+    req.session.studioUserInfo.toGroup=params.groupId;
+    res.json({isOK:true,msg:'更新成功'});
+});
+
 module.exports = router;
