@@ -1435,7 +1435,7 @@ var chat={
                     }
                     break;
                 }
-                case 'showTradeInfo'://晒单信息
+                case 'showTrade'://晒单信息
                     var showTradeInfo = result.data;
                     chatShowTrade.pushShowTradeInfo(showTradeInfo);
                     break;
