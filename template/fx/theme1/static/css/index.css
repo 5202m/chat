@@ -1156,6 +1156,20 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .yxlist li i.i3{ background-position:0 -130px }
 .yxlist li i.i4{ background-position:0 -195px }
 
+/* fx热点专题 */
+.mod_menu .dr11 .dropcont{ height: auto; top:50%; }
+.wid2 .mod_menu .dr11 .dropcont{ top:40% }
+.fxsplist{ padding: 30px }
+.fxsplist ul{ margin-top: -10px; }
+.fxsplist li{ font-size: 18px; text-align: center;   overflow: hidden; margin-top: 10px; position: relative; }
+.fxsplist li a{ height: 48px; line-height: 48px; display: block; text-decoration: none; color: #c49351;padding-left: 87px; margin-left: 10px;  border: 1px solid #c49351; text-align: left;border-radius: 3px;}
+.fxsplist li a:hover{ background: #c49351; color: #fff; }
+.fxsplist li i{ display: block; width: 65px; height: 50px; position: absolute; left: 0; top: 0;background:url(../img/fxspecial.png) 0 0 no-repeat }
+.fxsplist li i.i2{ background-position:0 -60px }
+.fxsplist li i.i3{ background-position:0 -120px }
+.fxsplist li b{ display: block; width: 8px; height: 15px; position: absolute; top: 50%; margin-top: -7px; right: 20px; background:url(../img/fxspecial.png) 0 -180px no-repeat;  }
+.fxsplist li a:hover b{ background-position: -20px -180px; }
+
 /* fx分析师专栏 */
 .header-right li.analystzl .dropcont{ width: 160px; left: 50%; margin-left: -80px; }
 .analystzl{}
