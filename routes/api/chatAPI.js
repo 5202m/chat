@@ -9,6 +9,7 @@ var router = express.Router();
 var userService = require('../../service/userService');
 var chatService = require('../../service/chatService');//引入chatService
 var visitorService = require('../../service/visitorService');//引入visitorService
+var chatPointsService = require('../../service/chatPointsService');//引入chatPointsService
 var common = require('../../util/common'); //引入公共的js
 var errorMessage = require('../../util/errorMessage');
 var constant = require('../../constant/constant');//引入constant
@@ -116,20 +117,6 @@ router.post('/noticeArticle', function(req, res) {
     res.json(result);
 });
 /**
- * 更新晒单状态推送消息
- */
-router.post('/noticeShowTrade', function(req, res){
-    var tradeIds = req.body['tradeIds'];
-    var result={isOK:false,error:null };
-    if(common.isBlank(tradeIds)){
-        result.error=errorMessage.code_1000;
-    }else{
-        chatService.noticeShowTrade(tradeIds);
-        result.isOK=true;
-    }
-    res.json(result);
-});
-/**
  * 客户晒单推送信息
  */
 router.post('/showTradeNotice', function(req, res) {
@@ -151,6 +138,7 @@ router.post('/showTradeNotice', function(req, res) {
             var tradeInfo = tradeInfoArray[i];
             if(tradeInfo.tradeType == 2){ //客户晒单
                 tradeInfoResult.push(tradeInfo);
+                chatPointsService.add({groupType: tradeInfo.groupType,userId: tradeInfo.boUser.telephone, item: 'daily_showTrade', val: 0,isGlobal: false,remark: '',opUser: tradeInfo.createUser,opIp: tradeInfo.createIp},function(result){});
             }
         }
         chatService.sendMsgToSpace(tradeInfo.groupType,"notice",{type:chatService.noticeType.showTrade,data:tradeInfoResult});

@@ -9,7 +9,6 @@ var chatShowTradeService = require('../service/showTradeService');
 var studioService = require('../service/studioService');
 var config=require('../resources/config');//资源文件
 var async = require('async');//引入async
-var chatPointsService = require('../service/chatPointsService');//引入chatPointsService
 /**
  * 聊天室服务类
  * 备注：处理聊天室接受发送的所有信息及其管理
@@ -675,40 +674,6 @@ var chatService ={
             }
         }catch(e){
             logger.error("noticeArticle fail",e);
-        }
-
-    },
-    /**
-     * 通知晒单数据
-     * @param tradeIds
-     */
-    noticeShowTrade:function(tradeIds){
-        try{
-            chatShowTradeService.getShowTradeByIds(tradeIds.split(','), function(result) {
-                var dataMap = {}, row = null;
-                for (var i in result) {
-                    row = result[i];
-                    if (dataMap.hasOwnProperty(row.groupType)) {
-                        dataMap[row.groupType].push(row);
-                    } else {
-                        dataMap[row.groupType] = [row];
-                    }
-                    var pointsParams = {groupType: row.groupType,userId: row.boUser.telephone, item: 'daily_showTrade', val: 0,isGlobal: false,remark: '',opUser: row.createUser,opIp: row.createIp};
-                    chatPointsService.add(pointsParams,function(result){
-
-                    });
-                }
-                var groupTypes = Object.keys(dataMap);
-                for(var i = 0, lenI = groupTypes.length; i < lenI; i++){
-                    studioService.getRoomList(groupTypes[i], function(rows){
-                        for(var i in rows) {
-                            chatService.sendMsgToRoom(true, null, rows[i]._id, "notice", {type: chatService.noticeType.showTradeInfo,data: dataMap[rows[i].groupType]});
-                        }
-                    });
-                }
-            });
-        }catch(e){
-            logger.error("noticeShowTrade fail",e);
         }
 
     },
