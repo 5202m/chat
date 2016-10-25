@@ -130,7 +130,7 @@ var studioService = {
      * 提取直播间
      */
     getStudioByGroupId:function(groupId,callback){
-        chatGroup.findById(groupId).select({clientGroup:1,name:1,talkStyle:1,whisperRoles:1}).exec(function (err,row) {
+        chatGroup.findById(groupId).select({clientGroup:1,name:1,talkStyle:1,whisperRoles:1,point:1,traninClient:1}).exec(function (err,row) {
             if(err){
                 logger.error("getStudioList fail:"+err);
             }
