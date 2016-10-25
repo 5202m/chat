@@ -26,31 +26,87 @@ var videosLive = {
             }
             if(!common.containSplitStr(cgs,indexJS.userInfo.clientGroup)){
                 if(indexJS.checkClientGroup("vip")){
-                    alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
+                   // alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
+                    box.showMsg({title:thiz.find("b").text(),msg:"该房间仅对新客户开放,"});
+                    $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher()'>如有疑问请联系老师助理</a>。");
+                    $("#popMsgCont .yesbtn").bind("click", function(){
+                        videosLive.contactTeacher();
+                    });
                 }else{
-                    alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
+                    //alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
+                    box.showMsg({title:thiz.find("b").text(),msg:"已有真实账户并激活的客户才可进入Vip专场，您还不满足条件,"});
+                    $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher()'>如有疑问请联系老师助理</a>。");
+                    $("#popMsgCont .yesbtn").bind("click", function(){
+                        videosLive.contactTeacher();
+                    });
                 }
                 return false;
             }
             common.getJson("/studio/checkGroupAuth",{groupId:thiz.attr("rid")},function(result){
                 if(!result.isOK){
                     if(indexJS.checkClientGroup("vip")){
-                        alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
+                        //alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
+                        box.showMsg({title:thiz.find("b").text(),msg:"该房间仅对新客户开放,"});
+                        $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher()'>如有疑问请联系老师助理</a>。");
+                        $("#popMsgCont .yesbtn").bind("click", function(){
+                            videosLive.contactTeacher();
+                        });
                     }else if(thiz.attr("rt")=='train') {
-                        alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
+                       common.getJson("/studio/getchatGroupByGroupId",{groupId:thiz.attr("rid")},function(result){
+                          var traninClients =  result.traninClient;
+                           var flag = false;
+                           for(var i = 0;i<traninClients.length;i++){
+                               var traninClient = traninClients[i];
+                               if(indexJS.userInfo.userId == traninClient.clientId){
+                                   flag = true;
+                                   break;
+                               }
+                           }
+                           if(flag){
+                               box.showMsg({title:thiz.find("b").text(),msg:"您未报名培训班或者未通过审核，是否消耗"+result.point+"积分直接进入房间？"});
+                               $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher()'>如有疑问请联系老师助理</a>。");
+                               $("#popMsgCont .yesbtn").bind("click", function(){
+                                   var params = {groupType:indexJS.userInfo.groupType,item:"prerogative_room",tag:'user_'+indexJS.userInfo.userId,val:-result.point,groupId:thiz.attr("rid")};
+                                   common.getJson('/studio/addPointsInfo',{params:JSON.stringify(params)}, function(result) {
+                                       if (!result.isOK) {
+                                           box.showTipBox(result.msg);
+                                       }else{
+                                           common.getJson('/studio/updateSession',{params:JSON.stringify(params)}, function(result) {
+                                               if(result.isOK){
+                                                   indexJS.toRefreshView();
+                                               }
+                                           });
+                                       }
+                                   })
+                               });
+                           }
+                        });
+
+                       // alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
                     }else{
-                        alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
+                        //alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
+                        box.showMsg({title:thiz.find("b").text(),msg:"已有真实账户并激活的客户才可进入Vip专场，您还不满足条件,"});
+                        $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher()'>如有疑问请联系老师助理</a>。");
+                        $("#popMsgCont .yesbtn").bind("click", function(){
+                            videosLive.contactTeacher();
+                        });
                     }
                 }else{
                     indexJS.toRefreshView();
                 }
             },true,function(err){
                 if("success"!=err) {
-                    alert("操作失败，请联系客服！" );
+                    //alert("操作失败，请联系客服！" );
+                    box.showMsg({title:thiz.find("b").text(),msg:"操作失败,"});
+                    $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher()'>如有疑问请联系老师助理</a>。");
+                    $("#popMsgCont .yesbtn").bind("click", function(){
+                        videosLive.contactTeacher();
+                    });
                 }
             });
         });
         indexJS.setListScroll($(".tabcont .main_tab .infocont .rbox .scrollbox"));//行情持仓比例未平仓品种比率滚动条
+
     },
     /**
      * 获取行情
@@ -159,5 +215,17 @@ var videosLive = {
                 formatHtmlArr.push('</div>');
         }
         return formatHtmlArr.join('');
+    },
+    contactTeacher:function(){
+        if($(".pletter_win .mult_dialog a[utype=3]").length==0) {
+            chat.getCSList();//设置所有客服
+        }
+        if($(this).hasClass('nocs')){
+            box.showTipBox('助理失联中');
+        }else {
+            common.openPopup('.blackbg,.pletter_win');
+        }
+
+        $("#popMsgBox").hide();
     }
 };
