@@ -222,6 +222,7 @@ var chatTeacher = {
                 box.showMsg(msg);
             }
         }else{
+            $('#loginBox').css('z-index','102');
             common.openPopup('.blackbg,.login');
         }
     },
