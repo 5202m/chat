@@ -1015,7 +1015,7 @@ var box={
                 if(result.isOK) {
                     common.getJson(indexJS.apiUrl + '/common/modifyArticle', {id: _this.attr('_id'), 'type': 'downloads'}, function (data) {
                         if (data.isOK) {
-                            if(typeof result.msg.change == 'number') {
+                            if(common.isValid(result.msg) && typeof result.msg.change == 'number') {
                                 box.showMsg('消费' + (-result.msg.change) + '积分');
                             }
                             _this.parent().prev().text(data.num);

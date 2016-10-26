@@ -400,7 +400,7 @@ var chatPride = {
             if (result.isOK) {
                 indexJS.getArticleInfo(dom.attr('_id'), function (data) {
                     if (data) {
-                        if(typeof result.msg.change == 'number') {
+                        if(common.isValid(result.msg) && typeof result.msg.change == 'number') {
                             box.showMsg('消费' + Math.abs(result.msg.change) + '积分');
                         }
                         chatPride.setViewDataHtml(dom, data);
