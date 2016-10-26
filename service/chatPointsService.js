@@ -83,13 +83,15 @@ var chatPointsService = {
      * 查询一个积分配置信息
      * @param item
      * @param groupType
+     * @param clientGroup
      * @param callback (err, config)
      */
-    getConfig : function(item, groupType, callback){
-        ChatPointsConfig.findOne({
+    getConfig : function(item, groupType,clientGroup, callback){
+        ChatPointsConfig.find({
             query : {
                 item : item,
                 groupType : groupType,
+                clientGroup:{$in:[clientGroup]},
                 isDeleted : 0,
                 status : 1
             }
@@ -97,6 +99,7 @@ var chatPointsService = {
             if(err){
                 logger.error("<<getConfig:查询积分配置信息出错，[errMessage:%s]", err);
             }
+            console.log("config",config);
             callback(err, config);
         })
     },
@@ -107,12 +110,12 @@ var chatPointsService = {
      * @param callback
      */
     add : function(params, callback){
-        if(!params.groupType || !params.userId || !params.item){
+        if(!params.groupType || !params.userId || !params.item||!params.clientGroup){
             callback(ErrorMessage.code_1000, null);
             return;
         }
         params.opUser = params.opUser || params.userId;
-        chatPointsService.getConfig(params.item, params.groupType, function(err, config){
+        chatPointsService.getConfig(params.item, params.groupType,params.clientGroup, function(err, config){
             if(err){
                 callback(ErrorMessage.code_10, null);
             }else if(!params.val && !config){

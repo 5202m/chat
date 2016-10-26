@@ -624,10 +624,8 @@ var userService = {
             }else{
                 callback({isOK:true});
                 if(common.isValid(params.item)) {
-                    var pointsParams = {change: 'avatar',groupType: params.groupType,userId: params.mobilePhone, item: params.item, val: 0,isGlobal: false,remark: '',opUser: params.userId,opIp: params.ip};
-                    userService.pointsChange(pointsParams,function(result){
-
-                    });
+                    var pointsParams = {clientGroup:params.clientGroup,change: 'avatar',groupType: params.groupType,userId: params.mobilePhone, item: params.item, val: 0,isGlobal: false,remark: '',opUser: params.userId,opIp: params.ip};
+                    userService.pointsChange(pointsParams,function(result){});
                 }
             }
         });
@@ -689,7 +687,7 @@ var userService = {
                     }else{
                         callback({isOK:true});
                         if(common.isValid(params.item)) {
-                            var pointsParams = {change: 'username',groupType: userInfo.groupType,userId: userInfo.mobilePhone, item: params.item, val: 0,isGlobal: false,remark: '',opUser: userInfo.userId,opIp: params.ip};
+                            var pointsParams = {clientGroup:userInfo.clientGroup,change: 'username',groupType: userInfo.groupType,userId: userInfo.mobilePhone, item: params.item, val: 0,isGlobal: false,remark: '',opUser: userInfo.userId,opIp: params.ip};
                             userService.pointsChange(pointsParams,function(result){
 
                             });
@@ -722,7 +720,7 @@ var userService = {
                             }else{
                                 callback({isOK:true});
                                 if(common.isValid(params.item)) {
-                                    var pointsParams = {change: 'email',groupType: params.groupType,userId: row.mobilePhone, item: params.item, val: 0,isGlobal: false,remark: '',opUser: params.userId,opIp: params.ip};
+                                    var pointsParams = {clientGroup:params.clientGroup,change: 'email',groupType: params.groupType,userId: row.mobilePhone, item: params.item, val: 0,isGlobal: false,remark: '',opUser: params.userId,opIp: params.ip};
                                     userService.pointsChange(pointsParams,function(result){
 
                                     });
@@ -761,6 +759,7 @@ var userService = {
                             if (common.isValid(params.item)) {
                                 var pointsParams = {
                                     change: 'pwd',
+                                    clientGroup:userInfo.clientGroup,
                                     groupType: userInfo.groupType,
                                     userId: userInfo.mobilePhone,
                                     item: params.item,
@@ -802,11 +801,32 @@ var userService = {
                     isChange = true;
                 }
                 if(isChange){
-                    var pointsParam = {groupType:params.groupType, userId:params.userId, item:params.item, val:params.val, isGlobal:false, remark:params.remark, opUser:params.opUser, opIp:params.ip};
+                    var pointsParam = {clientGroup:params.clientGroup,groupType:params.groupType, userId:params.userId, item:params.item, val:params.val, isGlobal:false, remark:params.remark, opUser:params.opUser, opIp:params.ip};
                     chatPointsService.add(pointsParam, function(err, res){
                         callback(res);
                     });
                 }
+            }
+        });
+    },
+    /**
+     * 完善资料积分变化
+     * @param mobilePhone
+     * @param groupType
+     * @param callback
+     */
+    getClientGroupByMId:function(mobileArr,groupType, callback){
+        member.find({mobilePhone:{$in:mobileArr},valid: 1,"loginPlatform.chatUserGroup" : {$elemMatch : {_id :groupType}}}, "loginPlatform.chatUserGroup.$", function(err, result){
+            if(err){
+                logger.error("getTeacherByUserId->get fail!"+err);
+                callback(null);
+            }else{
+                var mbGrObj={},row=null;
+                for(var i in result){
+                    row=result[i].loginPlatform.chatUserGroup.id(groupType);
+                    mbGrObj[result[i].mobilePhone]= row.clientGroup;
+                }
+                callback(mbGrObj);
             }
         });
     }

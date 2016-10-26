@@ -213,7 +213,7 @@ var studioService = {
                 callback(resultTmp);
             });
             if(common.isValid(userInfo.item)) {
-                var pointsParams = {groupType: userInfo.groupType,userId: userInfo.mobilePhone, item: userInfo.item, val: 0,isGlobal: false,remark: '',opUser: userInfo.userId,opIp: userInfo.ip};
+                var pointsParams = {clientGroup:clientGroup,groupType: userInfo.groupType,userId: userInfo.mobilePhone, item: userInfo.item, val: 0,isGlobal: false,remark: '',opUser: userInfo.userId,opIp: userInfo.ip};
                 chatPointsService.add(pointsParams,function(result){
 
                 });

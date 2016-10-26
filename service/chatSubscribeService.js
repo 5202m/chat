@@ -53,7 +53,7 @@ var chatSubscribeService = {
             status: 1 //状态：0 无效， 1 有效
         };
         if(params.point>0) {
-            var pointsParam = {groupType: params.groupType,userId: params.userId,item: 'prerogative_subscribe',val: -params.point,isGlobal: false,remark: params.pointsRemark,opUser: params.userName,opIp: params.Ip};
+            var pointsParam = {clientGroup:params.clientGroup,groupType: params.groupType,userId: params.userId,item: 'prerogative_subscribe',val: -params.point,isGlobal: false,remark: params.pointsRemark,opUser: params.userName,opIp: params.Ip};
             chatPointsService.add(pointsParam, function (err, result) {
                 if (!err && result) {
                     insertModel.pointsId = result._id;
@@ -99,7 +99,7 @@ var chatSubscribeService = {
                 }
                 var setObj = { '$set': {'analyst': params.analyst,'noticeType':params.noticeType,/*startDate:params.startDate,*/endDate:params.endDate,point:params.point, updateDate : new Date()}};
                 if(params.point>0 && row.point<params.point){
-                    var pointsParam = {groupType:params.groupType, userId:params.userId, item:'prerogative_subscribe', val:-(params.point-row.point), isGlobal:false, remark:params.pointsRemark, opUser:params.userName, opIp:params.Ip};
+                    var pointsParam = {clientGroup:params.clientGroup,groupType:params.groupType, userId:params.userId, item:'prerogative_subscribe', val:-(params.point-row.point), isGlobal:false, remark:params.pointsRemark, opUser:params.userName, opIp:params.Ip};
                     chatPointsService.add(pointsParam,function(err, result) {
                         if (!err && result) {
                             setObj.pointsId = result._id;

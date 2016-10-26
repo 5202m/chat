@@ -1062,6 +1062,7 @@ router.post('/modifyAvatar',function(req, res){
         params.groupType = getGroupType(req);
         params.mobilePhone = userInfo.mobilePhone;
         params.userId = userInfo.userId;
+        params.clientGroup = userInfo.clientGroup;
         userService.modifyAvatar(params,function(result){
             if(result.isOK){
                 req.session.studioUserInfo.avatar=avatar;
@@ -1263,7 +1264,7 @@ router.post('/modifyUName',function(req, res){
  */
 router.post('/modifyEmail',function(req, res){
     var userInfo=req.session.studioUserInfo,params=req.body["params"];
-    if(common.isBlank(params)){
+    if(common.isBlank(params)||!userInfo){
         res.json({isOK:false,msg:'参数错误'});
         return;
     }
@@ -1299,7 +1300,6 @@ router.post('/modifyEmail',function(req, res){
             email : params.email,
             url : urls.join("")
         };
-
         pmApiService.sendEmailByUTM(emailParams, "VerityEmail", params.email, userInfo.groupType, function(result){
             if(result.isOK){
                 result.msg = "已发送验证邮件至" + params.email + "！";
@@ -1320,13 +1320,17 @@ router.get('/confirmMail',function(req, res){
     params.key = req.query['key'];
     params.ip = common.getClientIp(req);
     params.item = 'register_email';
-    if(common.isBlank(params.email)){
+    var userInfo=req.session.studioUserInfo;
+    if(!userInfo){
+        res.render("error",{error: '操作错误，请联系客服'});
+    }else if(common.isBlank(params.email)){
         res.render("error",{error: '邮箱地址不能为空！'});
     }else if(!common.isEmail(params.email)){
         res.render("error",{error: '邮箱地址有误！'});
     }else if(common.getMD5(constant.emailKey+params.email+params.userId) != params.key) {
         res.render("error",{error: '校验码错误！'});
     }else{
+        params.clientGroup=userInfo.clientGroup;
         userService.modifyEmail(params,function(result){
              if(result.isOK){
                  try {
@@ -1456,6 +1460,7 @@ router.post('/subscribe', function(req, res){
     }
     params.Ip = common.getClientIp(req);
     params.userId = userInfo.mobilePhone;
+    params.clientGroup=userInfo.clientGroup;
     params.pointsId = '';//消费积分ID
     params.userName = userInfo.userName;
     params.startDate = new Date();//common.DateAdd('d', 1, new Date());//开始时间默认从订阅第二天开始

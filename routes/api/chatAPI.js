@@ -133,15 +133,25 @@ router.post('/showTradeNotice', function(req, res) {
             res.json(result);
             return;
         }
-        var tradeInfoResult = [];
+        var tradeInfoResult = [],mobileArr=[],tradeInfo =null;
         for(var i = 0;i<tradeInfoArray.length;i++){
-            var tradeInfo = tradeInfoArray[i];
+            tradeInfo = tradeInfoArray[i];
             if(tradeInfo.tradeType == 2){ //客户晒单
-                tradeInfoResult.push(tradeInfo);
-                chatPointsService.add({groupType: tradeInfo.groupType,userId: tradeInfo.boUser.telephone, item: 'daily_showTrade', val: 0,isGlobal: false,remark: '',opUser: tradeInfo.createUser,opIp: tradeInfo.createIp},function(result){});
+                mobileArr.push(tradeInfo.boUser.telephone);
             }
         }
-        chatService.sendMsgToSpace(tradeInfo.groupType,"notice",{type:chatService.noticeType.showTrade,data:tradeInfoResult});
+        //通过手机号码查询客户组
+        var mbObj=userService.getClientGroupByMId(mobileArr,tradeInfo.groupType);
+        for(var i = 0;i<tradeInfoArray.length;i++){
+            tradeInfo = tradeInfoArray[i];
+            if(tradeInfo.tradeType == 2){ //客户晒单
+                tradeInfoResult.push(tradeInfo);
+                chatPointsService.add({clientGroup:mbObj[tradeInfo.boUser.telephone],groupType: tradeInfo.groupType,groupType: tradeInfo.groupType,userId:tradeInfo.boUser.telephone, item: 'daily_showTrade', val: 0,isGlobal: false,remark: '',opUser: tradeInfo.createUser,opIp: tradeInfo.createIp},function(result){});
+            }
+        }
+        if(tradeInfoResult.length>0){
+            chatService.sendMsgToSpace(tradeInfo.groupType,"notice",{type:chatService.noticeType.showTrade,data:tradeInfoResult});
+        }
         result.isOK=true;
     }
     res.json(result);

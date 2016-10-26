@@ -99,6 +99,7 @@ var clientTrainService = {
                        }else{
                            var  everySignParam =  {
                                groupType:userInfo.groupType,
+                               clientGroup:userInfo.clientGroup,
                                userId:userInfo.mobilePhone,
                                item:'daily_sign',
                                val:null,
@@ -106,10 +107,11 @@ var clientTrainService = {
                                remark:"每日签到",
                                opUser:userInfo.userName,
                                opIp:clientip
-                           }
+                           };
                            chatPointsService.add(everySignParam, function(result){});
                            var  serialSignParam =  {
                                groupType:userInfo.groupType,
+                               clientGroup:userInfo.clientGroup,
                                userId:userInfo.mobilePhone,
                                item:'daily_sign',
                                val:null,
@@ -117,7 +119,7 @@ var clientTrainService = {
                                remark:"连续签到",
                                opUser:userInfo.userName,
                                opIp:clientip
-                           }
+                           };
                            chatPointsService.add(serialSignParam, function(result){});
                            callback({isOK:true, msg:'客户签到成功'});
                        }
@@ -139,6 +141,7 @@ var clientTrainService = {
                        }else{
                            var  param =  {
                                            userId:userInfo.mobilePhone,
+                                           clientGroup:userInfo.clientGroup,
                                            groupType:userInfo.groupType,
                                            item:'daily_sign',
                                            val:null,
@@ -146,9 +149,8 @@ var clientTrainService = {
                                            remark:"每日签到",
                                            opUser:userInfo.userName,
                                            opIp:clientip
-                                        }
+                                        };
                            chatPointsService.add(param, function(result){});
-
                            callback({isOK:true, msg:'客户签到成功'});
                        }
                    });
