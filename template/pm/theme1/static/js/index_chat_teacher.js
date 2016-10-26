@@ -246,22 +246,11 @@ var chatTeacher = {
             return;
         }*/
         chatTeacher.teacherId = teachId;
-        var params = {
-            groupId:groupId,
-            authorId:chatTeacher.teacherId,
-            code:"teach_video_base,teach_video_gw,teach_video_expert",
-            hasContent:0,
-            pageNo:1,
-            pageSize:3,
-            orderByStr:'{"sequence":"desc","publishStartDate":"desc"}'
-        };
-
-        common.getJson('/studio/initShowTeacher',{data:JSON.stringify(params)},function(data){
+        common.getJson('/studio/getShowTeacher',{data:JSON.stringify({groupId:groupId,authorId:chatTeacher.teacherId})},function(data){
             var userInfo = data.userInfo;//直播老师
             var analystList = data.analystList;//分析师列表
             var chatShowTrade = data.chatShowTrade;//直播老师晒单
             var chatGroupInfo = data.chatGroupInfo;//直播房间
-            var articleList = data.articleList;
             if(null != userInfo){//直播老师信息
                 $('.main_tab .teacherlist .teacherbox .te_top  .info-l span').eq(0).text(userInfo.userName);
                 $('.main_tab .teacherlist .teacherbox .te_top  .info-l span').eq(1).text(userInfo.position);
@@ -324,19 +313,88 @@ var chatTeacher = {
             if(null != chatGroupInfo){//直播房间老师
                 chatTeacher.showTrani(chatGroupInfo);
             }
-            if(articleList != null){
-                var  articleHtml = [];
-                for(var i = 1;i>=3;i++){
-                    if( i % 2 != 0){
-                        articleHtml.push('<li>');
-                    }else{
-                        articleHtml.push('<li class="r">');
+
+            indexJS.getArticleList("teach_video_base,teach_video_expert,teach_video_financial,teach_video_gw,student_style,teach_live_video",indexJS.userInfo.groupId,0,1,20,'{"createDate":"desc"}',null,function(dataList){
+                if(dataList && dataList.result==0){
+                    var articleList = dataList.data; console.log(articleList);
+                    var teachLiveCount = 1,studentLiveCount = 1,teachVideoCount = 1;
+                    var teachLiveHtml = [],studentLiveHtml = [],teachVideoHtml = [];
+                    var article =null,articleDetail = null;
+                    for(var i = 0;i<articleList.length;i++){
+                        article = articleList[i];
+                        articleDetail = articleList[i].detailList[0];
+                        //精彩直播
+                        if(article.categoryId == "teach_live_video" ){
+                            if(teachLiveCount <= 6){
+                                if( teachLiveCount % 3 != 0){
+                                    teachLiveHtml.push('<li>');
+                                }else{
+                                    teachLiveHtml.push('<li class="r">');
+                                }
+                                teachLiveHtml.push('<a href="javascript:" class="imga" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',\''+articleDetail.title+'\']);"><img src="'+article.mediaImgUrl+'" ><b class="playbtn"><i></i></b></a>');
+                                teachLiveHtml.push('<a href="javascript:" class="vlink" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',\''+articleDetail.title+'\']);">'+articleDetail.tag+'</a>');
+                                teachLiveHtml.push('</li>');
+                                teachLiveCount++;
+                            }
+                        }else  if(article.categoryId == "student_style" ){ //学员风采
+                            if(studentLiveCount <= 3){
+                                if( studentLiveCount % 3 != 0){
+                                    studentLiveHtml.push('<li>');
+                                }else{
+                                    studentLiveHtml.push('<li class="r">');
+                                }
+                                studentLiveHtml.push('<div class="imga"><img src="'+article.mediaUrl+'" alt=""></div>');
+                                studentLiveHtml.push('<span class="vlink">'+articleDetail.tag+'</span>');
+                                studentLiveHtml.push('</li>');
+                                studentLiveCount++;
+                            }
+                        }else{//教学视频
+                            if(teachVideoCount <= 3){
+                                if( teachVideoCount % 3 != 0){
+                                    teachVideoHtml.push('<li>');
+                                }else{
+                                    teachVideoHtml.push('<li class="r">');
+                                }
+                                teachVideoHtml.push('<a href="javascript:" class="imga" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',\''+articleDetail.title+'\']);"><img src="'+article.mediaImgUrl+'" ><b class="playbtn"><i></i></b></a>');
+                                teachVideoHtml.push('<a href="javascript:" class="vlink" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',\''+articleDetail.title+'\']);" >'+articleDetail.tag+'</a>');
+                                teachVideoHtml.push('</li>');
+                                teachVideoCount++;
+                            }
+                        }
                     }
-                    articleHtml.push('     <a href="" class="imga"><img src="/pm/theme1/img/tebox_pic2.jpg" alt=""><b class="playbtn"><i></i></b></a>');
-                    articleHtml.push('     <a href="" class="vlink">非农议息大赚</a></li>');
+                    $('.main_tab .teacherlist .teacherbox .tebox_teachLive ul').empty().prepend(teachLiveHtml.join("")); //精彩直播
+                    $('.main_tab .teacherlist .teacherbox .tebox_studentLive ul').empty().prepend(studentLiveHtml.join("")); //学员风采
+                    $('.main_tab .teacherlist .teacherbox .tebox_teachVideo ul').empty().prepend(teachVideoHtml.join("")); //教学视频
+                    //精采视频播放
+                    $('.main_tab .teacherlist .teacherbox .tebox_teachLive ul li a').click(function(){
+                        $('.main_tab .teacherlist .teacherbox .tebox_teachLive ul li .vlink').removeClass("on");
+                        if($(this).attr("class") =="imga"){
+                            $(this).next(".vlink").addClass("on");
+                        }
+                        if($(this).attr("class") =="vlink"){
+                            $(this).addClass("on");
+                        }
+                        videos.player.play($(this).attr("vurl"), $(this).attr("title"));
+                        var vdId=$(this).attr("articleId");
+                        chatAnalyze.setUTM(false,{courseId:vdId});//统计教学视频点击数
+                    });
+
+                    //教学视频播放
+                    $('.main_tab .teacherlist .teacherbox .tebox_teachVideo ul li a').click(function(){
+                        $('.main_tab .teacherlist .teacherbox .tebox_teachVideo ul li a .vlink').removeClass("on");
+                        if($(this).attr("class") =="imga"){
+                            $(this).next(".vlink").addClass("on");
+                        }
+                        if($(this).attr("class") =="vlink"){
+                            $(this).addClass("on");
+                        }
+                        videos.player.play($(this).attr("vurl"), $(this).attr("title"));
+                        var vdId=$(this).attr("articleId");
+                        chatAnalyze.setUTM(false,{courseId:vdId});//统计教学视频点击数
+                    });
+
                 }
-                $('.main_tab .teacherlist .teacherbox .tebox_video  ul').empty().prepend(articleHtml.join(""));
-            }
+            });
         });
     },
 
