@@ -178,7 +178,7 @@ var chatPointsService = {
             rate = Constant.pointsRate[params.groupType][params.clientGroup];
         }
         var chkResult = chatPointsService.checkLimit(config, pointsInfo, journal, rate);
-        if(journal.change != 0){
+        if(journal.change == 0){
             //积分变化为0不记录积分流水
             callback(null, journal);
         }else if(!chkResult){
@@ -215,15 +215,8 @@ var chatPointsService = {
      */
     checkLimit : function(config, pointsInfo, journal, rate){
         if(!config){//积分配置不存在
-            if(typeof journal.change == "number"){
-                if(journal.change + pointsInfo.points > 0){
-                    return null;
-                }else{
-                    return ErrorMessage.code_3004;
-                }
-            }else{
-                return ErrorMessage.code_3000; //不指定积分值，无效
-            }
+            journal.change = 0;
+            return null;
         }
         var result = null;
         var loc_val = journal.change || config.val;
