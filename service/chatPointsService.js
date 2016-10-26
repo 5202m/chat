@@ -99,7 +99,6 @@ var chatPointsService = {
             if(err){
                 logger.error("<<getConfig:查询积分配置信息出错，[errMessage:%s]", err);
             }
-            console.log("config",config);
             callback(err, config);
         })
     },
