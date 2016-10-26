@@ -404,7 +404,7 @@ var chatPride = {
                             box.showMsg('消费' + Math.abs(result.msg.change) + '积分');
                         }
                         chatPride.setViewDataHtml(dom, data);
-                        if(common.isBlank(storeData) && $.inArray(dom.attr('_id'), storeData)<0) {
+                        if($.inArray(dom.attr('_id'), storeData)<0) {
                             storeData.push(dom.attr('_id'));
                         }
                         store.set('point_'+indexJS.userInfo.userId, storeData);
