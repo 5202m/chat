@@ -1596,7 +1596,7 @@ router.post('/addClientTrain', function(req, res){
 /**
  * 初始化直播老师
  */
-router.post('/initShowTeacher', function(req, res){
+router.post('/getShowTeacher', function(req, res){
     var params = req.body['data'];
     if(typeof params == 'string'){
         try {
@@ -1611,15 +1611,7 @@ router.post('/initShowTeacher', function(req, res){
             return;
         }
         params.groupType = chatUser.groupType;
-        var baseApiParams={};
-        baseApiParams.code=params.code;
-        baseApiParams.platform=chatUser.groupId;
-        baseApiParams.authorId=params.authorId;
-        baseApiParams.hasContent=params.hasContent;
-        baseApiParams.pageNo = common.isBlank(params.pageNo) ? 1 : params.pageNo;
-        baseApiParams.pageSize = common.isBlank(params.pageSize) ? 15 : params.pageSize;
-        baseApiParams.orderByStr = common.isBlank(params.orderByStr) ? "" : params.orderByStr;
-        studioService.initShowTeacher(params, baseApiParams,function(result){
+        studioService.getShowTeacher(params,function(result){
             res.json(result);
         });
     }
