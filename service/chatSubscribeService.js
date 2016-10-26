@@ -138,6 +138,16 @@ var chatSubscribeService = {
      * @param callback ({{isOK : boolean, msg : String}})
      */
     saveSubscribe4UTM : function(groupType, userId, subscribeType, isAdd, callback){
+        var groupCodes = {
+            "daily_quotation" : "daily_quotation",
+            "big_quotation" : "big_quotation",
+            "daily_review" : "daily_review",
+            "week_review" : "week_review"
+        };
+        if(!groupCodes.hasOwnProperty(subscribeType)){
+            callback({isOK : true, msg : ""});
+            return;
+        }
         if(!groupType || !Config.utm.hasOwnProperty(groupType) || !userId){
             callback({isOK : false, msg : "参数错误！"});
             return ;
@@ -158,7 +168,7 @@ var chatSubscribeService = {
                 timestamp : common.formatDate(new Date(), "yyyyMMddHHmmss"),
                 accountSid: config.sid,
                 sign: "",
-                groupCode : subscribeType,
+                groupCode : groupCodes[subscribeType],
                 type : isAdd ? "add" : "remove",
                 phones : userId,
                 emails : null
