@@ -1050,6 +1050,21 @@ var box={
         return sort;
     },
     /**
+     * 获取会员权益内容
+     * @param code
+     */
+    setVipBeneFit:function(code){
+        if(common.isBlank(code)){
+            code = 'member_activity';
+        }
+        indexJS.getArticleList(code,indexJS.userInfo.groupId,1,1,1,'{"sequence":"desc","publishStartDate":"desc"}',null,function(dataList){
+            if(dataList && dataList.result==0){
+                var data = dataList.data[0].detailList[0];
+                $('div[t='+code+'] .benefit_table').html(data.content);
+            }
+        });
+    },
+    /**
      * 根据内容域模块名返回内容模板
      * @param region 内容域模块名
      * @returns {string}

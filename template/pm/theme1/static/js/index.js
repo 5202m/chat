@@ -79,6 +79,7 @@ var indexJS ={
          * 会员权益按钮事件
          */
         $('#vipbenefit').click(function(){
+            $('.vipbenefit .main_tabnav a:first').click();
             common.openPopup('.blackbg,.vipbenefit');
         });
         /**
@@ -110,7 +111,8 @@ var indexJS ={
         });
         /*聊天及我的账户弹框tab切换*/
         $('.main_tabnav a').click(function () {
-            switch($(this).attr('t')){
+            var t = $(this).attr('t');
+            switch(t){
                 case 'livepride':
                     chatPride.setTradeStrategyNote(null, false);
                     break;
@@ -128,12 +130,15 @@ var indexJS ={
                     chatShowTrade.getPointsInfo();
                     break;
             }
+            if($(this).parent().hasClass('vipbene')){
+                box.setVipBeneFit(t);
+            }
             $(this).parent().find('a').removeClass('on');
             $(this).parent().parent().find('.tabcont .main_tab').removeClass('on');
             $(this).addClass('on');
-            $('div[t='+$(this).attr('t')+']').addClass('on');
+            $('div[t='+ t +']').addClass('on');
             indexJS.heightCalcu();
-            if($(this).attr('t') == 'chat'){
+            if(t == 'chat'){
                 chat.setTalkListScroll(true);
             }
         });
@@ -645,6 +650,6 @@ var indexJS ={
         $('.chat_content .scrollbox').height(hh - $('.main_tabnav').height() - 201 - hh_header - 6);
         $('.sd_list .scrollbox').height(hh - $('.main_tabnav').height() - $('.sdbtn_bar').height() - hh_header - 6);
         $('.pop_mysd .sd_list .scrollbox').height(340);
-        $('#tvInfoId .introtext').height(hh - hh_header - $('.mod_video').height() - $('.mod_infotab .tabnav').height() - $('#teachVideoId').height() - $('#teachVideoPanel .courseNum').height() - 100);
+        $('#tvInfoId .introtext').height(hh - hh_header - $('.mod_video').height() - $('.mod_infotab .tabnav').height() - $('#teachVideoId').height() - $('#teachVideoPanel .courseNum').height() - 102);
     }
 };

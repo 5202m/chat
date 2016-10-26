@@ -100,7 +100,7 @@ var chatPride = {
         var imgReg = /<img\s+[^>]*src=['"]([^'"]+)['"][^>]*>/,matches;
         articleDetail=articleInfo.detailList && articleInfo.detailList[0];
         var aid = articleInfo._id || articleInfo.id;
-        var storeViewData = chatPride.getStoreViewData(aid);
+        var storeViewData = chatPride.getStoreViewData()||[];
         if (common.isValid(articleDetail.tag) && articleDetail.tag == 'trading_strategy') {
             publishTime = new Date(articleInfo.publishStartDate).getTime();
             //课程信息
@@ -128,7 +128,7 @@ var chatPride = {
                             remarkMap[row.symbol] = [row];
                         }
                     });
-                    if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' || common.isValid(storeViewData)) {
+                    if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' ||  $.inArray(aid, storeViewData)>-1) {
                         style = ' style="display:none;"';
                         var idx = 0;
                         $.each(remarkMap, function (i, row) {
@@ -197,7 +197,7 @@ var chatPride = {
                      }
                  });
                  if (common.isValid(articleDetail.tag) && articleDetail.tag == 'trading_strategy') {
-                     if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' || common.isValid(storeViewData)) {
+                     if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' ||  $.inArray(aid, storeViewData)>-1) {
                          var idx = 0;
                          $.each(remarkMap, function (i, row) {
                              var tradeStrategySupportDivHtml = [];
@@ -289,7 +289,7 @@ var chatPride = {
         publishTime = new Date(articleInfo.publishStartDate).getTime();
         //课程信息
         var aid = articleInfo._id || articleInfo.id;
-        var storeViewData = chatPride.getStoreViewData(aid);
+        var storeViewData = chatPride.getStoreViewData()||[];
         if(isPush){
             $panel.find("li[aid='" + aid + "']").remove();
         }
@@ -304,7 +304,7 @@ var chatPride = {
         }
         if (common.isValid(articleDetail.tag) && common.isValid(articleDetail.remark) && articleDetail.tag == 'shout_single') {
             var tradeStrategyHdDetailHtml = [], remarkArr = JSON.parse(articleDetail.remark),style='';
-            if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' || common.isValid(storeViewData)) {
+            if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' || $.inArray(aid, storeViewData)>-1) {
                 style=' style="display:none;"';
                 $.each(remarkArr, function (i, row) {
                     tradeStrategyHdDetailHtml.push(tradeStrategyHdDetail.formatStr(row.name, (row.longshort == 'long' ? '看涨' : '看跌'), row.point, row.profit, row.loss,''));
@@ -314,15 +314,21 @@ var chatPride = {
                     tradeStrategyHdDetailHtml.push(tradeStrategyHdDetail.formatStr(row.name, (row.longshort == 'long' ? '看涨' : '看跌'), '***', '***', '***','dim'));
                 });
             }
-            html = tradeStrategyHd.formatStr(articleDetail.content||'&nbsp;', tradeStrategyHdDetailHtml.join(''), style, aid);
+            var contentHtml = articleDetail.content||'&nbsp;';
+            matches = imgReg.exec(contentHtml);
+            while (matches) {
+                contentHtml = html.replace(imgReg, tradeStrategyNoteImg.formatStr(matches[1]));
+                matches = imgReg.exec(contentHtml);
+            }
+            html = tradeStrategyHd.formatStr(contentHtml, tradeStrategyHdDetailHtml.join(''), style, aid);
         }
         publishTimeStr = common.formatterDateTime(articleInfo.createDate, '-').substring(11);
         if(articleDetail.tag == 'trading_strategy'){
             return;
         }
         $li = $(tradeStrategyNote.formatStr(publishTimeStr, html, aid));
-        $li.find(".picpart>.imgbox").each(function () {
-            $(this).find("a>img").attr("src", $(this).attr("url"));
+        $li.find(".imgbox").each(function () {
+            $(this).find("img").attr("src", $(this).attr("url"));
         });
         if (isPrepend) {
             $panel.find(".livebrief[pt='" + publishTime + "']>div.brieflist ul").prepend($li);
@@ -374,38 +380,38 @@ var chatPride = {
     },
     /**
      * 获取交易策略或喊单store数据
-     * @param id
      * @returns {*}
      */
-    getStoreViewData:function(id){
+    getStoreViewData:function(){
         if (!store.enabled){
             console.log('Local storage is not supported by your browser.');
             return;
         }
-        return store.get(indexJS.userInfo.userId + '_' + id);
+        return store.get('point_'+indexJS.userInfo.userId);
     },
     /**
      * 扣积分查看数据
      * @param dom
      */
     viewData:function(dom){
-        var storeData = chatPride.getStoreViewData(dom.attr('_id'));
-        if(common.isBlank(storeData)) {
-            var params = {groupType: indexJS.userInfo.groupType,item: dom.attr('item'),tag: 'viewdata_' + dom.attr('_id')};
-            common.getJson('/studio/addPointsInfo', {params: JSON.stringify(params)}, function (result) {
-                if (result.isOK) {
-                    indexJS.getArticleInfo(dom.attr('_id'), function (data) {
-                        if (data) {
-                            box.showMsg('消费'+Math.abs(result.msg.change)+'积分');
-                            chatPride.setViewDataHtml(dom, data);
-                            store.set(indexJS.userInfo.userId + '_' + data._id, data);
+        var storeData = chatPride.getStoreViewData()||[];
+        var params = {groupType: indexJS.userInfo.groupType,item: dom.attr('item'),tag: 'viewdata_' + dom.attr('_id')};
+        common.getJson('/studio/addPointsInfo', {params: JSON.stringify(params)}, function (result) {
+            if (result.isOK) {
+                indexJS.getArticleInfo(dom.attr('_id'), function (data) {
+                    if (data) {
+                        if(typeof result.msg.change == 'number') {
+                            box.showMsg('消费' + Math.abs(result.msg.change) + '积分');
                         }
-                    });
-                }
-            });
-        }else{
-            chatPride.setViewDataHtml(dom, storeData);
-        }
+                        chatPride.setViewDataHtml(dom, data);
+                        if(common.isBlank(storeData) && $.inArray(dom.attr('_id'), storeData)<0) {
+                            storeData.push(dom.attr('_id'));
+                        }
+                        store.set('point_'+indexJS.userInfo.userId, storeData);
+                    }
+                });
+            }
+        });
     },
     /**
      * 设置查看数据的html

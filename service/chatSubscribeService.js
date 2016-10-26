@@ -98,6 +98,9 @@ var chatSubscribeService = {
                     params.endDate = common.DateAdd('M', 1, new Date(row.startDate));//极速时间，1月
                 }
                 var setObj = { '$set': {'analyst': params.analyst,'noticeType':params.noticeType,/*startDate:params.startDate,*/endDate:params.endDate,point:params.point, updateDate : new Date()}};
+                if(common.isBlank(params.analyst) || common.isBlank(params.noticeType)){
+                    setObj = { '$set': {'analyst': params.analyst,'noticeType':params.noticeType,/*startDate:params.startDate,*/endDate:params.endDate,point:params.point,valid:0, updateDate : new Date()}};
+                }
                 if(params.point>0 && row.point<params.point){
                     var pointsParam = {clientGroup:params.clientGroup,groupType:params.groupType, userId:params.userId, item:'prerogative_subscribe', val:-(params.point-row.point), isGlobal:false, remark:params.pointsRemark, opUser:params.userName, opIp:params.Ip};
                     chatPointsService.add(pointsParam,function(err, result) {
