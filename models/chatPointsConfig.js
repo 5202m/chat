@@ -17,6 +17,7 @@ var mongoose = require('mongoose')
 var chatPointsConfigSchema = new Schema({
     "_id" : ObjectId,
     "groupType" : {type:String, index : true},  //房间组别
+    "clientGroup" :[],  //客户组别
     "type" : String,                            //类别
     "item" : {type:String, index : true},       //项目
     "val" : Number,                             //积分值
