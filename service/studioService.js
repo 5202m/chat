@@ -661,7 +661,7 @@ var studioService = {
      * @param params
      * @param callback
      */
-    initShowTeacher: function(params,baseApiParams,dataCallback){
+    getShowTeacher: function(params,dataCallback){
         async.parallel({
                 userInfo: function (callback) {
                     boUser.findOne({userNo:params.authorId},"userNo userName position avatar introduction winRate",function(err,rows) {
@@ -740,17 +740,7 @@ var studioService = {
                             callback(err,rooms);
                         }
                     });
-              },
-                articleList: function (callback) {
-                baseApiService.getArticleList(baseApiParams,function(err,data){
-                if(err){
-                    logger.error("提取文档接口失败!:", err);
-                    callback(err,null);
-                }else{
-                    callback(err,data);
-                }
-              });
-            }
+              }
         },
          function (error, result) {
              dataCallback(result);
