@@ -1245,7 +1245,7 @@ var chat={
         if(common.isBlank(num) || isNaN(num)){
             return;
         }
-        $(".right_row .main_tabnav a[t='chat'] .dialognum").text(parseInt(num));
+        $(".right_row .main_tabnav a[t='chat'] .dialognum span").text(parseInt(num));
     },
     /**
      * 查询UI在线用户
@@ -1341,7 +1341,7 @@ var chat={
                         }
                         chat.contactAnalystEvent();
                         chat.setOnlineUser(userInfoTmp);
-                        onLineNum += parseInt($(".right_row .main_tabnav a[t='chat'] .dialognum").text()) + 1;
+                        onLineNum += parseInt($(".right_row .main_tabnav a[t='chat'] .dialognum span").text()) + 1;
                         chat.setOnlineNum(onLineNum);//设置在线人数
                     }else{
                         if(indexJS.userInfo.userId!=userInfoTmp.userId){
@@ -1349,7 +1349,7 @@ var chat={
                             if(userInfoTmp.userType == 3){
                                 $("#userListId #"+userInfoTmp.userId+' .uname>span').addClass('csoffline');
                             }else{
-                                var onLineNum = parseInt($(".right_row .main_tabnav a[t='chat'] .dialognum").text());
+                                var onLineNum = parseInt($(".right_row .main_tabnav a[t='chat'] .dialognum span").text());
                                 $("#userListId #"+userInfoTmp.userId).remove();
                                 $('#analystbar a[uid='+userInfoTmp.userId+']').remove();
                                 if(userInfoTmp.userType==2){

@@ -139,6 +139,7 @@ var indexJS ={
             $('div[t='+ t +']').addClass('on');
             indexJS.heightCalcu();
             if(t == 'chat'){
+                chat.showChatMsgNumTip(true);
                 chat.setTalkListScroll(true);
             }
         });
