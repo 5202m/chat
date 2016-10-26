@@ -55,8 +55,8 @@ var chatSubscribeService = {
         if(params.point>0) {
             var pointsParam = {clientGroup:params.clientGroup,groupType: params.groupType,userId: params.userId,item: 'prerogative_subscribe',val: -params.point,isGlobal: false,remark: params.pointsRemark,opUser: params.userName,opIp: params.Ip};
             chatPointsService.add(pointsParam, function (err, result) {
-                if (!err && result) {
-                    insertModel.pointsId = result._id;
+                if (!err) {
+                    insertModel.pointsId = common.isBlank(result)?'':result._id;
                     new chatSubscribe(insertModel).save(function (err) {
                         if (err) {
                             logger.error("保存订阅数据失败! >>saveSubscribe:", err);
@@ -104,8 +104,8 @@ var chatSubscribeService = {
                 if(params.point>0 && row.point<params.point){
                     var pointsParam = {clientGroup:params.clientGroup,groupType:params.groupType, userId:params.userId, item:'prerogative_subscribe', val:-(params.point-row.point), isGlobal:false, remark:params.pointsRemark, opUser:params.userName, opIp:params.Ip};
                     chatPointsService.add(pointsParam,function(err, result) {
-                        if (!err && result) {
-                            setObj.pointsId = result._id;
+                        if (!err) {
+                            setObj.pointsId = common.isBlank(result)?'':result._id;
                             chatSubscribe.findOneAndUpdate(searchObj, setObj, function (err1, row1) {
                                 if (err1) {
                                     logger.error('modifySubscribe=>fail!' + err1);

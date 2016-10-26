@@ -337,9 +337,9 @@ router.post('/login',function(req, res){
                 result.error=errorMessage.code_1006;
             }
         }
-        if(!common.isMobilePhone(mobilePhone)){
+        /*if(!common.isMobilePhone(mobilePhone)){
             result.error=errorMessage.code_1003;
-        }
+        }*/
     }
     if(result.error){
         res.json(result);
