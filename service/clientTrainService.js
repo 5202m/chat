@@ -20,8 +20,8 @@ var clientTrainService = {
     addClientTrain: function(params,userInfo, callback){
         chatGroup.findOne({'defaultAnalyst.userNo':params.userNo,groupType:userInfo.groupType,"traninClient.clientId":userInfo.userId},"",function(err,row) {
             if(err){
-                logger.error("查询培训报名数据失败! >>addChatTeacher:", err);
-                callback({isOK:false, msg:'已经培训报名了！'});
+                logger.error("查询培训报名数据失败! >>addClientTrain:", err);
+                callback({isOK:false, msg:'查询培训报名数据失败！'});
             }else{
                 if(row!= null){
                     callback(errorMessage.code_3003, null);
@@ -30,13 +30,13 @@ var clientTrainService = {
                     var setObj = {$push:{"traninClient":{"clientId":userInfo.userId,"nickname":params.nickname}}};
                     chatGroup.findOneAndUpdate(searchObj, setObj, function (err,row) {
                         if (err) {
-                            logger.error("保存培训报名数据失败! >>addChatTeacher:", err);
+                            logger.error("保存培训报名数据失败! >>addClientTrain:", err);
                             callback({isOK:false, msg:'培训报名失败'});
                         }else{
                             if(params.updateTrain){
                                 chatGroup.find({"groupType":userInfo.groupType,"defaultAnalyst":{$ne:[null],$exists:true},"defaultAnalyst._id":{$ne:""}},"",function(err,rooms){
                                     if(err){
-                                        logger.error("获取房间列表失败! >>getChatGroupList:", err);
+                                        logger.error("获取房间列表失败!", err);
                                     }else{
                                         callback({isOK:true, msg: '培训报名成功',chatGroup:rooms});
                                     }
