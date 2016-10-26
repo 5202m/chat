@@ -420,6 +420,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .mod_menu .dropitem > a i.i8{ background-position:0 -210px;margin-top:10px}
 .mod_menu .dropitem > a i.i9{ background-position: 0 -240px;}
 .mod_menu .dropitem > a i.i10{ background-position: 0 -270px;}
+.mod_menu .dropitem > a i.i11{ background-position: 0 -300px;}
 .mod_menu .dropitem.on > a i.i1{ background-position:-30px 0px;}
 .mod_menu .dropitem.on > a i.i2{ background-position:-30px -30px;}
 .mod_menu .dropitem.on > a i.i3{ background-position:-30px -60px;}
@@ -430,6 +431,7 @@ body{ background:url(../img/bg.jpg) center 0 no-repeat;font-family:'Microsoft Ya
 .mod_menu .dropitem.on > a i.i8{ background-position:-30px -210px;}
 .mod_menu .dropitem.on > a i.i9{ background-position:-30px -240px;}
 .mod_menu .dropitem.on > a i.i10{ background-position:-30px -270px;}
+.mod_menu .dropitem.on > a i.i11{ background-position:-30px -300px;}
 .mod_menu .dropitem .arr{  display:none; position:absolute; width:0; height:0; left:0; top:50%; margin-top: -8px; border-width:8px; border-color: transparent transparent transparent #fff ; border-style:solid; }
 .mod_menu .dropitem.on .arr{ display: block;z-index:10002;  }
 .dropcont .arr{ display:block; position:absolute; width:0; height:0; right:-16px; top:auto; border-width:8px; border-color: transparent transparent transparent #fff ; border-style:solid;}
