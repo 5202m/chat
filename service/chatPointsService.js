@@ -87,7 +87,7 @@ var chatPointsService = {
      * @param callback (err, config)
      */
     getConfig : function(item, groupType,clientGroup, callback){
-        ChatPointsConfig.find({
+        ChatPointsConfig.findOne({
             query : {
                 item : item,
                 groupType : groupType,
@@ -100,7 +100,7 @@ var chatPointsService = {
                 logger.error("<<getConfig:查询积分配置信息出错，[errMessage:%s]", err);
             }
             callback(err, config);
-        })
+        });
     },
 
     /**
