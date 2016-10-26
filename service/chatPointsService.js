@@ -117,8 +117,8 @@ var chatPointsService = {
         chatPointsService.getConfig(params.item, params.groupType,params.clientGroup, function(err, config){
             if(err){
                 callback(ErrorMessage.code_10, null);
-            }else if(!params.val && !config){
-                callback(ErrorMessage.code_3000, null);
+            }else if(!config){
+                callback(null, null);
             }else{
                 chatPointsService.getChatPoints(params.groupType, params.userId, function(err, pointsInfo){
                     if(err){
