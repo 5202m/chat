@@ -212,7 +212,7 @@ var chatShowTrade = {
      * 晒单墙点赞事件
      */
     showTradePraise:function(){
-        $('#showTradeDiv .scrollbox ul li .support').click(function(){
+        $('#showTradeDiv .scrollbox ul li .support,.pop_mysd .sd_list .sd_ul li .support').click(function(){
             var $this = $(this);
             var params = {clientId:indexJS.userInfo.userId, praiseId:$(this).attr('id')};
             common.getJson("/studio/setTradePraise",{data:JSON.stringify(params)},function(result){
