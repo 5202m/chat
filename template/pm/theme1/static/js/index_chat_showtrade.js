@@ -217,7 +217,7 @@ var chatShowTrade = {
             var params = {clientId:indexJS.userInfo.userId, praiseId:$(this).attr('id')};
             common.getJson("/studio/setTradePraise",{data:JSON.stringify(params)},function(result){
                 if(result.isOK) {
-                    $this.find('i').fadeIn().delay(400).fadeOut();
+                    //$this.find('i').fadeIn().delay(400).fadeOut();
                     var sp= $this.find("span");
                     sp.text(common.isValid(sp.text())?(parseInt(sp.text())+1):0);
                 }else{
