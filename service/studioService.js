@@ -664,7 +664,7 @@ var studioService = {
     getShowTeacher: function(params,dataCallback){
         async.parallel({
                 userInfo: function (callback) {
-                    boUser.findOne({userNo:params.authorId},"userNo userName position avatar introduction winRate",function(err,rows) {
+                    boUser.findOne({userNo:params.authorId},"userNo userName position avatar introduction winRate tag",function(err,rows) {
                         if(err){
                             logger.error("查询直播老师数据失败!:", err);
                             callback(err,null);
