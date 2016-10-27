@@ -33,7 +33,6 @@ var indexJS ={
         this.setVisitStore();//设置访客存储
         this.setEvent();//设置各种事件
         //this.setTradeStrategyNote(null, true);
-        //this.setAdvertisement();
         box.init();
         videosTeach.init();
         videos.init();
@@ -288,7 +287,6 @@ var indexJS ={
     serverTimeUp:function(){
         indexJS.fillCourse();//填充课程
         indexJS.courseTick.tick();
-        //indexJS.setInformation();
         this.towMinTime=this.serverTime;
         setInterval(function(){
             indexJS.serverTime+=1000;
@@ -433,71 +431,6 @@ var indexJS ={
         }
     },
     /**
-     * 设置广告
-     */
-    setAdvertisement:function(){
-        this.getArticleList("advertisement",indexJS.userInfo.groupId,"0",1,5,'{"sequence":"desc","publishStartDate":"desc"}',null,function(dataList){
-            if(dataList && dataList.result==0){
-                var data=dataList.data;
-                for(var i in data){
-                    $(".ban_ul").append('<li class="swiper-slide"><a href="'+(common.isBlank(data[i].linkUrl)?"javascript:":data[i].linkUrl)+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'banner_img\', \''+data[i].detailList[0].title+'\']);" target="_blank"><img width="100%" alt="" src="'+data[i].mediaUrl+'"></a></li>');
-                    if(data.length>1){
-                        $("#mod_position").append('<span class="'+(parseInt(i)==0?'p-click':'')+'"></span>');
-                    }
-                }
-                if(data && data.length>1){
-                    new Swiper('.mod_banner', {
-                        pagination: '#mod_position',
-                        paginationClickable: true,
-                        loop: true,
-                        autoplay : 5000,
-                        autoplayDisableOnInteraction : false
-                    });
-                }
-            }
-        });
-    },
-    /**
-     * 加载快讯数据
-     */
-    setInformation: function(){
-        var scrollDom = $(".mod_main .tabcont .main_tab:eq(2)").find('.scrollbox'), intervalTime = $('#newInfoCount').attr('t');
-        if(!common.isBlank(intervalTime) && indexJS.serverTime - intervalTime < 2*60*1000){
-            return;
-        }
-        $.getJSON(indexJS.apiUrl+ '/common/getInformation?t='+indexJS.serverTime, null, function(result){
-            if(result){
-                if(result.isOK) {
-                    var pt = $('#newInfoCount').attr('pt'), pubDateTime = null,newsHtml = '', newsFormatHtml = indexJS.formatHtml('news');
-                    $.each(result.data.news.item, function(key, row){
-                        if (pt == row.pubDate  && common.isValid(pt)) {
-                            indexJS.infoNewCount++;
-                            $('#newInfoCount').text(indexJS.infoNewCount).show();
-                        }
-                        if(key < 1){
-                            pubDateTime = row.pubDate;
-                        }
-                        if(row.pubDate > pt || common.isBlank(pt)) {
-                            newsHtml += newsFormatHtml.formatStr(row.pubDate.substring(10), row.title);
-                        }
-                    });
-                    if(common.isValid(newsHtml)) {
-                        $('.mod_main .message_list .scrollbox ul').prepend(newsHtml);
-                    }
-                    if(common.isBlank(pt)){
-                        $('#newInfoCount').attr('pt', pubDateTime);
-                    }
-                    indexJS.setListScroll(scrollDom);//设置滚动
-                    $('#newInfoCount').attr('pt', pubDateTime);
-                    if($(".mod_main .tabcont .main_tab:eq(2)").hasClass('on')){
-                        indexJS.infoNewCount = 0;
-                        $('#newInfoCount').attr({'pt':pubDateTime,'t':indexJS.serverTime}).text(indexJS.infoNewCount).hide();
-                    }
-                }
-            }
-        });
-    },
-    /**
      * 加载实盘策略
      */
     setTradeStrategy: function(scrollDom){
@@ -552,7 +485,6 @@ var indexJS ={
             case 2:
                 $("#welive_info").trigger("click");
                 break;
-
             case 1:
             default :
                 break;
@@ -643,9 +575,8 @@ var indexJS ={
      * 自动计算高度
      */
      heightCalcu: function() {
-        hh = $(window).height();
-        hh_header = $('.box-header').height();
-
+        var hh = $(window).height();
+        var hh_header = $('.box-header').height();
         $('.mod_video').height(hh - $('.mod_infotab').height() - hh_header - 5);
         $('.mod_main .tabcont .scrollbox').height(hh - $('.main_tabnav').height() - hh_header - 16);
         $('.chat_content .scrollbox').height(hh - $('.main_tabnav').height() - 201 - hh_header - 6);

@@ -1,13 +1,4 @@
 // VERSION: 2.2 LAST UPDATE: 13.03.2012
-/* 
- * Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
- * 
- * Made by Wilq32, wilq32@gmail.com, Wroclaw, Poland, 01.2009
- * Website: http://code.google.com/p/jqueryrotate/ 
- */
-
-// Documentation removed from script file (was kinda useless and outdated)
-
 (function($) {
 var supportedCSS,styles=document.getElementsByTagName("head")[0].style,toCheck="transformProperty WebkitTransform OTransform msTransform MozTransform".split(" ");
 for (var a=0;a<toCheck.length;a++) if (styles[toCheck[a]] !== undefined) supportedCSS = toCheck[a];

@@ -20,10 +20,9 @@
     <!--[if lt IE 9]>
     <link href="/pm/theme1/css/studioIE.css" rel="stylesheet" type="text/css">
     <![endif]-->
-    <script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
     <script type="text/javascript" src="/base/lib/store.min.js"></script>
     <!-- 自动登录 begin -->
-    <script type="text/javascript" src="/pm/theme1/js/loginAuto.js"></script>
+    <script type="text/javascript" src="/pm/theme1/js/lg.min.js"></script>
     <script>
         LoginAuto.sessionUser = JSON.parse('<%- userInfo %>');
         LoginAuto.init();
@@ -82,21 +81,21 @@
 
 <!-- 各种弹框 -->
 <% include index_box.html %>
-<script type="text/javascript" src="/base/lib/sewise/sewise.player.min.js"></script>
 <%if(isDevTest) {%>
     <script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="/base/lib/sewise/sewise.player.min.js"></script>
     <script type="text/javascript" src="/base/lib/socket.io.js"></script>
     <script type="text/javascript" src="/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
     <script type="text/javascript" src="/base/lib/lightbox/lightbox.min.js"></script>
     <script type="text/javascript" src="/base/lib/jqueryUI/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/base/lib/swipe/swiper.min.js"></script>
-    <script type="text/javascript" src="/base/lib/websocket.min.js"></script>
     <script type="text/javascript" src="/base/lib/jquery.xdomainrequest.min.js"></script>
     <script type="text/javascript" src="/base/lib/flowplayer/flowplayer.min.js"></script>
     <script type="text/javascript" src="/base/lib/paste.js"></script>
     <script type="text/javascript" src="/base/lib/jquery.superslide.2.1.1.js"></script>
-    <script type="text/javascript" src="/base/lib/newquote.js"></script>
     <script type="text/javascript" src="/base/lib/jquery.face.js"></script>
+    <script type="text/javascript" src="/base/lib/websocket.min.js"></script>
+    <script type="text/javascript" src="/base/lib/newquote.js"></script>
     <script type="text/javascript" src="/base/util/common.js"></script>
     <script type="text/javascript" src="/base/util/chatAnalyze.js"></script>
     <script type="text/javascript" src="/pm/theme1/js/index.js"></script>
@@ -110,177 +109,41 @@
     <script type="text/javascript" src="/pm/theme1/js/index_chat.js"></script>
     <script type="text/javascript" src="/pm/theme1/js/index_chat_teacher.js"></script>
     <script type="text/javascript" src="/pm/theme1/js/index_chat_showtrade.js"></script>
-<%}%>
+    <script type="text/javascript">
+        indexJS.fromPlatform='<%- fromPlatform%>';
+        indexJS.apiUrl='<%= apiUrl %>';
+        indexJS.userInfo=JSON.parse('<%- userInfo %>');
+        indexJS.serverTime=Number('<%= serverTime %>');
+        indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
+        indexJS.filePath='<%= filePath %>';
+        indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
+        indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
+        indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
+        chatAnalyze.setUTM(true,$.extend({userTel:'<%= userSession.mobilePhone %>'}, indexJS.userInfo));
+        indexJS.init();//初始化
+    </script>
+<%} else{ %>
 <script type="text/javascript">
     basket.version='<%=version%>';
-    /*basket.require(
-            {url: "/base/lib/jquery-1.7.min.js"},
-            {url: "/base/lib/socket.io.js"},
-            {url: "/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"},
-            {url: "/base/lib/lightbox/lightbox.min.js"},
-            {url: "/base/lib/jqueryUI/jquery-ui.min.js"},
-            {url: "/base/lib/swipe/swiper.min.js"},
-            {url: "/base/lib/websocket.min.js"},
-            {url: "/base/lib/jquery.xdomainrequest.min.js"},
-            {url: "/base/lib/flowplayer/flowplayer.min.js"},
-            {url: "/base/lib/paste.js"},
-            {url: "/base/lib/jquery.superslide.2.1.1.js"}
-    <% if(isDevTest) { %>
-        ,{url:"/base/lib/newquote.js",skipCache:true}
-        ,{url:"/base/lib/jquery.face.js",skipCache:true}
-        ,{url:"/base/util/common.js",skipCache:true}
-        ,{url:"/base/util/chatAnalyze.js",skipCache:true}
-        ,{url:"/pm/theme1/js/index.js",skipCache:true}
-        ,{url:"/pm/theme1/js/index_box.js",skipCache:true}
-        ,{url:"/pm/theme1/js/index_video.js",skipCache:true}
-        ,{url:"/pm/theme1/js/index_video_live.js",skipCache:true}
-        ,{url:"/pm/theme1/js/index_video_teach.js",skipCache:true}
-        ,{url:"/pm/theme1/js/index_video_subscribe.js",skipCache:true}
-        ,{url:"/pm/theme1/js/index_video_train.js",skipCache:true}
-        ,{url:"/pm/theme1/js/index_chat_pride.js",skipCache:true}
-        ,{url:"/pm/theme1/js/index_chat.js",skipCache:true}
-        ,{url:"/pm/theme1/js/index_chat_teacher.js",skipCache:true}
-        ,{url:"/pm/theme1/js/index_chat_showtrade.js",skipCache:true}
-    <% }else{ %>,{url:"/pm/theme1/js/index.min.js"}<% }%>,function () {//ie版本不做本地缓存操作
+    basket.require({url:"/pm/theme1/js/lib.min.js"},{url:"/pm/theme1/js/index.min.js"},function () {//ie版本不做本地缓存操作
         pageFun();
-        indexJS.init();//初始化
     }).then(function () {
         pageFun();
-        indexJS.init();//初始化
-    });*/
-    pageFun();
-    indexJS.init();//初始化
+    });
     function pageFun() {
-         indexJS.fromPlatform='<%- fromPlatform%>';
-         indexJS.apiUrl='<%= apiUrl %>';
-         indexJS.userInfo=JSON.parse('<%- userInfo %>');
-         indexJS.serverTime=Number('<%= serverTime %>');
-         indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
-         indexJS.filePath='<%= filePath %>';
-         indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
-         indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
-         indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
-         chatAnalyze.setUTM(true,$.extend({userTel:'<%= userSession.mobilePhone %>'}, indexJS.userInfo));
-
-        $(function () {
-            /*晒单图片*/
-            //$('.lightbox').lightbox();
-
-            /**/
-            $('.skilldata .viewdata').click(function () {
-                $(this).parent().find('.support span').removeClass('dim')
-            });
-
-            $('.te_list li').click(function () {
-                $('.dialogbtn').hide();
-                var ind = $(this).attr('class').substr(2, 1);
-                //alert(ind)
-                var mydialog = $($('.te_dialoglist .dialogbtn')[ind - 1]);
-                mydialog.css('left', $(this).offset().left - $('.chat').offset().left + 5).show();
-            });
-            $('.te_list .jt_btn').click(function () {
-                $('.te_dialoglist .dialogbtn').hide();
-            });
-
-            /*聊天屏蔽下拉框*/
-            /*$('.view_select').hover(function () {
-                $(this).addClass('dw')
-            }, function () {
-                $(this).removeClass('dw')
-            });*/
-
-
-            /*私聊窗口关闭*/
-            $('.pletter_win .pop_close').click(function () {
-                $('.pletter_win').hide();
-                $('.blackbg').hide();
-            });
-
-            /*点赞+1*/
-            /*$('.support').live('click', function () {
-                if (!$(this).hasClass('supported')) {
-                    $(this).find('i').fadeIn().delay(400).fadeOut();
-                    $(this).find('span').html(parseInt($(this).find('span').html()) + 1);
-                    $(this).addClass('supported');
-                    $(this).attr('title', '已点赞')
-                }
-            });*/
-        });
-
+        indexJS.fromPlatform='<%- fromPlatform%>';
+        indexJS.apiUrl='<%= apiUrl %>';
+        indexJS.userInfo=JSON.parse('<%- userInfo %>');
+        indexJS.serverTime=Number('<%= serverTime %>');
+        indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
+        indexJS.filePath='<%= filePath %>';
+        indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
+        indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
+        indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
+        chatAnalyze.setUTM(true,$.extend({userTel:'<%= userSession.mobilePhone %>'}, indexJS.userInfo));
+        indexJS.init();//初始化
     }
-
 </script>
-<script type="text/javascript">
-    /*indexJS.fromPlatform='<%- fromPlatform%>';
-    indexJS.apiUrl='<%= apiUrl %>';
-    indexJS.userInfo=JSON.parse('<%- userInfo %>');
-    indexJS.serverTime=Number('<%= serverTime %>');
-    indexJS.socketUrl=JSON.parse('<%- socketUrl %>');
-    indexJS.filePath='<%= filePath %>';
-    indexJS.syllabusData=common.formatToJson('<%- syllabusData%>');
-    indexJS.currStudioAuth=('<%- currStudioAuth%>'=='true');
-    indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
-    chatAnalyze.setUTM(true,$.extend({userTel:'<%= userSession.mobilePhone %>'}, indexJS.userInfo));*/
-    /*function widthCheck(){
-        var ww = $(window).width();
-        if(ww <= 1680 ){
-            $('body').addClass('wid1');
-            if(ww < 1440 ){
-                $('body').addClass('wid2');
-                if(ww < 1281 ){
-                    $('body').addClass('wid3');
-                }
-            }
-        }
-        if(ww >1680){
-            $('body').removeClass('wid1');
-            $('body').removeClass('wid2');
-            $('body').removeClass('wid3');
-        }
-    }
-    function heightCalcu() {
-        var hh = $(window).height(), hh_banner = $('.mod_banner').height();
-        var hh_room = $('.mod_room').height();
-        $('.mod_main .tabcont').height(hh - hh_banner - 115);
-        $('.mod_video').height(hh - $(".mod_videolist").height() - 70);
-        var hTmp = $(".mod_videolist .listcont").height();
-        $('.mod_videolist .list_tab').height(hTmp - 30);
-        $('.mod_videolist .sd_show').height(hTmp - 40);
-        $('.mod_userlist .scrollbox').height(hh - hh_room - 115);
-        $('.mod_menu').height(hh - 70);
-        $('.calendar_ul.scrollbox2').height(hh - 165);
-        $('.ppt_list').height(hh - 101);
-        $('.allsd_list .sdlistcont').height(hh - 173);
-        $('.mysd_list .sdlistcont').height(hh - 218);
-        $('.main_tab .scrollbox:eq(0)').height(hh - hh_banner - 115);
-        $('.main_tab .scrollbox:gt(1)').height(hh - hh_banner - 115);
-        var chatTab = $(".main_tab:eq(1)");
-        var chatInputHeight = 0;
-        if(chatTab.is(".on")){
-            chatInputHeight = $(".chat_input").height();
-        }else{
-            chatTab.addClass("on");
-            chatInputHeight = $(".chat_input").height();
-            chatTab.removeClass("on");
-        }
-        $('#chatMsgContentDiv').height(hh - hh_banner - 115 - chatInputHeight);
-        $('#teachVideoId div[t] ul').css("max-height",($('.mod_video').height()-150)+"px");
-    }
-    widthCheck();
-    heightCalcu();*/
-    /*$(function() {
-        $(window).resize(function (e) {
-            widthCheck();
-            heightCalcu();
-        });
-        lightbox.option({
-            'resizeDuration': 200,
-            'wrapAround': true,
-            'disableScrolling':true,
-            'positionFromTop':50,
-            'albumLabel':"%1 of %2"
-        });
-    });*/
-</script>
+<%}%>
 </body>
 </html>

@@ -34,13 +34,21 @@ var fileZip = {
      * @param flieInArr
      * @param fileOut
      */
-    zipJs:function(flieInArr,fileOut){
+    zipJs:function(flieInArr,fileOut,isMarge){
         var obj=this.formatCurrPath(flieInArr);
         flieInArr=obj.filePath;
         var fileOutArr=[];
         fileOutArr.push(fileOut);
         try{
-            fs.writeFileSync(this.formatCurrPath(fileOutArr).filePath[0], ujs.minify(flieInArr).code, 'utf8');
+            if(isMarge){
+                var pfList=[];
+                for(var i in flieInArr){
+                    pfList.push("/* "+obj.fileName[i]+" */\n"+fs.readFileSync(flieInArr[i], 'utf8'));
+                }
+                fs.writeFileSync(this.formatCurrPath(fileOutArr).filePath[0],pfList.join("\n"), 'utf8');
+            }else{
+                fs.writeFileSync(this.formatCurrPath(fileOutArr).filePath[0], ujs.minify(flieInArr).code, 'utf8');
+            }
         }catch (e){
             console.log("zipJs【"+fileOut+"】 fail,no file!");
             return;
@@ -73,21 +81,44 @@ for(var key in config.defTemplate){
         prefixPath='template\\'+key+'\\theme'+i+'\\static\\';
         if(i==1){//pc版
             fileZip.zipCss([prefixPath+'css\\index.css'],prefixPath+'css\\index.min.css');
-            if(key=="hx"){
-                fileZip.zipCss([prefixPath+'css\\dark.css'],prefixPath+'css\\dark.min.css');
-                fileZip.zipCss([prefixPath+'css\\light.css'],prefixPath+'css\\light.min.css');
-                fileZip.zipCss([prefixPath+'css\\gold.css'],prefixPath+'css\\gold.min.css');
-                fileZip.zipCss([prefixPath+'css\\darkblue.css'],prefixPath+'css\\darkblue.min.css');
-                fileZip.zipCss([prefixPath+'css\\orange.css'],prefixPath+'css\\orange.min.css');
+            if(key=="pm"){
+                var libList=["jquery-1.7.min.js","socket.io.js"
+                ];
+                var libList=["jquery-1.7.min.js","socket.io.js","mScroll\\jquery.mCustomScrollbar.concat.min.js",
+                    "lightbox\\lightbox.min.js","jqueryUI\\jquery-ui.min.js","swipe\\swiper.min.js","jquery.xdomainrequest.min.js",
+                    "jquery.superslide.2.1.1.js","websocket.min.js","newquote.min.js","flowplayer\\flowplayer.min.js",
+                    "sewise\\sewise.player.min.js","paste.min.js","jquery.face.min.js"
+                ];
+                libList=libList.map(function(item){
+                    return "template\\base\\lib\\"+item;
+                });
+                var utilList=["template\\base\\util\\common.js","template\\base\\util\\chatAnalyze.js"];
+                var myList=["index.js","index_box.js","index_video.js","index_video_live.js","index_video_teach.js","index_video_subscribe.js",
+                        "index_video_train.js","index_chat_pride.js","index_chat.js","index_chat_teacher.js","index_chat_showtrade.js"
+                    ];
+                myList=myList.map(function(item){
+                    return prefixPath+"js\\"+item;
+                });
+                fileZip.zipJs(libList,prefixPath+"js\\lib.min.js",true);
+                fileZip.zipJs(utilList.concat(myList),prefixPath+"js\\index.min.js");
+                fileZip.zipJs([prefixPath+"js\\loginAuto.js"],prefixPath+"js\\lg.min.js");
+            }else{
+                if(key=="hx"){
+                    fileZip.zipCss([prefixPath+'css\\dark.css'],prefixPath+'css\\dark.min.css');
+                    fileZip.zipCss([prefixPath+'css\\light.css'],prefixPath+'css\\light.min.css');
+                    fileZip.zipCss([prefixPath+'css\\gold.css'],prefixPath+'css\\gold.min.css');
+                    fileZip.zipCss([prefixPath+'css\\darkblue.css'],prefixPath+'css\\darkblue.min.css');
+                    fileZip.zipCss([prefixPath+'css\\orange.css'],prefixPath+'css\\orange.min.css');
+                }
+                jsArr = [];
+                if(key!= "hx"){
+                    jsArr.push("template\\base\\util\\chatAnalyze.js");
+                }
+                jsArr.push("template\\base\\util\\common.js","template\\base\\lib\\newquote.js","template\\base\\lib\\jquery.face.js",
+                    prefixPath+"js\\index.js",prefixPath+"js\\index_video.js",prefixPath+"js\\index_chat.js",prefixPath+"js\\index_box.js",prefixPath+"js\\index_tool.js");
+                fileZip.zipJs(jsArr,prefixPath+"js\\index.min.js");
+                fileZip.zipJs([prefixPath+"js\\loginAuto.js"],prefixPath+"js\\lg.min.js");
             }
-            jsArr = [];
-            if(key!= "hx"){
-                jsArr.push("template\\base\\util\\chatAnalyze.js");
-            }
-            jsArr.push("template\\base\\util\\common.js","template\\base\\lib\\newquote.js","template\\base\\lib\\jquery.face.js",
-                prefixPath+"js\\index.js",prefixPath+"js\\index_video.js",prefixPath+"js\\index_chat.js",prefixPath+"js\\index_box.js",prefixPath+"js\\index_tool.js");
-            fileZip.zipJs(jsArr,prefixPath+"js\\index.min.js");
-            fileZip.zipJs([prefixPath+"js\\loginAuto.js"],prefixPath+"js\\lg.min.js");
         }
         if(i==2 || i==4){//移动版与或webui
         	fileZip.zipCss([prefixPath+'css\\index.css'],prefixPath+'css\\index.min.css');
