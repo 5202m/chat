@@ -259,6 +259,15 @@ var chatTeacher = {
 
                 $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").empty();
                 $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").append('<a href="javascript:void(0)" class="support" uid="'+userInfo.userNo+'" onclick="chatTeacher.showAnalystPraiseInfo(this)"><i class="i6"></i></a><b>(<label>'+userInfo.praiseNum+'</label>)</b><span>赞</span>');
+                if(userInfo.tag){
+                    var tagHtml = [];
+                    var tags = userInfo.tag.split(",");
+                    for(var i = 0 ;i<tags.length;i++){
+                        var tag = tags[i];
+                        tagHtml.push('<span class="tag"><span>'+tag+'</span><i></i></span>');
+                    }
+                    $(".main_tab .teacherlist .teacherbox  .taglist").empty().append(tagHtml.join(""));
+                }
             }
             if(null != analystList){//分析师列表
                 var html = [];
