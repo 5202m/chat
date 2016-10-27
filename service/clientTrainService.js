@@ -178,8 +178,8 @@ var clientTrainService = {
                         }
                     });
                 },
-                signinList: function (callback) {
-                    signin.find({"userId":{$ne:userInfo.mobilePhone}}).sort({"signinTime": -1}).exec("find", function (err, data) {
+                signinList: function (callback) {//最近10条签到用户
+                    signin.find({"userId":{$ne:userInfo.mobilePhone}}).sort({"signinTime": -1}).limit(10).exec("find", function (err, data) {
                         if (err) {
                             logger.error("查询最近签到客户数据失败!:", err);
                             callback(err,null);
