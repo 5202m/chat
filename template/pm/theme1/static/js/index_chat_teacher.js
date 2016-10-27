@@ -227,11 +227,11 @@ var chatTeacher = {
 
     selectAnalyst:function(obj){
         $(obj).addClass('on');
-        chatTeacher.initShowTeacher($(obj).attr('uid'));
+        chatTeacher.getShowTeacher($(obj).attr('uid'));
     },
 
     /**初始化直播老师栏目*/
-    initShowTeacher:function(userNo){
+    getShowTeacher:function(userNo){
         var teachId ;
         if(null == userNo){
             teachId = indexJS.courseTick.course && indexJS.courseTick.course.lecturerId;
@@ -260,8 +260,7 @@ var chatTeacher = {
                 $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").empty();
                 $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").append('<a href="javascript:void(0)" class="support" uid="'+userInfo.userNo+'" onclick="chatTeacher.showAnalystPraiseInfo(this)"><i class="i6"></i></a><b>(<label>'+userInfo.praiseNum+'</label>)</b><span>赞</span>');
             }
-
-            if(null != analystList){
+            if(null != analystList){//分析师列表
                 var html = [];
                 for(var i = 0;i<analystList.length;i++){
                     var analyst = analystList[i];
@@ -269,49 +268,64 @@ var chatTeacher = {
                 }
                 $('.main_tab .teacherlist .teacherbox  .clearfix .teacher_select .selectlist').empty().prepend(html.join(""));
             }
+            if(null != chatShowTrade){//直播老师晒单显示
+                var data = {type:"prerogative",item:"prerogative_position"};
+                common.getJson('/studio/getChatPointsConfig',{data:JSON.stringify(data)}, function(result) {
+                    var isNotAuth = false,isPos = false;
+                    if(result){
+                        var clientGroups = result.clientGroup;
+                        for(var i=0;i<clientGroups.length;i++){
+                            var clientGroup = clientGroups[i];
+                            if(clientGroup == indexJS.userInfo.clientGroup){
+                                isNotAuth = true;
+                            }
+                        }
+                    }
+                    var html = [];
+                    for(var i = 0,k=1;i<chatShowTrade.tradeList.length;i++,k++){
+                        var chatTrade = chatShowTrade.tradeList[i];
+                        isPos = !chatTrade.profit;
+                        if(k >4){
+                            break;
+                        }
+                        if( k % 2 != 0){
+                            html.push('<li>');
+                        }else{
+                            html.push('<li class="r">');
+                        }
+                        html.push('<div class="cont">');
+                        html.push('<div class="sd_tit">');
+                        html.push('<span class="dep">');
+                        if(isPos){
+                            html.push('持仓中');
+                        }else{
+                            html.push('获利：');
+                            html.push('<b' + (/^-/.test(chatTrade.profit) ? ' class="fall"' : '') + '>' + chatTrade.profit + '</b>');
+                        }
+                        html.push('</span>');
+                        html.push('<span class="sdtime">晒单时间: ' + common.formatterDateTime(chatTrade.showDate).substring(5, 16) + '</span>');
+                        html.push('</div>');
 
-            if(null != chatShowTrade){//直播老师晒单
-                var html = [];
-                var isNotAuth = indexJS.checkClientGroup("new"), isPos = false;
-                for(var i = 0,k=1;i<chatShowTrade.tradeList.length;i++,k++){
-                    var chatTrade = chatShowTrade.tradeList[i];
-                    isPos = !chatTrade.profit;
-                    if(k >4){
-                        break;
+                        if(isPos){
+                            if(indexJS.userInfo.isLogin && isNotAuth){
+                                html.push('<a href="' + chatTrade.tradeImg + '" data-lightbox="sd-img" data-title="' + (isPos ? "持仓中" : "获利：" + chatTrade.profit) + '" onclick="chatTeacher.deductionIntegralShowTrade(this)" tradeId="'+chatTrade._id+'">');
+                            }else{
+                                html.push('<a href="javascript:chatTeacher.sd.showAuthBox()">');
+                            }
+                            html.push('<i class="i-zoom"></i><img src="/pm/theme1/img/sd_default.png"></a>');
+                        }else{
+                            html.push('<a href="' + chatTrade.tradeImg + '" data-lightbox="sd-img" data-title="' + (isPos ? "持仓中" : "获利：" + chatTrade.profit) + '">');
+                            html.push('<i class="i-zoom"></i><img src="' + chatTrade.tradeImg + '"></a>');
+                        }
+                        html.push('</div></li>');
                     }
-                    if( k % 2 != 0){
-                        html.push('<li>');
-                    }else{
-                        html.push('<li class="r">');
-                    }
-                    html.push('<div class="cont">');
-                    html.push('<div class="sd_tit">');
-                    html.push('<span class="dep">');
-                    if(isPos){
-                        html.push('持仓中');
-                    }else{
-                        html.push('获利：');
-                        html.push('<b' + (/^-/.test(chatTrade.profit) ? ' class="fall"' : '') + '>' + chatTrade.profit + '</b>');
-                    }
-                    html.push('</span>');
-                    html.push('<span class="sdtime">晒单时间: ' + common.formatterDateTime(chatTrade.showDate).substring(5, 16) + '</span>');
-                    html.push('</div>');
-                    if(isNotAuth && isPos){
-                       // html.push('<a href="javascript:chatTeacher.sd.showAuthBox()">');
-                        html.push('<a href="' + chatTrade.tradeImg + '" data-lightbox="sd-img" data-title="' + (isPos ? "持仓中" : "获利：" + chatTrade.profit) + '" onclick="chatTeacher.deductionIntegralShowTrade(this)" tradeId="'+chatTrade._id+'">');
-                        html.push('<i class="i-zoom"></i><img src="/pm/theme1/img/sd_default.png"></a>');
-                    }else{
-                        html.push('<a href="' + chatTrade.tradeImg + '" data-lightbox="sd-img" data-title="' + (isPos ? "持仓中" : "获利：" + chatTrade.profit) + '">');
-                        html.push('<i class="i-zoom"></i><img src="' + chatTrade.tradeImg + '"></a>');
-                    }
-                    html.push('</div></li>');
-                }
-                $('.main_tab .teacherlist .teacherbox .sd_show  .sd_ul').empty().prepend(html.join(""));
+                    $('.main_tab .teacherlist .teacherbox .sd_show  .sd_ul').empty().prepend(html.join(""));
+                })
             }
-            if(null != chatGroupInfo){//直播房间老师
+            if(null != chatGroupInfo){//直播房间老师培训班显示
                 chatTeacher.showTrani(chatGroupInfo);
             }
-
+            //查询精采直播、学员风采、教学视频
             indexJS.getArticleList("teach_video_base,teach_video_expert,teach_video_financial,teach_video_gw,student_style,teach_live_video",indexJS.userInfo.groupId,0,1,20,'{"createDate":"desc"}',null,function(dataList){
                 if(dataList && dataList.result==0){
                     var articleList = dataList.data;
@@ -341,7 +355,7 @@ var chatTeacher = {
                                 }else{
                                     studentLiveHtml.push('<li class="r">');
                                 }
-                                studentLiveHtml.push('<div class="imga"><img src="'+article.mediaUrl+'" alt=""></div>');
+                                studentLiveHtml.push('<a href="'+article.mediaUrl+'" data-lightbox="student-img" data-title="' +articleDetail.title+ '"><div class="imga"><img src="'+article.mediaUrl+'" ></div></a>');
                                 studentLiveHtml.push('<span class="vlink">'+articleDetail.tag+'</span>');
                                 studentLiveHtml.push('</li>');
                                 studentLiveCount++;
@@ -376,10 +390,9 @@ var chatTeacher = {
                         var vdId=$(this).attr("articleId");
                         chatAnalyze.setUTM(false,{courseId:vdId});//统计教学视频点击数
                     });
-
                     //教学视频播放
                     $('.main_tab .teacherlist .teacherbox .tebox_teachVideo ul li a').click(function(){
-                        $('.main_tab .teacherlist .teacherbox .tebox_teachVideo ul li a .vlink').removeClass("on");
+                        $('.main_tab .teacherlist .teacherbox .tebox_teachVideo ul li .vlink').removeClass("on");
                         if($(this).attr("class") =="imga"){
                             $(this).next(".vlink").addClass("on");
                         }
@@ -390,7 +403,6 @@ var chatTeacher = {
                         var vdId=$(this).attr("articleId");
                         chatAnalyze.setUTM(false,{courseId:vdId});//统计教学视频点击数
                     });
-
                 }
             });
         });
@@ -467,7 +479,6 @@ var chatTeacher = {
             })
         }
     }
-
 };
 
 //初始化
