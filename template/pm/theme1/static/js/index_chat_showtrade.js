@@ -70,7 +70,7 @@ var chatShowTrade = {
                             var data=dataRt.data?dataRt.data[0]:null;
                             if(data){
                                 $('#tradeImg').val(data.fileDomain+data.filePath);
-                                _this.val('');
+                                $(_this).val('');
                             }
                         }else{
                             alert("上传图片失败，请联系在线客服！");

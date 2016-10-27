@@ -721,7 +721,7 @@ var box={
                                                 $("#avatarInfoId").attr("src",result.avatar);
                                                 $("#userListId li .mynk").prev().find("img").attr("src",result.avatar);
                                                 indexJS.userInfo.avatar=result.avatar;
-                                                _this.val('');
+                                                $(_this).val('');
                                             }
                                         },true,function(){
                                             alert("上传头像失败，请联系在线客服！");
