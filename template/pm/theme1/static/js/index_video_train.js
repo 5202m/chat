@@ -65,7 +65,7 @@ var videosTrain = {
                 formatHtmlArr.push('     <div class="train_name">{1}</div>');
                 formatHtmlArr.push('     <span class="slogan">{2}</span>');
                 formatHtmlArr.push('     <p>{3}</p>');
-                formatHtmlArr.push('     <a href="javascript:void(0)" class="trainbtn" userno="{4}" group= "{5}" onclick="chatTeacher.trainRegis(this,null)">报名</a><a href="javascript:void(0)" class="trainbtn traindetails">详情</a>');
+                formatHtmlArr.push('     <a href="javascript:void(0)" class="trainbtn" userno="{4}" group= "{5}" onclick="chatTeacher.trainRegis(this)">报名</a><a href="javascript:void(0)" class="trainbtn traindetails">详情</a>');
                 formatHtmlArr.push('</li>');
                 break;
         }
