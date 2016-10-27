@@ -25,7 +25,7 @@ var box={
                     common.getJson('/studio/getSignin',null,function(data){
                         if(null != data){
                             var signinInfo = data.signinInfo;
-                            var signinList = data.signinList;
+                            var signinUser = data.signinUser;
                             var serialSigDays = 0;
                             if(null!= signinInfo){
                                 serialSigDays = signinInfo.serialSigDays;
@@ -33,11 +33,12 @@ var box={
                             $('.signinbox .progressbar .barcont .current').text(serialSigDays+"天");
                             var currentDate = new Date();
                             var signinListHtml = [],signinFormatHtml = box.formatHtml('signin');
-                            if(null != signinList){
-                                for(var i in signinList){
-                                    var row = signinList[i];
+                            if(null != signinUser){
+                                for(var i in signinUser){
+                                    var row = signinUser[i];
                                     var avatar = row.avatar != null?row.avatar:'/pm/theme1/img/user.jpg';
                                     var minuteDiff = common.getMinuteDiff(currentDate,row.signinTime);
+                                    minuteDiff = minuteDiff <=0?1:minuteDiff;
                                     signinListHtml.push(signinFormatHtml.formatStr(avatar,minuteDiff + '分钟前'));
                                 }
                             }
