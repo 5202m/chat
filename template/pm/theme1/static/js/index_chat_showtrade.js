@@ -122,17 +122,28 @@ var chatShowTrade = {
         var listData = chatShowTrade.tradeList;
         var row = null;
         var length = listData.length;
-        var tradeHtml='',tradeFormat = common.isBlank(chatShowTrade.tradeForUser) ? chatShowTrade.formatHtml('showTradeAll') : chatShowTrade.formatHtml('showTradeUser');
+        var tradeHtml='',tradeFormat = common.isBlank(chatShowTrade.tradeForUser) ? chatShowTrade.formatHtml('showTradeAll') : chatShowTrade.formatHtml('showTradeUser'),cls;
         for(var i = start; i < length && i < start + 20; i++){
             row = listData[i];
             if($('#showTradeDiv .sd_ul li[sid="'+row._id+'"]').length>0 && common.isBlank(chatShowTrade.tradeForUser)){
                 continue;
             }
+            switch (row.status){
+                case 1:
+                    cls = '';
+                    break;
+                case 0:
+                    cls = ' class="checking"';
+                    break;
+                case -1:
+                    cls = ' class="failed"';
+                    break;
+            }
             var showTradeDate = common.formatterDateTime(row.showDate,'/').substr(5,11);
             if(common.isBlank(chatShowTrade.tradeForUser)){
                 tradeHtml += tradeFormat.formatStr(row.title, row.user.userName, showTradeDate, row.tradeImg, row.remark, common.isBlank(row.praise)?0:row.praise, row._id, row.user.userNo, row.user.avatar);
             }else{
-                tradeHtml += tradeFormat.formatStr(row.title, showTradeDate, row.tradeImg, row.remark, common.isBlank(row.praise)?0:row.praise, row._id);
+                tradeHtml += tradeFormat.formatStr(row.title, showTradeDate, row.tradeImg, row.remark, common.isBlank(row.praise)?0:row.praise, row._id, cls);
             }
         }
         if(common.isBlank(chatShowTrade.tradeForUser)) {
@@ -331,9 +342,9 @@ var chatShowTrade = {
                 formatHtmlArr.push('</li>');
                 break;
             case 'showTradeUser':
-                formatHtmlArr.push('<li>');
+                formatHtmlArr.push('<li{6}>');
                 formatHtmlArr.push('    <div class="cont">');
-                formatHtmlArr.push('        <div class="sd_summary">{0}</div>');
+                formatHtmlArr.push('        <div class="sd_summary">{0}<i class="status"></i></div>');
                 formatHtmlArr.push('        <div class="sd_tit"><span class="sdtime">晒单时间: {1}</span></div>');
                 formatHtmlArr.push('        <a href="{2}" data-rel="sd-img" data-title="{0}" data-lightbox="my-dialog-img"><img src="{2}" alt="{0}" class="mCS_img_loaded"><i class="i-zoom"></i></a>');
                 formatHtmlArr.push('        <p class="sd_p">{3}</p>');

@@ -41,7 +41,8 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 
 /*images*/
 .mymsg .closebtn i,.message_list li i,.guideli .support,.roomctrl i,.mod_userlist .headimg b,.rbox_top .rname i,.rbox_top .peo_num i,.hqbox li i,.votebox a,.notebtn.on i,.calendar_table .stars span,.error i,.per_item .level i,.per_item .tipbtn i,.upg_tip i,.kh-btn a i,.mult_dialog .close,.mult_dialog .num,.mult_dialog .headimg b,.pletter_win .pl_close,.pletter_win .pl_small,.tec_videolist .list-icon i,.tec_videolist .v_name i,.tec_videolist .refresh-icon i,.cate_box .cate_name i,.cate_box li a i,.nextbox .live_time i,.pletter_win .whcls > i,.sd_ul .cont > i,.sd_pages .arr i,.sd_stat p i,.usersd_list .lightbox > i,.usersd_list .support,.usersd_list .state,.mod_scrollnews a i,.mod_scrollnews .newsbtn i,.mod_scrollnews .newsclose i,.textlive li .dot{ background-image:url(../img/img_css.png); background-repeat:no-repeat;}
-.header-btn a i,.myaid i,.mod_livelist .minbox a i,.maxbox .hidebtn i,.login_option .option i,.social_icon,.sub-tabnav > a i,.numctrl i,.pop_close i,.dytable .item em i,.inp_checkbox input[type=checkbox]:checked + label > i,.inp_radio label,.inp_radio input[type=radio]:checked + label > i,.progressbar .current,.rewardpoint p .arr,.signinbtn i,.sign_vistor .vtit i,.benefit_table .tick,.live_prevlist li i,.taglist .tag i,.dialog .bubble > i,.info_push .pushclose i,.toolbar .tbtn,.toolbar .tosigninbtn i,.hdbox .hdbox-i,.stateshow .item i,.sd_bot .support i,.tabnav .khbtn i,.view_select i,.pop_small i,.nextbox .live_time i,.picpart .imgbox i,.sd_ul .cont .i-zoom,.ligg_st .st i,.detail_ph .ph_cont .picbox i,.skilldata .pdname i,.train_ad .actrulebtn i,.detail_ph .t_list li .arrow{ background-image:url(../img/icons.png); background-repeat:no-repeat; background-position: 0 0}
+.header-btn a i,.myaid i,.mod_livelist .minbox a i,.maxbox .hidebtn i,.login_option .option i,.social_icon,.sub-tabnav > a i,.numctrl i,.pop_close i,.dytable .item em i,.inp_checkbox input[type=checkbox]:checked + label > i,.inp_radio label,.inp_radio input[type=radio]:checked + label > i,.progressbar .current,.rewardpoint p .arr,.signinbtn i,.sign_vistor .vtit i,.benefit_table .tick,.live_prevlist li i,.taglist .tag i,.dialog .bubble > i,.info_push .pushclose i,.toolbar .tbtn,.toolbar .tosigninbtn i,.hdbox .hdbox-i,.stateshow .item i,.sd_bot .support i,.tabnav .khbtn i,.view_select i,.pop_small i,.nextbox .live_time i,.picpart .imgbox i,.sd_ul .cont .i-zoom,.ligg_st .st i,.detail_ph .ph_cont .picbox i,.skilldata .pdname i,.train_ad .actrulebtn i,.detail_ph .t_list li .arrow,.pop_mysd .status{ background-image:url(../img/icons.png); background-repeat:no-repeat; background-position: 0 0}
+.inp_checkbox input[type=checkbox]:checked + label > i,.inp_radio label,.inp_radio input[type=radio]:checked + label > i{ background-image:url(../img/icons.png); background-repeat:no-repeat; background-position: 0 0}
 .img-loading{position:absolute;bottom:0;display:block;width:25px;height:25px;border-radius:4px;background:url(../img/loading2.gif) no-repeat center;background-size:40px 40px;z-index:9}
 
 /* header */
@@ -371,8 +372,9 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .brieflist .imgbox img{ width: 100%; height: auto; vertical-align: top; }
 .brieflist .imgbox img{ height: auto; }
 .brieflist .picpart a{  display: block;}
-.brieflist + .morebtn{ display:block; width:100%; height:40px; text-align:center; background-color:#ececec; font-size:16px; line-height:40px; color:#444; margin-top:20px; margin-bottom:5px;}
-.brieflist + .morebtn:hover{ text-decoration: none; background: #e5e5e5}
+.livebrief_list .morebtn{ display:block; width:100%; height:40px; text-align:center; background-color:#ececec; font-size:16px; line-height:40px; color:#444; margin-top:20px; margin-bottom:5px;}
+.livebrief_list .morebtn:hover{ text-decoration: none; background: #e5e5e5}
+.brieflist .textcont .hdbox2{margin-bottom:10px;}
 
 /*聊天内容*/
 .chat_content{ position:relative; z-index:1; overflow: hidden;padding:0 20px 0 0;}
@@ -454,7 +456,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 
 /*@功能*/
 .dialog.showchat .dialogbtn{ display:block;}
-.dialogbtn { position:absolute; left:-10px; top:40px; width:53px;z-index:10; background:#fff; border-radius:2px; box-shadow:0 0 4px rgba(12,3,5,.3); display:none;}
+.dialogbtn { position:absolute; left:-10px; top:40px; width:53px;z-index:10; background:#fff; border-radius:2px; box-shadow:0px 1px 4px rgba(12,3,5,.2); display:none;}
 .dialogbtn .inner{ position: relative; margin-top: -1px; }
 .dialogbtn a{ display:block; height:22px; text-align:center; line-height:20px; color:#464852; font-size:12px; text-decoration:none;border-top:1px solid #ebebeb; background: none }
 .dialogbtn a:hover{ background: #f2f6fa }
@@ -470,6 +472,8 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .dialogbtn.bot.one a.d1 b{ display: block;border-color:#fff transparent transparent  transparent ; bottom:-10px; top: auto }
 .dialogbtn.bot.one a.d1:hover b{ border-color:#c49351 transparent transparent  transparent ; }
 .dialogbtn.bot a.d1 b{ display: none; }
+.txt_dia{ color: #3b96d5;margin-right: 5px; cursor: pointer; }
+.txt_dia label{cursor: pointer;}
 
 /*下拉*/
 .view_select{ width:115px;float:right; height:26px; position:absolute; top:15px; right:20px; z-index:20; cursor:pointer}
@@ -600,7 +604,12 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .sd_result .kh-btn a.fl:hover{ background-color: #c58735 }
 .popup_box.pop_addsd{ margin-top: -260px; }
 .popup_box.pop_mysd{ margin-top: -315px; height: 630px; }
-.pop_mysd .sd_show.sd_list .sd_ul{ margin-bottom: 30px; }
+.pop_mysd .sd_show .sd_ul li{ margin-top: 10px; }
+.pop_mysd .sd_list .sd_summary{ position: relative; padding:5px 0 ; }
+.pop_mysd .sd_list .checking .sd_summary,.pop_mysd .sd_list .failed .sd_summary{ padding-right: 40px; }
+.pop_mysd .status {display: none; width: 42px; height: 12px; position: absolute; right: 0; top: 10px;}
+.pop_mysd .checking .status{ display: block; background-position: 0 -240px; }
+.pop_mysd .failed .status{ display: block; background-position: 0 -260px; }
 
 /*行情直播*/
 .mod_room{ height:150px;border-bottom:5px solid #1e2d58;border-bottom:5px solid rgba(5,15,36,.6); position: relative;}
@@ -1237,6 +1246,24 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .mod_scrollnews .newsclose{ display: block; width:10px; height: 10px; padding: 10px 8.5px; position: absolute; right: 0; top: 0  }
 .mod_scrollnews .newsclose i{ display: block;width:10px; height: 10px; background-position: -140px -300px; }
 
+/*兼容提示*/
+.ie_upgrade{ display: none; position: fixed; bottom: 0; left: 0; width: 100%;  text-align: center; border-top: 2px solid #ececec; z-index: 1000 }
+.lt-ie8 .ie_upgrade,.lt-ie9 .ie_upgrade{display: block;}
+.ie_upgrade .ietip{ background: #f7f7f7;padding: 15px 0;}
+.ie_upgrade span{ display: inline-block;*display: inline;*zoom: 1; color: #444; font-size: 14px; line-height: 24px;  }
+.ie_upgrade span a{ color: #cb5055 }
+.ie_upgrade .iewhybtn{ display: inline-block;*display: inline;*zoom: 1; background: #3b96d5; font-size: 14px; line-height: 24px; color: #fff;  width: 80px; border-radius: 3px ; margin-left: 20px;}
+.ie_upgrade .iewhybtn:hover { background: #2587cb; text-decoration: none; }
+.ie_upgrade .iestory{ background: rgb(254, 251, 211);padding: 20px 0; display: none; }
+.iestory .cont{ width: 800px; margin: 0 auto; position: relative; }
+.iestory span{ font-size: 24px; display: inline-block;*display: inline;*zoom: 1;  margin-top: 20px; position: absolute; left: 0; font-weight: bold;}
+.iestory img{ vertical-align: top; }
+.iestory .closebtn{ display: block; width: 14px; height: 14px; position: absolute; right: 0; top: 20px; padding: 10px; background: #efefef; border-radius: 50% }
+.iestory .closebtn i{display: block; width: 14px; height: 14px; background-position: right 0; line-height: 0; font-size: 0; }
+.iestory .closebtn:hover { background: #e2e2e1 }
+
+/* rewrite */
+.swiper-slide{ overflow: hidden; }
 
 /*复写滚动条*/
 .mCSB_inside>.mCSB_container{ margin-right:12px}
