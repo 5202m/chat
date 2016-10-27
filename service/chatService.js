@@ -516,6 +516,9 @@ var chatService ={
                         return false;
                     }
                     userSaveInfo=row.loginPlatform.chatUserGroup[0].toObject();//用于信息保存
+                    if(userSaveInfo.vipUser){
+                        userSaveInfo.clientGroup = "vip";
+                    }
                     userSaveInfo.mobilePhone=row.mobilePhone;
                     if(userSaveInfo.nickname){
                         userInfo.nickname=userSaveInfo.nickname;//如果后台设置了昵称则更新为后台
