@@ -674,7 +674,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 /*弹出框*/
 .blackbg{ background:#000; opacity: .4; filter: alpha(opacity=40); width:100%; height:100%; position:fixed; top:0; left:0; z-index:100}
 .blackbg2 { background:#000; opacity: .4; filter: alpha(opacity=40); width:100%; height:100%; position:fixed; top:0; left:0; z-index:100}
-.popup_box{position:absolute; top:50%; margin-top:-200px; left:50%; height:auto;width:526px; margin-left:-263px;  border-radius:3px; z-index:101; background:#fff;overflow: hidden;}
+.popup_box{border: 1px solid #dcdfe3;position:absolute; top:50%; margin-top:-200px; left:50%; height:auto;width:526px; margin-left:-263px;  border-radius:3px; z-index:101; background:#fff;overflow: hidden;}
 .popup_box.notice{width:460px; margin-left:-230px; }
 .popup_box .pop_tit { font-size:24px; line-height:60px; color:#444; text-align:center}
 .popup_box .pop_tit span{ display: inline-block;*display: inline;*zoom: 1; margin: 30px 19px 0;  height: 1px;vertical-align: top; background: #aec7de; width: 23%; }
