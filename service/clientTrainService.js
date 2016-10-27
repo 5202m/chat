@@ -74,22 +74,22 @@ var clientTrainService = {
         var searchObj={userId:userInfo.mobilePhone,groupType:userInfo.groupType};
         signin.findOne(searchObj,function(err,row) {
             if(err){
-                logger.error("查询直播老师数据失败!:", err);
+                logger.error("查询签到数据失败!:", err);
                 callback(err,null);
             }else{
                if(null != row){
-                   var signinTime = row.signinTime;
-                   var currentDate = new Date();
+                   var signinTime = row.signinTime;//签到时间
+                   var currentDate = new Date();    //当前时间
                    var dateDiff = common.getDateDiff(currentDate,signinTime);
                    var setObj = {};
-                   if(dateDiff == 0){
+                   if(dateDiff == 0){//当天已经签到了
                        callback(errorMessage.code_3002, null);
                        return;
                    }
-                   if(dateDiff==1){
+                   if(dateDiff==1){//连续签到
                        setObj = {$set:{"signinTime":new Date()},$inc:{"signinDays":1,"serialSigDays":1},$push:{"historySignTime":new Date()}};
                    }
-                   if(dateDiff >1){
+                   if(dateDiff >1){//不连续签到
                        setObj = {$set:{"signinTime":new Date(),"serialSigDays":1},$inc:{"signinDays":1},$push:{"historySignTime":new Date()}};
                    }
                    signin.update(searchObj,setObj,function(err,row){
@@ -181,7 +181,7 @@ var clientTrainService = {
                 signinList: function (callback) {
                     signin.find({"userId":{$ne:userInfo.mobilePhone}}).sort({"signinTime": -1}).exec("find", function (err, data) {
                         if (err) {
-                            logger.error("查询客户签到数据失败!:", err);
+                            logger.error("查询最近签到客户数据失败!:", err);
                             callback(err,null);
                         }else{
                             callback(err,data);
@@ -193,7 +193,6 @@ var clientTrainService = {
                 dataCallback(result);
             })
     }
-    
 };
 //导出服务类
 module.exports = clientTrainService;
