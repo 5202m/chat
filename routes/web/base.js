@@ -1668,5 +1668,28 @@ router.post('/updateSession', function(req, res){
     req.session.studioUserInfo.toGroup=params.groupId;
     res.json({isOK:true,msg:'更新成功'});
 });
+/**
+ * 查询积分配置表
+ */
+router.post('/getChatPointsConfig',function(req, res){
+    var userInfo=req.session.studioUserInfo;
+    var params = req.body['data'];
+    if(common.isBlank(params)){
+        res.json({isOK:false,msg:'参数错误'});
+        return;
+    }
+    if(typeof params == 'string'){
+        try{
+            params = JSON.parse(params);
+        }catch(e){
+            res.json(null);
+            return;
+        }
+    }
+    params.groupType = userInfo.groupType;
+    chatPointsService.getChatPointsConfig(params,function(result){
+        res.json(result);
+    });
+});
 
 module.exports = router;
