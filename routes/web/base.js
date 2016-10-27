@@ -712,7 +712,7 @@ router.post('/reg',function(req, res){
                 //验证码通过校验
                 studioService.checkClientGroup(params.mobilePhone,null,common.getTempPlatformKey(userSession.groupType),function(clientGroup, accountNo){
                     var thirdId = userSession.thirdId || null;
-                    var userInfo={mobilePhone:params.mobilePhone, ip:common.getClientIp(req), groupType:userSession.groupType, accountNo: accountNo, thirdId:thirdId, pwd:params.password,item:params.item,userId:userSession.userId};
+                    var userInfo={mobilePhone:params.mobilePhone, ip:common.getClientIp(req), groupType:userSession.groupType, accountNo: accountNo, thirdId:thirdId, pwd:common.getMD5(constant.pwdKey+params.password),item:params.item,userId:userSession.userId};
                     studioService.studioRegister(userInfo,clientGroup,function(result){
                         if(result.isOK){
                             req.session.studioUserInfo={groupType:userSession.groupType,clientStoreId:userSession.clientStoreId,firstLogin:true,isLogin:true,mobilePhone:userInfo.mobilePhone,userId:userInfo.userId,defGroupId:userInfo.defGroupId,clientGroup:userInfo.clientGroup,nickname:userInfo.nickname};
