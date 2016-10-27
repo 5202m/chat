@@ -60,7 +60,7 @@ var chatPride = {
                             + dataTmp.mediaUrl
                             + '"></a></li>');
                     }
-                    $(".ban_ul:first").html(html.join(""));
+                    $(".ban_ul").html(html.join(""));
                     /**
                      * 图片幻灯片广告
                      */
@@ -541,7 +541,7 @@ var chatPride = {
                 formatHtmlArr.push('</li>');
                 break;
             case 'tradeStrategyHd':
-                formatHtmlArr.push('<div class="textcont">{0}');
+                formatHtmlArr.push('{0}');
                 formatHtmlArr.push('<div class="hdbox2">');
                 formatHtmlArr.push('    <span class="hdtit">&nbsp;</span>');
                 formatHtmlArr.push('    <a href="javascript:void(0);" class="viewdata2"{2} _id="{3}" item="prerogative_callTrade">查看数据</a>');
@@ -559,7 +559,6 @@ var chatPride = {
                 formatHtmlArr.push('            {1}');
                 formatHtmlArr.push('        </tbody>');
                 formatHtmlArr.push('    </table>');
-                formatHtmlArr.push('</div>');
                 formatHtmlArr.push('</div>');
                 break;
             case 'tradeStrategyHdDetail':
