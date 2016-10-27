@@ -57,9 +57,9 @@ var box={
         /*弹出框关闭按钮*/
         $('.popup_box .pop_close,.formbtn[t=close]').click(function(){
             $(this).parent().parent().hide();
-            if(!$(this).parent().parent().hasClass('parentShow')) {
+            //if($($('div.popup_box').is(':visible')).length<2) {
                 $(".blackbg").hide();
-            }
+            //}
             $(".blackbg form").each(function(){
                 this.reset();
             });
@@ -828,7 +828,7 @@ var box={
                 box.showMsg('请输入昵称');
                 return;
             }else if(!common.isRightName(nickName)){
-                box.showMsg('昵称必须由中文、英文、不超过连续4个数字并且长度不超过8个字符');
+                box.showMsg('昵称为2至10位字符(数字/英文/中文/下划线)，不能全数字!');
                 return;
             } else {
                 $(this).prop('disabled', true);
@@ -836,7 +836,7 @@ var box={
                 common.getJson("/studio/modifyName", {nickname: nickName}, function (result) {
                     $(_this).attr('disabled', false);
                     if (!result.isOK) {
-                        box.showTipBox((result.msg ? result.msg : "修改失败，请联系客服！"));
+                        box.showMsg((result.msg ? result.msg : "修改失败，请联系客服！"));
                         return false;
                     } else {
                         indexJS.refreshNickname(true, result.nickname);
@@ -869,11 +869,14 @@ var box={
             } else if(common.isBlank(newPwd)){
                 $('.change_psw .error').html('<i></i>请输入新密码！').removeClass('dn');
                 return;
-            } else if(common.isBlank(newPwd1)){
+            } else if(!/^.{6,20}$/.test(newPwd)){
+                $('.change_psw .error').html('<i></i>密码由6至20数字、字母、符号组成！').removeClass('dn');
+                return;
+            }else if(common.isBlank(newPwd1)){
                 $('.change_psw .error').html('<i></i>请输入确认新的密码！').removeClass('dn');
                 return;
             } else if(newPwd != newPwd1){
-                $('.change_psw .error').html('<i></i>新密码输入不一致，请重新输入！').removeClass('dn');
+                $('.change_psw .error').html('<i></i>两次密码输入不一致！').removeClass('dn');
                 return;
             }
             $('.change_psw .error').addClass('dn');
@@ -900,8 +903,10 @@ var box={
     /**隐藏消息*/
     hideMsg : function(){
         if($("#popMsgBox").is(":visible")){
-            $("#popMsgBox").fadeOut("normal", "swing", function(){
-                $(".blackbg").hide();
+            $("#popMsgBox").fadeOut("normal", "swing", function(){console.log($('.popup_box').is(':visible').length);
+                //if($($('div.popup_box').is(':visible')).length<2) {
+                    $(".blackbg").hide();
+                //}
             });
         }
     },

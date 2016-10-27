@@ -562,7 +562,7 @@ var chat={
         if(isClear){
             $tip.data("cnt", 0).html("").hide();
         }else{
-            if(!$tip.parent().is(".on")){
+            if(!$tip.parent().parent().parent().parent().is(".on")){
                 var cnt = ($tip.data("cnt") || 0) + 1;
                 $tip.data("cnt", cnt).html(cnt).show();
             }

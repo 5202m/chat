@@ -181,6 +181,8 @@ var chatShowTrade = {
             $('#trade_error').text('请输入标题').show();
         }else if(common.isBlank(userName)){
             $('#trade_error').text('请输入晒单人').show();
+        }else if(!common.isRightName(userName)){
+            $('#trade_error').text('晒单人为2至10位字符(数字/英文/中文/下划线)，不能全数字!');
         }else if(common.isBlank(tradeImg)){
             $('#trade_error').text('请上传晒单图片').show();
         }else{
@@ -202,6 +204,7 @@ var chatShowTrade = {
                         $('#setNkBtn').click();
                     }
                     $('.pop_addsd').hide();
+                    $('.pop_addsd input[type="text"],.pop_addsd textarea').empty();
                 }else{
                     box.showMsg(data.msg);
                 }

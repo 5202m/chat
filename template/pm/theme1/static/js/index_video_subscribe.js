@@ -33,10 +33,18 @@ var videosSubscribe = {
                     $.each(noticeTypeArr, function(k, v){
                         $('#'+v+'_'+row.type).prop('checked', true);
                     });
+                    var weekParentDiv = $('#week_'+row.type).parent().parent().parent();
+                    var monthParentDiv = $('#month_'+row.type).parent().parent().parent();
                     if(common.getDateDiff(row.startDate, row.endDate)>7){
                         $('#month_'+row.type).prop('checked',true);
+                        monthParentDiv.children('div.item').hide();
+                        monthParentDiv.children('div.item').hide();
+                        monthParentDiv.children('div.mydytime').html(common.formatterDate(row.startDate,'/')+' <b>至</b> '+common.formatterDate(row.endDate,'/')).removeClass('dn');
                     }else{
                         $('#week_'+row.type).prop('checked',true);
+                        weekParentDiv.children('div.item').hide();
+                        weekParentDiv.children('div.item').hide();
+                        weekParentDiv.children('div.mydytime').html(common.formatterDate(row.startDate,'/')+' <b>至</b> '+common.formatterDate(row.endDate,'/')).removeClass('dn');
                     }
                     $('.dytable .'+row.type+' a[t="'+row.type+'"]').attr({'id':row._id,'orip':row.point});
                 });
@@ -155,7 +163,9 @@ var videosSubscribe = {
                         }
                         if(common.isBlank(params.analyst) || common.isBlank(params.noticeType)){
                             box.showMsg('取消订阅成功！');
-                        } else {
+                        } else if(common.isValid(params.id)) {
+                            box.showMsg('修改订阅成功！');
+                        }else{
                             box.showMsg('订阅成功！');
                         }
                         videosSubscribe.setSubscribeType();
@@ -191,7 +201,9 @@ var videosSubscribe = {
                 formatHtmlArr.push('    <td>{0}</td>');
                 formatHtmlArr.push('    <td><div class="itembox{5}">{1}</div><input type="hidden" name="{7}_analysts" /></td>');
                 formatHtmlArr.push('    <td>{2}<input type="hidden" name="{7}_noticeTypes" /></td>');
-                formatHtmlArr.push('    <td><div class="itembox{6}">{3}</div></td>');
+                formatHtmlArr.push('    <td><div class="itembox{6}">');
+                formatHtmlArr.push('    <div class="mydytime dn"></div>');
+                formatHtmlArr.push('    {3}</div></td>');
                 formatHtmlArr.push('    <td>{4}</td>');
                 formatHtmlArr.push('</tr>');
                 break;

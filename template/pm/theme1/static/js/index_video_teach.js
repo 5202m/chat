@@ -12,10 +12,12 @@ var videosTeach = {
          */
         $('#teachVideoId a').bind("click", function(e, callback, isAll){
             $('#teachVideoId a').removeClass('on');
-            videosTeach.setVideoList($(this).addClass("on").attr("t"), function(){
+            var $this = $(this);
+            videosTeach.setVideoList($this.addClass("on").attr("t"), function(){
                 if(typeof callback === "function"){
                     callback(isAll);
                 }
+                $('#teachVideoPanel .sub_tab .courseNum .numbox .inner .c_num:first a').click();
             });
         });
     },

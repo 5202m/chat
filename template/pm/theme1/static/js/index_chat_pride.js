@@ -365,7 +365,7 @@ var chatPride = {
         var articleDetail=articleInfo.detailList && articleInfo.detailList[0];
         var aid = articleInfo._id || articleInfo.id;
         if (common.isValid(articleDetail.tag) && common.isValid(articleDetail.remark) && articleDetail.tag == 'shout_single') {
-            $('#chatMsgContentDiv .dialoglist').append(infoPushHtml.formatStr((common.isBlank(articleDetail.content) ? articleDetail.authorInfo.userName+'老师喊单啦' : articleDetail.content.replace('<p>','').replace('</p>','')), aid));
+            $('#chatMsgContentDiv .dialoglist').append(infoPushHtml.formatStr((common.isBlank(articleDetail.content) ? (articleDetail.authorInfo.userName||'')+'老师喊单啦' : articleDetail.content.replace('<p>','').replace('</p>','')), aid));
             $('#chatMsgContentDiv .dialoglist .pushclose').unbind('click');
             $('#chatMsgContentDiv .dialoglist .pushclose').click(function () {
                 $(this).parent().hide();
@@ -494,11 +494,12 @@ var chatPride = {
                 break;
             case 'tradeStrategySupport':
                 formatHtmlArr.push('<div class="skilldata clearfix">');
-                formatHtmlArr.push('    <div class="pdname"><span>{0}</span><i></i></div>');
-                formatHtmlArr.push('    {2}');
                 formatHtmlArr.push('    <div class="data_cont">');
+                formatHtmlArr.push('        <div class="pdname"><span>{0}</span><i></i></div>');
+                formatHtmlArr.push('        <b class="br-ctrl"></b>');
                 formatHtmlArr.push('        {1}');
                 formatHtmlArr.push('    </div>');
+                formatHtmlArr.push('   {2}');
                 formatHtmlArr.push('</div>');
                 break;
             case 'tradeStrategySupportDiv':
