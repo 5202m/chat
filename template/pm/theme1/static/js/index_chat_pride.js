@@ -32,9 +32,35 @@ var chatPride = {
                 if (dataList && dataList.result == 0) {
                     var data = dataList.data;
                     $(".ban_ul").empty();
+                    var html = [],dataTmp=null,url=null,target=null;
                     for (var i in data) {
-                        $(".ban_ul:first").append('<li><a href="' + (common.isBlank(data[i].linkUrl) ? "javascript:" : data[i].linkUrl) + '" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'banner_img\', \'' + data[i].detailList[0].title + '\']);" target="_blank"><img width="100%" alt="" src="' + data[i].mediaUrl + '"></a></li>');
+                        dataTmp = data[i];
+                        if(common.isBlank(dataTmp.linkUrl)){
+                            switch (dataTmp.detailList[0].tag){
+                                case "live800":
+                                    url = "javascript:openLive800Chat(null)";
+                                    break;
+                                case "qq":
+                                    url = "javascript:openQQChatByCommonv3('','800018282');";
+                                    break;
+                                default :
+                                    url = "javascript:";
+                            }
+                            target = '';
+                        }else{
+                            url = dataTmp.linkUrl;
+                            target = ' target="_blank"';
+                        }
+                        html.push('<li><a href="'
+                            + url
+                            + '" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'banner_img\', \''
+                            + dataTmp.detailList[0].title + '\']);"'
+                            + target
+                            + '><img width="100%" alt="" src="'
+                            + dataTmp.mediaUrl
+                            + '"></a></li>');
                     }
+                    $(".ban_ul:first").html(html.join(""));
                     /**
                      * 图片幻灯片广告
                      */
@@ -515,8 +541,9 @@ var chatPride = {
                 formatHtmlArr.push('</li>');
                 break;
             case 'tradeStrategyHd':
+                formatHtmlArr.push('<div class="textcont">{0}');
                 formatHtmlArr.push('<div class="hdbox2">');
-                formatHtmlArr.push('    <span class="hdtit">{0}</span>');
+                formatHtmlArr.push('    <span class="hdtit">&nbsp;</span>');
                 formatHtmlArr.push('    <a href="javascript:void(0);" class="viewdata2"{2} _id="{3}" item="prerogative_callTrade">查看数据</a>');
                 formatHtmlArr.push('    <table width="100%" border="0" cellspacing="0" cellpadding="0">');
                 formatHtmlArr.push('        <thead>');
@@ -532,6 +559,7 @@ var chatPride = {
                 formatHtmlArr.push('            {1}');
                 formatHtmlArr.push('        </tbody>');
                 formatHtmlArr.push('    </table>');
+                formatHtmlArr.push('</div>');
                 formatHtmlArr.push('</div>');
                 break;
             case 'tradeStrategyHdDetail':
