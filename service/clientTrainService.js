@@ -167,7 +167,7 @@ var clientTrainService = {
         async.parallel({
                 signinInfo: function (callback) {
                     signin.findOne({
-                            userId:userInfo.userId,
+                            userId:userInfo.mobilePhone,
                             groupType:userInfo.groupType
                         }, function(err, row){
                         if (err) {
@@ -179,7 +179,7 @@ var clientTrainService = {
                     });
                 },
                 signinList: function (callback) {
-                    signin.find({"userId":{$ne:userInfo.userId}}).sort({"signinTime": -1}).exec("find", function (err, data) {
+                    signin.find({"userId":{$ne:userInfo.mobilePhone}}).sort({"signinTime": -1}).exec("find", function (err, data) {
                         if (err) {
                             logger.error("查询客户签到数据失败!:", err);
                             callback(err,null);

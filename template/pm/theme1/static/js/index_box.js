@@ -41,9 +41,16 @@ var box={
                                     signinListHtml.push(signinFormatHtml.formatStr(avatar,minuteDiff + '分钟前'));
                                 }
                             }
-                            $('.signinbox .sign_vistor ul').prepend(signinListHtml.join(''));
+                            $('.signinbox .sign_vistor ul').empty().prepend(signinListHtml.join(''));
                             $('#sign_vistor').height(75);
                             indexJS.setListScroll($('#sign_vistor'));
+                            //设置进度条
+                            var progressbar  = (serialSigDays/30)*100;
+                            if(progressbar>100){
+                                progressbar = 100;
+                            }
+                            $(".signinbox .progressbar .bar").width(progressbar+"%");
+
                             common.openPopup('.blackbg,.signin');
                         }else{
                             console.log("fail");
