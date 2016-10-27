@@ -12,6 +12,7 @@ var chat={
     whTipInterId:null,//私聊提示
     pushInfoTimeOutId:null,//延迟执行的ID
     initUserList:false,
+    userList:{},//用户列表
     msgType:{ //信息类型
         text:'text' ,
         img:'img',
@@ -809,79 +810,8 @@ var chat={
      * @returns {boolean}
      */
     setOnlineUser:function(row){
-        $("#userListId li[id='"+row.userId+"']").remove();//存在则移除旧的记录
-        var dialogHtml=chat.getDialogHtml(row.userId,row.nickname,row.userType),isMeHtml="",csHtml='',seq=row.sequence,meCls='';
-        if(indexJS.userInfo.userId==row.userId){
-            isMeHtml = "【我】";
-            seq = "0";
-            meCls='mynk';
-        }
-        if(row.userType==3){
-            var gIdDom=$("#roomInfoId");
-            if(gIdDom.attr("aw")=="true" && common.containSplitStr(gIdDom.attr("awr"), row.userType)){
-                csHtml='<em>私聊</em>';
-            }
-            isMeHtml = "&nbsp;（助理）";
-        }
-        if(row.isFromAjax === true){ //不在线的客服
-            meCls='csoffline';
-        }
-        var lav=chat.getAImgOrLevel(row.userId, row.clientGroup,row.userType,row.avatar);
-        var lis=$("#userListId li"),
-            liDom='<li id="'+row.userId+'" cg="'+(common.isBlank(row.clientGroup)?'':row.clientGroup)+'" t="'+seq+'" utype="'+row.userType+'" class="'+lav.level+'" >'+dialogHtml+'<a href="javascript:" t="header" class="uname"><div class="headimg">'+lav.aImg+'<b></b></div><span class="'+meCls+'">'+row.nickname+isMeHtml+'<i></i></span>'+csHtml+'</a></li>';
-         if(seq=="0"){
-            lis.first().before(liDom);
-        }else{
-            var isInsert=false,seqTmp= 0,nickTmp='';//按用户级别顺序插入
-            lis.each(function(){
-                seqTmp=parseInt($(this).attr("t"));
-                if(row.sequence<seqTmp){
-                    $(this).before(liDom);
-                    isInsert=true;
-                    return false;
-                }else if(row.sequence==seqTmp){
-                    //在线客服显示在前面
-                    nickCsTmp=$(this).find("span[class='csoffline']").size();
-                    if(nickCsTmp){
-                        $(this).before(liDom);
-                        isInsert=true;
-                        return false;
-                    }
-                    nickTmp=$(this).find("a span").text();
-                    if(row.nickname<=nickTmp){
-                        $(this).before(liDom);
-                        isInsert=true;
-                        return false;
-                    }
-                }
-            });
-            if(!isInsert){
-                $("#userListId").append(liDom);
-            }
-        }
-        if(common.isValid(dialogHtml)){
-            $("#userListId").contextmenu(function(){
-                return false;
-            });
-            $("#userListId li[id="+row.userId+"] a[t=header]").click(function(e){
-                if($(this).attr('t') == '0'){
-                    $('.user_box li').removeClass('zin');
-                }else {
-                    $('.user_box li').removeClass('zin');
-                    $(this).parent().addClass('zin');
-                    var pv = $(this).prev();
-                    pv.attr("avs", $(this).find(".headimg img").attr("src"));
-                    chat.openDiaLog(pv);
-                }
-            }).dblclick(function(){
-                $(this).find("em").trigger("click");
-            }).find("em").click(function(e){
-                var pDom=$(this).parents("[utype]");
-                var userId=pDom.attr("id");
-                chat.closeWhTip(userId);
-                chat.fillWhBox(pDom.attr("cg"),pDom.find(".headimg img").attr("src"),pDom.attr("utype"),userId,pDom.find(".uname span").text(),false,false);
-                return false;
-            });
+        if(!chat.userList.hasOwnProperty(row.userId)) {
+            chat.userList[row.userId] = row;
         }
     },
     /**
@@ -1286,10 +1216,15 @@ var chat={
      * 查询UI在线用户
      */
     searchUserList:function(val){
-        var userArr=$("#userListId li[t!=14][t!=0]").map(function () {
-            var name = $(this).find(".uname span").text();
-            return name.indexOf(val)!=-1?{value:$(this).attr("id"),label:name,userType: $(this).attr("utype")}:null;
-        }).get();
+        if(!val){
+            return [];
+        }
+        var userArr = [],reg = new RegExp(val,"i");
+        $.each(chat.userList,function(key, row){
+            if(row.userType != -1 && reg.test(row.nickname)){
+                userArr.push({value:row.userId,label:row.nickname,userType: row.userType});
+            }
+        });
         return userArr;
     },
     setUserListIdEmpty : function(){
