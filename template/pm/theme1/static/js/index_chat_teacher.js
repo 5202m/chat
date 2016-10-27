@@ -239,10 +239,9 @@ var chatTeacher = {
             teachId = userNo;
         }
         var groupId = LoginAuto.sessionUser['groupId'];
-
-        /*if(teachId == chatTeacher.teacherId){
+        if(teachId == chatTeacher.teacherId){
             return;
-        }*/
+        }
         chatTeacher.teacherId = teachId;
         common.getJson('/studio/getShowTeacher',{data:JSON.stringify({groupId:groupId,authorId:chatTeacher.teacherId})},function(data){
             var userInfo = data.userInfo;//直播老师
@@ -259,6 +258,7 @@ var chatTeacher = {
 
                 $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").empty();
                 $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").append('<a href="javascript:void(0)" class="support" uid="'+userInfo.userNo+'" onclick="chatTeacher.showAnalystPraiseInfo(this)"><i class="i6"></i></a><b>(<label>'+userInfo.praiseNum+'</label>)</b><span>赞</span>');
+                $(".main_tab .teacherlist .teacherbox  .taglist").empty();
                 if(userInfo.tag){
                     var tagHtml = [];
                     var tags = userInfo.tag.split(",");
@@ -266,7 +266,7 @@ var chatTeacher = {
                         var tag = tags[i];
                         tagHtml.push('<span class="tag"><span>'+tag+'</span><i></i></span>');
                     }
-                    $(".main_tab .teacherlist .teacherbox  .taglist").empty().append(tagHtml.join(""));
+                    $(".main_tab .teacherlist .teacherbox  .taglist").append(tagHtml.join(""));
                 }
             }
             if(null != analystList){//分析师列表
