@@ -1342,7 +1342,7 @@ var chat={
                     if(data.online){
                         var onLineNum = 0;
                         if(userInfoTmp.userType == 2 && $('#analystbar a[uid="'+userInfoTmp.userId+'"]').length == 0){
-                            $('#analystbar').append('<a href="javascript:void(0);" t="1" avs="'+userInfoTmp.avatar+'" nk="'+userInfoTmp.nickname+'" class="contactbtn" uid="'+userInfoTmp.userId+'" utype="'+userInfoTmp.userType+'">联系'+userInfoTmp.nickname+'</a>');
+                            $('#analystbar').append('<a href="javascript:void(0);" t="0" avs="'+userInfoTmp.avatar+'" nk="'+userInfoTmp.nickname+'" class="contactbtn" uid="'+userInfoTmp.userId+'" utype="'+userInfoTmp.userType+'">联系'+userInfoTmp.nickname+'</a>');
                             onLineNum += 1;
                         }
                         chat.contactAnalystEvent();
