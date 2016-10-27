@@ -1582,11 +1582,9 @@ router.post('/addClientTrain', function(req, res){
     }
     var userInfo=req.session.studioUserInfo;
     if(params.clientGroup.indexOf(userInfo.clientGroup) > 0){
-        if(userInfo.clientGroup == 'register' || userInfo.clientGroup == 'simulate'){
-            clientTrainService.addClientTrain(params,userInfo, function(result){
-                res.json(result);
-            });
-        }
+        clientTrainService.addClientTrain(params,userInfo, function(result){
+            res.json(result);
+        });
     }else{
         var msg = "客户为:"+common.groupType[userInfo.clientGroup]+",培训班只对"+params.clientGroup+"客户开放";
         res.json({train:'fail', msg:msg});
