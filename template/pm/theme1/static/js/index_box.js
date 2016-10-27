@@ -64,9 +64,9 @@ var box={
         /*弹出框关闭按钮*/
         $('.popup_box .pop_close,.formbtn[t=close]').click(function(){
             $(this).parent().parent().hide();
-            //if($($('div.popup_box').is(':visible')).length<2) {
+            if($('div.popup_box:visible').length<1 && $("div.pletter_win:visible").length<1) {
                 $(".blackbg").hide();
-            //}
+            }
             $(".blackbg form").each(function(){
                 this.reset();
             });
@@ -910,10 +910,10 @@ var box={
     /**隐藏消息*/
     hideMsg : function(){
         if($("#popMsgBox").is(":visible")){
-            $("#popMsgBox").fadeOut("normal", "swing", function(){console.log($('.popup_box').is(':visible').length);
-                //if($($('div.popup_box').is(':visible')).length<2) {
+            $("#popMsgBox").fadeOut("normal", "swing", function(){
+                if($('div.popup_box:visible').length<1 && $("div.pletter_win:visible").length<1) {
                     $(".blackbg").hide();
-                //}
+                }
             });
         }
     },

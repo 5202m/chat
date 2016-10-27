@@ -1074,11 +1074,17 @@ var chat={
                     //关闭事件
                     $("#"+whId).find(".pop_close").click(function(){
                         $(".pletter_win .cont[id],.pletter_win .mult_dialog a[uid]").remove();
-                        $(".pletter_win,.blackbg").hide();
+                        $(".pletter_win").hide();
+                        if($('div.popup_box:visible').length<1 && $("div.pletter_win:visible").length<1) {
+                            $(".blackbg").hide();
+                        }
                     });
                     //最小化事件
                     $("#"+whId).find(".pop_small").click(function(){
-                        $(".pletter_win,.blackbg").hide();
+                        $(".pletter_win").hide();
+                        if($('div.popup_box:visible').length<1 && $("div.pletter_win:visible").length<1) {
+                            $(".blackbg").hide();
+                        }
                     });
                     //加载私聊信息
                     chat.socket.emit("getWhMsg",{clientStoreId:indexJS.userInfo.clientStoreId,userType:indexJS.userInfo.userType,groupId:indexJS.userInfo.groupId,groupType:indexJS.userInfo.groupType,userId:indexJS.userInfo.userId,toUser:{userId:userId,userType:userType}});
