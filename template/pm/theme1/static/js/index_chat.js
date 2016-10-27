@@ -239,6 +239,35 @@ var chat={
                 }
                else if(data.isOK){
                     box.showMsg("签到成功!");
+                    common.getJson('/studio/getSignin',null,function(data){
+                        if(null != data){
+                            var signinInfo = data.signinInfo;
+                            var signinUser = data.signinUser;
+                            var serialSigDays = 0;
+                            if(null!= signinInfo){
+                                serialSigDays = signinInfo.serialSigDays;
+                            }
+                            $('.signinbox .progressbar .barcont .current').text(serialSigDays+"天");
+                            var currentDate = new Date();
+                            var signinListHtml = [],signinFormatHtml = box.formatHtml('signin');
+                            if(null != signinUser){
+                                for(var i in signinUser){
+                                    var row = signinUser[i];
+                                    var avatar = row.avatar != null?row.avatar:'/pm/theme1/img/user.jpg';
+                                    var minuteDiff = common.getMinuteDiff(currentDate,row.signinTime);
+                                    minuteDiff = minuteDiff <=0?1:minuteDiff;
+                                    signinListHtml.push(signinFormatHtml.formatStr(avatar,minuteDiff + '分钟前'));
+                                }
+                            }
+                            $('.signinbox .sign_vistor ul').prepend(signinListHtml.join(''));
+                            $('#sign_vistor').height(75);
+                            indexJS.setListScroll($('#sign_vistor'));
+                            common.openPopup('.blackbg,.signin');
+                        }else{
+                            console.log("fail");
+                            box.showMsg(data.msg);
+                        }
+                    });
                 }else{
                     box.showMsg(data.msg);
                 }
