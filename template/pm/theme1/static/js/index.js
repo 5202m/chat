@@ -117,7 +117,7 @@ var indexJS ={
                     chatPride.setTradeStrategyNote(null, false);
                     break;
                 case 'teacher':
-                    chatTeacher.initShowTeacher(null);
+                    chatTeacher.getShowTeacher(null);
                     break;
                 case 'showtrade':
                     chatShowTrade.initShowTrade();/*晒单墙*/
