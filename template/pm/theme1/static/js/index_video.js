@@ -507,10 +507,7 @@ var videos={
         $('#course_panel li.on').removeClass("on");
         if(course){
             $('#course_panel .main_tab[d='+course.day+']').find('li a[st="'+course.startTime+'"][et="'+course.endTime+'"]').parent().addClass("on");
-        }
-
-        if(course){
-            //TODO 直播老师 - 刷新
+            chatTeacher.getShowTeacher(course.lecturerId);
         }
     },
 
