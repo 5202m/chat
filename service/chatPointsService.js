@@ -303,6 +303,21 @@ var chatPointsService = {
             }
         }
         return result;
+    },
+    /**
+     * 查询积分配置表
+     * @param usrInfo
+     * @param callback
+     */
+    getChatPointsConfig:function(params,callback) {
+        ChatPointsConfig.findOne({"groupType": params.groupType,"type":params.type,"item" : params.item}, "", function (err, row) {
+             if(err){
+                 logger.error("获取积分配置表失败! >>getChatPointsConfig:", err);
+                 callback(null);
+             }else{
+                 callback(row);
+             }
+        })
     }
 };
 
