@@ -182,13 +182,12 @@ var chatTeacher = {
             var nickname = indexJS.userInfo.nickname;
             if(group.indexOf(userGroup) > 0){
                 var params = {userNo:userNo,nickname:nickname,clientGroup:group,updateTrain:updateTrain}
-                common.getJson('/studio/addClientTrain',{data:JSON.stringify(params)},function(data){console.log(data);
+                common.getJson('/studio/addClientTrain',{data:JSON.stringify(params)},function(data){
                     if(data.errcode == "3003"){
                         box.showMsg(data.errmsg);
                         return;
                     }
                     if(data.isOK){
-                        console.log("succ");
                         if(updateTrain){
                             chatTeacher.showTrani(data.chatGroup);
                         }else{
@@ -197,7 +196,6 @@ var chatTeacher = {
                     }else if(data.train){
                         box.showMsg(data.msg);
                     }else{
-                        console.log("fail");
                         box.showMsg(data.msg);
                     }
                 });
@@ -316,7 +314,7 @@ var chatTeacher = {
 
             indexJS.getArticleList("teach_video_base,teach_video_expert,teach_video_financial,teach_video_gw,student_style,teach_live_video",indexJS.userInfo.groupId,0,1,20,'{"createDate":"desc"}',null,function(dataList){
                 if(dataList && dataList.result==0){
-                    var articleList = dataList.data; console.log(articleList);
+                    var articleList = dataList.data;
                     var teachLiveCount = 1,studentLiveCount = 1,teachVideoCount = 1;
                     var teachLiveHtml = [],studentLiveHtml = [],teachVideoHtml = [];
                     var article =null,articleDetail = null;
