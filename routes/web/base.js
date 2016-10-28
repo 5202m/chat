@@ -1716,7 +1716,16 @@ router.post('/getChatPointsConfig',function(req, res){
  * 提取培训班详情
  */
 router.get('/getTrDetail', function(req, res) {
-    res.render(common.renderPath(req, constant.tempPlatform.pc, "vtrain", "theme1"), {});
+    var userNo=req.query["uid"];
+    studioService.getUserInfoByUserNo(req.session.studioUserInfo.groupType,userNo,function(ret){
+        if(ret.winRate){
+            ret.winRate=ret.winRate.replace("%","");
+        }
+        if(ret.earningsM){
+            ret.earningsM=ret.earningsM.replace("%","");
+        }
+        res.render(common.renderPath(req, constant.tempPlatform.pc, "vtrain", "theme1"), ret);
+    });
 });
 
 module.exports = router;

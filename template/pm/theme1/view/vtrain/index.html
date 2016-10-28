@@ -1,25 +1,25 @@
-<link href="../static/css/jquery.mCustomScrollbar.css" type="text/css" rel="stylesheet" />
-<link href="../static/css/train.css" type="text/css" rel="stylesheet" />
+<link href="/base/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
+<link href="/pm/theme1/css/train.min.css" type="text/css" rel="stylesheet" />
 <!-- 老师培训班详情-陈丞  -->
-
+<%if(userNo=='jade') {%>
 <div class="scrollbox">
     <div class="teacherbox">
         <div class="te_top">
-            <div class="himg"><img src="../static/img/timg3.jpg" alt=""></div>
+            <div class="himg"><img src="/pm/theme1/img/timg3.jpg" alt=""></div>
             <div class="info1 clearfix">
                 <div class="info-l">
-                    <span class="te_name">陈丞</span><br>
-                    <span class="te_org">大数据挖掘师</span>
+                    <span class="te_name"><%= locals.userName %></span><br>
+                    <span class="te_org"><%= locals.position %></span>
                 </div>
                 <div class="stateshow">
                     <div class="item">
                         <i class="i1"></i>
-                        <b>90<em>%</em></b>
+                        <b><%= locals.winRate %><em>%</em></b>
                         <span>胜率</span>
                     </div>
                     <div class="item">
                         <i class="i2"></i>
-                        <b>50<em>%</em></b>
+                        <b><%= locals.earningsM %><em>%</em></b>
                         <span>月收益</span>
                     </div>
                     <!-- <div class="item">
@@ -29,7 +29,7 @@
                     </div> -->
                     <div class="item">
                         <i class="i6"></i>
-                        <b><em>(6558)</em></b>
+                        <b><em>(<%= locals.praiseNum %>)</em></b>
                         <span>赞</span>
                     </div>
                 </div>
@@ -103,55 +103,105 @@
         <div class="ph_tit"><span><i></i>老师经典案例</span></div>
         <div class="ph_cont">
             <p>9月非农前夕策略验证“阴谋论”之说，<b>做多</b>，盈利<b class="sz">3800</b>美元/手</p>
-            <div class="imgdiv"><img src="../static/img/teacher_exp.jpg" alt=""></div>
+            <div class="imgdiv"><img src="/pm/theme1/img/teacher_exp.jpg" alt=""></div>
         </div>
     </div>
-    <div class="detail_ph">
-        <div class="ph_tit"><span><i></i>排行榜</span></div>
-        <div class="indent_cont">
-            <div class="medaltable">
-                <table cellpadding="0" cellspacing="0" width="100%" border="0">
-                    <tr>
-                        <th width="20%"></th>
-                        <th>直播间昵称</th>
-                        <th width="25%"><span>账号</span></th>
-                        <th width="20%">收益率</th>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="medal m1"></i>状元
-                        </td>
-                        <td>会飞的黄金</td>
-                        <td>186****8888</td>
-                        <td>3.96%</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="medal m2"></i>榜眼
-                        </td>
-                        <td>大风声</td>
-                        <td>186****8888</td>
-                        <td>1.23%</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <i class="medal m3"></i>探花
-                        </td>
-                        <td>123ab春满人</td>
-                        <td>186****8888</td>
-                        <td>0.96%</td>
-                    </tr>
-                </table>
+</div>
+<%} else if(userNo=='lgg'){ %>
+<div class="scrollbox dn">
+    <div class="ligg_top clearfix">
+        <div class="lbox">
+            <div class="himg"><img src="../static/img/timg_lgg.jpg" alt=""></div>
+            <div class="bcont">
+                <div class="ligg_st">
+                    <div class="st"><i class="st1"></i>胜率：<span><b>90</b>%</span></div>
+                    <div class="st"><i class="st2"></i>赞：<span>(6558)</span></div>
+                </div>
+                <p class="ligg_zy"><span>投资箴言：</span>兵者，诡道也。投资亦然。辨其道中脉络，方能亏少赚多。</p>
+                <a href="" class="applybtn">立即报名</a>
             </div>
-            <div class="train_ad"><a href="javascript:void(0)" class="actrulebtn" onclick="openPopup('train_rule')"><i></i>活动条款</a></div>
+
+        </div>
+        <div class="rbox">
+            <div class="ligg_intro">
+                <b>李呱呱</b><span>顺势波浪八法专家</span>
+            </div>
+            <div class="taglist">
+                <div class="tag"><span>实战高手</span><i></i></div>
+                <div class="tag"><span>有激情</span><i></i></div>
+                <div class="tag"><span>段子手</span><i></i></div>
+                <div class="tag"><span>波浪八法</span><i></i></div>
+            </div>
+            <div class="detail_ph">
+                <div class="ph_tit"><span><i></i>老师简介</span></div>
+                <div class="ph_cont">
+                    <p>多年实盘操作经验，交易风格属积极大胆进攻，多次掌握黄金单边大波段行情。钻研日内波段操作，透过实战盈亏的洗练而创造出独特的顺势交易系统，成功将易懂难精的波浪理论结合葛兰碧八法，创造了将经典理论融入于实际做单的关键点操作，短中线波段掌握精准度高。</p>
+                </div>
+            </div>
+            <div class="detail_ph">
+                <div class="ph_tit"><span><i></i>老师经典案例</span></div>
+                <div class="ph_cont">
+                    <p>6/9~6/13非农后续效应再加上英国脱欧的不确定恐慌情绪，因而将1240-1260的多方区间上移至1260-1280，李老师在区间内采保守获利就尽早出场或反转就出场的方式，5次相加总共产生<b>2600美元获利</b>！跟单的小伙伴们有福了！</p>
+                    <div class="picbox"><a href="../static/img/ligg_sd.jpg" data-rel="sd-img" data-title="持仓中" class="lightbox"><img src="../static/img/ligg_sd.jpg" alt="晒单" class="mCS_img_loaded"><i class="i-zoom"></i></a></div>
+
+                </div>
+            </div>
         </div>
     </div>
 
+    <div class="detail_ph">
+        <div class="ph_tit"><span><i></i>课程介绍</span></div>
+        <div class="ph_cont kcbg">
+            <h4 class="kcname">日内波段实战法与交易心理学</h4>
+            <ul class="t_list">
+                <li><i>1</i><span>随处可听到的顺势交易如何落实在贵金属 </span></li>
+                <li><i>2</i><span>具体有哪些顺势交易的系统</span></li>
+                <li><i>3</i><span>杰西、李佛摩尔的名言与实战心态对照</span></li>
+                <li><i>4</i><span>市场心理如何形成行情趋势洪流</span></li>
+                <li><i>5</i><span>运用正确心态建立自己的交易系统</span></li>
+            </ul>
+            <div class="kcbgpic"></div>
+            <div class="apply_info">
+                <div class="inbox in1">
+                    <div class="cont">
+                        <p>报名时间：<b>10.17-10.21</b></p>
+                        <p class="red">开课时间：<b>10.24-10.28 </b></p>
+
+                    </div>
+                    <i class="arr"></i>
+                </div>
+                <div class="inbox in2">
+                    <div class="cont">
+                        <p>报名条件：</p>
+                        <ul class="t_list">
+                            <li><i>1</i><span>注册直播间 </span></li>
+                            <li><i>2</i><span>报名期间净入金满1000美元</span></li>
+                        </ul>
+                        <p class="p2">报名人数：<br>限额50名，招满截止   </p>
+                    </div>
+                    <i class="arr"></i>
+                </div>
+                <div class="inbox">
+                    <div class="cont">
+                        <p>报名流程：</p>
+                        <ul class="t_list">
+                            <li><i>1</i><span>在直播间“我的助理”处报名 </span></li>
+                            <li><i>2</i><span>登记个人信息，完成报名</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <a href="" class="applybtn">马上报名</a>
 </div>
+<%}%>
 
-<script src="../static/js/jquery.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="../static/js/jquery.mCustomScrollbar.js"></script>
+
+
+
+<script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
+<script type="text/javascript" src="/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript">
     $(function(){
         myscroll();

@@ -181,7 +181,7 @@ var chatTeacher = {
             var userGroup = indexJS.userInfo.clientGroup;
             var nickname = indexJS.userInfo.nickname;
             if(group.indexOf(userGroup) != -1){
-                var params = {groupId:$(obj).attr("rmid"),userNo:userNo,clientGroup:group,updateTrain:updateTrain};
+                var params = {groupId:$(obj).attr("rmid"),userNo:userNo,clientGroup:group,updateTrain:updateTrain,nickname:nickname};
                 common.getJson('/studio/addClientTrain',{data:JSON.stringify(params)},function(data){
                     if(data.awInto){
                         indexJS.toRefreshView();

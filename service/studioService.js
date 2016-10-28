@@ -655,7 +655,32 @@ var studioService = {
             callback(rows);
         });
     },
-
+    /**
+     * 通过用户userNo提取信息
+     * @param userNo
+     */
+    getUserInfoByUserNo:function(groupType,userNo,callback){
+        boUser.findOne({userNo:userNo},"userNo userName position avatar introduction introductionImg winRate earningsM",function(err,rows) {
+            if(err){
+                logger.error("查询直播老师数据失败!:", err);
+                callback(null);
+            }else{
+                if(rows){
+                    var result =  rows.toObject();
+                    chatPraiseService.getPraiseNum(result.userNo,constant.chatPraiseType.user,groupType,function(data){
+                        if(data && data.length > 0){
+                            result.praiseNum = data[0].praiseNum;
+                        }else{
+                            result.praiseNum = 0;
+                        }
+                        callback(result);
+                    });
+                }else{
+                    callback(null);
+                }
+            }
+        });
+    },
 
     /**
      * 初始直播老师列表
@@ -665,25 +690,8 @@ var studioService = {
     getShowTeacher: function(params,dataCallback){
         async.parallel({
                 userInfo: function (callback) {
-                    boUser.findOne({userNo:params.authorId},"userNo userName position avatar introduction winRate tag",function(err,rows) {
-                        if(err){
-                            logger.error("查询直播老师数据失败!:", err);
-                            callback(err,null);
-                        }else{
-                            if(rows){
-                                var result =  rows.toObject();
-                                chatPraiseService.getPraiseNum(result.userNo,constant.chatPraiseType.user,params.groupType,function(data){
-                                    if(data && data.length > 0){
-                                        result.praiseNum = data[0].praiseNum;
-                                    }else{
-                                        result.praiseNum = 0;
-                                    }
-                                    callback(err,result);
-                                });
-                            }else{
-                                callback(err,null);
-                            }
-                        }
+                    studioService.getUserInfoByUserNo(params.groupType,params.authorId,function(ret){
+                        callback(null,ret);
                     });
                },
                 analystList: function (callback) {

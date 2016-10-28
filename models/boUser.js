@@ -10,6 +10,8 @@ var mongoose = require('mongoose')
         telephone: String ,
         position: String ,
         avatar:String,
+        winRate:String,
+        earningsM:String,
         introductionImgLink:String,//简介图片跳转链接
         introductionImg:String,//简介图片
         introduction:String,//简介

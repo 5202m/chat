@@ -27,6 +27,15 @@ var userService = {
         });
     },
     /**
+     * 通过用户userNo提取信息
+     * @param userNo
+     */
+    getUserInfoByUserNo:function(userNo,callback){
+        boUser.findOne({userNo:userNo},"userNo userName position avatar introduction introductionImg winRate earningsM",function(err,row) {
+            callback(row);
+        });
+    },
+    /**
      * 通过用户id提取信息
      * @param ids
      */

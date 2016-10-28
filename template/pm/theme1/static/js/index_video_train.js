@@ -40,7 +40,7 @@ var videosTrain = {
                 });
                 $('.pop_train .scrollbox .trainlist').empty().prepend(trainHtml);
                 $('.pop_train .scrollbox .trainlist .traindetails').click(function(){
-                    $('.blackbg,.train_detail iframe').attr("src","/studio/getTrDetail");
+                    $('.blackbg,.train_detail iframe').attr("src","/studio/getTrDetail?uid="+$(this).prev().attr("userno"));
                     common.openPopup('.blackbg,.train_detail');
                 });
             }

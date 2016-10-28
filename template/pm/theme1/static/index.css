@@ -228,7 +228,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .wshadow.r{ background-position: left 0; right: 40px; left: auto;}
 .courseintro{ padding-left:180px ; margin: 0 30px;position: relative; padding-bottom: 10px;	}
 .courseintro .cpic{position: absolute; left: 0 ;top:3px; border: 1px solid #e6e6e6; border-radius: 3px; overflow: hidden; width: 161px;}
-.courseintro .cpic img{ width: 100%; height: auto; max-height: 88px }
+.courseintro .cpic img{ width: 100%; height: auto; }
 .introtext p{ font-size: 14px;line-height: 21px; color: #939599  }
 
 /* 互动区 */
@@ -418,8 +418,8 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .info_push .pushclose{ display: block; width: 8px; height: 8px; border-radius: 50%; position: absolute; right: 7px; top: 8px; padding: 6px;}
 .info_push .pushclose i{ display: block; width: 8px; height: 8px; background-position: -80px -100px }
 .info_push .pushclose:hover { background: #d7d7d7; }
-.contactbar{ padding-top: 31px; position:absolute; width: 100%; bottom:0; left:0; background:url(../img/white-shadow2.png) 0 0 repeat-x; z-index: 10; box-sizing: border-box; padding-left: 10px; }
-.contactbar .contactbtn{ display: inline-block;*display: inline;*zoom: 1; margin-left: 5px; padding: 0 10px; height: 24px; line-height: 24px; color: #fff; font-size: 12px;background: #3b96d5; border-radius: 2px; margin-bottom: 5px;}
+.contactbar{ padding-bottom: 5px; padding-top: 31px; position:absolute; width: 100%; bottom:0; left:0; background:url(../img/white-shadow2.png) 0 0 repeat-x; z-index: 10 }
+.contactbar .contactbtn{ display: inline-block;*display: inline;*zoom: 1; margin-left: 15px; padding: 0 10px; height: 24px; line-height: 24px; color: #fff; font-size: 12px;background: #3b96d5; border-radius: 2px}
 .contactbar .contactbtn:hover{ background: #2587cb; text-decoration: none; }
 
 .chat_input{ position:relative; z-index:10}
@@ -454,11 +454,6 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .input_area .sendbtn:hover{ background:#2587cb; text-decoration: none;}
 .input_area .lgtip{color:#84878d; line-height:18px; font-size:15px;}
 .input_area .lgtip a{ color:#2587cb; }
-.mymsg{ height:auto; position:absolute; width:100%; bottom:40px; left:0; padding:6px 0; background:#f5f5be; z-index:11; }
-.mymsg p{ padding:0 44px 0 80px;color:#c83344; line-height:24px; font-size:15px;}
-.mymsg .replybtn{ position:absolute; top:6px; left:10px; display:block; height:22px; width:56px; border:1px solid #b59030; border-radius:2px; text-align:center;color:#b59030; line-height:22px; font-size:14px;}
-.mymsg .replybtn:hover { background:rgba(255,255,255,.5); text-decoration:none}
-.mymsg .pop_close:hover{ border-radius: 0 }
 
 /*@功能*/
 .dialog.showchat .dialogbtn{ display:block;}
@@ -689,7 +684,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 /*弹出框*/
 .blackbg{ background:#000; opacity: .4; filter: alpha(opacity=40); width:100%; height:100%; position:fixed; top:0; left:0; z-index:100}
 .blackbg2 { background:#000; opacity: .4; filter: alpha(opacity=40); width:100%; height:100%; position:fixed; top:0; left:0; z-index:100}
-.popup_box{border: 1px solid #dcdfe3;position:absolute; top:50%; margin-top:-200px; left:50%; height:auto;width:526px; margin-left:-263px;  border-radius:3px; z-index:101; background:#fff;overflow: hidden;}
+.popup_box{position:absolute; top:50%; margin-top:-200px; left:50%; height:auto;width:526px; margin-left:-263px;  border-radius:3px; z-index:101; background:#fff;overflow: hidden;}
 .popup_box.notice{width:460px; margin-left:-230px; }
 .popup_box .pop_tit { font-size:24px; line-height:60px; color:#444; text-align:center}
 .popup_box .pop_tit span{ display: inline-block;*display: inline;*zoom: 1; margin: 30px 19px 0;  height: 1px;vertical-align: top; background: #aec7de; width: 23%; }
@@ -1272,7 +1267,6 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 /*复写滚动条*/
 .mCSB_inside>.mCSB_container{ margin-right:12px}
 .mCSB_outside + .mCSB_scrollTools{ right: -24px; z-index: 12 }
-.mCSB_outside + .mCS-dark {right:-18px;}
 
 .mCS-light-thick.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,.mCS-light-thick.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar, .mCS-light-thick.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{background: url(../img/scroll.png) -10px center no-repeat #527bac; }
 .mCS-light-thick.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{ background-position: right center; background-color: #4b7eba }

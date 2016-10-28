@@ -82,6 +82,7 @@ for(var key in config.defTemplate){
         if(i==1){//pc版
             fileZip.zipCss([prefixPath+'css\\index.css'],prefixPath+'css\\index.min.css');
             if(key=="pm"){
+                fileZip.zipCss([prefixPath+'css\\train.css'],prefixPath+'css\\train.min.css');
                 var libList=["jquery-1.7.min.js","socket.io.js"
                 ];
                 var libList=["jquery-1.7.min.js","socket.io.js","mScroll\\jquery.mCustomScrollbar.concat.min.js",
