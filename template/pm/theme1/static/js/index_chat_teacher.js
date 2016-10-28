@@ -201,22 +201,22 @@ var chatTeacher = {
                 });
             }else{
                 var groupMeg = [];
-                groupMeg.push("[");
+                groupMeg.push("【");
                 if(group.indexOf(",") > 0){
                     var groupTypes = group.split(",");
                     for(var i in groupTypes){
                        var groupType = groupTypes[i];
-                        groupMeg.push(common.groupType[groupType])
+                        groupMeg.push(common.clientGroupStr[groupType])
                         if(i < groupTypes.length-1){
-                            groupMeg.push(",");
+                            groupMeg.push(" , ");
                         }
                     }
                 }else{
-                    groupMeg.push(common.groupType[group]);
+                    groupMeg.push(common.clientGroupStr[group]);
                 }
-                groupMeg.push("]");
+                groupMeg.push("】");
 
-                var msg = "客户为:["+common.groupType[userGroup]+"],培训班只对"+groupMeg.join("")+"客户开放";
+                var msg = "客户为:【"+common.clientGroupStr[userGroup]+"】,培训班只对"+groupMeg.join("")+"客户开放";
                 box.showMsg(msg);
             }
         }else{
