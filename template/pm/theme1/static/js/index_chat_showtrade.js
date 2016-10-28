@@ -292,7 +292,7 @@ var chatShowTrade = {
         for(var i = 0, length=data.length; i < length; i++){
             row = data[i];
             if($('#showTradeDiv .sd_ul li[sid="'+row.id+'"]').length==0){
-                var showTradeDate = common.formatterDateTime(row.showDate,'/').substr(5,11);
+                var showTradeDate = common.formatterDateTime(row.showDate.time,'/').substr(5,11);
                 tradeHtml += tradeFormat.formatStr(row.title, row.boUser.userName, showTradeDate, row.tradeImg, row.remark, (common.isBlank(row.praise)?0:row.praise), row.id, row.boUser.userNo, row.boUser.avatar);
                 $('#showTradeDiv .scrollbox ul.sd_ul li').removeClass('r');
                 $('#showTradeDiv .scrollbox ul.sd_ul').prepend(tradeHtml);
@@ -300,7 +300,7 @@ var chatShowTrade = {
                 indexJS.setListScroll('#showTradeDiv .scrollbox', null, {callbacks : {onTotalScroll : function(){chatShowTrade.setShowTrade();}}});/*设置滚动条*/
             }
             var html = chatShowTrade.formatHtml('pushShowTradeInfo');
-            $('#chatMsgContentDiv .dialoglist').append(html.formatStr(row.boUser.userName, (common.isBlank(row.title)?'...':row.title), row._id));
+            $('#chatMsgContentDiv .dialoglist').append(html.formatStr(row.boUser.userName, (common.isBlank(row.title)?'...':row.title), row.id));
         }
         chat.setTalkListScroll(true);
         $('#chatMsgContentDiv .dialoglist .pushclose').unbind('click');
