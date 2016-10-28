@@ -291,9 +291,9 @@ var chatShowTrade = {
         var tradeHtml='',tradeFormat = chatShowTrade.formatHtml('showTradeAll'),row = null;
         for(var i = 0, length=data.length; i < length; i++){
             row = data[i];
-            if($('#showTradeDiv .sd_ul li[sid="'+row._id+'"]').length==0){
+            if($('#showTradeDiv .sd_ul li[sid="'+row.id+'"]').length==0){
                 var showTradeDate = common.formatterDateTime(row.showDate,'/').substr(5,11);
-                tradeHtml += tradeFormat.formatStr(row.title, row.boUser.userName, showTradeDate, row.tradeImg, row.remark, common.isBlank(row.praise)?0:row.praise, row._id, row.boUser.userNo, row.boUser.avatar);
+                tradeHtml += tradeFormat.formatStr(row.title, row.boUser.userName, showTradeDate, row.tradeImg, row.remark, (common.isBlank(row.praise)?0:row.praise), row.id, row.boUser.userNo, row.boUser.avatar);
                 $('#showTradeDiv .scrollbox ul.sd_ul li').removeClass('r');
                 $('#showTradeDiv .scrollbox ul.sd_ul').prepend(tradeHtml);
                 $('#showTradeDiv .scrollbox ul.sd_ul li:odd').addClass('r');
