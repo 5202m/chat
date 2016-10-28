@@ -67,7 +67,7 @@ var videosTeach = {
                             $("#tvInfoId .introtext p").text(detail.remark);
                         }
                     });
-                    indexJS.setListScroll('#tvInfoId .introtext');//设置滚动
+                    indexJS.setListScroll('#teachVideoPanel .scrollbox');//设置滚动
                     chatAnalyze.setUTM(false,{courseId:vdId});//统计教学视频点击数
                 });
                 if(typeof callback === "function"){

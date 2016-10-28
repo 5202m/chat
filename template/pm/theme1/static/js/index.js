@@ -591,6 +591,5 @@ var indexJS ={
         $('.chat_content .scrollbox').height(hh - $('.main_tabnav').height() - 201 - hh_header - 6);
         $('.sd_list .scrollbox').height(hh - $('.main_tabnav').height() - $('.sdbtn_bar').height() - hh_header - 6);
         $('.pop_mysd .sd_list .scrollbox').height(340);
-        $('#tvInfoId .introtext').height(hh - hh_header - $('.mod_video').height() - $('.mod_infotab .tabnav').height() - $('#teachVideoId').height() - $('#teachVideoPanel .courseNum').height() - 102);
     }
 };
