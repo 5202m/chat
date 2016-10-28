@@ -1268,6 +1268,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 /*复写滚动条*/
 .mCSB_inside>.mCSB_container{ margin-right:12px}
 .mCSB_outside + .mCSB_scrollTools{ right: -24px; z-index: 12 }
+.mCSB_outside + .mCS-dark {right:-18px;}
 
 .mCS-light-thick.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,.mCS-light-thick.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar, .mCS-light-thick.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{background: url(../img/scroll.png) -10px center no-repeat #527bac; }
 .mCS-light-thick.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{ background-position: right center; background-color: #4b7eba }
