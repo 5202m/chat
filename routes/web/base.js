@@ -1473,6 +1473,12 @@ router.post('/subscribe', function(req, res){
         res.json({'isOK':false, 'msg':'参数错误'});
     }else if(common.isBlank(userInfo.email) && 'email'.indexOf(params.noticeType)>-1){
         res.json({'isOK':false,'msg':'请先绑定邮箱'});
+    }else if(common.isBlank(params.id) && common.isBlank(params.analyst)){
+        res.json({'isOK':false,'msg':'请选择订阅老师！'});
+    }else if(common.isBlank(params.id) && common.isBlank(params.noticeType)){
+        res.json({'isOK':false,'msg':'请选择订阅方式！'});
+    }else if(common.isBlank(params.id) && common.isBlank(params.noticeCycle)){
+        res.json({'isOK':false,'msg':'请选择订阅周期！'});
     }else{
         if(common.isBlank(params.id)) {
             chatSubscribeService.saveSubscribe(params, function (result) {

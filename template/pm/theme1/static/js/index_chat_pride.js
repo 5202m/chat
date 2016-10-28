@@ -19,7 +19,7 @@ var chatPride = {
         $("#textliveMore").bind("click", function(){
             if(!$(this).is(".all")){
                 var lastId = $("#textlivePanel li[aid]:last").attr("aid");
-                indexJS.setTradeStrategyNote(lastId, false);
+                chatPride.setTradeStrategyNote(lastId, false);
             }
         });
     },
