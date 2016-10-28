@@ -244,7 +244,7 @@ var videosSubscribe = {
                 formatHtmlArr.push('</div>');
                 break;
             case 'noticeType':
-                formatHtmlArr.push('<div class="pdbox {0}"><a href="javascript:void(0);" class="dybtn" t="{0}" tn="{1}" nts="email">');
+                formatHtmlArr.push('<div class="pdbox {0}"><a href="javascript:void(0);" class="dybtn" t="{0}" tn="{1}" nts="email"');
                 formatHtmlArr.push(' onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'header_dy_{0}\', \'content_top\', 1, true]);">');
                 formatHtmlArr.push('邮件订阅</a></div>');
                 break;
