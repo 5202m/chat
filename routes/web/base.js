@@ -1586,7 +1586,7 @@ router.post('/addClientTrain', function(req, res){
             res.json(result);
         });
     }else{
-        var msg = "客户为:"+common.groupType[userInfo.clientGroup]+",培训班只对"+params.clientGroup+"客户开放";
+        var msg = "客户为:"+common.clientGroupStr[userInfo.clientGroup]+",培训班只对"+params.clientGroup+"客户开放";
         res.json({train:'fail', msg:msg});
     }
 });
@@ -1637,7 +1637,7 @@ router.post('/getSignin', function(req, res){
 });
 
 /**
- * 查询签到
+ * 根据groupId查询房间
  */
 router.post('/getchatGroupByGroupId', function(req, res){
     var groupId=req.body["groupId"];
