@@ -1143,7 +1143,7 @@ router.get('/getVerifyCode', function(req, res) {
  * 获取晒单数据
  */
 router.post('/getShowTrade', function(req, res){
-    var params = req.body['data'];
+    var userInfo = req.session.studioUserInfo,params = req.body['data'];
     if(typeof params == 'string'){
         try {
             params = JSON.parse(params);
@@ -1152,10 +1152,13 @@ router.post('/getShowTrade', function(req, res){
             return;
         }
     }
-     params.pageSize = common.isBlank(params.pageSize) ? 100 : params.pageSize;
+    params.pageSize = common.isBlank(params.pageSize) ? 100 : params.pageSize;
     if(isNaN(params.pageSize) || common.isBlank(params.groupType)){
         res.json({'isOK':false,'data':null, 'msg':'参数错误'});
     }else{
+        if(common.isValid(params.userNo) && params.userNo != userInfo.userId){
+            params.status = 1;
+        }
         showTradeService.getShowTradeList(params,function(page){
             res.json({'isOK':true,'data':page,'msg':''});
         });
