@@ -906,6 +906,19 @@ var common = {
         return  dates;
     },
     /**
+     * 获取两个日期之间相差的小时
+     * @param startDate
+     * @param endDate
+     * @returns {number}
+     */
+    getHourDiff:function(startDate, endDate) {
+        var startTime = new Date(startDate).getTime();
+        var endTime = new Date(endDate).getTime();
+        var dates = Math.abs((startTime - endTime))/(1000*60*60);
+        dates = Math.floor(dates);
+        return  dates;
+    },
+    /**
      * 获取两个日期之间相差的分钟
      * @param startDate
      * @param endDate
@@ -917,6 +930,18 @@ var common = {
         var dates = Math.abs((startTime - endTime))/(1000*60);
         dates = Math.floor(dates);
         return  dates;
+    },
+    /**
+     * js日期、月份：日期加一天
+     * @param date
+     * @param days
+     * @returns {string}
+     */
+    addDate: function (date,days){
+        var d=new Date(date);
+        d.setDate(d.getDate()+days);
+        var m=d.getMonth()+1;
+        return d.getFullYear()+'-'+m+'-'+d.getDate();
     }
 };
 /**

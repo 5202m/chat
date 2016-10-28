@@ -632,6 +632,18 @@ var common = {
         return loc_result;
     },
     /**
+     * js日期、月份：日期加一天
+     * @param date
+     * @param days
+     * @returns {string}
+     */
+    addDate: function (date,days){
+        var d=new Date(date);
+        d.setDate(d.getDate()+days);
+        var m=d.getMonth()+1;
+        return d.getFullYear()+'-'+m+'-'+d.getDate();
+    },
+    /**
      * 判断是否数字
      * @param obj
      * @returns {boolean}
