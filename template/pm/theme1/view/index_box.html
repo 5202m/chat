@@ -22,13 +22,13 @@
                 <div class="in_line clearfix">
                     <i class="ic_msg"></i>
                     <input type="text" name="verifyCode" placeholder="短信验证码" class="in1 in2">
-                    <a href="javascript:void(0)" class="rbtn" ut="studio_reg" t="120">获取验证码</a><!--<a href="" class="rbtn pressed">60s...</a>按钮点击后的样式-->
+                    <a href="javascript:void(0)" class="rbtn" ut="studio_reg" t="120" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zc_PIN', 'content_top', 1, true]);">获取验证码</a><!--<a href="" class="rbtn pressed">60s...</a>按钮点击后的样式-->
                 </div>
             </div>
             <div class="error dn"><i></i></div>
-            <div class="btnbar"><input type="button" class="set_submit" value="提交" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'Login_tijiao', 'content_top']);"></div>
+            <div class="btnbar"><input type="button" class="set_submit" value="提交" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zc_tijiao', 'content_top', 1, true]);"></div>
             <div class="botbar lh50">
-                <span class="fr">已有账号，我要<a href="javascript:void(0)" id="reg_login">登录</a></span>
+                <span class="fr">已有账号，我要<a href="javascript:void(0)" id="reg_login" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zc_register', 'content_top', 1, true]);">登录</a></span>
             </div>
         </form>
         <a class="pop_close" href="javascript:"><i>关闭</i></a>
@@ -70,13 +70,13 @@
                     <span>下次自动登录</span>
                 </div>
                 <!-- <span class="fr">如未收到验证码，请咨询 <a href="">在线客服</a></span> -->
-                <a href="javascript:void(0);" class="fr" id="preSetPwdBtn">找回密码？</a>
+                <a href="javascript:void(0);" class="fr" id="preSetPwdBtn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_dl_getbackPwd', 'content_top', 1, true]);">找回密码？</a>
             </div>
             <div class="error dn"><i></i>输入内容有误，请重新输入！</div>
-            <div class="btnbar"><input type="button" class="set_submit" value="登录" id="logBtnSub" /></div>
+            <div class="btnbar"><input type="button" class="set_submit" value="登录" id="logBtnSub" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_dl_login2', 'content_top', 1, true]);"/></div>
             <div class="botbar clearfix">
 
-                <span class="fr">您还没有金道直播间账号？<a href="javascript:void(0);" id="preRegBtn">免费注册</a></span>
+                <span class="fr">您还没有金道直播间账号？<a href="javascript:void(0);" id="preRegBtn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_dl_register', 'content_top', 1, true]);">免费注册</a></span>
             </div>
             <!--div class="social_login">
                 <span>社交账号登录：</span>
@@ -158,7 +158,7 @@
     <div class="cont">
         <div class="personal_info">
             <div class="headimg"><img width="120" height="120" src="<%if(userSession.isLogin){%><%= userSession.avatar || '/pm/theme1/img/user.png' %><%}%>" id="avatarInfoId" alt=""></div>
-            <a href="javascript:void(0);" id="modifyAvatar">修改头像</a>
+            <a href="javascript:void(0);" id="modifyAvatar" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zh_profile', 'content_top', 1, true]);">修改头像</a>
             <form method="post" enctype='multipart/form-data' id="fileForm" name="fileForm" style="display: none;">
                 <input type="file" name="file" />
                 <input type="hidden" name="fileDir" value="pic/header/chat/front"/>
@@ -200,9 +200,9 @@
             </div>
         </div>
         <div class="main_tabnav" id="infotab">
-            <a href="javascript:void(0)" class="on" t="accountInfo">账户资料<i></i></a>
-            <a href="javascript:void(0)" t="myPoint">我的积分<i></i></a>
-            <a href="javascript:void(0)" t="mySubscribe">我的订阅<i></i></a>
+            <a href="javascript:void(0)" class="on" t="accountInfo" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zh_AccountDetails', 'content_top', 1, true]);">账户资料<i></i></a>
+            <a href="javascript:void(0)" t="myPoint" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_myPoints', 'content_top', 1, true]);">我的积分<i></i></a>
+            <a href="javascript:void(0)" t="mySubscribe" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_mySubscribe', 'content_top', 1, true]);">我的订阅<i></i></a>
         </div>
         <div class="tabcont">
             <div class="main_tab on" t="accountInfo">
@@ -215,7 +215,7 @@
                             </div>
                             <div class="edit_div">
                                 <a href="javascript:void(0);" id="setUserName">设置</a>
-                                <a href="javascript:void(0);" id="saveUserName" class="dn">保存</a>
+                                <a href="javascript:void(0);" id="saveUserName" class="dn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zh_mySubscribe', 'content_top', 1, true]);">保存</a>
                             </div>
                             <span class="itip">（设置之后可使用用户名+密码方式登录直播间)</span>
                         </div>
@@ -238,7 +238,7 @@
                             </div>
                             <div class="edit_div">
                                 <a href="javascript:void(0);" id="bindEmail">绑定</a>
-                                <a href="javascript:void(0);" id="saveEmail" class="dn">保存</a>
+                                <a href="javascript:void(0);" id="saveEmail" class="dn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zh_email', 'content_top', 1, true]);">保存</a>
                             </div>
                             <span class="itip">（验证邮箱可使用邮箱+密码方式登录、订阅邮件服务等）</span>
                         </div>
@@ -250,7 +250,7 @@
                             </div>
                             <div class="edit_div">
                                 <a href="javascript:void(0);" id="modifyNk">修改</a>
-                                <a href="javascript:void(0);" id="setNkBtn" class="dn">保存</a>
+                                <a href="javascript:void(0);" id="setNkBtn" class="dn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zh_nicheng', 'content_top', 1, true]);">保存</a>
                             </div>
                             <span class="itip dn nickNameTip">（先设置个好听的昵称吧）</span>
                         </div>
@@ -261,7 +261,7 @@
                                 <input type="password" id="myPwd" placeholder="<%if(userSession.isLogin){%><%= userSession.password?'*******':'未设置' %><%}%>" disabled="disabled">
                             </div>
                             <div class="edit_div">
-                                <a href="javascript:void(0);" id="modifyPwd">修改</a>
+                                <a href="javascript:void(0);" id="modifyPwd" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zh_password', 'content_top', 1, true]);">修改</a>
                                 <!--a href="javascript:void(0);" id="savePwd" class="dn">保存</a-->
                             </div>
                             <span class="itip">（设置之后可使用用户名+密码方式登录直播间)</span>
@@ -494,10 +494,10 @@
     <div class="cont">
         <div class="pop_tit longt"><span><i class="fr"></i></span>金道贵金属视频直播间会员权益说明<span><i></i></span></div>
         <div class="main_tabnav vipbene">
-            <a href="javascript:void(0)" class="on" t="member_activity">活动特权<i></i></a>
-            <a href="javascript:void(0)" t="member_product">产品特权<i></i></a>
-            <a href="javascript:void(0)" t="member_server">服务特权<i></i></a>
-            <a href="javascript:void(0)" t="member_function">功能特权<i></i></a>
+            <a href="javascript:void(0)" class="on" t="member_activity" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_qy_activity', 'content_top', 1, true]);">活动特权<i></i></a>
+            <a href="javascript:void(0)" t="member_product" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_qy_production', 'content_top', 1, true]);">产品特权<i></i></a>
+            <a href="javascript:void(0)" t="member_server" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_qy_service', 'content_top', 1, true]);">服务特权<i></i></a>
+            <a href="javascript:void(0)" t="member_function" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_qy_function', 'content_top', 1, true]);">功能特权<i></i></a>
         </div>
         <div class="tabcont">
             <div t="member_activity" class="main_tab on">
@@ -545,12 +545,12 @@
         <div class="pop_tit"><span><i class="fr"></i></span>资料下载<span><i></i></span></div>
         <div class="ranknavbar">
             <span>排序：</span>
-            <a href="javascript:void(0);" class="rankbtn on" sort="default">默认排序<b></b></a>
-            <a href="javascript:void(0);" class="rankbtn" sort="point">积分<i>↓</i><b></b></a>
-            <a href="javascript:void(0);" class="rankbtn" sort="uptime">上传时间<i>↓</i><b></b></a>
+            <a href="javascript:void(0);" class="rankbtn on" sort="default" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zl_moren', 'content_top', 1, true]);">默认排序<b></b></a>
+            <a href="javascript:void(0);" class="rankbtn" sort="point" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zl_jifen', 'content_top', 1, true]);">积分<i>↓</i><b></b></a>
+            <a href="javascript:void(0);" class="rankbtn" sort="uptime" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zl_shangchuanshijian', 'content_top', 1, true]);">上传时间<i>↓</i><b></b></a>
             <div class="search_bar">
                 <input type="text" class="sinp" placeholder="在结果中搜索" />
-                <input type="button" class="sbtn" value="搜索" />
+                <input type="button" class="sbtn" value="搜索" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zl_search', 'content_top', 1, true]);"/>
             </div>
             <div class="page_bar">
                 <span id="totalRecords">共</span>

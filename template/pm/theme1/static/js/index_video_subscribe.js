@@ -244,7 +244,9 @@ var videosSubscribe = {
                 formatHtmlArr.push('</div>');
                 break;
             case 'noticeType':
-                formatHtmlArr.push('<div class="pdbox {0}"><a href="javascript:void(0);" class="dybtn" t="{0}" tn="{1}" nts="email">邮件订阅</a></div>');
+                formatHtmlArr.push('<div class="pdbox {0}"><a href="javascript:void(0);" class="dybtn" t="{0}" tn="{1}" nts="email">');
+                formatHtmlArr.push(' onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'header_dy_{0}\', \'content_top\', 1, true]);">');
+                formatHtmlArr.push('邮件订阅</a></div>');
                 break;
             case 'noticeCycle':
                 formatHtmlArr.push('<div class="item">');
@@ -257,7 +259,9 @@ var videosSubscribe = {
                 formatHtmlArr.push('</div>');
                 break;
             case 'subscribeBtn':
-                formatHtmlArr.push('<div class="pdbox {0}">共计：<b>0分</b><a href="javascript:void(0);" class="dybtn" t="{0}" tn="{1}" a="{2}" t="{3}" c="{4}">订阅/结算</a></div>');
+                formatHtmlArr.push('<div class="pdbox {0}">共计：<b>0分</b><a href="javascript:void(0);" class="dybtn" t="{0}" tn="{1}" a="{2}" t="{3}" c="{4}"');
+                formatHtmlArr.push(' onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'header_dy_{0}\', \'content_top\', 1, true]);">');
+                formatHtmlArr.push('订阅/结算</a></div>');
                 break;
         }
         return formatHtmlArr.join("");

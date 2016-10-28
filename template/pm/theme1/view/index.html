@@ -34,9 +34,9 @@
 <!-- header begin -->
 <div class="box-header">
     <div class="box-header-in clearfix">
-        <h1 class="fl hide-t">视频直播间</h1>
+        <h1 class="fl hide-t" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_logo', 'content_top', 1, true]);">视频直播间</h1>
         <div class="header_ad fl">
-            <a href="javascript:void(0);" target="_blank"><img src="/pm/theme1/img/header_ad0927.gif"></a>
+            <a href="javascript:void(0);" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_banner', 'content_top', 1, true]);"><img src="/pm/theme1/img/header_ad0927.gif"></a>
         </div>
         <!--div class="header-btn fl">
             <a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','open_real_account', 'content_top',1,true]);"><i class="real"></i><span>开立真实账户</span></a>
@@ -46,26 +46,26 @@
             <div class="h_menu1">
                 <%if(userSession.isLogin){%>
                 <span class="welcome">嗨！欢迎<span><%= userSession.nickname || "匿名_xxx" %></span>进入金道直播间</span>
-                <a href="javascript:void(0)" id="logout" class="topbtn">注销</a>
+                <a href="javascript:void(0)" id="logout" class="topbtn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_zhuxiao', 'content_top', 1, true]);">注销</a>
                 <%} else {%>
                 <span class="welcome">嗨！欢迎进入金道直播间</span>
-                <a href="javascript:void(0)" onclick="" id="login_a" class="topbtn">登录</a>
-                <a href="javascript:void(0)" onclick="" id="register_a" class="topbtn">免费注册</a>
+                <a href="javascript:void(0)" id="login_a" class="topbtn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_login', 'content_top', 1, true]);">登录</a>
+                <a href="javascript:void(0)" id="register_a" class="topbtn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_register', 'content_top', 1, true]);">免费注册</a>
                 <%}%>
-                <a href="https://ui.24k.hk/" target="_webui" class="topbtn">在线交易</a>
+                <a href="https://ui.24k.hk/" target="_webui" class="topbtn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_webui', 'content_top', 1, true]);">在线交易</a>
             </div>
             <div class="h_menu2">
-                <a href="javascript:void(0)" id="personal_center" onclick="">我的账户</a>
+                <a href="javascript:void(0)" id="personal_center" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_myAccount', 'content_top', 1, true]);">我的账户</a>
                 <span>|</span>
-                <a href="javascript:void(0)" id="vipbenefit" onclick="">会员权益</a>
+                <a href="javascript:void(0)" id="vipbenefit" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_vipBenefits', 'content_top', 1, true]);">会员权益</a>
                 <span>|</span>
-                <a href="javascript:void(0)" id="infodown" onclick="">资料下载</a>
+                <a href="javascript:void(0)" id="infodown" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_ppt', 'content_top', 1, true]);">资料下载</a>
                 <span>|</span>
-                <a href="javascript:void(0)" id="live_preview" onclick="">直播预告</a>
+                <a href="javascript:void(0)" id="live_preview" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_course', 'content_top', 1, true]);">直播预告</a>
                 <span>|</span>
-                <a href="http://www.24k.hk/special/video_live_publicity/index.html" target="_blank">关于直播</a>
+                <a href="http://www.24k.hk/special/video_live_publicity/index.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_studioLP', 'content_top', 1, true]);">关于直播</a>
                 <span>|</span>
-                <a href="javascript:void(0);" id="qqcs" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'chat_QQ', 'contest_top',1,true]);">QQ客服</a>
+                <a href="javascript:void(0);" id="qqcs" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'header_QQcs', 'content_top', 1, true]);">QQ客服</a>
             </div>
         </div>
     </div>

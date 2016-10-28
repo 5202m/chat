@@ -364,9 +364,6 @@ var box={
             ops = ops || {};
             box.toRoomId = ops.groupId;
             box.openLgBox(ops.closeable, ops.showTip, ops.loginTime);
-            if(common.isValid($(this).attr("tp"))){
-                _gaq.push(['_trackEvent', 'pmchat_studio', 'login', $(this).attr("tp"), 1, true]);
-            }
         });
         if(indexJS.userInfo.clientGroup=='visitor'){
             var lgt = $('#roomInfoId').attr("lgt");//后台控制登录弹框时间
@@ -1108,7 +1105,7 @@ var box={
                 formatHtmlArr.push('    <td>{3}</td>');
                 formatHtmlArr.push('    <td>{4}积分</td>');
                 formatHtmlArr.push('    <td>{5}</td>');
-                formatHtmlArr.push('    <td><a href="javascript:void(0);" target="download" dn="{6}" p="{4}" _id="{7}" class="downbtn" sufix="{0}" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'file_download\',\'{1}\']);">下载</a></td>');
+                formatHtmlArr.push('    <td><a href="javascript:void(0);" target="download" dn="{6}" p="{4}" _id="{7}" class="downbtn" sufix="{0}" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'header_zl_download\', \'content_top\', 1, true]);">下载</a></td>');
                 formatHtmlArr.push('</tr>');
                 break;
             case 'signin':

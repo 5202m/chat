@@ -102,7 +102,6 @@ var indexJS ={
             indexJS.fillCourse();*/
             common.openPopup('.blackbg,.live_preview');
             //$(this).attr("ck",1);
-            _gaq.push(['_trackEvent', 'pmchat_studio','header_course','content_top',1,true]);
         });
         /*QQ客服按钮事件*/
         $('#qqcs').click(function(){
@@ -235,7 +234,7 @@ var indexJS ={
                     ons='';
                 }
                 dateStr = common.formatterDate(new Date(startDateTime + ((days[i].day + 6) % 7) * 86400000)).substring(5);
-                nva.append('<a href="javascript:" class="'+ons+'" t="'+i+'"><span>'+common.daysCN[days[i].day+""]+'<b>' + dateStr + '</b></span><i></i></a>');
+                nva.append('<a href="javascript:" class="'+ons+'" t="'+i+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'header_yg_' + i + '\', \'content_top\', 1, true]);"><span>'+common.daysCN[days[i].day+""]+'<b>' + dateStr + '</b></span><i></i></a>');
                 $(".live_preview .tabcont").append('<div class="main_tab'+ons+'" t="'+i+'" d="'+days[i].day+'"><ul class="live_prevlist"></ul></div>');
                 als='';
                 var lsTab=$(".live_preview .tabcont .main_tab:last ul"),courseObj=null;
@@ -246,7 +245,7 @@ var indexJS ={
                     for(var k= 0,tklen=tmk.length;k<tklen;k++){
                         courseObj=tmk[k].course[i];
                         if(courseObj.status != 0 && courseObj.lecturer){
-                            lsTab.append('<li class="'+als+'"><a href="javascript:" st="'+tmk[k].startTime+'" et="'+tmk[k].endTime+'"><i></i><div class="c_name">'+courseObj.title+'<span>'+courseObj.lecturer+'</span><span class="time">'+tmk[k].startTime+'- '+tmk[k].endTime+'　</span><span>'+courseType[courseObj.courseType]+'　</span></div></a></li>');
+                            lsTab.append('<li class="'+als+'"><a href="javascript:" st="'+tmk[k].startTime+'" et="'+tmk[k].endTime+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'header_yg_course\', \'' + courseObj.title + '\', 1, true]);"><i></i><div class="c_name">'+courseObj.title+'<span>'+courseObj.lecturer+'</span><span class="time">'+tmk[k].startTime+'- '+tmk[k].endTime+'　</span><span>'+courseType[courseObj.courseType]+'　</span></div></a></li>');
                             als = '';
                         }
                     }

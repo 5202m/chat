@@ -33,9 +33,9 @@
                             <div id="newscont2"></div>
                         </div>
                     </div>
-                    <a href="javascript:void(0)" class="newsclose"><i></i></a>
+                    <a href="javascript:void(0)" class="newsclose" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_sp_zimunew', 'content_left', 1, true]);"><i></i></a>
                 </div>
-                <a href="javascript:void(0)" class="newsbtn"><i></i>NEWS</a>
+                <a href="javascript:void(0)" class="newsbtn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_sp_zimunew', 'content_left', 1, true]);"><i></i>NEWS</a>
             </div>
 
             <div class="mod_livelist">
@@ -43,8 +43,8 @@
                     <div class="minbox dn" id="playlist_min"><a href="javascript:void(0)" id="playlist_show"><i></i></a></div>
                     <div class="maxbox" id="playlist_max">
                         <div class="livetabnav" id="playlist_nav">
-                            <a href="javascript:void(0)" class="on" t="today">今日直播</a>
-                            <a href="javascript:void(0)" class="fr" t="yesterday" style="display: none;">昨日回顾</a>
+                            <a href="javascript:void(0)" class="on" t="today" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_sp_livetoday', 'content_left', 1, true]);">今日直播</a>
+                            <a href="javascript:void(0)" class="fr" t="yesterday" style="display: none;" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_sp_review', 'content_left', 1, true]);">昨日回顾</a>
                         </div>
                         <div class="livetab" id="playlist_panel">
                             <ul t="today">
@@ -59,17 +59,17 @@
         </div>
         <div class="mod_infotab">
             <div class="tabnav clearfix">
-                <a href="javascript:void(0)" class="nav-a tablink on live"><span class="hoverbox">直播</span></a>
-                <a href="javascript:void(0)" class="nav-a tablink teach"><span class="hoverbox">教学</span></a>
-                <a href="javascript:void(0)" id="subscribe" class="nav-a"><span class="hoverbox">订阅</span></a>
-                <a href="javascript:void(0)" id="trains" class="nav-a"><span class="hoverbox"><span>培训班<i class="num" id="trainsnum">8</i></span></span></a>
-                <a href="javascript:void(0)" class="myaid" onclick=""><i></i><span>联系助理</span></a>
-                <div class="khbtn">
+                <a href="javascript:void(0)" class="nav-a tablink on live" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_live', 'content_left', 1, true]);"><span class="hoverbox">直播</span></a>
+                <a href="javascript:void(0)" class="nav-a tablink teach" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_teachvideo', 'content_left', 1, true]);"><span class="hoverbox">教学</span></a>
+                <a href="javascript:void(0)" id="subscribe" class="nav-a" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_Subscribe', 'content_left', 1, true]);"><span class="hoverbox">订阅</span></a>
+                <a href="javascript:void(0)" id="trains" class="nav-a" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_trained', 'content_left', 1, true]);"><span class="hoverbox"><span>培训班<i class="num" id="trainsnum">8</i></span></span></a>
+                <a href="javascript:void(0)" class="myaid" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_zhuli', 'content_left', 1, true]);"><i></i><span>联系助理</span></a>
+                <div class="khbtn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_kh', 'content_left', 1, true]);">
                     <i></i><span>立即开户</span>
                     <div class="khbtns">
                         <div class="box">
-                            <a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','open_real_account', 'content_top',1,true]);"><i></i><span>真实交易开户</span></a>
-                            <a href="http://oa.24k.hk/zh/account_02.html" target="_blank" class="mn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio','open_demo_account', 'content_top',1,true]);"><i></i><span>模拟交易开户</span></a>
+                            <a href="http://oa.24k.hk/zh/realaccount_open.html" target="_blank" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_realaccount_open', 'content_left', 1, true]);"><i></i><span>真实交易开户</span></a>
+                            <a href="http://oa.24k.hk/zh/account_02.html" target="_blank" class="mn" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_account_02', 'content_left', 1, true]);"><i></i><span>模拟交易开户</span></a>
                         </div>
                         <i class="arr"></i>
                     </div>
@@ -81,7 +81,9 @@
                         <% if (studioList!='[]') { %>
                         <% studioList.forEach(function(row,index){  %>
                         <%if(row.isCurr){%><span id="roomInfoId" lgt='<%= row.loginBoxTime %>' cgs="<%= row.clientGroup %>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>" rt="<%= row.roomType %>" style="display:none;"><%= row.name %><i class="off"></i></span><%}%>
-                        <a href="javascript:void(0);"<%if(row.isCurr) {%> class="on" lgt='<%= row.loginBoxTime %>'<%}else{%> rid="<%= row.id %>"<%}%> cgs="<%= row.clientGroup %>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>" rt="<%= row.roomType %>"><span><b><%= row.name %></b></span><i></i></a>
+                        <a href="javascript:void(0);"<%if(row.isCurr) {%> class="on" lgt='<%= row.loginBoxTime %>'<%}else{%> rid="<%= row.id %>"<%}%> cgs="<%= row.clientGroup %>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>" rt="<%= row.roomType %>" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_zb_<%= row.id %>', '<%= row.name %>', 1, true]);">
+                            <span><b><%= row.name %></b></span><i></i>
+                        </a>
                         <% });%>
                         <% } %>
                         <!--a href="" class="on"><span><b>直播大厅</b></span><i class="living"></i></a>
@@ -160,9 +162,9 @@
                 </div>
                 <div class="main_tab">
                     <div class="sub-tabnav s2" id="teachVideoId">
-                        <a href="javascript:void(0);" t="teach_video_base"><span>基础教学</span></a>
-                        <a href="javascript:void(0);" t="teach_video_gw"><span>谈金论道</span></a>
-                        <a href="javascript:void(0);" t="teach_video_expert"><span>专家锦囊</span></a>
+                        <a href="javascript:void(0);" t="teach_video_base" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_jx_base', 'content_left', 1, true]);"><span>基础教学</span></a>
+                        <a href="javascript:void(0);" t="teach_video_gw" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_jx_gw', 'content_left', 1, true]);"><span>谈金论道</span></a>
+                        <a href="javascript:void(0);" t="teach_video_expert" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_jx_expert', 'content_left', 1, true]);"><span>专家锦囊</span></a>
                         <!--a href="javascript:void(0);" t=""><span>软件操作</span></a-->
                     </div>
                     <div class="sub-tabcont teachlive" id="teachVideoPanel">

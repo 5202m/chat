@@ -370,7 +370,7 @@ var chatShowTrade = {
             case 'pushShowTradeInfo':
                 formatHtmlArr.push('<div class="info_push">');
                 formatHtmlArr.push('    <div class="pushcont">系统：{0}在晒单墙晒了一单，{1}</div>');
-                formatHtmlArr.push('    <a href="javascript:void(0);" class="detailbtn showtrade" _id="{2}">去看看</a>');
+                formatHtmlArr.push('    <a href="javascript:void(0);" class="detailbtn showtrade" _id="{2}" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_lts_QuKankan\', \'content_right\', 1, true]);">去看看</a>');
                 formatHtmlArr.push('    <a href="javascript:void(0);" class="pushclose"><i></i></a>');
                 formatHtmlArr.push('</div>');
                 break;

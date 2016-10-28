@@ -275,7 +275,7 @@ var chatTeacher = {
                 var html = [];
                 for(var i = 0;i<analystList.length;i++){
                     var analyst = analystList[i];
-                    html.push('<a href="javascript:void(0)" class="" onclick="chatTeacher.selectAnalyst(this)" uid="'+analyst.userNo+'">'+analyst.userName+'</a>');
+                    html.push('<a href="javascript:void(0)" class="" onclick="chatTeacher.selectAnalyst(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_OthenTeacher\', \''+analyst.userName+'\', 1, true]);" uid="'+analyst.userNo+'">'+analyst.userName+'</a>');
                 }
                 $('.main_tab .teacherlist .teacherbox  .clearfix .teacher_select .selectlist').empty().prepend(html.join(""));
             }
@@ -321,7 +321,7 @@ var chatTeacher = {
                             if(indexJS.userInfo.isLogin && isNotAuth){
                                 html.push('<a href="' + chatTrade.tradeImg + '" data-lightbox="sd-img" data-title="' + (isPos ? "持仓中" : "获利：" + chatTrade.profit) + '" onclick="chatTeacher.deductionIntegralShowTrade(this)" tradeId="'+chatTrade._id+'">');
                             }else{
-                                html.push('<a href="javascript:chatTeacher.sd.showAuthBox()">');
+                                html.push('<a href="javascript:chatTeacher.sd.showAuthBox();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_ChiChangZhong\', \'content_right\', 1, true]);">');
                             }
                             html.push('<i class="i-zoom"></i><img src="/pm/theme1/img/sd_default.png"></a>');
                         }else{
@@ -354,8 +354,8 @@ var chatTeacher = {
                                 }else{
                                     teachLiveHtml.push('<li class="r">');
                                 }
-                                teachLiveHtml.push('<a href="javascript:" class="imga" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',\''+articleDetail.title+'\']);"><img src="'+article.mediaImgUrl+'" ><b class="playbtn"><i></i></b></a>');
-                                teachLiveHtml.push('<a href="javascript:" class="vlink" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',\''+articleDetail.title+'\']);">'+articleDetail.tag+'</a>');
+                                teachLiveHtml.push('<a href="javascript:" class="imga" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_Wonderfullive\', \''+articleDetail.title+'\', 1, true]);"><img src="'+article.mediaImgUrl+'" ><b class="playbtn"><i></i></b></a>');
+                                teachLiveHtml.push('<a href="javascript:" class="vlink" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_Wonderfullive\', \''+articleDetail.title+'\', 1, true]);">'+articleDetail.tag+'</a>');
                                 teachLiveHtml.push('</li>');
                                 teachLiveCount++;
                             }
@@ -366,7 +366,7 @@ var chatTeacher = {
                                 }else{
                                     studentLiveHtml.push('<li class="r">');
                                 }
-                                studentLiveHtml.push('<a href="'+article.mediaUrl+'" data-lightbox="student-img" data-title="' +articleDetail.title+ '"><div class="imga"><img src="'+article.mediaUrl+'" ></div></a>');
+                                studentLiveHtml.push('<a href="'+article.mediaUrl+'" data-lightbox="student-img" data-title="' +articleDetail.title+ '" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_StudentsStyle\', \''+articleDetail.tag+'\', 1, true]);"><div class="imga"><img src="'+article.mediaUrl+'" ></div></a>');
                                 studentLiveHtml.push('<span class="vlink">'+articleDetail.tag+'</span>');
                                 studentLiveHtml.push('</li>');
                                 studentLiveCount++;
@@ -378,8 +378,8 @@ var chatTeacher = {
                                 }else{
                                     teachVideoHtml.push('<li class="r">');
                                 }
-                                teachVideoHtml.push('<a href="javascript:" class="imga" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',\''+articleDetail.title+'\']);"><img src="'+article.mediaImgUrl+'" ><b class="playbtn"><i></i></b></a>');
-                                teachVideoHtml.push('<a href="javascript:" class="vlink" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',\''+articleDetail.title+'\']);" >'+articleDetail.tag+'</a>');
+                                teachVideoHtml.push('<a href="javascript:" class="imga" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_teachvideo\', \''+articleDetail.title+'\', 1, true]);"><img src="'+article.mediaImgUrl+'" ><b class="playbtn"><i></i></b></a>');
+                                teachVideoHtml.push('<a href="javascript:" class="vlink" title="'+articleDetail.title+'" ct="'+article.categoryId+'" articleId="'+article._id+'" vUrl="'+article.mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_teachvideo\', \''+articleDetail.title+'\', 1, true]);">'+articleDetail.tag+'</a>');
                                 teachVideoHtml.push('</li>');
                                 teachVideoCount++;
                             }
@@ -436,7 +436,7 @@ var chatTeacher = {
                 trainHtml.push('<div class="headimg"><img src="'+row.defaultAnalyst.avatar+'" alt="" class="mCS_img_loaded"></div>');
                 trainHtml.push('<div class="train_name">'+row.name+'</span></div>');
                 trainHtml.push('<p>'+introduction+'</p>');
-                trainHtml.push('<a href="javascript:void(0)" class="trainbtn" userno="'+row.defaultAnalyst.userNo+'" group= "'+row.clientGroup+'" updateTrain="updateTrain" onclick="chatTeacher.trainRegis(this)">报名（'+row.traninClient.length+'人）</a>');
+                trainHtml.push('<a href="javascript:void(0)" class="trainbtn" userno="'+row.defaultAnalyst.userNo+'" group= "'+row.clientGroup+'" updateTrain="updateTrain" onclick="chatTeacher.trainRegis(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_Signup\', \''+row.name+'\', 1, true]);">报名（'+row.traninClient.length+'人）</a>');
                 trainHtml.push('</div></li>');
 
                 var traninClientList = row.traninClient;

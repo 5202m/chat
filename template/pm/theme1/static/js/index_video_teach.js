@@ -39,7 +39,7 @@ var videosTeach = {
                 var row;
                 for(var i in data){
                     row=data[i].detailList[0];
-                    cateDiv.append('<div title="'+row.title+'" class="c_num"><a href="javascript:void(0);" title="'+row.title+'" ct="'+data[i].categoryId+'" id="'+data[i]._id+'" t="'+((common.isValid(data[i].mediaUrl) && data[i].mediaUrl.indexOf('.mp4')!=-1)?'mp4':'')+'" vUrl="'+data[i].mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',\''+row.title+'\']);">'+(parseInt(i)+1)+'</a></div>');
+                    cateDiv.append('<div title="'+row.title+'" class="c_num"><a href="javascript:void(0);" title="'+row.title+'" ct="'+data[i].categoryId+'" id="'+data[i]._id+'" t="'+((common.isValid(data[i].mediaUrl) && data[i].mediaUrl.indexOf('.mp4')!=-1)?'mp4':'')+'" vUrl="'+data[i].mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_jx_video\', \''+row.title+'\', 1, true]);">'+(parseInt(i)+1)+'</a></div>');
                 }
                 /*页数滚动调用 数字是tab序号*/
                 videosTeach.numSlide(0);

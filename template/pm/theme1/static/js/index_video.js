@@ -359,7 +359,7 @@ var videos={
                                 .data('content', data.content);
                         }
                     }else{  //新增
-                        var title = $('<a href="javascript:void(0);" tid="' + data.id + '" title="' + data.title + '" target="_blank" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'zimu_txt\', \'' + data.title + '\']);"><i></i><span>' + data.title + '</span></a>');
+                        var title = $('<a href="javascript:void(0);" tid="' + data.id + '" title="' + data.title + '" target="_blank" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_sp_zimutxt\', \'content_left\', 1, true]);"><i></i><span>' + data.title + '</span></a>');
                         if(common.isValid(data.url)) {
                             title.attr({'href':data.url,'url':'true'});
                         }else{
@@ -380,9 +380,9 @@ var videos={
                             if(indexJS.userInfo.clientGroup && data.infos[i].clientGroup && $.inArray(indexJS.userInfo.clientGroup, data.infos[i].clientGroup)>-1){
                                 if(data.infos[i].pushType == 1 && data.infos[i].contentId && data.infos[i].title){
                                     if(common.isValid(data.infos[i].url)){
-                                        title = $('<a href="'+data.infos[i].url+'" url="true" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'zimu_txt\', \'' + data.infos[i].title + '\']);"><i></i><span>' + data.infos[i].title + '</span></a>');
+                                        title = $('<a href="'+data.infos[i].url+'" url="true" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_sp_zimutxt\', \'content_left\', 1, true]);"><i></i><span>' + data.infos[i].title + '</span></a>');
                                     }else {
-                                        title = $('<a href="javascript:void(0);" url="false" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'zimu_txt\', \'' + data.infos[i].title + '\']);"><i></i><span>' + data.infos[i].title + '</span></a>');
+                                        title = $('<a href="javascript:void(0);" url="false" tid="' + data.infos[i].contentId + '" title="' + data.infos[i].title + '" target="_blank" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_sp_zimutxt\', \'content_left\', 1, true]);"><i></i><span>' + data.infos[i].title + '</span></a>');
                                         title.data('content', data.infos[i].content);
                                     }
                                     newsPanel.append(title);
