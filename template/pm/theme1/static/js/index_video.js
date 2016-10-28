@@ -507,7 +507,7 @@ var videos={
         $('#course_panel li.on').removeClass("on");
         if(course){
             $('#course_panel .main_tab[d='+course.day+']').find('li a[st="'+course.startTime+'"][et="'+course.endTime+'"]').parent().addClass("on");
-            chatTeacher.getShowTeacher(course.lecturerId);
+            //chatTeacher.getShowTeacher(course.lecturerId);
         }
     },
 

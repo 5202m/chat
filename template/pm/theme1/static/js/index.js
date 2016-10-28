@@ -110,6 +110,10 @@ var indexJS ={
         /*聊天及我的账户弹框tab切换*/
         $('.main_tabnav a').click(function () {
             var t = $(this).attr('t');
+            $(this).parent().find('a').removeClass('on');
+            $(this).parent().parent().find('.tabcont .main_tab').removeClass('on');
+            $(this).addClass('on');
+            $('div[t='+ t +']').addClass('on');
             switch(t){
                 case 'livepride':
                     chatPride.setTradeStrategyNote(null, false);
@@ -132,10 +136,6 @@ var indexJS ={
             if($(this).parent().hasClass('vipbene')){
                 box.setVipBeneFit(t);
             }
-            $(this).parent().find('a').removeClass('on');
-            $(this).parent().parent().find('.tabcont .main_tab').removeClass('on');
-            $(this).addClass('on');
-            $('div[t='+ t +']').addClass('on');
             indexJS.heightCalcu();
             if(t == 'chat'){
                 chat.showChatMsgNumTip(true);

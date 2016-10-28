@@ -181,7 +181,7 @@ var chatTeacher = {
             var userGroup = indexJS.userInfo.clientGroup;
             var nickname = indexJS.userInfo.nickname;
             if(group.indexOf(userGroup) != -1){
-                var params = {groupId:$(obj).attr("rmid"),userNo:userNo,clientGroup:group,updateTrain:updateTrain,nickname:nickname};
+                var params = {groupId:$(obj).attr("rmid"),userNo:userNo,clientGroup:group,nickname:nickname};
                 common.getJson('/studio/addClientTrain',{data:JSON.stringify(params)},function(data){
                     if(data.awInto){
                         indexJS.toRefreshView();
@@ -194,10 +194,8 @@ var chatTeacher = {
                             }else{
                                 box.showMsg(data.msg);
                             }
-                        }else if(data.train){
-                            box.showMsg(data.msg);
                         }else{
-                            box.showMsg(data.msg);
+                            box.showMsg(data.msg||data.errmsg);
                         }
                     }
                 });
@@ -235,6 +233,9 @@ var chatTeacher = {
 
     /**初始化直播老师栏目*/
     getShowTeacher:function(userNo){
+        if(!$('.main_tabnav a[t=teacher]').hasClass("on")){
+            return;
+        }
         var teachId ;
         if(null == userNo){
             teachId = indexJS.courseTick.course && indexJS.courseTick.course.lecturerId;
@@ -249,7 +250,8 @@ var chatTeacher = {
             var userInfo = data.userInfo;//直播老师
             var analystList = data.analystList;//分析师列表
             var chatShowTrade = data.chatShowTrade;//直播老师晒单
-            var chatGroupInfo = data.chatGroupInfo;//直播房间
+            var trainList = data.trainList;//培训班列表
+            var trAndClNum=data.trAndClNum;
             if(null != userInfo){//直播老师信息
                 chatTeacher.teacherId = userInfo.userNo;
                 $('.main_tab .teacherlist .teacherbox .te_top  .info-l span').eq(0).text(userInfo.userName);
@@ -332,10 +334,10 @@ var chatTeacher = {
                         html.push('</div></li>');
                     }
                     $('.main_tab .teacherlist .teacherbox .sd_show  .sd_ul').empty().prepend(html.join(""));
-                })
+                });
             }
-            if(null != chatGroupInfo){//直播房间老师培训班显示
-                chatTeacher.showTrani(chatGroupInfo);
+            if(null != trainList){//直播房间老师培训班显示
+                chatTeacher.showTrani(trainList,trAndClNum);
             }
             //查询精采直播、学员风采、教学视频
             indexJS.getArticleList("teach_video_base,teach_video_expert,teach_video_financial,teach_video_gw,student_style,teach_live_video",indexJS.userInfo.groupId,0,1,20,'{"createDate":"desc"}',null,function(dataList){
@@ -419,41 +421,33 @@ var chatTeacher = {
             });
         });
     },
-
-    showTrani:function(chatGroupInfo){
-        var traninNum = 0;
-        if(null != chatGroupInfo){//直播房间老师
+    /**
+     * 显示培训班
+     * @param trainList
+     * @param trAndClNum
+     */
+    showTrani:function(trainList,trAndClNum){
+        if(null != trainList){//直播房间老师
             var  trainHtml = [];
             var  trainClientHtml = [];
-            chatGroupInfo.forEach(function(row,index){
-                traninNum +=row.traninClient.length;
+            trainList.forEach(function(row,index){
                 if((index+1) % 2 != 0){
                     trainHtml.push('<li>');
                 }else{
                     trainHtml.push('<li class="r">');
                 }
-                var introduction = common.trim(row.defaultAnalyst.introduction);
+                var remark = common.trim(row.remark);
                 trainHtml.push('<div class="cont">');
-                trainHtml.push('<div class="headimg"><img src="'+row.defaultAnalyst.avatar+'" alt="" class="mCS_img_loaded"></div>');
+                trainHtml.push('<div class="headimg"><img src="'+row.defaultAnalyst.avatar+'" alt=""></div>');
                 trainHtml.push('<div class="train_name">'+row.name+'</span></div>');
-                trainHtml.push('<p>'+introduction+'</p>');
-                trainHtml.push('<a href="javascript:void(0)" class="trainbtn" userno="'+row.defaultAnalyst.userNo+'" group= "'+row.clientGroup+'" updateTrain="updateTrain" onclick="chatTeacher.trainRegis(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_Signup\', \''+row.name+'\', 1, true]);">报名（'+row.traninClient.length+'人）</a>');
+                trainHtml.push('<p>'+remark+'</p>');
+                trainHtml.push('<a href="javascript:void(0)" class="trainbtn" userno="'+row.defaultAnalyst.userNo+'" awi="'+row.allowInto+'" group= "'+row.clientGroup+'" rmid="'+row._id+'" updateTrain="updateTrain" onclick="chatTeacher.trainRegis(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_Signup\', \''+row.name+'\', 1, true]);">'+(row.allowInto?"进入":"报名")+'（'+row.clientSize+'人）</a>');
                 trainHtml.push('</div></li>');
-
-                var traninClientList = row.traninClient;
-                if(null != traninClientList && traninClientList.length >0){
-                    for(var i = 0;i<traninClientList.length;i++){
-                        var traninClient = traninClientList[i];
-                        trainClientHtml.push('<li>');
-                        trainClientHtml.push('<div class="imga"><img src="/pm/theme1/img/tebox_pic1.jpg" alt=""></div>');
-                        trainClientHtml.push('<span class="vlink">Tim学员非农大赚1万美金</span>');
-                        trainClientHtml.push('</li>');
-                    }
-                }
             });
-            $('.main_tab .teacherlist .teacherbox .tebox_train  .tebox_tit span').text('(已结束开班57期/总共'+traninNum+'人)');
+            if(trAndClNum){
+                $('.main_tab .teacherlist .teacherbox .tebox_train  .tebox_tit span').text('(已结束开班'+trAndClNum.trainNum+'期/总共'+trAndClNum.clientNum+'人)');
+            }
             $('.main_tab .teacherlist .teacherbox .tebox_train  ul').empty().prepend(trainHtml.join(""));
-            $('.main_tab .teacherlist .teacherbox .tebox_tranin  ul').empty().prepend(trainClientHtml.join(""));
         }
     },
 

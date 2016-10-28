@@ -681,7 +681,6 @@ var studioService = {
             }
         });
     },
-
     /**
      * 初始直播老师列表
      * @param params
@@ -693,20 +692,26 @@ var studioService = {
                     studioService.getUserInfoByUserNo(params.groupType,params.authorId,function(ret){
                         callback(null,ret);
                     });
-               },
+                },
                 analystList: function (callback) {
                     chatGroup.findById(params.groupId,"authUsers",function(err,row){
                         if(err){
-                            callback(null);
+                            callback(null,row);
                         }else{
                             boUser.find({userNo:{"$in":row.authUsers},"role.roleNo":common.getPrefixReg("analyst")},"userNo userName avatar position",function(err,rowList){
-                                if(!rowList || err){
-                                    callback(err,null);
-                                }else{
-                                    callback(err,rowList);
-                                }
+                                callback(null,rowList);
                             });
                         }
+                    });
+                },
+                trainList: function (callback) {
+                    clientTrainService.getTrainList(params.groupType,params.authorId,true,function(rooms){
+                        callback(null,rooms);
+                    });
+                },
+                trAndClNum: function (callback) {
+                    clientTrainService.getTrainAndClientNum(params.groupType,params.authorId,function(numObj){
+                        callback(null,numObj);
                     });
                 },
                 chatShowTrade: function (callback) {
@@ -716,38 +721,31 @@ var studioService = {
                         "valid": 1,
                         "tradeType": 1
                     }).sort({"showDate": -1}).exec("find", function (err, data) {
+                        var result = null;
                         if (err) {
                             logger.error("查询直播老师晒单数据失败!:", err);
-                            callback(err,result);
-                            return;
-                        }
-                        var result = null;
-                        if(data && data.length > 0){
-                            result = {
-                                analyst : data[0].toObject().boUser,
-                                tradeList : []
-                            };
-                            var tradeInfo = null;
-                            for(var i = 0,lenI = data.length; i < lenI;i++){
-                                tradeInfo = data[i].toObject();
-                                delete tradeInfo["boUser"];
-                                result.tradeList.push(tradeInfo);
+                            callback(null,result);
+                        }else{
+                            if(data && data.length > 0){
+                                result = {
+                                    analyst : data[0].toObject().boUser,
+                                    tradeList : []
+                                };
+                                var tradeInfo = null;
+                                for(var i = 0,lenI = data.length; i < lenI;i++){
+                                    tradeInfo = data[i].toObject();
+                                    delete tradeInfo["boUser"];
+                                    result.tradeList.push(tradeInfo);
+                                }
                             }
-                            callback(err,result);
-                            return;
+                            callback(null,result);
                         }
-                        callback(err,result);
-                    });
-                },
-                chatGroupInfo: function (callback) {
-                    clientTrainService.getTrainList(params.groupType,params.authorId,true,function(rooms){
-                        callback(null,rooms);
                     });
                 }
         },
          function (error, result) {
              dataCallback(result);
-        })
+        });
     },
     /**
      * 获取房间培训老师列表

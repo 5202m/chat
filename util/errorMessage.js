@@ -26,9 +26,11 @@ var errorMessage = {
     "code_3000" : {'errcode' : "3000", 'errmsg' : "积分配置信息不存在！"},
     "code_3001" : {'errcode' : "3001", 'errmsg' : "积分已达上限!"},
     "code_3002" : {'errcode' : "3002", 'errmsg' : "今天已经签到了!"},
-    "code_3003" : {'errcode' : "3003", 'errmsg' : "已经培训报名了!"},
+    "code_3003" : {'errcode' : "3003", 'errmsg' : "您已经报名啦，无需重复报名!"},
     "code_3004" : {'errcode' : "3004", 'errmsg' : "有效积分不足!"},
-    "code_3005" : {'errcode' : "3005", 'errmsg' : "您操作该培训班的权限受限，请联系客服!"}
+    "code_3005" : {'errcode' : "3005", 'errmsg' : "您操作该培训班的权限受限，请联系客服!"},
+    "code_3006" : {'errcode' : "3006", 'errmsg' : "该培训班已结束!"},
+    "code_3007" : {'errcode' : "3007", 'errmsg' : "您的报名还在审批中....."}
 };
 //导出类
 module.exports = errorMessage;
