@@ -180,7 +180,7 @@ var chatTeacher = {
             var updateTrain =$(obj).attr("updateTrain");
             var userGroup = indexJS.userInfo.clientGroup;
             var nickname = indexJS.userInfo.nickname;
-            if(group.indexOf(userGroup) > 0){
+            if(group.indexOf(userGroup) != -1){
                 var params = {userNo:userNo,nickname:nickname,clientGroup:group,updateTrain:updateTrain}
                 common.getJson('/studio/addClientTrain',{data:JSON.stringify(params)},function(data){
                     if(data.errcode == "3003"){
@@ -202,7 +202,7 @@ var chatTeacher = {
             }else{
                 var groupMeg = [];
                 groupMeg.push("【");
-                if(group.indexOf(",") > 0){
+                if(group.indexOf(",") !=-1){
                     var groupTypes = group.split(",");
                     for(var i in groupTypes){
                        var groupType = groupTypes[i];
