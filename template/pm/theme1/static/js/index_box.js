@@ -39,7 +39,14 @@ var box={
                                     var avatar = row.avatar != null?row.avatar:'/pm/theme1/img/user.jpg';
                                     var minuteDiff = common.getMinuteDiff(currentDate,row.signinTime);
                                     minuteDiff = minuteDiff <=0?1:minuteDiff;
-                                    signinListHtml.push(signinFormatHtml.formatStr(avatar,minuteDiff + '分钟前'));
+                                    var d = common.addDate(new Date,1);
+                                    console.log(d);
+                                    if(minuteDiff > 59){
+                                        var hourdiff = common.getHourDiff(currentDate,row.signinTime);
+                                        signinListHtml.push(signinFormatHtml.formatStr(avatar,hourdiff + '小时前'));
+                                    }else{
+                                        signinListHtml.push(signinFormatHtml.formatStr(avatar,minuteDiff + '分钟前'));
+                                    }
                                 }
                             }
                             $('.signinbox .sign_vistor ul').empty().prepend(signinListHtml.join(''));

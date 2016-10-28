@@ -178,8 +178,10 @@ var clientTrainService = {
                         }
                     });
                 },
-                signinUser: function (callback) {//最近10条签到用户
-                    signin.find({"userId":{$ne:userInfo.mobilePhone}}).sort({"signinTime": -1}).limit(10).exec("find", function (err, data) {
+                signinUser: function (callback) {//当天最近10条签到用户
+                     var currDate = common.formatDate(new Date(),"yyyy-MM-dd");
+                     var tomorrow = common.addDate(new Date(),1);
+                    signin.find({"userId":{$ne:userInfo.mobilePhone},signinTime:{'$gte':new Date(currDate),'$lt':new Date(tomorrow)}}).sort({"signinTime": -1}).limit(10).exec("find", function (err, data) {
                         if (err) {
                             logger.error("查询最近签到客户数据失败!:", err);
                             callback(err,null);
