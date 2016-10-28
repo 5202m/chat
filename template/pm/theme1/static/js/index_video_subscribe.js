@@ -156,11 +156,7 @@ var videosSubscribe = {
             if(parseInt(params.point) != parseInt(orip) || params.analyst != $(this).attr('a') || params.noticeType != $(this).attr('t') || params.noticeCycle != $(this).attr('c')) {
                 common.getJson('/studio/subscribe', {params: JSON.stringify(params)}, function (data) {
                     if (data.isOK) {
-                        if (parseInt(params.point) > parseInt(orip)) {
-                            var myPoints = parseInt($('#mypoints').text());
-                            var onsume = parseInt(params.point) - parseInt(orip);
-                            $('#mypoints,#sdPoints').text(myPoints - onsume);
-                        }
+                        chatShowTrade.getPointsInfo();
                         if(common.isBlank(params.analyst) || common.isBlank(params.noticeType)){
                             box.showMsg('取消订阅成功！');
                         } else if(common.isValid(params.id)) {

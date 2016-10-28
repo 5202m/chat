@@ -42,6 +42,8 @@ var videosTeach = {
                     row=data[i].detailList[0];
                     cateDiv.append('<div title="'+row.title+'" class="c_num"><a href="javascript:void(0);" title="'+row.title+'" ct="'+data[i].categoryId+'" id="'+data[i]._id+'" t="'+((common.isValid(data[i].mediaUrl) && data[i].mediaUrl.indexOf('.mp4')!=-1)?'mp4':'')+'" vUrl="'+data[i].mediaUrl+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'video_play\',\''+row.title+'\']);">'+(parseInt(i)+1)+'</a></div>');
                 }
+                /*页数滚动调用 数字是tab序号*/
+                videosTeach.numSlide(0);
                 //播放视频
                 $("#teachVideoPanel .numbox .c_num a").click(function(){
                     $("#teachVideoPanel .numbox .c_num a").removeClass("on");
@@ -106,5 +108,30 @@ var videosTeach = {
         if(!$('.tabnav a.teach').is(".on")){
             $('.tabnav a.teach').trigger("click");
         }
+    },
+    /* 页数滚动 */
+    numSlide:function(tabnum){
+        var nowIndex = 0;
+        var nowtab = $($('.teachlive .sub_tab')[tabnum]);
+        var itemW = $('.courseNum .c_num').width();
+        var itemNum = $(nowtab).find('.courseNum .c_num').size();
+
+        $(nowtab).find('.courseNum .inner').width(function(){
+            return (itemNum*itemW)
+        });
+
+        $(nowtab).find('.numctrl.next').click(function(){
+            if($(nowtab).find('.courseNum .inner').width()-nowIndex*itemW -$(nowtab).find('.courseNum .numbox').width()>0){
+                nowIndex ++;
+                $(nowtab).find('.courseNum .inner').animate({left: -nowIndex*itemW}, "slow");
+            }
+        });
+
+        $(nowtab).find('.numctrl.prev').click(function(){
+            if(nowIndex!=0){
+                nowIndex --;
+                $(nowtab).find('.courseNum .inner').animate({left: -nowIndex*itemW}, "slow");
+            }
+        });
     }
 };

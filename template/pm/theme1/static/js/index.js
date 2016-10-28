@@ -183,6 +183,15 @@ var indexJS ={
                 }
             }
         });
+        /*兼容提示*/
+        $('.ietip .iewhybtn').click(function(){
+            $('.ietip').hide();
+            $('.iestory').show();
+        });
+        $('.iestory .closebtn').click(function(){
+            $('.iestory').hide();
+            $('.ietip').show();
+        });
         common.placeholderSupport(".formcont .in_line input[placeholder]");//ie下输入框显示文字提示
     },
     /**
