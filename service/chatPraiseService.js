@@ -21,13 +21,14 @@ var chatPraiseService ={
      * @param praiseId
      * @param type
      */
-    setPraise:function(praiseId,type,fromPlatform){
+    setPraise:function(praiseId,type,fromPlatform,callback){
         chatPraise.findOne({praiseId:praiseId,praiseType:type,fromPlatform:fromPlatform},function(err,row){
            if(row){
                row.praiseNum+=1;
                row.save(function(err,rowTmp){
                    //console.log(err+";rowTmp:"+JSON.stringify(rowTmp));
                });
+               callback({isOK:false});
            }else{
                var chatPraiseModel = new chatPraise({
                    _id:null,
@@ -38,6 +39,7 @@ var chatPraiseService ={
                });
                chatPraiseModel.save(function(err){
                    console.log('save chatPraiseModel success!');
+                   callback({isOK:true});
                });
            }
         });
