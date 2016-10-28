@@ -243,7 +243,7 @@ var chatTeacher = {
             return;
         }
         chatTeacher.teacherId = teachId;
-        common.getJson('/studio/getShowTeacher',{data:JSON.stringify({groupId:groupId,authorId:chatTeacher.teacherId})},function(data){
+        common.getJson('/studio/getShowTeacher',{data:JSON.stringify({groupId:groupId,authorId:teachId.split(",")[0]})},function(data){
             var userInfo = data.userInfo;//直播老师
             var analystList = data.analystList;//分析师列表
             var chatShowTrade = data.chatShowTrade;//直播老师晒单
