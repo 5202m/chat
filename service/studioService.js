@@ -17,6 +17,7 @@ var boUser = require('../models/boUser');//引入boUser数据模型
 var chatShowTrade = require('../models/chatShowTrade');//引入chatShowTrade数据模型
 var baseApiService = require('../service/baseApiService');//引入baseApiService
 var chatPraiseService = require('../service/chatPraiseService');//引入chatPraiseService
+var clientTrainService = require('../service/clientTrainService');//引入clientTrainService
 /**
  * 定义直播服务类
  * @type {{}}
@@ -87,7 +88,7 @@ var studioService = {
      * @param callback
      */
     getRoomList:function(groupType,callback){
-        chatGroup.find({valid:1,status:1,groupType:groupType}).select({clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1,defTemplate:1,roomType:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
+        chatGroup.find({valid:1,status:{$in:[1,2]},groupType:groupType}).select({clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1,defTemplate:1,roomType:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
             if(err){
                 logger.error("getStudioList fail:"+err);
             }
@@ -647,7 +648,7 @@ var studioService = {
      * @param callback
      */
     getTrainRoomList:function(groupType,callback){
-        chatGroup.find({valid:1,status:1,groupType:groupType, "defaultAnalyst._id":{$ne:null}}).select({clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1,defTemplate:1,defaultAnalyst:1,openDate:1,students:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
+        chatGroup.find({valid:1,status:{$in:[1,2]},groupType:groupType, "defaultAnalyst._id":{$ne:null}}).select({clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1,defTemplate:1,defaultAnalyst:1,openDate:1,students:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
             if(err){
                 logger.error("getStudioList fail:"+err);
             }
@@ -700,7 +701,6 @@ var studioService = {
                         }
                     });
                 },
-
                 chatShowTrade: function (callback) {
                     chatShowTrade.find({
                         "boUser.userNo": params.authorId,
@@ -730,17 +730,12 @@ var studioService = {
                         }
                         callback(err,result);
                     });
-                  },
-                    chatGroupInfo: function (callback) {
-                    chatGroup.find({"groupType":params.groupType,"defaultAnalyst":{$ne:[null],$exists:true},"defaultAnalyst._id":{$ne:""}},"",function(err,rooms){
-                        if(err){
-                            logger.error("获取直播老师房间列表失败!:", err);
-                            callback(err,null);
-                        }else{
-                            callback(err,rooms);
-                        }
+                },
+                chatGroupInfo: function (callback) {
+                    clientTrainService.getTrainList(params.groupType,params.authorId,true,function(rooms){
+                        callback(null,rooms);
                     });
-              }
+                }
         },
          function (error, result) {
              dataCallback(result);

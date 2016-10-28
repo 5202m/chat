@@ -566,18 +566,18 @@ var indexJS ={
     widthCheck: function() {
         var ww = $(window).width();
         if (ww <= 1680) {
-            $('body').addClass('wid1')
+            $('body').addClass('wid1');
             if (ww < 1440) {
-                $('body').addClass('wid2')
+                $('body').addClass('wid2');
                 if (ww < 1281) {
-                    $('body').addClass('wid3')
+                    $('body').addClass('wid3');
                 }
             }
         }
         if (ww > 1680) {
-            $('body').removeClass('wid1')
-            $('body').removeClass('wid2')
-            $('body').removeClass('wid3')
+            $('body').removeClass('wid1');
+            $('body').removeClass('wid2');
+            $('body').removeClass('wid3');
         }
     },
     /**

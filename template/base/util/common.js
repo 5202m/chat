@@ -210,9 +210,9 @@ var common = {
                     failCallBack(textStatus);
                 }else{
                     if (common.isValid(obj.responseText) && obj.statusText != "OK") {
-                        alert(obj.responseText);
+                        console.error(obj.responseText);
                     }else{
-                        alert("请求超时,请重试!");
+                        console.error("请求超时,请重试:url[%s]",url);
                     }
                 }
             }

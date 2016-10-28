@@ -18,22 +18,29 @@ var clientTrainService = {
      * @param callback
      */
     addClientTrain: function(params,userInfo, callback){
-        chatGroup.findOne({'defaultAnalyst.userNo':params.userNo,groupType:userInfo.groupType,"traninClient.clientId":userInfo.userId},"",function(err,row) {
+        chatGroup.findOne({_id:params.groupId,valid:1,status:{$in:[1,2]}},"openDate clientGroup",function(err,row) {
             if(err){
                 logger.error("查询培训报名数据失败! >>addClientTrain:", err);
                 callback({isOK:false, msg:'查询培训报名数据失败！'});
             }else{
-                if(row!= null){
-                    callback(errorMessage.code_3003, null);
+                if(row){
+                    if(!common.containSplitStr(row.clientGroup,userInfo.clientGroup)){
+                        callback(errorMessage.code_3005);
+                    }else if(common.dateTimeWeekCheck(row.openDate, false)){
+                        callback({awInto:true});
+                    }else{
+                        callback(errorMessage.code_3003);
+                    }
                 }else{
-                    var searchObj={'defaultAnalyst.userNo':params.userNo,groupType:userInfo.groupType};
+                    var searchObj={_id:params.groupId};
                     var setObj = {$push:{"traninClient":{"clientId":userInfo.userId,"nickname":params.nickname}}};
                     chatGroup.findOneAndUpdate(searchObj, setObj, function (err,row) {
                         if (err) {
                             logger.error("保存培训报名数据失败! >>addClientTrain:", err);
                             callback({isOK:false, msg:'培训报名失败'});
                         }else{
-                            if(params.updateTrain){
+                            console.log("row:",JSON.stringify(row));
+                            /*if(params.updateTrain){
                                 chatGroup.find({"groupType":userInfo.groupType,"defaultAnalyst":{$ne:[null],$exists:true},"defaultAnalyst._id":{$ne:""}},"",function(err,rooms){
                                     if(err){
                                         logger.error("获取房间列表失败!", err);
@@ -43,7 +50,7 @@ var clientTrainService = {
                                 });
                             }else{
                                 callback({isOK:true, msg: '培训报名成功'});
-                            }
+                            }*/
                         }
                     });
                 }
@@ -52,16 +59,33 @@ var clientTrainService = {
     },
 
     /**
-     * 获取房间列表
-     * @param userId
+     * 提取培训班列表
+     * @param groupType
+     * @param teachId
+     * @param isAll
      * @param callback
      */
-    getChatGroupList:function(userInfo,callback){
-        chatGroup.find({"groupType":userInfo.groupType,"defaultAnalyst":{$ne:[null],$exists:true},"defaultAnalyst._id":{$ne:""}},"",function(err,rooms){
+    getTrainList:function(groupType,teachId,isAll,callback){
+        var searchObj={"groupType":groupType,roomType:'train'};
+        if(!isAll){
+            searchObj.status={$in:[1,2]};
+        }
+        if(teachId){
+            searchObj["defaultAnalyst._id"]=teachId;
+        }
+        chatGroup.find(searchObj,"_id status defaultAnalyst point openDate clientGroup name",function(err,rooms){
             if(err){
                 logger.error("获取房间列表失败! >>getChatGroupList:", err);
             }else{
-                callback(rooms);
+                var tmList=[];
+                if(rooms){
+                    var row=null;
+                    for(var i in rooms){
+                        row=rooms[i];
+                        tmList.push({"_id":row._id,allowInto:common.dateTimeWeekCheck(row.openDate, false),clientGroup:row.clientGroup,defaultAnalyst:row.defaultAnalyst,status:row.status});
+                    }
+                }
+                callback(tmList);
             }
         });
     },

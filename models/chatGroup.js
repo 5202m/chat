@@ -10,7 +10,7 @@ var mongoose = require('mongoose')
           _id:{type:String},
           groupType:{type:String},//组类别
           name:{type:String},//名称
-          status:{type:Number, default:1}, //状态：0 、禁用 ；1、启动
+          status:{type:Number, default:1}, //状态：0 、禁用 ；1、启动; 2、授权访问
           valid:{type:Number, default:1}, //是否删除：0 、删除 ；1、正常
           sequence:{type:Number, default:0},//排序序列
           level:{type:Number, default:0},//级别

@@ -96,7 +96,7 @@ var adminService ={
      * @param callback
      */
     getChatGroupListByAuthUser:function(userId,callback){
-        chatGroup.find({status:1,valid:1,authUsers:userId},"id name groupType",function(err,rooms){
+        chatGroup.find({status:{$in:[1,2]},valid:1,authUsers:userId},"id name groupType",function(err,rooms){
             callback(rooms);
         });
     },
@@ -144,7 +144,7 @@ var adminService ={
      * @param callback
      */
     setVisitorGag:function(data, callback){
-        var searchObj={_id:data.groupId,groupType:data.groupType,status:1,valid:1,chatRules:{$elemMatch:{type:data.type}}};
+        var searchObj={_id:data.groupId,groupType:data.groupType,status:{$in:[1,2]},valid:1,chatRules:{$elemMatch:{type:data.type}}};
         chatGroup.findOne(searchObj,"chatRules.$",function(err, row){
             if(err){
                 logger.error("setVisitorGag->fail!:"+err);

@@ -137,7 +137,7 @@ var userService = {
         }
         contentVal = common.encodeHtml(contentVal);
         //预定义规则
-        chatGroup.findById(groupId,function (err,row) {
+        chatGroup.findOne({_id:groupId,valid:1,status:{$in:[1,2]}},function (err,row) {
             if(err||!row){
                 callback({isOK:false,tip:'系统异常，房间不存在！',leaveRoom:true});
                 return;
@@ -146,7 +146,7 @@ var userService = {
                 callback({isOK:true,tip:'',talkStyle:row.talkStyle,whisperRoles:row.whisperRoles});
                 return;
             }
-            if(!common.dateTimeWeekCheck(row.openDate, true) || row.status!=1|| row.valid!=1){
+            if(!common.dateTimeWeekCheck(row.openDate, true)){
                 callback({isOK:false,tip:'房间开放时间结束！',leaveRoom:true});
                 return;
             }
@@ -568,16 +568,13 @@ var userService = {
     },
     /**
      * 检查房间是否在开放时间内，或可用
+     * @param userId
      * @param groupId
      * @returns {boolean}
      */
-    checkRoomStatus:function(groupId,currCount,callback){
-        chatGroup.findById(groupId,"status openDate maxCount valid",function(err,row){
+    checkRoomStatus:function(userId,groupId,currCount,callback){
+        chatGroup.findOne({_id:groupId,valid:1,status:{$in:[1,2]}},"status openDate maxCount valid roomType traninClient",function(err,row){
             if(!row || err){
-                callback(false);
-                return;
-            }
-            if(row.status!=1|| row.valid!=1){
                 callback(false);
                 return;
             }
@@ -585,7 +582,19 @@ var userService = {
                 callback(false);
                 return;
             }
-            callback(common.dateTimeWeekCheck(row.openDate, true));
+            var ret=common.dateTimeWeekCheck(row.openDate, true);
+            if(row.status==2){//授权访问，需要检查授权客户
+                ret=false;
+                if(row.traninClient){
+                    for(var i=0;i<row.traninClient.length;i++){
+                        if(row.traninClient[i].isAuth==1 && row.traninClient[i].clientId==userId){
+                            ret=true;
+                            break;
+                        }
+                    }
+                }
+            }
+            callback(ret);
         });
     },
     /**

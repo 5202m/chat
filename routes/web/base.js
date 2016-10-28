@@ -126,7 +126,7 @@ router.get('/', function(req, res) {
         }else{
             var targetGroupId = chatUser.toGroup || chatUser.groupId || groupId;
             chatService.getRoomOnlineTotalNum(targetGroupId,function(onlineNum){
-                userService.checkRoomStatus(targetGroupId,onlineNum,function(isOK) {
+                userService.checkRoomStatus(chatUser.userId,targetGroupId,onlineNum,function(isOK) {
                     if(isOK){
                         if(targetGroupId != chatUser.groupId){//目标房间不是当前已登录房间==>追加到目标房间，后跳转
                             studioService.joinNewGroup(chatUser.groupType,chatUser.mobilePhone,chatUser.userId, targetGroupId, chatUser.isLogin, function (resultTmp) {
@@ -1565,18 +1565,31 @@ router.post('/addPointsInfo', function(req, res){
 /**
  * 获取培训班列表
  */
-router.post('/getTrainRoomList', function(req, res){
+router.get('/getTrainRoomList', function(req, res){
     var userInfo=req.session.studioUserInfo;
     if(!userInfo){
         res.json(null);
-        return;
+    }else{
+        clientTrainService.getTrainList(userInfo.groupType,null,false,function(result){
+            res.json(result);
+        });
     }
-    var groupType = userInfo.groupType;
-    clientTrainService.getChatGroupList(userInfo,function(result){
-        res.json(result);
-    });
-
 });
+
+/**
+ * 获取培训班条数
+ */
+router.get('/getTrainRoomNum', function(req, res){
+    var userInfo=req.session.studioUserInfo;
+    if(!userInfo){
+        res.json({num:0});
+    }else{
+        clientTrainService.getTrainList(userInfo.groupType,null,false,function(result){
+            res.json({num:result?result.length:0});
+        });
+    }
+});
+
 
 /**
  * 添加报名培训
@@ -1592,14 +1605,13 @@ router.post('/addClientTrain', function(req, res){
         }
     }
     var userInfo=req.session.studioUserInfo;
-    if(params.clientGroup.indexOf(userInfo.clientGroup) > 0){
-        clientTrainService.addClientTrain(params,userInfo, function(result){
-            res.json(result);
-        });
-    }else{
-        var msg = "客户为:"+common.clientGroupStr[userInfo.clientGroup]+",培训班只对"+params.clientGroup+"客户开放";
-        res.json({train:'fail', msg:msg});
-    }
+    clientTrainService.addClientTrain(params,userInfo, function(result){
+        if(result.awInto){
+            req.session.studioUserInfo.toGroup=params.groupId;
+            console.log("req.session.studioUserInfo.toGroup",req.session.studioUserInfo.toGroup);
+        }
+        res.json(result);
+    });
 });
 
 /**
@@ -1699,6 +1711,13 @@ router.post('/getChatPointsConfig',function(req, res){
     chatPointsService.getChatPointsConfig(params,function(result){
         res.json(result);
     });
+});
+
+/**
+ * 提取培训班详情
+ */
+router.get('/getTrDetail', function(req, res) {
+    res.render(common.renderPath(req, constant.tempPlatform.pc, "vtrain", "theme1"), {});
 });
 
 module.exports = router;

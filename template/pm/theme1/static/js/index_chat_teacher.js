@@ -181,22 +181,24 @@ var chatTeacher = {
             var userGroup = indexJS.userInfo.clientGroup;
             var nickname = indexJS.userInfo.nickname;
             if(group.indexOf(userGroup) != -1){
-                var params = {userNo:userNo,nickname:nickname,clientGroup:group,updateTrain:updateTrain}
+                var params = {groupId:$(obj).attr("rmid"),userNo:userNo,clientGroup:group,updateTrain:updateTrain};
                 common.getJson('/studio/addClientTrain',{data:JSON.stringify(params)},function(data){
-                    if(data.errcode == "3003"){
+                    if(data.awInto){
+                        indexJS.toRefreshView();
+                    }else if(data.errcode){
                         box.showMsg(data.errmsg);
-                        return;
-                    }
-                    if(data.isOK){
-                        if(updateTrain){
-                            chatTeacher.showTrani(data.chatGroup);
+                    }else{
+                        if(data.isOK){
+                            if(updateTrain){
+                                chatTeacher.showTrani(data.chatGroup);
+                            }else{
+                                box.showMsg(data.msg);
+                            }
+                        }else if(data.train){
+                            box.showMsg(data.msg);
                         }else{
                             box.showMsg(data.msg);
                         }
-                    }else if(data.train){
-                        box.showMsg(data.msg);
-                    }else{
-                        box.showMsg(data.msg);
                     }
                 });
             }else{
