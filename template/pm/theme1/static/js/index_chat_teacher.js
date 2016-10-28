@@ -268,6 +268,8 @@ var chatTeacher = {
                     }
                     $(".main_tab .teacherlist .teacherbox  .taglist").append(tagHtml.join(""));
                 }
+            }else{
+                $('.main_tab .teacherlist .teacherbox').hide();
             }
             if(null != analystList){//分析师列表
                 var html = [];
