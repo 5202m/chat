@@ -234,7 +234,7 @@
                         <div class="item">
                             <span class="iname">邮箱</span>
                             <div class="inp_div">
-                                <input type="email" id="myEmail" placeholder="<%if(userSession.isLogin){%><%= userSession.email ? (userSession.email.substring(0,3)+'*****'+userSession.email.substring(userSession.email.lastIndexOf('.')+1)) : '未绑定' %><%}%>" disabled="disabled">
+                                <input type="email" id="myEmail" placeholder="<%if(userSession.isLogin){%><%= userSession.email ? (userSession.email.substring(0,3)+'*****'+userSession.email.substring(userSession.email.lastIndexOf('.')+1)) : '未绑定' %><%}%>" value="<%if(userSession.isLogin){%><%= userSession.email ? (userSession.email.substring(0,3)+'*****'+userSession.email.substring(userSession.email.lastIndexOf('.')+1)) : '' %><%}%>" disabled="disabled" />
                             </div>
                             <div class="edit_div">
                                 <a href="javascript:void(0);" id="bindEmail">绑定</a>

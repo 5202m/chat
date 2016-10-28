@@ -1471,6 +1471,8 @@ router.post('/subscribe', function(req, res){
     }
     if(common.isBlank(params.groupType) || common.isBlank(params.userId) || common.isBlank(params.type) || !common.isNumber(params.point)){
         res.json({'isOK':false, 'msg':'参数错误'});
+    }else if(common.isBlank(userInfo.email) && 'email'.indexOf(params.noticeType)>-1){
+        res.json({'isOK':false,'msg':'请先绑定邮箱'});
     }else{
         if(common.isBlank(params.id)) {
             chatSubscribeService.saveSubscribe(params, function (result) {

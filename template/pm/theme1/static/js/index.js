@@ -165,6 +165,7 @@ var indexJS ={
             indexJS.setListScroll($(".tabcont .main_tab .teacherlist .scrollbox"));//直播老师
             indexJS.setListScroll($(".pop_train .cont .scrollbox"));//培训班
             indexJS.setListScroll($(".train_detail .cont .scrollbox"));//培训班详情
+            indexJS.setListScroll('#teachVideoPanel .scrollbox');//教学列表
         }
         /**
          * 联系助理按钮事件

@@ -140,37 +140,48 @@ var videosSubscribe = {
          */
         $('.dytable .pdbox a').click(function(){
             var params = {groupType:indexJS.userInfo.groupType,type:$(this).attr('t'),point:(common.isBlank($(this).attr('p'))?0:parseInt($(this).attr('p')))};
-            params.noticeCycle = common.isBlank($('input[name="noticeCycle_'+$(this).attr('t')+'"]:checked').val())?'month':$('input[name="noticeCycle_'+$(this).attr('t')+'"]:checked').val();
+            params.noticeCycle = common.isBlank($('input[name="noticeCycle_'+$(this).attr('t')+'"]:checked').val())?'':$('input[name="noticeCycle_'+$(this).attr('t')+'"]:checked').val();
             params.analyst = $('input[name="'+$(this).attr('t')+'_analysts"]').val();
             params.noticeType = common.isBlank($('input[name="'+$(this).attr('t')+'_noticeTypes"]').val())?$(this).attr('nts'):$('input[name="'+$(this).attr('t')+'_noticeTypes"]').val();
             params.pointsRemark = '订阅'+$(this).attr('tn');
             //params.orip = common.isBlank($(this).attr('orip'))?0:$(this).attr('orip');
             params.id = common.isBlank($(this).attr('id'))?'':$(this).attr('id');
             var orip = common.isBlank($(this).attr('orip'))?0:$(this).attr('orip');
-            if(common.isBlank(params.analyst) || common.isBlank(params.noticeType)){
-                params.point = 0;
-                params.analyst = '';
-                params.noticeType = '';
-                params.noticeCycle = '';
-            }
-            if(parseInt(params.point) != parseInt(orip) || params.analyst != $(this).attr('a') || params.noticeType != $(this).attr('t') || params.noticeCycle != $(this).attr('c')) {
-                common.getJson('/studio/subscribe', {params: JSON.stringify(params)}, function (data) {
-                    if (data.isOK) {
-                        chatShowTrade.getPointsInfo();
-                        if(common.isBlank(params.analyst) || common.isBlank(params.noticeType)){
-                            box.showMsg('取消订阅成功！');
-                        } else if(common.isValid(params.id)) {
-                            box.showMsg('修改订阅成功！');
-                        }else{
-                            box.showMsg('订阅成功！');
-                        }
-                        videosSubscribe.setSubscribeType();
-                    } else {
-                        box.showMsg(data.msg);
-                    }
-                });
+            if(common.isBlank($('#myEmail').val()) && $.inArray('email', params.noticeType.split(','))>-1){
+                box.showMsg('请先绑定邮箱！');
+                $('#infotab a[t="accountInfo"]').click();
+            }else if(common.isBlank(params.id) && common.isBlank(params.analyst)){
+                box.showMsg('请选择订阅老师！');
+            }else if(common.isBlank(params.id) && common.isBlank(params.noticeType)){
+                box.showMsg('请选择订阅方式！');
+            }else if(common.isBlank(params.id) && common.isBlank(params.noticeCycle)){
+                box.showMsg('请选择订阅周期！');
             }else{
-                box.showMsg('订阅内容无变化！');
+                if(common.isBlank(params.analyst) || common.isBlank(params.noticeType)){
+                    params.point = 0;
+                    params.analyst = '';
+                    params.noticeType = '';
+                    params.noticeCycle = '';
+                }
+                if(parseInt(params.point) != parseInt(orip) || params.analyst != $(this).attr('a') || params.noticeType != $(this).attr('t') || params.noticeCycle != $(this).attr('c')) {
+                    common.getJson('/studio/subscribe', {params: JSON.stringify(params)}, function (data) {
+                        if (data.isOK) {
+                            chatShowTrade.getPointsInfo();
+                            if(common.isBlank(params.analyst) || common.isBlank(params.noticeType)){
+                                box.showMsg('取消订阅成功！');
+                            } else if(common.isValid(params.id)) {
+                                box.showMsg('修改订阅成功！');
+                            }else{
+                                box.showMsg('订阅成功！');
+                            }
+                            videosSubscribe.setSubscribeType();
+                        } else {
+                            box.showMsg(data.msg);
+                        }
+                    });
+                }else{
+                    box.showMsg('订阅内容无变化！');
+                }
             }
         });
     },
