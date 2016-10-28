@@ -920,7 +920,29 @@ router.post('/setUserPraise', function(req, res) {
         var fromPlatform=getGroupType(req);
         baseApiService.checkChatPraise(clientId,praiseId,fromPlatform,function(isOK){
             if(isOK){
-                chatPraiseService.setPraise(praiseId,constant.chatPraiseType.user,fromPlatform);
+                chatPraiseService.setPraise(praiseId,constant.chatPraiseType.user,fromPlatform,function(result){
+                   if(result.isOK){
+                       var params = {};
+                       var userInfo=req.session.studioUserInfo;
+                       params.groupType = userInfo.groupType;
+                       params.type = "daily";
+                       params.item = "daily_praise";
+                       chatPointsService.getChatPointsConfig(params,function(row){
+                           params.userId = userInfo.mobilePhone;
+                           params.clientGroup = userInfo.clientGroup;
+                           params.tag = "trade_"+praiseId ;
+                           params.val = row.val;
+                           params.isGlobal = false;
+                           params.opUser = userInfo.userId;
+                           params.opIp = common.getClientIp(req);
+                           chatPointsService.add(params, function(err, result){
+                               if(err){
+                                   console.error("点赞添加积分失败!");
+                               }
+                           });
+                       });
+                    }
+                });
             }
             res.json({isOK:isOK});
         });
@@ -1631,9 +1653,22 @@ router.post('/getShowTeacher', function(req, res){
             return;
         }
         params.groupType = chatUser.groupType;
-        studioService.getShowTeacher(params,function(result){
-            res.json(result);
-        });
+        var authorId = params.authorId;
+        if(authorId){
+            params.authorId = authorId.split(",")[0];
+            studioService.getShowTeacher(params,function(result){
+                res.json(result);
+            });
+        }else{
+            studioService.getBoUserBygroupId(params,function(result){
+                if(result){
+                    params.authorId = result[0].userNo;
+                    studioService.getShowTeacher(params,function(result){
+                        res.json(result);
+                    });
+                }
+            });
+        }
     }
 });
 
