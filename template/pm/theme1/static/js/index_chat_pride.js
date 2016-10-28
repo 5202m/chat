@@ -156,26 +156,26 @@ var chatPride = {
                     });
                     if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' ||  $.inArray(aid, storeViewData)>-1) {
                         style = ' style="display:none;"';
-                        var idx = 0;
+                        var idx = 0, lenI = Object.keys(remarkMap).length-1;
                         $.each(remarkMap, function (i, row) {
                             var tradeStrategySupportDivHtml = [];
                             $.each(row, function(j, r){
                                 tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
                             });
-                            tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy">查看数据</a>':'')));
+                            tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==lenI?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy">查看数据</a>':'')));
                             idx++;
                         });
                     } else {
                         if (remarkArr.length == 0) {
                             style = ' style="display:none;"';
                         }
-                        var idx = 0;
+                        var idx = 0, lenI = Object.keys(remarkMap).length-1;
                         $.each(remarkMap, function (i, row) {
                             var tradeStrategySupportDivHtml = [];
                             $.each(row, function(j, r){
                                 tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, 'dim'));
                             });
-                            tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy">查看数据</a>':'')));
+                            tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==lenI?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy">查看数据</a>':'')));
                             idx++;
                         });
                     }
@@ -224,26 +224,26 @@ var chatPride = {
                  });
                  if (common.isValid(articleDetail.tag) && articleDetail.tag == 'trading_strategy') {
                      if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' ||  $.inArray(aid, storeViewData)>-1) {
-                         var idx = 0;
+                         var idx = 0, lenI = Object.keys(remarkMap).length-1;
                          $.each(remarkMap, function (i, row) {
                              var tradeStrategySupportDivHtml = [];
                              $.each(row, function(j, r){
                                  tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
                              });
-                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy">查看数据</a>':'')));
+                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==lenI?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy">查看数据</a>':'')));
                              idx++;
                          });
                      } else {
                          if (remarkArr.length == 0) {
                              style = ' style="display:none;"';
                          }
-                         var idx = 0;
+                         var idx = 0, lenI = Object.keys(remarkMap).length-1;
                          $.each(remarkMap, function (i, row) {
                              var tradeStrategySupportDivHtml = [];
                              $.each(row, function(j, r){
                                  tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), '****', 'dim'));
                              });
-                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy">查看数据</a>':'')));
+                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==lenI?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy">查看数据</a>':'')));
                              idx++;
                          });
                      }

@@ -17,7 +17,6 @@ var videosTeach = {
                 if(typeof callback === "function"){
                     callback(isAll);
                 }
-                $('#teachVideoPanel .sub_tab .courseNum .numbox .inner .c_num:first a').click();
             });
         });
     },
