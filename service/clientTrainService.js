@@ -78,9 +78,9 @@ var clientTrainService = {
                 logger.error("获取房间列表失败! >>getChatGroupList:", err);
             }else{
                 var tmList=[];
-                if(rooms){
-                    var row=null;
-                    for(var i in rooms){
+                var row=null;
+                if(rooms && rooms.length>0){
+                    for(var i=0;i<rooms.length;i++){
                         row=rooms[i];
                         tmList.push({"_id":row._id,allowInto:common.dateTimeWeekCheck(row.openDate, false),clientGroup:row.clientGroup,defaultAnalyst:row.defaultAnalyst,status:row.status});
                     }

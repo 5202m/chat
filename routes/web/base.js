@@ -1608,7 +1608,6 @@ router.post('/addClientTrain', function(req, res){
     clientTrainService.addClientTrain(params,userInfo, function(result){
         if(result.awInto){
             req.session.studioUserInfo.toGroup=params.groupId;
-            console.log("req.session.studioUserInfo.toGroup",req.session.studioUserInfo.toGroup);
         }
         res.json(result);
     });

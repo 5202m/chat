@@ -831,9 +831,11 @@ var userService = {
                 callback(null);
             }else{
                 var mbGrObj={},row=null;
-                for(var i in result){
-                    row=result[i].loginPlatform.chatUserGroup.id(groupType);
-                    mbGrObj[result[i].mobilePhone]= row.clientGroup;
+                if(result && result.length>0){
+                    for(var i=0;i<result.length;i++){
+                        row=result[i].loginPlatform.chatUserGroup.id(groupType);
+                        mbGrObj[result[i].mobilePhone]= row.clientGroup;
+                    }
                 }
                 callback(mbGrObj);
             }
