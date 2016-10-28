@@ -696,7 +696,7 @@ var studioService = {
                },
                 analystList: function (callback) {
                     chatGroup.findById(params.groupId,"authUsers",function(err,row){
-                        if(!row || err){
+                        if(err){
                             callback(null);
                         }else{
                             boUser.find({userNo:{"$in":row.authUsers},"role.roleNo":common.getPrefixReg("analyst")},"userNo userName avatar position",function(err,rowList){
@@ -748,6 +748,26 @@ var studioService = {
          function (error, result) {
              dataCallback(result);
         })
+    },
+    /**
+     * 获取房间培训老师列表
+     * @param params
+     * @param callback
+     */
+    getBoUserBygroupId:function(params,callback){
+        chatGroup.findById(params.groupId,"authUsers",function(err,row){
+            if(err){
+                callback(null);
+            }else{
+                boUser.find({userNo:{"$in":row.authUsers},"role.roleNo":common.getPrefixReg("analyst")},"userNo userName avatar position",function(err,rowList){
+                    if(err){
+                        callback(null);
+                    }else{
+                        callback(rowList);
+                    }
+                });
+            }
+        });
     }
 
 };
