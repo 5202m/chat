@@ -115,6 +115,7 @@ var indexJS ={
                     chatPride.setTradeStrategyNote(null, false);
                     break;
                 case 'teacher':
+                    chatTeacher.teacherSele = "off";
                     chatTeacher.getShowTeacher(null);
                     break;
                 case 'showtrade':

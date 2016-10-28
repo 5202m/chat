@@ -5,7 +5,7 @@
 var chatTeacher = {
     //直播老师絯号
     teacherId : null,
-
+    teacherSele : "off",
     init: function(){
     	this.setEvent();
     },
@@ -228,8 +228,9 @@ var chatTeacher = {
     },
 
     selectAnalyst:function(obj){
-        $(obj).addClass('on');
+        chatTeacher.teacherSele = "off"
         chatTeacher.getShowTeacher($(obj).attr('uid'));
+        chatTeacher.teacherSele = "on";
     },
 
     /**初始化直播老师栏目*/
@@ -241,16 +242,16 @@ var chatTeacher = {
             teachId = userNo;
         }
         var groupId = LoginAuto.sessionUser['groupId'];
-        if(teachId == chatTeacher.teacherId){
+        if(teachId == chatTeacher.teacherId|| chatTeacher.teacherSele == "on"){
             return;
         }
-        chatTeacher.teacherId = teachId;
-        common.getJson('/studio/getShowTeacher',{data:JSON.stringify({groupId:groupId,authorId:teachId.split(",")[0]})},function(data){
+        common.getJson('/studio/getShowTeacher',{data:JSON.stringify({groupId:groupId,authorId:teachId})},function(data){
             var userInfo = data.userInfo;//直播老师
             var analystList = data.analystList;//分析师列表
             var chatShowTrade = data.chatShowTrade;//直播老师晒单
             var chatGroupInfo = data.chatGroupInfo;//直播房间
             if(null != userInfo){//直播老师信息
+                chatTeacher.teacherId = userInfo.userNo;
                 $('.main_tab .teacherlist .teacherbox .te_top  .info-l span').eq(0).text(userInfo.userName);
                 $('.main_tab .teacherlist .teacherbox .te_top  .info-l span').eq(1).text(userInfo.position);
                 $('.main_tab .teacherlist .teacherbox .te_top  .himg img').attr({src:userInfo.avatar});
@@ -270,14 +271,12 @@ var chatTeacher = {
                     }
                     $(".main_tab .teacherlist .teacherbox  .taglist").append(tagHtml.join(""));
                 }
-            }else{
-                $('.main_tab .teacherlist .teacherbox').hide();
             }
             if(null != analystList){//分析师列表
                 var html = [];
                 for(var i = 0;i<analystList.length;i++){
                     var analyst = analystList[i];
-                    html.push('<a href="javascript:void(0)" class="" onclick="chatTeacher.selectAnalyst(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_OthenTeacher\', \''+analyst.userName+'\', 1, true]);" uid="'+analyst.userNo+'">'+analyst.userName+'</a>');
+                    html.push('<a href="javascript:void(0)" onclick="chatTeacher.selectAnalyst(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_OthenTeacher\', \''+analyst.userName+'\', 1, true]);" uid="'+analyst.userNo+'">'+analyst.userName+'</a>');
                 }
                 $('.main_tab .teacherlist .teacherbox  .clearfix .teacher_select .selectlist').empty().prepend(html.join(""));
             }
