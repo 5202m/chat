@@ -1309,7 +1309,8 @@ router.post('/modifyEmail',function(req, res){
         res.json({isOK:false,msg:'邮箱地址有误！'});
     }else{
         //http:192.168.35.91:3006/studio/confirmMail?grouptype=<%= groupType %>&userid=<%= userId %>&email=<%= encodeURI(email) %>&key=<%= key %>
-        var urls = [req.headers.referer];
+        var ref = req.headers.referer.indexOf('?')>-1?req.headers.referer.substring(0,req.headers.referer.indexOf('?')):req.headers.referer;
+        var urls = [ref];
         urls.push("/confirmMail?grouptype=");
         urls.push(userInfo.groupType);
         urls.push("&userid=");
