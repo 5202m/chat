@@ -133,7 +133,8 @@ var indexJS ={
                     chatShowTrade.getPointsInfo();
                     break;
             }
-            if($(this).parent().hasClass('vipbene')){
+            if($(this).parent().hasClass('vipbene') && !$(this).hasClass('loaded')){
+                $(this).addClass('loaded');
                 box.setVipBeneFit(t);
             }
             indexJS.heightCalcu();

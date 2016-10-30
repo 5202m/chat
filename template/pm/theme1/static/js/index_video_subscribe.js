@@ -71,17 +71,17 @@ var videosSubscribe = {
                     var analystsArr = JSON.parse(row.analysts),
                         analystSize = analystsArr.length;
                     $.each(analystsArr, function(key, row1){
-                        if(analystSize>1){
+                        //if(analystSize>1){
                             analystsHtml.push(analysts.formatStr(row1.userId, row1.name, row1.point, row.code));
-                        }else{
+                        /*}else{
                             cls1=' w2';
                             analystsHtml.push(analyst.formatStr(row1.userId, row1.name, row1.point, row.code));
-                        }
+                        }*/
                     });
                     var noticeTypesArr = JSON.parse(row.noticeTypes),
                         noticeTypeSize = noticeTypesArr.length;
                     $.each(noticeTypesArr, function(key, row1){
-                        if(noticeTypeSize>1 || analystSize>1){
+                        //if(noticeTypeSize>1 || analystSize>1){
                             if(key==0){
                                 noticeTypesHtml.push('<div class="itembox w1">');
                             }
@@ -90,9 +90,9 @@ var videosSubscribe = {
                                 noticeTypesHtml.push('</div>');
                                 subscribeBtnHtml.push(subscribeBtn.formatStr(row.code, row.name,row.analysts,row.noticeTypes,row.noticeCycle));
                             }
-                        }else{
+                        /*}else{
                             noticeTypesHtml.push(noticeType.formatStr(row.code, row.name));
-                        }
+                        }*/
                     });
                     if(common.isValid(row.noticeCycle)) {
                         cls2=' w1';
