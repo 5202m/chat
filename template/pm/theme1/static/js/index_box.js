@@ -40,7 +40,6 @@ var box={
                                     var minuteDiff = common.getMinuteDiff(currentDate,row.signinTime);
                                     minuteDiff = minuteDiff <=0?1:minuteDiff;
                                     var d = common.addDate(new Date,1);
-                                    console.log(d);
                                     if(minuteDiff > 59){
                                         var hourdiff = common.getHourDiff(currentDate,row.signinTime);
                                         signinListHtml.push(signinFormatHtml.formatStr(avatar,hourdiff + '小时前'));
