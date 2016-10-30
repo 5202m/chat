@@ -656,7 +656,7 @@ var userService = {
     getTeacherList:function(params, callback){
         this.getAuthUsersByGroupId(params.groupId,function(result){
             if(result){
-                var searchObj = {valid:1,status:0,'role.roleNo':{$regex:/analyst.*/i},userNo:{$in:result}};
+                var searchObj = {valid:1,status:0,'role.roleNo':common.getPrefixReg("analyst"),userNo:{$in:result}};
                 if(params.hasQRCode) {
                     searchObj.wechatCodeImg = {$nin: [null, '']};
                 }
@@ -668,6 +668,8 @@ var userService = {
                         callback(row);
                     }
                 });
+            }else{
+                callback(null);
             }
         });
     },

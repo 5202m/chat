@@ -238,7 +238,7 @@ var chatTeacher = {
         }
         var teachId ;
         if(null == userNo){
-            teachId = indexJS.courseTick.course && indexJS.courseTick.course.lecturerId;
+            teachId = indexJS.courseTick.course && indexJS.courseTick.course.lecturerId.split(",")[0];
         }else{
             teachId = userNo;
         }
@@ -248,8 +248,8 @@ var chatTeacher = {
         }
         common.getJson('/studio/getShowTeacher',{data:JSON.stringify({groupId:groupId,authorId:teachId})},function(data){
             var userInfo = data.userInfo;//直播老师
-            var analystList = data.analystList;//分析师列表
-            var chatShowTrade = data.chatShowTrade;//直播老师晒单
+            var teacherList = data.teacherList;//分析师列表
+            var tradeList = data.tradeList;//直播老师晒单
             var trainList = data.trainList;//培训班列表
             var trAndClNum=data.trAndClNum;
             if(null != userInfo){//直播老师信息
@@ -257,7 +257,7 @@ var chatTeacher = {
                 $('.main_tab .teacherlist .teacherbox .te_top  .info-l span').eq(0).text(userInfo.userName);
                 $('.main_tab .teacherlist .teacherbox .te_top  .info-l span').eq(1).text(userInfo.position);
                 $('.main_tab .teacherlist .teacherbox .te_top  .himg img').attr({src:userInfo.avatar});
-                var winRate = userInfo.winRate!=""?userInfo.winRate:"0%";
+                var winRate = userInfo.winRate!=""?userInfo.winRate:"--";
                 $('.main_tab .teacherlist .teacherbox .te_top  .stateshow .item b').eq(0).text(winRate);
                 $('.main_tab .teacherlist .teacherbox  .intro span').text(userInfo.introduction);
 
@@ -271,18 +271,18 @@ var chatTeacher = {
                         var tag = tags[i];
                         tagHtml.push('<span class="tag"><span>'+tag+'</span><i></i></span>');
                     }
-                    $(".main_tab .teacherlist .teacherbox  .taglist").append(tagHtml.join(""));
+                    $(".main_tab .teacherlist .teacherbox  .taglist").html(tagHtml.join(""));
                 }
             }
-            if(null != analystList){//分析师列表
-                var html = [];
-                for(var i = 0;i<analystList.length;i++){
-                    var analyst = analystList[i];
+            if(null != teacherList){//分析师列表
+                var html = [],analyst = null;
+                for(var i = 0;i<teacherList.length;i++){
+                    analyst = teacherList[i];
                     html.push('<a href="javascript:void(0)" onclick="chatTeacher.selectAnalyst(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_OthenTeacher\', \''+analyst.userName+'\', 1, true]);" uid="'+analyst.userNo+'">'+analyst.userName+'</a>');
                 }
-                $('.main_tab .teacherlist .teacherbox  .clearfix .teacher_select .selectlist').empty().prepend(html.join(""));
+                $('.main_tab .teacherlist .teacherbox  .clearfix .teacher_select .selectlist').html(html.join(""));
             }
-            if(null != chatShowTrade){//直播老师晒单显示
+            if(null != tradeList){//直播老师晒单显示
                 var data = {type:"prerogative",item:"prerogative_position"};
                 common.getJson('/studio/getChatPointsConfig',{data:JSON.stringify(data)}, function(result) {
                     var isNotAuth = false,isPos = false;
@@ -295,9 +295,9 @@ var chatTeacher = {
                             }
                         }
                     }
-                    var html = [];
-                    for(var i = 0,k=1;i<chatShowTrade.tradeList.length;i++,k++){
-                        var chatTrade = chatShowTrade.tradeList[i];
+                    var html = [],chatTrade =null;
+                    for(var i = 0,k=1;i<tradeList.tradeList.length;i++,k++){
+                        chatTrade = tradeList.tradeList[i];
                         isPos = !chatTrade.profit;
                         if(k >4){
                             break;
@@ -333,14 +333,14 @@ var chatTeacher = {
                         }
                         html.push('</div></li>');
                     }
-                    $('.main_tab .teacherlist .teacherbox .sd_show  .sd_ul').empty().prepend(html.join(""));
+                    $('.main_tab .teacherlist .teacherbox .sd_show  .sd_ul').html(html.join(""));
                 });
             }
             if(null != trainList){//直播房间老师培训班显示
                 chatTeacher.showTrani(trainList,trAndClNum);
             }
             //查询精采直播、学员风采、教学视频
-            indexJS.getArticleList("teach_video_base,teach_video_expert,teach_video_financial,teach_video_gw,student_style,teach_live_video",indexJS.userInfo.groupId,0,1,20,'{"createDate":"desc"}',null,function(dataList){
+            indexJS.getArticleList("teach_video_base,teach_video_expert,teach_video_financial,teach_video_gw,student_style,teach_live_video",indexJS.userInfo.groupId,0,1,20,'{"createDate":"desc"}',{authorId:teachId},function(dataList){
                 if(dataList && dataList.result==0){
                     var articleList = dataList.data;
                     var teachLiveCount = 1,studentLiveCount = 1,teachVideoCount = 1;
@@ -388,9 +388,9 @@ var chatTeacher = {
                             }
                         }
                     }
-                    $('.main_tab .teacherlist .teacherbox .tebox_teachLive ul').empty().prepend(teachLiveHtml.join("")); //精彩直播
-                    $('.main_tab .teacherlist .teacherbox .tebox_studentLive ul').empty().prepend(studentLiveHtml.join("")); //学员风采
-                    $('.main_tab .teacherlist .teacherbox .tebox_teachVideo ul').empty().prepend(teachVideoHtml.join("")); //教学视频
+                    $('.main_tab .teacherlist .teacherbox .tebox_teachLive ul').html(teachLiveHtml.join("")); //精彩直播
+                    $('.main_tab .teacherlist .teacherbox .tebox_studentLive ul').html(studentLiveHtml.join("")); //学员风采
+                    $('.main_tab .teacherlist .teacherbox .tebox_teachVideo ul').html(teachVideoHtml.join("")); //教学视频
                     //精采视频播放
                     $('.main_tab .teacherlist .teacherbox .tebox_teachLive ul li a').click(function(){
                         $('.main_tab .teacherlist .teacherbox .tebox_teachLive ul li .vlink').removeClass("on");

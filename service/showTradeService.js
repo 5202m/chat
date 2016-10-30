@@ -63,7 +63,7 @@ var showTradeService = {
     getShowTradeList:function(params, callback){
         var searchObj = {"groupType":params.groupType, "valid":1, "status":1,"tradeType":2};
         if(common.isValid(params.userNo)){
-            searchObj = {"groupType":params.groupType, "valid":1,"tradeType":2,"boUser.userNo":params.userNo};
+            searchObj = {"groupType":params.groupType, "valid":1,"tradeType":(params.tradeType?params.tradeType:2),"boUser.userNo":params.userNo};
             if(common.isValid(params.status)){
                 searchObj.status = params.status;
             }

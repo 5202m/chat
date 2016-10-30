@@ -38,9 +38,13 @@ var videosTrain = {
                     var introduction = common.trim(row.defaultAnalyst.introduction);
                     trainHtml += trainFormatHtml.formatStr(row.defaultAnalyst.avatar,row.name, row.defaultAnalyst.userName, introduction,row.defaultAnalyst.userNo,row.clientGroup,row.allowInto,row.allowInto?"进入":"报名",row._id);
                 });
-                $('.pop_train .scrollbox .trainlist').empty().prepend(trainHtml);
+                $('.pop_train .scrollbox .trainlist').html(trainHtml);
                 $('.pop_train .scrollbox .trainlist .traindetails').click(function(){
-                    $('.blackbg,.train_detail iframe').attr("src","/studio/getTrDetail?uid="+$(this).prev().attr("userno"));
+                    $('.train_detail .pop_tit label').text($(this).parent().parent().find(".train_name").text());
+                    var userNo=$(this).prev().attr("userno");
+                    $("#train_info_id").empty().load("/studio/getTrDetail?uid="+userNo,function(){
+                        $('#train_info_id .scrollbox[tid="'+userNo+'"]').show();
+                    });
                     common.openPopup('.blackbg,.train_detail');
                 });
             }

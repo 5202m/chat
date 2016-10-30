@@ -14,10 +14,10 @@ var userService = require('../service/userService');//引入userService
 var syllabusService = require('../service/syllabusService');//引入syllabusService
 var chatPointsService = require('../service/chatPointsService');//引入chatPointsService
 var boUser = require('../models/boUser');//引入boUser数据模型
-var chatShowTrade = require('../models/chatShowTrade');//引入chatShowTrade数据模型
 var baseApiService = require('../service/baseApiService');//引入baseApiService
 var chatPraiseService = require('../service/chatPraiseService');//引入chatPraiseService
 var clientTrainService = require('../service/clientTrainService');//引入clientTrainService
+var showTradeService = require('../service/showTradeService');//引入showTradeService
 /**
  * 定义直播服务类
  * @type {{}}
@@ -693,15 +693,9 @@ var studioService = {
                         callback(null,ret);
                     });
                 },
-                analystList: function (callback) {
-                    chatGroup.findById(params.groupId,"authUsers",function(err,row){
-                        if(err){
-                            callback(null,row);
-                        }else{
-                            boUser.find({userNo:{"$in":row.authUsers},"role.roleNo":common.getPrefixReg("analyst")},"userNo userName avatar position",function(err,rowList){
-                                callback(null,rowList);
-                            });
-                        }
+                teacherList: function (callback) {
+                   userService.getTeacherList({groupId:params.groupId},function(rowList){
+                        callback(null,rowList);
                     });
                 },
                 trainList: function (callback) {
@@ -714,60 +708,16 @@ var studioService = {
                         callback(null,numObj);
                     });
                 },
-                chatShowTrade: function (callback) {
-                    chatShowTrade.find({
-                        "boUser.userNo": params.authorId,
-                        "groupType": params.groupType,
-                        "valid": 1,
-                        "tradeType": 1
-                    }).sort({"showDate": -1}).exec("find", function (err, data) {
-                        var result = null;
-                        if (err) {
-                            logger.error("查询直播老师晒单数据失败!:", err);
-                            callback(null,result);
-                        }else{
-                            if(data && data.length > 0){
-                                result = {
-                                    analyst : data[0].toObject().boUser,
-                                    tradeList : []
-                                };
-                                var tradeInfo = null;
-                                for(var i = 0,lenI = data.length; i < lenI;i++){
-                                    tradeInfo = data[i].toObject();
-                                    delete tradeInfo["boUser"];
-                                    result.tradeList.push(tradeInfo);
-                                }
-                            }
-                            callback(null,result);
-                        }
+                tradeList: function (callback) {
+                    showTradeService.getShowTradeList({pageSize:4,tradeType:1,groupType:params.groupType,userNo:params.authorId},function(list){
+                        callback(null,list);
                     });
                 }
         },
          function (error, result) {
              dataCallback(result);
         });
-    },
-    /**
-     * 获取房间培训老师列表
-     * @param params
-     * @param callback
-     */
-    getBoUserBygroupId:function(params,callback){
-        chatGroup.findById(params.groupId,"authUsers",function(err,row){
-            if(err){
-                callback(null);
-            }else{
-                boUser.find({userNo:{"$in":row.authUsers},"role.roleNo":common.getPrefixReg("analyst")},"userNo userName avatar position",function(err,rowList){
-                    if(err){
-                        callback(null);
-                    }else{
-                        callback(rowList);
-                    }
-                });
-            }
-        });
     }
-
 };
 
 //导出服务类

@@ -1,8 +1,6 @@
-<link href="/base/lib/mScroll/jquery.mCustomScrollbar.min.css" rel="stylesheet" />
 <link href="/pm/theme1/css/train.min.css" type="text/css" rel="stylesheet" />
 <!-- 老师培训班详情-陈丞  -->
-<%if(userNo=='jade') {%>
-<div class="scrollbox">
+<div class="scrollbox dn" tid="jade">
     <div class="teacherbox">
         <div class="te_top">
             <div class="himg"><img src="/pm/theme1/img/timg3.jpg" alt=""></div>
@@ -107,8 +105,7 @@
         </div>
     </div>
 </div>
-<%} else if(userNo=='lgg'){ %>
-<div class="scrollbox dn">
+<div class="scrollbox dn" tid="">
     <div class="ligg_top clearfix">
         <div class="lbox">
             <div class="himg"><img src="../static/img/timg_lgg.jpg" alt=""></div>
@@ -195,27 +192,12 @@
     </div>
     <a href="" class="applybtn">马上报名</a>
 </div>
-<%}%>
-
-
-
-
-<script type="text/javascript" src="/base/lib/jquery-1.7.min.js"></script>
-<script type="text/javascript" src="/base/lib/mScroll/jquery.mCustomScrollbar.concat.min.js"></script>
 <script type="text/javascript">
     $(function(){
-        myscroll();
-    });
-    //滚动条控制js
-    function myscroll(){
-        //滚动条
         $.mCustomScrollbar.defaults.scrollButtons.enable=true;
         $(".sdlistcont").mCustomScrollbar({theme:"dark",scrollbarPosition:"outside",scrollButtons:false});
         $(".scrollbox").mCustomScrollbar({theme:"light-thick",scrollbarPosition:"outside",scrollButtons:false});
-    }
+    });
 </script>
-
-
-
 </body>
 </html>

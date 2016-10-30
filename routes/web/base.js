@@ -1653,6 +1653,7 @@ router.post('/getShowTeacher', function(req, res){
             return;
         }
         params.groupType = chatUser.groupType;
+        params.groupId = chatUser.groupId;
         var authorId = params.authorId;
         if(authorId){
             params.authorId = authorId.split(",")[0];
@@ -1660,12 +1661,14 @@ router.post('/getShowTeacher', function(req, res){
                 res.json(result);
             });
         }else{
-            studioService.getBoUserBygroupId(params,function(result){
-                if(result){
-                    params.authorId = result[0].userNo;
+            userService.getAuthUsersByGroupId(chatUser.groupId,function(ret){
+                if(common.isValid(ret)){
+                    params.authorId = ret.split(",")[0];
                     studioService.getShowTeacher(params,function(result){
                         res.json(result);
                     });
+                }else{
+                    res.json(null);
                 }
             });
         }
