@@ -260,8 +260,10 @@ var chatTeacher = {
                 $('.main_tab .teacherlist .teacherbox .te_top  .info-l span').eq(0).text(userInfo.userName);
                 $('.main_tab .teacherlist .teacherbox .te_top  .info-l span').eq(1).text(userInfo.position);
                 $('.main_tab .teacherlist .teacherbox .te_top  .himg img').attr({src:userInfo.avatar});
-                var winRate = userInfo.winRate!=""?userInfo.winRate:"--";
+                var winRate = !common.isBlank(userInfo.winRate) && userInfo.winRate!=""?userInfo.winRate:"--";
+                var earningsM = !common.isBlank(userInfo.earningsM) && userInfo.earningsM!=""?userInfo.earningsM:"--";
                 $('.main_tab .teacherlist .teacherbox .te_top  .stateshow .item b').eq(0).text(winRate);
+                $('.main_tab .teacherlist .teacherbox .te_top  .stateshow .item b').eq(1).text(earningsM);
                 $('.main_tab .teacherlist .teacherbox  .intro span').text(userInfo.introduction);
 
                 $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").empty();
