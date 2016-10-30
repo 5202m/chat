@@ -455,10 +455,11 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .input_area .lgtip{color:#84878d; line-height:18px; font-size:15px;}
 .input_area .lgtip a{ color:#2587cb; }
 .mymsg{ height:auto; position:absolute; width:100%; bottom:40px; left:0; padding:6px 0; background:#f5f5be; z-index:11; }
-.mymsg p{ padding:0 44px 0 80px;color:#c83344; line-height:24px; font-size:15px;}
-.mymsg .replybtn{ position:absolute; top:6px; left:10px; display:block; height:22px; width:56px; border:1px solid #b59030; border-radius:2px; text-align:center;color:#b59030; line-height:22px; font-size:14px;}
-.mymsg .replybtn:hover { background:rgba(255,255,255,.5); text-decoration:none}
-.mymsg .pop_close:hover{ border-radius: 0 }
+.mymsg .mymsg_list{position:relative;margin-bottom: 3px;}
+.mymsg .mymsg_list p{ padding:0 44px 0 80px;color:#c83344; line-height:24px; font-size:15px;}
+.mymsg .mymsg_list .replybtn{ position:absolute; top:0px; left:10px; display:block; height:22px; width:56px; border:1px solid #b59030; border-radius:2px; text-align:center;color:#b59030; line-height:22px; font-size:14px;}
+.mymsg .mymsg_list .replybtn:hover { background:rgba(255,255,255,.5); text-decoration:none}
+.mymsg .mymsg_list .pop_close:hover{ border-radius: 0 }
 
 /*@功能*/
 .dialog.showchat .dialogbtn{ display:block;}

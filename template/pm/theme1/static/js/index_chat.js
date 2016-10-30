@@ -44,16 +44,6 @@ var chat={
                 $('.dialogbtn').hide();
             }
         });
-        //回复对话
-        $(".replybtn").click(function(){
-            var $this = $(this);
-            chat.setDialog($this.attr("uId"),$(".sender").html(),$this.attr("ts"),$this.attr("futype"));//设置对话
-            $(".mymsg em").show();
-        });
-        //关闭对话
-        $("#mymsgClose").click(function(){
-            $(".mymsg,.mymsg em").hide();//设置对话
-        });
         //清屏
         $(".clearbtn").click(function(){
             $("#dialog_list").html("");//设置对话
@@ -159,7 +149,13 @@ var chat={
                     imgObj.remove();
                     var replyDom = $(".replybtn");
                     if (toUser && toUser.userId == replyDom.attr("uid") && toUser.talkStyle == replyDom.attr("ts")) {//如果对话userId匹配则表示当前回复结束
-                        $(".mymsg,.mymsg em").hide();
+                        //$(".mymsg,.mymsg em").hide();
+                        $('.mymsg div[uid="'+toUser.userId+'"]').remove();
+                        if($('#myMsgListContent .mymsg_list').length==0){
+                            $(".mymsg,.mymsg em").hide();
+                        }else if($('#myMsgListContent .mymsg_list').length<2){
+                            $('.mymsg').height(27);
+                        }
                     }
                 }
             }
@@ -174,7 +170,13 @@ var chat={
             };
             var replyDom = $(".replybtn");
             if (toUser && toUser.userId == replyDom.attr("uid") && toUser.talkStyle == replyDom.attr("ts")) {//如果对话userId匹配则表示当前回复结束
-                $(".mymsg,.mymsg em").hide();
+                //$(".mymsg,.mymsg em").hide();
+                $('.mymsg div[uid="'+toUser.userId+'"]').remove();
+                if($('#myMsgListContent .mymsg_list').length==0){
+                    $(".mymsg,.mymsg em").hide();
+                }else if($('#myMsgListContent .mymsg_list').length<2){
+                    $('.mymsg').height(27);
+                }
             }
             sendObj.fromUser.toUser = toUser;
             chat.socket.emit('sendMsg', sendObj);//发送数据
@@ -701,11 +703,25 @@ var chat={
                 if(indexJS.userInfo.userId==toUser.userId){
                     $(".mymsg").show();
                     $(".mymsg em").hide();
-                    $(".replybtn").attr("uid",fromUser.userId);
+                    var myMsgList = [];
+                    /*$(".replybtn").attr("uid",fromUser.userId);
                     $(".replybtn").attr("ts",toUser.talkStyle);
                     $(".replybtn").attr("futype",fromUser.userType);
                     $(".sender").html(fromUser.nickname);
-                    $(".xcont").html(pHtml);
+                    $(".xcont").html(pHtml);*/
+                    myMsgList.push('<div class="mymsg_list" uid="'+fromUser.userId+'">');
+                    myMsgList.push('    <p><span class="sender">'+fromUser.nickname+'</span>对你说：<span class="xcont">'+pHtml+'</span></p>');
+                    myMsgList.push('    <a href="javascript:void(0);" class="replybtn" uid="'+fromUser.userId+'" ts="'+toUser.talkStyle+'" futype="'+fromUser.userType+'">回复</a>');
+                    myMsgList.push('    <a href="javascript:void(0);" class="pop_close mymsg_close"><i>关闭</i></a>');
+                    myMsgList.push('</div>');
+                    $('#myMsgListContent').append(myMsgList.join(''));
+                    if($('#myMsgListContent .mymsg_list').length>1){
+                        $('.mymsg').height(58);
+                        indexJS.setListScroll($('.mymsg'));
+                    }else{
+                        $('.mymsg').height(27);
+                    }
+                    chat.replyEvent($(".mymsg .mymsg_list .replybtn"),$(".mymsg .mymsg_list .mymsg_close"));
                 }
             }
         }
@@ -1595,6 +1611,33 @@ var chat={
         $('#analystbar a').unbind('click');
         $('#analystbar a').click(function(){
             chat.setDialog($(this).attr("uid"),$(this).attr("nk"),$(this).attr("t"),$(this).attr("utype"),$(this).attr("avs"));//设置对话
+        });
+    },
+    /**
+     * @ 消息提醒，回复事件
+     * @param replyDom
+     * @param myMsgCloseDom
+     */
+    replyEvent:function(replyDom, myMsgCloseDom) {
+        //回复对话
+        replyDom = (typeof replyDom=='object')?replyDom:$(replyDom);
+        replyDom.unbind('click');
+        replyDom.click(function () {
+            var $this = $(this);
+            var sender = $this.prev().children('span.sender').html();
+            chat.setDialog($this.attr("uId"), sender, $this.attr("ts"), $this.attr("futype"));//设置对话
+            $(".mymsg em").show();
+        });
+        //关闭对话
+        myMsgCloseDom = (typeof myMsgCloseDom=='object')?myMsgCloseDom:$(myMsgCloseDom);
+        myMsgCloseDom.unbind('click');
+        myMsgCloseDom.click(function () {
+            $(this).parent().remove();//移除dom
+            if($('#myMsgListContent .mymsg_list').length==0){
+                $('.mymsg,.mymsg em').hide();
+            }else if($('#myMsgListContent .mymsg_list').length<2){
+                $('.mymsg').height(27);
+            }
         });
     }
 };
