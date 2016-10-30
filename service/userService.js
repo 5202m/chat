@@ -596,8 +596,8 @@ var userService = {
                 ret=false;
                 if(row.traninClient){
                     for(var i=0;i<row.traninClient.length;i++){
-                        if(row.traninClient[i].isAuth==1 && row.traninClient[i].clientId==userId){
-                            ret=true;
+                        if(row.traninClient[i].clientId==userId){
+                            ret=row.roomType=='train'?(row.traninClient[i].isAuth==1):true;
                             break;
                         }
                     }
