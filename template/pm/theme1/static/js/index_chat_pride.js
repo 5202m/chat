@@ -435,6 +435,8 @@ var chatPride = {
                         store.set('point_'+indexJS.userInfo.userId, storeData);
                     }
                 });
+            }else{
+                box.showMsg(result.msg);
             }
         });
     },
