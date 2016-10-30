@@ -19,7 +19,7 @@ var videosTrain = {
      */
     initTraninNum:function(){
         $.getJSON('/studio/getTrainRoomNum', {groupType:indexJS.userInfo.groupType}, function(result){
-            if(result!=null){
+            if(result!=null && result.num>0){
                 $('#trainsnum').show().text(result.num);
             }else{
                 $('#trainsnum').hide();
