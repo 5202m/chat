@@ -565,7 +565,8 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .tebox_video li .playbtn{ display: block; width: 50px; height: 30px; border-radius: 5px; background: #40a8f1; position: absolute; top: 50%; margin-top: -15px; left: 50%; margin-left: -25px; box-shadow: 1px 1px 4px rgba(81,133,169,.6);}
 .tebox_video li .playbtn:hover { background: #2587cb }
 .tebox_video li .playbtn i{ border-width: 7px 11px; display: block; content: ''; width: 0; height: 0; border-style: solid; border-color: transparent transparent transparent #fff; box-shadow: 1px 1px 4px rgba(81,133,169,.6); margin-left: 21px; margin-top: 9px;}
-.tebox_video li .vlink{ font-size: 14px; color: #46484d; line-height: 30px;  }
+.tebox_video li .vlink{ font-size: 14px; color: #46484d; line-height: 30px; text-decoration: none;  }
+.tebox_video li .vlink.on{ font-size: 18px; color: #3b96d5 ;}
 
 /*晒单墙*/
 .sd_show.sd_list{ border-top: 0; padding: 0 20px; margin-top: 0; }
