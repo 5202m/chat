@@ -30,7 +30,8 @@ var errorMessage = {
     "code_3004" : {'errcode' : "3004", 'errmsg' : "有效积分不足!"},
     "code_3005" : {'errcode' : "3005", 'errmsg' : "您操作该培训班的权限受限，请联系客服!"},
     "code_3006" : {'errcode' : "3006", 'errmsg' : "该培训班已结束!"},
-    "code_3007" : {'errcode' : "3007", 'errmsg' : "您的报名还在审批中....."}
+    "code_3007" : {'errcode' : "3007", 'errmsg' : "您的报名还在审批中....."},
+    "code_3008" : {'errcode' : "3008", 'errmsg' : "您没有访问该房间的权限，请联系客服！"}
 };
 //导出类
 module.exports = errorMessage;

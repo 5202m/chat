@@ -80,7 +80,7 @@
                     <div class="sub-tabnav s1" id="roomList_panel">
                         <% if (studioList!='[]') { %>
                         <% studioList.forEach(function(row,index){  %>
-                        <%if(row.isCurr){%><span id="roomInfoId" lgt='<%= row.loginBoxTime %>' cgs="<%= row.clientGroup %>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>" rt="<%= row.roomType %>" style="display:none;"><%= row.name %><i class="off"></i></span><%}%>
+                        <%if(row.isCurr){%><span id="roomInfoId" lgt='<%= row.loginBoxTime %>' cgs="<%= row.clientGroup %>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>" rt="<%= row.roomType %>" st="<%= row.status %>" sp="<%= row.isOpen %>" style="display:none;"><%= row.name %><i class="off"></i></span><%}%>
                         <a href="javascript:void(0);"<%if(row.isCurr) {%> class="on" lgt='<%= row.loginBoxTime %>'<%}else{%> rid="<%= row.id %>"<%}%> cgs="<%= row.clientGroup %>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>" rt="<%= row.roomType %>" onclick="_gaq.push(['_trackEvent', 'pmchat_studio', 'left_zb_<%= row.id %>', '<%= row.name %>', 1, true]);">
                             <span><b><%= row.name %></b></span><i></i>
                         </a>

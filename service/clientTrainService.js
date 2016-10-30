@@ -57,12 +57,18 @@ var clientTrainService = {
                                 break;
                             }
                         }
-                        if(retInfo.errcode){
+                        if(retInfo.errcode||retInfo.awInto){
                             callback(retInfo);
                         }else{
-                            clientTrainService.saveTrain(params.groupId,userInfo.userId,params.nickname,function(saveRet){
-                                callback(saveRet);
-                            });
+                            isOpen=common.dateTimeWeekCheck(row.openDate, false);
+                            if(isOpen){
+                                retInfo=errorMessage.code_3008;
+                                callback(retInfo);
+                            }else{
+                                clientTrainService.saveTrain(params.groupId,userInfo.userId,params.nickname,function(saveRet){
+                                    callback(saveRet);
+                                });
+                            }
                         }
                     }else{
                         clientTrainService.saveTrain(params.groupId,userInfo.userId,params.nickname,function(saveRet){

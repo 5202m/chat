@@ -519,6 +519,8 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .teacherbox .taglist{ margin: 16px 0 10px}
 .teacherbox .intro{ color: #46484d; font-size: 14px; line-height: 24px;}
 .teacherbox .intro b{ display: block; }
+.teacherbox .view_select{width: 165px;}
+.teacherbox .view_select .se_cont{width: 160px;}
 .view_select.teacher_select{ position: relative; right: auto; top: auto; float: right; }
 .tebox_tit{ font-size: 15px; color: #46484d; line-height: 30px; padding: 6px 0 }
 .tebox_tit span{ font-size: 12px; font-weight: normal;}

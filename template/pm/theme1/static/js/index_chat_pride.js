@@ -131,10 +131,11 @@ var chatPride = {
             //课程信息
             $panelUL = $panel.find(".livebrief[pt='" + publishTime + "']>div.te_info");
             if ($panelUL.size() == 0) {
-                var author = '', avatar = '', style = '', tag = [], tagHtml = [];
+                var author = '', avatar = '', style = '', tag = [], tagHtml = [],tUserId='';
                 if (articleDetail.authorInfo) {
                     author = articleDetail.authorInfo.name || "";
                     avatar = articleDetail.authorInfo.avatar || "";
+                    tUserId=articleDetail.authorInfo.userId || "";
                     tag = common.isValid(articleDetail.authorInfo.tag) ? articleDetail.authorInfo.tag.replace(/\s*，\s*/g,',').split(',') : [];
                     $.each(tag, function (key, val) {
                         tagHtml.push(tagFormat.formatStr(val));
@@ -189,7 +190,7 @@ var chatPride = {
                         matches = imgReg.exec(contentHtml);
                     }
                 }
-                tradeStrategyLiveBriefHtml = tradeStrategyLiveBrief.formatStr(avatar, author, publishTimeStr, (articleDetail.title || ""), contentHtml, tradeStrategySupportHtml.join(''), publishTime, style, tagHtml.join(''), aid);
+                tradeStrategyLiveBriefHtml = tradeStrategyLiveBrief.formatStr(avatar, author, publishTimeStr, (articleDetail.title || ""), contentHtml, tradeStrategySupportHtml.join(''), publishTime, style, tagHtml.join(''), aid,tUserId);
                 if (isPrepend) {
                     $panel.prepend(tradeStrategyLiveBriefHtml);
                 } else {
@@ -200,10 +201,11 @@ var chatPride = {
                     $this.find("a>img").attr("src", $this.attr("url"));
                 });
             }else if($panelUL.size() > 0 && isPush){
-                 var author = '', avatar = '',style = '',tag =[], tagHtml = [];
+                 var author = '', avatar = '',style = '',tag =[], tagHtml = [],tUserId='';
                  if (articleDetail.authorInfo) {
                      author = articleDetail.authorInfo.name || "";
                      avatar = articleDetail.authorInfo.avatar || "";
+                     tUserId=articleDetail.authorInfo.userId || "";
                      tag = common.isValid(articleDetail.authorInfo.tag)? articleDetail.authorInfo.tag.replace(/\s*，\s*/g,',').split(',') : [];
                      $.each(tag, function(key, val){
                         tagHtml.push(tagFormat.formatStr(val));
@@ -256,6 +258,7 @@ var chatPride = {
                     }
                 }
                  $panelUL = $panel.find(".livebrief[_aid='" + aid + "']");
+                 $panelUL.find("div.te_info").attr("tid",tUserId);
                  $panelUL.find('div.te_info>div.himg>img').attr('src',avatar);
                  $panelUL.find('div.te_info>div.teinfo1>span.te_name').text(author);
                  $panelUL.find('div.te_info>div.teinfo1>span.livetime').text(publishTimeStr);
@@ -489,7 +492,7 @@ var chatPride = {
         switch(region) {
             case 'tradeStrategyLiveBrief'://课程信息，直播老师
                 formatHtmlArr.push('<div class="livebrief" pt="{6}" _aid="{9}">');
-                formatHtmlArr.push('    <div class="te_info">');
+                formatHtmlArr.push('    <div class="te_info" tid="{10}">');
                 formatHtmlArr.push('        <div class="himg"><img src="{0}" alt="" width="120" height="120"></div>');
                 formatHtmlArr.push('        <div class="teinfo1">');
                 formatHtmlArr.push('            <span class="te_name">{1}</span>');

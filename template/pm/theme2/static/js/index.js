@@ -321,6 +321,10 @@ var studioChatMbIdx={
                 }
                 return false;
             }
+            if(loc_liDom.attr("st") == "2"){//权限受限
+                studioMbPop.showMessage("您暂无访问该房间的权限，请联系客服！");
+                return false;
+            }
             if(loc_liDom.attr("go") != 'true'){
                 studioMbPop.showMessage("该直播间暂未开放，请稍后访问！");
                 return false;

@@ -10,7 +10,6 @@ var chatTeacher = {
     	this.setEvent();
     },
     setEvent: function(){
-
         /**
          * 联系助理按钮事件
          */
@@ -157,14 +156,6 @@ var chatTeacher = {
         /**显示未授权弹框*/
         showAuthBox:function(){
            var csDom = $("#userListId li[utype='3']:first");
-            /*  if(csDom.size() == 0){//没有老师助理在线
-                $("#sdNoAuthBox .sdzl").hide();
-            }else{
-                $("#sdNoAuthBox .sdzl").show();
-                $("#sdNoAuthBox .aid_chat img").attr("src", csDom.find(".headimg img").attr("src"));
-                $("#sdNoAuthBox .aid_chat span").attr("uid", csDom.attr("id")).text(csDom.find(".uname span:first").text());
-            }*/
-
             $("#sdNoAuthBox .sdzl").show();
             $("#sdNoAuthBox .aid_chat img").attr("src", csDom.find(".headimg img").attr("src"));
             $("#sdNoAuthBox .aid_chat span").attr("uid", csDom.attr("id")).text(csDom.find(".uname span:first").text());
@@ -233,7 +224,16 @@ var chatTeacher = {
         chatTeacher.getShowTeacher($(obj).attr('uid'));
         chatTeacher.teacherSele = "on";
     },
-
+    /**
+     * 清空html
+     * @param arr
+     */
+    clearHtml:function(arr){
+        var obj=$(".main_tab .teacherlist .teacherbox");
+        for(var i in arr){
+            obj.find(arr[i]).html("");
+        }
+    },
     /**初始化直播老师栏目*/
     getShowTeacher:function(userNo){
         if(!$('.main_tabnav a[t=teacher]').hasClass("on")){
@@ -248,7 +248,11 @@ var chatTeacher = {
                 return;
             }
         }
+        if(common.isBlank(teachId)){
+            teachId=$("#textlivePanel .livebrief[pt]:eq(0)>div.te_info").attr("tid")||"";
+        }
         var groupId = LoginAuto.sessionUser['groupId'];
+        this.clearHtml([".taglist",".sd_show .sd_ul",".tebox_teachLive ul",".tebox_studentLive ul",".tebox_teachVideo ul"]);
         common.getJson('/studio/getShowTeacher',{data:JSON.stringify({groupId:groupId,authorId:teachId})},function(data){
             var userInfo = data.userInfo;//直播老师
             var teacherList = data.teacherList;//分析师列表
@@ -338,7 +342,7 @@ var chatTeacher = {
                         }
                         html.push('</div></li>');
                     }
-                    $('.main_tab .teacherlist .teacherbox .sd_show  .sd_ul').html(html.join(""));
+                    $('.main_tab .teacherlist .teacherbox .sd_show .sd_ul').html(html.join(""));
                 });
             }
             if(null != trainList){//直播房间老师培训班显示

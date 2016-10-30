@@ -194,6 +194,7 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
                 rowTmp.disable=(!common.containSplitStr(row.clientGroup,clientGroup));
                 rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.clientGroup,constant.clientGroup.visitor);
                 rowTmp.roomType = row.roomType;
+                rowTmp.status = row.status;
                 var ruleArr=row.chatRules,isPass=true,ruleRow=null;
                 for(var i in ruleArr) {
                 	ruleRow=ruleArr[i];
@@ -1659,16 +1660,7 @@ router.post('/getShowTeacher', function(req, res){
                 res.json(result);
             });
         }else{
-            userService.getAuthUsersByGroupId(chatUser.groupId,function(ret){
-                if(ret && ret.length>0){
-                    params.authorId = ret[0];
-                    studioService.getShowTeacher(params,function(result){
-                        res.json(result);
-                    });
-                }else{
-                    res.json(null);
-                }
-            });
+            res.json(null);
         }
     }
 });

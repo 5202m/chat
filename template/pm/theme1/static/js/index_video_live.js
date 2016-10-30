@@ -44,6 +44,13 @@ var videosLive = {
                 }
                 return false;
             }
+            if(thiz.attr("st") == "2"){//权限受限
+                if(thiz.attr("rt") == "train" && thiz.attr("sp") != "true"){
+                    $('#trains').click();
+                }else{
+                    box.showTipBox("您暂无访问该房间的权限，请联系客服！");
+                }
+            }
             common.getJson("/studio/checkGroupAuth",{groupId:thiz.attr("rid")},function(result){
                 if(!result.isOK){
                     if(indexJS.checkClientGroup("vip")){
