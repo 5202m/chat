@@ -1038,7 +1038,7 @@ var box={
                             _this.parent().prev().text(data.num);
                         }
                     });
-                    if(_this.attr('sufix')=='pdf') {
+                    if($.inArray(_this.attr('sufix'),['pdf','png','jpg','jpeg','gif'])) {
                         window.open(_this.data("file_url"));
                     }else {
                         window.location.href = _this.data("file_url");
