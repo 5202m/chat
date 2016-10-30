@@ -322,8 +322,26 @@ var studioChatMbIdx={
                 return false;
             }
             if(loc_liDom.attr("st") == "2"){//权限受限
-                studioMbPop.showMessage("您暂无访问该房间的权限，请联系客服！");
-                return false;
+                if(loc_liDom.attr("rt") == "train"){
+                    if(loc_liDom.attr("ha")=="-1"){
+                        studioMbPop.showMessage("您还未报名该培训班，请联系客服！");
+                        return false;
+                    }
+                    if(loc_liDom.attr("ha")=="0"){
+                        if(loc_liDom.attr("go") != "true"){
+                            studioMbPop.showMessage("您的报名正在审批中....");
+                            return false;
+                        }else{
+                            studioMbPop.showMessage("您没有访问该房间的权限，请联系客服！");
+                            return false;
+                        }
+                    }
+                }else{
+                    if(loc_liDom.attr("ha")=="-1"){
+                        studioMbPop.showMessage("您没有访问该房间的权限，请联系客服！");
+                        return false;
+                    }
+                }
             }
             if(loc_liDom.attr("go") != 'true'){
                 studioMbPop.showMessage("该直播间暂未开放，请稍后访问！");

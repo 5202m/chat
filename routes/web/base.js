@@ -194,7 +194,23 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
                 rowTmp.disable=(!common.containSplitStr(row.clientGroup,clientGroup));
                 rowTmp.allowVisitor=isVisitor?(!rowTmp.disable):common.containSplitStr(row.clientGroup,constant.clientGroup.visitor);
                 rowTmp.roomType = row.roomType;
-                rowTmp.status = row.status;
+                rowTmp.status=row.status;
+                rowTmp.trainAuth = -1;
+                if(rowTmp.status==2){
+                    if(rowTmp.traninClient){
+                        var length=rowTmp.traninClient.length;
+                        for(var i=0;i<length;i++){
+                            if(rowTmp.traninClient[i].clientId==chatUser.userId){
+                                if(rowTmp.roomType=='train'){
+                                    rowTmp.trainAuth=rowTmp.traninClient[i].isAuth;
+                                }else{
+                                    rowTmp.trainAuth=1;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
                 var ruleArr=row.chatRules,isPass=true,ruleRow=null;
                 for(var i in ruleArr) {
                 	ruleRow=ruleArr[i];

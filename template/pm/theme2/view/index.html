@@ -59,7 +59,7 @@
                     <ul class="videoroom-ul">
                         <% if (studioList!='[]') { %>
                         <% studioList.forEach(function(row,index){ %>
-                        <li class="<%=((!row.disable || !userSession.isLogin) && row.isOpen ? 'live' : '')%>"  cgs="<%= row.clientGroup %>" av="<%= row.allowVisitor %>" rt="<%= row.roomType %>" st="<%= row.status %>"  ga="<%=!row.disable%>" go="<%=row.isOpen%>" gi="<%= row.id %>">
+                        <li class="<%=((!row.disable || !userSession.isLogin) && row.isOpen ? 'live' : '')%>"  cgs="<%= row.clientGroup %>" av="<%= row.allowVisitor %>" rt="<%= row.roomType %>" st="<%= row.status %>" ha="<%= row.trainAuth %>"  ga="<%=!row.disable%>" go="<%=row.isOpen%>" gi="<%= row.id %>">
                             <section class="room-main clearfix">
                                 <div class="tit">
                                     <b><%= row.name %></b><div><i></i>火热直播中</div><br>

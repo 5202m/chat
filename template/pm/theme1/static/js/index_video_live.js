@@ -45,10 +45,29 @@ var videosLive = {
                 return false;
             }
             if(thiz.attr("st") == "2"){//权限受限
-                if(thiz.attr("rt") == "train" && thiz.attr("sp") != "true"){
-                    $('#trains').click();
+                if(thiz.attr("rt") == "train"){
+                    if(thiz.attr("ha")=="-1"){
+                        if(thiz.attr("sp") != "true"){
+                            $('#trains').click();
+                        }else{
+                            box.showTipBox("您没有访问该房间的权限，请联系客服！");
+                        }
+                        return false;
+                    }
+                    if(thiz.attr("ha")=="0"){
+                        if(thiz.attr("sp") != "true"){
+                            box.showTipBox("您的报名正在审批中....");
+                            return false;
+                        }else{
+                            box.showTipBox("您没有访问该房间的权限，请联系客服！");
+                            return false;
+                        }
+                    }
                 }else{
-                    box.showTipBox("您暂无访问该房间的权限，请联系客服！");
+                    if(thiz.attr("ha")=="-1"){
+                        box.showTipBox("您没有访问该房间的权限，请联系客服！");
+                        return false;
+                    }
                 }
             }
             common.getJson("/studio/checkGroupAuth",{groupId:thiz.attr("rid")},function(result){
