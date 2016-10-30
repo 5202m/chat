@@ -185,19 +185,6 @@ var clientTrainService = {
                                remark:"每日签到"
                            };
                            chatPointsService.add(everySignParam, function(error,result){});
-                           /*  var  serialSignParam =  {
-                               userId:userInfo.mobilePhone,
-                               groupType:userInfo.groupType,
-                               clientGroup:userInfo.clientGroup,
-                               type:'daily',
-                               item : 'daily_sign',
-                               tag : 'sign',
-                               isGlobal:false,
-                               opUser:userInfo.userId,
-                               opIp:clientip
-                               remark:"连续签到",
-                            };
-                           chatPointsService.add(serialSignParam, function(error,result){});*/
                            callback({isOK:true, msg:'客户签到成功'});
                        }
                    });
