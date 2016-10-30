@@ -927,19 +927,16 @@ router.post('/setUserPraise', function(req, res) {
                        params.groupType = userInfo.groupType;
                        params.type = "daily";
                        params.item = "daily_praise";
-                       chatPointsService.getChatPointsConfig(params,function(row){
-                           params.userId = userInfo.mobilePhone;
-                           params.clientGroup = userInfo.clientGroup;
-                           params.tag = "trade_"+praiseId ;
-                           params.val = row.val;
-                           params.isGlobal = false;
-                           params.opUser = userInfo.userId;
-                           params.opIp = common.getClientIp(req);
-                           chatPointsService.add(params, function(err, result){
-                               if(err){
-                                   console.error("点赞添加积分失败!");
-                               }
-                           });
+                       params.userId = userInfo.mobilePhone;
+                       params.clientGroup = userInfo.clientGroup;
+                       params.tag = "trade_"+praiseId ;
+                       params.isGlobal = false;
+                       params.opUser = userInfo.userId;
+                       params.opIp = common.getClientIp(req);
+                       chatPointsService.add(params, function(err, result){
+                           if(err){
+                               console.error("点赞添加积分失败!");
+                           }
                        });
                     }
                 });
