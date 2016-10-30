@@ -27,7 +27,6 @@ var adminService ={
             if(!err && row) {
                 result.isOK = true;
                 result.position = row.position;
-                result.introduction = row.introduction;
                 result.avatar = row.avatar;
                 var userTypeTmp = null;
                 for (var p in constant.roleUserType) {

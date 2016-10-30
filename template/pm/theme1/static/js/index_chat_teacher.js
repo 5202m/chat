@@ -224,9 +224,12 @@ var chatTeacher = {
             common.openPopup('.blackbg,.login');
         }
     },
-
+    /**
+     * 选择分析师
+     * @param obj
+     */
     selectAnalyst:function(obj){
-        chatTeacher.teacherSele = "off"
+        chatTeacher.teacherSele = "off";
         chatTeacher.getShowTeacher($(obj).attr('uid'));
         chatTeacher.teacherSele = "on";
     },
@@ -237,15 +240,15 @@ var chatTeacher = {
             return;
         }
         var teachId ;
-        if(null == userNo){
+        if(common.isBlank(userNo)){
             teachId = indexJS.courseTick.course && indexJS.courseTick.course.lecturerId.split(",")[0];
         }else{
             teachId = userNo;
+            if(teachId == chatTeacher.teacherId|| chatTeacher.teacherSele == "on"){
+                return;
+            }
         }
         var groupId = LoginAuto.sessionUser['groupId'];
-        if(teachId == chatTeacher.teacherId|| chatTeacher.teacherSele == "on"){
-            return;
-        }
         common.getJson('/studio/getShowTeacher',{data:JSON.stringify({groupId:groupId,authorId:teachId})},function(data){
             var userInfo = data.userInfo;//直播老师
             var teacherList = data.teacherList;//分析师列表

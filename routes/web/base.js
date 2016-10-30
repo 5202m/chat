@@ -1655,15 +1655,15 @@ router.post('/getShowTeacher', function(req, res){
         params.groupType = chatUser.groupType;
         params.groupId = chatUser.groupId;
         var authorId = params.authorId;
-        if(authorId){
+        if(common.isValid(authorId)){
             params.authorId = authorId.split(",")[0];
             studioService.getShowTeacher(params,function(result){
                 res.json(result);
             });
         }else{
             userService.getAuthUsersByGroupId(chatUser.groupId,function(ret){
-                if(common.isValid(ret)){
-                    params.authorId = ret.split(",")[0];
+                if(ret && ret.length>0){
+                    params.authorId = ret[0];
                     studioService.getShowTeacher(params,function(result){
                         res.json(result);
                     });
