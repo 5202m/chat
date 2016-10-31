@@ -1579,17 +1579,20 @@ router.post('/addPointsInfo', function(req, res){
             return;
         }
     }
-    if(common.isBlank(params.groupType) /*|| common.isBlank(params.remark) || common.isBlank(params.val) || common.isBlank(params.tag)*/){
+    if(common.isBlank(params.groupType)){
         res.json({isOK:false,msg:'参数错误'});
         return;
     }else{
         params.userId = userInfo.mobilePhone;
+        params.groupType = userInfo.groupType,
         params.clientGroup = userInfo.clientGroup;
-        params.item = common.isBlank(params.item)?'':params.item;
+        params.type = "prerogative",
+        params.item = common.isBlank(params.item)?'prerogative_position':params.item;
         params.tag = params.tag || "";
         params.isGlobal = false;
         params.opUser = userInfo.userId;
         params.opIp = common.getClientIp(req);
+        params.remark ="查看持仓单" ;
         chatPointsService.add(params, function(err, result){
             if(err && err.errcode != '3001'){
                 res.json({isOK:false,msg:err.errmsg});

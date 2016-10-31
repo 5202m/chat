@@ -331,7 +331,7 @@ var chatTeacher = {
 
                         if(isPos){
                             if(indexJS.userInfo.isLogin && isNotAuth){
-                                html.push('<a href="' + chatTrade.tradeImg + '" data-lightbox="sd-img" data-title="' + (isPos ? "持仓中" : "获利：" + chatTrade.profit) + '" onclick="chatTeacher.deductionIntegralShowTrade(this)" tradeId="'+chatTrade._id+'">');
+                                html.push('<a href="#" onclick="chatTeacher.deductionIntegralShowTrade(this)" tradeId="'+chatTrade._id+'" tradeImg="'+chatTrade.tradeImg+'" isPos="'+isPos+'" profit="'+chatTrade.profit+'">');
                             }else{
                                 html.push('<a href="javascript:chatTeacher.sd.showAuthBox();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_ChiChangZhong\', \'content_right\', 1, true]);">');
                             }
@@ -490,6 +490,10 @@ var chatTeacher = {
             common.getJson('/studio/addPointsInfo',{params:JSON.stringify(params)}, function(result) {
                 if (!result.isOK) {
                     box.showTipBox(result.msg);
+                }else{
+                    _this.attr("href",_this.attr("tradeImg"));
+                    _this.attr("data-lightbox","sd-img");
+                    _this.attr("data-title",_this.attr("isPos") ? "持仓中" : "获利：" +_this.attr("profit"));
                 }
             })
         }
