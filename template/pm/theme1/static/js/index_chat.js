@@ -1267,10 +1267,9 @@ var chat={
         });
         //进入聊天室加载的在线用户
         this.socket.on('onlineUserList',function(data,dataLength){
-            //$('#userListId').html("");放到this.setUserListIdEmpty()方法中
             //如客户数小于200，则追加额外游客数
             var onLineNum = dataLength;
-            if($("#roomInfoId").attr("av")=="true" && !chat.initUserList){
+            if($("#roomInfoId").attr("av")=="true"){
                 var randId= 0,size=0;
                 if(dataLength>100){
                     size = Math.ceil(Math.random()*50)+275;
@@ -1279,10 +1278,8 @@ var chat={
                 }
                 for(var i=0;i<size;i++){
                     randId=common.randomNumber(6);
-                    data[("visitor_"+randId)]=({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:15,userType:-1});
                 }
                 onLineNum = onLineNum + size;
-                chat.initUserList = true;
             }
             var row=null;
             for(var i in data){
@@ -1290,15 +1287,13 @@ var chat={
                 chat.setOnlineUser(row);//设置在线用户
                 if(row.userType == 3 && $('.mult_dialog a[uid='+row.userId+']').length > 0){
                     $('.mult_dialog a[uid='+row.userId+']').attr('online', true);
-                    onLineNum = onLineNum - 1;
                 }else if($.inArray(row.userType, [1,2]) > -1 && $('#analystbar a[uid="'+row.userId+'"]').length == 0){
-                    $('#analystbar').append('<a href="javascript:void(0);" t="0" avs="'+row.avatar+'" nk="'+row.nickname+'" class="contactbtn" uid="'+row.userId+'" utype="'+row.userType+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_lts_LianXiTeacher\', \'content_right\', 1, true]);">联系'+row.nickname+'</a>');
+                    $('#analystbar').empty().append('<a href="javascript:void(0);" t="0" avs="'+row.avatar+'" nk="'+row.nickname+'" class="contactbtn" uid="'+row.userId+'" utype="'+row.userType+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_lts_LianXiTeacher\', \'content_right\', 1, true]);">联系'+row.nickname+'</a>');
                 }
             }
             chat.contactAnalystEvent();
             onLineNum = onLineNum + $('.mult_dialog a[uid]').length + $('#analystbar a[uid]').length;
             chat.setOnlineNum(onLineNum);//设置在线人数
-            indexJS.setListScroll(".user_box");
         });
         //断开连接
         this.socket.on('disconnect',function(e){
