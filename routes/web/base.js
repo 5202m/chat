@@ -946,7 +946,7 @@ router.post('/setUserPraise', function(req, res) {
                        params.groupType = userInfo.groupType;
                        params.type = "daily";
                        params.item = "daily_praise";
-                       params.tag = "trade_"+praiseId ;
+                       params.tag = "trade_"+praiseId;
                        params.isGlobal = false;
                        params.opUser = userInfo.userId;
                        params.opIp = common.getClientIp(req);
@@ -1592,7 +1592,7 @@ router.post('/addPointsInfo', function(req, res){
         params.isGlobal = false;
         params.opUser = userInfo.userId;
         params.opIp = common.getClientIp(req);
-        params.remark ="查看持仓单" ;
+        params.remark ="查看持仓单";
         chatPointsService.add(params, function(err, result){
             if(err && err.errcode != '3001'){
                 res.json({isOK:false,msg:err.errmsg});
