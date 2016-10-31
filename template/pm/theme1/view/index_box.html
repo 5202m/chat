@@ -246,7 +246,7 @@
                         <div class="item">
                             <span class="iname">昵称</span>
                             <div class="inp_div">
-                                <input type="text" id="myNickName" placeholder="<%if(userSession.isLogin){%><%= userSession.nickname||'匿名_xxx' %><%}%>" disabled="disabled">
+                                <input type="text" id="myNickName" placeholder="<%if(userSession.isLogin){%><%= userSession.nickname||'匿名_xxx' %><%}%>" disabled="disabled" maxlength="20" />
                             </div>
                             <div class="edit_div">
                                 <a href="javascript:void(0);" id="modifyNk">修改</a>

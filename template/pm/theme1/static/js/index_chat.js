@@ -196,7 +196,10 @@ var chat={
                 return;
             }
             if (indexJS.userInfo.isSetName === false) {
-                box.openSetNameBox(true);
+                $('#personal_center').click();
+                $('#modifyNk').click();
+                $('.nickNameTip').removeClass('dn').css('color','red');
+                $('#myNickName').focus();
                 return;
             }
             $("#sendImgInp").trigger("click");
@@ -1487,7 +1490,7 @@ var chat={
             }
         }else{
             obj.mCustomScrollbar({scrollInertia:1,scrollButtons:{enable:false},theme:(theme?theme:"light-thick"), scrollbarPosition: "outside"});
-            indexJS.setScrollStyle(obj);
+            //indexJS.setScrollStyle(obj);
             obj.mCustomScrollbar("scrollTo", "bottom");
         }
     },
@@ -1544,7 +1547,7 @@ var chat={
          */
         showMsg : function(info){
             var html = [];
-            html.push('<div class="dialog push">');
+            html.push('<div class="info_push" style="padding-right:10px;">');
             html.push(info.content);
             html.push('</div>');
             $("#dialog_list").append(html.join(""));

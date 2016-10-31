@@ -332,7 +332,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .skilldata .support b{ font-size: 14px; }
 .skilldata .support span{ font-size: 14px; width: 50px;height: 24px; display: inline-block;*display: inline;*zoom: 1; vertical-align: top; text-indent: 3px;  }
 .skilldata .support span.dim{ font-size: 0; line-height: 0; background: url(../img/data-dim.png) center center no-repeat;}
-.skilldata .viewdata{ display: inline-block;*display: inline;*zoom: 1; float: right; /*position: absolute; right: -10px; top: 0;*/height: 26px; width: 80px; line-height: 26px; font-size: 14px; color: #fff; background: #3b96d5; text-align: center; border-radius: 2px;}
+.skilldata .viewdata{ display: inline-block;*display: inline;*zoom: 1; float: right; /*position: absolute; right: -10px; top: 0;*/height: 26px; width: 80px; line-height: 26px; font-size: 14px; color: #fff; background: #3b96d5; text-align: center; border-radius: 2px; margin-top: 10px;}
 .skilldata .viewdata:hover { background: #2587cb; text-decoration: none; }
 .skilldata .pdname{ font-size: 0; display: inline-block;*display: inline;*zoom: 1; margin-right: 10px;height: 21px; line-height: 21px; font-size: 15px; color: #2b2d33; text-align: center; padding: 0 5px; min-width: 38px; border: 1px solid #7e828c; border-radius: 2px; position: relative; margin-right: 20px;margin-top: 5px}
 .skilldata .pdname i{display: block; width: 6px; height: 10px; background-position: -80px -225px; position: absolute; right:-6px; top: 50%; margin-top: -5px;  }
@@ -358,9 +358,9 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .brieflist > ul > li{padding-left: 23px; position: relative; margin-bottom: 20px;}
 .brieflist .dot{ display: block; width: 5px; height: 5px; background: #c1c5c8; border-radius: 50%; overflow: hidden; position: absolute; left: -3px; top:6px;}
 .brieflist .ltime{ display: inline-block;*display: inline;*zoom: 1; padding: 0 5px; height: 18px; line-height: 18px; font-size: 12px; font-family: 'Arial'; color: #939599; border:1px solid #dddee1; border-radius: 2px }
-.brieflist .hdbox2 { position: relative; }
+.brieflist .hdbox2 { position: relative; padding-top: 5px; }
 .brieflist .hdbox2 .hdtit{ color: #cb5055; line-height: 32px;font-size: 14px; padding-bottom: 3px; display: block; }
-.brieflist .hdbox2 .viewdata2{ display: block; width: 80px;  height: 26px; line-height: 26px; text-align: center; color: #fff; font-size: 14px; background: #3b96d5; border-radius: 2px; position: absolute; right: 10px; top: 0 }
+.brieflist .hdbox2 .viewdata2{ display: block; width: 80px;  height: 26px; line-height: 26px; text-align: center; color: #fff; font-size: 14px; background: #3b96d5; border-radius: 2px; float: right; margin-top: 5px;}
 .brieflist .hdbox2 .viewdata2:hover { background: #2587cb; text-decoration: none; }
 .hdbox2 table{ overflow: hidden; background: #cceaff; border-radius: 4px; line-height: 32px; font-size: 14px; color: #2b2d33;text-align: center; }
 .hdbox2 table th{ color: #90a4b3; font-weight: normal;}
@@ -411,7 +411,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .dialog.analyst .bubble > i{ background-position:-40px -110px;}
 .dialog.mine.admin .bubble > i{ background-position:-60px -120px;}
 .dialog.mine.analyst .bubble > i{ background-position:-60px -110px;}
-.info_push{margin-left: 48px; background: #f7f2f3; border-radius: 5px; line-height: 24px; padding: 6px 100px 6px 10px; font-size: 14px; clear: both;position: relative; margin-bottom: 17px;}
+.info_push{margin-left: 48px; background: #f7f2f3; border-radius: 5px; line-height: 24px; padding: 6px 100px 6px 10px; font-size: 14px; clear: both;position: relative; margin-bottom: 17px; margin-right: 48px; word-break: break-all;}
 .info_push .pushcont{ color: #d45d62; }
 .info_push .detailbtn{ display: block; width: 58px; font-size: 14px; color: #fff;text-align: center; background: #3b96d5; border-radius: 3px; position: absolute; right: 33px; top: 6px;}
 .info_push .detailbtn:hover{ background: #2587cb;text-decoration: none; }
@@ -433,12 +433,13 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .toolbar .tbtn.magicbtn{ background-position:-90px -140px}
 .toolbar .tbtn.flowerbtn{ background-position:-120px -140px}
 .toolbar .tbtn.djbtn{ background-position:-150px -140px}
-.toolbar .tbtn.imgbtn{ background-position:0 -215px}
-.toolbar .tbtn.facebtn:hover,.pletter_win .toolbar .tbtn.facebtn{ background-position:0 -165px}
+.toolbar .tbtn.imgbtn{ background-position:-150px -215px}
+.toolbar .tbtn.facebtn:hover{ background-position:0 -165px}
 .toolbar .tbtn.clearbtn:hover{ background-position:-30px -165px}
 .toolbar .tbtn.magicbtn:hover{ background-position:-90px -165px}
 .toolbar .tbtn.flowerbtn:hover{ background-position:-120px -165px}
 .toolbar .tbtn.djbtn:hover{ background-position:-150px -165px}
+.toolbar .tbtn.imgbtn:hover{ background-position:-150px -240px}
 .toolbar .tosigninbtn{ display: inline-block;*display: inline;*zoom: 1; vertical-align: top; float: right; background: #a4adb3; line-height: 24px; height: 24px; width: 66px; text-align: center; color: #fff; border-radius: 2px;font-size: 14px; }
 .toolbar .tosigninbtn i{ display: inline-block;*display: inline;*zoom: 1; width: 5px; height: 14px; background-position: -80px -115px; margin-top: 5px; vertical-align: top; margin-right: 7px;}
 .toolbar .tosigninbtn:hover{ background: #49a3e2; text-decoration: none; cursor: pointer; }
@@ -777,6 +778,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .dytable .w2 .item .tname{ width: auto; }
 .itembox .mydytime{ font-size: 14px; color: #444; line-height: 22px; margin-bottom: 10px;  }
 .itembox .mydytime b{ display: block; font-weight: normal; font-size: 12px; color: #939599 }
+
 /*老师培训班*/
 .popup_box.bbox{ width: 990px; margin-left: -495px; }
 .popup_box.bbox > .cont{ padding: 35px 25px 0 }
@@ -1274,8 +1276,8 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .mCSB_outside + .mCSB_scrollTools{ right: -24px; z-index: 12 }
 .mCSB_outside + .mCS-dark {right:-18px;}
 .pletter_win .mCSB_outside + .mCSB_scrollTools{ right: -20px; }
-.mCS-light-thick.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,.mCS-light-thick.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar, .mCS-light-thick.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{background: url(../img/scroll.png) -10px center no-repeat #527bac; }
-.mCS-light-thick.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{ background-position: right center; background-color: #4b7eba }
+.mCS-light-thick.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar,.mCS-light-thick.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar, .mCS-light-thick.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{background: #9fa1a6; }
+.mCS-light-thick.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{ background-position: right center; background-color: #989ca6 }
 
 /*复写lightbox*/
 .lb-data .lb-caption{ display: block !important; overflow: hidden; white-space: nowrap;text-overflow: ellipsis; }
@@ -1322,15 +1324,18 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .wid3 .tabnav .khbtn, .wid3 .myaid{ padding: 0 10px }
 .wid3 .myaid span,.wid3 .tabnav .khbtn > span{ font-size: 14px; }
 .wid3 .te_info .himg{ width: 90px;height: 90px;  }
-.wid3 .teacherlist .teacherbox .te_top{ padding-top: 10px; height: 180px; margin-left: 0;padding-left: 0; border-radius: 90px; border-left: 1px solid #e6eff5;}
-.wid3 .teacherlist .te_top .info-l{ top:50%; margin-top: -22px; height: 44px; position: absolute; left: 100px; }
+.wid3 .teacherlist .teacherbox .te_top{ padding-top: 0; /*height: 180px; */margin-left: 0;padding-left: 0; border-radius: 90px; border-left: 1px solid #e6eff5;}
+.wid3 .teacherlist .te_top .info-l{ top:50%; height: auto; position: absolute; left: 100px; transform: translateY(-50%); }
 .wid3 .teacherlist .te_top .himg{ width: 80px; height: 80px; left: 10px; top:50%; margin-top: -40px;}
-.wid3 .teacherlist .teacherbox .stateshow{ margin-top: 5px; width:200px; }
-.wid3 .teacherlist .stateshow .item{ width: 60px; margin-top: 15px; }
-.wid3 .livebrief .te_info{ padding-left: 100px; } 
+.wid3 .teacherlist .teacherbox .stateshow{ padding-top:0; width:200px; }
+.wid3 .teacherlist .stateshow .item{ width: 55px; margin-top: 15px; }
+.wid3 .livebrief .te_info{ padding-left: 100px; height: auto; } 
 .wid3 .skilldata .pdname{ margin-top: 0; margin-bottom: 5px; }
 .wid3 .skilldata .pdname i{width: 10px; height: 6px; background-position: -80px -215px; margin: 0;right: auto; top: auto; left: 50%; margin-left: -5px; bottom: -6px; }
 .wid3 .skilldata .br-ctrl{ display: block; }
+.wid3 .te_info .livetime{ display: block; padding-left: 0; }
+.wid3 .te_info .taglist{ position: relative; margin-left: -100px; }
+.wid3 .te_info .taglist .tag{ margin-top: 5px; }
 
 @media(max-height:800px){
 	.mod_livelist{ height: 230px; margin-top: -115px; }

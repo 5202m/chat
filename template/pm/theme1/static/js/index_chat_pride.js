@@ -332,6 +332,10 @@ var chatPride = {
             html = html.replace(imgReg, tradeStrategyNoteImg.formatStr(matches[1]));
             matches = imgReg.exec(html);
         }
+        var author = '&nbsp;';
+        /*if (articleDetail.authorInfo) {
+            author = articleDetail.authorInfo.name || "";
+        }*/
         if (common.isValid(articleDetail.tag) && common.isValid(articleDetail.remark) && articleDetail.tag == 'shout_single') {
             var tradeStrategyHdDetailHtml = [], remarkArr = JSON.parse(articleDetail.remark),style='';
             if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' || $.inArray(aid, storeViewData)>-1) {
@@ -350,7 +354,7 @@ var chatPride = {
                 contentHtml = html.replace(imgReg, tradeStrategyNoteImg.formatStr(matches[1]));
                 matches = imgReg.exec(contentHtml);
             }
-            html = tradeStrategyHd.formatStr(contentHtml, tradeStrategyHdDetailHtml.join(''), style, aid);
+            html = tradeStrategyHd.formatStr(contentHtml, author, tradeStrategyHdDetailHtml.join(''), style, aid);
         }
         publishTimeStr = common.formatterDateTime(articleInfo.createDate, '-').substring(11);
         if(articleDetail.tag == 'trading_strategy'){
@@ -548,9 +552,8 @@ var chatPride = {
                 break;
             case 'tradeStrategyHd':
                 formatHtmlArr.push('{0}');
-                formatHtmlArr.push('<div class="hdbox2">');
-                formatHtmlArr.push('    <span class="hdtit">&nbsp;</span>');
-                formatHtmlArr.push('    <a href="javascript:void(0);" class="viewdata2"{2} _id="{3}" item="prerogative_callTrade" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_hd_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>');
+                formatHtmlArr.push('<div class="hdbox2 clearfix">');
+                //formatHtmlArr.push('    <span class="hdtit">{1}</span>');
                 formatHtmlArr.push('    <table width="100%" border="0" cellspacing="0" cellpadding="0">');
                 formatHtmlArr.push('        <thead>');
                 formatHtmlArr.push('            <tr>');
@@ -562,9 +565,10 @@ var chatPride = {
                 formatHtmlArr.push('            </tr>');
                 formatHtmlArr.push('        </thead>');
                 formatHtmlArr.push('        <tbody>');
-                formatHtmlArr.push('            {1}');
+                formatHtmlArr.push('            {2}');
                 formatHtmlArr.push('        </tbody>');
                 formatHtmlArr.push('    </table>');
+                formatHtmlArr.push('    <a href="javascript:void(0);" class="viewdata2"{3} _id="{4}" item="prerogative_callTrade" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_hd_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>');
                 formatHtmlArr.push('</div>');
                 break;
             case 'tradeStrategyHdDetail':
