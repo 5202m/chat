@@ -10,6 +10,12 @@ var chatShowTrade = {
         this.setEvent();
     },
     setEvent: function(){
+        /**
+         * 如果已经登录，则直接取积分
+         */
+        if(indexJS.userInfo.isLogin) {
+            chatShowTrade.getPointsInfo();
+        }
         /*我要晒单按钮事件*/
         $('#wantShowTrade').click(function(){
             if(indexJS.userInfo.isLogin){
@@ -245,7 +251,7 @@ var chatShowTrade = {
     /**
      * 获取积分
      */
-    getPointsInfo:function(){
+    getPointsInfo:function(sendGet){
         common.getJson('/studio/getPointsInfo',{params:JSON.stringify({groupType:indexJS.userInfo.groupType})},function(data){
             if(data){
                 var levelPointObj={},nextPointObj={};
@@ -259,7 +265,7 @@ var chatShowTrade = {
                 }
                 $('#myLevel,#sdLevel').text(levelPointObj.name);
                 $('.personal_center .levelbar .progress b,.pop_mysd .levelbar .progress b').css('width',(data.pointsGlobal/nextPointObj.points*100)+'%');
-                $('.personal_center .levelbar .le_detail,.pop_mysd .levelbar .le_detail').text(data.pointsGlobal+'/'+nextPointObj.points);
+                $('.personal_center .levelbar .le_detail,.pop_mysd .levelbar .le_detail').attr({'pg':data.pointsGlobal,'sendget':sendGet}).text(data.pointsGlobal+'/'+nextPointObj.points);
                 $('#mypoints,#sdPoints').text(data.points);
                 var pointsGetDetail = [], pointsConsumeDetail = [],
                     pointsGetHtml = chatShowTrade.formatHtml('getPoint'),

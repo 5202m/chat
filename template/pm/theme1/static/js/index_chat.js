@@ -136,6 +136,12 @@ var chat={
                 $('#myNickName').focus();
                 return;
             }
+            /**
+             * 如果已经登录，则直接取积分
+             */
+            if(indexJS.userInfo.isLogin && common.isBlank($('.personal_center .levelbar .le_detail').attr('sendget'))) {
+                chatShowTrade.getPointsInfo(true);
+            }
             var toUser = chat.getToUser();
             //发送剪切图片
             var imgObj = $("#contentText .text-min-img img");
@@ -177,6 +183,7 @@ var chat={
                     $('.mymsg').height(27);
                 }
             }
+            sendObj.fromUser.pointsGlobal = parseInt($('.personal_center .levelbar .le_detail').attr('pg'));
             sendObj.fromUser.toUser = toUser;
             chat.socket.emit('sendMsg', sendObj);//发送数据
             chat.setContent(sendObj, true, false);//直接把数据填入内容栏
@@ -683,17 +690,17 @@ var chat={
             if(fromUser.userType==3){
                 nickname += "&nbsp;（助理）";
             }
-            /*if(common.isValid(fromUser.clientGroup)){
-                if("vip"==fromUser.clientGroup){
-                    nkTmHtml = '<span class="level">L4</span>';
-                }else if("active"==fromUser.clientGroup || "notActive"==fromUser.clientGroup){
-                    nkTmHtml = '<span class="level">L3</span>';
-                }else if("simulate"==fromUser.clientGroup){
-                    nkTmHtml = '<span class="level">L2</span>';
-                }else if("register"==fromUser.clientGroup){
-                    nkTmHtml = '<span class="level">L1</span>';
+            if($.inArray(fromUser.userType,[0])>-1 && !isNaN(fromUser.pointsGlobal)) {
+                var levelPointObj = {};
+                for (var i = indexJS.pointLevel.length - 1; i >= 0; i--) {
+                    var obj = indexJS.pointLevel[i];
+                    if (fromUser.pointsGlobal >= obj.points) {
+                        levelPointObj = obj;
+                        break;
+                    }
                 }
-            }*/
+                nkTmHtml = '<span class="level">' + levelPointObj.name + '</span>';
+            }
             nkTmHtml += '<a href="javascript:void(0);" class="uname">'+nickname+'</a><span class="ctime">'+chat.formatPublishTime(fromUser.publishTime)+'</span>';
             dialog=chat.getDialogHtml(fromUser.userId,nickname,fromUser.userType);
             if(!isLoadData && toUser){
