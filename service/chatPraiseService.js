@@ -27,8 +27,8 @@ var chatPraiseService ={
                row.praiseNum+=1;
                row.save(function(err,rowTmp){
                    //console.log(err+";rowTmp:"+JSON.stringify(rowTmp));
+                   callback({isOK:true});
                });
-               callback({isOK:false});
            }else{
                var chatPraiseModel = new chatPraise({
                    _id:null,
