@@ -1291,7 +1291,7 @@ var chat={
                 if(row.userType == 3 && $('.mult_dialog a[uid='+row.userId+']').length > 0){
                     $('.mult_dialog a[uid='+row.userId+']').attr('online', true);
                     onLineNum = onLineNum - 1;
-                }else if(row.userType == 2 && $('#analystbar a[uid="'+row.userId+'"]').length == 0){
+                }else if($.inArray(row.userType, [1,2]) > -1 && $('#analystbar a[uid="'+row.userId+'"]').length == 0){
                     $('#analystbar').append('<a href="javascript:void(0);" t="0" avs="'+row.avatar+'" nk="'+row.nickname+'" class="contactbtn" uid="'+row.userId+'" utype="'+row.userType+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_lts_LianXiTeacher\', \'content_right\', 1, true]);">联系'+row.nickname+'</a>');
                 }
             }
@@ -1327,7 +1327,7 @@ var chat={
                     var data=result.data,userInfoTmp=data.onlineUserInfo;
                     if(data.online){
                         var onLineNum = 0;
-                        if(userInfoTmp.userType == 2 && $('#analystbar a[uid="'+userInfoTmp.userId+'"]').length == 0){
+                        if($.inArray(userInfoTmp.userType, [1,2]) > -1 && $('#analystbar a[uid="'+userInfoTmp.userId+'"]').length == 0){
                             $('#analystbar').append('<a href="javascript:void(0);" t="0" avs="'+userInfoTmp.avatar+'" nk="'+userInfoTmp.nickname+'" class="contactbtn" uid="'+userInfoTmp.userId+'" utype="'+userInfoTmp.userType+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_lts_LianXiTeacher\', \'content_right\', 1, true]);">联系'+userInfoTmp.nickname+'</a>');
                             onLineNum += 1;
                         }
@@ -1344,7 +1344,7 @@ var chat={
                                 var onLineNum = parseInt($(".right_row .main_tabnav a[t='chat'] .dialognum span").text());
                                 $("#userListId #"+userInfoTmp.userId).remove();
                                 $('#analystbar a[uid='+userInfoTmp.userId+']').remove();
-                                if(userInfoTmp.userType==2){
+                                if($.inArray(userInfoTmp.userType, [1,2]) > -1){
                                     onLineNum -= 1;
                                 }else if(userInfoTmp.userType==0 || userInfoTmp.userType==-1) {
                                     onLineNum -= 1;
