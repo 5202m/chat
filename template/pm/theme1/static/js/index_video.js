@@ -203,6 +203,10 @@ var videos={
                 }
             }
             this.refreshStyle();
+            //今日直播列表自动关闭
+            window.setTimeout(function(){
+            	$("#playlist_hide").trigger("click");
+            }, 5000);
         },
 
         /**
