@@ -117,6 +117,7 @@ var videosSubscribe = {
         /**
          * 计算订阅所需积分
          */
+        $('.dytable .tody input[type="checkbox"],.dytable .tody input[type="radio"],.dytable .pdbox a').unbind('click');
         $('.dytable .tody input[type="checkbox"],.dytable .tody input[type="radio"],.dytable .pdbox a').click(function(){
             var totalPoint = 0,analystsArr = [], noticeTypesArr = [];
             $('.dytable .tody tr[t="'+$(this).attr('t')+'"] input[t="'+$(this).attr('t')+'"]').each(function(){
@@ -138,7 +139,13 @@ var videosSubscribe = {
         /**
          * 订阅结算按钮
          */
+        $('.dytable .pdbox a').unbind('click');
         $('.dytable .pdbox a').click(function(){
+            var $this = $(this);
+            if($this.hasClass('clicked')){
+                return false;
+            }
+            $this.addClass('clicked');
             var params = {groupType:indexJS.userInfo.groupType,type:$(this).attr('t'),point:(common.isBlank($(this).attr('p'))?0:parseInt($(this).attr('p')))};
             params.noticeCycle = common.isBlank($('input[name="noticeCycle_'+$(this).attr('t')+'"]:checked').val())?'':$('input[name="noticeCycle_'+$(this).attr('t')+'"]:checked').val();
             params.analyst = $('input[name="'+$(this).attr('t')+'_analysts"]').val();
@@ -175,6 +182,7 @@ var videosSubscribe = {
                                 box.showMsg('订阅成功！');
                             }
                             videosSubscribe.setSubscribeType();
+                            $this.removeClass('clicked');
                         } else {
                             box.showMsg(data.msg);
                         }

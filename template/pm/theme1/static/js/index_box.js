@@ -994,10 +994,10 @@ var box={
         if(common.isBlank(sort)){
             sort = '{"sequence":"desc","publishStartDate":"desc"}';
         }
-        indexJS.getArticleList("download",indexJS.userInfo.groupId,1,currPage,6,sort,null,function(dataList){
+        indexJS.getArticleList("download",indexJS.userInfo.groupId,1,currPage,5,sort,null,function(dataList){
             $('#totalRecords').text('共'+dataList.totalRecords);
             $('#page b').text(dataList.pageNo);
-            $('#page span').text(Math.ceil(dataList.totalRecords/6));
+            $('#page span').text(Math.ceil(dataList.totalRecords/5));
             if(dataList && dataList.result==0){
                 var data=dataList.data,row=null;
                 var pptHtml = [],pptFormat = box.formatHtml('download');
@@ -1014,8 +1014,8 @@ var box={
                     $(pptHtml).find('a.downbtn').data("file_url", data[i].mediaUrl);
                     $panel.append(pptHtml);
                 }
-                $('.infodown .downtable').height(240);
-                indexJS.setListScroll($('.infodown .downtable'));
+                /*$('.infodown .downtable').height(240);
+                indexJS.setListScroll($('.infodown .downtable'));*/
                 box.setDownloads();
             }
         });

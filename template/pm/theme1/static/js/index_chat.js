@@ -233,7 +233,7 @@ var chat={
         $( ".pletter_win").css({
             top : $(window).height() / 2 - 218,
             left : $(window).width() / 2 - 310
-        }).draggable({handle: ".tit", cursor: "move" ,containment: "document", scroll: false });
+        }).draggable({handle: ".titonline", cursor: "move" ,containment: "document", scroll: false });
         //添加签到
         $(".signinbtn").click(function(){
             common.getJson('/studio/addSignin',null,function(data){
@@ -890,11 +890,11 @@ var chat={
      * @param isOnline
      */
     setWhOnlineTip:function(toUserId,isOnline){
-        var liDom=$('#wh_msg_'+toUserId+' .tit strong');
+        var liDom=$('#wh_msg_'+toUserId+' .titonline strong');
         if(liDom.length==0){
             return;
         }
-        var txt=$('#wh_msg_'+toUserId+' .tit strong'),img=$('.mult_dialog a[uid='+toUserId+']').find("img"),userli=$('#userListId li[t=3][uid='+toUserId+'] .headimg');
+        var txt=$('#wh_msg_'+toUserId+' .titonline strong'),img=$('.mult_dialog a[uid='+toUserId+']').find("img"),userli=$('#userListId li[t=3][uid='+toUserId+'] .headimg');
         if(isOnline){
             txt.text("在线");
             img.removeClass("have_op");
