@@ -543,14 +543,6 @@ var box={
                 isTrue=false;
                 return isTrue;
             }else{
-                /*if(this.name=='mobilePhone') {
-                    $(this).val($.trim($(this).val()));
-                    if(!common.isMobilePhone(this.value)){
-                        box.showBoxError(formDom, "<i></i>手机号码输入有误！");
-                        isTrue=false;
-                        return isTrue;
-                    }
-                }*/
                 if(this.name=='nickname'&& !common.isRightName(this.value)) {
                     box.showBoxError(formDom, "<i></i>昵称为2至10位字符(数字/英文/中文/下划线)，不能全数字!");
                     isTrue=false;
@@ -868,9 +860,6 @@ var box={
     modifyPasswordEvent:function(){
         $('#modifyPwd').click(function(){
             common.openPopup($('.change_psw'));
-            /*$(this).addClass('dn');
-            $('#myPwd').removeAttr('disabled').focus();
-            $('#savePwd').removeClass('dn');*/
         });
         $('#savePwd').click(function(){
             var password = $('#oPwd').val(), newPwd = $('#newPwd').val(), newPwd1 = $('#newPwd1').val();
@@ -896,15 +885,13 @@ var box={
             common.getJson("/studio/modifyPwd",{params:JSON.stringify(params)},function(result){
                 $(_this).attr('disabled',false);
                 if(!result.isOK){
-                    $('.change_psw .error').html('<i></i>'+(result.msg?result.msg:"修改失败，请联系客服！")).removeClass('dn');//box.showTipBox((result.msg?result.msg:"修改失败，请联系客服！"));
+                    $('.change_psw .error').html('<i></i>'+(result.msg?result.msg:"修改失败，请联系客服！")).removeClass('dn');
                     return false;
                 }else{
                     box.openLgBox(true, false, null);
                     $('#myPwd').prop('disabled',true);
                     $('.change_psw').hide();
                     $('.change_psw form input[type="password"]').val('');
-                    //$('#savePwd').addClass('dn');
-                    //$('#modifyPwd').removeClass('dn');
                 }
             },true,function(err){
                 $(_this).prop('disabled',false);
@@ -1014,8 +1001,6 @@ var box={
                     $(pptHtml).find('a.downbtn').data("file_url", data[i].mediaUrl);
                     $panel.append(pptHtml);
                 }
-                /*$('.infodown .downtable').height(240);
-                indexJS.setListScroll($('.infodown .downtable'));*/
                 box.setDownloads();
             }
         });

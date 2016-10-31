@@ -96,12 +96,7 @@ var indexJS ={
          * 直播预告按钮事件
          */
         $('#live_preview').click(function(){
-            /*if($(this).attr("ck")==1||!indexJS.syllabusData){
-                return;
-            }
-            indexJS.fillCourse();*/
             common.openPopup('.blackbg,.live_preview');
-            //$(this).attr("ck",1);
         });
         /*QQ客服按钮事件*/
         $('#qqcs').click(function(){
@@ -319,8 +314,6 @@ var indexJS ={
         this.userInfo.nickname=nickname;
         //头部
         $(".personal_info .username,.header-right .welcome span").text(nickname);
-        //在线列表
-        //$("#userListId li .mynk").text(nickname + "【我】");
     },
     /**
      * 设置访客存储信息
@@ -355,7 +348,6 @@ var indexJS ={
         }else{
             obj.loginId=this.userInfo.userId;
             store.set(key,obj);
-            //$("#contentText").html("").attr("contenteditable",true);
         }
         this.isNeverLogin=!common.isValid(obj.loginId);
         //如果非游客没有昵称，自动设置一个昵称

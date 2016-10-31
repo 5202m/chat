@@ -228,8 +228,6 @@ var videosLive = {
                     $('#percentInfoUpdateTime').text('上次更新时间：' + common.formatterDate(row.date.time) + ' '+common.getHHMM(new Date()) + ' GMT+0800');
                 });
                 $('.rbox .infobox .percentInfo').html(soprHtml.join(''));
-            }else{
-                //videosLive.setSymbolOpenPositionRatios();
             }
         });
     },
@@ -261,6 +259,9 @@ var videosLive = {
         }
         return formatHtmlArr.join('');
     },
+    /**
+     * 联系助理
+     */
     contactTeacher:function(){
         if($(".pletter_win .mult_dialog a[utype=3]").length==0) {
             chat.getCSList();//设置所有客服

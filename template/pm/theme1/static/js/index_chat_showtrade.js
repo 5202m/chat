@@ -310,7 +310,6 @@ var chatShowTrade = {
         $('#chatMsgContentDiv .dialoglist .showtrade').unbind('click');
         $('#chatMsgContentDiv .dialoglist .showtrade').click(function(){
             $('.main_tabnav a[t="showtrade"]').click();
-            //$('html,body').animate({scrollTop:$('#showTradeDiv .sd_ul li[sid="'+$(this).attr('_id')+'"]').offset().top}, 800);
             indexJS.setListScroll('#showTradeDiv .scrollbox', $('#showTradeDiv .sd_ul li[sid="'+$(this).attr('_id')+'"]').offset().top);/*滚动到指定位置*/
         });
     },

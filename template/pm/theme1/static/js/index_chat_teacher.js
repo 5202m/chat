@@ -500,7 +500,3 @@ var chatTeacher = {
     }
 };
 
-//初始化
-$(function() {
-    chatTeacher.init();
-});

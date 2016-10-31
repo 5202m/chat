@@ -71,17 +71,15 @@ var videosSubscribe = {
                     var analystsArr = JSON.parse(row.analysts),
                         analystSize = analystsArr.length;
                     $.each(analystsArr, function(key, row1){
-                        //if(analystSize>1){
-                            analystsHtml.push(analysts.formatStr(row1.userId, row1.name, row1.point, row.code));
-                        /*}else{
-                            cls1=' w2';
-                            analystsHtml.push(analyst.formatStr(row1.userId, row1.name, row1.point, row.code));
-                        }*/
+                        var analystName = row1.name;
+                        if(row1.name.indexOf('(')>-1){
+                            analystName = row1.name.substring(0,row1.name.indexOf('('));
+                        }
+                        analystsHtml.push(analysts.formatStr(row1.userId, analystName, row1.point, row.code));
                     });
                     var noticeTypesArr = JSON.parse(row.noticeTypes),
                         noticeTypeSize = noticeTypesArr.length;
                     $.each(noticeTypesArr, function(key, row1){
-                        //if(noticeTypeSize>1 || analystSize>1){
                             if(key==0){
                                 noticeTypesHtml.push('<div class="itembox w1">');
                             }
@@ -90,9 +88,6 @@ var videosSubscribe = {
                                 noticeTypesHtml.push('</div>');
                                 subscribeBtnHtml.push(subscribeBtn.formatStr(row.code, row.name,row.analysts,row.noticeTypes,row.noticeCycle));
                             }
-                        /*}else{
-                            noticeTypesHtml.push(noticeType.formatStr(row.code, row.name));
-                        }*/
                     });
                     if(common.isValid(row.noticeCycle)) {
                         cls2=' w1';
@@ -151,7 +146,6 @@ var videosSubscribe = {
             params.analyst = $('input[name="'+$(this).attr('t')+'_analysts"]').val();
             params.noticeType = common.isBlank($('input[name="'+$(this).attr('t')+'_noticeTypes"]').val())?$(this).attr('nts'):$('input[name="'+$(this).attr('t')+'_noticeTypes"]').val();
             params.pointsRemark = '订阅'+$(this).attr('tn');
-            //params.orip = common.isBlank($(this).attr('orip'))?0:$(this).attr('orip');
             params.id = common.isBlank($(this).attr('id'))?'':$(this).attr('id');
             var orip = common.isBlank($(this).attr('orip'))?0:$(this).attr('orip');
             if(common.isBlank($('#myEmail').val()) && $.inArray('email', params.noticeType.split(','))>-1){

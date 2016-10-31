@@ -20,7 +20,6 @@ var chat={
     },
     init:function(){
         this.setEvent();//设置各种事件
-        this.setUserListIdEmpty();//清空用户列表
         this.getCSList();//设置所有客服
         this.setSocket();//设置socket连接
         this.setTalkListScroll(true);
@@ -409,10 +408,6 @@ var chat={
                         row['sequence'] = 3;
                         row['userType'] = 3;
                         row['isFromAjax']=true;
-                        //如果客服不在线显示。
-                        if($("#userListId li[id='"+row.userId+"']").size()==0) {
-                            //chat.setOnlineUser(row);//设置在线用户
-                        }
                         if($('.mult_dialog a[uid='+row.userId+']').length==0){
                             chat.setWhVisitors('',row.userType,row.userId,row.nickname,row.avatar,true,false);
                         }
@@ -420,7 +415,6 @@ var chat={
                     $('.mod_infotab .tabnav .myaid').removeClass('nocs');
                     $('.mult_dialog a[uid] .num').hide();
                     $('.mult_dialog a[uid]:first').click();
-                    //chat.setOnlineNum();//重新设置在线人数
                 }else{
                     $('.mod_infotab .tabnav .myaid').addClass('nocs');
                 }
@@ -1347,7 +1341,7 @@ var chat={
                                 }else if(userInfoTmp.userType==0 || userInfoTmp.userType==-1) {
                                     onLineNum -= 1;
                                 }
-                                indexJS.setListScroll(".user_box");
+                                //indexJS.setListScroll(".user_box");
                                 chat.setOnlineNum(onLineNum);//设置在线人数
                             }
                         }
@@ -1490,7 +1484,6 @@ var chat={
             }
         }else{
             obj.mCustomScrollbar({scrollInertia:1,scrollButtons:{enable:false},theme:(theme?theme:"light-thick"), scrollbarPosition: "outside"});
-            //indexJS.setScrollStyle(obj);
             obj.mCustomScrollbar("scrollTo", "bottom");
         }
     },
@@ -1562,9 +1555,6 @@ var chat={
     setPushInfo:function(){
         var whInfo = null, whInfos = chat.msgPushObj.whInfos;
         if(whInfos && whInfos.length > 0 && $('#roomInfoId').attr('rt')!='vip') {
-            if($(".pletter_win .mult_dialog a[utype=3]").length==0){
-                //chat.getCSList();
-            }
             for(var i = 0, len = whInfos.length; i < len; i++) {
                 whInfo = whInfos[i];
                 if(whInfo.pushed){
