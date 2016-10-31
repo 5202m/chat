@@ -138,7 +138,9 @@ var chatPride = {
                     tUserId=articleDetail.authorInfo.userId || "";
                     tag = common.isValid(articleDetail.authorInfo.tag) ? articleDetail.authorInfo.tag.replace(/\s*，\s*/g,',').split(',') : [];
                     $.each(tag, function (key, val) {
-                        tagHtml.push(tagFormat.formatStr(val));
+                        if(common.isValid(val)) {
+                            tagHtml.push(tagFormat.formatStr(val));
+                        }
                     });
                 }
                 var publishTimeStr = common.formatterDateTime(publishTime, '-').substring(0, 16)
