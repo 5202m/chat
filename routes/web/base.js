@@ -950,7 +950,7 @@ router.post('/setUserPraise', function(req, res) {
                        params.isGlobal = false;
                        params.opUser = userInfo.userId;
                        params.opIp = common.getClientIp(req);
-                       params. remark="每日点赞",
+                       params. remark="每日点赞";
                        chatPointsService.add(params, function(err, result){
                            if(err){
                                console.error("点赞添加积分失败!");
