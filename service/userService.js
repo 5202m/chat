@@ -836,7 +836,8 @@ var userService = {
      * @param callback
      */
     getClientGroupByMId:function(mobileArr,groupType, callback){
-        member.find({mobilePhone:{$in:mobileArr},valid: 1,"loginPlatform.chatUserGroup" : {$elemMatch : {_id :groupType}}}, "mobilePhone loginPlatform.chatUserGroup.$", function(err, result){
+        member.find({mobilePhone:{$in:mobileArr},valid: 1,"loginPlatform.chatUserGroup" : {$elemMatch : {_id :groupType}}}, 
+        		"mobilePhone loginPlatform.chatUserGroup.$", function(err, result){
             if(err){
                 logger.error("getTeacherByUserId->get fail!"+err);
                 callback(null);
