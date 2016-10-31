@@ -1014,8 +1014,8 @@ var box={
                     $(pptHtml).find('a.downbtn').data("file_url", data[i].mediaUrl);
                     $panel.append(pptHtml);
                 }
-                /*$('.infodown .downtable').height(240);
-                indexJS.setListScroll($('.infodown .downtable'));*/
+                $('.infodown .downtable').height(240);
+                indexJS.setListScroll($('.infodown .downtable'));
                 box.setDownloads();
             }
         });
