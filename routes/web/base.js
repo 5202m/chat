@@ -1107,17 +1107,17 @@ router.post('/getFinancData', function(req, res){
  * 更新用户头像
  */
 router.post('/modifyAvatar',function(req, res){
-    var userInfo=req.session.studioUserInfo,avatar=req.body["avatar"],params=req.body["params"];
-    if(common.isBlank(params)){
+    var userInfo=req.session.studioUserInfo,avatar=req.body["avatar"],params=req.body["params"]||'{}';
+    /*if(common.isBlank(params)){
         res.json({isOK:false,msg:'参数错误'});
         return;
-    }
+    }*/
     if(typeof params == 'string'){
         try{
             params = JSON.parse(params);
         }catch(e){
-            res.json(null);
-            return;
+            /*res.json(null);
+            return;*/
         }
     }
     params.ip = common.getClientIp(req);
