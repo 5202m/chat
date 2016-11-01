@@ -1292,7 +1292,7 @@ var chat={
                 if(row.userType == 3 && $('.mult_dialog a[uid='+row.userId+']').length > 0){
                     $('.mult_dialog a[uid='+row.userId+']').attr('online', true);
                 }else if($.inArray(row.userType, [1,2]) > -1 && $('#analystbar a[uid="'+row.userId+'"]').length == 0){
-                    $('#analystbar').empty().append('<a href="javascript:void(0);" t="0" avs="'+row.avatar+'" nk="'+row.nickname+'" class="contactbtn" uid="'+row.userId+'" utype="'+row.userType+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_lts_LianXiTeacher\', \'content_right\', 1, true]);">联系'+row.nickname+'</a>');
+                    $('#analystbar').append('<a href="javascript:void(0);" t="0" avs="'+row.avatar+'" nk="'+row.nickname+'" class="contactbtn" uid="'+row.userId+'" utype="'+row.userType+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_lts_LianXiTeacher\', \'content_right\', 1, true]);">联系'+row.nickname+'</a>');
                 }
             }
             chat.contactAnalystEvent();
