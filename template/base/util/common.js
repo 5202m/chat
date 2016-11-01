@@ -11,7 +11,7 @@ var common = {
     /**
      * 组类型
      */
-    clientGroupStr : {vip:'VIP用户',active:'真实[A]',notActive:'真实[N]',simulate:'模拟',register:'注册','visitor':'游客'},
+    clientGroupStr : {vip:'VIP会员',active:'激活会员',notActive:'真实会员',simulate:'模拟会员',register:'注册会员','visitor':'游客'},
     /**
      * 功能：删除数组中某个下标的元素
      */

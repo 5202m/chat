@@ -115,13 +115,13 @@
                             <div class="per_item clearfix">
                                 <span class="level">等级：
                                     <%if('vip'==userSession.clientGroup){%>
-                                        <strong>VIP</strong><i class="l4"></i>
+                                        <strong>VIP会员</strong><i class="l4"></i>
                                     <%} else if('active'==userSession.clientGroup) {%>
-                                        <strong>真实[A]</strong><i class="l3"></i>
+                                        <strong>激活会员</strong><i class="l3"></i>
                                     <%} else if('notActive'==userSession.clientGroup) {%>
-                                        <strong>真实[N]</strong><i class="l3"></i>
+                                        <strong>真实会员</strong><i class="l3"></i>
                                     <%} else if('simulate'==userSession.clientGroup) {%>
-                                        <strong>模拟</strong><i class="l2"></i>
+                                        <strong>模拟会员</strong><i class="l2"></i>
                                     <%} else if('register'==userSession.clientGroup) {%>
                                         <strong>注册</strong><i class="l1"></i>
                                     <%} else {%>
