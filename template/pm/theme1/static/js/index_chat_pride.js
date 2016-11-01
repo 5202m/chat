@@ -328,6 +328,10 @@ var chatPride = {
         if ($panel.find("li[aid='" + aid + "']").size() > 0) {
             return;
         }
+        var author = '';
+        if (articleDetail.authorInfo) {
+            author = articleDetail.authorInfo.name.substring(0,1) || "";
+        }
         html = articleDetail.content;
         matches = imgReg.exec(html);
         while (matches) {
@@ -346,13 +350,13 @@ var chatPride = {
                     tradeStrategyHdDetailHtml.push(tradeStrategyHdDetail.formatStr(row.name, (row.longshort == 'long' ? '看涨' : '看跌'), '***', '***', '***','dim'));
                 });
             }
-            var contentHtml = articleDetail.content||'&nbsp;';
+            var contentHtml = articleDetail.content||'';
             matches = imgReg.exec(contentHtml);
             while (matches) {
                 contentHtml = html.replace(imgReg, tradeStrategyNoteImg.formatStr(matches[1]));
                 matches = imgReg.exec(contentHtml);
             }
-            html = tradeStrategyHd.formatStr(contentHtml, tradeStrategyHdDetailHtml.join(''), style, aid);
+            html = tradeStrategyHd.formatStr(contentHtml, tradeStrategyHdDetailHtml.join(''), style, aid, author);
         }
         publishTimeStr = common.formatterDateTime(articleInfo.createDate, '-').substring(11);
         if(articleDetail.tag == 'trading_strategy'){
@@ -471,13 +475,13 @@ var chatPride = {
                     remarkMap[row.symbol] = [row];
                 }
             });
-            var idx = 0;
+            var idx = 0, lenI = Object.keys(remarkMap).length-1;
             $.each(remarkMap, function (i, row) {
                 var tradeStrategySupportDivHtml = [];
                 $.each(row, function(j, r){
                     tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
                 });
-                tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata" style="display:none;" _id="'+data._id+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
+                tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==lenI?'<a href="javascript:void(0);" class="viewdata" style="display:none;" _id="'+data._id+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
                 idx++;
             });
             var hdBoxDom = dom.parent('div.skilldata').parent('div.hdbox');
@@ -527,12 +531,12 @@ var chatPride = {
                 break;
             case 'tradeStrategySupport':
                 formatHtmlArr.push('<div class="skilldata clearfix">');
+                formatHtmlArr.push('   {2}');
                 formatHtmlArr.push('    <div class="data_cont">');
                 formatHtmlArr.push('        <div class="pdname"><span>{0}</span><i></i></div>');
                 formatHtmlArr.push('        <b class="br-ctrl"></b>');
                 formatHtmlArr.push('        {1}');
                 formatHtmlArr.push('    </div>');
-                formatHtmlArr.push('   {2}');
                 formatHtmlArr.push('</div>');
                 break;
             case 'tradeStrategySupportDiv':
@@ -550,6 +554,8 @@ var chatPride = {
             case 'tradeStrategyHd':
                 formatHtmlArr.push('{0}');
                 formatHtmlArr.push('<div class="hdbox2 clearfix">');
+                formatHtmlArr.push('    <span class="hdtit">【喊单】{4}老师喊单了</span>');
+                formatHtmlArr.push('    <a href="javascript:void(0);" class="viewdata2"{2} _id="{3}" item="prerogative_callTrade" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_hd_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>');
                 formatHtmlArr.push('    <table width="100%" border="0" cellspacing="0" cellpadding="0">');
                 formatHtmlArr.push('        <thead>');
                 formatHtmlArr.push('            <tr>');
@@ -564,7 +570,6 @@ var chatPride = {
                 formatHtmlArr.push('            {1}');
                 formatHtmlArr.push('        </tbody>');
                 formatHtmlArr.push('    </table>');
-                formatHtmlArr.push('    <a href="javascript:void(0);" class="viewdata2"{2} _id="{3}" item="prerogative_callTrade" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_hd_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>');
                 formatHtmlArr.push('</div>');
                 break;
             case 'tradeStrategyHdDetail':
