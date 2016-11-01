@@ -176,13 +176,14 @@ var videosSubscribe = {
                                 box.showMsg('订阅成功！');
                             }
                             videosSubscribe.setSubscribeType();
-                            $this.removeClass('clicked');
                         } else {
                             box.showMsg(data.msg);
                         }
+                        $this.removeClass('clicked');
                     });
                 }else{
                     box.showMsg('订阅内容无变化！');
+                    $this.removeClass('clicked');
                 }
             }
         });
