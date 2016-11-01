@@ -652,7 +652,7 @@ var common = {
         return typeof obj === 'number' && !isNaN(obj)
     },
     /**组类型**/
-    clientGroupStr : {active:'真实[A]',notActive:'真实[N]',simulate:'模拟',register:'注册','visitor':'游客'}
+    clientGroupStr : {active:'激活会员',notActive:'真实会员',simulate:'模拟会员',register:'注册会员','visitor':'游客'}
 };
 //导出类
 module.exports = common;
