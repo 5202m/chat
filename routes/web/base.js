@@ -499,7 +499,7 @@ router.get('/home', function(req, res) {
  *
  */
 router.get('/getArticleList', function(req, res) {
-    var params={};
+    var params={},userInfo = req.session.studioUserInfo;
     params.code=req.query["code"];
     params.platform=req.query["platform"];
     params.pageNo=req.query["pageNo"];
@@ -513,8 +513,39 @@ router.get('/getArticleList', function(req, res) {
     params.pageNo = common.isBlank(params.pageNo) ? 1 : params.pageNo;
     params.pageSize = common.isBlank(params.pageSize) ? 15 : params.pageSize;
     params.orderByStr = common.isBlank(params.orderByStr) ? "" : params.orderByStr;
+    var ids = req.query['ids']||'';
     baseApiService.getArticleList(params,function(data){
-        res.json(data?JSON.parse(data):null);
+        if(data){
+            data = JSON.parse(data);
+            var dataList = data.data,row = null;
+            for(var i in dataList) {
+                row = dataList[i];
+                var detailInfo = row.detailList && row.detailList[0];
+                if (!common.containSplitStr(ids,row._id)) {
+                    if ((detailInfo.tag == 'shout_single' || detailInfo.tag == 'trading_strategy') && userInfo.clientGroup != 'vip') {
+                        var remark = JSON.parse(detailInfo.remark), remarkRow = null;
+                        for (var j in remark) {
+                            remarkRow = remark[j];
+                            if (detailInfo.tag == 'trading_strategy') {
+                                remarkRow.support_level = '****';
+                            } else if (detailInfo.tag == 'shout_single') {
+                                remarkRow.point = '****';
+                                remarkRow.profit = '****';
+                                remarkRow.loss = '****';
+                            }
+                            remark[j] = remarkRow;
+                        }
+                        detailInfo.remark = JSON.stringify(remark);
+                    }
+                    row.detailList[0] = detailInfo;
+                    dataList[i] = row;
+                }
+            }
+            data.data = dataList;
+            res.json(data);
+        }else{
+            res.json(null);
+        }
     });
 });
 

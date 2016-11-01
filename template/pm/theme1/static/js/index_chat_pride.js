@@ -59,7 +59,7 @@ var chatPride = {
                             + dataTmp.mediaUrl
                             + '"></a></li>');
                     }
-                    $(".ban_ul").html(html.join(""));
+                    $(".ban_ul:first").html(html.join(""));
                     /**
                      * 图片幻灯片广告
                      */
@@ -88,10 +88,12 @@ var chatPride = {
                     noteId = $("#textlivePanel li[aid]:last").attr("aid");
                 }
             }
+            var storeViewData = chatPride.getStoreViewData()||[];
             var params = {
                 isAll : 1,
                 pageKey : noteId || "",
-                pageLess : 1
+                pageLess : 1,
+                ids:storeViewData.join(',')
             };
             indexJS.getArticleList("class_note",indexJS.userInfo.groupId,1,1,30,'{"publishStartDate":"desc","createDate":"desc"}',params,function(dataList){
                 if(dataList && dataList.result==0){
@@ -291,8 +293,8 @@ var chatPride = {
             $('.main_tabnav a[t="livepride"] .num').hide();
         }
         //查看数据
-        $('.viewdata,.viewdata2').unbind('click');
-        $('.viewdata,.viewdata2').click(function(){
+        $('.viewdata').unbind('click');
+        $('.viewdata').click(function(){
             if(!indexJS.userInfo.isLogin){
                 $('#login_a').click();
             }else{
@@ -378,8 +380,8 @@ var chatPride = {
             $('.main_tabnav a[t="livepride"] .num').hide();
         }
         //查看数据
-        $('.viewdata,.viewdata2').unbind('click');
-        $('.viewdata,.viewdata2').click(function(){
+        $('.viewdata2').unbind('click');
+        $('.viewdata2').click(function(){
             if(!indexJS.userInfo.isLogin){
                 $('#login_a').click();
             }else{

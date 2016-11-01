@@ -407,7 +407,8 @@ var indexJS ={
                 pageLess:common.trim(params.pageLess),
                 isAll:common.trim(params.isAll),
                 pageSize:pageSize,
-                orderByStr:orderByStr
+                orderByStr:orderByStr,
+                ids:common.isBlank(params.ids)?'':params.ids
             },function(data){
                 //console.log("getArticleList->data:"+JSON.stringify(data));
                 callback(data);
