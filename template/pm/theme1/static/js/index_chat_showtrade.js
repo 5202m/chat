@@ -31,6 +31,7 @@ var chatShowTrade = {
         /*我的晒单按钮事件*/
         $('#myShowTrade').click(function(){
             if(indexJS.userInfo.isLogin){
+                $('.pop_mysd .sd_list .sd_ul').empty();
                 chatShowTrade.getPointsInfo();
                 chatShowTrade.tradeForUser = indexJS.userInfo.userId;
                 chatShowTrade.initShowTrade();
