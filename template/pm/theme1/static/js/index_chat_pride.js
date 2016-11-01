@@ -175,7 +175,7 @@ var chatPride = {
                         $.each(remarkMap, function (i, row) {
                             var tradeStrategySupportDivHtml = [];
                             $.each(row, function(j, r){
-                                tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, 'dim'));
+                                tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), '****', 'dim'));
                             });
                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==lenI?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
                             idx++;
