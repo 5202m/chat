@@ -1619,7 +1619,6 @@ router.post('/addPointsInfo', function(req, res){
         params.userId = userInfo.mobilePhone;
         params.groupType = userInfo.groupType;
         params.clientGroup = userInfo.clientGroup;
-        params.item = params.item;
         params.tag = params.tag || "";
         params.opUser = userInfo.userId;
         params.opIp = common.getClientIp(req);
