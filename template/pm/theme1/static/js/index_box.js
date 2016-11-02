@@ -1022,7 +1022,7 @@ var box={
                             _this.parent().prev().text(data.num);
                         }
                     });
-                    if($.inArray(_this.attr('sufix'),['pdf','png','jpg','jpeg','gif'])) {
+                    if($.inArray(_this.attr('sufix'),['pdf','png','jpg','jpeg','gif'])>-1) {
                         window.open(_this.data("file_url"));
                     }else {
                         window.location.href = _this.data("file_url");
