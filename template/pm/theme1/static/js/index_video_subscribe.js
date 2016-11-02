@@ -3,6 +3,7 @@
  * author Jade.zhu
  */
 var videosSubscribe = {
+    subscribeData:null,
     init: function(){
         this.setEvent();
     },
@@ -22,6 +23,7 @@ var videosSubscribe = {
     setSubscribe:function(){
         common.getJson('/studio/getSubscribe',{params:JSON.stringify({groupType:indexJS.userInfo.groupType})},function(data){
             if(data!=null){
+                videosSubscribe.subscribeData = data;
                 $.each(data,function(i, row){
                     var analystsArr = row.analyst.split(',');
                     var noticeTypeArr = row.noticeType.split(',');
@@ -141,13 +143,13 @@ var videosSubscribe = {
                 return false;
             }
             $this.addClass('clicked');
-            var params = {groupType:indexJS.userInfo.groupType,type:$(this).attr('t'),point:(common.isBlank($(this).attr('p'))?0:parseInt($(this).attr('p')))};
-            params.noticeCycle = common.isBlank($('input[name="noticeCycle_'+$(this).attr('t')+'"]:checked').val())?'':$('input[name="noticeCycle_'+$(this).attr('t')+'"]:checked').val();
-            params.analyst = $('input[name="'+$(this).attr('t')+'_analysts"]').val();
-            params.noticeType = common.isBlank($('input[name="'+$(this).attr('t')+'_noticeTypes"]').val())?$(this).attr('nts'):$('input[name="'+$(this).attr('t')+'_noticeTypes"]').val();
-            params.pointsRemark = '订阅'+$(this).attr('tn');
-            params.id = common.isBlank($(this).attr('id'))?'':$(this).attr('id');
-            params.orip = common.isBlank($(this).attr('orip'))?0:$(this).attr('orip');
+            var params = {groupType:indexJS.userInfo.groupType,type:$this.attr('t'),point:(common.isBlank($this.attr('p'))?0:parseInt($this.attr('p')))};
+            params.noticeCycle = common.isBlank($('input[name="noticeCycle_'+$this.attr('t')+'"]:checked').val())?'':$('input[name="noticeCycle_'+$this.attr('t')+'"]:checked').val();
+            params.analyst = $('input[name="'+$this.attr('t')+'_analysts"]').val();
+            params.noticeType = common.isBlank($('input[name="'+$this.attr('t')+'_noticeTypes"]').val())?$this.attr('nts'):$('input[name="'+$this.attr('t')+'_noticeTypes"]').val();
+            params.pointsRemark = '订阅'+$this.attr('tn');
+            params.id = common.isBlank($this.attr('id'))?'':$this.attr('id');
+            params.orip = common.isBlank($this.attr('orip'))?0:$this.attr('orip');
             if(common.isBlank($('#myEmail').val()) && $.inArray('email', params.noticeType.split(','))>-1){
                 box.showMsg('请先绑定邮箱！');
                 $('#infotab a[t="accountInfo"]').click();
@@ -177,7 +179,7 @@ var videosSubscribe = {
                     }
                 });
                 $.unique(lecturerIdArr);
-                var analystArr = params.analyst.split(','), notInAnalyst = [];
+                var analystArr = params.analyst.split(','), notInAnalyst = [], isModify = true;
                 if(common.isValid(params.analyst)) {
                     $.each(analystArr, function (k, v) {
                         if ($.inArray(v, lecturerIdArr) < 0) {
@@ -185,26 +187,40 @@ var videosSubscribe = {
                         }
                     });
                 }
-                if(notInAnalyst.length > 0){
-                    var msgOps = {title:'温馨提醒',
-                                    msg:notInAnalyst.join(',')+'老师没有课程安排，确定订阅？',
-                                    btns:[{
-                                            txt : "确定",
-                                            fn : function(){
-                                                videosSubscribe.saveSubscribe(params, $this);
-                                            }
-                                        },
-                                        {
-                                            txt : '取消',
-                                            fn : function(){
-                                                box.hideMsg();
-                                                $this.removeClass('clicked');
-                                            }
-                                        }]
-                                };
-                    box.showMsg(msgOps);
-                }else{
-                    videosSubscribe.saveSubscribe(params, $this);
+                $.each(videosSubscribe.subscribeData, function(i, row){
+                    if($this.attr('t') == row.type && params.analyst == row.analyst && params.noticeType == row.noticeType){
+                        var cycle = common.getDateDiff(row.startDate, row.endDate)>7?'month':'week';
+                        if(params.noticeCycle == cycle) {
+                            isModify = false;
+                            return false;
+                        }
+                    }
+                });
+                if(isModify) {
+                    if (notInAnalyst.length > 0 && $.inArray($this.attr('t'), ['live_reminder', 'shout_single_strategy', 'trading_strategy']) > -1) {
+                        var msgOps = {
+                            title: '温馨提醒',
+                            msg: notInAnalyst.join(',') + '老师没有课程安排，确定订阅？',
+                            btns: [{
+                                txt: "确定",
+                                fn: function () {
+                                    videosSubscribe.saveSubscribe(params, $this);
+                                }
+                            },
+                                {
+                                    txt: '取消',
+                                    fn: function () {
+                                        box.hideMsg();
+                                        $this.removeClass('clicked');
+                                    }
+                                }]
+                        };
+                        box.showMsg(msgOps);
+                    } else {
+                        videosSubscribe.saveSubscribe(params, $this);
+                    }
+                }else {
+                    box.showMsg('你已订阅相关课程，无需重复订阅！');
                 }
             }
         });
