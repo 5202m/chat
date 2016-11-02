@@ -1354,6 +1354,8 @@ router.post('/modifyEmail',function(req, res){
         res.json({isOK:false,msg:'邮箱地址不能为空！'});
     }else if(!common.isEmail(params.email)){
         res.json({isOK:false,msg:'邮箱地址有误！'});
+    }else if(common.isBlank(userInfo.nickname)){
+        res.json({isOK:false,msg:'请先设置一个好听的昵称吧！'});
     }else{
         //http:192.168.35.91:3006/studio/confirmMail?grouptype=<%= groupType %>&userid=<%= userId %>&email=<%= encodeURI(email) %>&key=<%= key %>
         var ref = req.headers.referer.indexOf('?')>-1?req.headers.referer.substring(0,req.headers.referer.indexOf('?')):req.headers.referer;
