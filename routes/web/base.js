@@ -1596,7 +1596,7 @@ router.post('/getPointsInfo', function(req, res){
 /**
  * 添加积分获得或消费记录
  * {groupType:String, userId:String, item:String, tag:String, val:Number, isGlobal:Boolean, remark:String, opUser:String, opIp:String}
- * params:{groupType:Number, remark:String, val:Number, tag:String}
+ * params:{item:String, remark:String, val:Number, tag:String}
  */
 router.post('/addPointsInfo', function(req, res){
     var userInfo=req.session.studioUserInfo,params = req.body['params'];
@@ -1612,20 +1612,17 @@ router.post('/addPointsInfo', function(req, res){
             return;
         }
     }
-    if(common.isBlank(params.groupType)){
+    if(common.isBlank(params.item)){
         res.json({isOK:false,msg:'参数错误'});
         return;
     }else{
         params.userId = userInfo.mobilePhone;
-        params.groupType = userInfo.groupType,
+        params.groupType = userInfo.groupType;
         params.clientGroup = userInfo.clientGroup;
-        params.type = "prerogative",
-        params.item = common.isBlank(params.item)?'prerogative_position':params.item;
+        params.item = params.item;
         params.tag = params.tag || "";
-        params.isGlobal = false;
         params.opUser = userInfo.userId;
         params.opIp = common.getClientIp(req);
-        params.remark ="查看持仓单";
         chatPointsService.add(params, function(err, result){
             if(err && err.errcode != '3001'){
                 res.json({isOK:false,msg:err.errmsg});
