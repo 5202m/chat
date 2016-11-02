@@ -159,11 +159,11 @@ var clientTrainService = {
                 callback(err,null);
             }else{
                if(null != row){
-                   var signinTime = row.signinTime;//签到时间
-                   var currentDate = new Date();    //当前时间
+                   var signinTime = common.formatterDate(row.signinTime);//签到时间
+                   var currentDate = common.formatterDate(new Date());    //当前时间
                    var dateDiff = common.getDateDiff(currentDate,signinTime);
                    var setObj = {};
-                   if(dateDiff == 0){//当天已经签到了
+                   if(signinTime == currentDate){//当天已经签到了
                        callback(errorMessage.code_3002, null);
                        return;
                    }
