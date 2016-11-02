@@ -293,35 +293,7 @@ var videos={
             $("#lvVideoId .img-loading").fadeIn(0).delay(2000).fadeOut(200);
             $('<iframe frameborder=0 width="100%" height="100%" src="/fx/theme1/html/fx678.html" allowfullscreen></iframe>').appendTo('#lvVideoId');
         }else if(url.indexOf("rtmp")!=-1){
-            var urlGroupArr=/(.*)\/([0-9]+)$/g.exec(url);
-            if(!urlGroupArr || urlGroupArr.length<3){
-                return;
-            }
-            flowplayer("lvVideoId", "/base/lib/flowplayer/flowplayer.swf",{
-                clip: {
-                    url: urlGroupArr[2],
-                    provider: 'rtmp',
-                    live: true
-                },
-                plugins: {
-                    rtmp: {
-                        proxyType: 'best',
-                        url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
-                        netConnectionUrl: urlGroupArr[1]
-                    }
-                },
-                onError:function(e){
-                }
-            });
-            /*var sdHtml='<div style="position: relative; width: 100%; height: 100%; left: 0px; top: 0px;">'+
-                '<object type="application/x-shockwave-flash" id="sewise_player" name="sewise_player" data="/js/lib/flash/SewisePlayer.swf" width="100%" height="100%">'+
-                '<param name="allowfullscreen" value="true">'+
-                '<param name="wmode" value="transparent">'+
-                '<param name="allowscriptaccess" value="always">'+
-                '<param name="flashvars" value="autoStart=true&amp;programId=&amp;shiftTime=&amp;lang=zh_CN&amp;type=rtmp&amp;serverApi=ServerApi.execute&amp;skin=/js/lib/flash/skins/liveOrange.swf&amp;title=&amp;draggable=true&amp;published=0&amp;streamUrl='+url+'&amp;duration=3600&amp;poster=&amp;flagDatas=&amp;videosJsonUrl=&amp;adsJsonData=&amp;statistics=&amp;customDatas=&amp;playerName=Sewise Player&amp;clarityButton=enable&amp;timeDisplay=disable&amp;controlBarDisplay=enable&amp;topBarDisplay=disable&amp;customStrings=&amp;volume=0.6&amp;key=&amp;trackCallback=">'+
-                '</object>'+
-                '</div>';
-            $("#lvVideoId").html(sdHtml);*/
+            obsPlayer.init(url,'lvVideoId',true);
         }else{
             $("#lvVideoId .img-loading").fadeIn(0).delay(2000).fadeOut(200);
             $(videos.getEmbedDom(url)).appendTo('#lvVideoId');
@@ -561,7 +533,7 @@ var videos={
     setVideo:function(thisDom){
         try{
             this.setStudioTip(false);
-            $("#lvVideoId").html("");//播放教学视频则移除在线视频元素
+            $("#lvVideoId").hide().html("");//播放教学视频则移除在线视频元素
             var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
             if(vUrl.indexOf(".html")!=-1){
                 if(window.SewisePlayer){//停播放教学视频

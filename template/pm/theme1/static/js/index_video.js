@@ -26,10 +26,6 @@ var videos={
 
         //保利威视播放器
         blwsPlayer : null,
-
-        //flowplayer播放器
-        flowplayer : null,
-
         /**
          * 使用iframe播放视频
          * @param url
@@ -80,35 +76,6 @@ var videos={
             });
             this.sewisePlayer.startup();
         },
-
-        /**
-         * 使用flowplayer播放视频
-         * @param url
-         */
-        playByFlowplayer : function(url){
-            var urlGroupArr=/(.*)\/([0-9]+)$/g.exec(url);
-            if(!urlGroupArr || urlGroupArr.length<3){
-                return;
-            }
-            this.clear();
-            flowplayer("videoPlayerPanel", "/base/lib/flowplayer/flowplayer.swf",{
-                clip: {
-                    url: urlGroupArr[2],
-                    provider: 'rtmp',
-                    live: true
-                },
-                plugins: {
-                    rtmp: {
-                        proxyType: 'best',
-                        url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
-                        netConnectionUrl: urlGroupArr[1]
-                    }
-                },
-                onError:function(e){
-                }
-            });
-        },
-
         /**
          * 使用Embed元素播放视频
          * @param url
@@ -150,7 +117,7 @@ var videos={
                 }else if(/\.swf/.test(url)){
                     this.playByEmbed(url);
                 }else if(/rtmp/.test(url)){
-                    this.playByFlowplayer(url);
+                    obsPlayer.init(url,'videoPlayerPanel',true);
                 }else{
                     this.playBySewise(url, title);
                 }

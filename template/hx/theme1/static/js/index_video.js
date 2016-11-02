@@ -454,25 +454,7 @@ var videos={
         $("#nextCourse").hide();
         $("#lvVideoId").show().data("url", url).html("");
         if(url.indexOf("rtmp")!=-1){
-            var urlGroupArr=/(.*)\/([0-9]+)$/g.exec(url);
-            if(!urlGroupArr || urlGroupArr.length<3){
-                return;
-            }
-            flowplayer("lvVideoId", "/base/lib/flowplayer/flowplayer.swf",{
-                clip: {
-                    url: urlGroupArr[2],
-                    provider: 'rtmp',
-                    live: true
-                },
-                plugins: {
-                    rtmp: {
-                        url: '/base/lib/flowplayer/flowplayer.rtmp.swf',
-                        netConnectionUrl: urlGroupArr[1]
-                    }
-                },
-                onError:function(e){
-                }
-            });
+            obsPlayer.init(url,'lvVideoId',false);
         }else{
             $("#lvVideoId .img-loading").fadeIn(0).delay(2000).fadeOut(200);
             $(videos.getEmbedDom(url)).appendTo('#lvVideoId');
@@ -542,7 +524,7 @@ var videos={
     setVideo:function(thisDom){
         try{
             this.setStudioTip(false);
-            $("#lvVideoId").html("");//播放教学视频则移除直播元素
+            $("#lvVideoId").hide().html("");//播放教学视频则移除直播元素
             var vUrl=thisDom.attr("vUrl"),title=thisDom.text();
             if(vUrl.indexOf(".html")!=-1){
                 if(window.SewisePlayer){//停播放教学视频

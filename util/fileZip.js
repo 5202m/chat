@@ -87,8 +87,7 @@ for(var key in config.defTemplate){
                 ];
                 var libList=["jquery-1.7.min.js","socket.io.js","mScroll\\jquery.mCustomScrollbar.concat.min.js",
                     "lightbox\\lightbox.min.js","jqueryUI\\jquery-ui.min.js","swipe\\swiper.min.js","jquery.xdomainrequest.min.js",
-                    "jquery.superslide.2.1.1.js","websocket.min.js","newquote.min.js","flowplayer\\flowplayer.min.js",
-                    "sewise\\sewise.player.min.js","paste.min.js","jquery.face.min.js"
+                    "jquery.superslide.2.1.1.js","websocket.min.js","newquote.min.js","obsplayer\\obsplayer.min.js","sewise\\sewise.player.min.js","paste.min.js","jquery.face.min.js"
                 ];
                 libList=libList.map(function(item){
                     return "template\\base\\lib\\"+item;
