@@ -151,7 +151,20 @@ var videosLive = {
             });
         });
         indexJS.setListScroll($(".tabcont .main_tab .infocont .rbox .scrollbox"));//行情持仓比例未平仓品种比率滚动条
-
+        /**
+         * 联系助理按钮事件
+         */
+        $('.contactContact').unbind('click');
+        $('.contactContact').click(function(){
+            if($(".pletter_win .mult_dialog a[utype=3]").length==0) {
+                chat.getCSList();//设置所有客服
+            }
+            if($(this).hasClass('nocs')){
+                box.showTipBox('助理失联中');
+            }else {
+                common.openPopup('.blackbg,.pletter_win');
+            }
+        })
     },
     /**
      * 获取行情
