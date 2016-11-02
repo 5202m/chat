@@ -167,11 +167,13 @@ var videosSubscribe = {
                 var lecturerIdArr = [], manyUid = null;
                 $('#course_panel .main_tab .live_prevlist li').each(function(){
                     var tuid = $(this).attr('tuid');
-                    if(tuid.indexOf(',')>-1){
-                        manyUid = tuid.split(',');
-                        lecturerIdArr = $.merge(lecturerIdArr, manyUid);
-                    }else {
-                        lecturerIdArr.push(tuid);
+                    if(common.isValid(tuid)) {
+                        if (tuid.indexOf(',') > -1) {
+                            manyUid = tuid.split(',');
+                            lecturerIdArr = $.merge(lecturerIdArr, manyUid);
+                        } else {
+                            lecturerIdArr.push(tuid);
+                        }
                     }
                 });
                 $.unique(lecturerIdArr);
