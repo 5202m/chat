@@ -554,7 +554,7 @@ var chatPride = {
             case 'tradeStrategyHd':
                 formatHtmlArr.push('{0}');
                 formatHtmlArr.push('<div class="hdbox2 clearfix">');
-                formatHtmlArr.push('    <span class="hdtit">【喊单】{4}老师喊单了</span>');
+                formatHtmlArr.push('    <span class="hdtit">【喊单】{4}老师喊单了，快来围观！</span>');
                 formatHtmlArr.push('    <a href="javascript:void(0);" class="viewdata2"{2} _id="{3}" item="prerogative_callTrade" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_hd_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>');
                 formatHtmlArr.push('    <table width="100%" border="0" cellspacing="0" cellpadding="0">');
                 formatHtmlArr.push('        <thead>');

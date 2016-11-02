@@ -242,7 +242,7 @@ var indexJS ={
                     for(var k= 0,tklen=tmk.length;k<tklen;k++){
                         courseObj=tmk[k].course[i];
                         if(courseObj.status != 0 && courseObj.lecturer){
-                            lsTab.append('<li class="'+als+'"><a href="javascript:" st="'+tmk[k].startTime+'" et="'+tmk[k].endTime+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'header_yg_course\', \'' + courseObj.title + '\', 1, true]);"><i></i><div class="c_name">'+courseObj.title+'<span>'+courseObj.lecturer+'</span><span class="time">'+tmk[k].startTime+'- '+tmk[k].endTime+'　</span><span>'+courseType[courseObj.courseType]+'　</span></div></a></li>');
+                            lsTab.append('<li class="'+als+'" tuid="'+courseObj.lecturerId+'"><a href="javascript:" st="'+tmk[k].startTime+'" et="'+tmk[k].endTime+'" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'header_yg_course\', \'' + courseObj.title + '\', 1, true]);"><i></i><div class="c_name">'+courseObj.title+'<span>'+courseObj.lecturer+'</span><span class="time">'+tmk[k].startTime+'- '+tmk[k].endTime+'　</span><span>'+courseType[courseObj.courseType]+'　</span></div></a></li>');
                             als = '';
                         }
                     }

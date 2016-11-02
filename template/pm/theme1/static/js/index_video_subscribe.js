@@ -147,7 +147,7 @@ var videosSubscribe = {
             params.noticeType = common.isBlank($('input[name="'+$(this).attr('t')+'_noticeTypes"]').val())?$(this).attr('nts'):$('input[name="'+$(this).attr('t')+'_noticeTypes"]').val();
             params.pointsRemark = '订阅'+$(this).attr('tn');
             params.id = common.isBlank($(this).attr('id'))?'':$(this).attr('id');
-            var orip = common.isBlank($(this).attr('orip'))?0:$(this).attr('orip');
+            params.orip = common.isBlank($(this).attr('orip'))?0:$(this).attr('orip');
             if(common.isBlank($('#myEmail').val()) && $.inArray('email', params.noticeType.split(','))>-1){
                 box.showMsg('请先绑定邮箱！');
                 $('#infotab a[t="accountInfo"]').click();
@@ -164,29 +164,76 @@ var videosSubscribe = {
                     params.noticeType = '';
                     params.noticeCycle = '';
                 }
-                if(parseInt(params.point) != parseInt(orip) || params.analyst != $(this).attr('a') || params.noticeType != $(this).attr('t') || params.noticeCycle != $(this).attr('c')) {
-                    common.getJson('/studio/subscribe', {params: JSON.stringify(params)}, function (data) {
-                        if (data.isOK) {
-                            chatShowTrade.getPointsInfo();
-                            if(common.isBlank(params.analyst) || common.isBlank(params.noticeType)){
-                                box.showMsg('取消订阅成功！');
-                            } else if(common.isValid(params.id)) {
-                                box.showMsg('修改订阅成功！');
-                            }else{
-                                box.showMsg('订阅成功！');
-                            }
-                            videosSubscribe.setSubscribeType();
-                        } else {
-                            box.showMsg(data.msg);
+                var lecturerIdArr = [], manyUid = null;
+                $('#course_panel .main_tab .live_prevlist li').each(function(){
+                    var tuid = $(this).attr('tuid');
+                    if(tuid.indexOf(',')>-1){
+                        manyUid = tuid.split(',');
+                        lecturerIdArr = $.merge(lecturerIdArr, manyUid);
+                    }else {
+                        lecturerIdArr.push(tuid);
+                    }
+                });
+                $.unique(lecturerIdArr);
+                var analystArr = params.analyst.split(','), notInAnalyst = [];
+                if(common.isValid(params.analyst)) {
+                    $.each(analystArr, function (k, v) {
+                        if ($.inArray(v, lecturerIdArr) < 0) {
+                            notInAnalyst.push($('#' + v + '_' + $this.attr('t')).attr('cval'));
                         }
-                        $this.removeClass('clicked');
                     });
+                }
+                if(notInAnalyst.length > 0){
+                    var msgOps = {title:'温馨提醒',
+                                    msg:notInAnalyst.join(',')+'老师没有课程安排，确定订阅？',
+                                    btns:[{
+                                            txt : "确定",
+                                            fn : function(){
+                                                videosSubscribe.saveSubscribe(params, $this);
+                                            }
+                                        },
+                                        {
+                                            txt : '取消',
+                                            fn : function(){
+                                                box.hideMsg();
+                                                $this.removeClass('clicked');
+                                            }
+                                        }]
+                                };
+                    box.showMsg(msgOps);
                 }else{
-                    box.showMsg('订阅内容无变化！');
-                    $this.removeClass('clicked');
+                    videosSubscribe.saveSubscribe(params, $this);
                 }
             }
         });
+    },
+    /**
+     * 保存订阅数据
+     * @param params
+     * @param $this
+     */
+    saveSubscribe: function(params, $this){
+        if(parseInt(params.point) != parseInt(params.orip) || params.analyst != $this.attr('a') || params.noticeType != $this.attr('t') || params.noticeCycle != $this.attr('c')) {
+            common.getJson('/studio/subscribe', {params: JSON.stringify(params)}, function (data) {
+                if (data.isOK) {
+                    chatShowTrade.getPointsInfo();
+                    if(common.isBlank(params.analyst) || common.isBlank(params.noticeType)){
+                        box.showMsg('取消订阅成功！');
+                    } else if(common.isValid(params.id)) {
+                        box.showMsg('修改订阅成功！');
+                    }else{
+                        box.showMsg('订阅成功！');
+                    }
+                    videosSubscribe.setSubscribeType();
+                } else {
+                    box.showMsg(data.msg);
+                }
+                $this.removeClass('clicked');
+            });
+        }else{
+            box.showMsg('订阅内容无变化！');
+            $this.removeClass('clicked');
+        }
     },
     /**
      * 根据内容域模块名返回内容模板
