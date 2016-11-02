@@ -166,7 +166,7 @@ var chatPride = {
                             $.each(row, function(j, r){
                                 tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
                             });
-                            tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==lenI?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
+                            tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
                             idx++;
                         });
                     } else {
@@ -179,7 +179,7 @@ var chatPride = {
                             $.each(row, function(j, r){
                                 tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), '****', 'dim'));
                             });
-                            tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==lenI?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
+                            tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
                             idx++;
                         });
                     }
@@ -235,7 +235,7 @@ var chatPride = {
                              $.each(row, function(j, r){
                                  tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
                              });
-                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==lenI?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
+                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
                              idx++;
                          });
                      } else {
@@ -248,7 +248,7 @@ var chatPride = {
                              $.each(row, function(j, r){
                                  tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), '****', 'dim'));
                              });
-                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==lenI?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
+                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata"'+style+' _id="'+aid+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
                              idx++;
                          });
                      }
@@ -481,7 +481,7 @@ var chatPride = {
                 $.each(row, function(j, r){
                     tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
                 });
-                tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==lenI?'<a href="javascript:void(0);" class="viewdata" style="display:none;" _id="'+data._id+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
+                tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata" style="display:none;" _id="'+data._id+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
                 idx++;
             });
             var hdBoxDom = dom.parent('div.skilldata').parent('div.hdbox');
