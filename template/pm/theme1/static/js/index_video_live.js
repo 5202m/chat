@@ -28,7 +28,7 @@ var videosLive = {
                 if(indexJS.checkClientGroup("vip")){
                    // alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
                     box.showMsg({title:thiz.find("b").text(),msg:"该房间仅对新客户开放,"});
-                    $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);'>如有疑问请联系老师助理</a>。");
+                    $("#popMsgTxt").append('<a class="contactContact" style="color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer" onclick="videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);">如有疑问请联系老师助理</a>。');
                     $("#popMsgCont .yesbtn").bind("click", function(){
                         videosLive.contactTeacher();
                         _gaq.push(['_trackEvent', 'pmchat_studio', 'left_zb_confirm', 'content_left', 1, true]);
@@ -36,7 +36,7 @@ var videosLive = {
                 }else{
                     //alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
                     box.showMsg({title:thiz.find("b").text(),msg:"已有真实账户并激活的客户才可进入Vip专场，您还不满足条件,"});
-                    $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);'>如有疑问请联系老师助理</a>。");
+                    $("#popMsgTxt").append('<a class="contactContact" style="color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer" onclick="videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);">如有疑问请联系老师助理</a>。');
                     $("#popMsgCont .yesbtn").bind("click", function(){
                         videosLive.contactTeacher();
                         _gaq.push(['_trackEvent', 'pmchat_studio', 'left_zb_confirm', 'content_left', 1, true]);
@@ -75,7 +75,7 @@ var videosLive = {
                     if(indexJS.checkClientGroup("vip")){
                         //alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
                         box.showMsg({title:thiz.find("b").text(),msg:"该房间仅对新客户开放,"});
-                        $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);'>如有疑问请联系老师助理</a>。");
+                        $("#popMsgTxt").append('<a class="contactContact" style="color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer" onclick="videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);">如有疑问请联系老师助理</a>。');
                         $("#popMsgCont .yesbtn").bind("click", function(){
                             videosLive.contactTeacher();
                             _gaq.push(['_trackEvent', 'pmchat_studio', 'left_zb_confirm', 'content_left', 1, true]);
@@ -95,7 +95,7 @@ var videosLive = {
                                if(result.point && Math.abs(result.point)>0){
                                    var tip=',是否消耗'+result.point+'积分直接进入房间?';
                                    box.showMsg({title:thiz.find("b").text(),msg:"您未报名培训班或者未通过审核"+tip});
-                                   $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);'>如有疑问请联系老师助理</a>。");
+                                   $("#popMsgTxt").append('<a class="contactContact" style="color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer" onclick="videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);">如有疑问请联系老师助理</a>。');
                                    $("#popMsgCont .yesbtn").bind("click", function(){
                                        var point = result.point;
                                        if(point != 0){
@@ -129,7 +129,7 @@ var videosLive = {
                     }else{
                         //alert("已有真实账户并激活的客户才可进入Vip专场，您还不满足条件。如有疑问，请联系老师助理。");
                         box.showMsg({title:thiz.find("b").text(),msg:"已有真实账户并激活的客户才可进入Vip专场，您还不满足条件,"});
-                        $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);'>如有疑问请联系老师助理</a>。");
+                        $("#popMsgTxt").append('<a class="contactContact" style="color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer" onclick="videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);">如有疑问请联系老师助理</a>。');
                         $("#popMsgCont .yesbtn").bind("click", function(){
                             videosLive.contactTeacher();
                             _gaq.push(['_trackEvent', 'pmchat_studio', 'left_zb_confirm', 'content_left', 1, true]);
@@ -142,7 +142,7 @@ var videosLive = {
                 if("success"!=err) {
                     //alert("操作失败，请联系客服！" );
                     box.showMsg({title:thiz.find("b").text(),msg:"操作失败,"});
-                    $("#popMsgTxt").append("<a class='contactContact' style='color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer' onclick='videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);'>如有疑问请联系老师助理</a>。");
+                    $("#popMsgTxt").append('<a class="contactContact" style="color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer" onclick="videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);">如有疑问请联系老师助理</a>。');
                     $("#popMsgCont .yesbtn").bind("click", function(){
                         videosLive.contactTeacher();
                         _gaq.push(['_trackEvent', 'pmchat_studio', 'left_zb_confirm', 'content_left', 1, true]);
