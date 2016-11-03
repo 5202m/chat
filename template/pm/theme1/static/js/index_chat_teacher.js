@@ -473,10 +473,11 @@ var chatTeacher = {
                        // _this.find('i').fadeIn().delay(400).fadeOut();
                         var lb= _this.next().find("label");
                         lb.text(common.isValid(lb.text())?(parseInt(lb.text())+1):0);
+                        box.showTipBox('亲，点赞成功！');
                     }else{
                         box.showTipBox('亲，已点赞，当天只能点赞一次！');
                     }
-                   // _this.addClass('supported');
+                    _this.addClass('supported');
                     _this.attr('title','已点赞');
                 },true);
             }catch(e){
