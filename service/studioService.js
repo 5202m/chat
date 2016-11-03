@@ -88,7 +88,7 @@ var studioService = {
      * @param callback
      */
     getRoomList:function(groupType,callback){
-        chatGroup.find({valid:1,status:{$in:[1,2]},groupType:groupType}).select({traninClient:1,status:1,clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1,defTemplate:1,roomType:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
+        chatGroup.find({valid:1,status:{$in:[1,2]},groupType:groupType}).select({traninClient:1,status:1,clientGroup:1,remark:1,name:1,level:1,groupType:1,talkStyle:1,whisperRoles:1,chatRules:1,openDate:1,defTemplate:1,roomType:1,defaultAnalyst:1}).sort({'sequence':'asc'}).exec(function (err,rows) {
             if(err){
                 logger.error("getStudioList fail:"+err);
             }

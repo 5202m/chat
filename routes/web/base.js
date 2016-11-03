@@ -250,6 +250,7 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
                     viewDataObj.defTemplate = row.defTemplate;
                 }
                 rowTmp.defTemplate = row.defTemplate;
+                rowTmp.defaultAnalyst = row.defaultAnalyst;
                 newStudioList.push(rowTmp);
             });
         }
