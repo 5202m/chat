@@ -338,7 +338,7 @@ var chatPride = {
             html = html.replace(imgReg, tradeStrategyNoteImg.formatStr(matches[1]));
             matches = imgReg.exec(html);
         }
-        if (common.isValid(articleDetail.tag) && common.isValid(articleDetail.remark) && articleDetail.tag == 'shout_single') {
+        if (common.isValid(articleDetail.tag) && common.isValid(articleDetail.remark) && (articleDetail.tag == 'shout_single' || articleDetail.tag == 'resting_order')) {
             var tradeStrategyHdDetailHtml = [], remarkArr = JSON.parse(articleDetail.remark),style='';
             if (indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip' || $.inArray(aid, storeViewData)>-1) {
                 style=' style="display:none;"';
@@ -356,7 +356,11 @@ var chatPride = {
                 contentHtml = html.replace(imgReg, tradeStrategyNoteImg.formatStr(matches[1]));
                 matches = imgReg.exec(contentHtml);
             }
-            html = tradeStrategyHd.formatStr(contentHtml, tradeStrategyHdDetailHtml.join(''), style, aid, author);
+            var label = "喊单";
+            if(articleDetail.tag == 'resting_order') {
+                label = "挂单";
+            }
+            html = tradeStrategyHd.formatStr(contentHtml, tradeStrategyHdDetailHtml.join(''), style, aid, author, label);
         }
         publishTimeStr = common.formatterDateTime(articleInfo.createDate, '-').substring(11);
         if(articleDetail.tag == 'trading_strategy'){
@@ -400,8 +404,12 @@ var chatPride = {
         var infoPushHtml = chatPride.formatHtml('pushShortSingle');
         var articleDetail=articleInfo.detailList && articleInfo.detailList[0];
         var aid = articleInfo._id || articleInfo.id;
-        if (common.isValid(articleDetail.tag) && common.isValid(articleDetail.remark) && articleDetail.tag == 'shout_single') {
-            $('#chatMsgContentDiv .dialoglist').append(infoPushHtml.formatStr((common.isBlank(articleDetail.content) ? (articleDetail.authorInfo.userName||'')+'老师喊单啦' : articleDetail.content.replace('<p>','').replace('</p>','')), aid));
+        if (common.isValid(articleDetail.tag) && common.isValid(articleDetail.remark) && (articleDetail.tag == 'shout_single' || articleDetail.tag == 'resting_order')) {
+            var label = "老师喊单啦";
+            if(articleDetail.tag == 'resting_order'){
+                label = "老师晒单啦";
+            }
+            $('#chatMsgContentDiv .dialoglist').append(infoPushHtml.formatStr((common.isBlank(articleDetail.content) ? (articleDetail.authorInfo.userName||'')+label : articleDetail.content.replace('<p>','').replace('</p>','')), aid));
             $('#chatMsgContentDiv .dialoglist .pushclose').unbind('click');
             $('#chatMsgContentDiv .dialoglist .pushclose').click(function () {
                 $(this).parent().hide();
@@ -458,7 +466,7 @@ var chatPride = {
     setViewDataHtml:function(dom, data){
         var articleInfo = data.detailList && data.detailList[0];
         var remarkArr = JSON.parse(articleInfo.remark),tradeStrategyHdDetailHtml = [],tradeStrategySupportHtml = [], tradeStrategyHdDetail = chatPride.formatHtml('tradeStrategyHdDetail');
-        if(articleInfo.tag == 'shout_single'){
+        if(articleInfo.tag == 'shout_single' || articleInfo.tag == 'resting_order'){
             $.each(remarkArr, function (i, row) {
                 tradeStrategyHdDetailHtml.push(tradeStrategyHdDetail.formatStr(row.name, (row.longshort == 'long' ? '看涨' : '看跌'), row.point, row.profit, row.loss,''));
             });
@@ -554,7 +562,7 @@ var chatPride = {
             case 'tradeStrategyHd':
                 formatHtmlArr.push('{0}');
                 formatHtmlArr.push('<div class="hdbox2 clearfix">');
-                formatHtmlArr.push('    <span class="hdtit">【喊单】{4}老师喊单了，快来围观！</span>');
+                formatHtmlArr.push('    <span class="hdtit">【{5}】{4}老师{5}了，快来围观！</span>');
                 formatHtmlArr.push('    <a href="javascript:void(0);" class="viewdata2"{2} _id="{3}" item="prerogative_callTrade" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_hd_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>');
                 formatHtmlArr.push('    <table width="100%" border="0" cellspacing="0" cellpadding="0">');
                 formatHtmlArr.push('        <thead>');
