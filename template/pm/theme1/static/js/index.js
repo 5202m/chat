@@ -408,7 +408,9 @@ var indexJS ={
                 isAll:common.trim(params.isAll),
                 pageSize:pageSize,
                 orderByStr:orderByStr,
-                ids:common.isBlank(params.ids)?'':params.ids
+                ids:common.isBlank(params.ids)?'':params.ids,
+                callTradeIsNotAuth: params.callTradeIsNotAuth,
+                strategyIsNotAuth: params.strategyIsNotAuth
             },function(data){
                 //console.log("getArticleList->data:"+JSON.stringify(data));
                 callback(data);

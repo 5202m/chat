@@ -310,12 +310,20 @@ var chatPointsService = {
      * @param callback
      */
     getChatPointsConfig:function(params,callback) {
-        ChatPointsConfig.findOne({"groupType": params.groupType,"type":params.type,"item" : params.item}, "", function (err, row) {
+        var searchObj = {"groupType": params.groupType,"type":params.type,"item" : params.item, isDeleted:0, status: 1};
+        if(typeof params.item == 'object'){
+            searchObj = {"groupType": params.groupType,"type":params.type,"item" : {$in:params.item}, isDeleted:0, status: 1};
+        }
+        ChatPointsConfig.find(searchObj, "", function (err, row) {
              if(err){
                  logger.error("获取积分配置表失败! >>getChatPointsConfig:", err);
                  callback(null);
              }else{
-                 callback(row);
+                 if(row.length>1) {
+                     callback(row);
+                 }else{
+                     callback(row[0]);
+                 }
              }
         })
     }
