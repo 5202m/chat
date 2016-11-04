@@ -332,9 +332,9 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .skilldata .support span.dim{ width: 50px; font-size: 0; line-height: 0; background: url(../img/data-dim.png) center center no-repeat;}
 .skilldata .viewdata{ display: inline-block;*display: inline;*zoom: 1; float: right;height: 26px; width: 80px; line-height: 26px; font-size: 14px; color: #fff; background: #3b96d5; text-align: center; border-radius: 2px;}
 .skilldata .viewdata:hover { background: #2587cb; text-decoration: none; }
-.skilldata .pdname{ font-size: 0; display: inline-block;*display: inline;*zoom: 1; margin-right: 10px;height: 21px; line-height: 21px; font-size: 15px; color: #2b2d33; text-align: center; padding: 0 5px; min-width: 38px; border: 1px solid #7e828c; border-radius: 2px; position: relative; margin-right: 20px;position: absolute; left: 0; top: 8px;}
-.skilldata .pdname i{display: block; width: 6px; height: 10px; background-position: -80px -225px; position: absolute; right:-6px; top: 50%; margin-top: -5px;  }
-.skilldata .data_cont{  clear: both; position: relative; padding-left: 65px; }
+.skilldata .pdname{ font-size: 0; display: inline-block;*display: inline;*zoom: 1; margin-right: 10px;height: 21px; line-height: 21px; font-size: 15px; color: #2b2d33; text-align: center; padding: 0 5px; min-width: 38px; border: 1px solid #7e828c; border-radius: 2px; margin-right: 20px; position: relative; margin-top: 5px;}
+.skilldata .pdname i{display: block; width: 6px; height: 10px; background-position: -80px -225px; position: absolute; top:50%; right: -6px; margin-top: -5px;  }
+.skilldata .data_cont{  clear: both; }
 .hdbox .skill .picpart .imgbox {display: inline-block;border: 1px solid #cfcfcf;width: 122px; position: relative; margin-top: 5px;vertical-align: bottom;}
 .hdbox .skill .imgbox img {width: 100%;height: auto;vertical-align: top;}
 .hdbox .skill .imgbox img{ width: 100%; height: auto; vertical-align: top; }
@@ -409,7 +409,8 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .dialog.analyst .bubble > i{ background-position:-40px -110px;}
 .dialog.mine.admin .bubble > i{ background-position:-60px -120px;}
 .dialog.mine.analyst .bubble > i{ background-position:-60px -110px;}
-.info_push{margin-left: 48px; background: #f7f2f3; border-radius: 5px; line-height: 24px; padding: 6px 100px 6px 10px; font-size: 14px; clear: both;position: relative; margin-bottom: 17px; margin-right: 48px; word-break: break-all;}
+.info_push{margin-left: 48px; background: #f7f2f3; border-radius: 5px; line-height: 24px; padding: 6px 100px 6px 10px; font-size: 14px; clear: both;position: relative; margin-bottom: 17px; /*margin-right: 48px;*/ word-break: break-all;}
+.staytop{ padding: 17px 20px 0; position: relative; z-index: 20;  }
 .info_push .pushcont{ color: #d45d62; }
 .info_push .detailbtn{ display: block; width: 58px; font-size: 14px; color: #fff;text-align: center; background: #3b96d5; border-radius: 3px; position: absolute; right: 33px; top: 6px;}
 .info_push .detailbtn:hover{ background: #2587cb;text-decoration: none; }
@@ -482,7 +483,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .txt_dia label{cursor: pointer;}
 
 /*下拉*/
-.view_select{ width:115px;float:right; height:26px; position:absolute; top:15px; right:20px; z-index:20; cursor:pointer}
+.view_select{ width:115px;float:right; height:26px; z-index:20; cursor:pointer; position: absolute; right: 20px; top: 15px;}
 .view_select.dw {}
 .view_select i { display:block; position:absolute; right:12px; top:10px; background-position:-180px -190px; width:16px; height:10px;}
 .view_select.dw i{ background-position:-180px -200px;  }
@@ -1266,11 +1267,13 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .wid3 .teacherlist .teacherbox .stateshow{ padding-top:0; width:200px; }
 .wid3 .teacherlist .stateshow .item{ width: 55px; margin-top: 15px; }
 .wid3 .livebrief .te_info{ padding-left: 100px; height: auto; } 
-.wid3 .skilldata .pdname{ top: 0; }
 .wid3 .skilldata .support {display: block; margin-right: 0;}
 .wid3 .skilldata .support span{ font-size: 12px; }
 .wid3 .skilldata .support span.dim{ font-size: 0; }
 .wid3 .skilldata .br-ctrl{ display: block; }
+.wid3 .skilldata .data_cont{ margin-bottom: 5px; }
+.wid3 .skilldata .pdname{  margin-top: 0; }
+.wid3 .skilldata .pdname i{ width: 10px; height: 6px; background-position: -80px -215px; right: auto; left: 50%; margin-left: -5px; top: auto; bottom: -6px }
 .wid3 .te_info .livetime{ display: block; padding-left: 0; }
 .wid3 .te_info .taglist{ position: relative; margin-left: -100px; }
 .wid3 .te_info .taglist .tag{ margin-top: 5px; }
