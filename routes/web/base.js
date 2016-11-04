@@ -518,31 +518,44 @@ router.get('/getArticleList', function(req, res) {
     baseApiService.getArticleList(params,function(data){
         if(data){
             data = JSON.parse(data);
-            var dataList = data.data,row = null;
-            for(var i in dataList) {
-                row = dataList[i];
-                var detailInfo = row.detailList && row.detailList[0];
-                if (!common.containSplitStr(ids,row._id)) {
-                    if ((detailInfo.tag == 'shout_single' || detailInfo.tag == 'trading_strategy') && userInfo.clientGroup != 'vip') {
-                        var remark = JSON.parse(detailInfo.remark), remarkRow = null;
-                        for (var j in remark) {
-                            remarkRow = remark[j];
-                            if (detailInfo.tag == 'trading_strategy') {
-                                remarkRow.support_level = '****';
-                            } else if (detailInfo.tag == 'shout_single') {
-                                remarkRow.point = '****';
-                                remarkRow.profit = '****';
-                                remarkRow.loss = '****';
+                var dataList = data.data, row = null;
+                for (var i in dataList) {
+                    row = dataList[i];
+                    var detailInfo = row.detailList && row.detailList[0];
+                    if (!common.containSplitStr(ids, row._id)) {
+                        var item = detailInfo.tag == 'trading_strategy'?'prerogative_strategy':'prerogative_callTrade';
+                        chatPointsService.getChatPointsConfig({type:"prerogative",item:item,groupType:userInfo.groupType},function(result) {
+                            var isNotAuth = true;
+                            if (result) {
+                                var clientGroups = result.clientGroup;
+                                for (var i = 0; i < clientGroups.length; i++) {
+                                    var clientGroup = clientGroups[i];
+                                    if (clientGroup == userInfo.clientGroup) {
+                                        isNotAuth = false;
+                                    }
+                                }
                             }
-                            remark[j] = remarkRow;
-                        }
-                        detailInfo.remark = JSON.stringify(remark);
+                            if ((detailInfo.tag == 'shout_single' || detailInfo.tag == 'trading_strategy' || detailInfo.tag == 'resting_order') && !isNotAuth) {
+                                var remark = JSON.parse(detailInfo.remark), remarkRow = null;
+                                for (var j in remark) {
+                                    remarkRow = remark[j];
+                                    if (detailInfo.tag == 'trading_strategy') {
+                                        remarkRow.support_level = '****';
+                                    } else if (detailInfo.tag == 'shout_single') {
+                                        remarkRow.point = '****';
+                                        remarkRow.profit = '****';
+                                        remarkRow.loss = '****';
+                                    }
+                                    remark[j] = remarkRow;
+                                }
+                                detailInfo.remark = JSON.stringify(remark);
+                            }
+                            row.detailList[0] = detailInfo;
+                            dataList[i] = row;
+                        });
                     }
-                    row.detailList[0] = detailInfo;
-                    dataList[i] = row;
                 }
-            }
-            data.data = dataList;
+                data.data = dataList;
             res.json(data);
         }else{
             res.json(null);
