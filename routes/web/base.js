@@ -1806,6 +1806,16 @@ router.post('/getChatPointsConfig',function(req, res){
 /**
  * 提取培训班详情
  */
+router.get('/getUserInfo', function(req, res) {
+    var userNo=req.query["uid"];
+    studioService.getUserInfoByUserNo(req.session.studioUserInfo.groupType,userNo,function(result){
+        res.json(result);
+    });
+});
+
+/**
+ * 提取培训班详情
+ */
 router.get('/getTrDetail', function(req, res) {
     var userNo=req.query["uid"];
     studioService.getUserInfoByUserNo(req.session.studioUserInfo.groupType,userNo,function(ret){

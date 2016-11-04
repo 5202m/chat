@@ -518,6 +518,30 @@ var videos={
             $("#nextCourse").find(".t_name").text(course.lecturer);
             $("#nextCourse").find(".live_name").text(course.title);
             $("#nextCourse").find(".time").text(common.daysCN[course.day]+' '+course.startTime+' - '+course.endTime);
+            //加载分析师头像
+            var $avatar = $("#nextCourse").find(".tec_head");
+            var avatars = $avatar.data("avatars") || {};
+            var currLecturer = course.lecturerId || "";
+            currLecturer = currLecturer.replace(/(,\w+)*$/g, "");
+            var currId = $avatar.data("lecturerId");
+            if(currId != currLecturer && currLecturer){
+                if(avatars.hasOwnProperty(currId)){
+                    $avatar.find("img").attr("src", avatars[currId]);
+                }else{
+                    $avatar.data("lecturerId", currLecturer);
+                    $.getJSON('/studio/getUserInfo',{uid: currLecturer},function(data){
+                        if(data && data.userNo){
+                            var $avatar = $("#nextCourse").find(".tec_head");
+                            var avatars = $avatar.data("avatars") || {};
+                            avatars[data.userNo] = data.avatar || "";
+                            $avatar.data("avatars", avatars);
+                            if($avatar.data("lecturerId") == data.userNo){
+                                $avatar.find("img").attr("src", avatars[data.userNo]);
+                            }
+                        }
+                    });
+                }
+            }
         }
         $("#lvVideoId").hide();
         $("#nextCourse").show();
