@@ -82,6 +82,14 @@ var indexJS ={
             common.openPopup('.blackbg,.vipbenefit');
         });
         /**
+         * 积分规则按钮事件
+         */
+        $('#pointsRule').click(function(){
+            $('.pointrule .main_tabnav a:first').click();
+            common.openPopup('.blackbg,.pointrule');
+        });
+        indexJS.setListScroll($(".pointrule .tabcont .scrollbox"));//设置积分规则滚动条
+        /**
          * 资料下载按钮事件
          */
         $('#infodown').click(function(){

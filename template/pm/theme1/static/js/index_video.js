@@ -134,6 +134,7 @@ var videos={
          * 初始化
          */
         init : function(){
+            indexJS.setListScroll($(".mod_livelist .livetab .scrollbox"));//设置今日直播滚动条
             this.initToday(indexJS.syllabusData && indexJS.syllabusData.courses);
             //this.initYesterday();
             this.setEvent();
