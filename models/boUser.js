@@ -15,6 +15,8 @@ var mongoose = require('mongoose')
         introductionImgLink:String,//简介图片跳转链接
         introductionImg:String,//简介图片
         introduction:String,//简介
+        wechatCode:String ,              //微信号
+        wechatCodeImg:String ,           //微信图片
         remark:String ,
         valid: {type:Number, default:1}, //是否删除：0 、删除；1、正常
         status: {type:Number, default:0},

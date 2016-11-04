@@ -660,7 +660,7 @@ var studioService = {
      * @param userNo
      */
     getUserInfoByUserNo:function(groupType,userNo,callback){
-        boUser.findOne({userNo:userNo},"userNo userName position avatar introduction introductionImg winRate earningsM",function(err,rows) {
+        boUser.findOne({userNo:userNo},"userNo userName position avatar introduction introductionImg winRate earningsM wechatCodeImg wechatCode",function(err,rows) {
             if(err){
                 logger.error("查询直播老师数据失败!:", err);
                 callback(null);

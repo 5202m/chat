@@ -268,7 +268,8 @@ var chatTeacher = {
                 var earningsM = !common.isBlank(userInfo.earningsM) && userInfo.earningsM!=""?userInfo.earningsM:"--";
                 $('.main_tab .teacherlist .teacherbox .te_top  .stateshow .item b').eq(0).text(winRate);
                 $('.main_tab .teacherlist .teacherbox .te_top  .stateshow .item b').eq(1).text(earningsM);
-                $('.main_tab .teacherlist .teacherbox  .intro span').text(userInfo.introduction);
+                $('#analystIntro').text(userInfo.introduction);
+                $('#analystWeChatQrCode').attr('src',userInfo.wechatCodeImg);
 
                 $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").empty();
                 $(".main_tab .teacherlist .teacherbox .te_top  .stateshow .item:last-child").append('<a href="javascript:void(0)" class="support" uid="'+userInfo.userNo+'" onclick="chatTeacher.showAnalystPraiseInfo(this)"><i class="i6"></i></a><b>(<label>'+userInfo.praiseNum+'</label>)</b><span>赞</span>');
