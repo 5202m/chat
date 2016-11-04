@@ -186,7 +186,7 @@ var chatPride = {
                         $.each(remarkMap, function (i, row) {
                             var tradeStrategySupportDivHtml = [];
                             $.each(row, function (j, r) {
-                                tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
+                                tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, r.drag_level, ''));
                             });
                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name, tradeStrategySupportDivHtml.join(''), (idx == 0 ? '<a href="javascript:void(0);" class="viewdata"' + style + ' _id="' + aid + '" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>' : '')));
                             idx++;
@@ -199,7 +199,7 @@ var chatPride = {
                         $.each(remarkMap, function (i, row) {
                             var tradeStrategySupportDivHtml = [];
                             $.each(row, function (j, r) {
-                                tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), '****', 'dim'));
+                                tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), '****', '****', 'dim'));
                             });
                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name, tradeStrategySupportDivHtml.join(''), (idx == 0 ? '<a href="javascript:void(0);" class="viewdata"' + style + ' _id="' + aid + '" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>' : '')));
                             idx++;
@@ -255,7 +255,7 @@ var chatPride = {
                         $.each(remarkMap, function (i, row) {
                             var tradeStrategySupportDivHtml = [];
                             $.each(row, function (j, r) {
-                                tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
+                                tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, r.drag_level, ''));
                             });
                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name, tradeStrategySupportDivHtml.join(''), (idx == 0 ? '<a href="javascript:void(0);" class="viewdata"' + style + ' _id="' + aid + '" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>' : '')));
                             idx++;
@@ -268,7 +268,7 @@ var chatPride = {
                         $.each(remarkMap, function (i, row) {
                             var tradeStrategySupportDivHtml = [];
                             $.each(row, function (j, r) {
-                                tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), '****', 'dim'));
+                                tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), '****', '****', 'dim'));
                             });
                             tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name, tradeStrategySupportDivHtml.join(''), (idx == 0 ? '<a href="javascript:void(0);" class="viewdata"' + style + ' _id="' + aid + '" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>' : '')));
                             idx++;
@@ -510,7 +510,7 @@ var chatPride = {
             $.each(remarkMap, function (i, row) {
                 var tradeStrategySupportDivHtml = [];
                 $.each(row, function(j, r){
-                    tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, ''));
+                    tradeStrategySupportDivHtml.push(tradeStrategySupportDiv.formatStr((j + 1), r.support_level, r.drag_level, ''));
                 });
                 tradeStrategySupportHtml.push(tradeStrategySupport.formatStr(row[0].name,tradeStrategySupportDivHtml.join(''), (idx==0?'<a href="javascript:void(0);" class="viewdata" style="display:none;" _id="'+data._id+'" item="prerogative_strategy" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_zb_cl_ChaKanShuJu\', \'content_right\', 1, true]);">查看数据</a>':'')));
                 idx++;
@@ -571,7 +571,7 @@ var chatPride = {
                 formatHtmlArr.push('</div>');
                 break;
             case 'tradeStrategySupportDiv':
-                formatHtmlArr.push('<div class="support"><i class="dot"></i><b>第{0}支撑：</b><span class="{2}">{1}</span></div>');
+                formatHtmlArr.push('<div class="support"><i class="dot"></i><b>第{0}支撑位/阻力位：</b><span class="{3}">{1}/{2}</span></div>');
                 break;
             case 'tradeStrategyNote':
                 formatHtmlArr.push('<li aid="{2}">');
