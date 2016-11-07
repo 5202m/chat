@@ -95,7 +95,7 @@ var chatPride = {
                 if (result) {
                     $.each(result,function(i,row) {
                         var clientGroups = row.clientGroup;
-                        for (var i = 0; i < clientGroups.length; i++) {
+                        for (var i = 0, lenI = !clientGroups ? 0 : clientGroups.length; i < lenI; i++) {
                             var clientGroup = clientGroups[i];
                             if (clientGroup == indexJS.userInfo.clientGroup) {
                                 if(row.item == 'prerogative_callTrade'){

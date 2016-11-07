@@ -311,7 +311,7 @@ var chatPointsService = {
      */
     getChatPointsConfig:function(params,callback) {
         var searchObj = {"groupType": params.groupType,"type":params.type,"item" : params.item, isDeleted:0, status: 1};
-        if(typeof params.item == 'object'){
+        if(params.item instanceof Array){
             searchObj = {"groupType": params.groupType,"type":params.type,"item" : {$in:params.item}, isDeleted:0, status: 1};
         }
         ChatPointsConfig.find(searchObj, "", function (err, row) {
@@ -319,7 +319,7 @@ var chatPointsService = {
                  logger.error("获取积分配置表失败! >>getChatPointsConfig:", err);
                  callback(null);
              }else{
-                 if(row.length>1) {
+                 if(params.item instanceof Array) {
                      callback(row);
                  }else{
                      callback(row[0]);
