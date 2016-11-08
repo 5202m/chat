@@ -50,11 +50,9 @@ var videosLive = {
             }
             if(thiz.attr("st") == "2"){//权限受限
                 if(thiz.attr("rt") == "train"){
-                    chatTeacher.trainRegis(thiz);
-                    return false;
-                    var currDate = common.formatterDate(new Date(),'-'), currTime = common.getHHMMSS(new Date());
+                    /*var currDate = common.formatterDate(new Date(),'-'), currTime = common.getHHMMSS(new Date());
                     var isAuthTime = thiz.attr("bgt")==currDate && thiz.attr("wbt")>currTime;
-                    var isTraining = thiz.attr("bgt")<=currDate && thiz.attr("wbt")<currTime && thiz.attr("wet")<currTime;
+                    var isTraining = thiz.attr("bgt")<=currDate && thiz.attr("wbt")<currTime && thiz.attr("wet")<currTime;*/
                     if(thiz.attr("ha")=="-1"){
                         if(thiz.attr("sp") != "true"){
                             //$('#trains').click();
@@ -69,7 +67,9 @@ var videosLive = {
                         }
                         return false;
                     }
-                    if(thiz.attr("ha")=="0"){
+                    chatTeacher.trainRegis(thiz);
+                    return false;
+                    /*if(thiz.attr("ha")=="0"){
                         if(thiz.attr("sp") != "true"){
                             box.showTipBox("您的报名正在审批中....");
                             return false;
@@ -77,7 +77,7 @@ var videosLive = {
                             box.showTipBox("您没有访问该房间的权限，请联系客服！");
                             return false;
                         }
-                    }
+                    }*/
                 }else{
                     if(thiz.attr("ha")=="-1"){
                         box.showTipBox("您没有访问该房间的权限，请联系客服！");
