@@ -6,7 +6,7 @@ var mongoose = require('mongoose')
     ,ObjectId = Schema.ObjectId
     ,chatPraiseSchema = new Schema({//点赞Schema
         _id:ObjectId,
-        praiseId : String,
+        praiseId : {type:String, index : true},
         praiseType : String,
         fromPlatform:String,
         praiseNum:{type:Number, default:0},

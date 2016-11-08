@@ -7,7 +7,7 @@ var mongoose = require('mongoose')
     ,dictSchema=new Schema(
         {
             "_id" : {type:String},
-            "code" : {type:String},//字典编号
+            "code" : {type:String,index:true},//字典编号
             "valid" : {type:Number, default:1}, //是否删除：0 、删除 ；1、正常
             "nameCN" : {type:String},//简体名称
             "nameTW" : {type:String},//繁体名称

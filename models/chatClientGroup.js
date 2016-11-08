@@ -8,8 +8,8 @@ var mongoose = require('mongoose')
     ,chatClientGroupSchema=new Schema(
         {
           _id:{type:String},
-          groupType:{type:String},//类别
-          clientGroupId:{type:String},//客户组id
+          groupType:{type:String,index:true},//类别
+          clientGroupId:{type:String,index:true},//客户组id
           name:{type:String,index:true},//名称
           valid:{type:Number, default:1}, //是否删除：0 、删除 ；1、正常
           sequence:{type:Number, default:0},//排序序列

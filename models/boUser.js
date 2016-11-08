@@ -5,7 +5,7 @@ var mongoose = require('mongoose')
     , Schema = mongoose.Schema
     ,userSchema = new Schema({//会员Schema
         _id:String,
-        userNo : String,
+        userNo : {type:String,index:true},
         userName : String,
         telephone: String ,
         position: String ,
@@ -23,7 +23,7 @@ var mongoose = require('mongoose')
         tag : String,  //标签
         role : {
             _id :String,
-            roleNo : String,
+            roleNo : {type:String,index:true},
             roleName :String
         }
    });
