@@ -199,7 +199,7 @@ var chatTeacher = {
                     }
                 });
             }else{
-                var groupMeg = [];
+                /*var groupMeg = [];
                 groupMeg.push("【");
                 if(group.indexOf(",") !=-1){
                     var groupTypes = group.split(",");
@@ -216,7 +216,13 @@ var chatTeacher = {
                 groupMeg.push("】");
 
                 var msg = "客户为:【"+common.clientGroupStr[userGroup]+"】,培训班只对"+groupMeg.join("")+"客户开放";
-                box.showMsg(msg);
+                 box.showMsg(msg);*/
+                box.showMsg({msg: "该房间仅对培训班学员开放,"});
+                $("#popMsgTxt").append('<a class="contactContact" style="color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer" onclick="videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);">如有疑问请联系老师助理</a>。');
+                $("#popMsgCont .yesbtn").bind("click", function(){
+                    videosLive.contactTeacher();
+                    _gaq.push(['_trackEvent', 'pmchat_studio', 'left_zb_confirm', 'content_left', 1, true]);
+                });
             }
         }else{
             $('#loginBox').css('z-index','102');
