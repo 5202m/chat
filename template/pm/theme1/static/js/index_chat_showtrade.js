@@ -295,7 +295,8 @@ var chatShowTrade = {
      * @param data
      */
     pushShowTradeInfo:function(data) {
-        var tradeHtml='',tradeFormat = chatShowTrade.formatHtml('showTradeAll'),row = null;
+        var tradeHtml='',tradeFormat = chatShowTrade.formatHtml('showTradeAll'),row = null,txt=null;
+        var html = chatShowTrade.formatHtml('pushShowTradeInfo');
         for(var i = 0, length=data.length; i < length; i++){
             row = data[i];
             if($('#showTradeDiv .sd_ul li[sid="'+row.id+'"]').length==0){
@@ -306,8 +307,9 @@ var chatShowTrade = {
                 $('#showTradeDiv .scrollbox ul.sd_ul li:odd').addClass('r');
                 indexJS.setListScroll('#showTradeDiv .scrollbox', null, {callbacks : {onTotalScroll : function(){chatShowTrade.setShowTrade();}}});/*设置滚动条*/
             }
-            var html = chatShowTrade.formatHtml('pushShowTradeInfo');
-            $('#chatMsgContentDiv .dialoglist').append(html.formatStr(row.boUser.userName, (common.isBlank(row.title)?'...':row.title), row.id));
+            txt = row.boUser.userName + '在晒单墙晒了一单，' + (common.isBlank(row.title)?'...':row.title);
+            $('#chatMsgContentDiv .dialoglist').append(html.formatStr(txt, row.id));
+            chat.showSystemTopInfo("class_note", row.id, txt);
         }
         chat.setTalkListScroll(true);
         $('#chatMsgContentDiv .dialoglist .pushclose').unbind('click');
@@ -316,9 +318,13 @@ var chatShowTrade = {
         });
         $('#chatMsgContentDiv .dialoglist .showtrade').unbind('click');
         $('#chatMsgContentDiv .dialoglist .showtrade').click(function(){
-            $('.main_tabnav a[t="showtrade"]').click();
-            indexJS.setListScroll('#showTradeDiv .scrollbox', $('#showTradeDiv .sd_ul li[sid="'+$(this).attr('_id')+'"]').offset().top);/*滚动到指定位置*/
+            chatShowTrade.gotoLook($(this).attr('_id'));
         });
+    },
+    /**去看看-晒单*/
+    gotoLook : function(showTradeId){
+        $('.main_tabnav a[t="showtrade"]').click();
+        indexJS.setListScroll('#showTradeDiv .scrollbox', $('#showTradeDiv .sd_ul li[sid="'+showTradeId+'"]').offset().top);/*滚动到指定位置*/
     },
     /**
      * 根据传入的模块域标识返回待处理的html模板
@@ -375,8 +381,8 @@ var chatShowTrade = {
                 break;
             case 'pushShowTradeInfo':
                 formatHtmlArr.push('<div class="info_push">');
-                formatHtmlArr.push('    <div class="pushcont">系统：{0}在晒单墙晒了一单，{1}</div>');
-                formatHtmlArr.push('    <a href="javascript:void(0);" class="detailbtn showtrade" _id="{2}" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_lts_QuKankan\', \'content_right\', 1, true]);">去看看</a>');
+                formatHtmlArr.push('    <div class="pushcont">系统：{0}</div>');
+                formatHtmlArr.push('    <a href="javascript:void(0);" class="detailbtn showtrade" _id="{1}" onclick="_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_lts_QuKankan\', \'content_right\', 1, true]);">去看看</a>');
                 formatHtmlArr.push('    <a href="javascript:void(0);" class="pushclose"><i></i></a>');
                 formatHtmlArr.push('</div>');
                 break;

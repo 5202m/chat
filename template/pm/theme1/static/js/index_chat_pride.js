@@ -427,22 +427,29 @@ var chatPride = {
         var infoPushHtml = chatPride.formatHtml('pushShortSingle');
         var articleDetail=articleInfo.detailList && articleInfo.detailList[0];
         var aid = articleInfo._id || articleInfo.id;
+        var txt = null;
         if (common.isValid(articleDetail.tag) && common.isValid(articleDetail.remark) && (articleDetail.tag == 'shout_single' || articleDetail.tag == 'resting_order')) {
             var label = "老师喊单啦";
             if(articleDetail.tag == 'resting_order'){
                 label = "老师晒单啦";
             }
-            $('#chatMsgContentDiv .dialoglist').append(infoPushHtml.formatStr((common.isBlank(articleDetail.content) ? (articleDetail.authorInfo.userName||'')+label : articleDetail.content.replace('<p>','').replace('</p>','')), aid));
+            txt = (common.isBlank(articleDetail.content) ? (articleDetail.authorInfo.userName||'')+label : articleDetail.content.replace('<p>','').replace('</p>',''));
+            $('#chatMsgContentDiv .dialoglist').append(infoPushHtml.formatStr(txt, aid));
+            chat.showSystemTopInfo("class_note", aid, txt);
             $('#chatMsgContentDiv .dialoglist .pushclose').unbind('click');
             $('#chatMsgContentDiv .dialoglist .pushclose').click(function () {
                 $(this).parent().hide();
             });
             $('#chatMsgContentDiv .dialoglist .shoutsingle').unbind('click');
             $('#chatMsgContentDiv .dialoglist .shoutsingle').click(function () {
-                $('.main_tabnav a[t="livepride"]').click();
-                indexJS.setListScroll($(".tabcont .main_tab .livebrief_list .scrollbox"), $('.livebrief_list .livebrief .brieflist ul li[aid="' + $(this).attr('_id') + '"]').offset().top);/*滚动到指定位置*/
+                chatPride.gotoLook($(this).attr('_id'));
             });
         }
+    },
+    /**去看看-策略、喊单、挂单*/
+    gotoLook : function(articleId){
+        $('.main_tabnav a[t="livepride"]').click();
+        indexJS.setListScroll($(".tabcont .main_tab .livebrief_list .scrollbox"), $('.livebrief_list .livebrief .brieflist ul li[aid="' + articleId + '"]').offset().top);/*滚动到指定位置*/
     },
     /**
      * 获取交易策略或喊单store数据

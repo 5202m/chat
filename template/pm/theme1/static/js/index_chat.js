@@ -291,6 +291,26 @@ var chat={
                 }
             });
         });
+
+        /**顶部系统小提示*/
+        $("#chatPrideSystemTopInfo .detailbtn").bind("click", function(){
+            $("#chatPrideSystemTopInfo").fadeOut();
+            var info = $("#chatPrideSystemTopInfo").data("data");
+            if(info){
+                switch(info.type){
+                    case "class_note": //直播精华
+                        chatPride.gotoLook(info.id);
+                        break;
+
+                    case "showTrade": //晒单
+                        chatShowTrade.gotoLook(info.id);
+                        break;
+                }
+            }
+        });
+        $("#chatPrideSystemTopInfo .pushclose").bind("click", function(){
+            $("#chatPrideSystemTopInfo").fadeOut();
+        });
     },
     /**
      * 设置并压缩图片
@@ -1634,5 +1654,18 @@ var chat={
                 $('.mymsg').height(27);
             }
         });
+    },
+
+    /**
+     * 显示系统消息
+     * @param type
+     * @param id
+     * @param txt
+     */
+    showSystemTopInfo:function(type, id, txt){
+        var $panel = $("#chatPrideSystemTopInfo");
+        $panel.data("data", {type : type, id : id});
+        $panel.find(".pushcont span").text(txt);
+        $panel.slideDown();
     }
 };

@@ -410,7 +410,8 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .dialog.mine.admin .bubble > i{ background-position:-60px -120px;}
 .dialog.mine.analyst .bubble > i{ background-position:-60px -110px;}
 .info_push{margin-left: 48px; background: #f7f2f3; border-radius: 5px; line-height: 24px; padding: 6px 100px 6px 10px; font-size: 14px; clear: both;position: relative; margin-bottom: 17px; /*margin-right: 48px;*/ word-break: break-all;}
-.staytop{ padding: 17px 20px 0; position: relative; z-index: 20;  }
+.staytop{ padding: 0 20px; position: absolute; z-index: 20; top: 0; width: 100%; box-sizing: border-box; left: 0;  }
+.staytop .info_push{ margin-top: 17px; box-shadow: 0 0 8px rgba(0,0,0,.1); margin-bottom: 0; }
 .info_push .pushcont{ color: #d45d62; }
 .info_push .detailbtn{ display: block; width: 58px; font-size: 14px; color: #fff;text-align: center; background: #3b96d5; border-radius: 3px; position: absolute; right: 33px; top: 6px;}
 .info_push .detailbtn:hover{ background: #2587cb;text-decoration: none; }
@@ -483,7 +484,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .txt_dia label{cursor: pointer;}
 
 /*下拉*/
-.view_select{ width:115px;float:right; height:26px; z-index:20; cursor:pointer; position: absolute; right: 20px; top: 15px;}
+.view_select{ width:115px;float:right; height:26px; z-index:20; cursor:pointer; position: relative; margin-top: 17px;}
 .view_select.dw {}
 .view_select i { display:block; position:absolute; right:12px; top:10px; background-position:-180px -190px; width:16px; height:10px;}
 .view_select.dw i{ background-position:-180px -200px;  }
@@ -526,9 +527,8 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .wechatbox .wechatbtn i{ display: inline-block; width: 20px; height: 18px; background-position: -180px -215px; vertical-align: top; margin: 3px 5px 0 0 }
 .wechatbox .cont{ position: relative;  }
 .wechatbox .wx_qrcode{ display: none; position: absolute; bottom: 24px; right: 0; }
-.wechatbox .wx_qrcode .qr{ padding: 4px; border: 1px solid #dbe9f3; border-radius: 2px; background: #fff; margin-bottom: 9px;}
-.wx_qrcode .qr img{ width: 75px; height: 75px; }
-.wx_qrcode .arr{  }
+.wechatbox .wx_qrcode .qr{ padding: 2px; border: 1px solid #dbe9f3; border-radius: 2px; background: #fff; margin-bottom: 9px;}
+.wx_qrcode .qr img{ width: 62px; height: 62px; }
 .wx_qrcode .arr i{ position: absolute; bottom: 3px; left: 50%; margin-left: -6px; display: block; height: 0; width: 0; border-style: solid; border-width: 7px 6px 0; border-color: #dbe9f3 transparent transparent }
 .wx_qrcode .arr i.i2{ bottom: 5px; margin-left: -6px; border-color: #fff transparent transparent  }
 .wechatbox .wechatbtn:hover + .wx_qrcode{ display: block; }
