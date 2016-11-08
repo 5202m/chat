@@ -169,6 +169,7 @@ var chatTeacher = {
             var userNo =$(obj).attr("userno");
             var group =$(obj).attr("cgs");
             var updateTrain =$(obj).attr("updateTrain");
+            var isDetail = $(obj).attr('isDetail');
             var userGroup = indexJS.userInfo.clientGroup;
             var nickname = indexJS.userInfo.nickname;
             if(group.indexOf(userGroup) != -1){
@@ -190,6 +191,8 @@ var chatTeacher = {
                         if(data.isOK){
                             if(updateTrain){
                                 chatTeacher.showTrani(data.chatGroup);
+                            }else if(isDetail=='true'){
+                                videosTrain.getTrainList();
                             }else{
                                 box.showMsg(data.msg);
                             }

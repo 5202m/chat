@@ -141,7 +141,7 @@ var clientTrainService = {
      */
     getTrainList:function(groupType,teachId,isAll,callback){
         var searchObj={"groupType":groupType,roomType:'train'};
-        var limit=50,searchFields="_id status defaultAnalyst point openDate clientGroup name";
+        var limit=50,searchFields="_id status defaultAnalyst point openDate clientGroup name traninClient";
         if(!isAll){
             searchObj.status={$in:[1,2]};
         }

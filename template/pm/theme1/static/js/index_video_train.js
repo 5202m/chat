@@ -36,7 +36,7 @@ var videosTrain = {
                 var trainHtml = "",trainFormatHtml = videosTrain.formatHtml('train');
                 $.each(result, function(key, row){
                     var introduction = common.trim(row.defaultAnalyst.introduction);
-                    trainHtml += trainFormatHtml.formatStr(row.defaultAnalyst.avatar,row.name, row.defaultAnalyst.userName, introduction,row.defaultAnalyst.userNo,row.clientGroup,row.allowInto,row.allowInto?"进入":"报名",row._id);
+                    trainHtml += trainFormatHtml.formatStr(row.defaultAnalyst.avatar,row.name, row.defaultAnalyst.userName, introduction,row.defaultAnalyst.userNo,row.clientGroup,row.allowInto,row.allowInto?"进入":"报名",row._id,(row.allowInto?'':'('+row.clientSize+'人)'));
                 });
                 $('.pop_train .scrollbox .trainlist').html(trainHtml);
                 $('.pop_train .scrollbox .trainlist .traindetails').click(function(){
@@ -58,19 +58,13 @@ var videosTrain = {
     formatHtml:function(region){
         var formatHtmlArr = [];
         switch(region) {
-            case '':
-                formatHtmlArr.push('<div class="textlive" pt="{0}">');
-                formatHtmlArr.push('</div>');
-                break;
-        }
-        switch(region) {
             case 'train':
                 formatHtmlArr.push('<li>');
                 formatHtmlArr.push('     <div class="headimg"><img src="{0}" alt=""></div>');
                 formatHtmlArr.push('     <div class="train_name">{1}</div>');
                 formatHtmlArr.push('     <span class="slogan">{2}</span>');
                 formatHtmlArr.push('     <p>{3}</p>');
-                formatHtmlArr.push('     <a href="javascript:void(0);" class="trainbtn" userno="{4}" cgs= "{5}" onclick="chatTeacher.trainRegis(this);" sp="{6}" rid="{8}">{7}</a><!--a href="javascript:void(0)" class="trainbtn traindetails">详情</a-->');
+                formatHtmlArr.push('     <a href="javascript:void(0);" class="trainbtn" userno="{4}" cgs= "{5}" isDetail="true" onclick="chatTeacher.trainRegis(this);" sp="{6}" rid="{8}">{7}<span>{9}</span></a><!--a href="javascript:void(0)" class="trainbtn traindetails">详情</a-->');
                 formatHtmlArr.push('</li>');
                 break;
         }
