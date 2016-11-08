@@ -199,12 +199,12 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
                 rowTmp.openDate = common.isValid(row.openDate)?JSON.parse(row.openDate):{};
                 //rowTmp.traninClient = row.traninClient;
                 if(rowTmp.status==2){
-                    if(rowTmp.traninClient){
-                        var length=rowTmp.traninClient.length;
+                    if(row.traninClient){
+                        var length=row.traninClient.length;
                         for(var i=0;i<length;i++){
-                            if(rowTmp.traninClient[i].clientId==chatUser.userId){
+                            if(row.traninClient[i].clientId==chatUser.userId){
                                 if(rowTmp.roomType=='train'){
-                                    rowTmp.trainAuth=rowTmp.traninClient[i].isAuth;
+                                    rowTmp.trainAuth=row.traninClient[i].isAuth;
                                 }else{
                                     rowTmp.trainAuth=1;
                                 }
