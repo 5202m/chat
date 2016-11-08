@@ -27,7 +27,11 @@ var videosLive = {
             if(!common.containSplitStr(cgs,indexJS.userInfo.clientGroup)){
                 if(indexJS.checkClientGroup("vip")){
                    // alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
-                    box.showMsg({title:thiz.find("b").text(),msg:"该房间仅对新客户开放,"});
+                    if(thiz.attr("rt") == "train"){
+                        box.showMsg({title: thiz.find("b").text(), msg: "该房间仅对培训班学员开放,"});
+                    }else {
+                        box.showMsg({title: thiz.find("b").text(), msg: "该房间仅对新客户开放,"});
+                    }
                     $("#popMsgTxt").append('<a class="contactContact" style="color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer" onclick="videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);">如有疑问请联系老师助理</a>。');
                     $("#popMsgCont .yesbtn").bind("click", function(){
                         videosLive.contactTeacher();
@@ -46,6 +50,11 @@ var videosLive = {
             }
             if(thiz.attr("st") == "2"){//权限受限
                 if(thiz.attr("rt") == "train"){
+                    chatTeacher.trainRegis(thiz);
+                    return false;
+                    var currDate = common.formatterDate(new Date(),'-'), currTime = common.getHHMMSS(new Date());
+                    var isAuthTime = thiz.attr("bgt")==currDate && thiz.attr("wbt")>currTime;
+                    var isTraining = thiz.attr("bgt")<=currDate && thiz.attr("wbt")<currTime && thiz.attr("wet")<currTime;
                     if(thiz.attr("ha")=="-1"){
                         if(thiz.attr("sp") != "true"){
                             //$('#trains').click();
@@ -80,7 +89,11 @@ var videosLive = {
                 if(!result.isOK){
                     if(indexJS.checkClientGroup("vip")){
                         //alert("该房间仅对新客户开放，如有疑问，请联系老师助理。");
-                        box.showMsg({title:thiz.find("b").text(),msg:"该房间仅对新客户开放,"});
+                        if(thiz.attr("rt") == "train"){
+                            box.showMsg({title: thiz.find("b").text(), msg: "该房间仅对培训班学员开放,"});
+                        }else {
+                            box.showMsg({title: thiz.find("b").text(), msg: "该房间仅对新客户开放,"});
+                        }
                         $("#popMsgTxt").append('<a class="contactContact" style="color:#2980d1; font-size:14px;text-decoration:none;cursor:pointer" onclick="videosLive.contactTeacher();_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'left_zb_callzhuli\', \'content_left\', 1, true]);">如有疑问请联系老师助理</a>。');
                         $("#popMsgCont .yesbtn").bind("click", function(){
                             videosLive.contactTeacher();

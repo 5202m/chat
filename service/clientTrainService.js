@@ -24,7 +24,7 @@ var clientTrainService = {
                 logger.error("保存培训报名数据失败! >>saveTrain:", err);
                 callback({isOK:false, msg:'培训报名失败'});
             }else{
-                callback({isOK:true, msg: '培训报名成功'});
+                callback({isOK:true, msg: '恭喜您！报名成功。'});
             }
         });
     },
@@ -41,21 +41,42 @@ var clientTrainService = {
             }else{
                 var retInfo={};
                 if(row){
+                    var openDate = JSON.parse(row.openDate);
+                    var currDate = common.formatterDate(new Date(),'-'), currTime = common.getHHMMSS(new Date());
+                    var isAuthTime = openDate.beginDate==currDate && openDate.weekTime[0].beginTime>currTime;
+                    var isTraining = openDate.beginDate<=currDate && openDate.weekTime[0].beginTime<currTime && openDate.weekTime[0].endTime<currTime;
                     if(!common.containSplitStr(row.clientGroup,userInfo.clientGroup)){
                         retInfo=errorMessage.code_3005;
                     }else if(row.traninClient){
-                        var trRow=null,isOpen=false;
+                        var trRow=null,isOpen=false,isEntered = false;
                         for(var i=0;i<row.traninClient.length;i++){
                             trRow=row.traninClient[i];
                             if(trRow.clientId==userInfo.userId){
-                                isOpen=common.dateTimeWeekCheck(row.openDate, false);
-                                if(trRow.isAuth==1){
-                                    retInfo=isOpen?{awInto:true}:errorMessage.code_3006;
-                                }else{
-                                    retInfo=isOpen?errorMessage.code_3007:errorMessage.code_3003;
+                                isEntered = true;
+                                if(isAuthTime){
+                                    retInfo = errorMessage.code_3009;
+                                } else {
+                                    isOpen = common.dateTimeWeekCheck(row.openDate, false);
+                                    if (trRow.isAuth == 1) {
+                                        if(isTraining){
+                                            errorMessage.code_3011.errmsg = errorMessage.code_3011.errmsg.replace("{time}", openDate.weekTime[0].beginTime+"到"+openDate.weekTime[0].endTime);
+                                            retInfo = errorMessage.code_3011;
+                                        } else {
+                                            retInfo = isOpen ? {awInto: true} : errorMessage.code_3006;
+                                        }
+                                    } else {
+                                        if(isTraining){
+                                            retInfo = errorMessage.code_3007;
+                                        } else {
+                                            retInfo = isOpen ? errorMessage.code_3007 : errorMessage.code_3003;
+                                        }
+                                    }
                                 }
                                 break;
                             }
+                        }
+                        if(isAuthTime && !isEntered || isTraining && !isEntered){
+                            retInfo = errorMessage.code_3010;
                         }
                         if(retInfo.errcode||retInfo.awInto){
                             callback(retInfo);

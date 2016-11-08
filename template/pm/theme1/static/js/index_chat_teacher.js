@@ -167,17 +167,25 @@ var chatTeacher = {
     trainRegis:function(obj){
         if(indexJS.userInfo.isLogin) {
             var userNo =$(obj).attr("userno");
-            var group =$(obj).attr("group");
+            var group =$(obj).attr("cgs");
             var updateTrain =$(obj).attr("updateTrain");
             var userGroup = indexJS.userInfo.clientGroup;
             var nickname = indexJS.userInfo.nickname;
             if(group.indexOf(userGroup) != -1){
-                var params = {groupId:$(obj).attr("rmid"),userNo:userNo,clientGroup:group,nickname:nickname};
+                var params = {groupId:$(obj).attr("rid"),userNo:userNo,clientGroup:group,nickname:nickname};
                 common.getJson('/studio/addClientTrain',{data:JSON.stringify(params)},function(data){
                     if(data.awInto){
                         indexJS.toRefreshView();
                     }else if(data.errcode){
-                        box.showMsg(data.errmsg);
+                        if($(obj).attr('rml')=='true' && $.inArray(data.errcode,['3003','3009'])>-1){
+                            $('.train_detail .pop_tit label').text($(obj).text());
+                            $("#train_info_id").empty().load("/studio/getTrDetail?uid="+userNo,function(){
+                                $('#train_info_id .scrollbox[tid="'+userNo+'"]').show();
+                            });
+                            common.openPopup('.blackbg,.train_detail');
+                        } else {
+                            box.showMsg(data.errmsg);
+                        }
                     }else{
                         if(data.isOK){
                             if(updateTrain){
@@ -455,7 +463,7 @@ var chatTeacher = {
                 trainHtml.push('<div class="headimg"><img src="'+row.defaultAnalyst.avatar+'" alt=""></div>');
                 trainHtml.push('<div class="train_name">'+row.name+'</span></div>');
                 trainHtml.push('<p>'+remark+'</p>');
-                trainHtml.push('<a href="javascript:void(0)" class="trainbtn" userno="'+row.defaultAnalyst.userNo+'" awi="'+row.allowInto+'" group= "'+row.clientGroup+'" rmid="'+row._id+'" updateTrain="updateTrain" onclick="chatTeacher.trainRegis(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_Signup\', \''+row.name+'\', 1, true]);">'+(row.allowInto?"进入":"报名")+'（'+row.clientSize+'人）</a>');
+                trainHtml.push('<a href="javascript:void(0)" class="trainbtn" userno="'+row.defaultAnalyst.userNo+'" sp="'+row.allowInto+'" cgs= "'+row.clientGroup+'" rid="'+row._id+'" updateTrain="updateTrain" onclick="chatTeacher.trainRegis(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_Signup\', \''+row.name+'\', 1, true]);">'+(row.allowInto?"进入":"报名")+'（'+row.clientSize+'人）</a>');
                 trainHtml.push('</div></li>');
             });
             if(trAndClNum){

@@ -26,12 +26,15 @@ var errorMessage = {
     "code_3000" : {'errcode' : "3000", 'errmsg' : "积分配置信息不存在！"},
     "code_3001" : {'errcode' : "3001", 'errmsg' : "积分已达上限!"},
     "code_3002" : {'errcode' : "3002", 'errmsg' : "今天已经签到了!"},
-    "code_3003" : {'errcode' : "3003", 'errmsg' : "您已经报名啦，无需重复报名!"},
+    "code_3003" : {'errcode' : "3003", 'errmsg' : "您已成功报名，请等待审核!"},
     "code_3004" : {'errcode' : "3004", 'errmsg' : "有效积分不足!"},
     "code_3005" : {'errcode' : "3005", 'errmsg' : "您操作该培训班的权限受限，请联系客服!"},
     "code_3006" : {'errcode' : "3006", 'errmsg' : "该培训班已结束!"},
-    "code_3007" : {'errcode' : "3007", 'errmsg' : "您的报名还在审批中....."},
-    "code_3008" : {'errcode' : "3008", 'errmsg' : "您没有访问该房间的权限，请联系客服！"}
+    "code_3007" : {'errcode' : "3007", 'errmsg' : "很遗憾，您未通过审核，请关注下期培训班！"/*"您的报名还在审批中....."*/},
+    "code_3008" : {'errcode' : "3008", 'errmsg' : "报名已结束，请关注下期培训班！"/*"您没有访问该房间的权限，请联系客服！"*/},
+    "code_3009" : {'errcode' : "3009", 'errmsg' : "培训班名单正在审批中，请稍后！"},
+    "code_3010" : {'errcode' : "3010", 'errmsg' : "报名已结束，请关注下期培训班！"},
+    "code_3011" : {'errcode' : "3011", 'errmsg' : "培训班开放时间{time}，请稍后再进！"}
 };
 //导出类
 module.exports = errorMessage;

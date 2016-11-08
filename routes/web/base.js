@@ -196,6 +196,8 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
                 rowTmp.roomType = row.roomType;
                 rowTmp.status=row.status;
                 rowTmp.trainAuth = -1;
+                rowTmp.openDate = common.isValid(row.openDate)?JSON.parse(row.openDate):{};
+                //rowTmp.traninClient = row.traninClient;
                 if(rowTmp.status==2){
                     if(rowTmp.traninClient){
                         var length=rowTmp.traninClient.length;
