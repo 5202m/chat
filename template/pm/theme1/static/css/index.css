@@ -535,7 +535,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .wechatbox .wechatbtn:hover{ background: #edf6fc }
 .teacherbox .view_select{width: 165px;}
 .teacherbox .view_select .se_cont{width: 160px;}
-.view_select.teacher_select{ position: relative; right: auto; top: auto; float: right; }
+.view_select.teacher_select{ position: relative; right: auto; top: auto; float: right; margin-top: 5px; }
 .tebox_tit{ font-size: 15px; color: #46484d; line-height: 30px; padding: 6px 0 }
 .tebox_tit span{ font-size: 12px; font-weight: normal;}
 .sd_show { border-top: 1px solid #dcdfe3; margin-top: 10px; padding-bottom: 20px;}
