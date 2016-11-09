@@ -18,7 +18,17 @@ var chatSubscribeService = {
      * @param callback
      */
     getSubscribeList: function(params, callback){
-        var searchObj = {groupType:params.groupType,userId:params.userId,valid:1,status:1,$or:[{analyst:{$ne:''},noticeType:{$ne:''}}]};
+        var now = new Date();
+        var searchObj = {
+            groupType:params.groupType,
+            userId:params.userId,
+            valid:1,
+            status:1,
+            analyst: {$ne:''},
+            noticeType: {$ne:''},
+            startDate : {$lte : now},
+            endDate : {$gt : now}
+        };
         chatSubscribe.find(searchObj,"type analyst noticeType startDate endDate point",function(err, result){
             if(err){
                 logger.error("查询数据失败! >>getSubscribeTypeList:", err);
