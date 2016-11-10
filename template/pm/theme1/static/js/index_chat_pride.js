@@ -431,7 +431,7 @@ var chatPride = {
         if (common.isValid(articleDetail.tag) && common.isValid(articleDetail.remark) && (articleDetail.tag == 'shout_single' || articleDetail.tag == 'resting_order')) {
             var label = "老师喊单啦";
             if(articleDetail.tag == 'resting_order'){
-                label = "老师晒单啦";
+                label = "老师挂单啦";
             }
             txt = (common.isBlank(articleDetail.content) ? (articleDetail.authorInfo.userName||'')+label : articleDetail.content.replace('<p>','').replace('</p>',''));
             $('#chatMsgContentDiv .dialoglist').append(infoPushHtml.formatStr(txt, aid));
