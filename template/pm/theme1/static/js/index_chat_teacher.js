@@ -517,6 +517,9 @@ var chatTeacher = {
                     _this.attr("href",_this.attr("tradeImg"));
                     _this.attr("data-lightbox","sd-img");
                     _this.attr("data-title",_this.attr("isPos") ? "持仓中" : "获利：" +_this.attr("profit"));
+                    _this.removeAttr('onclick');
+                    _this.unbind('click');
+                    _this.click();
                 }
             })
         }
