@@ -1177,8 +1177,12 @@ var chat={
      * 设置在线人数
      */
     setOnlineNum:function(){
-        $(".mod_userlist .titbar label:first").text($("#userListId li").length);
-        $(".mod_userlist .titbar label:last").text($("#visitorListId li").length);
+        indexJS.initOnlineNumSet();
+        $(".mod_userlist .titbar label:first").text($("#userListId li").length + indexJS.onlineNumSet.member);
+        $(".mod_userlist .titbar label:last").text($("#visitorListId li").length + indexJS.onlineNumSet.visitor);
+        $("#userListId li:last").after(chat.getRdC(null, true).join(''));
+        chat.setUserListClick($("#userListId li a[t=header]"));
+        indexJS.setListScroll(".user_box");
     },
     /**
      * 查询UI在线用户
@@ -1198,15 +1202,16 @@ var chat={
      * @returns {number}
      */
     getRandCNum:function(clientGroup,isAv,dataLength){
+        indexJS.initOnlineNumSet();
         var rdNum=0;
         if("vip"==clientGroup){
-            rdNum = parseInt(Math.random()*(10-5+1)+5,10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
+            rdNum = parseInt(Math.random() * (indexJS.onlineNumSet.vipend - indexJS.onlineNumSet.vipstart + 1) + 5, 10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
             if(isNaN(rdNum)){
                 rdNum = 5;
             }
             return rdNum;
         }else if("active"==clientGroup){
-            rdNum = parseInt(Math.random()*(80-40+1)+40,10);//直播室普通房间：会员人数每天递增人数（40-80人）
+            rdNum = parseInt(Math.random() * (indexJS.onlineNumSet.normalend - indexJS.onlineNumSet.normalstart + 1) + 40, 10);//直播室普通房间：会员人数每天递增人数（40-80人）
             if(isNaN(rdNum)){
                 rdNum = 40;
             }
@@ -1221,8 +1226,17 @@ var chat={
      * @param clientGroup
      * @returns {Array}
      */
-     getRdC:function(clientGroup){
-        var rdNum =this.getRandCNum(clientGroup),seq=11,listStr =null;
+     getRdC:function(clientGroup,forceFill){
+        var rdNum=0,seq=11,listStr =null;
+        if(forceFill){
+            var tNum=parseInt($(".mod_userlist .titbar span:first i label").text()),liNum=$("#userListId li").length;
+            if(tNum>liNum){
+                rdNum=tNum-liNum;
+            }
+        }else{
+            rdNum =this.getRandCNum(clientGroup);
+        }
+
         if(clientGroup == "vip"){
             seq=10;
             listStr =["炼金道士","Dil","金石为开","Hal","爱笑大叔","Ada","黄金泰坦","SKY","指点为金","我为金狂"];
@@ -1234,10 +1248,15 @@ var chat={
                 "涨停兄","Pal","唯美小金","Ski","一起交流","Kim","一路高歌","Leo"];
         }
         var data = [],arrIndex=0;
+        var nk='';
         for (var i = 0; i<rdNum; i++) {
             if (listStr.length>0) {
                 arrIndex = Math.floor(Math.random()*listStr.length);
-                data.push(chat.getOnlineUserDom({userId:("userRcd_"+i),clientGroup:clientGroup,nickname:listStr[arrIndex],sequence:seq,userType:0}).dom);
+                nk=listStr[arrIndex];
+                if(forceFill && arrIndex+1<listStr.length){
+                    nk=nk.substring(0,2)+ listStr[arrIndex+1].substring(0,2);
+                }
+                data.push(chat.getOnlineUserDom({userId:("userRcd_"+i),clientGroup:clientGroup,nickname:nk,sequence:seq,userType:0}).dom);
                 listStr.splice(arrIndex, 1);
             } else {
                 break;
@@ -1399,7 +1418,7 @@ var chat={
                             var tradeImg = tradeInfo.tradeImg;//晒单图片
                             var showId = tradeInfo.id;
                             // var content = '<div ><div><span style="font-weight:bold;color:red;">提示：有小伙伴晒单啦！</span></div><div><span style="font-weight:bold;color:red;">晒单人：<label>'+userName+'</label></span></div><div><a href="'+tradeImg+'" data-lightbox="dialog-img"><img src="'+tradeImg+'"></img></a></div>';
-                            chat.showTradeDictionary[showId] = tradeInfo;console.log(chat.showTradeDictionary);
+                            chat.showTradeDictionary[showId] = tradeInfo;
                             var  html = "";
                             html+= '<div class="show-order-box sd-push">';
                             html+='<h6>系统：用户'+userName+'推送了一条新的晒单<a href="javascript:void(0);" class="see" onClick="chat.setPushShowTrade(this)" id="seeShowTrade" key='+showId+'>去看看</a></h6>';
@@ -1417,6 +1436,9 @@ var chat={
                     var data=result.data;
                     if(data && 'login_time_set'==data.type){
                         indexJS.lgBoxTipInfo=result.data;
+                    }
+                    if(data && 'online_mem_set'==data.type){
+                        chat.setOnlineNum();
                     }
                     break;
                 }

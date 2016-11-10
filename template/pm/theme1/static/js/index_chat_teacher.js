@@ -467,12 +467,21 @@ var chatTeacher = {
                 }else{
                     trainHtml.push('<li class="r">');
                 }
+                var txt = '报名',numTxt='('+row.clientSize+'人)',clk=' onclick="chatTeacher.trainRegis(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_Signup\', \''+row.name+'\', 1, true]);"';
+                if(row.allowInto){
+                    txt = '进入';
+                    numTxt = '';
+                }else if(row.isEnd){
+                    txt = '已结束';
+                    clk = '';
+                    numTxt = '';
+                }
                 var remark = common.trim(row.remark);
                 trainHtml.push('<div class="cont">');
                 trainHtml.push('<div class="headimg"><img src="'+row.defaultAnalyst.avatar+'" alt=""></div>');
                 trainHtml.push('<div class="train_name">'+row.name+'</span></div>');
                 trainHtml.push('<p>'+remark+'</p>');
-                trainHtml.push('<a href="javascript:void(0)" class="trainbtn" userno="'+row.defaultAnalyst.userNo+'" sp="'+row.allowInto+'" cgs= "'+row.clientGroup+'" rid="'+row._id+'" updateTrain="updateTrain" onclick="chatTeacher.trainRegis(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_Signup\', \''+row.name+'\', 1, true]);">'+(row.allowInto?"进入":"报名")+'（'+row.clientSize+'人）</a>');
+                trainHtml.push('<a href="javascript:void(0)" class="trainbtn" userno="'+row.defaultAnalyst.userNo+'" sp="'+row.allowInto+'" cgs= "'+row.clientGroup+'" rid="'+row._id+'" updateTrain="updateTrain"'+clk+'>'+txt+numTxt+'</a>');
                 trainHtml.push('</div></li>');
             });
             if(trAndClNum){

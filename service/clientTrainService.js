@@ -44,7 +44,10 @@ var clientTrainService = {
                     var openDate = JSON.parse(row.openDate);
                     var currDate = common.formatterDate(new Date(),'-'), currTime = common.getHHMMSS(new Date());
                     var isAuthTime = openDate.beginDate==currDate && openDate.weekTime[0].beginTime>currTime;
-                    var isTraining = openDate.beginDate<=currDate && openDate.weekTime[0].beginTime<currTime && openDate.weekTime[0].endTime<currTime;
+                    var isTraining = openDate.beginDate<=currDate && openDate.endDate >= currDate;
+                    var weekArr = [6,0,1,2,3,4,5];
+                    var week = new Date().getDay();
+                    var isOpening = openDate.weekTime[weekArr[week]].beginTime<currTime && openDate.weekTime[weekArr[week]].endTime > currTime;
                     if(!common.containSplitStr(row.clientGroup,userInfo.clientGroup)){
                         retInfo=errorMessage.code_3005;
                     }else if(row.traninClient){
@@ -58,8 +61,8 @@ var clientTrainService = {
                                 } else {
                                     isOpen = common.dateTimeWeekCheck(row.openDate, false);
                                     if (trRow.isAuth == 1) {
-                                        if(isTraining){
-                                            errorMessage.code_3011.errmsg = errorMessage.code_3011.errmsg.replace("{time}", openDate.weekTime[0].beginTime+"到"+openDate.weekTime[0].endTime);
+                                        if(isTraining && !isOpening){
+                                            errorMessage.code_3011.errmsg = errorMessage.code_3011.errmsg.replace("{time}", openDate.weekTime[weekArr[week]].beginTime+"到"+openDate.weekTime[weekArr[week]].endTime);
                                             retInfo = errorMessage.code_3011;
                                         } else {
                                             retInfo = isOpen ? {awInto: true} : errorMessage.code_3006;
@@ -156,11 +159,13 @@ var clientTrainService = {
                 callback(null);
             }else{
                 var tmList=[];
-                var row=null;
+                var row=null,currDate = common.formatterDate(new Date(),'-');
                 if(rooms && rooms.length>0){
                     for(var i=0;i<rooms.length;i++){
                         row=rooms[i];
-                        tmList.push({"_id":row._id,name:row.name,clientSize:(row.traninClient?row.traninClient.length:0),allowInto:common.dateTimeWeekCheck(row.openDate, false,true),clientGroup:row.clientGroup,defaultAnalyst:row.defaultAnalyst,status:row.status});
+                        var openDate = JSON.parse(row.openDate)||{};
+                        var isEnd = (openDate.endDate<currDate)||false;
+                        tmList.push({"_id":row._id,name:row.name,clientSize:(row.traninClient?row.traninClient.length:0),allowInto:common.dateTimeWeekCheck(row.openDate, false,true),clientGroup:row.clientGroup,defaultAnalyst:row.defaultAnalyst,status:row.status,isEnd:isEnd});
                     }
                 }
                 callback(tmList);

@@ -36,7 +36,16 @@ var videosTrain = {
                 var trainHtml = "",trainFormatHtml = videosTrain.formatHtml('train');
                 $.each(result, function(key, row){
                     var introduction = common.trim(row.defaultAnalyst.introduction);
-                    trainHtml += trainFormatHtml.formatStr(row.defaultAnalyst.avatar,row.name, row.defaultAnalyst.userName, introduction,row.defaultAnalyst.userNo,row.clientGroup,row.allowInto,row.allowInto?"进入":"报名",row._id,(row.allowInto?'':'('+row.clientSize+'人)'));
+                    var txt = '报名',numTxt='('+row.clientSize+'人)',clk='onclick="chatTeacher.trainRegis(this);" ';
+                    if(row.allowInto){
+                        txt = '进入';
+                        numTxt = '';
+                    }else if(row.isEnd){
+                        txt = '已结束';
+                        clk = '';
+                        numTxt = '';
+                    }
+                    trainHtml += trainFormatHtml.formatStr(row.defaultAnalyst.avatar,row.name, row.defaultAnalyst.userName, introduction,row.defaultAnalyst.userNo,row.clientGroup,row.allowInto,txt ,row._id, numTxt, clk);
                 });
                 $('.pop_train .scrollbox .trainlist').html(trainHtml);
                 $('.pop_train .scrollbox .trainlist .traindetails').click(function(){
@@ -64,7 +73,7 @@ var videosTrain = {
                 formatHtmlArr.push('     <div class="train_name">{1}</div>');
                 formatHtmlArr.push('     <span class="slogan">{2}</span>');
                 formatHtmlArr.push('     <p>{3}</p>');
-                formatHtmlArr.push('     <a href="javascript:void(0);" class="trainbtn" userno="{4}" cgs= "{5}" isDetail="true" onclick="chatTeacher.trainRegis(this);" sp="{6}" rid="{8}">{7}<span>{9}</span></a><a href="javascript:void(0)" class="trainbtn traindetails">详情</a>');
+                formatHtmlArr.push('     <a href="javascript:void(0);" class="trainbtn" userno="{4}" cgs= "{5}" isDetail="true" {10}sp="{6}" rid="{8}">{7}<span>{9}</span></a><a href="javascript:void(0)" class="trainbtn traindetails">详情</a>');
                 formatHtmlArr.push('</li>');
                 break;
         }

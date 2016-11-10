@@ -17,6 +17,7 @@ var indexJS ={
     syllabusData:null,//课程数据
     onlineCsStatus:0,//在线客服链接状态：0-未连接 1-正在连接 2-已连接
     infoNewCount:0,//快讯新条数
+    onlineNumSet:null,//虚拟在线人数
     init:function(){
         this.serverTimeUp();
         this.setVisitStore();//设置访客存储
@@ -896,6 +897,21 @@ var indexJS ={
                 $(".course_nav a[d='" + currCourse.day + "']").trigger("click");
                 $('.course_tab[d='+currCourse.day+']').find('li a[st="'+currCourse.startTime+'"][et="'+currCourse.endTime+'"]').addClass("on");
             }
+        }
+    },
+    /**
+     * 初始化在线人数设置值
+     */
+    initOnlineNumSet : function(){
+        if(common.isBlank(this.onlineNumSet)){
+            this.onlineNumSet = {"member":0,"visitor":0,"vipstart":5,"vipend":10,"normalstart":40,"normalend":80};
+        }else{
+            this.onlineNumSet.member = parseInt(this.onlineNumSet.member) || 40;
+            this.onlineNumSet.visitor = parseInt(this.onlineNumSet.visitor) || 80;
+            this.onlineNumSet.vipstart = parseInt(this.onlineNumSet.vipstart) || 5;
+            this.onlineNumSet.vipend = parseInt(this.onlineNumSet.vipend) || 10;
+            this.onlineNumSet.normalstart = parseInt(this.onlineNumSet.normalstart) || 40;
+            this.onlineNumSet.normalend = parseInt(this.onlineNumSet.normalend) || 80;
         }
     }
 };

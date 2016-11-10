@@ -475,6 +475,8 @@
         indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
         var lgBoxTipInfo='<%- lgBoxTipInfo %>';
         indexJS.lgBoxTipInfo=common.isBlank(lgBoxTipInfo)?null:JSON.parse(lgBoxTipInfo);
+        var onlineNumVal = '<%- onlineNumValSet%>';
+        indexJS.onlineNumSet=common.isBlank(onlineNumVal)?null:JSON.parse(onlineNumVal);
         function widthCheck(){
             var ww = $(window).width();
             if(ww <= 1600 ){
