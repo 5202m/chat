@@ -1180,7 +1180,11 @@ var chat={
         indexJS.initOnlineNumSet();
         $(".mod_userlist .titbar label:first").text($("#userListId li").length + indexJS.onlineNumSet.member);
         $(".mod_userlist .titbar label:last").text($("#visitorListId li").length + indexJS.onlineNumSet.visitor);
-        $("#userListId li:last").after(chat.getRdC(null, true).join(''));
+        if($("#userListId li").length>0) {
+            $("#userListId li:last").after(chat.getRdC(null, true).join(''));
+        }else{
+            $("#userListId").html(chat.getRdC(null, true).join(''));
+        }
         chat.setUserListClick($("#userListId li a[t=header]"));
         indexJS.setListScroll(".user_box");
     },

@@ -467,12 +467,13 @@ var chatTeacher = {
                 }else{
                     trainHtml.push('<li class="r">');
                 }
-                var txt = '报名',numTxt='('+row.clientSize+'人)',clk=' onclick="chatTeacher.trainRegis(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_Signup\', \''+row.name+'\', 1, true]);"';
+                var txt = '报名',cls='trainbtn',numTxt='('+row.clientSize+'人)',clk=' onclick="chatTeacher.trainRegis(this);_gaq.push([\'_trackEvent\', \'pmchat_studio\', \'right_ls_Signup\', \''+row.name+'\', 1, true]);"';
                 if(row.allowInto){
                     txt = '进入';
                     numTxt = '';
                 }else if(row.isEnd){
                     txt = '已结束';
+                    cls += ' b2';
                     clk = '';
                     numTxt = '';
                 }
@@ -481,7 +482,7 @@ var chatTeacher = {
                 trainHtml.push('<div class="headimg"><img src="'+row.defaultAnalyst.avatar+'" alt=""></div>');
                 trainHtml.push('<div class="train_name">'+row.name+'</span></div>');
                 trainHtml.push('<p>'+remark+'</p>');
-                trainHtml.push('<a href="javascript:void(0)" class="trainbtn" userno="'+row.defaultAnalyst.userNo+'" sp="'+row.allowInto+'" cgs= "'+row.clientGroup+'" rid="'+row._id+'" updateTrain="updateTrain"'+clk+'>'+txt+numTxt+'</a>');
+                trainHtml.push('<a href="javascript:void(0)" class="'+cls+'" userno="'+row.defaultAnalyst.userNo+'" sp="'+row.allowInto+'" cgs= "'+row.clientGroup+'" rid="'+row._id+'" updateTrain="updateTrain"'+clk+'>'+txt+numTxt+'</a>');
                 trainHtml.push('</div></li>');
             });
             if(trAndClNum){

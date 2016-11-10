@@ -814,6 +814,7 @@ body{ background:#dadfe6;font-family:'Microsoft YaHei','Microsoft JhengHei','Sim
 .trainlist li > p{ font-size: 14px; line-height: 21px; padding: 10px 20px; text-align: justify; }
 .trainlist .trainbtn{ background: #3b96d5; display: inline-block;*display: inline;*zoom: 1; width: auto; padding: 0 25px; line-height: 24px; font-size: 14px; color: #fff; border-radius: 2px; margin: 0 5px }
 .trainlist .trainbtn:hover{ background: #2587cb;text-decoration: none; }
+.trainlist .trainbtn.b2{ background:#a4adb3}
 .popup_box.train_detail{ height: 600px; margin-top: -300px;}
 .popup_box.train_detail > .cont{ padding: 35px 40px 0 }
 
