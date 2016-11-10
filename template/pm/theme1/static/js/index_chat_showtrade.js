@@ -309,7 +309,7 @@ var chatShowTrade = {
             }
             txt = row.boUser.userName + '在晒单墙晒了一单，' + (common.isBlank(row.title)?'...':row.title);
             $('#chatMsgContentDiv .dialoglist').append(html.formatStr(txt, row.id));
-            chat.showSystemTopInfo("class_note", row.id, txt);
+            chat.showSystemTopInfo("showTrade", row.id, txt);
         }
         chat.setTalkListScroll(true);
         $('#chatMsgContentDiv .dialoglist .pushclose').unbind('click');
