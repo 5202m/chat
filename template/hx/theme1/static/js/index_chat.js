@@ -1292,6 +1292,11 @@ var chat={
                 }
             }
             $('#userListId').html(userArr.join(""));
+            //如果只有一条成员记录则直接后面追加
+            if(userArr.length<=1){
+                fR=1;
+                fV=1;
+            }
             var targetDom=$('#userListId li:eq('+((clientGroup=="vip"?fV:fR)-1)+')');
             if(targetDom.length>0){
                 targetDom.after(chat.getRdC(clientGroup).join(''));
