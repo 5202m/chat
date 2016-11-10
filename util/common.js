@@ -148,8 +148,9 @@ var common = {
      * @param nullResult 空值结果
      *          1）对于禁言设置，空值表示没有设置禁言，即当前时间不包含在其中。传值false
      *          2）对于聊天规则设置，空值表示永久生效，即当前时间包含在其中。传值true
+     * @param checkDate 仅仅检查日期是否通过
      */
-    dateTimeWeekCheck:function(srcDateTime, nullResult){
+    dateTimeWeekCheck:function(srcDateTime, nullResult,checkDate){
         if(this.isBlank(srcDateTime)){
             return !!nullResult;
         }
@@ -161,6 +162,9 @@ var common = {
         }
         if(!isPass){
             return false;
+        }
+        if(checkDate){
+            return isPass;
         }
         var weekTime=dateTime.weekTime;
         if(this.isBlank(weekTime)){

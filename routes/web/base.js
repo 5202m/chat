@@ -182,6 +182,7 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
             }
         }else{
             viewDataObj.lgBoxTipInfo="";
+            viewDataObj.onlineNumValSet='';
             data.studioList.forEach(function(row){
                 rowTmp={};
                 rowTmp.id=row._id;
@@ -238,6 +239,8 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
                     }else if(ruleRow.type == 'speak_num_set'&& isPass){
                         rowTmp.speakNum=ruleRow.beforeRuleVal;
                         rowTmp.speakNumTip = ruleRow.afterRuleTips;
+                    }else if(ruleRow.type == 'online_mem_set'){
+                        viewDataObj.onlineNumValSet=ruleRow.beforeRuleVal;
                     }
                 }
                 rowTmp.remark=common.trim(row.remark);

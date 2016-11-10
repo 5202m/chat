@@ -160,7 +160,7 @@ var clientTrainService = {
                 if(rooms && rooms.length>0){
                     for(var i=0;i<rooms.length;i++){
                         row=rooms[i];
-                        tmList.push({"_id":row._id,name:row.name,clientSize:(row.traninClient?row.traninClient.length:0),allowInto:common.dateTimeWeekCheck(row.openDate, false),clientGroup:row.clientGroup,defaultAnalyst:row.defaultAnalyst,status:row.status});
+                        tmList.push({"_id":row._id,name:row.name,clientSize:(row.traninClient?row.traninClient.length:0),allowInto:common.dateTimeWeekCheck(row.openDate, false,true),clientGroup:row.clientGroup,defaultAnalyst:row.defaultAnalyst,status:row.status});
                     }
                 }
                 callback(tmList);
