@@ -166,7 +166,7 @@ var chatTeacher = {
     trainDetails : function(obj){
         var $this = $(obj);
         $('.train_detail .pop_tit label').text($this.parent().parent().find(".train_name").text());
-        var userNo=$this.prev().attr("userno");
+        var userNo=$this.attr("userno");
         $("#train_info_id").empty().load("/studio/getTrDetail?uid="+userNo,function(){
             $('#train_info_id .scrollbox[tid="'+userNo+'"]').show();
         });
