@@ -162,7 +162,20 @@ var chatTeacher = {
             $("#sdNoAuthBox,.blackbg").show();
         }
     },
-
+    /**培训班详情*/
+    trainDetails : function(obj){
+        var $this = $(obj);
+        $('.train_detail .pop_tit label').text($this.parent().parent().find(".train_name").text());
+        var userNo=$this.prev().attr("userno");
+        $("#train_info_id").empty().load("/studio/getTrDetail?uid="+userNo,function(){
+            $('#train_info_id .scrollbox[tid="'+userNo+'"]').show();
+        });
+        common.openPopup('.blackbg,.train_detail');
+    },
+    /**按照培训班分析师编号报名培训班*/
+    trainRegisByUserNo : function(userNo){
+        chatTeacher.trainRegis($(".pop_train .scrollbox .trainlist a[userno='" + userNo + "']")[0]);
+    },
     /**培训报名*/
     trainRegis:function(obj){
         if(indexJS.userInfo.isLogin) {
