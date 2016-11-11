@@ -173,7 +173,12 @@ var chatTeacher = {
     },
     /**按照培训班分析师编号报名培训班*/
     trainRegisByUserNo : function(userNo){
-        chatTeacher.trainRegis($(".pop_train .scrollbox .trainlist a[userno='" + userNo + "']")[0]);
+        var $obj = $(".pop_train .scrollbox .trainlist a[userno='" + userNo + "']");
+        if($obj.size() == 0){
+            $obj = $("#roomList_panel a[userno='" + userNo + "']")
+        }
+        chatTeacher.trainRegis($obj[0]);
+
     },
     /**培训报名*/
     trainRegis:function(obj){
@@ -190,7 +195,7 @@ var chatTeacher = {
                     if(data.awInto){
                         indexJS.toRefreshView();
                     }else if(data.errcode){
-                        if($(obj).attr('rml')=='true' && $.inArray(data.errcode,['3003','3009'])>-1){
+                        if(!$(".train_detail").is(":visible") && $(obj).attr('rml')=='true' && $.inArray(data.errcode,['3003','3009'])>-1){
                             $('.train_detail .pop_tit label').text($(obj).text());
                             $("#train_info_id").empty().load("/studio/getTrDetail?uid="+userNo,function(){
                                 common.openPopup('.blackbg,.train_detail');
