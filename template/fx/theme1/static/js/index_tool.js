@@ -209,6 +209,7 @@ var tool={
                     $('.dr3').addClass('initCalendar');
                     tool.financeShowIntervalId = window.setInterval("tool.setFinanceData('',1)", 60000);
                 });
+                _gaq.push(['_trackEvent','fx_studio','tool_calendar','float_right',1,true]);
                 break;
             case 'dropitem dr4':
                 tool.setCftcCot();/*cftc持仓比例*/
@@ -223,6 +224,7 @@ var tool={
                 break;
             case 'dropitem dr9':
                 tool.initShowTrade();/*晒单墙*/
+                _gaq.push(['_trackEvent','fx_studio','tool_showTrade','float_right',1,true]);
                 break;
         }
     },
