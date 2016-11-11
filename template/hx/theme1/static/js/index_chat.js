@@ -1207,13 +1207,13 @@ var chat={
     getRandCNum:function(clientGroup,isAv,dataLength){
         var rdNum=0;
         if("vip"==clientGroup && indexJS.onlineNumSet.vipend>0 && indexJS.onlineNumSet.vipstart>0){
-            rdNum = parseInt(Math.random() * (indexJS.onlineNumSet.vipend - indexJS.onlineNumSet.vipstart + 1) + 5, 10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
+            rdNum = parseInt(Math.random() * (indexJS.onlineNumSet.vipend - indexJS.onlineNumSet.vipstart + 1) + indexJS.onlineNumSet.vipstart, 10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
             if(isNaN(rdNum)){
                 rdNum = 5;
             }
             return rdNum;
         }else if("active"==clientGroup && indexJS.onlineNumSet.normalend>0 && indexJS.onlineNumSet.normalstart>0){
-            rdNum = parseInt(Math.random() * (indexJS.onlineNumSet.normalend - indexJS.onlineNumSet.normalstart + 1) + 40, 10);//直播室普通房间：会员人数每天递增人数（40-80人）
+            rdNum = parseInt(Math.random() * (indexJS.onlineNumSet.normalend - indexJS.onlineNumSet.normalstart + 1) + indexJS.onlineNumSet.normalstart, 10);//直播室普通房间：会员人数每天递增人数（40-80人）
             if(isNaN(rdNum)){
                 rdNum = 40;
             }
