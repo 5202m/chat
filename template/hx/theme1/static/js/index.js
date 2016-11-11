@@ -906,12 +906,12 @@ var indexJS ={
         if(common.isBlank(this.onlineNumSet)){
             this.onlineNumSet = {"member":0,"visitor":0,"vipstart":5,"vipend":10,"normalstart":40,"normalend":80};
         }else{
-            this.onlineNumSet.member = parseInt(this.onlineNumSet.member) || 40;
-            this.onlineNumSet.visitor = parseInt(this.onlineNumSet.visitor) || 80;
-            this.onlineNumSet.vipstart = parseInt(this.onlineNumSet.vipstart) || 5;
-            this.onlineNumSet.vipend = parseInt(this.onlineNumSet.vipend) || 10;
-            this.onlineNumSet.normalstart = parseInt(this.onlineNumSet.normalstart) || 40;
-            this.onlineNumSet.normalend = parseInt(this.onlineNumSet.normalend) || 80;
+            this.onlineNumSet.member = parseInt(this.onlineNumSet.member) || 0;
+            this.onlineNumSet.visitor = parseInt(this.onlineNumSet.visitor) || 0;
+            this.onlineNumSet.vipstart = parseInt(this.onlineNumSet.vipstart) || 0;
+            this.onlineNumSet.vipend = parseInt(this.onlineNumSet.vipend) || 0;
+            this.onlineNumSet.normalstart = parseInt(this.onlineNumSet.normalstart) || 0;
+            this.onlineNumSet.normalend = parseInt(this.onlineNumSet.normalend) || 0;
         }
     }
 };

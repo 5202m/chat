@@ -1178,11 +1178,12 @@ var chat={
      */
     setOnlineNum:function(){
         indexJS.initOnlineNumSet();
-        $(".mod_userlist .titbar label:first").text($("#userListId li").length + indexJS.onlineNumSet.member);
-        $(".mod_userlist .titbar label:last").text($("#visitorListId li").length + indexJS.onlineNumSet.visitor);
         var clientGroup = $("#roomInfoId").text().match("VIP")!=null?"vip":"active";
         var userList = chat.getRdC(clientGroup, true);
         $("#userListId").append(userList.join(''));
+        chat.addVisitor();
+        $(".mod_userlist .titbar label:first").text($("#userListId li").length + (userList.length>0?indexJS.onlineNumSet.member:0));
+        $(".mod_userlist .titbar label:last").text($("#visitorListId li").length + (clientGroup=='vip'?0:indexJS.onlineNumSet.visitor));
         chat.setUserListClick($("#userListId li a[t=header]"));
         indexJS.setListScroll(".user_box");
     },
@@ -1204,15 +1205,14 @@ var chat={
      * @returns {number}
      */
     getRandCNum:function(clientGroup,isAv,dataLength){
-        indexJS.initOnlineNumSet();
         var rdNum=0;
-        if("vip"==clientGroup){
+        if("vip"==clientGroup && indexJS.onlineNumSet.vipend>0 && indexJS.onlineNumSet.vipstart>0){
             rdNum = parseInt(Math.random() * (indexJS.onlineNumSet.vipend - indexJS.onlineNumSet.vipstart + 1) + 5, 10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
             if(isNaN(rdNum)){
                 rdNum = 5;
             }
             return rdNum;
-        }else if("active"==clientGroup){
+        }else if("active"==clientGroup && indexJS.onlineNumSet.normalend>0 && indexJS.onlineNumSet.normalstart>0){
             rdNum = parseInt(Math.random() * (indexJS.onlineNumSet.normalend - indexJS.onlineNumSet.normalstart + 1) + 40, 10);//直播室普通房间：会员人数每天递增人数（40-80人）
             if(isNaN(rdNum)){
                 rdNum = 40;
@@ -1269,6 +1269,28 @@ var chat={
         return data;
     },
     /**
+     * 添加游客
+     * @param data
+     */
+    addVisitor:function(){
+        //如客户数小于500，则追加额外游客数
+        var size=chat.getRandCNum(null,$("#roomInfoId").attr("av")=="true",null);
+        var row=null,currDom=null,visitorArr=[],data=[];
+        if(size>0){
+            var randId= 0;
+            for(var i=0;i<size;i++){
+                randId=common.randomNumber(6);
+                data.push({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:-1});
+            }
+        }
+        for(var i in data){
+            row=data[i];
+            currDom=chat.getOnlineUserDom(row).dom;
+            visitorArr.push(currDom);//设置在线访客
+        }
+        $('#visitorListId').html(visitorArr.join(""));
+    },
+    /**
      * 设置socket
      */
     setSocket:function(){
@@ -1282,16 +1304,7 @@ var chat={
             $(".img-loading[pf=chatMessage]").show();
         });
         //进入聊天室加载的在线用户
-        this.socket.on('onlineUserList',function(data,dataLength,visitorNum){
-            //如客户数小于500，则追加额外游客数
-            var size=chat.getRandCNum(null,$("#roomInfoId").attr("av")=="true",dataLength);
-            if(size>0){
-                var randId= 0;
-                for(var i=0;i<size;i++){
-                    randId=common.randomNumber(6);
-                    data.push({userId:("visitor_"+randId),clientGroup:'visitor',nickname:('游客_'+randId),sequence:14,userType:-1});
-                }
-            }
+        this.socket.on('onlineUserList',function(data, dataLength, visitorNum){
             var clientGroup = $("#roomInfoId").text().match("VIP")!=null?"vip":"active";
             var row=null,currDom=null,visitorArr=[],userArr=[];
             var fR= 0,fV=0;//自动生成的客户的数据索引
@@ -1324,7 +1337,7 @@ var chat={
             if(targetDom.length>0){
                 targetDom.after(chat.getRdC(clientGroup).join(''));
             }
-            $('#visitorListId').html(visitorArr.join(""));
+            //$('#visitorListId').html(visitorArr.join(""));
             chat.setUserListClick($("#userListId li a[t=header]"));
             chat.setUserListClick($("#visitorListId li a[t=header]"));
             chat.setOnlineNum();//设置在线人数
