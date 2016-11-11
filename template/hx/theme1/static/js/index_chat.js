@@ -28,7 +28,10 @@ var chat={
      */
     setEvent:function(){
         $(".mod_userlist .titbar span").click(function(){
-            $(this).addClass("on").siblings(".on").removeClass("on");
+            if(!$(this).hasClass('clicked')){
+                chat.addVisitor();
+            }
+            $(this).addClass("on clicked").siblings(".on").removeClass("on");
             $(".user_box ul").hide().eq($(this).index()-1).show();
         });
         //初始化表情事件
@@ -1179,11 +1182,12 @@ var chat={
     setOnlineNum:function(){
         indexJS.initOnlineNumSet();
         var clientGroup = $("#roomInfoId").text().match("VIP")!=null?"vip":"active";
+        //chat.addVisitor();
+        var size=$("#visitorListId li").length==0?chat.getRandCNum(null,$("#roomInfoId").attr("av")=="true",null):$("#visitorListId li").length;
+        $(".mod_userlist .titbar label:first").text($("#userListId li").length + indexJS.onlineNumSet.member);
+        $(".mod_userlist .titbar label:last").text(size + indexJS.onlineNumSet.visitor);
         var userList = chat.getRdC(clientGroup, true);
         $("#userListId").append(userList.join(''));
-        chat.addVisitor();
-        $(".mod_userlist .titbar label:first").text($("#userListId li").length + (userList.length>0?indexJS.onlineNumSet.member:0));
-        $(".mod_userlist .titbar label:last").text($("#visitorListId li").length + (clientGroup=='vip'?0:indexJS.onlineNumSet.visitor));
         chat.setUserListClick($("#userListId li a[t=header]"));
         indexJS.setListScroll(".user_box");
     },
@@ -1205,6 +1209,7 @@ var chat={
      * @returns {number}
      */
     getRandCNum:function(clientGroup,isAv,dataLength){
+        indexJS.initOnlineNumSet();
         var rdNum=0;
         if("vip"==clientGroup && indexJS.onlineNumSet.vipend>0 && indexJS.onlineNumSet.vipstart>0){
             rdNum = parseInt(Math.random() * (indexJS.onlineNumSet.vipend - indexJS.onlineNumSet.vipstart + 1) + indexJS.onlineNumSet.vipstart, 10);//直播室VIP房间：VIP会员人数每天递增人数（5-10人）
@@ -1250,18 +1255,24 @@ var chat={
                 "涨停兄","Pal","唯美小金","Ski","一起交流","Kim","一路高歌","Leo"];
         }
         var data = [],arrIndex=0;
-        var nk='',userId='';
+        var nk='',userId='',nkIndex=0;
         for (var i = 0; i<rdNum; i++) {
             if (listStr.length>0) {
                 arrIndex = Math.floor(Math.random()*listStr.length);
                 nk=listStr[arrIndex];
                 userId = "userRcd_"+i;
                 if(forceFill && arrIndex+1<listStr.length){
-                    nk=nk.substring(0,2)+ listStr[arrIndex+1].substring(0,2);
-                    userId = "userRcd_"+nk.substring(0,1)+i;
+                    nkIndex=common.randomIndex(nk.length);
+                    if(nkIndex==0){
+                        nkIndex=1;
+                    }
+                    nk=nk.substring(0,nkIndex)+ listStr[arrIndex+1].substring(0,nkIndex)+common.randomNumber(3);
+                    userId = "userRcd_"+nk;
                 }
                 data.push(chat.getOnlineUserDom({userId:userId,clientGroup:clientGroup,nickname:nk,sequence:seq,userType:0}).dom);
-                listStr.splice(arrIndex, 1);
+                if(!forceFill){
+                    listStr.splice(arrIndex, 1);
+                }
             } else {
                 break;
             }
