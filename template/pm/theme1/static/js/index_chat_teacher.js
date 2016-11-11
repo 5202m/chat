@@ -184,7 +184,7 @@ var chatTeacher = {
             var isDetail = $(obj).attr('isDetail');
             var userGroup = indexJS.userInfo.clientGroup;
             var nickname = indexJS.userInfo.nickname;
-            if(group.indexOf(userGroup) != -1){
+            if(group && group.indexOf(userGroup) != -1){
                 var params = {groupId:$(obj).attr("rid"),userNo:userNo,clientGroup:group,nickname:nickname};
                 common.getJson('/studio/addClientTrain',{data:JSON.stringify(params)},function(data){
                     if(data.awInto){

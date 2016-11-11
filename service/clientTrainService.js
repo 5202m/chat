@@ -43,13 +43,33 @@ var clientTrainService = {
                 if(row){
                     var openDate = JSON.parse(row.openDate);
                     var currDate = common.formatterDate(new Date(),'-'), currTime = common.getHHMMSS(new Date());
-                    var weekArr = [6,0,1,2,3,4,5];
                     var week = new Date().getDay();
-                    var isAuthTime = openDate.beginDate==currDate && (!openDate.weekTime || openDate.weekTime[weekArr[week]].beginTime>currTime);
                     var isTraining = openDate.beginDate<=currDate && openDate.endDate >= currDate;
-                    var isOpening = !openDate.weekTime || (openDate.weekTime[weekArr[week]].beginTime<currTime && openDate.weekTime[weekArr[week]].endTime > currTime);
+                    var isAuthTime = false;
+                    var isOpening = false;
+                    var openTimeStr = [];
+                    var weekTimeTmp = null;
+                    for(var i = 0, lenI = !openDate.weekTime ? 0 : openDate.weekTime.length; i < lenI; i++){
+                        weekTimeTmp = openDate.weekTime[i];
+                        if(isTraining){
+                            if(!weekTimeTmp.week || weekTimeTmp.week == week){
+                                if((!weekTimeTmp.beginTime || weekTimeTmp.beginTime<=currTime)
+                                    && (!weekTimeTmp.endTime || weekTimeTmp.endTime>=currTime)){
+                                    isOpening = true;
+                                    openTimeStr = [];
+                                    break;
+                                }else if(weekTimeTmp.beginTime && weekTimeTmp.beginTime>currTime){
+                                    isAuthTime = true;
+                                }
+                                openTimeStr.push((weekTimeTmp.beginTime || "00:00:00") + "到" + (weekTimeTmp.endTime || "23:59:59"));
+                            }
+                        }
+                    }
+                    openTimeStr = openTimeStr.join("、");
+
                     if(!common.containSplitStr(row.clientGroup,userInfo.clientGroup)){
                         retInfo=errorMessage.code_3005;
+                        callback(retInfo);
                     }else if(row.traninClient){
                         var trRow=null,isOpen=false,isEntered = false;
                         for(var i=0;i<row.traninClient.length;i++){
@@ -62,8 +82,10 @@ var clientTrainService = {
                                     isOpen = common.dateTimeWeekCheck(row.openDate, false);
                                     if (trRow.isAuth == 1) {
                                         if(isTraining && !isOpening){
-                                            errorMessage.code_3011.errmsg = errorMessage.code_3011.errmsg.replace("{time}", openDate.weekTime[weekArr[week]].beginTime+"到"+openDate.weekTime[weekArr[week]].endTime);
-                                            retInfo = errorMessage.code_3011;
+                                            retInfo = {
+                                                'errcode' : errorMessage.code_3011.errcode,
+                                                'errmsg' : errorMessage.code_3011.errmsg.replace("{time}", openTimeStr)
+                                            };
                                         } else {
                                             retInfo = isOpen ? {awInto: true} : errorMessage.code_3006;
                                         }
@@ -78,7 +100,7 @@ var clientTrainService = {
                                 break;
                             }
                         }
-                        if(isAuthTime && !isEntered || isTraining && !isEntered){
+                        if(isTraining && !isEntered){
                             retInfo = errorMessage.code_3010;
                         }
                         if(retInfo.errcode||retInfo.awInto){
