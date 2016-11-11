@@ -1180,13 +1180,9 @@ var chat={
         indexJS.initOnlineNumSet();
         $(".mod_userlist .titbar label:first").text($("#userListId li").length + indexJS.onlineNumSet.member);
         $(".mod_userlist .titbar label:last").text($("#visitorListId li").length + indexJS.onlineNumSet.visitor);
-        if($("#userListId li").length>0) {
-            var userList = chat.getRdC(null, true);
-            $("#userListId").append(userList.join(''));
-        }else if($("#userListId li").length==0){
-            var userList = chat.getRdC(null, true);
-            $("#userListId").html(userList.join(''));
-        }
+        var clientGroup = $("#roomInfoId").text().match("VIP")!=null?"vip":"active";
+        var userList = chat.getRdC(clientGroup, true);
+        $("#userListId").append(userList.join(''));
         chat.setUserListClick($("#userListId li a[t=header]"));
         indexJS.setListScroll(".user_box");
     },
