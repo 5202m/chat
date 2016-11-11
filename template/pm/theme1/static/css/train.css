@@ -38,8 +38,8 @@
 .ph_cont .imgdiv img{ width: 100%; height: auto; }
 .train_detail .applybtn{ display: block; width: 200px; height: 40px; line-height: 40px; font-size: 18px; color: #fff; background: #3b96d5; font-weight: bold; margin:30px auto 40px; text-align: center; border-radius: 4px }
 .train_detail .applybtn:hover{ background: #2587cb;text-decoration: none; }
-.train_detail .train_ad { margin-bottom: 20px; display: block; background: url(../img/train_ad.jpg) 0 0 no-repeat; height: 224px;}
-.train_detail .train_ad .actrulebtn{display: inline-block;*display: inline;*zoom: 1; margin: 170px 0 0 380px; color: #ba2e36; font-size: 16px; line-height: 1.5; }
+.train_detail .train_ad { margin-bottom: 20px; display: block; background: url(../img/train_ad.jpg) center 0 no-repeat; height: 204px;}
+.train_detail .train_ad .actrulebtn{display: inline-block;*display: inline;*zoom: 1; margin: 38px 0 0 330px; color: #ba2e36; font-size: 16px; line-height: 1.5; }
 .train_ad .actrulebtn i{ display: inline-block;*display: inline;*zoom: 1; width: 6px; height: 12px; background-position: -100px -220px; margin: 3px 5px 0 0 }
 .detail_tab td{ border-bottom: 1px solid #e1e5eb; padding: 15px 0; font-size: 14px; color: #5d5f66  }
 .detail_tab th{padding: 15px 0; padding-left: 10px; text-align: left; font-weight: normal; border-bottom: 1px solid #e1e5eb; font-size: 14px; color: #5d5f66  ; vertical-align: top; line-height: 30px;}
@@ -88,9 +88,9 @@
 .ligg .kcbg{ position: relative; }
 .ligg .kcbgpic{ width: 286px; height: 168px; background: url(../img/ligg_kcbg.jpg) 0 0 no-repeat; position: absolute; right: -27px; top: 20px; z-index: -1; }
 .ligg .apply_info{ border: 1px solid #d7dde0; font-size: 0; text-align: center; margin-top: 15px; }
-.ligg .apply_info .inbox{ position: relative; display: inline-block;*display: inline;*zoom: 1; width: 35%; vertical-align: top; font-size: 14px; color: #5d5f66; line-height: 1.6; height: 160px; background: #fff }
+.ligg .apply_info .inbox{ position: relative; display: inline-block;*display: inline;*zoom: 1; width: 36%; vertical-align: top; font-size: 14px; color: #5d5f66; line-height: 1.6; height: 160px; background: #fff }
 .ligg .apply_info .inbox.in1{ width: 25.99%; }
-.ligg .apply_info .inbox.in2{ width: 39%; }
+.ligg .apply_info .inbox.in2{ width: 38%; }
 .ligg .apply_info .inbox i.arr{ position: absolute; width: 43px; height: 100%; padding:1px 0; background: url(../img/ligg_arr.png) center center no-repeat; top: -1px; right: 0; }
 .apply_info .inbox .cont{ padding-left: 30px; text-align: left; padding-top: 15px; }
 .apply_info .inbox p{ padding-left: 0; }
