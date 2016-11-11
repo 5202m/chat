@@ -43,11 +43,11 @@ var clientTrainService = {
                 if(row){
                     var openDate = JSON.parse(row.openDate);
                     var currDate = common.formatterDate(new Date(),'-'), currTime = common.getHHMMSS(new Date());
-                    var isAuthTime = openDate.beginDate==currDate && openDate.weekTime[0].beginTime>currTime;
-                    var isTraining = openDate.beginDate<=currDate && openDate.endDate >= currDate;
                     var weekArr = [6,0,1,2,3,4,5];
                     var week = new Date().getDay();
-                    var isOpening = openDate.weekTime[weekArr[week]].beginTime<currTime && openDate.weekTime[weekArr[week]].endTime > currTime;
+                    var isAuthTime = openDate.beginDate==currDate && (!openDate.weekTime || openDate.weekTime[weekArr[week]].beginTime>currTime);
+                    var isTraining = openDate.beginDate<=currDate && openDate.endDate >= currDate;
+                    var isOpening = !openDate.weekTime || (openDate.weekTime[weekArr[week]].beginTime<currTime && openDate.weekTime[weekArr[week]].endTime > currTime);
                     if(!common.containSplitStr(row.clientGroup,userInfo.clientGroup)){
                         retInfo=errorMessage.code_3005;
                     }else if(row.traninClient){
