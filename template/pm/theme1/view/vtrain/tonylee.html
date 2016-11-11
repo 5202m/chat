@@ -1,0 +1,105 @@
+<link href="/pm/theme1/css/train.min.css" type="text/css" rel="stylesheet"/>
+<div class="scrollbox ligg">
+    <div class="ligg_top clearfix">
+        <div class="lbox">
+            <div class="himg"><img src="/pm/theme1/img/timg_lgg.jpg"></div>
+            <div class="bcont">
+                <div class="ligg_st">
+                    <div class="st"><i class="st1"></i>胜率：<span><b><%= locals.winRate %></b>%</span></div>
+                    <div class="st"><i class="st2"></i>赞：<span>(<%= locals.praiseNum %>)</span></div>
+                </div>
+                <p class="ligg_zy"><span>投资箴言：</span>兵者，诡道也。投资亦然。辨其道中脉络，方能亏少赚多。</p>
+                <a href="javascript:chatTeacher.trainRegisByUserNo('<%=locals.userNo%>')" class="applybtn">立即报名</a>
+            </div>
+        </div>
+        <div class="rbox">
+            <div class="ligg_intro">
+                <b><%= locals.userName %></b><span><%= locals.position %></span>
+            </div>
+            <div class="taglist">
+                <div class="tag"><span>实战高手</span><i></i></div>
+                <div class="tag"><span>有激情</span><i></i></div>
+                <div class="tag"><span>段子手</span><i></i></div>
+                <div class="tag"><span>波浪八法</span><i></i></div>
+            </div>
+            <div class="detail_ph">
+                <div class="ph_tit"><span><i></i>老师简介</span></div>
+                <div class="ph_cont">
+                    <p>
+                        多年实盘操作经验，交易风格属积极大胆进攻，多次掌握黄金单边大波段行情。钻研日内波段操作，透过实战盈亏的洗练而创造出独特的顺势交易系统，成功将易懂难精的波浪理论结合葛兰碧八法，创造了将经典理论融入于实际做单的关键点操作，短中线波段掌握精准度高。</p>
+                </div>
+            </div>
+            <div class="detail_ph">
+                <div class="ph_tit"><span><i></i>老师经典案例</span></div>
+                <div class="ph_cont">
+                    <p>
+                        6/9~6/13非农后续效应再加上英国脱欧的不确定恐慌情绪，因而将1240-1260的多方区间上移至1260-1280，李老师在区间内采保守获利就尽早出场或反转就出场的方式，5次相加总共产生<b>2600美元获利</b>！跟单的小伙伴们有福了！
+                    </p>
+
+                    <div class="picbox">
+                        <a href="/pm/theme1/img/ligg_sd.jpg" data-lightbox="train-img">
+                            <img src="/pm/theme1/img/ligg_sd.jpg" alt="晒单">
+                            <i class="i-zoom"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="detail_ph">
+        <div class="ph_tit"><span><i></i>课程介绍</span></div>
+        <div class="ph_cont kcbg">
+            <h4 class="kcname">日内波段实战法与交易心理学</h4>
+            <ul class="t_list">
+                <li><i>1</i><span>随处可听到的顺势交易如何落实在贵金属 </span></li>
+                <li><i>2</i><span>具体有哪些顺势交易的系统</span></li>
+                <li><i>3</i><span>杰西、李佛摩尔的名言与实战心态对照</span></li>
+                <li><i>4</i><span>市场心理如何形成行情趋势洪流</span></li>
+                <li><i>5</i><span>运用正确心态建立自己的交易系统</span></li>
+            </ul>
+            <div class="kcbgpic"></div>
+            <div class="apply_info">
+                <div class="inbox in1">
+                    <div class="cont">
+                        <p>报名时间：<b>11.14-11.20</b></p>
+
+                        <p class="red">开课时间：<b>11.21-11.25</b></p>
+
+                    </div>
+                    <i class="arr"></i>
+                </div>
+                <div class="inbox in2">
+                    <div class="cont">
+                        <p>报名条件：</p>
+                        <ul class="t_list">
+                            <li><i>1</i><span>注册直播间 </span></li>
+                            <li><i>2</i><span>报名期间入金满1000美元</span></li>
+                        </ul>
+                        <p class="p2">报名人数：<br>限额50名，招满截止 </p>
+                    </div>
+                    <i class="arr"></i>
+                </div>
+                <div class="inbox">
+                    <div class="cont">
+                        <p>报名流程：</p>
+                        <ul class="t_list">
+                            <li><i>1</i><span>点击“立即报名”按钮提交报名</span></li>
+                            <li><i>2</i><span>报名审核通过后会有专人通知</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="javascript:chatTeacher.trainRegisByUserNo('<%=locals.userNo%>')" class="applybtn">立即报名</a>
+    <div class="train_ad"><a href="http://www.24k.hk/lp_v142_lgg.html" class="actrulebtn" target="_blank"><i></i>活动详情</a></div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $.mCustomScrollbar.defaults.scrollButtons.enable = true;
+        $(".sdlistcont").mCustomScrollbar({theme: "dark", scrollbarPosition: "outside", scrollButtons: false});
+        $(".scrollbox").mCustomScrollbar({theme: "light-thick", scrollbarPosition: "outside", scrollButtons: false});
+    });
+</script>
+</body>
+</html>

@@ -59,9 +59,8 @@ var videosLive = {
                             $('.train_detail .pop_tit label').text($(this).text());
                             var userNo=$(this).attr("userno");
                             $("#train_info_id").empty().load("/studio/getTrDetail?uid="+userNo,function(){
-                                $('#train_info_id .scrollbox[tid="'+userNo+'"]').show();
+                                common.openPopup('.blackbg,.train_detail');
                             });
-                            common.openPopup('.blackbg,.train_detail');
                         }else{
                             box.showTipBox("您没有访问该房间的权限，请联系客服！");
                         }

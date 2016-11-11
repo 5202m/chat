@@ -1825,7 +1825,7 @@ router.get('/getTrDetail', function(req, res) {
         if(ret.earningsM){
             ret.earningsM=ret.earningsM.replace("%","");
         }
-        res.render(common.renderPath(req, constant.tempPlatform.pc, "vtrain", "theme1"), ret);
+        res.render(common.renderPath(req, constant.tempPlatform.pc, "vtrain/"+userNo, "theme1"), ret);
     });
 });
 
