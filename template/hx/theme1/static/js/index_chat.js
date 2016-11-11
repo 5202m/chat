@@ -1181,9 +1181,11 @@ var chat={
         $(".mod_userlist .titbar label:first").text($("#userListId li").length + indexJS.onlineNumSet.member);
         $(".mod_userlist .titbar label:last").text($("#visitorListId li").length + indexJS.onlineNumSet.visitor);
         if($("#userListId li").length>0) {
-            $("#userListId li:last").after(chat.getRdC(null, true).join(''));
-        }else{
-            $("#userListId").html(chat.getRdC(null, true).join(''));
+            var userList = chat.getRdC(null, true);
+            $("#userListId").append(userList.join(''));
+        }else if($("#userListId li").length==0){
+            var userList = chat.getRdC(null, true);
+            $("#userListId").html(userList.join(''));
         }
         chat.setUserListClick($("#userListId li a[t=header]"));
         indexJS.setListScroll(".user_box");
@@ -1252,15 +1254,17 @@ var chat={
                 "涨停兄","Pal","唯美小金","Ski","一起交流","Kim","一路高歌","Leo"];
         }
         var data = [],arrIndex=0;
-        var nk='';
+        var nk='',userId='';
         for (var i = 0; i<rdNum; i++) {
             if (listStr.length>0) {
                 arrIndex = Math.floor(Math.random()*listStr.length);
                 nk=listStr[arrIndex];
+                userId = "userRcd_"+i;
                 if(forceFill && arrIndex+1<listStr.length){
                     nk=nk.substring(0,2)+ listStr[arrIndex+1].substring(0,2);
+                    userId = "userRcd_"+nk.substring(0,1)+i;
                 }
-                data.push(chat.getOnlineUserDom({userId:("userRcd_"+i),clientGroup:clientGroup,nickname:nk,sequence:seq,userType:0}).dom);
+                data.push(chat.getOnlineUserDom({userId:userId,clientGroup:clientGroup,nickname:nk,sequence:seq,userType:0}).dom);
                 listStr.splice(arrIndex, 1);
             } else {
                 break;
@@ -1442,6 +1446,7 @@ var chat={
                         indexJS.lgBoxTipInfo=result.data;
                     }
                     if(data && 'online_mem_set'==data.type){
+                        indexJS.onlineNumSet = common.isBlank(data.beforeRuleVal)?{}:JSON.parse(data.beforeRuleVal);
                         chat.setOnlineNum();
                     }
                     break;
