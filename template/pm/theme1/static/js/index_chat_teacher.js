@@ -208,6 +208,7 @@ var chatTeacher = {
                             if(updateTrain){
                                 chatTeacher.showTrani(data.chatGroup);
                             }else if(isDetail=='true'){
+                                box.showMsg(data.msg);
                                 videosTrain.getTrainList();
                             }else{
                                 box.showMsg(data.msg);
