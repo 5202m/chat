@@ -1184,12 +1184,17 @@ var chat={
         var clientGroup = $("#roomInfoId").text().match("VIP")!=null?"vip":"active";
         //chat.addVisitor();
         var size=$("#visitorListId li").length==0?chat.getRandCNum(null,$("#roomInfoId").attr("av")=="true",null):$("#visitorListId li").length;
-        $(".mod_userlist .titbar label:first").text($("#userListId li").length + indexJS.onlineNumSet.member);
-        $(".mod_userlist .titbar label:last").text(size + indexJS.onlineNumSet.visitor);
-        var userList = chat.getRdC(clientGroup, true);
-        $("#userListId").append(userList.join(''));
-        chat.setUserListClick($("#userListId li a[t=header]"));
-        indexJS.setListScroll(".user_box");
+        $(".mod_userlist .titbar label:first").text($("#userListId li").length);
+        $(".mod_userlist .titbar label:last").text(size);
+        if(!chat.initUserList) {
+            $(".mod_userlist .titbar label:first").text($("#userListId li").length + indexJS.onlineNumSet.member);
+            $(".mod_userlist .titbar label:last").text(size + indexJS.onlineNumSet.visitor);
+            var userList = chat.getRdC(clientGroup, true);
+            $("#userListId").append(userList.join(''));
+            chat.setUserListClick($("#userListId li a[t=header]"));
+            indexJS.setListScroll(".user_box");
+            chat.initUserList = true;
+        }
     },
     /**
      * 查询UI在线用户
@@ -1299,7 +1304,7 @@ var chat={
             currDom=chat.getOnlineUserDom(row).dom;
             visitorArr.push(currDom);//设置在线访客
         }
-        $('#visitorListId').html(visitorArr.join(""));
+        $('#visitorListId').append(visitorArr.join(""));
     },
     /**
      * 设置socket
@@ -1338,7 +1343,7 @@ var chat={
                     }
                 }
             }
-            $('#userListId').html(userArr.join(""));
+            $('#userListId').append(userArr.join(""));
             //如果只有一条成员记录则直接后面追加
             if(userArr.length<=1){
                 fR=1;
@@ -1467,6 +1472,7 @@ var chat={
                     }
                     if(data && 'online_mem_set'==data.type){
                         indexJS.onlineNumSet = common.isBlank(data.beforeRuleVal)?{}:JSON.parse(data.beforeRuleVal);
+                        chat.initUserList = false;
                         chat.setOnlineNum();
                     }
                     break;
