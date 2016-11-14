@@ -251,6 +251,7 @@ var chatPride = {
                 });
                 if (common.isValid(articleDetail.tag) && articleDetail.tag == 'trading_strategy') {
                     if (indexJS.userInfo.isLogin && !chatPride.strategyIsNotAuth || $.inArray(aid, storeViewData) > -1) {
+                        style = ' style="display:none;"';
                         var idx = 0, lenI = Object.keys(remarkMap).length - 1;
                         $.each(remarkMap, function (i, row) {
                             var tradeStrategySupportDivHtml = [];

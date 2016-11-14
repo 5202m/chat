@@ -214,9 +214,26 @@ var studioService = {
                 callback(resultTmp);
             });
             if(common.isValid(userInfo.item)) {
+                //注册积分
                 var pointsParams = {clientGroup:clientGroup,groupType: userInfo.groupType,userId: userInfo.mobilePhone, item: userInfo.item, val: 0,isGlobal: false,remark: '',opUser: userInfo.userId,opIp: userInfo.ip};
-                chatPointsService.add(pointsParams,function(result){
-
+                chatPointsService.add(pointsParams,function(){
+                    //DEMO积分
+                    if(clientGroup == constant.clientGroup.simulate || clientGroup == constant.clientGroup.notActive || clientGroup == constant.clientGroup.active){
+                        var pointsParamsD = {clientGroup:clientGroup,groupType: userInfo.groupType,userId: userInfo.mobilePhone, item: "hand_openDemo", val: 0,isGlobal: false,remark: '',opUser: userInfo.userId,opIp: userInfo.ip};
+                        chatPointsService.add(pointsParamsD,function(){
+                            //N客户积分
+                            if(clientGroup == constant.clientGroup.notActive || clientGroup == constant.clientGroup.active){
+                                var pointsParamsN = {clientGroup:clientGroup,groupType: userInfo.groupType,userId: userInfo.mobilePhone, item: "hand_openReal", val: 0,isGlobal: false,remark: '',opUser: userInfo.userId,opIp: userInfo.ip};
+                                chatPointsService.add(pointsParamsN,function(){
+                                    //A客户积分
+                                    if(clientGroup == constant.clientGroup.active){
+                                        var pointsParamsA = {clientGroup:clientGroup,groupType: userInfo.groupType,userId: userInfo.mobilePhone, item: "hand_deposit", val: 0,isGlobal: false,remark: '',opUser: userInfo.userId,opIp: userInfo.ip};
+                                        chatPointsService.add(pointsParamsA,function(result){});
+                                    }
+                                });
+                            }
+                        });
+                    }
                 });
             }
         });
