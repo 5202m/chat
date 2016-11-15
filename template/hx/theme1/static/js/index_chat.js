@@ -1178,8 +1178,9 @@ var chat={
      * 设置在线人数
      * isRandSet 是否随机设置
      * isLoadOrPush 是否加载或推送
+     * defNumObj 默认上下线人数：
      */
-    setOnlineNum:function(isRandSet,isLoadOrPush){
+    setOnlineNum:function(isRandSet,isLoadOrPush,defNumObj){
         var userLabel=$(".mod_userlist .titbar label:first"),vistorLabel=$(".mod_userlist .titbar label:last"),userSize = $("#userListId li").length,visitorSize = $("#visitorListId li").length;
         if(isRandSet) {
             indexJS.initOnlineNumSet();
@@ -1193,7 +1194,6 @@ var chat={
             ruList.remove();
             if(vistorLabel.parent().parent().hasClass("on")){
                 this.addVisitor();
-                chat.setUserListClick($("#visitorListId li a[t=header]"));
             }else{
                 var userList = chat.getRdC(clientGroup, true);
                 var targetDom=$('#userListId li[t=11]:eq(0)');
@@ -1203,11 +1203,19 @@ var chat={
                     $("#userListId").append(userList.join(''));
                 }
                 chat.setUserListClick($("#userListId li a[t=header]"));
+                indexJS.setListScroll(".user_box");
             }
-            indexJS.setListScroll(".user_box");
         }else{
-            userLabel.text(userSize);
-            vistorLabel.text(visitorSize);
+            if(defNumObj){
+                if(defNumObj.userType>-1){
+                    userLabel.text(parseInt(userLabel.text())+defNumObj.num);
+                }else{
+                    vistorLabel.text(parseInt(vistorLabel.text())+defNumObj.num);
+                }
+            }else{
+                userLabel.text(userSize);
+                vistorLabel.text(visitorSize);
+            }
         }
     },
     /**
@@ -1378,9 +1386,11 @@ var chat={
             switch (result.type){
                 case 'onlineNum':{
                     var data=result.data,userInfoTmp=data.onlineUserInfo;
+                    var num=1;
                     if(data.online){
                         chat.setOnlineUser(userInfoTmp);
                     }else{
+                        num=-1;
                         if(indexJS.userInfo.userId!=userInfoTmp.userId){
                             if(userInfoTmp.userType==2){
                                 $('#teacherInfoId,.user-infbox .user-code').addClass('dn');
@@ -1394,7 +1404,7 @@ var chat={
                             indexJS.setListScroll(".user_box");
                         }
                     }
-                    chat.setOnlineNum();//设置在线人数
+                    chat.setOnlineNum(false,false,{userType:userInfoTmp.userType,num:num});//设置在线人数
                     break;
                 }
                 case 'removeMsg':
