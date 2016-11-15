@@ -112,24 +112,25 @@ var videosTeach = {
     numSlide:function(tabnum){
         var nowIndex = 0;
         var nowtab = $($('.teachlive .sub_tab')[tabnum]);
+        //清除所有animate
+        $(nowtab).find('.courseNum .inner').stop();
         var itemW = $('.courseNum .c_num').width();
         var itemNum = $(nowtab).find('.courseNum .c_num').size();
-
         $(nowtab).find('.courseNum .inner').width(function(){
             return (itemNum*itemW)
-        });
+        }).css("left",0);
 
-        $(nowtab).find('.numctrl.next').click(function(){
+        $(nowtab).find('.numctrl.next').unbind("click").click(function(){
             if($(nowtab).find('.courseNum .inner').width()-nowIndex*itemW -$(nowtab).find('.courseNum .numbox').width()>0){
                 nowIndex ++;
-                $(nowtab).find('.courseNum .inner').animate({left: -nowIndex*itemW}, "slow");
+                $(nowtab).find('.courseNum .inner').stop().animate({left: -nowIndex*itemW});
             }
         });
 
-        $(nowtab).find('.numctrl.prev').click(function(){
+        $(nowtab).find('.numctrl.prev').unbind("click").click(function(){
             if(nowIndex!=0){
                 nowIndex --;
-                $(nowtab).find('.courseNum .inner').animate({left: -nowIndex*itemW}, "slow");
+                $(nowtab).find('.courseNum .inner').stop().animate({left: -nowIndex*itemW});
             }
         });
     }
