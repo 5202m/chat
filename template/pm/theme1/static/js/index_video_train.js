@@ -45,7 +45,7 @@ var videosTrain = {
                         cls += ' b2';
                         clk = '';
                     }
-                    trainHtml += trainFormatHtml.formatStr(row.defaultAnalyst.avatar,row.name, row.defaultAnalyst.userName, introduction,row.defaultAnalyst.userNo,row.clientGroup,row.allowInto,txt ,row._id, numTxt, clk, cls);
+                    trainHtml += trainFormatHtml.formatStr(row.defaultAnalyst.avatar,row.name,row.label, row.remark,row.defaultAnalyst.userNo,row.clientGroup,row.allowInto,txt ,row._id, numTxt, clk, cls);
                 });
                 $('.pop_train .scrollbox .trainlist').html(trainHtml);
             }

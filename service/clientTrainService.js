@@ -166,7 +166,7 @@ var clientTrainService = {
      */
     getTrainList:function(groupType,teachId,isAll,callback){
         var searchObj={"groupType":groupType,roomType:'train'};
-        var limit=50,searchFields="_id status defaultAnalyst point openDate clientGroup name traninClient";
+        var limit=50,searchFields="_id status defaultAnalyst point openDate clientGroup name traninClient label remark";
         if(!isAll){
             searchObj.status={$in:[1,2]};
         }
@@ -187,7 +187,8 @@ var clientTrainService = {
                         row=rooms[i];
                         var openDate = JSON.parse(row.openDate)||{};
                         var isEnd = (openDate.endDate<currDate)||false;
-                        tmList.push({"_id":row._id,name:row.name,clientSize:(row.traninClient?row.traninClient.length:0),allowInto:common.dateTimeWeekCheck(row.openDate, false,true),clientGroup:row.clientGroup,defaultAnalyst:row.defaultAnalyst,status:row.status,isEnd:isEnd});
+                        tmList.push({"_id":row._id,name:row.name,clientSize:(row.traninClient?row.traninClient.length:0),allowInto:common.dateTimeWeekCheck(row.openDate, false,true),
+                            clientGroup:row.clientGroup,defaultAnalyst:row.defaultAnalyst,status:row.status,isEnd:isEnd, label:row.label,remark:row.remark});
                     }
                 }
                 callback(tmList);
