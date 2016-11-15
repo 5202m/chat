@@ -120,6 +120,7 @@ var videosTeach = {
             return (itemNum*itemW)
         }).css("left",0);
 
+        //避免重复绑定click 先unbind
         $(nowtab).find('.numctrl.next').unbind("click").click(function(){
             if($(nowtab).find('.courseNum .inner').width()-nowIndex*itemW -$(nowtab).find('.courseNum .numbox').width()>0){
                 nowIndex ++;
