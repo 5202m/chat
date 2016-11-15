@@ -146,8 +146,14 @@ var indexJS ={
                                 }
                                 var roomId=$(this).attr("rid");
                                 if(data.hasOwnProperty(roomId)){
+                                    var setNumJson = {};
+                                    try{
+                                        setNumJson = JSON.parse($(".rooms .rbox[rid='"+roomId+"']").attr('rSet'));
+                                    }catch(e){
+                                        setNumJson = {};
+                                    }
                                     var rda=data[roomId];
-                                    var size =chat.getRandCNum(/VIP/g.test($(this).find(".rname").text())?"vip":"active",$(this).find(".enterbtn").attr("av")=="true",rda.onlineNum);
+                                    var size =chat.getRandCNum(/VIP/g.test($(this).find(".rname").text())?"vip":"active",setNumJson,rda.onlineNum);
                                     $(this).find(".peo_num label").text(rda.onlineNum + size);
                                     $(this).find(".info .nk").text(rda.name);
                                     if(!rda.isNext){
@@ -903,15 +909,20 @@ var indexJS ={
      * 初始化在线人数设置值
      */
     initOnlineNumSet : function(){
-        if(common.isBlank(this.onlineNumSet)){
+        try {
+            this.onlineNumSet = JSON.parse($("#roomInfoId").attr("rSet"));
+            if(common.isBlank(this.onlineNumSet)){
+                this.onlineNumSet = {"member":0,"visitor":0,"vipstart":5,"vipend":10,"normalstart":40,"normalend":80};
+            }else{
+                this.onlineNumSet.member = parseInt(this.onlineNumSet.member) || 0;
+                this.onlineNumSet.visitor = parseInt(this.onlineNumSet.visitor) || 0;
+                this.onlineNumSet.vipstart = parseInt(this.onlineNumSet.vipstart) || 0;
+                this.onlineNumSet.vipend = parseInt(this.onlineNumSet.vipend) || 0;
+                this.onlineNumSet.normalstart = parseInt(this.onlineNumSet.normalstart) || 0;
+                this.onlineNumSet.normalend = parseInt(this.onlineNumSet.normalend) || 0;
+            }
+        }catch(e){
             this.onlineNumSet = {"member":0,"visitor":0,"vipstart":5,"vipend":10,"normalstart":40,"normalend":80};
-        }else{
-            this.onlineNumSet.member = parseInt(this.onlineNumSet.member) || 0;
-            this.onlineNumSet.visitor = parseInt(this.onlineNumSet.visitor) || 0;
-            this.onlineNumSet.vipstart = parseInt(this.onlineNumSet.vipstart) || 0;
-            this.onlineNumSet.vipend = parseInt(this.onlineNumSet.vipend) || 0;
-            this.onlineNumSet.normalstart = parseInt(this.onlineNumSet.normalstart) || 0;
-            this.onlineNumSet.normalend = parseInt(this.onlineNumSet.normalend) || 0;
         }
     }
 };

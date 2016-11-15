@@ -365,7 +365,7 @@
             <% studioList.forEach(function(row,index){  if(row.isCurr) {%>
             <div class="user-inftop">
                 <div class="mod_menu_bg"></div>
-                <span id="roomInfoId" spn="<%= row.speakNum%>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>"><%= row.name %><i class="off"></i></span>
+                <span id="roomInfoId"  rSet="<%= row.onlineNumValSet%>" spn="<%= row.speakNum%>" aw="<%= row.allowWhisper %>" awr="<%= row.whisperRoles %>"  av="<%= row.allowVisitor %>"><%= row.name %><i class="off"></i></span>
                 <span id="setlogintip" style="display:none;"></span>
                 <span id="speaktip" style="display:none;"><%= row.speakNumTip %></span>
                 <!--<a class="toggle-room" href="javascript:;">切换房间 <i></i></a>-->
@@ -375,7 +375,7 @@
                     </a>
                     <div class="rooms">
                         <% studioList.forEach(function(rowIn,indexIn){ if(row.id!=rowIn.id) {%>
-                        <div class="rbox" rid="<%= rowIn.id %>"> <!--last-->
+                        <div class="rbox" rid="<%= rowIn.id %>"  rSet="<%= rowIn.onlineNumValSet%>"> <!--last-->
                             <div class="rbox_top">
                                 <span class="rname"><%= rowIn.name %><i></i></span>
                                 <span class="peo_num" title="在线人数"><i></i><label></label></span>
@@ -419,7 +419,7 @@
         </div>
         <div class="titbar">
             <div class="mod_menu_bg"></div>
-            <span class="on clicked">会员<i>（<label></label>）</i></span><span>游客<i>（<label></label>）</i></span>
+            <span class="on">会员<i>（<label></label>）</i></span><span>游客<i>（<label></label>）</i></span>
         </div>
         <div class="cont">
             <div class="user_box scrollbox">
@@ -475,8 +475,6 @@
         indexJS.visitorSpeak=('<%- visitorSpeak%>'=='true');
         var lgBoxTipInfo='<%- lgBoxTipInfo %>';
         indexJS.lgBoxTipInfo=common.isBlank(lgBoxTipInfo)?null:JSON.parse(lgBoxTipInfo);
-        var onlineNumVal = '<%- onlineNumValSet%>';
-        indexJS.onlineNumSet=common.isBlank(onlineNumVal)?null:JSON.parse(onlineNumVal);
         function widthCheck(){
             var ww = $(window).width();
             if(ww <= 1600 ){
