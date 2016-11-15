@@ -240,7 +240,7 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
                         rowTmp.speakNum=ruleRow.beforeRuleVal;
                         rowTmp.speakNumTip = ruleRow.afterRuleTips;
                     }else if(ruleRow.type == 'online_mem_set'){
-                        viewDataObj.onlineNumValSet=ruleRow.beforeRuleVal;
+                        rowTmp.onlineNumValSet=ruleRow.beforeRuleVal;
                     }
                 }
                 rowTmp.remark=common.trim(row.remark);
