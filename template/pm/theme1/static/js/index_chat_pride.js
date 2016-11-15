@@ -294,11 +294,6 @@ var chatPride = {
                 $panelUL.find('div.hdbox>div.skill').html('<span><i class="dot"></i>当前交易策略：</span>' + contentHtml);
                 $panelUL.find('div.hdbox>div.skilldata').remove();
                 $panelUL.find('div.hdbox>div.skill').after(tradeStrategySupportHtml.join(''));
-                if (remarkArr.length > 0 && indexJS.userInfo.isLogin && indexJS.userInfo.clientGroup == 'vip') {
-                    $panelUL.find('div.hdbox>div.skilldata>a').hide();
-                } else {
-                    $panelUL.find('div.hdbox>div.skilldata>a').show();
-                }
             }
         } else {
             chatPride.classNoteInfo.push(articleInfo);
