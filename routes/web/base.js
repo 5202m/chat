@@ -496,7 +496,9 @@ router.get('/logout', function(req, res) {
  * 跳转直播间主页
  */
 router.get('/home', function(req, res) {
-    req.session.studioUserInfo.groupId = null;
+    if(req.session.studioUserInfo){
+        req.session.studioUserInfo.groupId = null;
+    }
     res.redirect(getGroupType(req,true)+"?ko=1");
 });
 
@@ -1507,7 +1509,7 @@ router.post('/getSubscribeType',function(req, res){
  */
 router.post('/getSubscribe',function(req, res){
     var userInfo=req.session.studioUserInfo,params = req.body['params'];
-    if(common.isBlank(params)){
+    if(common.isBlank(params) || !userInfo){
         res.json({isOK:false,msg:'参数错误'});
         return;
     }
@@ -1585,7 +1587,7 @@ router.post('/subscribe', function(req, res){
  */
 router.post('/getPointsInfo', function(req, res){
     var userInfo=req.session.studioUserInfo,params = req.body['params'];
-    if(common.isBlank(params)){
+    if(common.isBlank(params) || !userInfo){
         res.json({isOK:false,msg:'参数错误'});
         return;
     }
@@ -1626,7 +1628,7 @@ router.post('/addPointsInfo', function(req, res){
             return;
         }
     }
-    if(common.isBlank(params.item)){
+    if(common.isBlank(params.item) || !userInfo){
         res.json({isOK:false,msg:'参数错误'});
         return;
     }else{
@@ -1744,6 +1746,10 @@ router.post('/addSignin', function(req, res){
  */
 router.post('/getSignin', function(req, res){
     var userInfo=req.session.studioUserInfo;
+    if(!userInfo){
+        res.json(null);
+        return;
+    }
     clientTrainService.getSignin(userInfo, function(result){
         res.json(result);
     });
@@ -1785,7 +1791,7 @@ router.post('/updateSession', function(req, res){
 router.post('/getChatPointsConfig',function(req, res){
     var userInfo=req.session.studioUserInfo;
     var params = req.body['data'];
-    if(common.isBlank(params)){
+    if(common.isBlank(params) || !userInfo){
         res.json({isOK:false,msg:'参数错误'});
         return;
     }
@@ -1807,6 +1813,9 @@ router.post('/getChatPointsConfig',function(req, res){
  * 提取培训班详情
  */
 router.get('/getUserInfo', function(req, res) {
+    if(!req.session.studioUserInfo){
+        res.json(null);
+    }
     var userNo=req.query["uid"];
     studioService.getUserInfoByUserNo(req.session.studioUserInfo.groupType,userNo,function(result){
         res.json(result);

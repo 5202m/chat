@@ -774,11 +774,12 @@ var chatService ={
                 for(var userId in roomUserArr){
                     userInfoTmp = roomUserArr[userId];
                     if(userInfoTmp && userInfoTmp.socketId && userId == userNoArr[j] && userInfoTmp.socketId!=excludeSocketId){
-                        space.to(userInfoTmp.socketId).emit(eventKey,data);
                         if(chatService.leaveRoomFlag.forcedOut==data.flag) {
                             toUserIdArr.push(userId);
                             delete roomUserArr[userId];
                             isForce=true;
+                        }else{
+                            space.to(userInfoTmp.socketId).emit(eventKey,data);
                         }
                         break;
                     }

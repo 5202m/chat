@@ -451,7 +451,7 @@ var common = {
      */
     setCrossDomain:function(req, res){
         /**IE设置跨域*/
-        if(req.headers["user-agent"].toLowerCase().indexOf("msie") > 0){
+        if(req.headers["user-agent"] && req.headers["user-agent"].toLowerCase().indexOf("msie") > 0){
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Access-Control-Allow-Headers", "X-Requested-With");
             res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");

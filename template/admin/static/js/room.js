@@ -1635,7 +1635,7 @@ var room={
     /**
      * 离开房间提示
      */
-    leaveRoomTip:function(flag){
+    leaveRoomTip:function(flag, userIds){
         if("visitor"==room.userInfo.clientGroup){
             return;
         }
@@ -1647,6 +1647,19 @@ var room={
             txt='您的账号已在其他地方进入该房间，';
         }
         if(flag=="forcedOut"){
+            alert(userIds + room.userInfo.userId);
+            var lenI = !userIds ? 0 : userIds.length;
+            if(lenI > 0){
+                for(var i = 0, lenI = !userIds ? 0 : userIds.length; i < lenI; i++){
+                    if(userIds[i] == room.userInfo.userId){
+                        break;
+                    }
+                }
+                if(i == lenI){
+                    return; //存在userIds, 但当前用户不在userIds列表中
+                }
+            }
+
             txt='您已被管理员强制退出房间，';
         }
         $("#tipMsgBox").fadeIn(0).delay(6000).fadeOut(200).find("span").text("注意："+txt+"正自动退出.....");
@@ -1738,7 +1751,7 @@ var room={
                     room.setTalkListScroll();
                     break;
                 case 'leaveRoom':{
-                    room.leaveRoomTip(result.flag);
+                    room.leaveRoomTip(result.flag, result.userIds);
                     break;
                 }
                 case 'approvalResult':{
