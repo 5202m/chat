@@ -239,7 +239,7 @@ function toStudioView(chatUser, options, groupId,clientGroup,isMobile,req,res){
                     }else if(ruleRow.type == 'speak_num_set'&& isPass){
                         rowTmp.speakNum=ruleRow.beforeRuleVal;
                         rowTmp.speakNumTip = ruleRow.afterRuleTips;
-                    }else if(ruleRow.type == 'online_mem_set'){
+                    }else if(ruleRow.type == 'online_mem_set'&& isPass){
                         rowTmp.onlineNumValSet=ruleRow.beforeRuleVal;
                     }
                 }
